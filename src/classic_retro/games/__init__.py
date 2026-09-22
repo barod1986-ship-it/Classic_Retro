@@ -1,0 +1,1 @@
+"""Exact game/revision adapters."""

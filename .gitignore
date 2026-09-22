@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+dist/
+build/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Private game inputs and generated game images
+roms/
+game-images/
+private/
+*.gba
+*.gb
+*.gbc
+*.nes
+*.sfc
+*.smc
+*.z64
+*.n64
+*.v64
+*.iso
+*.chd
+*.cue
+
+# Generated reports / patches
+artifacts/
+*.ips
+*.bps
+*.xdelta
+*.xdelta3

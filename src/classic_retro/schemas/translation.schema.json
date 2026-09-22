@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://classic-retro.dev/schemas/translation.schema.json",
+  "title": "Classic Retro Arabic Translation Document",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "game_id", "target_language", "entries"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "game_id": {"type": "string", "minLength": 1},
+    "source_language": {"type": "string", "minLength": 2},
+    "target_language": {"const": "ar"},
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "source", "translation"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "source": {"type": "string"},
+          "translation": {"type": "string"},
+          "context": {"type": "string"},
+          "notes": {"type": "string"},
+          "status": {
+            "type": "string",
+            "enum": ["draft", "reviewed", "final"]
+          },
+          "constraints": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "box": {"type": "string", "minLength": 1},
+              "max_width_px": {"type": "integer", "minimum": 1},
+              "max_lines": {"type": "integer", "minimum": 1}
+            }
+          }
+        }
+      }
+    }
+  }
+}
