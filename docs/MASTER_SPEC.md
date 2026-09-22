@@ -1,17 +1,28 @@
 # Classic Retro — Master Specification
 
-Version: 0.1 (Foundation)
+Version: 0.2 (Multi-platform Foundation)
 
 ## 1. Purpose
 
-Classic Retro is a reusable toolkit for Arabic localization of classic video games.
+Classic Retro is a reusable toolkit for Arabic localization of classic video games across multiple systems.
 
-The first implementation target is **Game Boy Advance**, while the architecture must allow later support for systems such as GB/GBC, SNES, Mega Drive / Genesis, NES, and PlayStation without rewriting the Arabic localization core.
+It is **not centered on Game Boy Advance or any other single console**. Platform support is added through adapters while the Arabic localization core remains shared.
+
+Target systems may include:
+
+- Game Boy / Game Boy Color
+- Game Boy Advance
+- NES / Famicom
+- SNES / Super Famicom
+- Mega Drive / Genesis
+- PlayStation
+- Nintendo 64
+- additional classic platforms when their formats and workflows are understood and verified
 
 The project is not a universal "replace text in ROM" script. It is a framework that separates:
 
 1. reusable localization logic,
-2. console-specific behavior,
+2. console/platform-specific behavior,
 3. engine/family-specific behavior,
 4. unavoidable game-specific overrides.
 
@@ -19,12 +30,13 @@ The project is not a universal "replace text in ROM" script. It is a framework t
 
 The foundation phase will not:
 
-- claim support for games that have not been verified,
+- claim support for games or platforms that have not been verified,
 - use hard-coded offsets as a general architecture,
-- assume all GBA games share one text format,
+- assume games on the same console share one text format,
+- assume cartridge-based and disc-based systems use the same storage model,
 - use naive string reversal as the Arabic solution,
-- commit commercial ROMs,
-- silently modify unknown ROM revisions,
+- commit commercial ROM or disc images,
+- silently modify unknown revisions,
 - build a GUI before the underlying pipeline is stable.
 
 ## 3. Architecture
@@ -39,7 +51,14 @@ classic_retro/
     validation/
     build/
   platforms/
+    gb/
+    gbc/
     gba/
+    nes/
+    snes/
+    megadrive/
+    ps1/
+    n64/
   engines/
   games/
   schemas/
@@ -48,13 +67,15 @@ classic_retro/
   docs/
 ```
 
+Platform directories are created when real support work begins; the list above describes the intended adapter model, not a claim that all platforms are already implemented.
+
 ### 3.1 Core
 
 The core must contain only reusable behavior.
 
 Expected responsibilities:
 
-- ROM identity model
+- game-image identity model
 - hashes and revision verification
 - translation document model
 - token model
@@ -68,27 +89,26 @@ Expected responsibilities:
 - reproducibility metadata
 - diagnostics and structured errors
 
-The core must not know game offsets.
+The core must not know game-specific offsets, sectors, archives, banks, or addresses.
 
 ### 3.2 Platform adapters
 
-Platform adapters describe hardware/container concerns shared by games on one platform.
+Platform adapters describe hardware/container concerns shared by games on one system.
 
-Initial platform:
+Examples of possible responsibilities:
 
-```text
-platforms/gba/
-```
-
-Possible responsibilities:
-
-- GBA ROM header inspection
-- address/offset conversion helpers
-- platform checksum/header rules when applicable
+- ROM/header inspection
+- cartridge banking/address conversion
+- disc-image filesystem or sector handling
+- executable/container identification
+- platform checksum/header rules
 - common graphics encodings
+- platform-specific address spaces
 - common compression helpers only when genuinely platform-wide
 
-Platform adapters must not pretend engine-specific formats are platform standards.
+A platform adapter must not pretend engine-specific formats are platform standards.
+
+No platform is treated as the default implementation target.
 
 ### 3.3 Engine / family adapters
 
@@ -98,44 +118,56 @@ Possible responsibilities:
 
 - text encoding
 - control codes
-- pointer formats
-- script banks
+- pointer/reference formats
+- script banks or resource archives
 - compression codecs
 - font format
 - text renderer behavior
 - runtime variables
 - dialogue window constraints
 
-One engine adapter may support multiple titles and revisions.
+One engine adapter may support multiple titles, revisions, and sometimes multiple releases on the same platform.
 
 ### 3.4 Game adapters
 
-A game adapter binds exact supported ROM revisions to an engine/platform implementation.
+A game adapter binds exact supported game revisions to an engine/platform implementation.
 
 It may define:
 
 - accepted SHA-256 hashes
-- title/revision metadata
-- engine selection
-- ROM ranges
+- title/region/revision metadata
+- platform and engine selection
+- ROM ranges, files, sectors, or resources
 - resource tables
 - game-specific exceptions
 - build hooks
 
 Game adapters should stay small. Reusable discoveries must move upward into the engine or platform layer.
 
-## 4. ROM identity and safety
+## 4. Game-image identity and safety
 
-Every input ROM must be identified before modification.
+Every input game image must be identified before modification.
 
-Minimum identity data:
+Cartridge example:
 
 ```yaml
 platform: gba
 title: Example
 region: USA
 revision: Rev 1
+container: rom
 size: 16777216
+sha256: ...
+```
+
+Disc example:
+
+```yaml
+platform: ps1
+title: Example
+region: USA
+revision: 1.0
+container: bin_cue
 sha256: ...
 ```
 
@@ -143,24 +175,26 @@ Rules:
 
 - SHA-256 is authoritative for supported input revisions.
 - CRC32 may be recorded for convenience but is not sufficient as the primary identity check.
+- Multi-file disc releases may require hashes for each required component.
 - Unknown hashes fail closed.
-- Similar filenames never imply compatible ROMs.
-- A build manifest records the source hash and toolkit version.
+- Similar filenames never imply compatible game images.
+- A build manifest records the source hash(es), platform, adapter, and toolkit version.
 
 ## 5. Research-first workflow
 
 Before implementing support for a new game:
 
-1. identify exact ROM revision,
-2. search for existing decompilation/disassembly projects,
-3. search for technical documentation and ROM maps,
+1. identify the exact platform, release, region, revision, and hashes,
+2. search for existing decompilation/disassembly/source projects,
+3. search for technical documentation, ROM maps, filesystem maps, and executable notes,
 4. search for existing translation/hacking tools,
-5. identify known compression algorithms,
-6. identify text encoding and control codes,
-7. identify font/renderer architecture,
-8. determine pointer/reference formats,
-9. determine whether text is static or dynamically composed,
-10. choose the least fragile implementation strategy.
+5. identify storage/container structure,
+6. identify known compression algorithms,
+7. identify text encoding and control codes,
+8. identify font/renderer architecture,
+9. determine pointer/reference formats,
+10. determine whether text is static or dynamically composed,
+11. choose the least fragile implementation strategy.
 
 Preferred implementation order:
 
@@ -169,14 +203,18 @@ source-level rebuild
     ↓ if unavailable/inappropriate
 documented engine tooling
     ↓
+structured resource extraction/reinsertion
+    ↓
 binary extraction/reinsertion
     ↓
 targeted reverse engineering
 ```
 
+The method is selected per game/engine, not per project globally.
+
 ## 6. Translation data model
 
-Human translation files are UTF-8 and independent from ROM addresses whenever possible.
+Human translation files are UTF-8 and independent from binary addresses whenever possible.
 
 Conceptual record:
 
@@ -190,9 +228,9 @@ constraints:
   box: dialogue
 ```
 
-Stable logical IDs are preferred over raw offsets.
+Stable logical IDs are preferred over raw offsets, sectors, or file positions.
 
-Offsets and addresses belong to adapter/build metadata, not translator-facing text.
+Binary locations belong to adapter/build metadata, not translator-facing text.
 
 ## 7. Control codes and placeholders
 
@@ -287,7 +325,9 @@ The generic font pipeline should support:
 - width tables,
 - missing-glyph detection.
 
-A future font compiler may transform source glyph assets into engine-specific binary formats.
+A font compiler may transform source glyph assets into platform/engine-specific binary formats.
+
+Different platforms may impose radically different constraints: tile-based fonts, sprite text, software-rendered bitmaps, texture pages, VRAM limits, palette limits, or executable-driven renderers.
 
 ## 10. Layout and wrapping
 
@@ -312,9 +352,9 @@ Validation should detect:
 
 Automatic wrapping must be deterministic.
 
-## 11. Pointers and relocation
+## 11. References, pointers, relocation, and storage
 
-Binary adapters must model references explicitly.
+Binary/resource adapters must model references explicitly.
 
 Potential reference types include:
 
@@ -322,7 +362,10 @@ Potential reference types include:
 - relative pointers,
 - banked pointers,
 - table indexes,
-- 16/24/32-bit values,
+- file offsets,
+- archive indexes,
+- disc sectors / LBAs,
+- 16/24/32/64-bit values,
 - little/big-endian encodings,
 - custom packed formats.
 
@@ -333,15 +376,17 @@ Supported relocation strategies may include:
 - known free-space regions,
 - expanded ROM regions,
 - rebuilt resource banks,
+- rebuilt archives,
+- relocated disc files with repaired references,
 - source-level linker relocation.
 
 Every relocation must be validated.
 
-## 12. Compression
+## 12. Compression and containers
 
-Compression is plugin/adapter behavior.
+Compression/container handling is plugin/adapter behavior.
 
-Conceptual interface:
+Conceptual codec interface:
 
 ```text
 decode(bytes) -> bytes
@@ -355,7 +400,16 @@ A codec may be:
 - engine-specific,
 - game-specific.
 
-No algorithm should be assigned to the platform layer merely because several games happen to use it.
+Container adapters may additionally expose operations such as:
+
+```text
+list_resources()
+extract_resource(id)
+replace_resource(id, bytes)
+rebuild()
+```
+
+No algorithm or archive layout should be assigned to the platform layer merely because several games happen to use it.
 
 ## 13. Extraction and rebuild symmetry
 
@@ -369,20 +423,21 @@ extract(original)
 
 An adapter should prove that it can round-trip unchanged data before Arabic modifications are trusted.
 
-Perfect byte identity may not be possible for every format, but semantic equivalence must be defined and tested.
+Perfect byte identity may not be possible for every format or disc build, but semantic equivalence must be defined and tested.
 
 ## 14. Validation levels
 
 ### Level 1 — Input
 
-- known hash
-- expected size
+- known platform
+- known hash(es)
+- expected size/container
 - valid platform metadata
 
 ### Level 2 — Extraction
 
-- tables in bounds
-- pointers resolve
+- tables/resources in bounds
+- pointers/references resolve
 - resources decode
 - no duplicate/overlapping ownership unless documented
 
@@ -395,18 +450,19 @@ Perfect byte identity may not be possible for every format, but semantic equival
 
 ### Level 4 — Rebuild
 
-- writes in bounds
+- writes/resources in bounds
 - relocations valid
-- pointers valid
+- references valid
 - compressed resources decode
+- container/filesystem remains valid
 - no accidental overwrite
 
 ### Level 5 — Runtime
 
-- emulator boot
-- target scene reachable
-- text visually verified
-- no regression in surrounding UI/logic
+- game boots in a suitable emulator
+- target scene is reachable
+- text is visually verified
+- surrounding UI/logic remains functional
 
 ## 15. Testing strategy
 
@@ -415,31 +471,37 @@ Tests should be split into:
 ```text
 tests/unit/
 tests/fixtures/
-tests/adapters/
+tests/platforms/
+tests/engines/
+tests/games/
 tests/integration/
 ```
 
-ROMs are not committed.
+Commercial game images are not committed.
 
 Small synthetic fixtures are preferred for unit tests.
 
-Tests involving user-supplied ROMs run locally or in an explicitly configured environment.
+Tests involving user-supplied game images run locally or in an explicitly configured environment.
+
+Platform-specific runtime tests may use different emulators or headless tooling.
 
 ## 16. Build outputs
 
-Generated output directory should be disposable and reproducible.
+Generated output directories should be disposable and reproducible.
 
 Possible outputs:
 
 ```text
 build/
   manifest.json
-  translated.rom        # local only, ignored
+  translated-game-image.*   # local only, ignored
   patch.*
   reports/
 ```
 
-Distributed project artifacts should favor patch formats rather than copyrighted original ROM content.
+Distributed project artifacts should favor patches rather than copyrighted original game content.
+
+The patch format may differ by platform and container type.
 
 ## 17. Error model
 
@@ -448,12 +510,14 @@ Errors must be explicit and actionable.
 Examples:
 
 ```text
-UNKNOWN_ROM_REVISION
-INVALID_POINTER
+UNKNOWN_PLATFORM
+UNKNOWN_GAME_REVISION
+INVALID_REFERENCE
 UNSUPPORTED_CONTROL_CODE
 MISSING_GLYPH
 TEXT_OVERFLOW
 RELOCATION_OVERFLOW
+CONTAINER_REBUILD_FAILED
 COMPRESSION_ROUNDTRIP_FAILED
 BUILD_VALIDATION_FAILED
 ```
@@ -467,18 +531,22 @@ Diagnostics should distinguish:
 - user-facing build status,
 - warnings,
 - adapter research/debug information,
-- binary trace details.
+- binary/resource trace details.
 
 Normal builds should remain readable.
 
 Verbose binary diagnostics should be opt-in.
 
-## 19. Initial GBA milestone
+## 19. First reference-game milestone
 
-The first GBA milestone is complete only when one reference game can pass the full pipeline:
+There is no mandatory first console.
+
+The first reference game should be selected because it gives us a useful, well-understood end-to-end implementation—not because its platform is privileged.
+
+The first reference milestone is complete when one verified game on any supported classic platform can pass the full pipeline:
 
 ```text
-identify
+identify platform + revision
 → extract
 → represent translation
 → Arabic-process
@@ -488,28 +556,29 @@ identify
 → generate patch
 ```
 
-The first supported game is a reference implementation, not the architecture itself.
+After that, support for additional games and platforms is added incrementally.
 
-Before adding a second game, code from the first implementation must be reviewed and moved into the correct Core / Platform / Engine / Game layer.
+Before adding each substantially different game/engine, reusable code from previous work must be reviewed and moved into the correct Core / Platform / Engine / Game layer.
 
 ## 20. Repository rules
 
-- No commercial ROM files.
+- No commercial ROM/disc images.
 - No unexplained magic offsets in core code.
 - Every supported revision must have explicit identity metadata.
-- Every adapter must document how its text system works.
-- Every binary transformation should have tests where practical.
+- Every adapter must document how its text/resource system works.
+- Every binary/resource transformation should have tests where practical.
 - Research notes that affect implementation belong in the repository.
 - Generated files do not become source-of-truth inputs.
 - Clean rebuilds must be possible from documented inputs.
+- A platform is not considered supported merely because its directory exists.
 
 ## 21. Foundation acceptance criteria
 
 The foundation phase is accepted when:
 
-- repository structure is agreed,
-- ROM identity schema is defined,
-- adapter contracts are defined,
+- multi-platform repository structure is agreed,
+- game-image identity schema is defined,
+- platform/engine/game adapter contracts are defined,
 - translation schema is defined,
 - Arabic pipeline behavior is defined,
 - validation/error model is defined,
