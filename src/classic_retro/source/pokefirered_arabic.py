@@ -27,7 +27,6 @@ _PINNED_BLOBS = {
 _OAK_INTRO_RIGHT_X = 216
 
 
-
 def check_pokefirered_arabic_source(source: Path) -> dict[str, object]:
     source = source.expanduser().resolve()
     texts = _read_pristine_source(source)
