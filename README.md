@@ -99,4 +99,11 @@ assets from the original ROM, CI checks and compiles the overlay while the BPS p
 built locally. See [the Minish Cap testing guide](docs/MINISH_CAP_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/TMC_ARABIC_RENDERER.md).
 
+The third reference target is **Final Fantasy VI Advance (USA)**, which has no
+decompilation: a binary ROM overlay adds Thumb hooks for right-to-left drawing, a 16px
+Arabic font and a rebuilt dialogue bank, and ships as a BPS patch built locally from your
+own ROM. The whole new-game opening (19 messages: the narration, the cliff above Narshe
+and the way to the mines) is in Arabic. See [the FF6 Advance testing guide](docs/FF6A_ARABIC_TEST_AR.md)
+and [the renderer notes](docs/FF6A_ARABIC_RENDERER.md).
+
 See [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md).

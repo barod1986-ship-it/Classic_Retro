@@ -16,8 +16,16 @@ from classic_retro.core.errors import ClassicRetroError
 from classic_retro.core.identity import fingerprint_file
 from classic_retro.engines.pokemon_gen3_arabic import PokemonGen3ArabicEncoder
 from classic_retro.media.resolve import resolve_media
+from classic_retro.rebuild.bps import apply_bps, create_bps
 from classic_retro.rebuild.model import load_rebuild_plan
 from classic_retro.rebuild.pipeline import verify_round_trip
+from classic_retro.rom.ff6a_arabic import (
+    build_ff6a_arabic_rom,
+    check_ff6a_translations,
+    check_hook_code,
+    encode_ff6a_arabic_line,
+    write_build_outputs,
+)
 from classic_retro.source.pokefirered_arabic import (
     check_pokefirered_arabic_source,
     prepare_pokefirered_arabic_source,
@@ -104,6 +112,24 @@ def _build_parser() -> argparse.ArgumentParser:
     verify_rebuild.add_argument("plan", type=Path)
     verify_rebuild.add_argument("image", type=Path)
     verify_rebuild.set_defaults(handler=_cmd_rebuild_verify)
+
+    bps_create = rebuild_commands.add_parser(
+        "bps-create",
+        help="Write a BPS patch from an original and a modified image, verified by re-applying",
+    )
+    bps_create.add_argument("source", type=Path)
+    bps_create.add_argument("target", type=Path)
+    bps_create.add_argument("patch", type=Path)
+    bps_create.set_defaults(handler=_cmd_rebuild_bps_create)
+
+    bps_apply = rebuild_commands.add_parser(
+        "bps-apply",
+        help="Apply a BPS patch; source, target and patch checksums are verified",
+    )
+    bps_apply.add_argument("patch", type=Path)
+    bps_apply.add_argument("source", type=Path)
+    bps_apply.add_argument("output", type=Path)
+    bps_apply.set_defaults(handler=_cmd_rebuild_bps_apply)
 
     transform = subcommands.add_parser(
         "transform",
@@ -199,6 +225,58 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     tmc_encode.set_defaults(handler=_cmd_tmc_encode_arabic)
 
+    ff6a = subcommands.add_parser(
+        "ff6a",
+        help="Final Fantasy VI Advance (USA) Arabic ROM overlay helpers",
+    )
+    ff6a_commands = ff6a.add_subparsers(dest="ff6a_command", required=True)
+
+    ff6a_check = ff6a_commands.add_parser(
+        "check-translations",
+        help="Validate the Arabic script without the ROM; with --font, measure every line",
+    )
+    ff6a_check.add_argument(
+        "--font",
+        type=Path,
+        help="Arabic TTF/OTF; also builds the font and measures every translated line",
+    )
+    ff6a_check.add_argument(
+        "--preview", type=Path, help="Write the generated Arabic glyph atlas as PNG"
+    )
+    ff6a_check.set_defaults(handler=_cmd_ff6a_check_translations)
+
+    ff6a_hooks = ff6a_commands.add_parser(
+        "check-hooks",
+        help="Re-assemble the Thumb hooks with arm-none-eabi binutils and compare the bytes",
+    )
+    ff6a_hooks.set_defaults(handler=_cmd_ff6a_check_hooks)
+
+    ff6a_build = ff6a_commands.add_parser(
+        "build-arabic",
+        help="Build the Arabic BPS patch (and optionally the patched image) from the USA ROM",
+    )
+    ff6a_build.add_argument("rom", type=Path)
+    ff6a_build.add_argument("--font", type=Path, required=True)
+    ff6a_build.add_argument("--out-dir", type=Path, required=True)
+    ff6a_build.add_argument(
+        "--write-rom",
+        metavar="NAME",
+        help="Also write the patched image into --out-dir under this name (local use only)",
+    )
+    ff6a_build.set_defaults(handler=_cmd_ff6a_build_arabic)
+
+    ff6a_encode = ff6a_commands.add_parser(
+        "encode-arabic",
+        help="Encode one logical Arabic line to FF6A codes in right-to-left paint order",
+    )
+    ff6a_encode.add_argument("text")
+    ff6a_encode.add_argument(
+        "--font",
+        type=Path,
+        help="Arabic TTF/OTF used to report the pixel width of the line",
+    )
+    ff6a_encode.set_defaults(handler=_cmd_ff6a_encode_arabic)
+
     adapters = subcommands.add_parser("adapters", help="List loaded adapter IDs")
     adapters.set_defaults(handler=_cmd_adapters)
 
@@ -272,6 +350,27 @@ def _cmd_rebuild_verify(args: argparse.Namespace) -> int:
         "round_trip": True,
     }
     print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_rebuild_bps_create(args: argparse.Namespace) -> int:
+    patch = create_bps(args.source.read_bytes(), args.target.read_bytes())
+    args.patch.write_bytes(patch.data)
+    payload = {
+        "patch_bytes": len(patch.data),
+        "source_bytes": patch.source_size,
+        "target_bytes": patch.target_size,
+        "source_crc32": f"{patch.source_crc32:08x}",
+        "target_crc32": f"{patch.target_crc32:08x}",
+    }
+    print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_rebuild_bps_apply(args: argparse.Namespace) -> int:
+    output = apply_bps(args.patch.read_bytes(), args.source.read_bytes())
+    args.output.write_bytes(output)
+    print(json.dumps({"output_bytes": len(output)}, indent=2, sort_keys=True))
     return 0
 
 
@@ -362,6 +461,35 @@ def _cmd_tmc_prepare_arabic_source(args: argparse.Namespace) -> int:
 
 def _cmd_tmc_encode_arabic(args: argparse.Namespace) -> int:
     result = encode_tmc_arabic_line(args.text, args.font)
+    print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_ff6a_check_translations(args: argparse.Namespace) -> int:
+    result = check_ff6a_translations(args.font, args.preview)
+    print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_ff6a_check_hooks(_: argparse.Namespace) -> int:
+    result = check_hook_code()
+    print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_ff6a_build_arabic(args: argparse.Namespace) -> int:
+    build = build_ff6a_arabic_rom(args.rom.read_bytes(), args.font)
+    written = write_build_outputs(build, args.out_dir, rom_name=args.write_rom)
+    report = {**build.report, "outputs": written}
+    (args.out_dir / "build-report.json").write_text(
+        json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_ff6a_encode_arabic(args: argparse.Namespace) -> int:
+    result = encode_ff6a_arabic_line(args.text, args.font)
     print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
     return 0
 
