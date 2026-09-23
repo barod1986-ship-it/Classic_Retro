@@ -61,3 +61,17 @@ jobs:
       - name: Verify Arabic source overlay against pinned upstream
         working-directory: toolkit
         run: classic-retro pokemon-gen3 source-check ../upstream
+
+      - name: Install FireRed modern build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev fonts-dejavu-core
+
+      - name: Apply Arabic renderer and generate test font atlas
+        working-directory: toolkit
+        run: |
+          classic-retro pokemon-gen3 prepare-arabic-source ../upstream --font /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf
+
+      - name: Build patched FireRed Rev 1 with modern compiler
+        working-directory: upstream
+        run: make -j2 firered_rev1_modern
