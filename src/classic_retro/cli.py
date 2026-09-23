@@ -19,6 +19,7 @@ from classic_retro.media.resolve import resolve_media
 from classic_retro.rebuild.bps import apply_bps, create_bps
 from classic_retro.rebuild.model import load_rebuild_plan
 from classic_retro.rebuild.pipeline import verify_round_trip
+from classic_retro.rom import golden_sun_arabic
 from classic_retro.rom.ff6a_arabic import (
     build_ff6a_arabic_rom,
     check_ff6a_translations,
@@ -277,6 +278,58 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     ff6a_encode.set_defaults(handler=_cmd_ff6a_encode_arabic)
 
+    golden_sun = subcommands.add_parser(
+        "golden-sun",
+        help="Golden Sun (USA, Europe) Arabic ROM overlay helpers",
+    )
+    golden_sun_commands = golden_sun.add_subparsers(dest="golden_sun_command", required=True)
+
+    golden_sun_check = golden_sun_commands.add_parser(
+        "check-translations",
+        help="Validate the Arabic script without the ROM; with --font, measure every line",
+    )
+    golden_sun_check.add_argument(
+        "--font",
+        type=Path,
+        help="Arabic TTF/OTF; also builds the font and measures every translated line",
+    )
+    golden_sun_check.add_argument(
+        "--preview", type=Path, help="Write the generated Arabic glyph atlas as PNG"
+    )
+    golden_sun_check.set_defaults(handler=_cmd_golden_sun_check_translations)
+
+    golden_sun_hooks = golden_sun_commands.add_parser(
+        "check-hooks",
+        help="Re-assemble the Thumb hooks with arm-none-eabi binutils and compare the bytes",
+    )
+    golden_sun_hooks.set_defaults(handler=_cmd_golden_sun_check_hooks)
+
+    golden_sun_build = golden_sun_commands.add_parser(
+        "build-arabic",
+        help="Build the Arabic BPS patch (and optionally the patched image) from the ROM",
+    )
+    golden_sun_build.add_argument("rom", type=Path)
+    golden_sun_build.add_argument("--font", type=Path, required=True)
+    golden_sun_build.add_argument("--out-dir", type=Path, required=True)
+    golden_sun_build.add_argument(
+        "--write-rom",
+        metavar="NAME",
+        help="Also write the patched image into --out-dir under this name (local use only)",
+    )
+    golden_sun_build.set_defaults(handler=_cmd_golden_sun_build_arabic)
+
+    golden_sun_encode = golden_sun_commands.add_parser(
+        "encode-arabic",
+        help="Encode one logical Arabic line to Golden Sun codes in right-to-left paint order",
+    )
+    golden_sun_encode.add_argument("text")
+    golden_sun_encode.add_argument(
+        "--font",
+        type=Path,
+        help="Arabic TTF/OTF used to report the pixel width of the line",
+    )
+    golden_sun_encode.set_defaults(handler=_cmd_golden_sun_encode_arabic)
+
     adapters = subcommands.add_parser("adapters", help="List loaded adapter IDs")
     adapters.set_defaults(handler=_cmd_adapters)
 
@@ -490,6 +543,35 @@ def _cmd_ff6a_build_arabic(args: argparse.Namespace) -> int:
 
 def _cmd_ff6a_encode_arabic(args: argparse.Namespace) -> int:
     result = encode_ff6a_arabic_line(args.text, args.font)
+    print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_golden_sun_check_translations(args: argparse.Namespace) -> int:
+    result = golden_sun_arabic.check_golden_sun_translations(args.font, args.preview)
+    print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_golden_sun_check_hooks(_: argparse.Namespace) -> int:
+    result = golden_sun_arabic.check_hook_code()
+    print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_golden_sun_build_arabic(args: argparse.Namespace) -> int:
+    build = golden_sun_arabic.build_golden_sun_arabic_rom(args.rom.read_bytes(), args.font)
+    written = golden_sun_arabic.write_build_outputs(build, args.out_dir, rom_name=args.write_rom)
+    report = {**build.report, "outputs": written}
+    (args.out_dir / "build-report.json").write_text(
+        json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_golden_sun_encode_arabic(args: argparse.Namespace) -> int:
+    result = golden_sun_arabic.encode_golden_sun_arabic_line(args.text, args.font)
     print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
     return 0
 
