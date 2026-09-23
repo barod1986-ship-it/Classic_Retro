@@ -37,24 +37,17 @@ def test_graphics_overlay_uses_full_width_font_container():
     assert "arabic_normal.hwlatfont" not in patched
 
 
-def test_oak_intro_overlay_replaces_only_first_speech_with_arabic_bytes():
-    original = """gOakSpeech_Text_WelcomeToTheWorld::
-    .string "Hello, there!\\n"
-    .string "Glad to meet you!\\p"
-    .string "Welcome to the world of POKéMON!\\p"
-    .string "My name is OAK.\\p"
-    .string "People affectionately refer to me\\n"
-    .string "as the POKéMON PROFESSOR.\\p$"
+def test_oak_intro_overlay_replaces_all_oak_speech_blocks():
+    labels = tuple(overlay._oak_speech_streams())
+    original = "\n\n".join(
+        f'{label}::\n    .string "placeholder$"' for label in labels
+    ) + "\n\n"
 
-gOakSpeech_Text_ThisWorld::
-    .string "This world…$"
-"""
     patched = overlay._patch_oak_intro(original)
 
-    assert "CLASSIC_RETRO_ARABIC_V1 — first OAK speech" in patched
-    assert "Hello, there!" not in patched
-    assert "gOakSpeech_Text_ThisWorld::" in patched
-    assert ".byte 0xFC, 0x19, 0xD8" in patched
+    assert patched.count("CLASSIC_RETRO_ARABIC_V1 — Arabic OAK speech") == len(labels)
+    assert patched.count(".byte 0xFC, 0x19, 0xD8") == len(labels)
+    assert '.string "placeholder$"' not in patched
 
 
 def test_oak_intro_bytes_preserve_newlines_pages_and_eos():
@@ -64,6 +57,83 @@ def test_oak_intro_bytes_preserve_newlines_pages_and_eos():
     assert data.count(0xFE) == 2
     assert data.count(0xFB) == 4
     assert data[-3:] == bytes.fromhex("fc1aff")
+
+
+def test_oak_dynamic_names_use_ltr_placeholder_control():
+    messages = {
+        label: overlay._oak_message_bytes(label)
+        for label in (
+            "gOakSpeech_Text_SoYourNameIsPlayer",
+            "gOakSpeech_Text_ConfirmRivalName",
+            "gOakSpeech_Text_RememberRivalsName",
+            "gOakSpeech_Text_LetsGo",
+        )
+    }
+
+    assert bytes.fromhex("fc1b01") in messages["gOakSpeech_Text_SoYourNameIsPlayer"]
+    assert bytes.fromhex("fc1b01") in messages["gOakSpeech_Text_LetsGo"]
+    assert bytes.fromhex("fc1b06") in messages["gOakSpeech_Text_ConfirmRivalName"]
+    assert bytes.fromhex("fc1b06") in messages["gOakSpeech_Text_RememberRivalsName"]
+    assert all(b"\xfd\x01" not in data and b"\xfd\x06" not in data for data in messages.values())
+
+
+def test_string_expander_handles_arabic_controls_and_reverses_ltr_placeholder():
+    original = """u8 *StringExpandPlaceholders(u8 *dest, const u8 *src)
+{
+    for (;;)
+    {
+        u8 c = *src++;
+        u8 placeholderId;
+        u8 *expandedString;
+
+        switch (c)
+        {
+            case PLACEHOLDER_BEGIN:
+                placeholderId = *src++;
+                expandedString = GetExpandedPlaceholder(placeholderId);
+                dest = StringExpandPlaceholders(dest, expandedString);
+                break;
+            case EXT_CTRL_CODE_BEGIN:
+                *dest++ = c;
+                c = *src++;
+                *dest++ = c;
+
+                switch (c)
+                {
+                    case 0x07:
+                    case 0x09:
+                    case 0x0F:
+                    case 0x15:
+                    case 0x16:
+                    case 0x17:
+                    case 0x18:
+                        break;
+                    case 0x04:
+                        *dest++ = *src++;
+                    case 0x0B:
+                        *dest++ = *src++;
+                    default:
+                        *dest++ = *src++;
+                }
+                break;
+            case EOS:
+                *dest = EOS;
+                return dest;
+            case 0xFA:
+            case 0xFB:
+            case 0xFE:
+            default:
+                *dest++ = c;
+        }
+    }
+}
+"""
+    patched = overlay._patch_string_util(original)
+
+    assert "StringCopyReversedMultibyteNoTerminator" in patched
+    assert "c == EXT_CTRL_CODE_LTR_PLACEHOLDER" in patched
+    assert "case EXT_CTRL_CODE_LTR:" in patched
+    assert "case EXT_CTRL_CODE_RTL:" in patched
 
 
 def test_charmap_overlay_rejects_upstream_f9_collision():
