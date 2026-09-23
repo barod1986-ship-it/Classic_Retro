@@ -49,7 +49,9 @@ def test_sector_view_exposes_only_2048_byte_payload(tmp_path):
     raw = tmp_path / "track.bin"
     first = b"A" * 2048
     second = b"B" * 2048
-    sector = lambda payload: bytes(24) + payload + bytes(280)
+    def sector(payload: bytes) -> bytes:
+        return bytes(24) + payload + bytes(280)
+
     raw.write_bytes(sector(first) + sector(second))
 
     with SectorView(raw, "MODE2/2352") as view:
