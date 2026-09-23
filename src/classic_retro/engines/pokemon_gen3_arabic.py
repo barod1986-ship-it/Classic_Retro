@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, features
 
 from classic_retro.arabic.pipeline import ArabicPipeline, ArabicPipelineConfig
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
@@ -231,15 +231,16 @@ def build_arabic_font_atlas(
     baseline = -top
 
     for index, character in enumerate(glyph_map.characters):
+        glyph_text = _font_glyph_text(character)
         cell = Image.new("L", (16, 16), 0)
         draw = ImageDraw.Draw(cell)
-        left, _, right, _ = font.getbbox(character, anchor="ls")
+        left, _, right, _ = font.getbbox(glyph_text, anchor="ls")
 
         # FireRed's CopyGlyphToWindow always starts reading at glyph x=0.
         # Centering variable-width glyphs here would make the engine crop them
         # to the first 'advance' columns. Align the ink box to x=0 instead.
         x = -left
-        draw.text((x, baseline), character, font=font, fill=255, anchor="ls")
+        draw.text((x, baseline), glyph_text, font=font, fill=255, anchor="ls")
 
         pixels = cell.load()
         foreground = [
@@ -252,7 +253,7 @@ def build_arabic_font_atlas(
                 f"Selected font produced an empty glyph for U+{ord(character):04X}",
             )
 
-        copy_width = _glyph_copy_width(font, character, left, right)
+        copy_width = _glyph_copy_width(font, glyph_text, left, right)
         ink_right = max(x_pos for x_pos, _ in foreground)
         copy_width = max(copy_width, ink_right + 1)
         if copy_width > 16:
@@ -338,12 +339,20 @@ def _choose_font(
     font_path: Path,
     characters: tuple[str, ...],
 ) -> tuple[ImageFont.FreeTypeFont, int, int, int]:
+    if not features.check_feature("raqm"):
+        raise ClassicRetroError(
+            ErrorCode.FONT_BUILD_FAILED,
+            "Arabic font generation requires a Pillow build with libraqm/HarfBuzz support",
+        )
+    glyph_texts = tuple(_font_glyph_text(character) for character in characters)
     for size in range(20, 5, -1):
-        font = ImageFont.truetype(str(font_path), size=size)
-        boxes = [font.getbbox(character, anchor="ls") for character in characters]
+        font = ImageFont.truetype(str(font_path), size=size, layout_engine=ImageFont.Layout.RAQM)
+        if size == 20:
+            _validate_font_coverage(font, characters)
+        boxes = [font.getbbox(text, anchor="ls") for text in glyph_texts]
         copy_widths = [
-            _glyph_copy_width(font, character, box[0], box[2])
-            for character, box in zip(characters, boxes, strict=True)
+            _glyph_copy_width(font, text, box[0], box[2])
+            for text, box in zip(glyph_texts, boxes, strict=True)
         ]
         top = min(box[1] for box in boxes)
         bottom = max(box[3] for box in boxes)
@@ -356,6 +365,37 @@ def _choose_font(
         ErrorCode.FONT_BUILD_FAILED,
         "Selected font cannot fit the FireRed 16x14 copied glyph area",
     )
+
+
+def _font_glyph_text(character: str) -> str:
+    """Ask OpenType for a contextual form without requiring presentation-form cmap entries."""
+    decomposition = unicodedata.decomposition(character).split()
+    if len(decomposition) == 2 and decomposition[0] in {
+        "<isolated>",
+        "<initial>",
+        "<medial>",
+        "<final>",
+    }:
+        form, codepoint = decomposition
+        before = "\u200d" if form in {"<medial>", "<final>"} else ""
+        after = "\u200d" if form in {"<medial>", "<initial>"} else ""
+        return before + chr(int(codepoint, 16)) + after
+    return character
+
+
+def _validate_font_coverage(font: ImageFont.FreeTypeFont, characters: tuple[str, ...]) -> None:
+    # FreeType returns a nonempty .notdef rectangle for missing characters.
+    # Nonempty ink alone therefore does not establish Arabic support.
+    missing = font.getmask("\U0010ffff")
+    missing_signature = (missing.size, bytes(missing))
+    bases = {text.strip("\u200d") for text in map(_font_glyph_text, characters)}
+    for text in sorted(bases):
+        mask = font.getmask(text)
+        if (mask.size, bytes(mask)) == missing_signature:
+            raise ClassicRetroError(
+                ErrorCode.FONT_BUILD_FAILED,
+                f"Selected font has no Arabic glyph for U+{ord(text):04X}",
+            )
 
 
 def _reject_combining_marks(stream: TokenStream) -> None:

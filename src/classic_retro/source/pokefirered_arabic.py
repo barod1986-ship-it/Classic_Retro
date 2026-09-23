@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import re
+import tempfile
 from pathlib import Path
 
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
@@ -15,6 +17,8 @@ from classic_retro.text.tokens import InlineToken, TextToken, TokenKind, TokenMo
 
 PINNED_COMMIT = "c75f352304d529f6ba92d4f74b9cf8b5c3810788"
 _PATCH_MARKER = "CLASSIC_RETRO_ARABIC_V1"
+_OVERLAY_VERSION = 2
+_STATE_FILE = ".classic-retro-arabic.json"
 
 _PINNED_BLOBS = {
     "include/characters.h": "d00ecf0a3afcd9fc1fa9534c00f4b74793d5f06f",
@@ -62,16 +66,33 @@ def prepare_pokefirered_arabic_source(source: Path, font_path: Path) -> dict[str
 
     if already_patched:
         _validate_patched_tree(source)
+        patched = {}
     else:
         texts = _read_pristine_source(source)
         patched = _patch_all(texts)
-        for relative, content in patched.items():
-            path = source / relative
-            path.write_text(content, encoding="utf-8", newline="\n")
 
     atlas = source / "graphics/fonts/arabic_normal.png"
     widths = source / "graphics/fonts/arabic_normal_widths.bin"
-    font_result = build_arabic_font_atlas(font_path, atlas, widths)
+    # Complete font generation before changing even one upstream source file.
+    # A missing/unsupported font must leave both pristine and patched trees intact.
+    with tempfile.TemporaryDirectory(prefix="classic-retro-", dir=source.parent) as temp:
+        staged_atlas = Path(temp) / atlas.name
+        staged_widths = Path(temp) / widths.name
+        font_result = build_arabic_font_atlas(font_path, staged_atlas, staged_widths)
+        for relative, content in patched.items():
+            (source / relative).write_text(content, encoding="utf-8", newline="\n")
+        atlas.parent.mkdir(parents=True, exist_ok=True)
+        atlas.write_bytes(staged_atlas.read_bytes())
+        widths.write_bytes(staged_widths.read_bytes())
+
+    state = {
+        "overlay_version": _OVERLAY_VERSION,
+        "upstream_commit": PINNED_COMMIT,
+        "source_blobs": {
+            relative: _git_blob_sha((source / relative).read_bytes()) for relative in _PINNED_BLOBS
+        },
+    }
+    (source / _STATE_FILE).write_text(json.dumps(state, indent=2) + "\n", encoding="utf-8")
 
     glyph_map = build_arabic_glyph_map()
     return {
@@ -80,6 +101,7 @@ def prepare_pokefirered_arabic_source(source: Path, font_path: Path) -> dict[str
         "already_patched": already_patched,
         "arabic_glyphs": len(glyph_map.characters),
         "font_size": font_result.font_size,
+        "font_sha256": hashlib.sha256(font_path.expanduser().read_bytes()).hexdigest(),
         "font_rows": font_result.rows,
         "max_advance": font_result.max_advance,
         "font_png": str(atlas),
@@ -131,26 +153,33 @@ def _read_pristine_source(source: Path) -> dict[str, str]:
 
 
 def _validate_patched_tree(source: Path) -> None:
-    required = (
-        "include/characters.h",
-        "include/text.h",
-        "src/text_printer.c",
-        "src/text.c",
-        "src/string_util.c",
-        "charmap.txt",
-        "graphics_file_rules.mk",
-        "data/text/new_game_intro.inc",
-    )
+    try:
+        state = json.loads((source / _STATE_FILE).read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise ClassicRetroError(
+            ErrorCode.SOURCE_BASELINE_MISMATCH,
+            "Untracked Arabic overlay; prepare a fresh checkout of " + PINNED_COMMIT,
+        ) from exc
+    if (
+        not isinstance(state, dict)
+        or state.get("overlay_version") != _OVERLAY_VERSION
+        or state.get("upstream_commit") != PINNED_COMMIT
+        or not isinstance(state.get("source_blobs"), dict)
+    ):
+        raise ClassicRetroError(
+            ErrorCode.SOURCE_BASELINE_MISMATCH,
+            "Outdated Arabic overlay; prepare a fresh checkout of " + PINNED_COMMIT,
+        )
     missing = [
         relative
-        for relative in required
+        for relative in _PINNED_BLOBS
         if not (source / relative).is_file()
-        or _PATCH_MARKER not in (source / relative).read_text(encoding="utf-8")
+        or _git_blob_sha((source / relative).read_bytes()) != state["source_blobs"].get(relative)
     ]
     if missing:
         raise ClassicRetroError(
             ErrorCode.SOURCE_BASELINE_MISMATCH,
-            "Partially patched pokefirered source: " + ", ".join(missing),
+            "Modified or partially patched pokefirered source: " + ", ".join(missing),
         )
 
 
@@ -421,17 +450,20 @@ def _patch_string_util(text: str) -> str:
 
     while (end > src)
     {
-        if (end - src >= 2
-         && (*(end - 2) == CHAR_EXTRA_SYMBOL || *(end - 2) == CHAR_KEYPAD_ICON))
+        const u8 *cursor = src;
+        const u8 *last = src;
+
+        // Scan actual glyph boundaries. A symbol's second byte may itself be
+        // F8/F9, so looking backwards for a prefix can split a valid glyph.
+        while (cursor < end)
         {
-            *dest++ = *(end - 2);
-            *dest++ = *(end - 1);
-            end -= 2;
+            last = cursor;
+            cursor += (*cursor == CHAR_EXTRA_SYMBOL || *cursor == CHAR_KEYPAD_ICON) ? 2 : 1;
         }
-        else
-        {
-            *dest++ = *--end;
-        }
+        cursor = last;
+        while (cursor < end)
+            *dest++ = *cursor++;
+        end = last;
     }
 
     return dest;
@@ -572,7 +604,25 @@ def _patch_graphics_rules(text: str) -> str:
     return _replace_once(text, anchor, replacement, "Arabic font graphics rule")
 
 
+def _patch_line_origins(text: str) -> str:
+    # Match the three pristine resets (newline, clear, scroll) before adding
+    # the LTR control, which has its own intentionally left-aligned reset.
+    reset = "textPrinter->printerTemplate.currentX = textPrinter->printerTemplate.x;"
+    if text.count(reset) != 3:
+        raise ClassicRetroError(
+            ErrorCode.SOURCE_PATCH_FAILED,
+            "Expected exactly three pristine newline/clear/scroll origin resets",
+        )
+    return text.replace(
+        reset,
+        "textPrinter->printerTemplate.currentX = textPrinter->rtl\n"
+        "                ? textPrinter->rtlX\n"
+        "                : textPrinter->printerTemplate.x;",
+    )
+
+
 def _patch_text_c(text: str, glyph_count: int) -> str:
+    text = _patch_line_origins(text)
     prototype_anchor = "static s32 GetGlyphWidth_Female(u16 glyphId, bool32 isJapanese);\n"
     text = _replace_once(
         text,
@@ -637,21 +687,6 @@ static s32 GetGlyphWidth_Arabic(u16 glyphId)
         normal_anchor,
         arabic_functions + normal_anchor,
         "Arabic glyph functions",
-    )
-
-    text = _replace_once(
-        text,
-        (
-            "        case CHAR_NEWLINE:\n"
-            "            textPrinter->printerTemplate.currentX = textPrinter->printerTemplate.x;\n"
-        ),
-        (
-            "        case CHAR_NEWLINE:\n"
-            "            textPrinter->printerTemplate.currentX = textPrinter->rtl\n"
-            "                ? textPrinter->rtlX\n"
-            "                : textPrinter->printerTemplate.x;\n"
-        ),
-        "RTL newline origin",
     )
 
     text = _replace_once(
@@ -817,24 +852,6 @@ static s32 GetGlyphWidth_Arabic(u16 glyphId)
         }
 """
     text = _replace_once(text, old_render, new_render, "RTL glyph drawing")
-
-    clear_scroll_anchor = (
-        "            textPrinter->printerTemplate.currentX = textPrinter->printerTemplate.x;\n"
-    )
-    if text.count(clear_scroll_anchor) < 2:
-        raise ClassicRetroError(
-            ErrorCode.SOURCE_PATCH_FAILED,
-            "Expected clear/scroll currentX anchors after newline patch",
-        )
-    text = text.replace(
-        clear_scroll_anchor,
-        (
-            "            textPrinter->printerTemplate.currentX = textPrinter->rtl\n"
-            "                ? textPrinter->rtlX\n"
-            "                : textPrinter->printerTemplate.x;\n"
-        ),
-        2,
-    )
 
     text = _replace_once(
         text,

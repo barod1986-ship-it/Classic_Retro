@@ -110,7 +110,10 @@ jobs:
         run: |
           ARABIC_FONT="$(fc-match -f '%{file}' 'Noto Kufi Arabic:style=SemiBold')"
           test -f "$ARABIC_FONT"
-          classic-retro pokemon-gen3 prepare-arabic-source ../upstream-target --font "$ARABIC_FONT"
+          mkdir -p ../artifact
+          classic-retro pokemon-gen3 prepare-arabic-source ../upstream-target --font "$ARABIC_FONT" | tee ../artifact/build-report.json
+          cp ../upstream-target/graphics/fonts/arabic_normal.png ../artifact/arabic_normal.png
+          fc-scan --format '%{family}\n%{style}\n' "$ARABIC_FONT" > ../artifact/font-info.txt
 
       - name: Build Arabic FireRed Rev 1 with matching compiler
         working-directory: upstream-target
@@ -151,9 +154,9 @@ jobs:
             "dynamic_ltr_placeholders": ["PLAYER", "RIVAL"],
             "dynamic_ltr_control": "FC 1B pp",
             "rtl_right_x": 216,
-            "arabic_font": "Noto Kufi Arabic SemiBold",
+            "arabic_font_request": "Noto Kufi Arabic SemiBold (resolved identity in font-info.txt)",
             "font_license": "SIL Open Font License 1.1",
-            "font_layout": "left-aligned variable advance; 16x14 FireRed copy bounds",
+            "font_layout": "OpenType contextual forms; 16x14 FireRed copy bounds",
             "pokefirered_commit": "c75f352304d529f6ba92d4f74b9cf8b5c3810788",
             "agbcc_commit": "da598c1d918402c42c0c0d7128ba14567f3175e9",
             "flips_commit": "6caac470f7fc096b0c5fdc374b65954f8bac5b16"
@@ -167,5 +170,8 @@ jobs:
           path: |
             artifact/firered-rev1-arabic-oak-full.bps
             artifact/manifest.json
+            artifact/build-report.json
+            artifact/arabic_normal.png
+            artifact/font-info.txt
           if-no-files-found: error
           retention-days: 14

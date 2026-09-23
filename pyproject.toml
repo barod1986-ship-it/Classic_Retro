@@ -19,6 +19,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+  "fonttools>=4.55,<5",
   "pytest>=8.3,<10",
   "ruff>=0.14,<1",
 ]

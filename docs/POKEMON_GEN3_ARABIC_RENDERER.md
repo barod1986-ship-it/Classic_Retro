@@ -53,6 +53,8 @@ The prepare-arabic-source command accepts a user-supplied Arabic-capable TTF or 
 The compiler:
 
 - chooses the largest size that fits FireRed's actual 16x14 copied glyph region,
+- rasterizes logical letters plus joining context through Pillow's libraqm/HarfBuzz,
+- rejects fonts that substitute missing-letter rectangles,
 - uses one baseline across contextual forms,
 - left-aligns every glyph at x=0 because CopyGlyphToWindow copies only columns 0..glyphWidth,
 - derives glyph width from the font's real advance instead of the centered ink span,
@@ -112,11 +114,38 @@ correctly inside Arabic dialogue.
 The CI reference build uses **Noto Kufi Arabic SemiBold** from the Noto Arabic
 family. Noto Arabic is licensed under the SIL Open Font License 1.1.
 
-Kufi was selected for the reference ROM because its heavier, compact forms remain
-readable at the approximately 13px size available to FireRed while fitting the
-engine's 16px-wide glyph cell without shrinking the entire Arabic set to the
-10px size previously required by DejaVu Sans.
+The actual font size is measured from the contextual outlines; it is not assumed
+from the font family name. The build report records the resulting size and the
+resolved font identity so that visual results can be reproduced and compared.
 
 The toolkit still accepts another Arabic-capable TTF/OTF through `--font`.
 The glyph-bound validator rejects a font/rasterization combination if any visible
 pixel would be outside the width or height that FireRed actually copies.
+
+### OpenType font correction
+
+The earlier atlas generator requested Unicode Presentation Forms directly from
+the font. Noto Kufi Arabic has logical-letter mappings and OpenType substitutions,
+but can lack those Presentation Forms mappings. It therefore returned nonempty
+missing-glyph rectangles, which passed the old ink-bounds tests. The earlier claim
+of a readable 13px reference font was based on those rectangles and was incorrect.
+
+The generator now converts each presentation form to its logical letter with
+zero-width joining context and lets HarfBuzz select the contextual outline.
+Presentation forms remain the game's slot identifiers. Actual font size is chosen
+from these real outlines and recorded, with the font SHA-256, in `build-report.json`.
+The artifact also includes the atlas and the resolved font family/style for review.
+Pillow must include libraqm; a build without it fails explicitly.
+
+### Source preparation and renderer regressions
+
+Font generation completes before any upstream source edit. A successful preparation
+records the overlay version and touched-source hashes in `.classic-retro-arabic.json`.
+Reusing a modified or old/untracked overlay is rejected; start with a fresh checkout
+of the pinned commit to upgrade. A valid existing overlay can regenerate its font.
+
+Newline, page-clear, and scroll all restore the RTL right edge. The separate LTR
+control restores the left edge. Dynamic names are reversed along forward-parsed
+glyph boundaries, including extra-symbol arguments that equal F8/F9/FF.
+Regression tests execute these C helpers and build a synthetic OpenType font that
+has contextual substitutions without Presentation Forms mappings.
