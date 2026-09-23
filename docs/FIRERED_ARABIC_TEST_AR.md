@@ -57,7 +57,8 @@ classic-retro pokemon-gen3 prepare-arabic-source /path/to/pokefirered --font /pa
 make -C /path/to/pokefirered -j2 firered_rev1
 ```
 
-يلزم Pillow مع دعم libraqm/HarfBuzz. إذا سبق تجهيز المصدر بإصدار قديم، استخدم
+تُثبّت تبعيات HarfBuzz والخط تلقائيًا مع المشروع، ولا يلزم مكوّن libraqm الاختياري.
+إذا سبق تجهيز المصدر بإصدار قديم، استخدم
 نسخة نظيفة من commit المحدد؛ وجود علامة التعريب وحدها لا يثبت توافق المصدر.
 
 الحدود الحالية: لا حركات عربية، ولا إدخال أسماء عربية، ونمط خط عربي واحد.

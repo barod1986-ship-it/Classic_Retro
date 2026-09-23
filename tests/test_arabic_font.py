@@ -4,7 +4,7 @@ import pytest
 from fontTools.feaLib.builder import addOpenTypeFeaturesFromString
 from fontTools.fontBuilder import FontBuilder
 from fontTools.pens.ttGlyphPen import TTGlyphPen
-from PIL import Image
+from PIL import Image, features
 
 from classic_retro.core.errors import ClassicRetroError
 from classic_retro.engines import pokemon_gen3_arabic as arabic
@@ -46,8 +46,9 @@ def contextual_font(tmp_path):
 
 
 def test_opentype_font_without_presentation_cmap_renders_four_distinct_forms(
-    contextual_font, tmp_path
+    contextual_font, tmp_path, monkeypatch
 ):
+    monkeypatch.setattr(features, "check_feature", lambda feature: False)
     characters = ("\ufe8f", "\ufe90", "\ufe91", "\ufe92")
     glyphs = arabic.ArabicGlyphMap(
         characters, dict(zip(characters, range(0x40, 0x44), strict=True))
@@ -63,6 +64,11 @@ def test_opentype_font_without_presentation_cmap_renders_four_distinct_forms(
     assert result.glyphs == 4
     for character, cell, width in zip(characters, cells, widths_path.read_bytes(), strict=True):
         arabic._validate_fire_red_glyph_bounds(cell, width, character)
+        ink = [(x, y) for y in range(16) for x in range(16) if cell.getpixel((x, y)) == 1]
+        if character in ("\ufe91", "\ufe92"):
+            assert min(x for x, _ in ink) == 0
+        if character in ("\ufe90", "\ufe92"):
+            assert max(x for x, _ in ink) == width - 1
 
 
 def test_font_missing_arabic_letters_is_rejected_before_writing(contextual_font, tmp_path):
@@ -72,9 +78,15 @@ def test_font_missing_arabic_letters_is_rejected_before_writing(contextual_font,
     assert not atlas.exists()
 
 
-def test_font_build_requires_opentype_shaping(contextual_font, tmp_path, monkeypatch):
-    monkeypatch.setattr(arabic.features, "check_feature", lambda feature: False)
-    with pytest.raises(ClassicRetroError, match="libraqm"):
-        arabic.build_arabic_font_atlas(
-            contextual_font, tmp_path / "font.png", tmp_path / "widths.bin"
-        )
+def test_context_font_does_not_modify_original_file(contextual_font):
+    before = contextual_font.read_bytes()
+    data = arabic._contextual_font_data(contextual_font, ("\ufe91",))
+    assert data != before
+    assert contextual_font.read_bytes() == before
+
+
+def test_invalid_font_has_an_actionable_error(tmp_path):
+    path = tmp_path / "invalid.ttf"
+    path.write_bytes(b"not a font")
+    with pytest.raises(ClassicRetroError, match="Invalid TTF/OTF"):
+        arabic.build_arabic_font_atlas(path, tmp_path / "font.png", tmp_path / "widths.bin")

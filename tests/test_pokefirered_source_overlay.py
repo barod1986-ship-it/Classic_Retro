@@ -218,7 +218,7 @@ def test_runtime_placeholder_reversal_preserves_glyph_units(native_helpers, sour
 def source_tree(tmp_path, monkeypatch):
     source = tmp_path / "upstream"
     (source / "src").mkdir(parents=True)
-    (source / "src/text.c").write_text("pristine\n", encoding="utf-8")
+    (source / "src/text.c").write_bytes(b"pristine\n")
     monkeypatch.setattr(
         overlay, "_PINNED_BLOBS", {"src/text.c": overlay._git_blob_sha(b"pristine\n")}
     )

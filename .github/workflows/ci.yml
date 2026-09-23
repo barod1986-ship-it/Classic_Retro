@@ -78,7 +78,7 @@ jobs:
       - name: Install build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential binutils-arm-none-eabi libpng-dev fontconfig fonts-noto-core
+          sudo apt-get install -y build-essential binutils-arm-none-eabi libpng-dev fontconfig
 
       - name: Install toolkit
         working-directory: toolkit
@@ -108,9 +108,12 @@ jobs:
       - name: Apply Arabic renderer, readable Kufi font, and full OAK speech translation
         working-directory: toolkit
         run: |
-          ARABIC_FONT="$(fc-match -f '%{file}' 'Noto Kufi Arabic:style=SemiBold')"
-          test -f "$ARABIC_FONT"
           mkdir -p ../artifact
+          NOTO_COMMIT=ffebf8c1ee449e544955a7e813c54f9b73848eac
+          ARABIC_FONT=../reference-font.ttf
+          curl --fail --location "https://raw.githubusercontent.com/notofonts/noto-fonts/$NOTO_COMMIT/hinted/ttf/NotoKufiArabic/NotoKufiArabic-SemiBold.ttf" -o "$ARABIC_FONT"
+          echo "aa30cd2663f1eb1c940c9cd6a898877f307c2572e72a8a352896fe23f512018e  $ARABIC_FONT" | sha256sum -c -
+          curl --fail --location "https://raw.githubusercontent.com/notofonts/noto-fonts/$NOTO_COMMIT/LICENSE" -o ../artifact/FONT-LICENSE.txt
           classic-retro pokemon-gen3 prepare-arabic-source ../upstream-target --font "$ARABIC_FONT" | tee ../artifact/build-report.json
           cp ../upstream-target/graphics/fonts/arabic_normal.png ../artifact/arabic_normal.png
           fc-scan --format '%{family}\n%{style}\n' "$ARABIC_FONT" > ../artifact/font-info.txt
@@ -154,7 +157,9 @@ jobs:
             "dynamic_ltr_placeholders": ["PLAYER", "RIVAL"],
             "dynamic_ltr_control": "FC 1B pp",
             "rtl_right_x": 216,
-            "arabic_font_request": "Noto Kufi Arabic SemiBold (resolved identity in font-info.txt)",
+            "arabic_font": "Noto Kufi Arabic SemiBold",
+            "font_sha256": "aa30cd2663f1eb1c940c9cd6a898877f307c2572e72a8a352896fe23f512018e",
+            "noto_fonts_commit": "ffebf8c1ee449e544955a7e813c54f9b73848eac",
             "font_license": "SIL Open Font License 1.1",
             "font_layout": "OpenType contextual forms; 16x14 FireRed copy bounds",
             "pokefirered_commit": "c75f352304d529f6ba92d4f74b9cf8b5c3810788",
@@ -173,5 +178,6 @@ jobs:
             artifact/build-report.json
             artifact/arabic_normal.png
             artifact/font-info.txt
+            artifact/FONT-LICENSE.txt
           if-no-files-found: error
           retention-days: 14

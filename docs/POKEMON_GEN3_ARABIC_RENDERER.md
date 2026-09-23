@@ -53,7 +53,7 @@ The prepare-arabic-source command accepts a user-supplied Arabic-capable TTF or 
 The compiler:
 
 - chooses the largest size that fits FireRed's actual 16x14 copied glyph region,
-- rasterizes logical letters plus joining context through Pillow's libraqm/HarfBuzz,
+- rasterizes logical letters plus joining context through HarfBuzz and FreeType,
 - rejects fonts that substitute missing-letter rectangles,
 - uses one baseline across contextual forms,
 - left-aligns every glyph at x=0 because CopyGlyphToWindow copies only columns 0..glyphWidth,
@@ -131,11 +131,18 @@ missing-glyph rectangles, which passed the old ink-bounds tests. The earlier cla
 of a readable 13px reference font was based on those rectangles and was incorrect.
 
 The generator now converts each presentation form to its logical letter with
-zero-width joining context and lets HarfBuzz select the contextual outline.
+zero-width joining context and lets HarfBuzz select the contextual outline. An in-memory cmap maps the game
+slot identifiers to those glyphs; Pillow then rasterizes them without a second
+shaping pass. The original font file is never modified.
 Presentation forms remain the game's slot identifiers. Actual font size is chosen
 from these real outlines and recorded, with the font SHA-256, in `build-report.json`.
 The artifact also includes the atlas and the resolved font family/style for review.
-Pillow must include libraqm; a build without it fails explicitly.
+The `uharfbuzz` and `fonttools` dependencies make this work on Windows as well
+as Linux without requiring Pillow's optional libraqm component. Fonts requiring
+multi-glyph/offset placement for one contextual character are rejected in v1.
+Joining forms trim blank edge pixels so neighbouring glyph cells touch.
+The reference font file is pinned by commit and SHA-256; fontconfig no longer
+substitutes Regular for the requested SemiBold weight.
 
 ### Source preparation and renderer regressions
 
