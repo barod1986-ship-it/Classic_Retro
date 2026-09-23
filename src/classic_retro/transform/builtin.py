@@ -78,6 +78,7 @@ def build_identity(options: Mapping[str, Any]) -> ResourceTransform:
 
 
 def build_zlib(options: Mapping[str, Any]) -> ResourceTransform:
+    _reject_unknown_options(options, {"wbits", "level", "max_output_bytes"})
     wbits = _integer_option(options, "wbits", 15)
     if not 9 <= wbits <= 15:
         raise ClassicRetroError(
@@ -93,6 +94,7 @@ def build_zlib(options: Mapping[str, Any]) -> ResourceTransform:
 
 
 def build_raw_deflate(options: Mapping[str, Any]) -> ResourceTransform:
+    _reject_unknown_options(options, {"window_bits", "level", "max_output_bytes"})
     window_bits = _integer_option(options, "window_bits", 15)
     if not 9 <= window_bits <= 15:
         raise ClassicRetroError(
