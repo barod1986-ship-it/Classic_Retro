@@ -243,10 +243,7 @@ def build_arabic_font_atlas(
 
         pixels = cell.load()
         foreground = [
-            (x_pos, y)
-            for y in range(14)
-            for x_pos in range(16)
-            if pixels[x_pos, y] >= 96
+            (x_pos, y) for y in range(14) for x_pos in range(16) if pixels[x_pos, y] >= 96
         ]
 
         if not foreground:
