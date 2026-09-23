@@ -18,12 +18,12 @@ from classic_retro.engines.pokemon_gen3_arabic import PokemonGen3ArabicEncoder
 from classic_retro.media.resolve import resolve_media
 from classic_retro.rebuild.model import load_rebuild_plan
 from classic_retro.rebuild.pipeline import verify_round_trip
-from classic_retro.text.document import load_translation_file
-from classic_retro.transform.profile import build_pipeline, load_transform_profile
 from classic_retro.source.pokefirered_arabic import (
     check_pokefirered_arabic_source,
     prepare_pokefirered_arabic_source,
 )
+from classic_retro.text.document import load_translation_file
+from classic_retro.transform.profile import build_pipeline, load_transform_profile
 from classic_retro.transform.registry import build_transform_registry
 
 
