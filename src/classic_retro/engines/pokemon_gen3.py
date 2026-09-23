@@ -246,10 +246,7 @@ class PokemonGen3TextCodec(GameTextCodec):
                 if spec is None:
                     raise ClassicRetroError(
                         ErrorCode.UNSUPPORTED_CONTROL_CODE,
-                        (
-                            "Unknown Pokémon Gen III extended control "
-                            f"0x{code:02X} at 0x{offset:X}"
-                        ),
+                        (f"Unknown Pokémon Gen III extended control 0x{code:02X} at 0x{offset:X}"),
                     )
                 name, argc = spec
                 size = 2 + argc
