@@ -16,24 +16,15 @@ def test_cli_rebuild_verify(tmp_path, capsys):
     plan = {
         "schema_version": "1.0",
         "id": "fixture",
-        "resources": [
-            {
-                "id": "text",
-                "start": 8,
-                "size": 4
-            }
-        ],
+        "resources": [{"id": "text", "start": 8, "size": 4}],
         "references": [
             {
                 "id": "text_ptr",
                 "offset": 0,
                 "target_resource_id": "text",
-                "integer": {
-                    "size_bytes": 2,
-                    "byte_order": "little"
-                }
+                "integer": {"size_bytes": 2, "byte_order": "little"},
             }
-        ]
+        ],
     }
     plan_path = tmp_path / "plan.json"
     plan_path.write_text(json.dumps(plan), encoding="utf-8")
