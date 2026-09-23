@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from pathlib import Path
 from types import MappingProxyType
-from typing import Mapping
+from collections.abc import Mapping
 
 from classic_retro.core.identity import FileFingerprint
 
@@ -44,7 +44,7 @@ class ProbeResult:
         object.__setattr__(self, "metadata", MappingProxyType(dict(self.metadata)))
 
     @classmethod
-    def no_match(cls) -> "ProbeResult":
+    def no_match(cls) -> ProbeResult:
         return cls(0.0)
 
 
