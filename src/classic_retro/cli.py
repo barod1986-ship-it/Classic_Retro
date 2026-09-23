@@ -7,6 +7,8 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from classic_retro import __version__
+from classic_retro.adapters.discovery import detect_file
+from classic_retro.adapters.registry import build_registry
 from classic_retro.core.errors import ClassicRetroError
 from classic_retro.core.identity import fingerprint_file
 
@@ -28,6 +30,16 @@ def _build_parser() -> argparse.ArgumentParser:
     fingerprint.add_argument("path", type=Path)
     fingerprint.set_defaults(handler=_cmd_fingerprint)
 
+    detect = subcommands.add_parser(
+        "detect",
+        help="Detect a platform from file content and match exact supported game revisions",
+    )
+    detect.add_argument("path", type=Path)
+    detect.set_defaults(handler=_cmd_detect)
+
+    adapters = subcommands.add_parser("adapters", help="List loaded adapter IDs")
+    adapters.set_defaults(handler=_cmd_adapters)
+
     return parser
 
 
@@ -42,14 +54,33 @@ def _cmd_fingerprint(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_detect(args: argparse.Namespace) -> int:
+    registry = build_registry()
+    result = detect_file(args.path, registry)
+    print(json.dumps(result.to_dict(), ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_adapters(_: argparse.Namespace) -> int:
+    registry = build_registry()
+    payload = {
+        "platforms": sorted(registry.platforms),
+        "engines": sorted(registry.engines),
+        "games": sorted(registry.games),
+    }
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    return 0
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
 
     try:
         return int(args.handler(args))
-    except ClassicRetroError as exc:
-        print(f"{exc.code.value}: {exc}", file=sys.stderr)
+    except (ClassicRetroError, OSError) as exc:
+        code = exc.code.value if isinstance(exc, ClassicRetroError) else "INPUT_IO_ERROR"
+        print(f"{code}: {exc}", file=sys.stderr)
         return 2
 
 
