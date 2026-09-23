@@ -87,9 +87,7 @@ def build_arabic_glyph_map() -> ArabicGlyphMap:
             f"Arabic glyph set needs {len(ordered)} slots; only {capacity} are available",
         )
 
-    slots = {
-        character: ARABIC_SLOT_FIRST + index for index, character in enumerate(ordered)
-    }
+    slots = {character: ARABIC_SLOT_FIRST + index for index, character in enumerate(ordered)}
     return ArabicGlyphMap(characters=ordered, slots=slots)
 
 
@@ -243,10 +241,7 @@ def build_arabic_font_atlas(
             colored_pixels[x_pos, y] = 1
 
         occupied = [
-            x_pos
-            for y in range(16)
-            for x_pos in range(16)
-            if colored_pixels[x_pos, y] != 0
+            x_pos for y in range(16) for x_pos in range(16) if colored_pixels[x_pos, y] != 0
         ]
         advance = min(15, max(3, max(occupied) - min(occupied) + 2))
         widths.append(advance)
