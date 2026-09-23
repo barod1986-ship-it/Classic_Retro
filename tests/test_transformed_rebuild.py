@@ -103,6 +103,7 @@ def test_changed_compressed_resource_can_relocate_and_update_reference():
     assert placement.relocated is True
     assert placement.rebuilt.start == 64
     assert int.from_bytes(result.image[0:2], "little") == 64
-    assert zlib.decompress(result.image[placement.rebuilt.start : placement.rebuilt.end]) == edited[
-        "dialogue"
-    ]
+    assert (
+        zlib.decompress(result.image[placement.rebuilt.start : placement.rebuilt.end])
+        == edited["dialogue"]
+    )
