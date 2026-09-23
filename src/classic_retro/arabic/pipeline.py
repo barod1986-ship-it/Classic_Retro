@@ -17,11 +17,11 @@ _PRESENTATION_RANGES = (
 
 _EXPLICIT_BIDI_CONTROLS = frozenset(
     {
-        "\u202A",  # LRE
-        "\u202B",  # RLE
-        "\u202C",  # PDF
-        "\u202D",  # LRO
-        "\u202E",  # RLO
+        "\u202a",  # LRE
+        "\u202b",  # RLE
+        "\u202c",  # PDF
+        "\u202d",  # LRO
+        "\u202e",  # RLO
         "\u2066",  # LRI
         "\u2067",  # RLI
         "\u2068",  # FSI
@@ -29,7 +29,7 @@ _EXPLICIT_BIDI_CONTROLS = frozenset(
     }
 )
 
-_MARKER_BOUNDARY = "\uFFFC"
+_MARKER_BOUNDARY = "\ufffc"
 _MARKER_CODES = tuple(chr(codepoint) for codepoint in range(0x2400, 0x2427))
 _MARKER_WIDTH = 5
 _MAX_MARKERS = len(_MARKER_CODES) ** 2
@@ -94,9 +94,7 @@ class ArabicPipeline:
 
 def _contains_presentation_form(text: str) -> bool:
     return any(
-        start <= ord(character) <= end
-        for character in text
-        for start, end in _PRESENTATION_RANGES
+        start <= ord(character) <= end for character in text for start, end in _PRESENTATION_RANGES
     )
 
 
