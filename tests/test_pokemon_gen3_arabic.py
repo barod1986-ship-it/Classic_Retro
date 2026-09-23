@@ -3,6 +3,7 @@ from __future__ import annotations
 import unicodedata
 
 import pytest
+from PIL import Image
 
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.pokemon_gen3_arabic import (
@@ -10,6 +11,7 @@ from classic_retro.engines.pokemon_gen3_arabic import (
     ARABIC_SLOT_LAST,
     EXT_CTRL_LTR_PLACEHOLDER,
     PokemonGen3ArabicEncoder,
+    _validate_fire_red_glyph_bounds,
     build_arabic_glyph_map,
     make_ltr_placeholder_token,
 )
@@ -66,3 +68,20 @@ def test_ltr_placeholder_token_uses_ordered_runtime_expansion_control():
 
     assert bytes((0xFC, EXT_CTRL_LTR_PLACEHOLDER, 0x01)) in data
     assert bytes((0xFD, 0x01)) not in data
+
+
+def test_fire_red_glyph_bounds_accept_pixels_inside_declared_copy_region():
+    glyph = Image.new("P", (16, 16), 0)
+    glyph.putpixel((4, 13), 1)
+
+    _validate_fire_red_glyph_bounds(glyph, 5, "ا")
+
+
+def test_fire_red_glyph_bounds_reject_hidden_centered_pixels():
+    glyph = Image.new("P", (16, 16), 0)
+    glyph.putpixel((6, 5), 1)
+
+    with pytest.raises(ClassicRetroError) as caught:
+        _validate_fire_red_glyph_bounds(glyph, 5, "ا")
+
+    assert caught.value.code is ErrorCode.FONT_BUILD_FAILED
