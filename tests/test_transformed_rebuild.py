@@ -49,7 +49,7 @@ def _fixture():
         safe_regions=(
             SafeRegion(
                 id="safe",
-                span=ByteRange(64, 112),
+                span=ByteRange(64, 128),
                 expected_fill_byte=0xFF,
             ),
         ),
