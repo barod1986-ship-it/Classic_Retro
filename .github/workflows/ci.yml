@@ -116,7 +116,7 @@ jobs:
 
       - name: Build Flips CLI
         working-directory: flips
-        run: ./make-linux.sh --profile=no
+        run: TARGET=cli make CFLAGS="-O3"
 
       - name: Create and verify BPS patch
         run: |
