@@ -22,3 +22,14 @@ def test_text_printer_overlay_adds_per_printer_rtl_state():
 
     assert "sTempTextPrinter.rtl = FALSE" in patched
     assert "sTempTextPrinter.rtlX = textSubPrinter->x" in patched
+
+
+def test_graphics_overlay_uses_full_width_font_container():
+    original = (
+        "$(FONTGFXDIR)/latin_normal.fwlatfont: $(FONTGFXDIR)/latin_normal.png\n"
+        "\t$(GFX) $< $@\n"
+    )
+    patched = overlay._patch_graphics_rules(original)
+
+    assert "arabic_normal.fwlatfont" in patched
+    assert "arabic_normal.hwlatfont" not in patched
