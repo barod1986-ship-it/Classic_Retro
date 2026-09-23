@@ -15,6 +15,7 @@ from classic_retro.text.tokens import (
     InlineToken,
     TextToken,
     Token,
+    TokenKind,
     TokenMovement,
     TokenStream,
 )
@@ -23,6 +24,7 @@ EXTRA_SYMBOL_PREFIX = 0xF9
 EXT_CTRL_PREFIX = 0xFC
 EXT_CTRL_RTL = 0x19
 EXT_CTRL_LTR = 0x1A
+EXT_CTRL_LTR_PLACEHOLDER = 0x1B
 ARABIC_SLOT_FIRST = 0x40
 ARABIC_SLOT_LAST = 0xCF
 
@@ -89,6 +91,26 @@ def build_arabic_glyph_map() -> ArabicGlyphMap:
 
     slots = {character: ARABIC_SLOT_FIRST + index for index, character in enumerate(ordered)}
     return ArabicGlyphMap(characters=ordered, slots=slots)
+
+
+def make_ltr_placeholder_token(
+    token_id: str,
+    name: str,
+    placeholder_id: int,
+) -> InlineToken:
+    if not 0 <= placeholder_id <= 0xFF:
+        raise ValueError("placeholder_id must fit one byte")
+    return InlineToken(
+        id=token_id,
+        kind=TokenKind.VARIABLE,
+        movement=TokenMovement.ORDERED,
+        name=name,
+        args={
+            "raw_hex": (
+                f"{EXT_CTRL_PREFIX:02x}{EXT_CTRL_LTR_PLACEHOLDER:02x}{placeholder_id:02x}"
+            )
+        },
+    )
 
 
 class PokemonGen3ArabicEncoder:
