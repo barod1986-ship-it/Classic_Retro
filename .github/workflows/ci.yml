@@ -255,3 +255,81 @@ jobs:
             upstream-tmc/data/classic_retro/arabic_font_preview.png
           if-no-files-found: error
           retention-days: 14
+
+  ff6a-arabic-overlay:
+    # Final Fantasy VI Advance has no decompilation: the overlay patches the
+    # user's own USA ROM locally (docs/FF6A_ARABIC_TEST_AR.md). CI re-assembles
+    # the Thumb hooks and compares them with the stored bytes, measures every
+    # Arabic line with the reference font, and checks the BPS writer against Flips.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Classic Retro
+        uses: actions/checkout@v6
+        with:
+          path: toolkit
+
+      - name: Checkout pinned Flips
+        uses: actions/checkout@v6
+        with:
+          repository: bates64/flips
+          ref: 6caac470f7fc096b0c5fdc374b65954f8bac5b16
+          path: flips
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential binutils-arm-none-eabi
+
+      - name: Install toolkit
+        working-directory: toolkit
+        run: python -m pip install -e .
+
+      - name: Re-assemble the Thumb hooks and compare with the stored bytes
+        run: classic-retro ff6a check-hooks
+
+      - name: Validate the Arabic script and measure every line with the reference font
+        run: |
+          mkdir -p artifact
+          NOTO_COMMIT=ffebf8c1ee449e544955a7e813c54f9b73848eac
+          ARABIC_FONT=reference-font.ttf
+          curl --fail --location "https://raw.githubusercontent.com/notofonts/noto-fonts/$NOTO_COMMIT/hinted/ttf/NotoKufiArabic/NotoKufiArabic-SemiBold.ttf" -o "$ARABIC_FONT"
+          echo "aa30cd2663f1eb1c940c9cd6a898877f307c2572e72a8a352896fe23f512018e  $ARABIC_FONT" | sha256sum -c -
+          classic-retro ff6a check-translations --font "$ARABIC_FONT" --preview artifact/arabic_font_preview.png | tee artifact/translation-report.json
+
+      - name: Build Flips CLI
+        working-directory: flips
+        run: TARGET=cli make CFLAGS="-O3"
+
+      - name: Cross-check the BPS writer and reader with Flips
+        run: |
+          python - <<'PY'
+          import random
+          generator = random.Random(6)
+          source = bytes(generator.getrandbits(8) for _ in range(400_000))
+          target = bytearray(source)
+          target[1000:1040] = b"A" * 40
+          target += source[5000:90_000] + b"\xff" * 120_000
+          open("source.bin", "wb").write(source)
+          open("target.bin", "wb").write(bytes(target))
+          PY
+          classic-retro rebuild bps-create source.bin target.bin ours.bps
+          ./flips/flips --apply ours.bps source.bin flips-out.bin
+          cmp flips-out.bin target.bin
+          ./flips/flips --create --exact --bps source.bin target.bin flips.bps
+          classic-retro rebuild bps-apply flips.bps source.bin ours-out.bin
+          cmp ours-out.bin target.bin
+
+      - name: Upload translation review files
+        uses: actions/upload-artifact@v6
+        with:
+          name: ff6a-arabic-overlay
+          path: |
+            artifact/translation-report.json
+            artifact/arabic_font_preview.png
+          if-no-files-found: error
+          retention-days: 14
