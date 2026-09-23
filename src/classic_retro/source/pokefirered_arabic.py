@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import re
 from pathlib import Path
 
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
@@ -285,6 +286,18 @@ def _patch_text_printer(text: str) -> str:
 
 def _patch_charmap(text: str) -> str:
     glyph_map = build_arabic_glyph_map()
+    upstream_slots = {
+        int(match.group(1), 16)
+        for match in re.finditer(r"=\\s*F9\\s+([0-9A-Fa-f]{2})\\b", text)
+    }
+    collisions = sorted(set(glyph_map.slots.values()) & upstream_slots)
+    if collisions:
+        values = ", ".join(f"F9 {value:02X}" for value in collisions)
+        raise ClassicRetroError(
+            ErrorCode.SOURCE_PATCH_FAILED,
+            "Arabic glyph range collides with upstream extra symbols: " + values,
+        )
+
     text = _replace_once(
         text,
         "RESUME_MUSIC = FC 18\n",
