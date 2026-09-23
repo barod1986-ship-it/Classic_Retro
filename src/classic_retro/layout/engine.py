@@ -173,6 +173,8 @@ class LayoutEngine:
 
             for boundary in candidates:
                 logical = _elements_to_stream(elements[start:boundary])
+                if boundary < len(elements):
+                    logical = _trim_trailing_break_spaces(logical)
                 candidate = self._prepare_line(logical, LayoutBreak.SOFT)
                 if candidate.width_px <= max_width_px:
                     best_boundary = boundary
@@ -189,10 +191,6 @@ class LayoutEngine:
                         f"line limit is {max_width_px}px"
                     ),
                 )
-
-            trimmed = _trim_trailing_break_spaces(best_line.logical)
-            if trimmed != best_line.logical:
-                best_line = self._prepare_line(trimmed, LayoutBreak.SOFT)
 
             lines.append(best_line)
             start = best_boundary
