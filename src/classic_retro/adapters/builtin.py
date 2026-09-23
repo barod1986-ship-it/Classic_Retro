@@ -2,10 +2,12 @@ from __future__ import annotations
 
 from classic_retro.adapters.registry import AdapterRegistry
 from classic_retro.engines.ff6a import Ff6aEngineAdapter
+from classic_retro.engines.fire_emblem import FireEmblemEngineAdapter
 from classic_retro.engines.golden_sun import GoldenSunEngineAdapter
 from classic_retro.engines.pokemon_gen3 import PokemonGen3EngineAdapter
 from classic_retro.engines.tmc import TmcEngineAdapter
 from classic_retro.games.final_fantasy_vi_advance import FinalFantasyVIAdvanceUsaGameAdapter
+from classic_retro.games.fire_emblem_sacred_stones import FireEmblemSacredStonesUsaGameAdapter
 from classic_retro.games.golden_sun import GoldenSunUsaEuropeGameAdapter
 from classic_retro.games.pokemon_firered import PokemonFireRedRev1GameAdapter
 from classic_retro.games.zelda_minish_cap import ZeldaMinishCapUsaGameAdapter
@@ -35,7 +37,9 @@ def register_builtin_adapters(registry: AdapterRegistry) -> None:
     registry.register_engine(TmcEngineAdapter())
     registry.register_engine(Ff6aEngineAdapter())
     registry.register_engine(GoldenSunEngineAdapter())
+    registry.register_engine(FireEmblemEngineAdapter())
     registry.register_game(PokemonFireRedRev1GameAdapter())
     registry.register_game(ZeldaMinishCapUsaGameAdapter())
     registry.register_game(FinalFantasyVIAdvanceUsaGameAdapter())
     registry.register_game(GoldenSunUsaEuropeGameAdapter())
+    registry.register_game(FireEmblemSacredStonesUsaGameAdapter())
