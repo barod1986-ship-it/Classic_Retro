@@ -184,14 +184,10 @@ def validate_token_preservation(source: TokenStream, target: TokenStream) -> Non
             )
 
     source_order = [
-        token.id
-        for token in source.inline_tokens
-        if token.movement is TokenMovement.ORDERED
+        token.id for token in source.inline_tokens if token.movement is TokenMovement.ORDERED
     ]
     target_order = [
-        token.id
-        for token in target.inline_tokens
-        if token.movement is TokenMovement.ORDERED
+        token.id for token in target.inline_tokens if token.movement is TokenMovement.ORDERED
     ]
     if source_order != target_order:
         raise ClassicRetroError(
