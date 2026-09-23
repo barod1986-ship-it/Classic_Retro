@@ -33,3 +33,31 @@ jobs:
 
       - name: Tests
         run: pytest
+
+  pokefirered-source-overlay:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Classic Retro
+        uses: actions/checkout@v4
+        with:
+          path: toolkit
+
+      - name: Checkout pinned pokefirered
+        uses: actions/checkout@v4
+        with:
+          repository: pret/pokefirered
+          ref: c75f352304d529f6ba92d4f74b9cf8b5c3810788
+          path: upstream
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install toolkit
+        working-directory: toolkit
+        run: python -m pip install -e .
+
+      - name: Verify Arabic source overlay against pinned upstream
+        working-directory: toolkit
+        run: classic-retro pokemon-gen3 source-check ../upstream
