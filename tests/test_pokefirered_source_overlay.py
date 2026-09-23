@@ -39,9 +39,7 @@ def test_graphics_overlay_uses_full_width_font_container():
 
 def test_oak_intro_overlay_replaces_all_oak_speech_blocks():
     labels = tuple(overlay._oak_speech_streams())
-    original = "\n\n".join(
-        f'{label}::\n    .string "placeholder$"' for label in labels
-    ) + "\n\n"
+    original = "\n\n".join(f'{label}::\n    .string "placeholder$"' for label in labels) + "\n\n"
 
     patched = overlay._patch_oak_intro(original)
 
