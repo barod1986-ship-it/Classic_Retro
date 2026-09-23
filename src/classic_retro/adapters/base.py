@@ -106,12 +106,22 @@ class GameRevision:
         return False
 
 
+@dataclass(frozen=True, slots=True)
+class SourceBuildSpec:
+    repository_url: str
+    commit: str
+    build_target: str
+    verify_target: str
+    expected_sha1: str | None = None
+
+
 class GameAdapter(ABC):
     id: str
     title: str
     platform_id: str
     engine_id: str
     revisions: tuple[GameRevision, ...]
+    source_build: SourceBuildSpec | None = None
 
     def match_revision(self, media: MediaSet) -> GameRevision | None:
         return next(

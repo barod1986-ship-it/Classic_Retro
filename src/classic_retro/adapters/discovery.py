@@ -4,7 +4,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
-from classic_retro.adapters.base import GameRevision, ProbeResult, ProbeSource
+from classic_retro.adapters.base import GameRevision, ProbeResult, ProbeSource, SourceBuildSpec
 from classic_retro.adapters.registry import AdapterRegistry
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.media.model import MediaKind, MediaSet
@@ -30,6 +30,7 @@ class GameMatch:
     platform_id: str
     engine_id: str
     revision: GameRevision
+    source_build: SourceBuildSpec | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -38,6 +39,9 @@ class GameMatch:
             "platform_id": self.platform_id,
             "engine_id": self.engine_id,
             "revision": asdict(self.revision),
+            "source_build": (
+                None if self.source_build is None else asdict(self.source_build)
+            ),
         }
 
 
@@ -131,6 +135,7 @@ def detect_game(
                     platform_id=adapter.platform_id,
                     engine_id=adapter.engine_id,
                     revision=revision,
+                    source_build=adapter.source_build,
                 )
             )
 
