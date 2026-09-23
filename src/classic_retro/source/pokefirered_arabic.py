@@ -217,7 +217,7 @@ def _patch_graphics_rules(text: str) -> str:
     replacement = (
         anchor
         + "\n# CLASSIC_RETRO_ARABIC_V1\n"
-        + "$(FONTGFXDIR)/arabic_normal.hwlatfont: $(FONTGFXDIR)/arabic_normal.png\n"
+        + "$(FONTGFXDIR)/arabic_normal.fwlatfont: $(FONTGFXDIR)/arabic_normal.png\n"
         + "\t$(GFX) $< $@\n"
     )
     return _replace_once(text, anchor, replacement, "Arabic font graphics rule")
@@ -249,7 +249,7 @@ def _patch_text_c(text: str, glyph_count: int) -> str:
             + "#define ARABIC_GLYPH_FIRST (0x100 | 0x40) // CLASSIC_RETRO_ARABIC_V1\n"
             + f"#define ARABIC_GLYPH_COUNT {glyph_count}\n"
             + "static const u16 sFontArabicGlyphs[] = "
-            + 'INCBIN_U16("graphics/fonts/arabic_normal.hwlatfont");\n'
+            + 'INCBIN_U16("graphics/fonts/arabic_normal.fwlatfont");\n'
             + "static const u8 sFontArabicGlyphWidths[] = "
             + 'INCBIN_U8("graphics/fonts/arabic_normal_widths.bin");\n'
         ),
