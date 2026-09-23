@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://classic-retro.dev/schemas/text-codec-profile.schema.json",
+  "title": "Classic Retro Fixed Text Codec Profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "glyphs"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "unknown_decode": {
+      "type": "string",
+      "enum": [
+        "error",
+        "opaque"
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "glyphs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sequence",
+          "bytes_hex"
+        ],
+        "properties": {
+          "sequence": {
+            "type": "string",
+            "minLength": 1
+          },
+          "bytes_hex": {
+            "$ref": "#/$defs/hexBytes"
+          }
+        }
+      }
+    },
+    "inline_codes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/inlineCode"
+      }
+    },
+    "terminators": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "bytes_hex"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "bytes_hex": {
+            "$ref": "#/$defs/hexBytes"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "hexBytes": {
+      "type": "string",
+      "pattern": "^(?:[0-9A-Fa-f]{2})(?:[0-9A-Fa-f ]*[0-9A-Fa-f])?$"
+    },
+    "scalar": {
+      "type": [
+        "string",
+        "integer",
+        "boolean"
+      ]
+    },
+    "inlineCode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "movement",
+        "bytes_hex"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "variable",
+            "control",
+            "line_break",
+            "page_break"
+          ]
+        },
+        "movement": {
+          "type": "string",
+          "enum": [
+            "free",
+            "ordered"
+          ]
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "args": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/scalar"
+          }
+        },
+        "bytes_hex": {
+          "$ref": "#/$defs/hexBytes"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": [
+                  "variable",
+                  "control"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "name"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": [
+                  "line_break",
+                  "page_break"
+                ]
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "name"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -10,6 +10,8 @@ from classic_retro import __version__
 from classic_retro.adapters.discovery import detect_input
 from classic_retro.adapters.registry import build_registry
 from classic_retro.arabic.pipeline import ArabicPipeline
+from classic_retro.codec.model import load_codec_profile
+from classic_retro.codec.table import TableTextCodec
 from classic_retro.core.errors import ClassicRetroError
 from classic_retro.core.identity import fingerprint_file
 from classic_retro.media.resolve import resolve_media
@@ -76,6 +78,20 @@ def _build_parser() -> argparse.ArgumentParser:
     check_arabic.add_argument("path", type=Path)
     check_arabic.set_defaults(handler=_cmd_arabic_check)
 
+    codec = subcommands.add_parser(
+        "codec",
+        help="Validate fixed game-text byte codecs and round trips",
+    )
+    codec_commands = codec.add_subparsers(dest="codec_command", required=True)
+    verify_codec = codec_commands.add_parser(
+        "verify",
+        help="Decode and exactly rebuild one binary text fixture",
+    )
+    verify_codec.add_argument("profile", type=Path)
+    verify_codec.add_argument("data", type=Path)
+    verify_codec.add_argument("--require-terminator", action="store_true")
+    verify_codec.set_defaults(handler=_cmd_codec_verify)
+
     adapters = subcommands.add_parser("adapters", help="List loaded adapter IDs")
     adapters.set_defaults(handler=_cmd_adapters)
 
@@ -131,6 +147,28 @@ def _cmd_arabic_check(args: argparse.Namespace) -> int:
         "normalization": "NFC",
         "base_direction": "R",
         "ligatures": False,
+    }
+    print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_codec_verify(args: argparse.Namespace) -> int:
+    profile = load_codec_profile(args.profile)
+    codec = TableTextCodec(profile)
+    data = args.data.read_bytes()
+    decoded = codec.verify_round_trip(
+        data,
+        require_terminator=args.require_terminator,
+    )
+    payload = {
+        "profile": profile.id,
+        "consumed_bytes": decoded.consumed_bytes,
+        "terminated": decoded.terminated,
+        "terminator_id": decoded.terminator_id,
+        "tokens": len(decoded.stream.tokens),
+        "inline_tokens": len(decoded.stream.inline_tokens),
+        "visible_text": decoded.stream.visible_text,
+        "round_trip": True,
     }
     print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
     return 0
