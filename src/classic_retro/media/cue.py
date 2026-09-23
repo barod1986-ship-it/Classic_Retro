@@ -228,7 +228,7 @@ def parse_cue(path: Path) -> CueSheet:
             if not any(index.number == 1 for index in indexes):
                 raise ClassicRetroError(
                     ErrorCode.INVALID_CUE_SHEET,
-                    f'TRACK {track_item["number"]:02d} has no INDEX 01',
+                    f"TRACK {track_item['number']:02d} has no INDEX 01",
                 )
             tracks.append(
                 CueTrack(
