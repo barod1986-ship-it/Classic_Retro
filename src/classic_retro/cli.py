@@ -15,6 +15,8 @@ from classic_retro.codec.table import TableTextCodec
 from classic_retro.core.errors import ClassicRetroError
 from classic_retro.core.identity import fingerprint_file
 from classic_retro.media.resolve import resolve_media
+from classic_retro.rebuild.model import load_rebuild_plan
+from classic_retro.rebuild.pipeline import verify_round_trip
 from classic_retro.text.document import load_translation_file
 
 
@@ -77,6 +79,19 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     check_arabic.add_argument("path", type=Path)
     check_arabic.set_defaults(handler=_cmd_arabic_check)
+
+    rebuild = subcommands.add_parser(
+        "rebuild",
+        help="Validate binary extraction/rebuild plans",
+    )
+    rebuild_commands = rebuild.add_subparsers(dest="rebuild_command", required=True)
+    verify_rebuild = rebuild_commands.add_parser(
+        "verify",
+        help="Extract and rebuild unchanged resources and require a byte-exact image",
+    )
+    verify_rebuild.add_argument("plan", type=Path)
+    verify_rebuild.add_argument("image", type=Path)
+    verify_rebuild.set_defaults(handler=_cmd_rebuild_verify)
 
     codec = subcommands.add_parser(
         "codec",
@@ -147,6 +162,22 @@ def _cmd_arabic_check(args: argparse.Namespace) -> int:
         "normalization": "NFC",
         "base_direction": "R",
         "ligatures": False,
+    }
+    print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_rebuild_verify(args: argparse.Namespace) -> int:
+    plan = load_rebuild_plan(args.plan)
+    original = args.image.read_bytes()
+    result = verify_round_trip(original, plan)
+    payload = {
+        "plan": plan.id,
+        "resources": len(plan.resources),
+        "references": len(plan.references),
+        "safe_regions": len(plan.safe_regions),
+        "writes": result.writes,
+        "round_trip": True,
     }
     print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
     return 0
