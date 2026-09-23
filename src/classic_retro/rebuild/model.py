@@ -114,10 +114,7 @@ class IntegerReferenceCodec:
         if numerator % self.scale:
             raise ClassicRetroError(
                 ErrorCode.REFERENCE_ALIGNMENT_ERROR,
-                (
-                    f"Target 0x{target_offset:X} cannot be represented with "
-                    f"scale {self.scale}"
-                ),
+                (f"Target 0x{target_offset:X} cannot be represented with scale {self.scale}"),
             )
 
         stored = numerator // self.scale
@@ -132,10 +129,7 @@ class IntegerReferenceCodec:
         if not minimum <= stored <= maximum:
             raise ClassicRetroError(
                 ErrorCode.REFERENCE_VALUE_OUT_OF_RANGE,
-                (
-                    f"Stored reference value {stored} does not fit "
-                    f"{self.size_bytes} byte(s)"
-                ),
+                (f"Stored reference value {stored} does not fit {self.size_bytes} byte(s)"),
             )
 
         return stored.to_bytes(
@@ -299,12 +293,8 @@ class RebuildPlan:
         return cls(
             id=data["id"],
             resources=tuple(ResourceSpec.from_dict(item) for item in data["resources"]),
-            references=tuple(
-                ReferenceSite.from_dict(item) for item in data.get("references", [])
-            ),
-            safe_regions=tuple(
-                SafeRegion.from_dict(item) for item in data.get("safe_regions", [])
-            ),
+            references=tuple(ReferenceSite.from_dict(item) for item in data.get("references", [])),
+            safe_regions=tuple(SafeRegion.from_dict(item) for item in data.get("safe_regions", [])),
         )
 
 
