@@ -225,22 +225,29 @@ def build_arabic_font_atlas(
     atlas.putpalette(palette + [0] * (768 - len(palette)))
 
     widths: list[int] = []
-    baseline = 1 - top
+    # FireRed copies normal glyphs from the top-left of a 16x16 buffer and
+    # renders only 14 rows. Keep foreground inside rows 0..12 so the one-pixel
+    # shadow can remain inside the copied 14-row area.
+    baseline = -top
 
     for index, character in enumerate(glyph_map.characters):
         cell = Image.new("L", (16, 16), 0)
         draw = ImageDraw.Draw(cell)
         left, _, right, _ = font.getbbox(character, anchor="ls")
-        ink_width = right - left
-        x = max(0, (16 - ink_width) // 2 - left)
+
+        # FireRed's CopyGlyphToWindow always starts reading at glyph x=0.
+        # Centering variable-width glyphs here would make the engine crop them
+        # to the first 'advance' columns. Align the ink box to x=0 instead.
+        x = -left
         draw.text((x, baseline), character, font=font, fill=255, anchor="ls")
 
         pixels = cell.load()
-        foreground: list[tuple[int, int]] = []
-        for y in range(15):
-            for x_pos in range(16):
-                if pixels[x_pos, y] >= 128:
-                    foreground.append((x_pos, y))
+        foreground = [
+            (x_pos, y)
+            for y in range(14)
+            for x_pos in range(16)
+            if pixels[x_pos, y] >= 96
+        ]
 
         if not foreground:
             raise ClassicRetroError(
@@ -248,23 +255,35 @@ def build_arabic_font_atlas(
                 f"Selected font produced an empty glyph for U+{ord(character):04X}",
             )
 
+        copy_width = _glyph_copy_width(font, character, left, right)
+        ink_right = max(x_pos for x_pos, _ in foreground)
+        copy_width = max(copy_width, ink_right + 1)
+        if copy_width > 16:
+            raise ClassicRetroError(
+                ErrorCode.FONT_BUILD_FAILED,
+                (
+                    f"Glyph U+{ord(character):04X} needs {copy_width}px, "
+                    "which exceeds the FireRed 16px cell"
+                ),
+            )
+
         colored = Image.new("P", (16, 16), 0)
         colored.putpalette(atlas.getpalette())
         colored_pixels = colored.load()
 
+        # Keep the shadow inside the same advance. Extending the width for a
+        # shadow pixel would introduce a one-pixel gap between connected Arabic
+        # presentation forms.
         for x_pos, y in foreground:
             shadow_x = x_pos + 1
             shadow_y = y + 1
-            if shadow_x < 16 and shadow_y < 16:
+            if shadow_x < copy_width and shadow_y < 14:
                 colored_pixels[shadow_x, shadow_y] = 2
         for x_pos, y in foreground:
             colored_pixels[x_pos, y] = 1
 
-        occupied = [
-            x_pos for y in range(16) for x_pos in range(16) if colored_pixels[x_pos, y] != 0
-        ]
-        advance = min(15, max(3, max(occupied) - min(occupied) + 2))
-        widths.append(advance)
+        _validate_fire_red_glyph_bounds(colored, copy_width, character)
+        widths.append(max(3, copy_width))
 
         column = index % 16
         row = index // 16
@@ -272,7 +291,9 @@ def build_arabic_font_atlas(
 
     png_path.parent.mkdir(parents=True, exist_ok=True)
     widths_path.parent.mkdir(parents=True, exist_ok=True)
-    atlas.save(png_path, format="PNG", optimize=False)
+    # Store the palette PNG as native 2bpp so gbagfx receives the same bit
+    # depth as FireRed's font format and does not need an 8bpp -> 2bpp step.
+    atlas.save(png_path, format="PNG", optimize=False, bits=2)
     widths_path.write_bytes(bytes(widths))
 
     return FontAtlasResult(
@@ -283,22 +304,60 @@ def build_arabic_font_atlas(
     )
 
 
+def _glyph_copy_width(
+    font: ImageFont.FreeTypeFont,
+    character: str,
+    left: int,
+    right: int,
+) -> int:
+    advance = math.ceil(font.getlength(character))
+    ink_width = right - left
+    return max(1, advance, ink_width)
+
+
+def _validate_fire_red_glyph_bounds(
+    glyph: Image.Image,
+    copy_width: int,
+    character: str,
+) -> None:
+    pixels = glyph.load()
+    clipped = [
+        (x_pos, y)
+        for y in range(16)
+        for x_pos in range(16)
+        if pixels[x_pos, y] != 0 and (x_pos >= copy_width or y >= 14)
+    ]
+    if clipped:
+        raise ClassicRetroError(
+            ErrorCode.FONT_BUILD_FAILED,
+            (
+                f"Glyph U+{ord(character):04X} has pixels outside FireRed's "
+                f"{copy_width}x14 copied region"
+            ),
+        )
+
+
 def _choose_font(
     font_path: Path,
     characters: tuple[str, ...],
 ) -> tuple[ImageFont.FreeTypeFont, int, int, int]:
-    for size in range(18, 5, -1):
+    for size in range(20, 5, -1):
         font = ImageFont.truetype(str(font_path), size=size)
         boxes = [font.getbbox(character, anchor="ls") for character in characters]
-        widths = [right - left for left, _, right, _ in boxes]
+        copy_widths = [
+            _glyph_copy_width(font, character, box[0], box[2])
+            for character, box in zip(characters, boxes, strict=True)
+        ]
         top = min(box[1] for box in boxes)
         bottom = max(box[3] for box in boxes)
-        if max(widths) <= 13 and bottom - top <= 13:
+
+        # 13 foreground rows + one shadow row = FireRed's normal 14px height.
+        if max(copy_widths) <= 16 and bottom - top <= 13:
             return font, size, top, bottom
 
     raise ClassicRetroError(
         ErrorCode.FONT_BUILD_FAILED,
-        "Selected font cannot fit the FireRed 16x16 Arabic glyph cell",
+        "Selected font cannot fit the FireRed 16x14 copied glyph area",
     )
 
 
