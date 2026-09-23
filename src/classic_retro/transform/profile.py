@@ -46,10 +46,7 @@ def build_pipeline(
     profile: TransformProfile,
     registry: TransformRegistry,
 ) -> TransformPipeline:
-    transforms = tuple(
-        registry.create(stage.codec, stage.options)
-        for stage in profile.stages
-    )
+    transforms = tuple(registry.create(stage.codec, stage.options) for stage in profile.stages)
     return TransformPipeline(profile.id, transforms)
 
 
