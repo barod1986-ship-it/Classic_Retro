@@ -87,9 +87,7 @@ class GameRevision:
             if digest is None:
                 continue
             normalized = digest.lower()
-            if len(normalized) != 64 or any(
-                char not in "0123456789abcdef" for char in normalized
-            ):
+            if len(normalized) != 64 or any(char not in "0123456789abcdef" for char in normalized):
                 raise ValueError(f"{field_name} must be 64 hexadecimal characters")
             object.__setattr__(self, field_name, normalized)
 
