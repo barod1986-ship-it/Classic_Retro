@@ -26,8 +26,7 @@ def test_text_printer_overlay_adds_per_printer_rtl_state():
 
 def test_graphics_overlay_uses_full_width_font_container():
     original = (
-        "$(FONTGFXDIR)/latin_normal.fwlatfont: $(FONTGFXDIR)/latin_normal.png\n"
-        "\t$(GFX) $< $@\n"
+        "$(FONTGFXDIR)/latin_normal.fwlatfont: $(FONTGFXDIR)/latin_normal.png\n\t$(GFX) $< $@\n"
     )
     patched = overlay._patch_graphics_rules(original)
 
