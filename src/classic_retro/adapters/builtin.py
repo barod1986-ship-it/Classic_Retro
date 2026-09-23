@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from classic_retro.adapters.registry import AdapterRegistry
 from classic_retro.engines.pokemon_gen3 import PokemonGen3EngineAdapter
+from classic_retro.engines.tmc import TmcEngineAdapter
 from classic_retro.games.pokemon_firered import PokemonFireRedRev1GameAdapter
+from classic_retro.games.zelda_minish_cap import ZeldaMinishCapUsaGameAdapter
 from classic_retro.platforms.gameboy import GameBoyColorPlatformAdapter, GameBoyPlatformAdapter
 from classic_retro.platforms.gba import GBAPlatformAdapter
 from classic_retro.platforms.megadrive import MegaDrivePlatformAdapter
@@ -26,4 +28,6 @@ def register_builtin_adapters(registry: AdapterRegistry) -> None:
         registry.register_platform(adapter)
 
     registry.register_engine(PokemonGen3EngineAdapter())
+    registry.register_engine(TmcEngineAdapter())
     registry.register_game(PokemonFireRedRev1GameAdapter())
+    registry.register_game(ZeldaMinishCapUsaGameAdapter())
