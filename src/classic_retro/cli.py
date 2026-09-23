@@ -22,6 +22,11 @@ from classic_retro.source.pokefirered_arabic import (
     check_pokefirered_arabic_source,
     prepare_pokefirered_arabic_source,
 )
+from classic_retro.source.tmc_arabic import (
+    check_tmc_arabic_source,
+    encode_tmc_arabic_line,
+    prepare_tmc_arabic_source,
+)
 from classic_retro.text.document import load_translation_file
 from classic_retro.transform.profile import build_pipeline, load_transform_profile
 from classic_retro.transform.registry import build_transform_registry
@@ -155,6 +160,44 @@ def _build_parser() -> argparse.ArgumentParser:
     compile_arabic.add_argument("text")
     compile_arabic.add_argument("--right-x", type=int, default=224)
     compile_arabic.set_defaults(handler=_cmd_pokemon_encode_arabic)
+
+    tmc = subcommands.add_parser(
+        "tmc",
+        help="The Legend of Zelda: The Minish Cap (zeldaret/tmc) helpers",
+    )
+    tmc_commands = tmc.add_subparsers(dest="tmc_command", required=True)
+
+    tmc_check = tmc_commands.add_parser(
+        "source-check",
+        help="Dry-run the Arabic overlay on the pinned zeldaret/tmc source",
+    )
+    tmc_check.add_argument("source", type=Path)
+    tmc_check.add_argument(
+        "--font",
+        type=Path,
+        help="Arabic TTF/OTF; also builds the font and measures every translated line",
+    )
+    tmc_check.set_defaults(handler=_cmd_tmc_source_check)
+
+    tmc_prepare = tmc_commands.add_parser(
+        "prepare-arabic-source",
+        help="Patch pinned zeldaret/tmc for RTL Arabic text and write the Arabic font",
+    )
+    tmc_prepare.add_argument("source", type=Path)
+    tmc_prepare.add_argument("--font", type=Path, required=True)
+    tmc_prepare.set_defaults(handler=_cmd_tmc_prepare_arabic_source)
+
+    tmc_encode = tmc_commands.add_parser(
+        "encode-arabic",
+        help="Encode one logical Arabic line to tmc_strings notation in RTL paint order",
+    )
+    tmc_encode.add_argument("text")
+    tmc_encode.add_argument(
+        "--font",
+        type=Path,
+        help="Arabic TTF/OTF used to report the pixel width of the line",
+    )
+    tmc_encode.set_defaults(handler=_cmd_tmc_encode_arabic)
 
     adapters = subcommands.add_parser("adapters", help="List loaded adapter IDs")
     adapters.set_defaults(handler=_cmd_adapters)
@@ -302,6 +345,24 @@ def _cmd_pokemon_encode_arabic(args: argparse.Namespace) -> int:
         "glyphs": len(encoder.glyph_map.characters),
     }
     print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_tmc_source_check(args: argparse.Namespace) -> int:
+    result = check_tmc_arabic_source(args.source, args.font)
+    print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_tmc_prepare_arabic_source(args: argparse.Namespace) -> int:
+    result = prepare_tmc_arabic_source(args.source, args.font)
+    print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_tmc_encode_arabic(args: argparse.Namespace) -> int:
+    result = encode_tmc_arabic_line(args.text, args.font)
+    print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
     return 0
 
 
