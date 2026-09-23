@@ -14,9 +14,7 @@ def test_parse_and_resolve_cue(tmp_path):
     payload.write_bytes(bytes(2352 * 2))
     cue = tmp_path / "disc.cue"
     cue.write_text(
-        'FILE "disc.bin" BINARY\n'
-        "  TRACK 01 MODE2/2352\n"
-        "    INDEX 01 00:00:00\n",
+        'FILE "disc.bin" BINARY\n  TRACK 01 MODE2/2352\n    INDEX 01 00:00:00\n',
         encoding="utf-8",
     )
 
@@ -33,9 +31,7 @@ def test_parse_and_resolve_cue(tmp_path):
 def test_cue_missing_member_fails_closed(tmp_path):
     cue = tmp_path / "disc.cue"
     cue.write_text(
-        'FILE "missing.bin" BINARY\n'
-        "  TRACK 01 MODE2/2352\n"
-        "    INDEX 01 00:00:00\n",
+        'FILE "missing.bin" BINARY\n  TRACK 01 MODE2/2352\n    INDEX 01 00:00:00\n',
         encoding="utf-8",
     )
 
