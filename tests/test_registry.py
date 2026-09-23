@@ -4,7 +4,13 @@ import hashlib
 
 import pytest
 
-from classic_retro.adapters.base import EngineAdapter, GameAdapter, GameRevision, PlatformAdapter, ProbeResult
+from classic_retro.adapters.base import (
+    EngineAdapter,
+    GameAdapter,
+    GameRevision,
+    PlatformAdapter,
+    ProbeResult,
+)
 from classic_retro.adapters.discovery import detect_game
 from classic_retro.adapters.registry import AdapterRegistry
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
