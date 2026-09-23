@@ -114,9 +114,9 @@ jobs:
         working-directory: upstream-target
         run: make -j2 firered_rev1
 
-      - name: Build Flips
+      - name: Build Flips CLI
         working-directory: flips
-        run: g++ *.c *.cpp -O3 -o flips
+        run: ./make-linux.sh --profile=no
 
       - name: Create and verify BPS patch
         run: |
