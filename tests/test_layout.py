@@ -34,9 +34,7 @@ def _ltr_engine(
 ) -> LayoutEngine:
     return LayoutEngine(
         TextMeasurer(_ascii_font(), inline_metrics),
-        arabic=ArabicPipeline(
-            ArabicPipelineConfig(base_direction=ArabicBaseDirection.LTR)
-        ),
+        arabic=ArabicPipeline(ArabicPipelineConfig(base_direction=ArabicBaseDirection.LTR)),
     )
 
 
@@ -60,9 +58,7 @@ def test_variable_uses_declared_maximum_width_and_can_break_around_object():
     )
     stream = TokenStream((TextToken("Hello "), player, TextToken(" world")))
 
-    metrics = InlineMetricResolver(
-        by_name={"PLAYER": InlineLayoutMetric(advance_px=20)}
-    )
+    metrics = InlineMetricResolver(by_name={"PLAYER": InlineLayoutMetric(advance_px=20)})
     result = _ltr_engine(inline_metrics=metrics).layout(
         stream,
         LayoutBox(max_width_px=44),
