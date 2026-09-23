@@ -141,6 +141,7 @@ jobs:
           TARGET_SHA256="$(sha256sum upstream-target/pokefirered_rev1.gba | awk '{print $1}')"
           PATCH_SHA256="$(sha256sum artifact/firered-rev1-arabic-oak-full.bps | awk '{print $1}')"
           PATCH_BYTES="$(stat -c %s artifact/firered-rev1-arabic-oak-full.bps)"
+          RTL_RIGHT_X="$(python -c 'import json; print(json.load(open("artifact/build-report.json"))["oak_intro_right_x"])')"
           cat > artifact/manifest.json <<EOF
           {
             "project": "Classic_Retro",
@@ -156,7 +157,7 @@ jobs:
             "oak_messages": 13,
             "dynamic_ltr_placeholders": ["PLAYER", "RIVAL"],
             "dynamic_ltr_control": "FC 1B pp",
-            "rtl_right_x": 216,
+            "rtl_right_x": $RTL_RIGHT_X,
             "arabic_font": "Noto Kufi Arabic SemiBold",
             "font_sha256": "aa30cd2663f1eb1c940c9cd6a898877f307c2572e72a8a352896fe23f512018e",
             "noto_fonts_commit": "ffebf8c1ee449e544955a7e813c54f9b73848eac",
