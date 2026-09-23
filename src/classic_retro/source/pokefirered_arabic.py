@@ -9,6 +9,7 @@ from classic_retro.engines.pokemon_gen3_arabic import (
     PokemonGen3ArabicEncoder,
     build_arabic_font_atlas,
     build_arabic_glyph_map,
+    make_ltr_placeholder_token,
 )
 from classic_retro.text.tokens import InlineToken, TextToken, TokenKind, TokenMovement, TokenStream
 
@@ -20,6 +21,7 @@ _PINNED_BLOBS = {
     "include/text.h": "7090a029bfc454e19e6425df631fda9db866ae0a",
     "src/text_printer.c": "e425ccb181b52d1f0827785e76c1793c2b2d693d",
     "src/text.c": "f3eef07ce6dea8269980a5ecfdd6902c1c9c13d2",
+    "src/string_util.c": "5c26d151a61274caac3a16c3b9c4eb73bf9a9e26",
     "charmap.txt": "b9d0ed9de00d05fc303bb987a5aa634b19009b47",
     "graphics_file_rules.mk": "39b952cd45b6a34eb98318a76aa531fcafff134d",
     "data/text/new_game_intro.inc": "e667b68d92f7b44f424d5d276093c434f1b7e2df",
@@ -47,6 +49,8 @@ def check_pokefirered_arabic_source(source: Path) -> dict[str, object]:
         "first_extra_symbol": f"0x{glyph_map.first_slot:02X}",
         "last_extra_symbol": f"0x{glyph_map.last_slot:02X}",
         "oak_intro_arabic": True,
+        "oak_intro_messages": len(_oak_speech_streams()),
+        "oak_dynamic_ltr_placeholders": True,
         "oak_intro_bytes": len(_oak_intro_bytes()),
     }
 
@@ -82,6 +86,8 @@ def prepare_pokefirered_arabic_source(source: Path, font_path: Path) -> dict[str
         "widths": str(widths),
         "build_target": "firered_rev1",
         "oak_intro_arabic": True,
+        "oak_intro_messages": len(_oak_speech_streams()),
+        "oak_dynamic_ltr_placeholders": True,
         "oak_intro_right_x": _OAK_INTRO_RIGHT_X,
     }
 
@@ -130,6 +136,7 @@ def _validate_patched_tree(source: Path) -> None:
         "include/text.h",
         "src/text_printer.c",
         "src/text.c",
+        "src/string_util.c",
         "charmap.txt",
         "graphics_file_rules.mk",
         "data/text/new_game_intro.inc",
@@ -163,63 +170,170 @@ def _patch_all(texts: dict[str, str]) -> dict[str, str]:
     result["charmap.txt"] = _patch_charmap(result["charmap.txt"])
     result["graphics_file_rules.mk"] = _patch_graphics_rules(result["graphics_file_rules.mk"])
     result["src/text.c"] = _patch_text_c(result["src/text.c"], count)
+    result["src/string_util.c"] = _patch_string_util(result["src/string_util.c"])
     result["data/text/new_game_intro.inc"] = _patch_oak_intro(
         result["data/text/new_game_intro.inc"]
     )
     return result
 
 
-def _oak_intro_bytes() -> bytes:
-    encoder = PokemonGen3ArabicEncoder()
-    stream = TokenStream(
-        (
-            TextToken("مرحبا بك!"),
-            InlineToken(
-                id="oak_intro_line_1",
-                kind=TokenKind.LINE_BREAK,
-                movement=TokenMovement.ORDERED,
-            ),
-            TextToken("سعيد بلقائك!"),
-            InlineToken(
-                id="oak_intro_page_1",
-                kind=TokenKind.CONTROL,
-                movement=TokenMovement.ORDERED,
-                name="PROMPT_CLEAR",
-                args={"raw_hex": "fb"},
-            ),
-            TextToken("أهلا بك في عالم بوكيمون!"),
-            InlineToken(
-                id="oak_intro_page_2",
-                kind=TokenKind.CONTROL,
-                movement=TokenMovement.ORDERED,
-                name="PROMPT_CLEAR",
-                args={"raw_hex": "fb"},
-            ),
-            TextToken("اسمي أوك."),
-            InlineToken(
-                id="oak_intro_page_3",
-                kind=TokenKind.CONTROL,
-                movement=TokenMovement.ORDERED,
-                name="PROMPT_CLEAR",
-                args={"raw_hex": "fb"},
-            ),
-            TextToken("يناديني الناس بمحبة"),
-            InlineToken(
-                id="oak_intro_line_2",
-                kind=TokenKind.LINE_BREAK,
-                movement=TokenMovement.ORDERED,
-            ),
-            TextToken("بروفيسور بوكيمون."),
-            InlineToken(
-                id="oak_intro_page_4",
-                kind=TokenKind.CONTROL,
-                movement=TokenMovement.ORDERED,
-                name="PROMPT_CLEAR",
-                args={"raw_hex": "fb"},
-            ),
-        )
+def _line(token_id: str) -> InlineToken:
+    return InlineToken(
+        id=token_id,
+        kind=TokenKind.LINE_BREAK,
+        movement=TokenMovement.ORDERED,
     )
-    return encoder.encode_message(stream, right_x=_OAK_INTRO_RIGHT_X, terminator=True)
+
+
+def _page(token_id: str) -> InlineToken:
+    return InlineToken(
+        id=token_id,
+        kind=TokenKind.CONTROL,
+        movement=TokenMovement.ORDERED,
+        name="PROMPT_CLEAR",
+        args={"raw_hex": "fb"},
+    )
+
+
+def _player(token_id: str) -> InlineToken:
+    return make_ltr_placeholder_token(token_id, "PLAYER", 0x01)
+
+
+def _rival(token_id: str) -> InlineToken:
+    return make_ltr_placeholder_token(token_id, "RIVAL", 0x06)
+
+
+def _oak_speech_streams() -> dict[str, TokenStream]:
+    return {
+        "gOakSpeech_Text_AskPlayerGender": TokenStream(
+            (
+                TextToken("والآن أخبرني."),
+                _line("gender_line"),
+                TextToken("هل أنت ولد أم بنت؟"),
+            )
+        ),
+        "gOakSpeech_Text_WelcomeToTheWorld": TokenStream(
+            (
+                TextToken("مرحبا بك!"),
+                _line("welcome_line_1"),
+                TextToken("سعيد بلقائك!"),
+                _page("welcome_page_1"),
+                TextToken("أهلا بك في عالم بوكيمون!"),
+                _page("welcome_page_2"),
+                TextToken("اسمي أوك."),
+                _page("welcome_page_3"),
+                TextToken("يناديني الناس بمحبة"),
+                _line("welcome_line_2"),
+                TextToken("بروفيسور بوكيمون."),
+                _page("welcome_page_4"),
+            )
+        ),
+        "gOakSpeech_Text_ThisWorld": TokenStream((TextToken("هذا العالم..."),)),
+        "gOakSpeech_Text_IsInhabitedFarAndWide": TokenStream(
+            (
+                TextToken("تعيش فيه في كل مكان"),
+                _line("world_line"),
+                TextToken("مخلوقات تسمى بوكيمون."),
+                _page("world_page"),
+            )
+        ),
+        "gOakSpeech_Text_IStudyPokemon": TokenStream(
+            (
+                TextToken("لبعض الناس، بوكيمون أصدقاء."),
+                _line("study_line_1"),
+                TextToken("وآخرون يقاتلون بهم."),
+                _page("study_page_1"),
+                TextToken("أما أنا..."),
+                _page("study_page_2"),
+                TextToken("فأدرس بوكيمون كمهنة."),
+                _page("study_page_3"),
+            )
+        ),
+        "gOakSpeech_Text_TellMeALittleAboutYourself": TokenStream(
+            (
+                TextToken("لكن أولا، أخبرني قليلا"),
+                _line("yourself_line"),
+                TextToken("عن نفسك."),
+                _page("yourself_page"),
+            )
+        ),
+        "gOakSpeech_Text_YourNameWhatIsIt": TokenStream(
+            (
+                TextToken("لنبدأ باسمك."),
+                _line("name_line"),
+                TextToken("ما اسمك؟"),
+                _page("name_page"),
+            )
+        ),
+        "gOakSpeech_Text_SoYourNameIsPlayer": TokenStream(
+            (
+                TextToken("حسنا..."),
+                _line("player_name_line"),
+                TextToken("إذن اسمك "),
+                _player("player_name"),
+            )
+        ),
+        "gOakSpeech_Text_WhatWasHisName": TokenStream(
+            (
+                TextToken("هذا حفيدي."),
+                _page("rival_intro_page_1"),
+                TextToken("إنه منافسك منذ كنتما"),
+                _line("rival_intro_line"),
+                TextToken("صغيرين."),
+                _page("rival_intro_page_2"),
+                TextToken("همم... ما كان اسمه؟"),
+            )
+        ),
+        "gOakSpeech_Text_YourRivalsNameWhatWasIt": TokenStream(
+            (TextToken("ما اسم منافسك؟"),)
+        ),
+        "gOakSpeech_Text_ConfirmRivalName": TokenStream(
+            (
+                TextToken("هل كان اسمه"),
+                _line("confirm_rival_line"),
+                _rival("confirm_rival_name"),
+            )
+        ),
+        "gOakSpeech_Text_RememberRivalsName": TokenStream(
+            (
+                TextToken("صحيح! تذكرت الآن!"),
+                _line("remember_rival_line"),
+                TextToken("اسمه "),
+                _rival("remember_rival_name"),
+                _page("remember_rival_page"),
+            )
+        ),
+        "gOakSpeech_Text_LetsGo": TokenStream(
+            (
+                _player("lets_go_player"),
+                _page("lets_go_page_1"),
+                TextToken("حان وقت بدء أسطورتك"),
+                _line("lets_go_line_1"),
+                TextToken("الخاصة مع بوكيمون!"),
+                _page("lets_go_page_2"),
+                TextToken("عالم الأحلام والمغامرات"),
+                _line("lets_go_line_2"),
+                TextToken("ينتظرك. هيا بنا!"),
+            )
+        ),
+    }
+
+
+def _oak_message_bytes(label: str) -> bytes:
+    streams = _oak_speech_streams()
+    try:
+        stream = streams[label]
+    except KeyError as exc:
+        raise ValueError(f"Unknown OAK speech label: {label}") from exc
+    return PokemonGen3ArabicEncoder().encode_message(
+        stream,
+        right_x=_OAK_INTRO_RIGHT_X,
+        terminator=True,
+    )
+
+
+def _oak_intro_bytes() -> bytes:
+    return _oak_message_bytes("gOakSpeech_Text_WelcomeToTheWorld")
 
 
 def _format_asm_bytes(data: bytes) -> str:
@@ -232,21 +346,30 @@ def _format_asm_bytes(data: bytes) -> str:
 
 
 def _patch_oak_intro(text: str) -> str:
-    original = """gOakSpeech_Text_WelcomeToTheWorld::
-    .string "Hello, there!\\n"
-    .string "Glad to meet you!\\p"
-    .string "Welcome to the world of POKéMON!\\p"
-    .string "My name is OAK.\\p"
-    .string "People affectionately refer to me\\n"
-    .string "as the POKéMON PROFESSOR.\\p$"
-"""
-    replacement = (
-        "gOakSpeech_Text_WelcomeToTheWorld::\n"
-        "    @ CLASSIC_RETRO_ARABIC_V1 — first OAK speech\n"
-        + _format_asm_bytes(_oak_intro_bytes())
-        + "\n"
-    )
-    return _replace_once(text, original, replacement, "OAK intro Arabic speech")
+    for label in _oak_speech_streams():
+        start = text.find(label + "::\n")
+        if start < 0:
+            raise ClassicRetroError(
+                ErrorCode.SOURCE_PATCH_FAILED,
+                f"OAK speech label not found: {label}",
+            )
+        end = text.find("\n\n", start)
+        if end < 0:
+            raise ClassicRetroError(
+                ErrorCode.SOURCE_PATCH_FAILED,
+                f"OAK speech block is not terminated: {label}",
+            )
+
+        replacement = (
+            label
+            + "::\n"
+            + "    @ CLASSIC_RETRO_ARABIC_V1 — Arabic OAK speech\n"
+            + _format_asm_bytes(_oak_message_bytes(label))
+            + "\n"
+        )
+        text = text[:start] + replacement + text[end + 1 :]
+
+    return text
 
 
 def _patch_characters(text: str) -> str:
@@ -257,6 +380,7 @@ def _patch_characters(text: str) -> str:
             "#define EXT_CTRL_CODE_RESUME_MUSIC           0x18\n"
             "#define EXT_CTRL_CODE_RTL                    0x19 // CLASSIC_RETRO_ARABIC_V1\n"
             "#define EXT_CTRL_CODE_LTR                    0x1A\n"
+            "#define EXT_CTRL_CODE_LTR_PLACEHOLDER        0x1B\n"
         ),
         "characters controls",
     )
@@ -281,6 +405,129 @@ def _patch_text_printer(text: str) -> str:
             "    sTempTextPrinter.rtlX = textSubPrinter->x;\n"
         ),
         "TextPrinter initialization",
+    )
+
+
+def _patch_string_util(text: str) -> str:
+    helper_anchor = "u8 *StringExpandPlaceholders(u8 *dest, const u8 *src)\n"
+    helper = """static u8 *StringCopyReversedMultibyteNoTerminator(u8 *dest, const u8 *src)
+{
+    const u8 *end = src;
+
+    while (*end != EOS)
+    {
+        if (*end == CHAR_EXTRA_SYMBOL || *end == CHAR_KEYPAD_ICON)
+            end += 2;
+        else
+            end++;
+    }
+
+    while (end > src)
+    {
+        if (end - src >= 2
+         && (*(end - 2) == CHAR_EXTRA_SYMBOL || *(end - 2) == CHAR_KEYPAD_ICON))
+        {
+            *dest++ = *(end - 2);
+            *dest++ = *(end - 1);
+            end -= 2;
+        }
+        else
+        {
+            *dest++ = *--end;
+        }
+    }
+
+    return dest;
+}
+
+// CLASSIC_RETRO_ARABIC_V1
+"""
+    text = _replace_once(
+        text,
+        helper_anchor,
+        helper + helper_anchor,
+        "LTR placeholder reverse-copy helper",
+    )
+
+    old = """        switch (c)
+        {
+            case PLACEHOLDER_BEGIN:
+                placeholderId = *src++;
+                expandedString = GetExpandedPlaceholder(placeholderId);
+                dest = StringExpandPlaceholders(dest, expandedString);
+                break;
+            case EXT_CTRL_CODE_BEGIN:
+                *dest++ = c;
+                c = *src++;
+                *dest++ = c;
+
+                switch (c)
+                {
+                    case 0x07:
+                    case 0x09:
+                    case 0x0F:
+                    case 0x15:
+                    case 0x16:
+                    case 0x17:
+                    case 0x18:
+                        break;
+                    case 0x04:
+                        *dest++ = *src++;
+                    case 0x0B:
+                        *dest++ = *src++;
+                    default:
+                        *dest++ = *src++;
+                }
+                break;
+"""
+    new = """        switch (c)
+        {
+            case PLACEHOLDER_BEGIN:
+                placeholderId = *src++;
+                expandedString = GetExpandedPlaceholder(placeholderId);
+                dest = StringExpandPlaceholders(dest, expandedString);
+                break;
+            case EXT_CTRL_CODE_BEGIN:
+                c = *src++;
+                if (c == EXT_CTRL_CODE_LTR_PLACEHOLDER)
+                {
+                    placeholderId = *src++;
+                    expandedString = GetExpandedPlaceholder(placeholderId);
+                    dest = StringCopyReversedMultibyteNoTerminator(dest, expandedString);
+                    break;
+                }
+
+                *dest++ = EXT_CTRL_CODE_BEGIN;
+                *dest++ = c;
+
+                switch (c)
+                {
+                    case 0x07:
+                    case 0x09:
+                    case 0x0F:
+                    case 0x15:
+                    case 0x16:
+                    case 0x17:
+                    case 0x18:
+                    case EXT_CTRL_CODE_LTR:
+                        break;
+                    case EXT_CTRL_CODE_RTL:
+                        *dest++ = *src++;
+                        break;
+                    case 0x04:
+                        *dest++ = *src++;
+                    case 0x0B:
+                        *dest++ = *src++;
+                    default:
+                        *dest++ = *src++;
+                }
+                break;
+"""
+    return _replace_once(
+        text,
+        old,
+        new,
+        "StringExpandPlaceholders Arabic controls",
     )
 
 
@@ -603,6 +850,7 @@ static s32 GetGlyphWidth_Arabic(u16 glyphId)
             "            case EXT_CTRL_CODE_SHIFT_RIGHT:\n"
             "            case EXT_CTRL_CODE_SHIFT_DOWN:\n"
             "            case EXT_CTRL_CODE_RTL:\n"
+            "            case EXT_CTRL_CODE_LTR_PLACEHOLDER:\n"
             "                ++str;\n"
         ),
         "GetStringWidth RTL argument",
