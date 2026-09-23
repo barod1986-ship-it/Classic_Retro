@@ -83,9 +83,22 @@ Inspect bytes produced for a logical Arabic line:
 
 Then build FireRed Rev 1 using the pinned upstream build target firered_rev1.
 
+## Dynamic PLAYER / RIVAL names
+
+The full Professor OAK reference speech uses FC 1B for PLAYER and RIVAL. The
+upstream StringExpandPlaceholders routine expands the selected Latin name, and
+Classic Retro reverses it by encoded glyph units before the already-RTL printer
+paints it from right to left. This keeps a name such as RED visually RED rather
+than DER.
+
+The name-entry UI itself is still the original FireRed Latin input UI. Supporting
+Arabic name entry is a separate feature from displaying dynamic Latin names
+correctly inside Arabic dialogue.
+
 ## v1 boundary
 
 - Arabic dialogue currently uses one shared Arabic glyph style even when the current game font is small, male, or female.
 - Combining harakat are rejected.
 - Arabic ligatures are disabled.
-- The RTL source engine and font path are established; bulk translation import into upstream dialogue sources is a later step.
+- All 13 Professor OAK speech strings in the new-game intro are the end-to-end reference translation.
+- Wider game dialogue import and Arabic name-entry UI remain later steps.
