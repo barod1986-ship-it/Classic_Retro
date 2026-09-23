@@ -284,9 +284,7 @@ def _oak_speech_streams() -> dict[str, TokenStream]:
                 TextToken("همم... ما كان اسمه؟"),
             )
         ),
-        "gOakSpeech_Text_YourRivalsNameWhatWasIt": TokenStream(
-            (TextToken("ما اسم منافسك؟"),)
-        ),
+        "gOakSpeech_Text_YourRivalsNameWhatWasIt": TokenStream((TextToken("ما اسم منافسك؟"),)),
         "gOakSpeech_Text_ConfirmRivalName": TokenStream(
             (
                 TextToken("هل كان اسمه"),
@@ -354,11 +352,10 @@ def _patch_oak_intro(text: str) -> str:
                 f"OAK speech label not found: {label}",
             )
         end = text.find("\n\n", start)
+        tail = end + 1
         if end < 0:
-            raise ClassicRetroError(
-                ErrorCode.SOURCE_PATCH_FAILED,
-                f"OAK speech block is not terminated: {label}",
-            )
+            end = len(text)
+            tail = len(text)
 
         replacement = (
             label
@@ -367,7 +364,7 @@ def _patch_oak_intro(text: str) -> str:
             + _format_asm_bytes(_oak_message_bytes(label))
             + "\n"
         )
-        text = text[:start] + replacement + text[end + 1 :]
+        text = text[:start] + replacement + text[tail:]
 
     return text
 
