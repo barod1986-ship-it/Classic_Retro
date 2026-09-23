@@ -172,12 +172,7 @@ def _patch_text_h(text: str) -> str:
     return _replace_once(
         text,
         "    u8 japanese;\n};\n",
-        (
-            "    u8 japanese;\n"
-            "    bool8 rtl; // CLASSIC_RETRO_ARABIC_V1\n"
-            "    u8 rtlX;\n"
-            "};\n"
-        ),
+        ("    u8 japanese;\n    bool8 rtl; // CLASSIC_RETRO_ARABIC_V1\n    u8 rtlX;\n};\n"),
         "TextPrinter RTL state",
     )
 
@@ -217,8 +212,7 @@ def _patch_charmap(text: str) -> str:
 
 def _patch_graphics_rules(text: str) -> str:
     anchor = (
-        "$(FONTGFXDIR)/latin_normal.fwlatfont: $(FONTGFXDIR)/latin_normal.png\n"
-        "\t$(GFX) $< $@\n"
+        "$(FONTGFXDIR)/latin_normal.fwlatfont: $(FONTGFXDIR)/latin_normal.png\n\t$(GFX) $< $@\n"
     )
     replacement = (
         anchor
@@ -244,7 +238,7 @@ def _patch_text_c(text: str, glyph_count: int) -> str:
     )
 
     glyph_anchor = (
-        'static const u16 sFontNormalLatinGlyphs[] = '
+        "static const u16 sFontNormalLatinGlyphs[] = "
         'INCBIN_U16("graphics/fonts/latin_normal.fwlatfont");\n'
     )
     text = _replace_once(
@@ -254,9 +248,9 @@ def _patch_text_c(text: str, glyph_count: int) -> str:
             glyph_anchor
             + "#define ARABIC_GLYPH_FIRST (0x100 | 0x40) // CLASSIC_RETRO_ARABIC_V1\n"
             + f"#define ARABIC_GLYPH_COUNT {glyph_count}\n"
-            + 'static const u16 sFontArabicGlyphs[] = '
+            + "static const u16 sFontArabicGlyphs[] = "
             + 'INCBIN_U16("graphics/fonts/arabic_normal.hwlatfont");\n'
-            + 'static const u8 sFontArabicGlyphWidths[] = '
+            + "static const u8 sFontArabicGlyphWidths[] = "
             + 'INCBIN_U8("graphics/fonts/arabic_normal_widths.bin");\n'
         ),
         "Arabic font data",
