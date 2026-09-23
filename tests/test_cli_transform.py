@@ -13,12 +13,9 @@ def test_cli_transform_verify(tmp_path, capsys):
         "stages": [
             {
                 "codec": "zlib",
-                "options": {
-                    "level": 9,
-                    "max_output_bytes": 1024
-                }
+                "options": {"level": 9, "max_output_bytes": 1024},
             }
-        ]
+        ],
     }
     profile_path = tmp_path / "transform.json"
     profile_path.write_text(json.dumps(profile), encoding="utf-8")
