@@ -7,6 +7,7 @@ import pytest
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.pokemon_gen3_arabic import (
     ARABIC_SLOT_FIRST,
+    ARABIC_SLOT_LAST,
     PokemonGen3ArabicEncoder,
     build_arabic_glyph_map,
 )
@@ -17,7 +18,7 @@ def test_arabic_glyph_map_uses_only_reserved_extra_symbol_range():
     glyph_map = build_arabic_glyph_map()
 
     assert glyph_map.first_slot == ARABIC_SLOT_FIRST
-    assert glyph_map.last_slot <= 0xFF
+    assert glyph_map.last_slot <= ARABIC_SLOT_LAST
     assert len(glyph_map.characters) == len(set(glyph_map.characters))
     assert all(glyph_map.encode(character)[0] == 0xF9 for character in glyph_map.characters)
 
