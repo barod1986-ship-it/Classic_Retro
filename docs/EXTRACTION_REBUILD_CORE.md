@@ -169,6 +169,14 @@ The data model is versioned through:
 rebuild-plan.schema.json
 ```
 
+A plan can be checked against an image with:
+
+```text
+classic-retro rebuild verify plan.json game.bin
+```
+
+The command extracts every declared original resource and rebuilds the image without edits. Success means the entire image is byte-identical.
+
 Engine/Game Adapters can construct RebuildPlan objects directly or load versioned plan data.
 
 The current core intentionally stops before ROM expansion, compression, pointer discovery, and automatic reference tracing. Those behaviors require platform/engine-specific evidence.
