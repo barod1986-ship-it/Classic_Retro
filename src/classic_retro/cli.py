@@ -18,6 +18,8 @@ from classic_retro.media.resolve import resolve_media
 from classic_retro.rebuild.model import load_rebuild_plan
 from classic_retro.rebuild.pipeline import verify_round_trip
 from classic_retro.text.document import load_translation_file
+from classic_retro.transform.profile import build_pipeline, load_transform_profile
+from classic_retro.transform.registry import build_transform_registry
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -92,6 +94,19 @@ def _build_parser() -> argparse.ArgumentParser:
     verify_rebuild.add_argument("plan", type=Path)
     verify_rebuild.add_argument("image", type=Path)
     verify_rebuild.set_defaults(handler=_cmd_rebuild_verify)
+
+    transform = subcommands.add_parser(
+        "transform",
+        help="Validate resource transform pipelines and compressed fixtures",
+    )
+    transform_commands = transform.add_subparsers(dest="transform_command", required=True)
+    verify_transform = transform_commands.add_parser(
+        "verify",
+        help="Decode, reuse unchanged bytes, and verify forced re-encoding",
+    )
+    verify_transform.add_argument("profile", type=Path)
+    verify_transform.add_argument("data", type=Path)
+    verify_transform.set_defaults(handler=_cmd_transform_verify)
 
     codec = subcommands.add_parser(
         "codec",
@@ -177,6 +192,26 @@ def _cmd_rebuild_verify(args: argparse.Namespace) -> int:
         "references": len(plan.references),
         "safe_regions": len(plan.safe_regions),
         "writes": result.writes,
+        "round_trip": True,
+    }
+    print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_transform_verify(args: argparse.Namespace) -> int:
+    profile = load_transform_profile(args.profile)
+    registry = build_transform_registry()
+    pipeline = build_pipeline(profile, registry)
+    data = args.data.read_bytes()
+    result = pipeline.verify(data)
+    payload = {
+        "pipeline": profile.id,
+        "stages": [stage.codec for stage in profile.stages],
+        "original_bytes": result.original_size,
+        "decoded_bytes": result.decoded_size,
+        "rebuilt_bytes": result.rebuilt_size,
+        "reused_original": result.reused_original,
+        "forced_reencode_exact": result.forced_reencode_exact,
         "round_trip": True,
     }
     print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
