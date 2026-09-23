@@ -78,7 +78,7 @@ jobs:
       - name: Install build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential binutils-arm-none-eabi libpng-dev fonts-dejavu-core
+          sudo apt-get install -y build-essential binutils-arm-none-eabi libpng-dev fontconfig fonts-noto-core
 
       - name: Install toolkit
         working-directory: toolkit
@@ -105,10 +105,12 @@ jobs:
           echo "dd5945db9b930750cb39d00c84da8571feebf417  pokefirered_rev1.gba" | sha1sum -c -
           test "$(sha256sum pokefirered_rev1.gba | awk '{print $1}')" = "729041b940afe031302d630fdbe57c0c145f3f7b6d9b8eca5e98678d0ca4d059"
 
-      - name: Apply Arabic renderer, font, and full OAK speech translation
+      - name: Apply Arabic renderer, readable Kufi font, and full OAK speech translation
         working-directory: toolkit
         run: |
-          classic-retro pokemon-gen3 prepare-arabic-source ../upstream-target --font /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf
+          ARABIC_FONT="$(fc-match -f '%{file}' 'Noto Kufi Arabic:style=SemiBold')"
+          test -f "$ARABIC_FONT"
+          classic-retro pokemon-gen3 prepare-arabic-source ../upstream-target --font "$ARABIC_FONT"
 
       - name: Build Arabic FireRed Rev 1 with matching compiler
         working-directory: upstream-target
@@ -149,6 +151,9 @@ jobs:
             "dynamic_ltr_placeholders": ["PLAYER", "RIVAL"],
             "dynamic_ltr_control": "FC 1B pp",
             "rtl_right_x": 216,
+            "arabic_font": "Noto Kufi Arabic SemiBold",
+            "font_license": "SIL Open Font License 1.1",
+            "font_layout": "left-aligned variable advance; 16x14 FireRed copy bounds",
             "pokefirered_commit": "c75f352304d529f6ba92d4f74b9cf8b5c3810788",
             "agbcc_commit": "da598c1d918402c42c0c0d7128ba14567f3175e9",
             "flips_commit": "6caac470f7fc096b0c5fdc374b65954f8bac5b16"
