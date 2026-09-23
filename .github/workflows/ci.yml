@@ -105,7 +105,7 @@ jobs:
           echo "dd5945db9b930750cb39d00c84da8571feebf417  pokefirered_rev1.gba" | sha1sum -c -
           test "$(sha256sum pokefirered_rev1.gba | awk '{print $1}')" = "729041b940afe031302d630fdbe57c0c145f3f7b6d9b8eca5e98678d0ca4d059"
 
-      - name: Apply Arabic renderer, font, and first OAK translation
+      - name: Apply Arabic renderer, font, and full OAK speech translation
         working-directory: toolkit
         run: |
           classic-retro pokemon-gen3 prepare-arabic-source ../upstream-target --font /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf
@@ -121,8 +121,8 @@ jobs:
       - name: Create and verify BPS patch
         run: |
           mkdir -p artifact
-          ./flips/flips --create --exact --bps upstream-base/pokefirered_rev1.gba upstream-target/pokefirered_rev1.gba artifact/firered-rev1-arabic-oak-intro.bps
-          ./flips/flips --apply artifact/firered-rev1-arabic-oak-intro.bps upstream-base/pokefirered_rev1.gba artifact/verified.gba
+          ./flips/flips --create --exact --bps upstream-base/pokefirered_rev1.gba upstream-target/pokefirered_rev1.gba artifact/firered-rev1-arabic-oak-full.bps
+          ./flips/flips --apply artifact/firered-rev1-arabic-oak-full.bps upstream-base/pokefirered_rev1.gba artifact/verified.gba
           cmp artifact/verified.gba upstream-target/pokefirered_rev1.gba
           rm artifact/verified.gba
 
@@ -131,8 +131,8 @@ jobs:
           BASE_SHA1="$(sha1sum upstream-base/pokefirered_rev1.gba | awk '{print $1}')"
           BASE_SHA256="$(sha256sum upstream-base/pokefirered_rev1.gba | awk '{print $1}')"
           TARGET_SHA256="$(sha256sum upstream-target/pokefirered_rev1.gba | awk '{print $1}')"
-          PATCH_SHA256="$(sha256sum artifact/firered-rev1-arabic-oak-intro.bps | awk '{print $1}')"
-          PATCH_BYTES="$(stat -c %s artifact/firered-rev1-arabic-oak-intro.bps)"
+          PATCH_SHA256="$(sha256sum artifact/firered-rev1-arabic-oak-full.bps | awk '{print $1}')"
+          PATCH_BYTES="$(stat -c %s artifact/firered-rev1-arabic-oak-full.bps)"
           cat > artifact/manifest.json <<EOF
           {
             "project": "Classic_Retro",
@@ -143,15 +143,11 @@ jobs:
             "patch_sha256": "$PATCH_SHA256",
             "patch_bytes": $PATCH_BYTES,
             "format": "BPS",
-            "scope": "first Professor OAK welcome speech",
-            "translation": [
-              "مرحبا بك!",
-              "سعيد بلقائك!",
-              "أهلا بك في عالم بوكيمون!",
-              "اسمي أوك.",
-              "يناديني الناس بمحبة",
-              "بروفيسور بوكيمون."
-            ],
+            "scope": "all 13 Professor OAK speech strings in the new-game intro",
+            "translation_language": "ar",
+            "oak_messages": 13,
+            "dynamic_ltr_placeholders": ["PLAYER", "RIVAL"],
+            "dynamic_ltr_control": "FC 1B pp",
             "rtl_right_x": 216,
             "pokefirered_commit": "c75f352304d529f6ba92d4f74b9cf8b5c3810788",
             "agbcc_commit": "da598c1d918402c42c0c0d7128ba14567f3175e9",
@@ -162,9 +158,9 @@ jobs:
       - name: Upload BPS patch only
         uses: actions/upload-artifact@v6
         with:
-          name: firered-rev1-arabic-oak-intro-bps
+          name: firered-rev1-arabic-oak-full-bps
           path: |
-            artifact/firered-rev1-arabic-oak-intro.bps
+            artifact/firered-rev1-arabic-oak-full.bps
             artifact/manifest.json
           if-no-files-found: error
           retention-days: 14
