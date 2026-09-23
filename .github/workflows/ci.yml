@@ -333,3 +333,49 @@ jobs:
             artifact/arabic_font_preview.png
           if-no-files-found: error
           retention-days: 14
+
+  golden-sun-arabic-overlay:
+    # The gsret/goldensun disassembly rebuilds Golden Sun but cannot relocate
+    # data yet: the overlay patches the user's own USA/Europe ROM locally
+    # (docs/GOLDEN_SUN_ARABIC_TEST_AR.md). CI re-assembles the Thumb hooks and
+    # compares them with the stored bytes, and measures every Arabic line with
+    # the reference font.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Classic Retro
+        uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y binutils-arm-none-eabi
+
+      - name: Install toolkit
+        run: python -m pip install -e .
+
+      - name: Re-assemble the Thumb hooks and compare with the stored bytes
+        run: classic-retro golden-sun check-hooks
+
+      - name: Validate the Arabic script and measure every line with the reference font
+        run: |
+          mkdir -p artifact
+          NOTO_COMMIT=ffebf8c1ee449e544955a7e813c54f9b73848eac
+          ARABIC_FONT=reference-font.ttf
+          curl --fail --location "https://raw.githubusercontent.com/notofonts/noto-fonts/$NOTO_COMMIT/hinted/ttf/NotoKufiArabic/NotoKufiArabic-SemiBold.ttf" -o "$ARABIC_FONT"
+          echo "aa30cd2663f1eb1c940c9cd6a898877f307c2572e72a8a352896fe23f512018e  $ARABIC_FONT" | sha256sum -c -
+          classic-retro golden-sun check-translations --font "$ARABIC_FONT" --preview artifact/arabic_font_preview.png | tee artifact/translation-report.json
+
+      - name: Upload translation review files
+        uses: actions/upload-artifact@v6
+        with:
+          name: golden-sun-arabic-overlay
+          path: |
+            artifact/translation-report.json
+            artifact/arabic_font_preview.png
+          if-no-files-found: error
+          retention-days: 14

@@ -106,4 +106,13 @@ own ROM. The whole new-game opening (19 messages: the narration, the cliff above
 and the way to the mines) is in Arabic. See [the FF6 Advance testing guide](docs/FF6A_ARABIC_TEST_AR.md)
 and [the renderer notes](docs/FF6A_ARABIC_RENDERER.md).
 
+The fourth reference target is **Golden Sun (USA, Europe)**. Its disassembly (gsret/goldensun)
+rebuilds the ROM but cannot relocate data yet, so a binary overlay patches your own ROM: the
+translated strings get their own context-Huffman trees with 12-bit Arabic codes (the game's text
+bank stays untouched), Thumb hooks mirror the game's sprite typewriter, and the player's name
+stays a left-to-right island inside Arabic lines.
+The whole storm-night opening (21 messages, both Yes/No branches) is in Arabic. See
+[the Golden Sun testing guide](docs/GOLDEN_SUN_ARABIC_TEST_AR.md) and
+[the renderer notes](docs/GOLDEN_SUN_ARABIC_RENDERER.md).
+
 See [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md).
