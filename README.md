@@ -79,8 +79,17 @@ Patch / Build Artifact
 
 ## Repository status
 
-**Foundation phase.**
+**Foundation toolkit with a playable FireRed Rev 1 reference patch.**
 
-No previous implementation is treated as authoritative. The project is being rebuilt from a clean base with documented architecture and reproducible tooling.
+The first end-to-end example translates the 13 Professor OAK speech strings in
+the new-game intro. This is a renderer/font test, not a complete game translation.
+Other platforms currently have detection or foundation components; they do not
+all have playable Arabic adapters.
+
+Install with `python -m pip install -e ".[dev]"`, run `pytest`, and identify your
+own input with `classic-retro detect "path/to/game.gba"`.
+
+See [the Arabic FireRed testing guide](docs/FIRERED_ARABIC_TEST_AR.md) for applying
+the reference BPS patch, the exact supported ROM, and the current limits.
 
 See [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md).

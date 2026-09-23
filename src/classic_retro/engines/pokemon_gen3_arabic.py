@@ -4,8 +4,11 @@ import math
 import unicodedata
 from dataclasses import dataclass
 from functools import lru_cache
+from io import BytesIO
 from pathlib import Path
 
+import uharfbuzz as hb
+from fontTools.ttLib import TTFont, TTLibError
 from PIL import Image, ImageDraw, ImageFont
 
 from classic_retro.arabic.pipeline import ArabicPipeline, ArabicPipelineConfig
@@ -231,15 +234,16 @@ def build_arabic_font_atlas(
     baseline = -top
 
     for index, character in enumerate(glyph_map.characters):
+        glyph_text = character
         cell = Image.new("L", (16, 16), 0)
         draw = ImageDraw.Draw(cell)
-        left, _, right, _ = font.getbbox(character, anchor="ls")
+        left, _, right, _ = font.getbbox(glyph_text, anchor="ls")
 
         # FireRed's CopyGlyphToWindow always starts reading at glyph x=0.
         # Centering variable-width glyphs here would make the engine crop them
         # to the first 'advance' columns. Align the ink box to x=0 instead.
         x = -left
-        draw.text((x, baseline), character, font=font, fill=255, anchor="ls")
+        draw.text((x, baseline), glyph_text, font=font, fill=255, anchor="ls")
 
         pixels = cell.load()
         foreground = [
@@ -252,9 +256,18 @@ def build_arabic_font_atlas(
                 f"Selected font produced an empty glyph for U+{ord(character):04X}",
             )
 
-        copy_width = _glyph_copy_width(font, character, left, right)
+        form = unicodedata.decomposition(character).split()[:1]
+        if form in (["<initial>"], ["<medial>"]):
+            # A joining edge must meet the adjacent cell, not the fractional
+            # side bearing left by rasterization at this small pixel size.
+            ink_left = min(x_pos for x_pos, _ in foreground)
+            foreground = [(x_pos - ink_left, y) for x_pos, y in foreground]
+        copy_width = _glyph_copy_width(font, glyph_text, left, right)
         ink_right = max(x_pos for x_pos, _ in foreground)
-        copy_width = max(copy_width, ink_right + 1)
+        if form in (["<final>"], ["<medial>"]):
+            copy_width = ink_right + 1
+        else:
+            copy_width = max(copy_width, ink_right + 1)
         if copy_width > 16:
             raise ClassicRetroError(
                 ErrorCode.FONT_BUILD_FAILED,
@@ -280,7 +293,7 @@ def build_arabic_font_atlas(
             colored_pixels[x_pos, y] = 1
 
         _validate_fire_red_glyph_bounds(colored, copy_width, character)
-        widths.append(max(3, copy_width))
+        widths.append(copy_width)
 
         column = index % 16
         row = index // 16
@@ -338,12 +351,17 @@ def _choose_font(
     font_path: Path,
     characters: tuple[str, ...],
 ) -> tuple[ImageFont.FreeTypeFont, int, int, int]:
+    font_data = _contextual_font_data(font_path, characters)
     for size in range(20, 5, -1):
-        font = ImageFont.truetype(str(font_path), size=size)
-        boxes = [font.getbbox(character, anchor="ls") for character in characters]
+        # HarfBuzz has already selected each contextual glyph. BASIC prevents
+        # a second shaping pass and works on Windows without optional libraqm.
+        font = ImageFont.truetype(
+            BytesIO(font_data), size=size, layout_engine=ImageFont.Layout.BASIC
+        )
+        boxes = [font.getbbox(text, anchor="ls") for text in characters]
         copy_widths = [
-            _glyph_copy_width(font, character, box[0], box[2])
-            for character, box in zip(characters, boxes, strict=True)
+            _glyph_copy_width(font, text, box[0], box[2])
+            for text, box in zip(characters, boxes, strict=True)
         ]
         top = min(box[1] for box in boxes)
         bottom = max(box[3] for box in boxes)
@@ -356,6 +374,70 @@ def _choose_font(
         ErrorCode.FONT_BUILD_FAILED,
         "Selected font cannot fit the FireRed 16x14 copied glyph area",
     )
+
+
+def _font_glyph_text(character: str) -> str:
+    """Ask OpenType for a contextual form without requiring presentation-form cmap entries."""
+    decomposition = unicodedata.decomposition(character).split()
+    if len(decomposition) == 2 and decomposition[0] in {
+        "<isolated>",
+        "<initial>",
+        "<medial>",
+        "<final>",
+    }:
+        form, codepoint = decomposition
+        before = "\u200d" if form in {"<medial>", "<final>"} else ""
+        after = "\u200d" if form in {"<medial>", "<initial>"} else ""
+        return before + chr(int(codepoint, 16)) + after
+    return character
+
+
+def _contextual_font_data(font_path: Path, characters: tuple[str, ...]) -> bytes:
+    """Map game slot identifiers to HarfBuzz-selected outlines in an in-memory font.
+
+    This does not alter or distribute the user's TTF/OTF. It only supplies a cmap
+    for FreeType's rasterizer, so its optional platform shaping libraries are not
+    required. Glyph zero is .notdef, even when it has visible rectangle pixels.
+    """
+    raw = font_path.read_bytes()
+    try:
+        parsed = TTFont(BytesIO(raw), recalcTimestamp=False)
+    except TTLibError as exc:
+        raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, "Invalid TTF/OTF font file") from exc
+    with parsed as font:
+        if "cmap" not in font:
+            raise ClassicRetroError(
+                ErrorCode.FONT_BUILD_FAILED, "Font has no Unicode character map"
+            )
+        shaper = hb.Font(hb.Face(raw))
+        glyph_order = font.getGlyphOrder()
+        mappings = {}
+        for character in characters:
+            buffer = hb.Buffer()
+            buffer.add_str(_font_glyph_text(character))
+            buffer.guess_segment_properties()
+            buffer.flags = hb.BufferFlags.REMOVE_DEFAULT_IGNORABLES
+            hb.shape(shaper, buffer, {"liga": False, "rlig": False})
+            glyphs = buffer.glyph_infos
+            if not glyphs or any(glyph.codepoint == 0 for glyph in glyphs):
+                raise ClassicRetroError(
+                    ErrorCode.FONT_BUILD_FAILED,
+                    f"Selected font has no Arabic glyph for U+{ord(character):04X}",
+                )
+            if len(glyphs) != 1 or any(
+                position.x_offset or position.y_offset for position in buffer.glyph_positions
+            ):
+                raise ClassicRetroError(
+                    ErrorCode.FONT_BUILD_FAILED,
+                    f"U+{ord(character):04X} requires composite placement; select another font",
+                )
+            mappings[ord(character)] = glyph_order[glyphs[0].codepoint]
+        for table in font["cmap"].tables:
+            if table.isUnicode() and table.format != 14:
+                table.cmap.update(mappings)
+        output = BytesIO()
+        font.save(output)
+        return output.getvalue()
 
 
 def _reject_combining_marks(stream: TokenStream) -> None:
