@@ -4,37 +4,246 @@
   "title": "Classic Retro Arabic Translation Document",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "game_id", "target_language", "entries"],
+  "required": [
+    "schema_version",
+    "game_id",
+    "source_language",
+    "target_language",
+    "entries"
+  ],
   "properties": {
-    "schema_version": {"const": "1.0"},
-    "game_id": {"type": "string", "minLength": 1},
-    "source_language": {"type": "string", "minLength": 2},
-    "target_language": {"const": "ar"},
+    "schema_version": {
+      "const": "1.0"
+    },
+    "game_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_language": {
+      "type": "string",
+      "minLength": 2
+    },
+    "target_language": {
+      "const": "ar"
+    },
     "entries": {
       "type": "array",
       "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["id", "source", "translation"],
-        "properties": {
-          "id": {"type": "string", "minLength": 1},
-          "source": {"type": "string"},
-          "translation": {"type": "string"},
-          "context": {"type": "string"},
-          "notes": {"type": "string"},
-          "status": {
-            "type": "string",
-            "enum": ["draft", "reviewed", "final"]
-          },
-          "constraints": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "box": {"type": "string", "minLength": 1},
-              "max_width_px": {"type": "integer", "minimum": 1},
-              "max_lines": {"type": "integer", "minimum": 1}
-            }
+        "$ref": "#/$defs/entry"
+      }
+    }
+  },
+  "$defs": {
+    "scalar": {
+      "type": [
+        "string",
+        "integer",
+        "boolean"
+      ]
+    },
+    "args": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/scalar"
+      }
+    },
+    "movement": {
+      "type": "string",
+      "enum": [
+        "free",
+        "ordered"
+      ]
+    },
+    "textToken": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "text"
+      ],
+      "properties": {
+        "type": {
+          "const": "text"
+        },
+        "text": {
+          "type": "string"
+        }
+      }
+    },
+    "namedInlineToken": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "id",
+        "name",
+        "movement"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "variable",
+            "control"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "movement": {
+          "$ref": "#/$defs/movement"
+        },
+        "args": {
+          "$ref": "#/$defs/args"
+        }
+      }
+    },
+    "breakToken": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "id",
+        "movement"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "line_break",
+            "page_break"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "movement": {
+          "$ref": "#/$defs/movement"
+        },
+        "args": {
+          "$ref": "#/$defs/args"
+        }
+      }
+    },
+    "opaqueToken": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "id",
+        "movement",
+        "data_hex"
+      ],
+      "properties": {
+        "type": {
+          "const": "opaque"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "movement": {
+          "$ref": "#/$defs/movement"
+        },
+        "data_hex": {
+          "type": "string",
+          "pattern": "^(?:[0-9A-Fa-f]{2})+$"
+        },
+        "args": {
+          "$ref": "#/$defs/args"
+        }
+      }
+    },
+    "token": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/textToken"
+        },
+        {
+          "$ref": "#/$defs/namedInlineToken"
+        },
+        {
+          "$ref": "#/$defs/breakToken"
+        },
+        {
+          "$ref": "#/$defs/opaqueToken"
+        }
+      ]
+    },
+    "stream": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tokens"
+      ],
+      "properties": {
+        "tokens": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/token"
           }
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "box": {
+          "type": "string",
+          "minLength": 1
+        },
+        "max_width_px": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_lines": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source",
+        "target"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "$ref": "#/$defs/stream"
+        },
+        "target": {
+          "$ref": "#/$defs/stream"
+        },
+        "context": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "reviewed",
+            "final"
+          ]
+        },
+        "constraints": {
+          "$ref": "#/$defs/constraints"
         }
       }
     }

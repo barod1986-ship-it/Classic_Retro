@@ -43,9 +43,49 @@ def test_translation_schema_requires_arabic_target():
             {
                 "schema_version": "1.0",
                 "game_id": "example",
+                "source_language": "en",
                 "target_language": "en",
                 "entries": [],
             },
         )
 
     assert caught.value.code is ErrorCode.INVALID_SCHEMA_INSTANCE
+
+
+def test_translation_schema_accepts_typed_inline_tokens():
+    validate_document(
+        "translation.schema.json",
+        {
+            "schema_version": "1.0",
+            "game_id": "example",
+            "source_language": "en",
+            "target_language": "ar",
+            "entries": [
+                {
+                    "id": "dialogue.001",
+                    "source": {
+                        "tokens": [
+                            {"type": "text", "text": "Hello "},
+                            {
+                                "type": "variable",
+                                "id": "name",
+                                "name": "PLAYER",
+                                "movement": "free",
+                            },
+                        ]
+                    },
+                    "target": {
+                        "tokens": [
+                            {"type": "text", "text": "مرحبًا "},
+                            {
+                                "type": "variable",
+                                "id": "name",
+                                "name": "PLAYER",
+                                "movement": "free",
+                            },
+                        ]
+                    },
+                }
+            ],
+        },
+    )

@@ -12,6 +12,7 @@ from classic_retro.adapters.registry import build_registry
 from classic_retro.core.errors import ClassicRetroError
 from classic_retro.core.identity import fingerprint_file
 from classic_retro.media.resolve import resolve_media
+from classic_retro.text.document import load_translation_file
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -47,6 +48,21 @@ def _build_parser() -> argparse.ArgumentParser:
     inspect_media.add_argument("path", type=Path)
     inspect_media.set_defaults(handler=_cmd_media_inspect)
 
+    translation = subcommands.add_parser(
+        "translation",
+        help="Validate and inspect canonical translation documents",
+    )
+    translation_commands = translation.add_subparsers(
+        dest="translation_command",
+        required=True,
+    )
+    validate_translation = translation_commands.add_parser(
+        "validate",
+        help="Validate schema, entry IDs, and protected token preservation",
+    )
+    validate_translation.add_argument("path", type=Path)
+    validate_translation.set_defaults(handler=_cmd_translation_validate)
+
     adapters = subcommands.add_parser("adapters", help="List loaded adapter IDs")
     adapters.set_defaults(handler=_cmd_adapters)
 
@@ -74,6 +90,12 @@ def _cmd_detect(args: argparse.Namespace) -> int:
 def _cmd_media_inspect(args: argparse.Namespace) -> int:
     result = resolve_media(args.path)
     print(json.dumps(result.to_dict(), ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_translation_validate(args: argparse.Namespace) -> int:
+    document = load_translation_file(args.path)
+    print(json.dumps(document.summary(), ensure_ascii=False, indent=2, sort_keys=True))
     return 0
 
 
