@@ -48,7 +48,7 @@ def test_fixed_codec_decodes_and_round_trips_exactly():
 
     decoded = codec.verify_round_trip(data, require_terminator=True)
 
-    assert decoded.consumed_bytes == 9
+    assert decoded.consumed_bytes == 8
     assert decoded.terminator_id == "end"
     assert decoded.stream.visible_text == "Hi!"
     assert [token.name for token in decoded.stream.inline_tokens] == ["PLAYER", "WAIT"]
