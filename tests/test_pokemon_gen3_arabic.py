@@ -8,8 +8,10 @@ from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.pokemon_gen3_arabic import (
     ARABIC_SLOT_FIRST,
     ARABIC_SLOT_LAST,
+    EXT_CTRL_LTR_PLACEHOLDER,
     PokemonGen3ArabicEncoder,
     build_arabic_glyph_map,
+    make_ltr_placeholder_token,
 )
 from classic_retro.text.tokens import TextToken, TokenStream
 
@@ -48,3 +50,19 @@ def test_arabic_combining_marks_fail_instead_of_disappearing():
         )
 
     assert caught.value.code is ErrorCode.UNSUPPORTED_ARABIC_MARK
+
+
+def test_ltr_placeholder_token_uses_ordered_runtime_expansion_control():
+    token = make_ltr_placeholder_token("player", "PLAYER", 0x01)
+
+    assert token.movement.value == "ordered"
+    assert token.args["raw_hex"] == f"fc{EXT_CTRL_LTR_PLACEHOLDER:02x}01"
+
+    encoder = PokemonGen3ArabicEncoder()
+    data = encoder.encode_message(
+        TokenStream((TextToken("اسمك "), token)),
+        right_x=216,
+    )
+
+    assert bytes((0xFC, EXT_CTRL_LTR_PLACEHOLDER, 0x01)) in data
+    assert bytes((0xFD, 0x01)) not in data
