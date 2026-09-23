@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import pytest
+
+from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.pokemon_gen3_arabic import build_arabic_glyph_map
 from classic_retro.source import pokefirered_arabic as overlay
 
@@ -61,3 +64,12 @@ def test_oak_intro_bytes_preserve_newlines_pages_and_eos():
     assert data.count(0xFE) == 2
     assert data.count(0xFB) == 4
     assert data[-3:] == bytes.fromhex("fc1aff")
+
+
+def test_charmap_overlay_rejects_upstream_f9_collision():
+    original = "RESUME_MUSIC = FC 18\nEXISTING = F9 40\n"
+
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay._patch_charmap(original)
+
+    assert caught.value.code is ErrorCode.SOURCE_PATCH_FAILED
