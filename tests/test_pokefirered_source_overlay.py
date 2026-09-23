@@ -32,3 +32,32 @@ def test_graphics_overlay_uses_full_width_font_container():
 
     assert "arabic_normal.fwlatfont" in patched
     assert "arabic_normal.hwlatfont" not in patched
+
+
+def test_oak_intro_overlay_replaces_only_first_speech_with_arabic_bytes():
+    original = """gOakSpeech_Text_WelcomeToTheWorld::
+    .string "Hello, there!\\n"
+    .string "Glad to meet you!\\p"
+    .string "Welcome to the world of POKéMON!\\p"
+    .string "My name is OAK.\\p"
+    .string "People affectionately refer to me\\n"
+    .string "as the POKéMON PROFESSOR.\\p$"
+
+gOakSpeech_Text_ThisWorld::
+    .string "This world…$"
+"""
+    patched = overlay._patch_oak_intro(original)
+
+    assert "CLASSIC_RETRO_ARABIC_V1 — first OAK speech" in patched
+    assert "Hello, there!" not in patched
+    assert "gOakSpeech_Text_ThisWorld::" in patched
+    assert ".byte 0xFC, 0x19, 0xD8" in patched
+
+
+def test_oak_intro_bytes_preserve_newlines_pages_and_eos():
+    data = overlay._oak_intro_bytes()
+
+    assert data[:3] == bytes.fromhex("fc19d8")
+    assert data.count(0xFE) == 2
+    assert data.count(0xFB) == 4
+    assert data[-3:] == bytes.fromhex("fc1aff")
