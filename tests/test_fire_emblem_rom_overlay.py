@@ -31,9 +31,21 @@ from classic_retro.engines.fire_emblem_arabic import (
     build_fire_emblem_arabic_glyph_map,
     fire_emblem_stream,
 )
+from classic_retro.engines.fire_emblem_legend import (
+    SCREEN_HEIGHT,
+    SCREEN_WIDTH,
+    LegendImage,
+    decode_legend_image,
+    encode_legend_image,
+    legend_budget,
+)
 from classic_retro.rebuild.bps import apply_bps
+from classic_retro.rebuild.lz77 import decompress_lz77
 from classic_retro.rom import fire_emblem_arabic as overlay
-from classic_retro.rom.fire_emblem_arabic_script import FireEmblemArabicMessage
+from classic_retro.rom.fire_emblem_arabic_script import (
+    FireEmblemArabicMessage,
+    fire_emblem_arabic_legend,
+)
 
 BASE = overlay.ROM_BASE
 TEXT_DATA = 0x08100000
@@ -93,6 +105,11 @@ def _synthetic_rom(messages: list[bytes]) -> bytes:
     for site in overlay.HOOK_SITES:
         put(site.address, site.original)
     put(overlay.TALK_STATE_POINTER, struct.pack("<I", overlay.TALK_STATE_ADDRESS))
+    for number, entry in enumerate(overlay.LEGEND_ORIGINAL):
+        put(
+            overlay.LEGEND_TABLE_ADDRESS + number * overlay.LEGEND_ENTRY_BYTES,
+            struct.pack("<III", *entry),
+        )
 
     nodes, encoded = _huffman(messages)
     slots = (overlay.HUFFMAN_ROOT_POINTER - overlay.HUFFMAN_TABLE_ADDRESS) // 4
@@ -138,6 +155,21 @@ def _fake_font(font_path, talk=None, **_kwargs) -> FireEmblemRtlFont:
     )
 
 
+def _fake_legend(font_path, subtitles=None) -> overlay.BuiltLegend:
+    """A checkerboard band per image instead of drawn text (no font needed)."""
+    items = []
+    for subtitle in fire_emblem_arabic_legend():
+        pixels = bytes(
+            (x // 8 + y // 8 + subtitle.index) % 13 + 1 if 72 <= y < 88 and 16 <= x < 96 else 0
+            for y in range(SCREEN_HEIGHT)
+            for x in range(SCREEN_WIDTH)
+        )
+        image = LegendImage(pixels=pixels, lines=subtitle.lines, widths=(80,))
+        encoded = encode_legend_image(image, legend_budget(subtitle.index))
+        items.append(overlay.BuiltSubtitle(subtitle=subtitle, image=image, encoded=encoded))
+    return overlay.BuiltLegend(font_size=13, items=tuple(items))
+
+
 def _translations(messages: list[bytes]) -> tuple[FireEmblemArabicMessage, ...]:
     def pinned(index: int, box: TalkBox, notation: str) -> FireEmblemArabicMessage:
         return FireEmblemArabicMessage(
@@ -172,6 +204,7 @@ def english():
 def build(english, tmp_path_factory):
     patcher = pytest.MonkeyPatch()
     patcher.setattr(overlay, "build_fire_emblem_rtl_font", _fake_font)
+    patcher.setattr(overlay, "build_legend", _fake_legend)
     font_file = tmp_path_factory.mktemp("font") / "font.ttf"
     font_file.write_bytes(b"not read by the fake font builder")
     rom = _synthetic_rom(english)
@@ -250,9 +283,27 @@ def test_translated_messages_are_raw_and_every_other_message_is_untouched(build,
     # Code pages of the hook sites, the message table, then the new region.
     region = range(overlay.HOOK_CODE_ADDRESS - BASE, overlay.REGION_END - BASE)
     assert {page for page in changed if page not in region} == {
-        0x2000, 0x3000, 0x6000, 0x7000, 0x8000, 0x15D000
+        0x2000, 0x3000, 0x6000, 0x7000, 0x8000, 0x15D000, 0x206000, 0x207000
     }  # fmt: skip
-    assert {0xF00000, 0xF01000, 0xF08000} <= changed
+    assert {0xF00000, 0xF01000, 0xF08000, 0xF10000} <= changed
+
+
+def test_legend_images_are_repointed_and_decompress_back(build):
+    rom, result = build
+    output = result.rom
+
+    for number, (gfx, _tile_map, frames) in enumerate(overlay.LEGEND_ORIGINAL):
+        entry = overlay.LEGEND_TABLE_ADDRESS + number * overlay.LEGEND_ENTRY_BYTES
+        new_gfx, new_map, new_frames = struct.unpack_from("<III", output, entry - BASE)
+        assert new_frames == frames
+        assert overlay.ARABIC_LEGEND_ADDRESS <= new_gfx < new_map < overlay.REGION_END
+        tiles = decompress_lz77(output[new_gfx - BASE :])
+        arrangement = decompress_lz77(output[new_map - BASE :])
+        assert decode_legend_image(tiles, arrangement) == result.legend[number].pixels
+        # The game's own images stay where they were.
+        assert output[gfx - BASE : gfx - BASE + 64] == rom[gfx - BASE : gfx - BASE + 64]
+    assert [item["index"] for item in result.report["legend"]] == list(range(7))
+    assert result.report["legend_font_size"] == 13
 
 
 def test_bps_patch_reproduces_the_arabic_image(build):
@@ -269,9 +320,12 @@ def test_unknown_image_is_refused():
     assert caught.value.code is ErrorCode.UNKNOWN_GAME_REVISION
 
 
-@pytest.mark.parametrize("damage", ["site", "decoder", "veneer", "state", "padding", "glyph"])
+@pytest.mark.parametrize(
+    "damage", ["site", "decoder", "veneer", "state", "padding", "glyph", "legend"]
+)
 def test_changed_anchors_are_refused(english, tmp_path, monkeypatch, damage):
     monkeypatch.setattr(overlay, "build_fire_emblem_rtl_font", _fake_font)
+    monkeypatch.setattr(overlay, "build_legend", _fake_legend)
     font_file = tmp_path / "font.ttf"
     font_file.write_bytes(b"x")
     rom = bytearray(_synthetic_rom(english))
@@ -285,6 +339,8 @@ def test_changed_anchors_are_refused(english, tmp_path, monkeypatch, damage):
         rom[overlay.TALK_STATE_POINTER - BASE] ^= 0x04
     elif damage == "padding":
         rom[overlay.REGION_END - BASE - 1] = 0
+    elif damage == "legend":
+        rom[overlay.LEGEND_TABLE_ADDRESS - BASE + 8] ^= 0x01
     else:
         rom[GLYPH_DATA - BASE + 72 * ord("!") + 5] += 1
 
@@ -300,6 +356,7 @@ def test_changed_anchors_are_refused(english, tmp_path, monkeypatch, damage):
 
 def test_changed_script_is_refused(english, tmp_path, monkeypatch):
     monkeypatch.setattr(overlay, "build_fire_emblem_rtl_font", _fake_font)
+    monkeypatch.setattr(overlay, "build_legend", _fake_legend)
     font_file = tmp_path / "font.ttf"
     font_file.write_bytes(b"x")
     translations = _translations(english)
@@ -334,6 +391,7 @@ def test_cli_checks_the_script_and_encodes_a_line(capsys):
     report = json.loads(capsys.readouterr().out)
     assert report["lines_measured"] is False
     assert report["messages"] == ["0x8db", "0x903", "0x904", "0x905", "0x906"]
+    assert report["legend_images"] == 7
 
     assert main(["fire-emblem", "encode-arabic", "مرحبا![A]", "--box", "world-map"]) == 0
     encoded = json.loads(capsys.readouterr().out)

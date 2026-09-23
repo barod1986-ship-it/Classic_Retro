@@ -10,6 +10,9 @@ without the ROM and the ROM build can refuse a different script.
 Translations are logical Unicode Arabic in the engine's bracket notation.
 Commands keep their original order; only ``[LF]`` and ``[.]`` may move, and
 ``[CR][LF]`` stays one unit (the narration box skips the byte after ``[CR]``).
+
+The legend shown before a new game is seven images, not messages; its Arabic
+lines are drawn into new images (``engines.fire_emblem_legend``).
 """
 
 from __future__ import annotations
@@ -197,5 +200,64 @@ def fire_emblem_arabic_messages() -> tuple[FireEmblemArabicMessage, ...]:
             "[OpenMidLeft][LoadFace 51 01]",
             "[OpenMidLeft]إفرايم، إيريكا[.][ToggleMouthMove]...[.][ToggleMouthMove][LF]",
             "يجب أن تنجوا.[.][A][X]",
+        ),
+    )
+
+
+@dataclass(frozen=True, slots=True)
+class FireEmblemArabicSubtitle:
+    """One legend image (``gOpSubtitleGfxLut`` entry): its English text and Arabic lines."""
+
+    index: int
+    english: str
+    lines: tuple[str, ...]
+
+
+def fire_emblem_arabic_legend() -> tuple[FireEmblemArabicSubtitle, ...]:
+    """The legend of the Sacred Stones, one entry per subtitle image."""
+    return (
+        FireEmblemArabicSubtitle(
+            0,
+            "In an age long past... evil flooded over the land. Creatures awash in the dark "
+            "tide ran wild, pushing mankind to the brink of annihilation.",
+            (
+                "في زمن غابر...",
+                "طغى الشر على الأرض.",
+                "وعاثت مخلوقات المد المظلم",
+                "فسادا، ودفعت البشرية",
+                "إلى حافة الفناء.",
+            ),
+        ),
+        FireEmblemArabicSubtitle(
+            1,
+            "In its despair, mankind appealed to the heavens, and from a blinding light came hope.",
+            ("وفي يأسها، تضرعت البشرية", "إلى السماء، فانبثق الأمل", "من نور يخطف الأبصار."),
+        ),
+        FireEmblemArabicSubtitle(2, "The Sacred Stones", ("الأحجار المقدسة",)),
+        FireEmblemArabicSubtitle(
+            3,
+            "These five glorious treasures held the power to dispel evil.",
+            ("هذه الكنوز الخمسة المجيدة", "حملت قوة تبدد الشر."),
+        ),
+        FireEmblemArabicSubtitle(
+            4,
+            "The hero Grado and his warriors used the Sacred Stones to combat evil's "
+            "darkness. They defeated the Demon King and sealed his soul away within the "
+            "stones.",
+            (
+                "استخدم البطل غرادو ومحاربوه",
+                "الأحجار المقدسة لمحاربة ظلام الشر،",
+                "فهزموا ملك الشياطين،",
+                "وحبسوا روحه",
+                "داخل الأحجار.",
+            ),
+        ),
+        FireEmblemArabicSubtitle(
+            5,
+            "With the darkness imprisoned, peace returned to Magvel.",
+            ("وبعد أن غدا الظلام سجينا،", "عاد السلام إلى ماغفيل."),
+        ),
+        FireEmblemArabicSubtitle(
+            6, "But this peace would not last...", ("لكن هذا السلام لم يكن ليدوم...",)
         ),
     )

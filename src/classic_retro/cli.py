@@ -349,6 +349,9 @@ def _build_parser() -> argparse.ArgumentParser:
     fire_emblem_check.add_argument(
         "--preview", type=Path, help="Write the generated Arabic glyph atlas as PNG"
     )
+    fire_emblem_check.add_argument(
+        "--legend-preview", type=Path, help="Write the seven Arabic legend images as one PNG"
+    )
     fire_emblem_check.set_defaults(handler=_cmd_fire_emblem_check_translations)
 
     fire_emblem_hooks = fire_emblem_commands.add_parser(
@@ -636,7 +639,9 @@ def _cmd_golden_sun_encode_arabic(args: argparse.Namespace) -> int:
 
 
 def _cmd_fire_emblem_check_translations(args: argparse.Namespace) -> int:
-    result = fire_emblem_arabic.check_fire_emblem_translations(args.font, args.preview)
+    result = fire_emblem_arabic.check_fire_emblem_translations(
+        args.font, args.preview, args.legend_preview
+    )
     print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
     return 0
 

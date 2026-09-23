@@ -14,7 +14,10 @@ image (``BE8E``, SHA-256 below) and ships as a BPS patch:
    entries get bit 31; ``CallARM_DecompText`` jumps to a hook that copies
    such messages and decodes every other one as before;
 4. four calls of the talk code become ``BL`` to ARM veneers placed over an
-   unused debug routine (``0x08003ABC``); each veneer jumps to its hook.
+   unused debug routine (``0x08003ABC``); each veneer jumps to its hook;
+5. the seven legend images shown before a new game are redrawn in Arabic
+   (``engines.fire_emblem_legend``), LZ77-compressed into the same region,
+   and their entries in ``gOpSubtitleGfxLut`` are repointed.
 
 The hook bytes are stored here; ``assemble_hooks`` rebuilds them from the
 assembly source with GNU binutils so CI can prove they match.
@@ -56,9 +59,24 @@ from classic_retro.engines.fire_emblem_arabic import (
     latin_rtl_glyphs,
     validate_command_skeleton,
 )
+from classic_retro.engines.fire_emblem_legend import (
+    EncodedLegend,
+    LegendImage,
+    decode_legend_image,
+    encode_legend_image,
+    legend_budget,
+    legend_font_size,
+    legend_sheet,
+    render_legend_image,
+    validate_legend_lines,
+)
+from classic_retro.font.shaped_text import ShapedLineRenderer
 from classic_retro.rebuild.bps import BpsPatch, create_bps
+from classic_retro.rebuild.lz77 import compress_lz77, decompress_lz77
 from classic_retro.rom.fire_emblem_arabic_script import (
     FireEmblemArabicMessage,
+    FireEmblemArabicSubtitle,
+    fire_emblem_arabic_legend,
     fire_emblem_arabic_messages,
 )
 
@@ -80,6 +98,7 @@ MESSAGE_BUFFER_BYTES = 0x1000
 HOOK_CODE_ADDRESS = 0x08F00000
 RTL_FONT_ADDRESS = 0x08F01000
 ARABIC_TEXT_ADDRESS = 0x08F08000
+ARABIC_LEGEND_ADDRESS = 0x08F10000
 REGION_END = 0x08F20000
 FREE_FILL = 0xFF
 HOOK_SOURCE = Path(__file__).with_name("fire_emblem_arabic_hooks.s")
@@ -122,6 +141,19 @@ VENEER_ORIGINAL = bytes.fromhex(
 )
 VENEER_BYTES = 16
 
+# gOpSubtitleGfxLut: {LZ77 tiles, LZ77 tile map, display frames} per legend image.
+LEGEND_TABLE_ADDRESS = 0x08206FE4
+LEGEND_ORIGINAL = (
+    (0x08AA23BC, 0x08AA5C84, 335),
+    (0x08AA31B4, 0x08AA5EE0, 280),
+    (0x08AA3AE4, 0x08AA6098, 120),
+    (0x08AA3D7C, 0x08AA6170, 280),
+    (0x08AA435C, 0x08AA629C, 330),
+    (0x08AA5344, 0x08AA6548, 300),
+    (0x08AA5954, 0x08AA6674, 250),
+)
+LEGEND_ENTRY_BYTES = 12
+
 
 @dataclass(frozen=True, slots=True)
 class HookSite:
@@ -146,7 +178,21 @@ class FireEmblemArabicBuild:
     rom: bytes
     patch: BpsPatch
     font: FireEmblemRtlFont
+    legend: tuple[LegendImage, ...] = ()
     report: dict[str, object] = field(default_factory=dict)
+
+
+@dataclass(frozen=True, slots=True)
+class BuiltSubtitle:
+    subtitle: FireEmblemArabicSubtitle
+    image: LegendImage
+    encoded: EncodedLegend
+
+
+@dataclass(frozen=True, slots=True)
+class BuiltLegend:
+    font_size: int
+    items: tuple[BuiltSubtitle, ...]
 
 
 def _offset(address: int) -> int:
@@ -217,6 +263,15 @@ def _verify_anchors(rom: bytes) -> tuple[FireEmblemFont, FireEmblemTextBank]:
             raise ClassicRetroError(
                 ErrorCode.SOURCE_BASELINE_MISMATCH, f"Unexpected code at {address:#x} ({purpose})"
             )
+    for number, original in enumerate(LEGEND_ORIGINAL):
+        entry = struct.unpack_from(
+            "<III", rom, _offset(LEGEND_TABLE_ADDRESS) + number * LEGEND_ENTRY_BYTES
+        )
+        if entry != original:
+            raise ClassicRetroError(
+                ErrorCode.SOURCE_BASELINE_MISMATCH,
+                f"Legend image {number} differs from the USA subtitle table",
+            )
     (state,) = struct.unpack_from("<I", rom, _offset(TALK_STATE_POINTER))
     if state != TALK_STATE_ADDRESS:
         raise ClassicRetroError(
@@ -277,6 +332,26 @@ def encode_translations(
     return encoded
 
 
+def build_legend(
+    font_path: Path, subtitles: tuple[FireEmblemArabicSubtitle, ...] | None = None
+) -> BuiltLegend:
+    """Render and encode every legend image with the user's font."""
+    subtitles = subtitles or fire_emblem_arabic_legend()
+    if sorted(subtitle.index for subtitle in subtitles) != list(range(len(LEGEND_ORIGINAL))):
+        raise ClassicRetroError(
+            ErrorCode.RESOURCE_SET_MISMATCH,
+            f"The legend needs one entry per image (0..{len(LEGEND_ORIGINAL) - 1})",
+        )
+    size = legend_font_size(font_path)
+    renderer = ShapedLineRenderer(font_path, size)
+    built = []
+    for subtitle in sorted(subtitles, key=lambda item: item.index):
+        image = render_legend_image(renderer, subtitle.lines)
+        encoded = encode_legend_image(image, legend_budget(subtitle.index))
+        built.append(BuiltSubtitle(subtitle=subtitle, image=image, encoded=encoded))
+    return BuiltLegend(font_size=size, items=tuple(built))
+
+
 def build_fire_emblem_arabic_rom(
     rom: bytes,
     font_path: Path,
@@ -309,8 +384,20 @@ def build_fire_emblem_arabic_rom(
         pointers[index] = ARABIC_TEXT_ADDRESS + len(texts)
         texts += encoded[index][0]
         texts += bytes(-len(texts) % 4)
-    if ARABIC_TEXT_ADDRESS + len(texts) > REGION_END:
+    if ARABIC_TEXT_ADDRESS + len(texts) > ARABIC_LEGEND_ADDRESS:
         raise ClassicRetroError(ErrorCode.RELOCATION_OVERFLOW, "Arabic messages exceed the region")
+
+    legend = build_legend(font_path)
+    blobs = bytearray()
+    legend_pointers: list[tuple[int, int]] = []
+    for item in legend.items:
+        gfx = ARABIC_LEGEND_ADDRESS + len(blobs)
+        blobs += compress_lz77(item.encoded.tiles)
+        tile_map = ARABIC_LEGEND_ADDRESS + len(blobs)
+        blobs += compress_lz77(item.encoded.tile_map)
+        legend_pointers.append((gfx, tile_map))
+    if ARABIC_LEGEND_ADDRESS + len(blobs) > REGION_END:
+        raise ClassicRetroError(ErrorCode.RELOCATION_OVERFLOW, "Legend images exceed the region")
 
     target = bytearray(rom)
 
@@ -328,10 +415,14 @@ def build_fire_emblem_arabic_rom(
         write(site.address, bl_instruction(site.address, stub))
     for index, address in pointers.items():
         write(MESSAGE_TABLE_ADDRESS + 4 * index, struct.pack("<I", address | RAW_POINTER_FLAG))
+    write(ARABIC_LEGEND_ADDRESS, bytes(blobs))
+    for item, (gfx, tile_map) in zip(legend.items, legend_pointers, strict=True):
+        entry = LEGEND_TABLE_ADDRESS + item.subtitle.index * LEGEND_ENTRY_BYTES
+        write(entry, struct.pack("<II", gfx, tile_map))
 
     output = bytes(target)
     replacements = {index: data for index, (data, _) in encoded.items()}
-    _verify_output(output, rom, bank, replacements, font_data)
+    _verify_output(output, rom, bank, replacements, font_data, legend.items)
     patch = create_bps(rom, output)
     report: dict[str, object] = {
         "game": "Fire Emblem: The Sacred Stones (USA)",
@@ -358,8 +449,26 @@ def build_fire_emblem_arabic_rom(
         "arabic_text_address": f"{ARABIC_TEXT_ADDRESS:#x}",
         "arabic_text_bytes": len(texts),
         "veneer_address": f"{VENEER_ADDRESS:#x}",
+        "legend": [
+            {
+                "index": item.subtitle.index,
+                "lines": list(item.subtitle.lines),
+                "widths": list(item.image.widths),
+                "tiles": item.encoded.tile_count,
+            }
+            for item in legend.items
+        ],
+        "legend_font_size": legend.font_size,
+        "arabic_legend_address": f"{ARABIC_LEGEND_ADDRESS:#x}",
+        "arabic_legend_bytes": len(blobs),
     }
-    return FireEmblemArabicBuild(rom=output, patch=patch, font=font, report=report)
+    return FireEmblemArabicBuild(
+        rom=output,
+        patch=patch,
+        font=font,
+        legend=tuple(item.image for item in legend.items),
+        report=report,
+    )
 
 
 def _verify_output(
@@ -368,6 +477,7 @@ def _verify_output(
     bank: FireEmblemTextBank,
     replacements: dict[int, bytes],
     font_data: bytes,
+    legend: tuple[BuiltSubtitle, ...],
 ) -> None:
     changed = {
         start
@@ -377,6 +487,10 @@ def _verify_output(
     allowed = {_offset(address) & ~0xFFF for address in (DECODER_ADDRESS, VENEER_ADDRESS)}
     allowed |= {_offset(site.address) & ~0xFFF for site in HOOK_SITES}
     allowed |= {_offset(MESSAGE_TABLE_ADDRESS + 4 * index) & ~0xFFF for index in replacements}
+    allowed |= {
+        _offset(LEGEND_TABLE_ADDRESS + number * LEGEND_ENTRY_BYTES) & ~0xFFF
+        for number in range(len(LEGEND_ORIGINAL))
+    }
     allowed |= set(range(_offset(HOOK_CODE_ADDRESS), _offset(REGION_END), 0x1000))
     if not changed <= allowed:
         raise ClassicRetroError(
@@ -424,13 +538,40 @@ def _verify_output(
             raise ClassicRetroError(
                 ErrorCode.BUILD_VALIDATION_FAILED, f"Veneer {number} misses {site.symbol}"
             )
+    for item in legend:
+        number = item.subtitle.index
+        gfx, tile_map, frames = struct.unpack_from(
+            "<III", output, _offset(LEGEND_TABLE_ADDRESS + number * LEGEND_ENTRY_BYTES)
+        )
+        if frames != LEGEND_ORIGINAL[number][2] or not all(
+            ARABIC_LEGEND_ADDRESS <= address < REGION_END and address % 4 == 0
+            for address in (gfx, tile_map)
+        ):
+            raise ClassicRetroError(
+                ErrorCode.BUILD_VALIDATION_FAILED, f"Legend entry {number} is wrong"
+            )
+        tiles = decompress_lz77(output[_offset(gfx) :])
+        arrangement = decompress_lz77(output[_offset(tile_map) :])
+        if (
+            tiles != item.encoded.tiles
+            or arrangement != item.encoded.tile_map
+            or decode_legend_image(tiles, arrangement) != item.image.pixels
+        ):
+            raise ClassicRetroError(
+                ErrorCode.BUILD_VALIDATION_FAILED, f"Legend image {number} does not read back"
+            )
 
 
 def check_fire_emblem_translations(
-    font_path: Path | None = None, preview_path: Path | None = None
+    font_path: Path | None = None,
+    preview_path: Path | None = None,
+    legend_preview_path: Path | None = None,
 ) -> dict[str, object]:
-    """Validate the translations without the ROM; with a font, measure every line."""
+    """Validate the translations without the ROM; with a font, measure and draw everything."""
     glyph_map = build_fire_emblem_arabic_glyph_map()
+    subtitles = fire_emblem_arabic_legend()
+    for subtitle in subtitles:
+        validate_legend_lines(subtitle.lines)
     font = build_fire_emblem_rtl_font(font_path) if font_path is not None else None
     if preview_path is not None:
         if font is None:
@@ -443,13 +584,22 @@ def check_fire_emblem_translations(
         "arabic_glyphs": len(glyph_map.characters),
         "lines_measured": font is not None,
         "encoded_bytes": sum(len(data) for data, _ in encoded.values()),
+        "legend_images": len(subtitles),
     }
-    if font is not None:
+    if legend_preview_path is not None and font_path is None:
+        raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, "A legend preview needs --font")
+    if font is not None and font_path is not None:
         report["font_size"] = font.font_size
         report["font_baseline"] = BASELINE
         report["widest_line"] = {
             f"{index:#x}": max(widths) for index, (_, widths) in sorted(encoded.items())
         }
+        legend = build_legend(font_path, subtitles)
+        report["legend_font_size"] = legend.font_size
+        report["legend_tiles"] = [item.encoded.tile_count for item in legend.items]
+        report["legend_widest_line"] = [max(item.image.widths) for item in legend.items]
+        if legend_preview_path is not None:
+            legend_sheet([item.image for item in legend.items]).save(legend_preview_path)
     return report
 
 
@@ -488,6 +638,10 @@ def write_build_outputs(
     patch_path.write_bytes(build.patch.data)
     font_preview(build.font).save(out_dir / "arabic_font_preview.png")
     written = {"patch": str(patch_path), "font_preview": str(out_dir / "arabic_font_preview.png")}
+    if build.legend:
+        legend_path = out_dir / "arabic_legend_preview.png"
+        legend_sheet(list(build.legend)).save(legend_path)
+        written["legend_preview"] = str(legend_path)
     if rom_name:
         rom_path = out_dir / rom_name
         rom_path.write_bytes(build.rom)
