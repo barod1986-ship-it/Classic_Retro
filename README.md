@@ -92,4 +92,11 @@ own input with `classic-retro detect "path/to/game.gba"`.
 See [the Arabic FireRed testing guide](docs/FIRERED_ARABIC_TEST_AR.md) for applying
 the reference BPS patch, the exact supported ROM, and the current limits.
 
+The second reference target is **The Legend of Zelda: The Minish Cap (USA)** through the
+zeldaret/tmc decompilation: a right-to-left renderer, a 16px Arabic font page, and the
+whole new-game opening (26 messages) in Arabic. Because that decompilation extracts its
+assets from the original ROM, CI checks and compiles the overlay while the BPS patch is
+built locally. See [the Minish Cap testing guide](docs/MINISH_CAP_ARABIC_TEST_AR.md) and
+[the renderer notes](docs/TMC_ARABIC_RENDERER.md).
+
 See [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md).
