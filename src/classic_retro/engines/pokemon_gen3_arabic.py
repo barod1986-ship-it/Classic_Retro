@@ -7,17 +7,21 @@ from functools import lru_cache
 from io import BytesIO
 from pathlib import Path
 
-import uharfbuzz as hb
-from fontTools.ttLib import TTFont, TTLibError
 from PIL import Image, ImageDraw, ImageFont
 
-from classic_retro.arabic.pipeline import ArabicPipeline, ArabicPipelineConfig
+from classic_retro.arabic.paint import reject_combining_marks, rtl_paint_order
+from classic_retro.arabic.repertoire import (
+    ARABIC_STATIC_CHARACTERS,
+    STANDARD_ARABIC_LETTERS,
+    arabic_presentation_repertoire,
+    legacy_renderer_pipeline,
+)
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.pokemon_gen3 import PokemonGen3TextCodec
+from classic_retro.font.arabic_outline import contextual_font_data, font_glyph_text
 from classic_retro.text.tokens import (
     InlineToken,
     TextToken,
-    Token,
     TokenKind,
     TokenMovement,
     TokenStream,
@@ -31,8 +35,8 @@ EXT_CTRL_LTR_PLACEHOLDER = 0x1B
 ARABIC_SLOT_FIRST = 0x40
 ARABIC_SLOT_LAST = 0xCF
 
-_STANDARD_ARABIC_LETTERS = "ءآأؤإئابتثجحخدذرزسشصضطظعغفقكلمنهويىة"
-_ARABIC_STATIC_CHARACTERS = "،؛؟ـ٠١٢٣٤٥٦٧٨٩"
+_STANDARD_ARABIC_LETTERS = STANDARD_ARABIC_LETTERS
+_ARABIC_STATIC_CHARACTERS = ARABIC_STATIC_CHARACTERS
 
 
 @dataclass(frozen=True, slots=True)
@@ -62,29 +66,7 @@ class ArabicGlyphMap:
 
 @lru_cache(maxsize=1)
 def build_arabic_glyph_map() -> ArabicGlyphMap:
-    pipeline = ArabicPipeline(
-        ArabicPipelineConfig(
-            support_ligatures=False,
-            preserve_harakat=True,
-            preserve_tatweel=True,
-            support_zwj=True,
-        )
-    )
-    characters: set[str] = set(_ARABIC_STATIC_CHARACTERS)
-
-    for letter in _STANDARD_ARABIC_LETTERS:
-        for prefix, suffix in (("", ""), ("ب", ""), ("", "ب"), ("ب", "ب")):
-            source = prefix + letter + suffix
-            shaped = pipeline.process(TokenStream((TextToken(source),))).shaped.visible_text
-            index = len(prefix)
-            if index >= len(shaped):
-                raise ClassicRetroError(
-                    ErrorCode.ARABIC_GLYPH_CAPACITY_EXCEEDED,
-                    f"Could not derive shaped form for Arabic letter {letter!r}",
-                )
-            characters.add(shaped[index])
-
-    ordered = tuple(sorted(characters, key=ord))
+    ordered = arabic_presentation_repertoire()
     capacity = ARABIC_SLOT_LAST - ARABIC_SLOT_FIRST + 1
     if len(ordered) > capacity:
         raise ClassicRetroError(
@@ -116,38 +98,13 @@ def make_ltr_placeholder_token(
 
 class PokemonGen3ArabicEncoder:
     def __init__(self) -> None:
-        self.pipeline = ArabicPipeline(
-            ArabicPipelineConfig(
-                support_ligatures=False,
-                preserve_harakat=True,
-                preserve_tatweel=True,
-                support_zwj=True,
-            )
-        )
+        self.pipeline = legacy_renderer_pipeline()
         self.base_codec = PokemonGen3TextCodec()
         self.glyph_map = build_arabic_glyph_map()
 
     def prepare_paint_order(self, stream: TokenStream) -> TokenStream:
         _reject_combining_marks(stream)
-        output: list[Token] = []
-        segment: list[Token] = []
-
-        def flush_segment() -> None:
-            if not segment:
-                return
-            visual = self.pipeline.process(TokenStream(tuple(segment))).visual
-            output.extend(_reverse_visual_stream(visual).tokens)
-            segment.clear()
-
-        for token in stream.tokens:
-            if isinstance(token, InlineToken) and token.movement is TokenMovement.ORDERED:
-                flush_segment()
-                output.append(token)
-            else:
-                segment.append(token)
-
-        flush_segment()
-        return TokenStream(tuple(output))
+        return rtl_paint_order(self.pipeline, stream)
 
     def encode_prepared(self, stream: TokenStream) -> bytes:
         output = bytearray()
@@ -376,93 +333,9 @@ def _choose_font(
     )
 
 
-def _font_glyph_text(character: str) -> str:
-    """Ask OpenType for a contextual form without requiring presentation-form cmap entries."""
-    decomposition = unicodedata.decomposition(character).split()
-    if len(decomposition) == 2 and decomposition[0] in {
-        "<isolated>",
-        "<initial>",
-        "<medial>",
-        "<final>",
-    }:
-        form, codepoint = decomposition
-        before = "\u200d" if form in {"<medial>", "<final>"} else ""
-        after = "\u200d" if form in {"<medial>", "<initial>"} else ""
-        return before + chr(int(codepoint, 16)) + after
-    return character
-
-
-def _contextual_font_data(font_path: Path, characters: tuple[str, ...]) -> bytes:
-    """Map game slot identifiers to HarfBuzz-selected outlines in an in-memory font.
-
-    This does not alter or distribute the user's TTF/OTF. It only supplies a cmap
-    for FreeType's rasterizer, so its optional platform shaping libraries are not
-    required. Glyph zero is .notdef, even when it has visible rectangle pixels.
-    """
-    raw = font_path.read_bytes()
-    try:
-        parsed = TTFont(BytesIO(raw), recalcTimestamp=False)
-    except TTLibError as exc:
-        raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, "Invalid TTF/OTF font file") from exc
-    with parsed as font:
-        if "cmap" not in font:
-            raise ClassicRetroError(
-                ErrorCode.FONT_BUILD_FAILED, "Font has no Unicode character map"
-            )
-        shaper = hb.Font(hb.Face(raw))
-        glyph_order = font.getGlyphOrder()
-        mappings = {}
-        for character in characters:
-            buffer = hb.Buffer()
-            buffer.add_str(_font_glyph_text(character))
-            buffer.guess_segment_properties()
-            buffer.flags = hb.BufferFlags.REMOVE_DEFAULT_IGNORABLES
-            hb.shape(shaper, buffer, {"liga": False, "rlig": False})
-            glyphs = buffer.glyph_infos
-            if not glyphs or any(glyph.codepoint == 0 for glyph in glyphs):
-                raise ClassicRetroError(
-                    ErrorCode.FONT_BUILD_FAILED,
-                    f"Selected font has no Arabic glyph for U+{ord(character):04X}",
-                )
-            if len(glyphs) != 1 or any(
-                position.x_offset or position.y_offset for position in buffer.glyph_positions
-            ):
-                raise ClassicRetroError(
-                    ErrorCode.FONT_BUILD_FAILED,
-                    f"U+{ord(character):04X} requires composite placement; select another font",
-                )
-            mappings[ord(character)] = glyph_order[glyphs[0].codepoint]
-        for table in font["cmap"].tables:
-            if table.isUnicode() and table.format != 14:
-                table.cmap.update(mappings)
-        output = BytesIO()
-        font.save(output)
-        return output.getvalue()
+_font_glyph_text = font_glyph_text
+_contextual_font_data = contextual_font_data
 
 
 def _reject_combining_marks(stream: TokenStream) -> None:
-    marks = sorted(
-        {
-            character
-            for token in stream.tokens
-            if isinstance(token, TextToken)
-            for character in token.text
-            if unicodedata.combining(character)
-        }
-    )
-    if marks:
-        values = ", ".join(f"U+{ord(character):04X}" for character in marks)
-        raise ClassicRetroError(
-            ErrorCode.UNSUPPORTED_ARABIC_MARK,
-            "Pokémon Gen III Arabic font v1 does not support combining marks: " + values,
-        )
-
-
-def _reverse_visual_stream(stream: TokenStream) -> TokenStream:
-    output: list[Token] = []
-    for token in reversed(stream.tokens):
-        if isinstance(token, TextToken):
-            output.append(TextToken(token.text[::-1]))
-        else:
-            output.append(token)
-    return TokenStream(tuple(output))
+    reject_combining_marks(stream, "Pokémon Gen III Arabic font v1")

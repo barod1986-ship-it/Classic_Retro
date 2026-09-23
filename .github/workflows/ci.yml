@@ -182,3 +182,76 @@ jobs:
             artifact/FONT-LICENSE.txt
           if-no-files-found: error
           retention-days: 14
+
+  minish-cap-arabic-overlay:
+    # zeldaret/tmc extracts its assets from the original ROM, which is never
+    # uploaded. This job checks the overlay against the pinned source, measures
+    # every Arabic line with the reference font and compiles the patched
+    # renderer; the ROM and BPS are built locally (docs/MINISH_CAP_ARABIC_TEST_AR.md).
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Classic Retro
+        uses: actions/checkout@v6
+        with:
+          path: toolkit
+
+      - name: Checkout pinned zeldaret/tmc
+        uses: actions/checkout@v6
+        with:
+          repository: zeldaret/tmc
+          ref: d92d4581e202ae531bdcc206a7d6a90ddb8fd907
+          path: upstream-tmc
+
+      - name: Checkout pinned agbcc
+        uses: actions/checkout@v6
+        with:
+          repository: pret/agbcc
+          ref: da598c1d918402c42c0c0d7128ba14567f3175e9
+          path: agbcc
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake binutils-arm-none-eabi gcc-arm-none-eabi libpng-dev
+          python -m pip install pycparser
+
+      - name: Install toolkit
+        working-directory: toolkit
+        run: python -m pip install -e .
+
+      - name: Check overlay, measure Arabic lines and apply it
+        working-directory: toolkit
+        run: |
+          NOTO_COMMIT=ffebf8c1ee449e544955a7e813c54f9b73848eac
+          ARABIC_FONT=../reference-font.ttf
+          curl --fail --location "https://raw.githubusercontent.com/notofonts/noto-fonts/$NOTO_COMMIT/hinted/ttf/NotoKufiArabic/NotoKufiArabic-SemiBold.ttf" -o "$ARABIC_FONT"
+          echo "aa30cd2663f1eb1c940c9cd6a898877f307c2572e72a8a352896fe23f512018e  $ARABIC_FONT" | sha256sum -c -
+          classic-retro tmc source-check ../upstream-tmc --font "$ARABIC_FONT"
+          classic-retro tmc prepare-arabic-source ../upstream-tmc --font "$ARABIC_FONT" | tee ../tmc-build-report.json
+
+      - name: Install agbcc into the tmc tree
+        working-directory: agbcc
+        run: |
+          ./build.sh
+          ./install.sh ../upstream-tmc
+
+      - name: Compile the patched renderer and Arabic font object (no ROM needed)
+        working-directory: upstream-tmc
+        run: |
+          make tools
+          make -f GBA.mk GAME_VERSION=USA build/USA/src/text.o build/USA/src/message.o build/USA/data/classic_retro_arabic.o
+
+      - name: Upload overlay review files
+        uses: actions/upload-artifact@v6
+        with:
+          name: minish-cap-arabic-overlay
+          path: |
+            tmc-build-report.json
+            upstream-tmc/data/classic_retro/arabic_font_preview.png
+          if-no-files-found: error
+          retention-days: 14
