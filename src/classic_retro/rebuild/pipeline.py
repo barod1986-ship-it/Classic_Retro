@@ -31,9 +31,7 @@ class RebuildResult:
     @property
     def relocated_resources(self) -> tuple[str, ...]:
         return tuple(
-            resource_id
-            for resource_id, placement in self.placements.items()
-            if placement.relocated
+            resource_id for resource_id, placement in self.placements.items() if placement.relocated
         )
 
 
@@ -174,10 +172,7 @@ def _validate_reference_targets(original: bytes, plan: RebuildPlan) -> None:
         if target != expected:
             raise ClassicRetroError(
                 ErrorCode.REFERENCE_TARGET_MISMATCH,
-                (
-                    f"Reference {reference.id} resolves to 0x{target:X}; "
-                    f"expected 0x{expected:X}"
-                ),
+                (f"Reference {reference.id} resolves to 0x{target:X}; expected 0x{expected:X}"),
             )
 
 
