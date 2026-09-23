@@ -7,10 +7,11 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from classic_retro import __version__
-from classic_retro.adapters.discovery import detect_file
+from classic_retro.adapters.discovery import detect_input
 from classic_retro.adapters.registry import build_registry
 from classic_retro.core.errors import ClassicRetroError
 from classic_retro.core.identity import fingerprint_file
+from classic_retro.media.resolve import resolve_media
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -32,10 +33,19 @@ def _build_parser() -> argparse.ArgumentParser:
 
     detect = subcommands.add_parser(
         "detect",
-        help="Detect a platform from file content and match exact supported game revisions",
+        help="Detect a platform and match exact supported game revisions",
     )
     detect.add_argument("path", type=Path)
     detect.set_defaults(handler=_cmd_detect)
+
+    media = subcommands.add_parser("media", help="Inspect game media/container inputs")
+    media_commands = media.add_subparsers(dest="media_command", required=True)
+    inspect_media = media_commands.add_parser(
+        "inspect",
+        help="Resolve a single file or CUE set and print its deterministic identity",
+    )
+    inspect_media.add_argument("path", type=Path)
+    inspect_media.set_defaults(handler=_cmd_media_inspect)
 
     adapters = subcommands.add_parser("adapters", help="List loaded adapter IDs")
     adapters.set_defaults(handler=_cmd_adapters)
@@ -56,7 +66,13 @@ def _cmd_fingerprint(args: argparse.Namespace) -> int:
 
 def _cmd_detect(args: argparse.Namespace) -> int:
     registry = build_registry()
-    result = detect_file(args.path, registry)
+    result = detect_input(args.path, registry)
+    print(json.dumps(result.to_dict(), ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_media_inspect(args: argparse.Namespace) -> int:
+    result = resolve_media(args.path)
     print(json.dumps(result.to_dict(), ensure_ascii=False, indent=2, sort_keys=True))
     return 0
 

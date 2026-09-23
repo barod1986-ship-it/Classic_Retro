@@ -14,7 +14,7 @@ from classic_retro.adapters.base import (
 from classic_retro.adapters.discovery import detect_game
 from classic_retro.adapters.registry import AdapterRegistry
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
-from classic_retro.core.identity import FileFingerprint
+from classic_retro.media.resolve import resolve_media
 
 
 class FixturePlatform(PlatformAdapter):
@@ -47,19 +47,19 @@ def test_registry_rejects_duplicate_ids():
     assert caught.value.code is ErrorCode.ADAPTER_ID_CONFLICT
 
 
-def test_game_matching_is_exact_sha256_and_size():
+def test_game_matching_is_exact_sha256_and_size(tmp_path):
     registry = AdapterRegistry()
     registry.register_engine(FixtureEngine())
     registry.register_game(FixtureGame())
 
-    fingerprint = FileFingerprint(
-        name="fixture.bin",
-        size=7,
-        sha256=hashlib.sha256(b"fixture").hexdigest(),
-    )
-    match = detect_game(fingerprint, "fixture", registry)
+    sample = tmp_path / "fixture.bin"
+    sample.write_bytes(b"fixture")
+    media = resolve_media(sample)
+
+    match = detect_game(media, "fixture", registry)
     assert match is not None
     assert match.id == "fixture-game"
 
-    wrong = FileFingerprint(name="fixture.bin", size=7, sha256="0" * 64)
-    assert detect_game(wrong, "fixture", registry) is None
+    sample.write_bytes(b"wrong!!")
+    wrong_media = resolve_media(sample)
+    assert detect_game(wrong_media, "fixture", registry) is None

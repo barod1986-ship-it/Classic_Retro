@@ -7,7 +7,8 @@ from typing import Any
 from classic_retro.adapters.base import GameRevision, ProbeResult, ProbeSource
 from classic_retro.adapters.registry import AdapterRegistry
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
-from classic_retro.core.identity import FileFingerprint, fingerprint_file
+from classic_retro.media.model import MediaKind, MediaSet
+from classic_retro.media.resolve import resolve_media
 
 
 @dataclass(frozen=True, slots=True)
@@ -42,37 +43,30 @@ class GameMatch:
 
 @dataclass(frozen=True, slots=True)
 class DetectionReport:
-    fingerprint: FileFingerprint
+    media: MediaSet
     platform: PlatformMatch
     game: GameMatch | None
     supported: bool
 
     def to_dict(self) -> dict[str, Any]:
         return {
-            "fingerprint": self.fingerprint.to_dict(),
+            "media": self.media.to_dict(),
             "platform": self.platform.to_dict(),
             "game": None if self.game is None else self.game.to_dict(),
             "supported": self.supported,
         }
 
 
-def detect_platform(
-    source: ProbeSource,
-    registry: AdapterRegistry,
-    *,
-    minimum_confidence: float = 0.80,
+def _choose_platform(
+    candidates: list[tuple[str, str, ProbeResult]],
+    source_name: str,
+    minimum_confidence: float,
 ) -> PlatformMatch:
-    candidates: list[tuple[str, str, ProbeResult]] = []
-
-    for adapter in registry.platforms.values():
-        result = adapter.probe(source)
-        if result.confidence >= minimum_confidence:
-            candidates.append((adapter.id, adapter.display_name, result))
-
+    candidates = [item for item in candidates if item[2].confidence >= minimum_confidence]
     if not candidates:
         raise ClassicRetroError(
             ErrorCode.PLATFORM_NOT_DETECTED,
-            f"No platform matched {source.name} with confidence >= {minimum_confidence:.2f}",
+            f"No platform matched {source_name} with confidence >= {minimum_confidence:.2f}",
         )
 
     candidates.sort(key=lambda item: (-item[2].confidence, item[0]))
@@ -93,8 +87,34 @@ def detect_platform(
     )
 
 
+def detect_platform(
+    source: ProbeSource,
+    registry: AdapterRegistry,
+    *,
+    minimum_confidence: float = 0.80,
+) -> PlatformMatch:
+    candidates = [
+        (adapter.id, adapter.display_name, adapter.probe(source))
+        for adapter in registry.platforms.values()
+    ]
+    return _choose_platform(candidates, source.name, minimum_confidence)
+
+
+def detect_platform_media(
+    media: MediaSet,
+    registry: AdapterRegistry,
+    *,
+    minimum_confidence: float = 0.80,
+) -> PlatformMatch:
+    candidates = [
+        (adapter.id, adapter.display_name, adapter.probe_media(media))
+        for adapter in registry.platforms.values()
+    ]
+    return _choose_platform(candidates, media.entry_path.name, minimum_confidence)
+
+
 def detect_game(
-    fingerprint: FileFingerprint,
+    media: MediaSet,
     platform_id: str,
     registry: AdapterRegistry,
 ) -> GameMatch | None:
@@ -102,7 +122,7 @@ def detect_game(
     for adapter in registry.games.values():
         if adapter.platform_id != platform_id:
             continue
-        revision = adapter.match_revision(fingerprint)
+        revision = adapter.match_revision(media)
         if revision is not None:
             matches.append(
                 GameMatch(
@@ -123,12 +143,15 @@ def detect_game(
     return matches[0] if matches else None
 
 
-def detect_file(path: Path, registry: AdapterRegistry) -> DetectionReport:
-    fingerprint = fingerprint_file(path)
-    source = ProbeSource(path)
-    platform = detect_platform(source, registry)
-    game = detect_game(fingerprint, platform.id, registry)
+def detect_input(path: Path, registry: AdapterRegistry) -> DetectionReport:
+    media = resolve_media(path)
 
+    if media.kind is MediaKind.SINGLE_FILE:
+        platform = detect_platform(ProbeSource(media.primary.path), registry)
+    else:
+        platform = detect_platform_media(media, registry)
+
+    game = detect_game(media, platform.id, registry)
     if game is not None and game.engine_id not in registry.engines:
         raise ClassicRetroError(
             ErrorCode.MISSING_ENGINE_ADAPTER,
@@ -136,8 +159,13 @@ def detect_file(path: Path, registry: AdapterRegistry) -> DetectionReport:
         )
 
     return DetectionReport(
-        fingerprint=fingerprint,
+        media=media,
         platform=platform,
         game=game,
         supported=game is not None,
     )
+
+
+def detect_file(path: Path, registry: AdapterRegistry) -> DetectionReport:
+    """Compatibility alias for callers that previously passed only single files."""
+    return detect_input(path, registry)
