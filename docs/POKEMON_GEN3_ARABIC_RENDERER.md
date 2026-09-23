@@ -6,11 +6,13 @@ FireRed's upstream gbagfx tool already converts 16x16 font PNG cells into the ga
 
 The original renderer treats F9 xx as CHAR_EXTRA_SYMBOL and promotes xx to glyph ID 0x100 | xx. GetStringWidth uses the same mechanism. Arabic therefore uses a reserved part of this secondary glyph page instead of deleting Latin glyphs.
 
-Reserved v1 range:
+The pinned FireRed charmap already uses F9 00..17 and F9 D0..FE. Its only contiguous free span is F9 18..CF. Arabic v1 deliberately uses a subset beginning at F9 40, leaving F9 18..3F free for future engine symbols.
 
-- extra-symbol byte: 0x40 and above
-- rendered glyph ID: 0x140 and above
-- existing upstream extra symbols remain below this range
+Reserved Arabic v1 range:
+
+- extra-symbol bytes: F9 40..CF maximum
+- rendered glyph IDs: 0x140..0x1CF maximum
+- source-overlay validation rejects any collision with an upstream F9 assignment
 
 ## Shaping, bidi, and paint order
 
