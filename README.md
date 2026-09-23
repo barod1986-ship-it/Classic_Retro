@@ -115,4 +115,15 @@ The whole storm-night opening (21 messages, both Yes/No branches) is in Arabic. 
 [the Golden Sun testing guide](docs/GOLDEN_SUN_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/GOLDEN_SUN_ARABIC_RENDERER.md).
 
+The fifth reference target is **Fire Emblem: The Sacred Stones (USA, Australia)**. The
+fireemblem8u decompilation rebuilds the ROM and gave every address, but most of its data is
+still binary, so a binary overlay patches your own ROM inside the image's own padding (it
+stays 16 MiB): translated messages are stored uncompressed next to the Huffman bank, and
+Thumb hooks switch the game's talk engine to right-to-left for them, in dialogue bubbles and
+in the world map's narration box. The opening legend (seven images, redrawn from HarfBuzz-shaped
+Arabic in the original palette), the world map's narration of Magvel and the throne-room scene
+of the prologue (5 messages) are in Arabic. See
+[the Fire Emblem testing guide](docs/FIRE_EMBLEM_ARABIC_TEST_AR.md) and
+[the renderer notes](docs/FIRE_EMBLEM_ARABIC_RENDERER.md).
+
 See [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md).

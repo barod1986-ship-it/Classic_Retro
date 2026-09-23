@@ -14,12 +14,13 @@ from classic_retro.codec.model import load_codec_profile
 from classic_retro.codec.table import TableTextCodec
 from classic_retro.core.errors import ClassicRetroError
 from classic_retro.core.identity import fingerprint_file
+from classic_retro.engines.fire_emblem_arabic import TalkBox
 from classic_retro.engines.pokemon_gen3_arabic import PokemonGen3ArabicEncoder
 from classic_retro.media.resolve import resolve_media
 from classic_retro.rebuild.bps import apply_bps, create_bps
 from classic_retro.rebuild.model import load_rebuild_plan
 from classic_retro.rebuild.pipeline import verify_round_trip
-from classic_retro.rom import golden_sun_arabic
+from classic_retro.rom import fire_emblem_arabic, golden_sun_arabic
 from classic_retro.rom.ff6a_arabic import (
     build_ff6a_arabic_rom,
     check_ff6a_translations,
@@ -330,6 +331,67 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     golden_sun_encode.set_defaults(handler=_cmd_golden_sun_encode_arabic)
 
+    fire_emblem = subcommands.add_parser(
+        "fire-emblem",
+        help="Fire Emblem: The Sacred Stones (USA) Arabic ROM overlay helpers",
+    )
+    fire_emblem_commands = fire_emblem.add_subparsers(dest="fire_emblem_command", required=True)
+
+    fire_emblem_check = fire_emblem_commands.add_parser(
+        "check-translations",
+        help="Validate the Arabic script without the ROM; with --font, measure every line",
+    )
+    fire_emblem_check.add_argument(
+        "--font",
+        type=Path,
+        help="Arabic TTF/OTF; also builds the font and measures every translated line",
+    )
+    fire_emblem_check.add_argument(
+        "--preview", type=Path, help="Write the generated Arabic glyph atlas as PNG"
+    )
+    fire_emblem_check.add_argument(
+        "--legend-preview", type=Path, help="Write the seven Arabic legend images as one PNG"
+    )
+    fire_emblem_check.set_defaults(handler=_cmd_fire_emblem_check_translations)
+
+    fire_emblem_hooks = fire_emblem_commands.add_parser(
+        "check-hooks",
+        help="Re-assemble the Thumb hooks with arm-none-eabi binutils and compare the bytes",
+    )
+    fire_emblem_hooks.set_defaults(handler=_cmd_fire_emblem_check_hooks)
+
+    fire_emblem_build = fire_emblem_commands.add_parser(
+        "build-arabic",
+        help="Build the Arabic BPS patch (and optionally the patched image) from the ROM",
+    )
+    fire_emblem_build.add_argument("rom", type=Path)
+    fire_emblem_build.add_argument("--font", type=Path, required=True)
+    fire_emblem_build.add_argument("--out-dir", type=Path, required=True)
+    fire_emblem_build.add_argument(
+        "--write-rom",
+        metavar="NAME",
+        help="Also write the patched image into --out-dir under this name (local use only)",
+    )
+    fire_emblem_build.set_defaults(handler=_cmd_fire_emblem_build_arabic)
+
+    fire_emblem_encode = fire_emblem_commands.add_parser(
+        "encode-arabic",
+        help="Encode logical Arabic text ([LF], [A]... allowed) in right-to-left paint order",
+    )
+    fire_emblem_encode.add_argument("text")
+    fire_emblem_encode.add_argument(
+        "--font",
+        type=Path,
+        help="Arabic TTF/OTF used to report the pixel width of each line",
+    )
+    fire_emblem_encode.add_argument(
+        "--box",
+        choices=[box.value for box in TalkBox],
+        default=TalkBox.BUBBLE.value,
+        help="Dialogue bubble or world map narration box (decides the line width)",
+    )
+    fire_emblem_encode.set_defaults(handler=_cmd_fire_emblem_encode_arabic)
+
     adapters = subcommands.add_parser("adapters", help="List loaded adapter IDs")
     adapters.set_defaults(handler=_cmd_adapters)
 
@@ -572,6 +634,39 @@ def _cmd_golden_sun_build_arabic(args: argparse.Namespace) -> int:
 
 def _cmd_golden_sun_encode_arabic(args: argparse.Namespace) -> int:
     result = golden_sun_arabic.encode_golden_sun_arabic_line(args.text, args.font)
+    print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_fire_emblem_check_translations(args: argparse.Namespace) -> int:
+    result = fire_emblem_arabic.check_fire_emblem_translations(
+        args.font, args.preview, args.legend_preview
+    )
+    print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_fire_emblem_check_hooks(_: argparse.Namespace) -> int:
+    result = fire_emblem_arabic.check_hook_code()
+    print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_fire_emblem_build_arabic(args: argparse.Namespace) -> int:
+    build = fire_emblem_arabic.build_fire_emblem_arabic_rom(args.rom.read_bytes(), args.font)
+    written = fire_emblem_arabic.write_build_outputs(build, args.out_dir, rom_name=args.write_rom)
+    report = {**build.report, "outputs": written}
+    (args.out_dir / "build-report.json").write_text(
+        json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_fire_emblem_encode_arabic(args: argparse.Namespace) -> int:
+    result = fire_emblem_arabic.encode_fire_emblem_arabic_line(
+        args.text, args.font, TalkBox(args.box)
+    )
     print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
     return 0
 
