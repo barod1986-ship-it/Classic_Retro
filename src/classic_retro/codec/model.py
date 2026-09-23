@@ -194,8 +194,7 @@ class CodecProfile:
             for inline in self.inline_codes
         )
         static_codes.extend(
-            (f"terminator:{terminator.id}", terminator.data)
-            for terminator in self.terminators
+            (f"terminator:{terminator.id}", terminator.data) for terminator in self.terminators
         )
         _validate_prefix_free(static_codes)
 
