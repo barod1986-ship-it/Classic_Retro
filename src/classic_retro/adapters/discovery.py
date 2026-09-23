@@ -39,9 +39,7 @@ class GameMatch:
             "platform_id": self.platform_id,
             "engine_id": self.engine_id,
             "revision": asdict(self.revision),
-            "source_build": (
-                None if self.source_build is None else asdict(self.source_build)
-            ),
+            "source_build": (None if self.source_build is None else asdict(self.source_build)),
         }
 
 
