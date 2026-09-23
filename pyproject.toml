@@ -9,8 +9,10 @@ description = "Multi-platform Arabic localization toolkit for classic video game
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+  "arabic-reshaper>=3.0.1,<4",
   "jsonschema>=4.23,<5",
   "pycdlib>=1.20,<2",
+  "python-bidi>=0.6.11,<0.7",
 ]
 
 [project.optional-dependencies]

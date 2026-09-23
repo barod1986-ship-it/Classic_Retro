@@ -9,6 +9,7 @@ from pathlib import Path
 from classic_retro import __version__
 from classic_retro.adapters.discovery import detect_input
 from classic_retro.adapters.registry import build_registry
+from classic_retro.arabic.pipeline import ArabicPipeline
 from classic_retro.core.errors import ClassicRetroError
 from classic_retro.core.identity import fingerprint_file
 from classic_retro.media.resolve import resolve_media
@@ -63,6 +64,18 @@ def _build_parser() -> argparse.ArgumentParser:
     validate_translation.add_argument("path", type=Path)
     validate_translation.set_defaults(handler=_cmd_translation_validate)
 
+    arabic = subcommands.add_parser(
+        "arabic",
+        help="Validate Arabic normalization, shaping, bidi, and protected tokens",
+    )
+    arabic_commands = arabic.add_subparsers(dest="arabic_command", required=True)
+    check_arabic = arabic_commands.add_parser(
+        "check",
+        help="Run the Arabic preparation pipeline over all target messages",
+    )
+    check_arabic.add_argument("path", type=Path)
+    check_arabic.set_defaults(handler=_cmd_arabic_check)
+
     adapters = subcommands.add_parser("adapters", help="List loaded adapter IDs")
     adapters.set_defaults(handler=_cmd_adapters)
 
@@ -96,6 +109,30 @@ def _cmd_media_inspect(args: argparse.Namespace) -> int:
 def _cmd_translation_validate(args: argparse.Namespace) -> int:
     document = load_translation_file(args.path)
     print(json.dumps(document.summary(), ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_arabic_check(args: argparse.Namespace) -> int:
+    document = load_translation_file(args.path)
+    pipeline = ArabicPipeline()
+
+    inline_tokens = 0
+    visible_characters = 0
+    for entry in document.entries:
+        result = pipeline.process(entry.target)
+        inline_tokens += len(result.normalized.inline_tokens)
+        visible_characters += len(result.normalized.visible_text)
+
+    payload = {
+        "game_id": document.game_id,
+        "entries": len(document.entries),
+        "inline_tokens": inline_tokens,
+        "visible_characters": visible_characters,
+        "normalization": "NFC",
+        "base_direction": "R",
+        "ligatures": False,
+    }
+    print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
     return 0
 
 
