@@ -31,10 +31,16 @@ The final paint-order conversion is performed after bidi processing. It is not a
 
 ## Runtime RTL controls
 
-The source overlay adds two engine controls:
+The source overlay adds three engine controls:
 
 - FC 19 xx: enable RTL and set the line right edge to text-box x + xx
 - FC 1A: return to LTR
+- FC 1B pp: expand placeholder pp as an isolated LTR run before RTL rendering
+
+FC 1B is consumed by FireRed's StringExpandPlaceholders path. PLAYER/RIVAL names are
+expanded, reversed by glyph units (not raw bytes), and then painted by the RTL
+renderer. This is the engine-level equivalent of keeping a dynamic Latin name
+isolated from the surrounding Arabic run.
 
 While RTL is enabled, the renderer subtracts the glyph advance before drawing. Newline, clear, and scroll states restore the configured right edge.
 
