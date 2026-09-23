@@ -106,9 +106,7 @@ def make_ltr_placeholder_token(
         movement=TokenMovement.ORDERED,
         name=name,
         args={
-            "raw_hex": (
-                f"{EXT_CTRL_PREFIX:02x}{EXT_CTRL_LTR_PLACEHOLDER:02x}{placeholder_id:02x}"
-            )
+            "raw_hex": (f"{EXT_CTRL_PREFIX:02x}{EXT_CTRL_LTR_PLACEHOLDER:02x}{placeholder_id:02x}")
         },
     )
 
