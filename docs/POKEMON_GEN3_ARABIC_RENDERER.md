@@ -2,7 +2,7 @@
 
 ## Design
 
-FireRed's upstream gbagfx tool already converts font PNG assets into the game's font format. Classic Retro reuses that path rather than introducing another binary font container.
+FireRed's upstream gbagfx tool already converts 16x16 font PNG cells into the game's full-width Latin font format. Classic Retro reuses that path rather than introducing another binary font container.
 
 The original renderer treats F9 xx as CHAR_EXTRA_SYMBOL and promotes xx to glyph ID 0x100 | xx. GetStringWidth uses the same mechanism. Arabic therefore uses a reserved part of this secondary glyph page instead of deleting Latin glyphs.
 
@@ -49,7 +49,7 @@ The compiler:
 - rasterizes background / foreground / shadow semantic pixels,
 - writes graphics/fonts/arabic_normal.png,
 - writes a one-byte-per-glyph width table,
-- patches graphics_file_rules.mk so upstream gbagfx creates arabic_normal.hwlatfont.
+- patches graphics_file_rules.mk so upstream gbagfx creates arabic_normal.fwlatfont.
 
 ## Exact upstream pinning
 
