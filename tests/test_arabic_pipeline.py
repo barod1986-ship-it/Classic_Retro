@@ -76,7 +76,9 @@ def test_protected_tokens_survive_shaping_and_bidi():
 
 def test_harakat_are_preserved_by_default():
     stream = TokenStream((TextToken("مَرْحَبًا"),))
-    original_marks = sum(bool(unicodedata.combining(character)) for character in stream.visible_text)
+    original_marks = sum(
+        bool(unicodedata.combining(character)) for character in stream.visible_text
+    )
 
     result = ArabicPipeline().process(stream)
 
@@ -93,9 +95,9 @@ def test_harakat_are_preserved_by_default():
 @pytest.mark.parametrize(
     ("text", "error_code"),
     [
-        ("\uFE8D", ErrorCode.PRE_SHAPED_ARABIC_INPUT),
-        ("مرحبا\u202Eabc", ErrorCode.EXPLICIT_BIDI_CONTROL),
-        ("مرحبا\uFFFC", ErrorCode.RESERVED_ARABIC_MARKER_CHARACTER),
+        ("\ufe8d", ErrorCode.PRE_SHAPED_ARABIC_INPUT),
+        ("مرحبا\u202eabc", ErrorCode.EXPLICIT_BIDI_CONTROL),
+        ("مرحبا\ufffc", ErrorCode.RESERVED_ARABIC_MARKER_CHARACTER),
     ],
 )
 def test_pipeline_rejects_unsafe_logical_input(text, error_code):
