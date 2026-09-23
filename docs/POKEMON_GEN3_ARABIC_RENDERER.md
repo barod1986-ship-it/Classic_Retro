@@ -44,6 +44,11 @@ isolated from the surrounding Arabic run.
 
 While RTL is enabled, the renderer subtracts the glyph advance before drawing. Newline, clear, and scroll states restore the configured right edge.
 
+The OAK dialogue starts at x=208, the exclusive right edge of FireRed's actual
+26-tile standard dialogue window. The earlier 216px origin clipped the first
+Arabic glyph or the last Latin letter. The page arrow is drawn and cleared ten
+pixels to the left of the RTL cursor, so it does not erase the last printed glyphs.
+
 RTL state is stored per TextPrinter, not globally.
 
 ## Font atlas

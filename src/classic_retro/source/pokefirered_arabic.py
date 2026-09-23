@@ -17,7 +17,7 @@ from classic_retro.text.tokens import InlineToken, TextToken, TokenKind, TokenMo
 
 PINNED_COMMIT = "c75f352304d529f6ba92d4f74b9cf8b5c3810788"
 _PATCH_MARKER = "CLASSIC_RETRO_ARABIC_V1"
-_OVERLAY_VERSION = 2
+_OVERLAY_VERSION = 3
 _STATE_FILE = ".classic-retro-arabic.json"
 
 _PINNED_BLOBS = {
@@ -31,7 +31,9 @@ _PINNED_BLOBS = {
     "data/text/new_game_intro.inc": "e667b68d92f7b44f424d5d276093c434f1b7e2df",
 }
 
-_OAK_INTRO_RIGHT_X = 216
+# Oak uses the standard 26-tile dialogue window, not the earlier 28-tile
+# controls-guide window. The right edge is exclusive in the RTL printer.
+_OAK_INTRO_RIGHT_X = 26 * 8
 
 
 def check_pokefirered_arabic_source(source: Path) -> dict[str, object]:
@@ -621,8 +623,43 @@ def _patch_line_origins(text: str) -> str:
     )
 
 
+def _patch_down_arrows(text: str) -> str:
+    start = "void TextPrinterDrawDownArrow(struct TextPrinter *textPrinter)\n"
+    end = "bool8 TextPrinterWaitAutoMode(struct TextPrinter *textPrinter)\n"
+    if text.count(start) != 1 or text.count(end) != 1:
+        raise ClassicRetroError(ErrorCode.SOURCE_PATCH_FAILED, "Down-arrow functions missing")
+    before, rest = text.split(start)
+    arrows, after = rest.split(end)
+    current_x = "textPrinter->printerTemplate.currentX"
+    if arrows.count(current_x) != 3:
+        raise ClassicRetroError(
+            ErrorCode.SOURCE_PATCH_FAILED,
+            "Expected three down-arrow draw/clear x coordinates",
+        )
+    helper = """// CLASSIC_RETRO_ARABIC_V1: the RTL cursor is at the left edge of the last glyph.
+static u8 GetTextPrinterArrowX(struct TextPrinter *textPrinter)
+{
+    u8 x = textPrinter->printerTemplate.currentX;
+
+    if (textPrinter->rtl)
+        return x >= 10 ? x - 10 : 0;
+    return x;
+}
+
+"""
+    return (
+        before
+        + helper
+        + start
+        + arrows.replace(current_x, "GetTextPrinterArrowX(textPrinter)")
+        + end
+        + after
+    )
+
+
 def _patch_text_c(text: str, glyph_count: int) -> str:
     text = _patch_line_origins(text)
+    text = _patch_down_arrows(text)
     prototype_anchor = "static s32 GetGlyphWidth_Female(u16 glyphId, bool32 isJapanese);\n"
     text = _replace_once(
         text,

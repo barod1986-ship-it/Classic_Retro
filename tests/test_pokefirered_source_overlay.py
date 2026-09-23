@@ -49,14 +49,15 @@ def test_oak_intro_overlay_replaces_all_oak_speech_blocks():
     patched = overlay._patch_oak_intro(original)
 
     assert patched.count("CLASSIC_RETRO_ARABIC_V1 — Arabic OAK speech") == len(labels)
-    assert patched.count(".byte 0xFC, 0x19, 0xD8") == len(labels)
+    # The standard dialogue window is 26 tiles (208 px), not 28 tiles.
+    assert patched.count(".byte 0xFC, 0x19, 0xD0") == len(labels)
     assert '.string "placeholder$"' not in patched
 
 
 def test_oak_intro_bytes_preserve_newlines_pages_and_eos():
     data = overlay._oak_intro_bytes()
 
-    assert data[:3] == bytes.fromhex("fc19d8")
+    assert data[:3] == bytes.fromhex("fc19d0")
     assert data.count(0xFE) == 2
     assert data.count(0xFB) == 4
     assert data[-3:] == bytes.fromhex("fc1aff")
@@ -153,15 +154,39 @@ def test_charmap_overlay_rejects_upstream_f9_collision():
 
 
 @pytest.fixture
-def native_helpers(tmp_path, expander_source):
+def arrow_source():
+    return """void TextPrinterDrawDownArrow(struct TextPrinter *textPrinter)
+{
+    ClearArrow(textPrinter->printerTemplate.currentX);
+    DrawArrow(textPrinter->printerTemplate.currentX);
+}
+void TextPrinterClearDownArrow(struct TextPrinter *textPrinter)
+{
+    ClearArrow(textPrinter->printerTemplate.currentX);
+}
+bool8 TextPrinterWaitAutoMode(struct TextPrinter *textPrinter)
+{
+    return 0;
+}
+"""
+
+
+def test_arrow_draw_and_both_clear_paths_use_same_coordinate(arrow_source):
+    patched = overlay._patch_down_arrows(arrow_source)
+    assert patched.count("ClearArrow(GetTextPrinterArrowX(textPrinter))") == 2
+    assert "DrawArrow(GetTextPrinterArrowX(textPrinter))" in patched
+
+
+@pytest.fixture
+def native_helpers(tmp_path, expander_source, arrow_source):
     compiler = shutil.which("cc")
     if os.name != "posix" or compiler is None:
         pytest.skip("Native renderer regression checks require a POSIX C compiler")
     helper = overlay._patch_string_util(expander_source).split("// CLASSIC_RETRO_ARABIC_V1")[0]
     origins = overlay._patch_line_origins("""
 int reset_origin(int state, int rtl) {
-    struct Printer printer = {{8, 0}, rtl, 224};
-    struct Printer *textPrinter = &printer;
+    struct TextPrinter printer = {{8, 0}, rtl, 224};
+    struct TextPrinter *textPrinter = &printer;
     switch (state) {
     case 0: /* newline */
         textPrinter->printerTemplate.currentX = textPrinter->printerTemplate.x;
@@ -176,13 +201,20 @@ int reset_origin(int state, int rtl) {
     return textPrinter->printerTemplate.currentX;
 }
 """)
+    arrow_helper = overlay._patch_down_arrows(arrow_source).split("void TextPrinterDrawDownArrow")[
+        0
+    ]
     source = tmp_path / "regression.c"
     source.write_text(
         "typedef unsigned char u8;\n"
         "#define EOS 0xFF\n#define CHAR_EXTRA_SYMBOL 0xF9\n#define CHAR_KEYPAD_ICON 0xF8\n"
-        "struct Printer { struct { int x, currentX; } printerTemplate; int rtl, rtlX; };\n"
+        "struct TextPrinter { struct { int x, currentX; } printerTemplate; int rtl, rtlX; };\n"
         + helper
         + origins
+        + arrow_helper
+        + "int arrow_x(int x, int rtl) {\n"
+        "    struct TextPrinter printer = {{0, x}, rtl, 208};\n"
+        "    return GetTextPrinterArrowX(&printer);\n}\n"
         + "int reverse(u8 *dest, const u8 *src) {\n"
         "    return StringCopyReversedMultibyteNoTerminator(dest, src) - dest;\n}\n",
         encoding="utf-8",
@@ -196,6 +228,13 @@ int reset_origin(int state, int rtl) {
 @pytest.mark.parametrize("rtl,expected", [(0, 8), (1, 224)])
 def test_runtime_line_origin(native_helpers, state, rtl, expected):
     assert native_helpers.reset_origin(state, rtl) == expected
+
+
+@pytest.mark.parametrize(
+    "x,rtl,expected", [(0, 0, 0), (200, 0, 200), (0, 1, 0), (5, 1, 0), (10, 1, 0), (200, 1, 190)]
+)
+def test_runtime_arrow_position_avoids_text_and_underflow(native_helpers, x, rtl, expected):
+    assert native_helpers.arrow_x(x, rtl) == expected
 
 
 @pytest.mark.parametrize(
