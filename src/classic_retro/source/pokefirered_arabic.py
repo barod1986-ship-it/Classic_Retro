@@ -286,7 +286,9 @@ def _patch_text_printer(text: str) -> str:
 
 def _patch_charmap(text: str) -> str:
     glyph_map = build_arabic_glyph_map()
-    upstream_slots = {int(m.group(1), 16) for m in re.finditer(r"=\s*F9\s+([0-9A-Fa-f]{2})\b", text)}
+    upstream_slots = {
+        int(m.group(1), 16) for m in re.finditer(r"=\s*F9\s+([0-9A-Fa-f]{2})\b", text)
+    }
     collisions = sorted(set(glyph_map.slots.values()) & upstream_slots)
     if collisions:
         values = ", ".join(f"F9 {value:02X}" for value in collisions)
