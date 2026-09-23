@@ -5,9 +5,11 @@ from pathlib import Path
 
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.pokemon_gen3_arabic import (
+    PokemonGen3ArabicEncoder,
     build_arabic_font_atlas,
     build_arabic_glyph_map,
 )
+from classic_retro.text.tokens import InlineToken, TextToken, TokenKind, TokenMovement, TokenStream
 
 PINNED_COMMIT = "c75f352304d529f6ba92d4f74b9cf8b5c3810788"
 _PATCH_MARKER = "CLASSIC_RETRO_ARABIC_V1"
@@ -19,7 +21,11 @@ _PINNED_BLOBS = {
     "src/text.c": "f3eef07ce6dea8269980a5ecfdd6902c1c9c13d2",
     "charmap.txt": "b9d0ed9de00d05fc303bb987a5aa634b19009b47",
     "graphics_file_rules.mk": "39b952cd45b6a34eb98318a76aa531fcafff134d",
+    "data/text/new_game_intro.inc": "e667b68d92f7b44f424d5d276093c434f1b7e2df",
 }
+
+_OAK_INTRO_RIGHT_X = 216
+
 
 
 def check_pokefirered_arabic_source(source: Path) -> dict[str, object]:
@@ -40,6 +46,8 @@ def check_pokefirered_arabic_source(source: Path) -> dict[str, object]:
         "arabic_glyphs": len(glyph_map.characters),
         "first_extra_symbol": f"0x{glyph_map.first_slot:02X}",
         "last_extra_symbol": f"0x{glyph_map.last_slot:02X}",
+        "oak_intro_arabic": True,
+        "oak_intro_bytes": len(_oak_intro_bytes()),
     }
 
 
@@ -73,6 +81,8 @@ def prepare_pokefirered_arabic_source(source: Path, font_path: Path) -> dict[str
         "font_png": str(atlas),
         "widths": str(widths),
         "build_target": "firered_rev1",
+        "oak_intro_arabic": True,
+        "oak_intro_right_x": _OAK_INTRO_RIGHT_X,
     }
 
 
@@ -122,6 +132,7 @@ def _validate_patched_tree(source: Path) -> None:
         "src/text.c",
         "charmap.txt",
         "graphics_file_rules.mk",
+        "data/text/new_game_intro.inc",
     )
     missing = [
         relative
@@ -152,7 +163,90 @@ def _patch_all(texts: dict[str, str]) -> dict[str, str]:
     result["charmap.txt"] = _patch_charmap(result["charmap.txt"])
     result["graphics_file_rules.mk"] = _patch_graphics_rules(result["graphics_file_rules.mk"])
     result["src/text.c"] = _patch_text_c(result["src/text.c"], count)
+    result["data/text/new_game_intro.inc"] = _patch_oak_intro(
+        result["data/text/new_game_intro.inc"]
+    )
     return result
+
+
+def _oak_intro_bytes() -> bytes:
+    encoder = PokemonGen3ArabicEncoder()
+    stream = TokenStream(
+        (
+            TextToken("مرحبا بك!"),
+            InlineToken(
+                id="oak_intro_line_1",
+                kind=TokenKind.LINE_BREAK,
+                movement=TokenMovement.ORDERED,
+            ),
+            TextToken("سعيد بلقائك!"),
+            InlineToken(
+                id="oak_intro_page_1",
+                kind=TokenKind.CONTROL,
+                movement=TokenMovement.ORDERED,
+                name="PROMPT_CLEAR",
+                args={"raw_hex": "fb"},
+            ),
+            TextToken("أهلا بك في عالم بوكيمون!"),
+            InlineToken(
+                id="oak_intro_page_2",
+                kind=TokenKind.CONTROL,
+                movement=TokenMovement.ORDERED,
+                name="PROMPT_CLEAR",
+                args={"raw_hex": "fb"},
+            ),
+            TextToken("اسمي أوك."),
+            InlineToken(
+                id="oak_intro_page_3",
+                kind=TokenKind.CONTROL,
+                movement=TokenMovement.ORDERED,
+                name="PROMPT_CLEAR",
+                args={"raw_hex": "fb"},
+            ),
+            TextToken("يناديني الناس بمحبة"),
+            InlineToken(
+                id="oak_intro_line_2",
+                kind=TokenKind.LINE_BREAK,
+                movement=TokenMovement.ORDERED,
+            ),
+            TextToken("بروفيسور بوكيمون."),
+            InlineToken(
+                id="oak_intro_page_4",
+                kind=TokenKind.CONTROL,
+                movement=TokenMovement.ORDERED,
+                name="PROMPT_CLEAR",
+                args={"raw_hex": "fb"},
+            ),
+        )
+    )
+    return encoder.encode_message(stream, right_x=_OAK_INTRO_RIGHT_X, terminator=True)
+
+
+def _format_asm_bytes(data: bytes) -> str:
+    lines = []
+    for offset in range(0, len(data), 16):
+        chunk = data[offset : offset + 16]
+        values = ", ".join(f"0x{value:02X}" for value in chunk)
+        lines.append(f"    .byte {values}")
+    return "\n".join(lines)
+
+
+def _patch_oak_intro(text: str) -> str:
+    original = """gOakSpeech_Text_WelcomeToTheWorld::
+    .string "Hello, there!\\n"
+    .string "Glad to meet you!\\p"
+    .string "Welcome to the world of POKéMON!\\p"
+    .string "My name is OAK.\\p"
+    .string "People affectionately refer to me\\n"
+    .string "as the POKéMON PROFESSOR.\\p$"
+"""
+    replacement = (
+        "gOakSpeech_Text_WelcomeToTheWorld::\n"
+        "    @ CLASSIC_RETRO_ARABIC_V1 — first OAK speech\n"
+        + _format_asm_bytes(_oak_intro_bytes())
+        + "\n"
+    )
+    return _replace_once(text, original, replacement, "OAK intro Arabic speech")
 
 
 def _patch_characters(text: str) -> str:
