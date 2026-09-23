@@ -14,11 +14,16 @@ from classic_retro.codec.model import load_codec_profile
 from classic_retro.codec.table import TableTextCodec
 from classic_retro.core.errors import ClassicRetroError
 from classic_retro.core.identity import fingerprint_file
+from classic_retro.engines.pokemon_gen3_arabic import PokemonGen3ArabicEncoder
 from classic_retro.media.resolve import resolve_media
 from classic_retro.rebuild.model import load_rebuild_plan
 from classic_retro.rebuild.pipeline import verify_round_trip
 from classic_retro.text.document import load_translation_file
 from classic_retro.transform.profile import build_pipeline, load_transform_profile
+from classic_retro.source.pokefirered_arabic import (
+    check_pokefirered_arabic_source,
+    prepare_pokefirered_arabic_source,
+)
 from classic_retro.transform.registry import build_transform_registry
 
 
@@ -121,6 +126,35 @@ def _build_parser() -> argparse.ArgumentParser:
     verify_codec.add_argument("data", type=Path)
     verify_codec.add_argument("--require-terminator", action="store_true")
     verify_codec.set_defaults(handler=_cmd_codec_verify)
+
+    pokemon = subcommands.add_parser(
+        "pokemon-gen3",
+        help="Pokémon Generation III engine helpers",
+    )
+    pokemon_commands = pokemon.add_subparsers(dest="pokemon_command", required=True)
+
+    source_check = pokemon_commands.add_parser(
+        "source-check",
+        help="Verify the pinned pokefirered source and Arabic overlay anchors",
+    )
+    source_check.add_argument("source", type=Path)
+    source_check.set_defaults(handler=_cmd_pokemon_source_check)
+
+    prepare_source = pokemon_commands.add_parser(
+        "prepare-arabic-source",
+        help="Patch pinned pokefirered source for RTL and build the Arabic font atlas",
+    )
+    prepare_source.add_argument("source", type=Path)
+    prepare_source.add_argument("--font", type=Path, required=True)
+    prepare_source.set_defaults(handler=_cmd_pokemon_prepare_arabic_source)
+
+    compile_arabic = pokemon_commands.add_parser(
+        "encode-arabic",
+        help="Encode one logical Arabic line to Gen III RTL paint-order bytes",
+    )
+    compile_arabic.add_argument("text")
+    compile_arabic.add_argument("--right-x", type=int, default=224)
+    compile_arabic.set_defaults(handler=_cmd_pokemon_encode_arabic)
 
     adapters = subcommands.add_parser("adapters", help="List loaded adapter IDs")
     adapters.set_defaults(handler=_cmd_adapters)
@@ -235,6 +269,37 @@ def _cmd_codec_verify(args: argparse.Namespace) -> int:
         "inline_tokens": len(decoded.stream.inline_tokens),
         "visible_text": decoded.stream.visible_text,
         "round_trip": True,
+    }
+    print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_pokemon_source_check(args: argparse.Namespace) -> int:
+    result = check_pokefirered_arabic_source(args.source)
+    print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_pokemon_prepare_arabic_source(args: argparse.Namespace) -> int:
+    result = prepare_pokefirered_arabic_source(args.source, args.font)
+    print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_pokemon_encode_arabic(args: argparse.Namespace) -> int:
+    from classic_retro.text.tokens import TextToken, TokenStream
+
+    encoder = PokemonGen3ArabicEncoder()
+    data = encoder.encode_message(
+        TokenStream((TextToken(args.text),)),
+        right_x=args.right_x,
+        terminator=True,
+    )
+    payload = {
+        "right_x": args.right_x,
+        "bytes_hex": data.hex(),
+        "bytes": len(data),
+        "glyphs": len(encoder.glyph_map.characters),
     }
     print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
     return 0
