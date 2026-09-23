@@ -52,8 +52,12 @@ The prepare-arabic-source command accepts a user-supplied Arabic-capable TTF or 
 
 The compiler:
 
-- chooses the largest size that fits the FireRed 16x16 Arabic glyph cell,
+- chooses the largest size that fits FireRed's actual 16x14 copied glyph region,
 - uses one baseline across contextual forms,
+- left-aligns every glyph at x=0 because CopyGlyphToWindow copies only columns 0..glyphWidth,
+- derives glyph width from the font's real advance instead of the centered ink span,
+- keeps foreground and shadow pixels inside the declared copied width,
+- writes the atlas as native 2bpp palette PNG,
 - rasterizes background / foreground / shadow semantic pixels,
 - writes graphics/fonts/arabic_normal.png,
 - writes a one-byte-per-glyph width table,
@@ -102,3 +106,17 @@ correctly inside Arabic dialogue.
 - Arabic ligatures are disabled.
 - All 13 Professor OAK speech strings in the new-game intro are the end-to-end reference translation.
 - Wider game dialogue import and Arabic name-entry UI remain later steps.
+
+## Reference font
+
+The CI reference build uses **Noto Kufi Arabic SemiBold** from the Noto Arabic
+family. Noto Arabic is licensed under the SIL Open Font License 1.1.
+
+Kufi was selected for the reference ROM because its heavier, compact forms remain
+readable at the approximately 13px size available to FireRed while fitting the
+engine's 16px-wide glyph cell without shrinking the entire Arabic set to the
+10px size previously required by DejaVu Sans.
+
+The toolkit still accepts another Arabic-capable TTF/OTF through `--font`.
+The glyph-bound validator rejects a font/rasterization combination if any visible
+pixel would be outside the width or height that FireRed actually copies.
