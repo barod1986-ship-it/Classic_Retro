@@ -153,8 +153,7 @@ class LayoutEngine:
             return []
 
         shadow = "".join(
-            element if isinstance(element, str) else _OBJECT_REPLACEMENT
-            for element in elements
+            element if isinstance(element, str) else _OBJECT_REPLACEMENT for element in elements
         )
         boundaries = set(self.breaks.boundaries(shadow))
         boundaries.add(len(elements))
