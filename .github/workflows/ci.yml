@@ -384,8 +384,8 @@ jobs:
     # The fireemblem8u decompilation rebuilds The Sacred Stones but most of its
     # data is still binary: the overlay patches the user's own USA ROM locally
     # (docs/FIRE_EMBLEM_ARABIC_TEST_AR.md). CI re-assembles the Thumb hooks and
-    # compares them with the stored bytes, and measures every Arabic line with
-    # the reference font.
+    # compares them with the stored bytes, measures every Arabic line with the
+    # reference font, and draws the seven Arabic legend images.
     runs-on: ubuntu-latest
 
     steps:
@@ -414,7 +414,7 @@ jobs:
           ARABIC_FONT=reference-font.ttf
           curl --fail --location "https://raw.githubusercontent.com/notofonts/noto-fonts/$NOTO_COMMIT/hinted/ttf/NotoKufiArabic/NotoKufiArabic-SemiBold.ttf" -o "$ARABIC_FONT"
           echo "aa30cd2663f1eb1c940c9cd6a898877f307c2572e72a8a352896fe23f512018e  $ARABIC_FONT" | sha256sum -c -
-          classic-retro fire-emblem check-translations --font "$ARABIC_FONT" --preview artifact/arabic_font_preview.png | tee artifact/translation-report.json
+          classic-retro fire-emblem check-translations --font "$ARABIC_FONT" --preview artifact/arabic_font_preview.png --legend-preview artifact/arabic_legend_preview.png | tee artifact/translation-report.json
 
       - name: Upload translation review files
         uses: actions/upload-artifact@v6
@@ -423,5 +423,6 @@ jobs:
           path: |
             artifact/translation-report.json
             artifact/arabic_font_preview.png
+            artifact/arabic_legend_preview.png
           if-no-files-found: error
           retention-days: 14

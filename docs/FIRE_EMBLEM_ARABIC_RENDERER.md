@@ -53,11 +53,14 @@ binary ROM overlay built from the user's image.
 | `0x08F00000` | Thumb hooks (`src/classic_retro/rom/fire_emblem_arabic_hooks.s`, 276 bytes) |
 | `0x08F01000` | Right-to-left glyph table: 256 pointers, then the glyphs (72 bytes each) |
 | `0x08F08000` | Translated messages, uncompressed, each on a word boundary |
+| `0x08F10000` | Legend images: LZ77 tiles and LZ77 tile map per image (about 11.6 KB for all seven) |
 | `0x08003ABC` | Four 16-byte ARM veneers over `sub_8003ABC`, a debug routine that nothing calls or points to |
+| `0x08206FE4` | `gOpSubtitleGfxLut`: the seven `{tiles, tile map}` pointers now point at the Arabic images; display times unchanged |
 
 The overlay checks that `0x08F00000..0x08F20000` is still `0xFF`, and every
-original byte it replaces, before writing. The Huffman bank is untouched: a
-translated message's table entry gets bit 31 and points at its bytes.
+original byte it replaces, before writing. The Huffman bank and the game's own
+legend images are untouched: a translated message's table entry gets bit 31 and
+points at its bytes, and the legend table points at the new images.
 
 ## Right-to-left mode
 
@@ -137,6 +140,35 @@ Messages: `0x8DB` (the world map's narration of Magvel: 22 key waits, and 18
 and `0x903`..`0x906` (the throne room of Castle Renais, from the soldier's report to
 King Fado's last words).
 
+## Legend images
+
+Before a new game, `StartIntroMonologue` shows the legend of the Sacred Stones as
+seven 240x160 images (`gOpSubtitleGfxLut`, `0x08206FE4`: LZ77 4bpp tiles, LZ77 tile
+map, display frames). They are drawn on palette 3: index 0 transparent, 1..13 a
+ramp from cream to dark brown for anti-aliased edges; lines are centred, 24 pixels
+apart. The tile map is `width - 1`, `height - 1` and u16 entries bottom row first
+(`TmApplyTsa`); the game adds the tile base and palette. Images 3..5 are also put
+on BG1 with a dark palette, 3 pixels off, as a shadow over the stone background.
+
+- **VRAM.** Tiles are decompressed at `0x06001000`, up to the tile map at
+  `0x06006000`; image 2 ("The Sacred Stones") goes to `0x06005000` while the stone
+  background fills the tiles below, so it may use 128 tiles. The Arabic images use
+  25..164 tiles (budget 128 for image 2, 512 for the others).
+- **Drawing.** Each line is shaped with HarfBuzz (right to left: contextual forms,
+  lam-alef ligatures, kerning) and rasterized by Pillow glyph by glyph through a
+  private-use cmap on an in-memory copy of the user's font, so no system shaping
+  library is needed. The size makes the font's alef as tall as the English
+  capitals (10 pixels: 13 px for the reference font). Coverage maps linearly onto
+  the ramp (below 40 of 255 is transparent). The reference font has no Latin
+  punctuation; `.`, `!` and `:` get square dots as wide as its alef stroke.
+- **Encoding.** Unique tiles (tile 0 blank), the full-screen tile map, and VRAM-safe
+  LZ77 (`rebuild/lz77.py`, never a distance of 1 because VRAM is written 16 bits at a
+  time). The build decompresses both back from the output image and compares the
+  decoded pixels with the drawing.
+- **Lines** (`fire_emblem_arabic_legend()` in the script): Arabic letters, spaces
+  and punctuation only (no bidi runs to reorder, no marks), at most five lines of
+  at most 224 pixels.
+
 ## Runtime verification
 
 With mGBA 0.10.2 (libmgba, headless, scripted input) on the patched build, from a
@@ -150,12 +182,15 @@ new game (Easy mode):
   English narration: 60 screenshots through the rest of the narration and the
   English throne room are pixel-identical to the original game;
 - a build translating only the throne room, from the menus: the English narration
-  (75 screenshots) is pixel-identical to the original game.
+  (75 screenshots) is pixel-identical to the original game;
+- the legend from the main menu (128 screenshots): all seven Arabic images with the
+  game's fades, the stone background and its shadow layer, at the positions of the
+  English ones; Start still skips to the Arabic narration.
 
 ## Commands
 
 ```sh
-classic-retro fire-emblem check-translations --font NotoKufiArabic-SemiBold.ttf
+classic-retro fire-emblem check-translations --font NotoKufiArabic-SemiBold.ttf --legend-preview legend.png
 classic-retro fire-emblem build-arabic original.gba --font NotoKufiArabic-SemiBold.ttf --out-dir out
 classic-retro fire-emblem encode-arabic "مولاي، ماذا نفعل؟[A]" --font NotoKufiArabic-SemiBold.ttf
 classic-retro fire-emblem check-hooks
@@ -166,7 +201,7 @@ classic-retro fire-emblem check-hooks
 - Combining harakat, mirrored brackets and Arabic-Indic digits are rejected.
 - Runtime text (`[G]` numbers, `[Tact]`, unit and item names) and the Yes/No and
   shop choices are rejected inside Arabic messages.
-- The opening legend, the chapter title and battle animations are images; the
+- The chapter title and battle animations are images not redrawn yet; the
   location label ("Renais Castle"), menus and help boxes use other text systems.
   All of these stay English, as does every message after `0x906`.
 - Battle quotes use a fixed 20-tile bubble; Arabic ones would need a third axis.
