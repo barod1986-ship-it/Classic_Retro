@@ -298,19 +298,24 @@ class PokemonGen3TextCodec(GameTextCodec):
             terminator_id=None,
         )
 
+    def encode_character(self, character: str) -> bytes:
+        if len(character) != 1:
+            raise ValueError("encode_character requires exactly one Unicode character")
+        value = _BYTES_BY_GLYPH.get(character)
+        if value is None:
+            raise ClassicRetroError(
+                ErrorCode.UNENCODABLE_TEXT,
+                f"Pokémon Gen III codec has no byte for {character!r}",
+            )
+        return bytes((value,))
+
     def encode(self, stream: TokenStream, *, terminator_id: str | None = None) -> bytes:
         output = bytearray()
 
         for token in stream.tokens:
             if isinstance(token, TextToken):
                 for character in token.text:
-                    value = _BYTES_BY_GLYPH.get(character)
-                    if value is None:
-                        raise ClassicRetroError(
-                            ErrorCode.UNENCODABLE_TEXT,
-                            f"Pokémon Gen III codec has no byte for {character!r}",
-                        )
-                    output.append(value)
+                    output.extend(self.encode_character(character))
                 continue
 
             if token.kind is TokenKind.OPAQUE:
