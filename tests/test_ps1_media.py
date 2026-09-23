@@ -40,9 +40,7 @@ def test_detect_ps1_bin_cue_from_iso_and_boot_signature(tmp_path):
 
     cue_path = tmp_path / "disc.cue"
     cue_path.write_text(
-        'FILE "disc.bin" BINARY\n'
-        "  TRACK 01 MODE2/2352\n"
-        "    INDEX 01 00:00:00\n",
+        'FILE "disc.bin" BINARY\n  TRACK 01 MODE2/2352\n    INDEX 01 00:00:00\n',
         encoding="utf-8",
     )
 
