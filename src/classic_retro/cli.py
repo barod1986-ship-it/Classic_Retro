@@ -21,7 +21,13 @@ from classic_retro.media.resolve import resolve_media
 from classic_retro.rebuild.bps import apply_bps, create_bps
 from classic_retro.rebuild.model import load_rebuild_plan
 from classic_retro.rebuild.pipeline import verify_round_trip
-from classic_retro.rom import fire_emblem_arabic, golden_sun_arabic, mmbn_arabic, pmd_arabic
+from classic_retro.rom import (
+    fire_emblem_arabic,
+    golden_sun_arabic,
+    mlss_arabic,
+    mmbn_arabic,
+    pmd_arabic,
+)
 from classic_retro.rom.ff6a_arabic import (
     build_ff6a_arabic_rom,
     check_ff6a_translations,
@@ -508,6 +514,63 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     mmbn_encode.set_defaults(handler=_cmd_mmbn_encode_arabic)
 
+    mlss = subcommands.add_parser(
+        "mlss",
+        help="Mario & Luigi: Superstar Saga (USA) Arabic ROM overlay helpers",
+    )
+    mlss_commands = mlss.add_subparsers(dest="mlss_command", required=True)
+
+    mlss_check = mlss_commands.add_parser(
+        "check-translations",
+        help="Validate the Arabic script without the ROM; with --font, measure every message",
+    )
+    mlss_check.add_argument(
+        "--font",
+        type=Path,
+        help="Arabic TTF/OTF; also builds the right-to-left font and computes every header",
+    )
+    mlss_check.add_argument(
+        "--preview", type=Path, help="Write the generated Arabic glyph atlas as PNG"
+    )
+    mlss_check.add_argument(
+        "--text-preview",
+        type=Path,
+        help="Write every translated message, laid out as the game draws it, as one PNG",
+    )
+    mlss_check.set_defaults(handler=_cmd_mlss_check_translations)
+
+    mlss_hooks = mlss_commands.add_parser(
+        "check-hooks",
+        help="Re-assemble the Thumb hook with arm-none-eabi binutils and compare the bytes",
+    )
+    mlss_hooks.set_defaults(handler=_cmd_mlss_check_hooks)
+
+    mlss_build = mlss_commands.add_parser(
+        "build-arabic",
+        help="Build the Arabic BPS patch (and optionally the patched image) from the ROM",
+    )
+    mlss_build.add_argument("rom", type=Path)
+    mlss_build.add_argument("--font", type=Path, required=True)
+    mlss_build.add_argument("--out-dir", type=Path, required=True)
+    mlss_build.add_argument(
+        "--write-rom",
+        metavar="NAME",
+        help="Also write the patched image into --out-dir under this name (local use only)",
+    )
+    mlss_build.set_defaults(handler=_cmd_mlss_build_arabic)
+
+    mlss_encode = mlss_commands.add_parser(
+        "encode-arabic",
+        help="Encode one message text in notation ({FF 0B 01}, \\n, ... {FF 0A}) in paint order",
+    )
+    mlss_encode.add_argument("text")
+    mlss_encode.add_argument(
+        "--font",
+        type=Path,
+        help="Arabic TTF/OTF used to report the width of each line and the header",
+    )
+    mlss_encode.set_defaults(handler=_cmd_mlss_encode_arabic)
+
     adapters = subcommands.add_parser("adapters", help="List loaded adapter IDs")
     adapters.set_defaults(handler=_cmd_adapters)
 
@@ -841,6 +904,35 @@ def _cmd_mmbn_build_arabic(args: argparse.Namespace) -> int:
 
 def _cmd_mmbn_encode_arabic(args: argparse.Namespace) -> int:
     result = mmbn_arabic.encode_mmbn_arabic_section(args.text, args.font)
+    print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_mlss_check_translations(args: argparse.Namespace) -> int:
+    result = mlss_arabic.check_mlss_translations(args.font, args.preview, args.text_preview)
+    print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_mlss_check_hooks(_: argparse.Namespace) -> int:
+    result = mlss_arabic.check_hook_code()
+    print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_mlss_build_arabic(args: argparse.Namespace) -> int:
+    build = mlss_arabic.build_mlss_arabic_rom(args.rom.read_bytes(), args.font)
+    written = mlss_arabic.write_build_outputs(build, args.out_dir, rom_name=args.write_rom)
+    report = {**build.report, "outputs": written}
+    (args.out_dir / "build-report.json").write_text(
+        json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_mlss_encode_arabic(args: argparse.Namespace) -> int:
+    result = mlss_arabic.encode_mlss_arabic_message(args.text, args.font)
     print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
     return 0
 

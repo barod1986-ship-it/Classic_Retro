@@ -519,3 +519,50 @@ jobs:
             artifact/arabic_pages_preview.png
           if-no-files-found: error
           retention-days: 14
+
+  mlss-arabic-overlay:
+    # The jellees/mlss decompilation matches Mario & Luigi: Superstar Saga but
+    # extracts its data from the original: the overlay patches the user's own
+    # USA ROM locally (docs/MLSS_ARABIC_TEST_AR.md). CI re-assembles the Thumb
+    # hook and compares it with the stored bytes, builds the right-to-left font
+    # from the reference font and lays out every Arabic message of the opening.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Classic Retro
+        uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y binutils-arm-none-eabi
+
+      - name: Install toolkit
+        run: python -m pip install -e .
+
+      - name: Re-assemble the Thumb hook and compare with the stored bytes
+        run: classic-retro mlss check-hooks
+
+      - name: Validate the Arabic script and lay out every message with the reference font
+        run: |
+          mkdir -p artifact
+          NOTO_COMMIT=ffebf8c1ee449e544955a7e813c54f9b73848eac
+          ARABIC_FONT=reference-font.ttf
+          curl --fail --location "https://raw.githubusercontent.com/notofonts/noto-fonts/$NOTO_COMMIT/hinted/ttf/NotoKufiArabic/NotoKufiArabic-SemiBold.ttf" -o "$ARABIC_FONT"
+          echo "aa30cd2663f1eb1c940c9cd6a898877f307c2572e72a8a352896fe23f512018e  $ARABIC_FONT" | sha256sum -c -
+          classic-retro mlss check-translations --font "$ARABIC_FONT" --preview artifact/arabic_font_preview.png --text-preview artifact/arabic_messages_preview.png | tee artifact/translation-report.json
+
+      - name: Upload translation review files
+        uses: actions/upload-artifact@v6
+        with:
+          name: mlss-arabic-overlay
+          path: |
+            artifact/translation-report.json
+            artifact/arabic_font_preview.png
+            artifact/arabic_messages_preview.png
+          if-no-files-found: error
+          retention-days: 14
