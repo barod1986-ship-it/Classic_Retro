@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -26,6 +27,8 @@ from classic_retro.localization.targets import (
 )
 
 REPO = Path(__file__).resolve().parents[1]
+# Python 3.14 colours help output when the environment asks for colour.
+COLOUR_CODES = re.compile(r"\x1b\[[0-9;]*m")
 ROM_OVERLAYS = ("ff6a", "golden-sun", "fire-emblem", "pmd-red", "mmbn", "mlss", "fomt")
 
 
@@ -323,7 +326,8 @@ def test_the_cli_keeps_every_command_group_and_adds_targets(capsys):
         with pytest.raises(SystemExit) as exit_:
             main([group, "--help"])
         assert exit_.value.code == 0
-        assert capsys.readouterr().out.startswith(f"usage: classic-retro {group} ")
+        usage = COLOUR_CODES.sub("", capsys.readouterr().out)
+        assert usage.startswith(f"usage: classic-retro {group} ")
 
     assert main(["targets", "list"]) == 0
     listed = json.loads(capsys.readouterr().out)

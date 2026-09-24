@@ -103,21 +103,21 @@ In this repository, write `localization/builtin/<target>.py` and add its `TARGET
 
 ```python
 TARGET = LocalizationTarget(
-    id="my-game",                      # the id the targets commands take
-    game_id="my-game-usa",             # the game adapter's id
+    id="my-game",  # the id the targets commands take
+    game_id="my-game-usa",  # the game adapter's id
     title="My Game (USA)",
     platform_id="gba",
-    kind="rom-overlay",                # or "source-overlay"
-    strategies=("glyph-font",),        # registered strategy ids, one or more
+    kind="rom-overlay",  # or "source-overlay"
+    strategies=("glyph-font",),  # registered strategy ids, one or more
     scope="What is translated",
     guide="docs/MY_GAME_ARABIC_TEST_AR.md",
     notes="docs/MY_GAME_ARABIC_RENDERER.md",
-    register_cli=register_cli,         # the target's own command group
+    register_cli=register_cli,  # the target's own command group
     check_hooks=check_hooks,
     check_translations=check_translations,
     build=build,
-    previews=PREVIEWS,                 # files check_translations writes, given a font
-    reference_patch_sha256="...",      # the patch built from the pinned image
+    previews=PREVIEWS,  # files check_translations writes, given a font
+    reference_patch_sha256="...",  # the patch built from the pinned image
 )
 ```
 
