@@ -23,14 +23,12 @@ assembly source with GNU binutils so CI can prove they match.
 from __future__ import annotations
 
 import hashlib
-import shutil
 import struct
-import subprocess
-import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
 
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
+from classic_retro.cpu.thumb import bl_instruction, literal_jump
 from classic_retro.engines.golden_sun import (
     KEY_END,
     STORE_TREE_BLOCKS,
@@ -59,6 +57,9 @@ from classic_retro.engines.golden_sun_arabic import (
     golden_sun_command,
     validate_command_skeleton,
 )
+from classic_retro.patching.hooks import HookProgram
+from classic_retro.patching.image import ImageSpec
+from classic_retro.patching.outputs import base_report, write_image, write_patch
 from classic_retro.rebuild.bps import BpsPatch, create_bps
 from classic_retro.rom.golden_sun_arabic_script import (
     GoldenSunArabicMessage,
@@ -124,6 +125,9 @@ HOOK_SYMBOLS = {
     "hook_measure_alt": 0x238,
     "rtl_font_pointer": 0x2A8,
 }
+IMAGE = ImageSpec("Golden Sun (USA, Europe)", USA_SHA256, USA_SIZE, ROM_BASE)
+HOOKS = HookProgram("Golden Sun hooks", HOOK_SOURCE, HOOK_CODE_ADDRESS, HOOK_CODE, HOOK_SYMBOLS)
+PATCH_NAME = "golden-sun-usa-europe-arabic-opening.bps"
 
 
 @dataclass(frozen=True, slots=True)
@@ -143,13 +147,13 @@ class HookSite:
                 raise ClassicRetroError(
                     ErrorCode.WRITE_OUT_OF_BOUNDS, f"Hook at {self.address:#x} is out of BL range"
                 )
-            data = struct.pack("<HH", 0xF000 | offset >> 12 & 0x7FF, 0xF800 | offset >> 1 & 0x7FF)
+            data = bl_instruction(self.address, target)
         elif self.kind == "jump":
             if self.address % 4:
                 raise ClassicRetroError(
                     ErrorCode.REFERENCE_ALIGNMENT_ERROR, f"Jump at {self.address:#x} is unaligned"
                 )
-            data = struct.pack("<HHI", 0x4B00, 0x4718, target | 1)
+            data = literal_jump(self.address, 3, target)
         else:
             raise ValueError(f"unknown hook kind {self.kind}")
         if len(data) != len(self.original):
@@ -194,8 +198,7 @@ class GoldenSunArabicBuild:
     report: dict[str, object] = field(default_factory=dict)
 
 
-def _offset(address: int) -> int:
-    return address - ROM_BASE
+_offset = IMAGE.offset
 
 
 def source_digest(codes: tuple[int, ...]) -> str:
@@ -204,11 +207,7 @@ def source_digest(codes: tuple[int, ...]) -> str:
 
 
 def verify_usa_image(rom: bytes) -> None:
-    if len(rom) != USA_SIZE or hashlib.sha256(rom).hexdigest() != USA_SHA256:
-        raise ClassicRetroError(
-            ErrorCode.UNKNOWN_GAME_REVISION,
-            "Input is not Golden Sun (USA, Europe) with SHA-256 " + USA_SHA256,
-        )
+    IMAGE.verify(rom)
 
 
 def _verify_anchors(rom: bytes) -> tuple[GoldenSunFont, GoldenSunTextBank]:
@@ -340,13 +339,7 @@ def build_golden_sun_arabic_rom(
     _verify_output(output, rom, bank, replacements, font_data, store)
     patch = create_bps(rom, output)
     report: dict[str, object] = {
-        "game": "Golden Sun (USA, Europe)",
-        "base_sha1": hashlib.sha1(rom).hexdigest(),
-        "base_sha256": hashlib.sha256(rom).hexdigest(),
-        "target_sha256": hashlib.sha256(output).hexdigest(),
-        "patch_sha256": hashlib.sha256(patch.data).hexdigest(),
-        "patch_bytes": len(patch.data),
-        "target_bytes": len(output),
+        **base_report(IMAGE.title, rom, output, patch),
         "strings": sorted(replacements),
         "string_lines": {str(index): encoded[index][1] for index in sorted(encoded)},
         "arabic_glyphs": len(build_golden_sun_arabic_glyph_map().characters),
@@ -470,60 +463,16 @@ def encode_golden_sun_arabic_line(text: str, font_path: Path | None = None) -> d
 def write_build_outputs(
     build: GoldenSunArabicBuild, out_dir: Path, *, rom_name: str | None
 ) -> dict[str, str]:
-    out_dir.mkdir(parents=True, exist_ok=True)
-    patch_path = out_dir / "golden-sun-usa-europe-arabic-opening.bps"
-    patch_path.write_bytes(build.patch.data)
+    patch_path = write_patch(out_dir, PATCH_NAME, build.patch)
     font_preview(build.font).save(out_dir / "arabic_font_preview.png")
     written = {"patch": str(patch_path), "font_preview": str(out_dir / "arabic_font_preview.png")}
-    if rom_name:
-        rom_path = out_dir / rom_name
-        rom_path.write_bytes(build.rom)
-        written["rom"] = str(rom_path)
-    return written
+    return written | write_image(out_dir, rom_name, build.rom)
 
 
 def assemble_hooks(source: Path = HOOK_SOURCE) -> tuple[bytes, dict[str, int]]:
     """Assemble the hook source with GNU binutils (arm-none-eabi-*) and read its symbols."""
-    tools = {name: shutil.which(f"arm-none-eabi-{name}") for name in ("as", "ld", "objcopy", "nm")}
-    missing = sorted(name for name, path in tools.items() if path is None)
-    if missing:
-        raise ClassicRetroError(
-            ErrorCode.BUILD_VALIDATION_FAILED,
-            "Missing GNU ARM binutils: " + ", ".join(f"arm-none-eabi-{name}" for name in missing),
-        )
-    with tempfile.TemporaryDirectory() as work:
-        folder = Path(work)
-        steps = (
-            [tools["as"], "-mcpu=arm7tdmi", "-o", folder / "hooks.o", source],
-            [tools["ld"], "-e", "0", "-Ttext", f"{HOOK_CODE_ADDRESS:#x}"]
-            + ["-o", folder / "hooks.elf", folder / "hooks.o"],
-            [tools["objcopy"], "-O", "binary", folder / "hooks.elf", folder / "hooks.bin"],
-            [tools["nm"], folder / "hooks.elf"],
-        )
-        try:
-            listing = [
-                subprocess.run(step, check=True, capture_output=True, text=True).stdout
-                for step in steps
-            ][-1]
-        except subprocess.CalledProcessError as exc:
-            raise ClassicRetroError(
-                ErrorCode.BUILD_VALIDATION_FAILED,
-                f"Assembling the Golden Sun hooks failed: {exc.stderr.strip()}",
-            ) from exc
-        code = (folder / "hooks.bin").read_bytes()
-    symbols = {}
-    for line in listing.splitlines():
-        parts = line.split()
-        if len(parts) == 3 and parts[2] in HOOK_SYMBOLS:
-            symbols[parts[2]] = int(parts[0], 16) - HOOK_CODE_ADDRESS
-    return code, symbols
+    return HOOKS.assemble(source)
 
 
 def check_hook_code(source: Path = HOOK_SOURCE) -> dict[str, object]:
-    code, symbols = assemble_hooks(source)
-    if code != HOOK_CODE or symbols != HOOK_SYMBOLS:
-        raise ClassicRetroError(
-            ErrorCode.BUILD_VALIDATION_FAILED,
-            "Assembled Golden Sun hooks differ from the stored HOOK_CODE / HOOK_SYMBOLS",
-        )
-    return {"hook_bytes": len(code), "symbols": dict(sorted(symbols.items())), "match": True}
+    return HOOKS.check(source)

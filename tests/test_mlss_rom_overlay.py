@@ -9,6 +9,7 @@ import pytest
 
 from classic_retro.cli import main
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
+from classic_retro.cpu import thumb
 from classic_retro.engines.mlss import (
     GROUP_BYTES,
     MlssFont,
@@ -386,12 +387,12 @@ def test_translations_must_keep_the_original_commands(synthetic, tmp_path, monke
 
 
 def test_bl_and_branch_encoding():
-    assert overlay.bl_instruction(0x0819975C, 0x08199764) == bytes.fromhex("00f002f8")
-    assert overlay.branch_instruction(0x08199760, 0x0819977A) == bytes.fromhex("0be0")
+    assert thumb.bl_instruction(0x0819975C, 0x08199764) == bytes.fromhex("00f002f8")
+    assert thumb.branch_instruction(0x08199760, 0x0819977A) == bytes.fromhex("0be0")
     with pytest.raises(ClassicRetroError):
-        overlay.bl_instruction(0x0819975C, overlay.HOOK_CODE_ADDRESS)
+        thumb.bl_instruction(0x0819975C, overlay.HOOK_CODE_ADDRESS)
     with pytest.raises(ClassicRetroError):
-        overlay.branch_instruction(0x08199760, 0x08199760 + 0x1000)
+        thumb.branch_instruction(0x08199760, 0x08199760 + 0x1000)
 
 
 def test_pinned_script_covers_the_opening():

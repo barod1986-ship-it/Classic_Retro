@@ -77,9 +77,44 @@ Validation
 Patch / Build Artifact
 ```
 
+## Localization targets
+
+Each supported game revision is a **localization target**: the game, the way its
+renderer is made to draw Arabic, its documents, and the checks and builds the toolkit
+runs the same way for every target.
+
+| Target | Game | Kind | Rendering strategy |
+|--------|------|------|--------------------|
+| `firered` | Pokémon FireRed Version (USA, Europe) (Rev 1) | source overlay | `glyph-font` |
+| `minish-cap` | The Legend of Zelda: The Minish Cap (USA) | source overlay | `glyph-font` |
+| `ff6a` | Final Fantasy VI Advance (USA) | ROM overlay | `glyph-font` |
+| `golden-sun` | Golden Sun (USA, Europe) | ROM overlay | `glyph-font` |
+| `fire-emblem` | Fire Emblem: The Sacred Stones (USA, Australia) | ROM overlay | `glyph-font`, `text-images` |
+| `pmd-red` | Pokémon Mystery Dungeon: Red Rescue Team (USA, Australia) | ROM overlay | `glyph-font` |
+| `mmbn` | Mega Man Battle Network (USA) | ROM overlay | `line-cells` |
+| `mlss` | Mario & Luigi: Superstar Saga (USA) | ROM overlay | `glyph-font` |
+| `fomt` | Harvest Moon: Friends of Mineral Town (USA) | ROM overlay | `line-cells` |
+
+```text
+classic-retro targets list                          # every target, its documents and operations
+classic-retro targets strategies                    # the ways of drawing Arabic, and who uses them
+classic-retro targets check-hooks [TARGET ...]      # re-assemble hook code, compare with stored bytes
+classic-retro targets check-translations TARGET --font FONT [--preview-dir DIR]
+classic-retro targets build TARGET ROM --font FONT --out-dir DIR [--write-rom NAME]
+```
+
+`targets build` also reports whether the patch matches the target's recorded
+reference patch. Every game keeps its own command group too (`classic-retro fomt ...`).
+
+The three rendering strategies are what the nine targets proved, not the only ones
+possible. Games on other platforms will need other methods, and the strategy and
+target registries accept them from this repository or from other packages through
+entry points. See [the rendering strategies](docs/ARABIC_STRATEGIES.md) and
+[adding a target](docs/ADDING_A_TARGET.md).
+
 ## Repository status
 
-**Foundation toolkit with a playable FireRed Rev 1 reference patch.**
+**Localization platform with nine reference targets, all on the Game Boy Advance so far.**
 
 The first end-to-end example translates the 13 Professor OAK speech strings in
 the new-game intro. This is a renderer/font test, not a complete game translation.

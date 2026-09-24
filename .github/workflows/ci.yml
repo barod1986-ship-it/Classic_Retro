@@ -256,11 +256,9 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-  ff6a-arabic-overlay:
-    # Final Fantasy VI Advance has no decompilation: the overlay patches the
-    # user's own USA ROM locally (docs/FF6A_ARABIC_TEST_AR.md). CI re-assembles
-    # the Thumb hooks and compares them with the stored bytes, measures every
-    # Arabic line with the reference font, and checks the BPS writer against Flips.
+  bps-flips-interop:
+    # Every rom-overlay target ships a BPS patch: CI checks the toolkit's BPS
+    # writer and reader against Flips in both directions.
     runs-on: ubuntu-latest
 
     steps:
@@ -283,23 +281,11 @@ jobs:
       - name: Install build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential binutils-arm-none-eabi
+          sudo apt-get install -y build-essential
 
       - name: Install toolkit
         working-directory: toolkit
         run: python -m pip install -e .
-
-      - name: Re-assemble the Thumb hooks and compare with the stored bytes
-        run: classic-retro ff6a check-hooks
-
-      - name: Validate the Arabic script and measure every line with the reference font
-        run: |
-          mkdir -p artifact
-          NOTO_COMMIT=ffebf8c1ee449e544955a7e813c54f9b73848eac
-          ARABIC_FONT=reference-font.ttf
-          curl --fail --location "https://raw.githubusercontent.com/notofonts/noto-fonts/$NOTO_COMMIT/hinted/ttf/NotoKufiArabic/NotoKufiArabic-SemiBold.ttf" -o "$ARABIC_FONT"
-          echo "aa30cd2663f1eb1c940c9cd6a898877f307c2572e72a8a352896fe23f512018e  $ARABIC_FONT" | sha256sum -c -
-          classic-retro ff6a check-translations --font "$ARABIC_FONT" --preview artifact/arabic_font_preview.png | tee artifact/translation-report.json
 
       - name: Build Flips CLI
         working-directory: flips
@@ -324,23 +310,56 @@ jobs:
           classic-retro rebuild bps-apply flips.bps source.bin ours-out.bin
           cmp ours-out.bin target.bin
 
-      - name: Upload translation review files
-        uses: actions/upload-artifact@v6
-        with:
-          name: ff6a-arabic-overlay
-          path: |
-            artifact/translation-report.json
-            artifact/arabic_font_preview.png
-          if-no-files-found: error
-          retention-days: 14
-
-  golden-sun-arabic-overlay:
-    # The gsret/goldensun disassembly rebuilds Golden Sun but cannot relocate
-    # data yet: the overlay patches the user's own USA/Europe ROM locally
-    # (docs/GOLDEN_SUN_ARABIC_TEST_AR.md). CI re-assembles the Thumb hooks and
-    # compares them with the stored bytes, and measures every Arabic line with
-    # the reference font.
+  localization-targets:
+    # The targets CI checks come from the registry (classic-retro targets list):
+    # every target with a check-translations operation gets an arabic-overlay
+    # job, so a new target is checked without editing this file.
     runs-on: ubuntu-latest
+    outputs:
+      checked: ${{ steps.list.outputs.checked }}
+
+    steps:
+      - name: Checkout Classic Retro
+        uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - name: Install toolkit
+        run: python -m pip install -e .
+
+      - name: List the targets that have checks
+        id: list
+        shell: bash
+        run: |
+          classic-retro targets list > targets.json
+          python - >> "$GITHUB_OUTPUT" <<'PY'
+          import json
+          checked = [
+              {"id": target["id"], "hooks": "check-hooks" in target["operations"]}
+              for target in json.load(open("targets.json", encoding="utf-8"))
+              if "check-translations" in target["operations"]
+          ]
+          print("checked=" + json.dumps(checked, separators=(",", ":")))
+          PY
+
+  arabic-overlay:
+    # The rom-overlay targets patch the user's own image locally (each target's
+    # guide, docs/*_ARABIC_TEST_AR.md, says how). CI runs the same checks for
+    # every one by target id: it re-assembles the hook code and compares it
+    # with the stored bytes, validates the Arabic script and lays out every
+    # string with the reference font, and uploads the target's previews.
+    needs: localization-targets
+    name: ${{ matrix.target.id }}-arabic-overlay
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: ${{ fromJSON(needs.localization-targets.outputs.checked) }}
+    defaults:
+      run:
+        shell: bash
 
     steps:
       - name: Checkout Classic Retro
@@ -358,240 +377,9 @@ jobs:
       - name: Install toolkit
         run: python -m pip install -e .
 
-      - name: Re-assemble the Thumb hooks and compare with the stored bytes
-        run: classic-retro golden-sun check-hooks
-
-      - name: Validate the Arabic script and measure every line with the reference font
-        run: |
-          mkdir -p artifact
-          NOTO_COMMIT=ffebf8c1ee449e544955a7e813c54f9b73848eac
-          ARABIC_FONT=reference-font.ttf
-          curl --fail --location "https://raw.githubusercontent.com/notofonts/noto-fonts/$NOTO_COMMIT/hinted/ttf/NotoKufiArabic/NotoKufiArabic-SemiBold.ttf" -o "$ARABIC_FONT"
-          echo "aa30cd2663f1eb1c940c9cd6a898877f307c2572e72a8a352896fe23f512018e  $ARABIC_FONT" | sha256sum -c -
-          classic-retro golden-sun check-translations --font "$ARABIC_FONT" --preview artifact/arabic_font_preview.png | tee artifact/translation-report.json
-
-      - name: Upload translation review files
-        uses: actions/upload-artifact@v6
-        with:
-          name: golden-sun-arabic-overlay
-          path: |
-            artifact/translation-report.json
-            artifact/arabic_font_preview.png
-          if-no-files-found: error
-          retention-days: 14
-
-  fire-emblem-arabic-overlay:
-    # The fireemblem8u decompilation rebuilds The Sacred Stones but most of its
-    # data is still binary: the overlay patches the user's own USA ROM locally
-    # (docs/FIRE_EMBLEM_ARABIC_TEST_AR.md). CI re-assembles the Thumb hooks and
-    # compares them with the stored bytes, measures every Arabic line with the
-    # reference font, and draws the seven Arabic legend images.
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Classic Retro
-        uses: actions/checkout@v6
-
-      - uses: actions/setup-python@v7
-        with:
-          python-version: "3.14"
-
-      - name: Install build dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y binutils-arm-none-eabi
-
-      - name: Install toolkit
-        run: python -m pip install -e .
-
-      - name: Re-assemble the Thumb hooks and compare with the stored bytes
-        run: classic-retro fire-emblem check-hooks
-
-      - name: Validate the Arabic script and measure every line with the reference font
-        run: |
-          mkdir -p artifact
-          NOTO_COMMIT=ffebf8c1ee449e544955a7e813c54f9b73848eac
-          ARABIC_FONT=reference-font.ttf
-          curl --fail --location "https://raw.githubusercontent.com/notofonts/noto-fonts/$NOTO_COMMIT/hinted/ttf/NotoKufiArabic/NotoKufiArabic-SemiBold.ttf" -o "$ARABIC_FONT"
-          echo "aa30cd2663f1eb1c940c9cd6a898877f307c2572e72a8a352896fe23f512018e  $ARABIC_FONT" | sha256sum -c -
-          classic-retro fire-emblem check-translations --font "$ARABIC_FONT" --preview artifact/arabic_font_preview.png --legend-preview artifact/arabic_legend_preview.png | tee artifact/translation-report.json
-
-      - name: Upload translation review files
-        uses: actions/upload-artifact@v6
-        with:
-          name: fire-emblem-arabic-overlay
-          path: |
-            artifact/translation-report.json
-            artifact/arabic_font_preview.png
-            artifact/arabic_legend_preview.png
-          if-no-files-found: error
-          retention-days: 14
-
-  pmd-red-arabic-overlay:
-    # The pret/pmd-red decompilation rebuilds Red Rescue Team but its data is
-    # still extracted from the original: the overlay patches the user's own USA
-    # ROM locally (docs/PMD_RED_ARABIC_TEST_AR.md). CI re-assembles the Thumb
-    # hooks and compares them with the stored bytes, and measures every Arabic
-    # line of the personality test with the reference font.
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Classic Retro
-        uses: actions/checkout@v6
-
-      - uses: actions/setup-python@v7
-        with:
-          python-version: "3.14"
-
-      - name: Install build dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y binutils-arm-none-eabi
-
-      - name: Install toolkit
-        run: python -m pip install -e .
-
-      - name: Re-assemble the Thumb hooks and compare with the stored bytes
-        run: classic-retro pmd check-hooks
-
-      - name: Validate the Arabic script and measure every line with the reference font
-        run: |
-          mkdir -p artifact
-          NOTO_COMMIT=ffebf8c1ee449e544955a7e813c54f9b73848eac
-          ARABIC_FONT=reference-font.ttf
-          curl --fail --location "https://raw.githubusercontent.com/notofonts/noto-fonts/$NOTO_COMMIT/hinted/ttf/NotoKufiArabic/NotoKufiArabic-SemiBold.ttf" -o "$ARABIC_FONT"
-          echo "aa30cd2663f1eb1c940c9cd6a898877f307c2572e72a8a352896fe23f512018e  $ARABIC_FONT" | sha256sum -c -
-          classic-retro pmd check-translations --font "$ARABIC_FONT" --preview artifact/arabic_font_preview.png --text-preview artifact/arabic_text_preview.png | tee artifact/translation-report.json
-
-      - name: Upload translation review files
-        uses: actions/upload-artifact@v6
-        with:
-          name: pmd-red-arabic-overlay
-          path: |
-            artifact/translation-report.json
-            artifact/arabic_font_preview.png
-            artifact/arabic_text_preview.png
-          if-no-files-found: error
-          retention-days: 14
-
-  mmbn-arabic-overlay:
-    # The Silenthal/bn1 disassembly matches Mega Man Battle Network but its
-    # assets are extracted from the original: the overlay patches the user's own
-    # USA ROM locally (docs/MMBN_ARABIC_TEST_AR.md). CI re-assembles the Thumb
-    # hooks and compares them with the stored bytes, and draws every Arabic page
-    # of the first morning with the reference font.
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Classic Retro
-        uses: actions/checkout@v6
-
-      - uses: actions/setup-python@v7
-        with:
-          python-version: "3.14"
-
-      - name: Install build dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y binutils-arm-none-eabi
-
-      - name: Install toolkit
-        run: python -m pip install -e .
-
-      - name: Re-assemble the Thumb hooks and compare with the stored bytes
-        run: classic-retro mmbn check-hooks
-
-      - name: Validate the Arabic script and draw every page with the reference font
-        run: |
-          mkdir -p artifact
-          NOTO_COMMIT=ffebf8c1ee449e544955a7e813c54f9b73848eac
-          ARABIC_FONT=reference-font.ttf
-          curl --fail --location "https://raw.githubusercontent.com/notofonts/noto-fonts/$NOTO_COMMIT/hinted/ttf/NotoKufiArabic/NotoKufiArabic-SemiBold.ttf" -o "$ARABIC_FONT"
-          echo "aa30cd2663f1eb1c940c9cd6a898877f307c2572e72a8a352896fe23f512018e  $ARABIC_FONT" | sha256sum -c -
-          classic-retro mmbn check-translations --font "$ARABIC_FONT" --text-preview artifact/arabic_pages_preview.png | tee artifact/translation-report.json
-
-      - name: Upload translation review files
-        uses: actions/upload-artifact@v6
-        with:
-          name: mmbn-arabic-overlay
-          path: |
-            artifact/translation-report.json
-            artifact/arabic_pages_preview.png
-          if-no-files-found: error
-          retention-days: 14
-
-  mlss-arabic-overlay:
-    # The jellees/mlss decompilation matches Mario & Luigi: Superstar Saga but
-    # extracts its data from the original: the overlay patches the user's own
-    # USA ROM locally (docs/MLSS_ARABIC_TEST_AR.md). CI re-assembles the Thumb
-    # hook and compares it with the stored bytes, builds the right-to-left font
-    # from the reference font and lays out every Arabic message of the opening.
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Classic Retro
-        uses: actions/checkout@v6
-
-      - uses: actions/setup-python@v7
-        with:
-          python-version: "3.14"
-
-      - name: Install build dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y binutils-arm-none-eabi
-
-      - name: Install toolkit
-        run: python -m pip install -e .
-
-      - name: Re-assemble the Thumb hook and compare with the stored bytes
-        run: classic-retro mlss check-hooks
-
-      - name: Validate the Arabic script and lay out every message with the reference font
-        run: |
-          mkdir -p artifact
-          NOTO_COMMIT=ffebf8c1ee449e544955a7e813c54f9b73848eac
-          ARABIC_FONT=reference-font.ttf
-          curl --fail --location "https://raw.githubusercontent.com/notofonts/noto-fonts/$NOTO_COMMIT/hinted/ttf/NotoKufiArabic/NotoKufiArabic-SemiBold.ttf" -o "$ARABIC_FONT"
-          echo "aa30cd2663f1eb1c940c9cd6a898877f307c2572e72a8a352896fe23f512018e  $ARABIC_FONT" | sha256sum -c -
-          classic-retro mlss check-translations --font "$ARABIC_FONT" --preview artifact/arabic_font_preview.png --text-preview artifact/arabic_messages_preview.png | tee artifact/translation-report.json
-
-      - name: Upload translation review files
-        uses: actions/upload-artifact@v6
-        with:
-          name: mlss-arabic-overlay
-          path: |
-            artifact/translation-report.json
-            artifact/arabic_font_preview.png
-            artifact/arabic_messages_preview.png
-          if-no-files-found: error
-          retention-days: 14
-
-  fomt-arabic-overlay:
-    # No decompilation builds Harvest Moon: Friends of Mineral Town: the overlay
-    # patches the user's own USA ROM locally (docs/FOMT_ARABIC_TEST_AR.md). CI
-    # re-assembles the Thumb hooks and compares them with the stored bytes, and
-    # draws and lays out every Arabic string of the opening with the reference font.
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Classic Retro
-        uses: actions/checkout@v6
-
-      - uses: actions/setup-python@v7
-        with:
-          python-version: "3.14"
-
-      - name: Install build dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y binutils-arm-none-eabi
-
-      - name: Install toolkit
-        run: python -m pip install -e .
-
-      - name: Re-assemble the Thumb hooks and compare with the stored bytes
-        run: classic-retro fomt check-hooks
+      - name: Re-assemble the hook code and compare it with the stored bytes
+        if: matrix.target.hooks
+        run: classic-retro targets check-hooks "${{ matrix.target.id }}"
 
       - name: Validate the Arabic script and lay out every string with the reference font
         run: |
@@ -600,14 +388,12 @@ jobs:
           ARABIC_FONT=reference-font.ttf
           curl --fail --location "https://raw.githubusercontent.com/notofonts/noto-fonts/$NOTO_COMMIT/hinted/ttf/NotoKufiArabic/NotoKufiArabic-SemiBold.ttf" -o "$ARABIC_FONT"
           echo "aa30cd2663f1eb1c940c9cd6a898877f307c2572e72a8a352896fe23f512018e  $ARABIC_FONT" | sha256sum -c -
-          classic-retro fomt check-translations --font "$ARABIC_FONT" --text-preview artifact/arabic_text_preview.png | tee artifact/translation-report.json
+          classic-retro targets check-translations "${{ matrix.target.id }}" --font "$ARABIC_FONT" --preview-dir artifact | tee artifact/translation-report.json
 
       - name: Upload translation review files
         uses: actions/upload-artifact@v6
         with:
-          name: fomt-arabic-overlay
-          path: |
-            artifact/translation-report.json
-            artifact/arabic_text_preview.png
+          name: ${{ matrix.target.id }}-arabic-overlay
+          path: artifact/
           if-no-files-found: error
           retention-days: 14

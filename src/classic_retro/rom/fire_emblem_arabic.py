@@ -26,14 +26,12 @@ assembly source with GNU binutils so CI can prove they match.
 from __future__ import annotations
 
 import hashlib
-import shutil
 import struct
-import subprocess
-import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
 
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
+from classic_retro.cpu.thumb import arm_veneer, bl_instruction, bl_target, literal_jump
 from classic_retro.engines.fire_emblem import (
     RAW_POINTER_FLAG,
     FireEmblemFont,
@@ -71,6 +69,9 @@ from classic_retro.engines.fire_emblem_legend import (
     validate_legend_lines,
 )
 from classic_retro.font.shaped_text import ShapedLineRenderer
+from classic_retro.patching.hooks import HookProgram
+from classic_retro.patching.image import ImageSpec
+from classic_retro.patching.outputs import base_report, write_image, write_patch
 from classic_retro.rebuild.bps import BpsPatch, create_bps
 from classic_retro.rebuild.lz77 import compress_lz77, decompress_lz77
 from classic_retro.rom.fire_emblem_arabic_script import (
@@ -123,6 +124,9 @@ HOOK_SYMBOLS = {
     "hook_arrow": 0x0D0,
     "rtl_glyphs_pointer": 0x0F4,
 }
+IMAGE = ImageSpec("Fire Emblem: The Sacred Stones (USA)", USA_SHA256, USA_SIZE, ROM_BASE)
+HOOKS = HookProgram("Fire Emblem hooks", HOOK_SOURCE, HOOK_CODE_ADDRESS, HOOK_CODE, HOOK_SYMBOLS)
+PATCH_NAME = "fire-emblem-sacred-stones-usa-arabic-opening.bps"
 
 # CallARM_DecompText: push {lr}; ldr r2, =0x03004150; ldr r2, [r2];
 # bl _call_via_r2; pop {r0}; bx r0 (and its literal). The first eight bytes
@@ -195,35 +199,15 @@ class BuiltLegend:
     items: tuple[BuiltSubtitle, ...]
 
 
-def _offset(address: int) -> int:
-    return address - ROM_BASE
-
-
-def bl_instruction(address: int, target: int) -> bytes:
-    offset = target - (address + 4)
-    if not -0x400000 <= offset < 0x400000 or offset % 2:
-        raise ClassicRetroError(
-            ErrorCode.WRITE_OUT_OF_BOUNDS, f"{target:#x} is out of BL range from {address:#x}"
-        )
-    return struct.pack("<HH", 0xF000 | offset >> 12 & 0x7FF, 0xF800 | offset >> 1 & 0x7FF)
-
-
-def bl_target(address: int, data: bytes) -> int:
-    high, low = struct.unpack("<HH", data)
-    if high & 0xF800 != 0xF000 or low & 0xF800 != 0xF800:
-        raise ClassicRetroError(ErrorCode.SOURCE_BASELINE_MISMATCH, f"No BL at {address:#x}")
-    offset = (high & 0x7FF) << 12 | (low & 0x7FF) << 1
-    if offset & 0x400000:
-        offset -= 0x800000
-    return address + 4 + offset
+_offset = IMAGE.offset
 
 
 def veneer(target: int) -> bytes:
-    return struct.pack("<HHIII", 0x4778, 0x46C0, 0xE59FC000, 0xE12FFF1C, target | 1)
+    return arm_veneer(target)
 
 
 def decoder_jump(target: int) -> bytes:
-    return struct.pack("<HHI", 0x4A00, 0x4710, target | 1)
+    return literal_jump(DECODER_ADDRESS, 2, target)
 
 
 def source_digest(data: bytes) -> str:
@@ -232,11 +216,7 @@ def source_digest(data: bytes) -> str:
 
 
 def verify_usa_image(rom: bytes) -> None:
-    if len(rom) != USA_SIZE or hashlib.sha256(rom).hexdigest() != USA_SHA256:
-        raise ClassicRetroError(
-            ErrorCode.UNKNOWN_GAME_REVISION,
-            "Input is not Fire Emblem: The Sacred Stones (USA) with SHA-256 " + USA_SHA256,
-        )
+    IMAGE.verify(rom)
 
 
 def _parse_bank(rom: bytes) -> FireEmblemTextBank:
@@ -277,8 +257,7 @@ def _verify_anchors(rom: bytes) -> tuple[FireEmblemFont, FireEmblemTextBank]:
         raise ClassicRetroError(
             ErrorCode.SOURCE_BASELINE_MISMATCH, "The talk state pointer differs from the USA image"
         )
-    region = rom[_offset(HOOK_CODE_ADDRESS) : _offset(REGION_END)]
-    if region.count(FREE_FILL) != len(region):
+    if not IMAGE.filled(rom, HOOK_CODE_ADDRESS, REGION_END, FREE_FILL):
         raise ClassicRetroError(
             ErrorCode.SAFE_REGION_CONTENT_MISMATCH, "Region 0x08F00000 is not empty padding"
         )
@@ -425,13 +404,7 @@ def build_fire_emblem_arabic_rom(
     _verify_output(output, rom, bank, replacements, font_data, legend.items)
     patch = create_bps(rom, output)
     report: dict[str, object] = {
-        "game": "Fire Emblem: The Sacred Stones (USA)",
-        "base_sha1": hashlib.sha1(rom).hexdigest(),
-        "base_sha256": hashlib.sha256(rom).hexdigest(),
-        "target_sha256": hashlib.sha256(output).hexdigest(),
-        "patch_sha256": hashlib.sha256(patch.data).hexdigest(),
-        "patch_bytes": len(patch.data),
-        "target_bytes": len(output),
+        **base_report(IMAGE.title, rom, output, patch),
         "messages": [f"{index:#x}" for index in sorted(replacements)],
         "message_lines": {f"{index:#x}": encoded[index][1] for index in sorted(encoded)},
         "message_boxes": {f"{message.index:#x}": str(message.box) for message in messages},
@@ -633,64 +606,20 @@ def encode_fire_emblem_arabic_line(
 def write_build_outputs(
     build: FireEmblemArabicBuild, out_dir: Path, *, rom_name: str | None
 ) -> dict[str, str]:
-    out_dir.mkdir(parents=True, exist_ok=True)
-    patch_path = out_dir / "fire-emblem-sacred-stones-usa-arabic-opening.bps"
-    patch_path.write_bytes(build.patch.data)
+    patch_path = write_patch(out_dir, PATCH_NAME, build.patch)
     font_preview(build.font).save(out_dir / "arabic_font_preview.png")
     written = {"patch": str(patch_path), "font_preview": str(out_dir / "arabic_font_preview.png")}
     if build.legend:
         legend_path = out_dir / "arabic_legend_preview.png"
         legend_sheet(list(build.legend)).save(legend_path)
         written["legend_preview"] = str(legend_path)
-    if rom_name:
-        rom_path = out_dir / rom_name
-        rom_path.write_bytes(build.rom)
-        written["rom"] = str(rom_path)
-    return written
+    return written | write_image(out_dir, rom_name, build.rom)
 
 
 def assemble_hooks(source: Path = HOOK_SOURCE) -> tuple[bytes, dict[str, int]]:
     """Assemble the hook source with GNU binutils (arm-none-eabi-*) and read its symbols."""
-    tools = {name: shutil.which(f"arm-none-eabi-{name}") for name in ("as", "ld", "objcopy", "nm")}
-    missing = sorted(name for name, path in tools.items() if path is None)
-    if missing:
-        raise ClassicRetroError(
-            ErrorCode.BUILD_VALIDATION_FAILED,
-            "Missing GNU ARM binutils: " + ", ".join(f"arm-none-eabi-{name}" for name in missing),
-        )
-    with tempfile.TemporaryDirectory() as work:
-        folder = Path(work)
-        steps = (
-            [tools["as"], "-mcpu=arm7tdmi", "-o", folder / "hooks.o", source],
-            [tools["ld"], "-e", "0", "-Ttext", f"{HOOK_CODE_ADDRESS:#x}"]
-            + ["-o", folder / "hooks.elf", folder / "hooks.o"],
-            [tools["objcopy"], "-O", "binary", folder / "hooks.elf", folder / "hooks.bin"],
-            [tools["nm"], folder / "hooks.elf"],
-        )
-        try:
-            listing = [
-                subprocess.run(step, check=True, capture_output=True, text=True).stdout
-                for step in steps
-            ][-1]
-        except subprocess.CalledProcessError as exc:
-            raise ClassicRetroError(
-                ErrorCode.BUILD_VALIDATION_FAILED,
-                f"Assembling the Fire Emblem hooks failed: {exc.stderr.strip()}",
-            ) from exc
-        code = (folder / "hooks.bin").read_bytes()
-    symbols = {}
-    for line in listing.splitlines():
-        parts = line.split()
-        if len(parts) == 3 and parts[2] in HOOK_SYMBOLS:
-            symbols[parts[2]] = int(parts[0], 16) - HOOK_CODE_ADDRESS
-    return code, symbols
+    return HOOKS.assemble(source)
 
 
 def check_hook_code(source: Path = HOOK_SOURCE) -> dict[str, object]:
-    code, symbols = assemble_hooks(source)
-    if code != HOOK_CODE or symbols != HOOK_SYMBOLS:
-        raise ClassicRetroError(
-            ErrorCode.BUILD_VALIDATION_FAILED,
-            "Assembled Fire Emblem hooks differ from the stored HOOK_CODE / HOOK_SYMBOLS",
-        )
-    return {"hook_bytes": len(code), "symbols": dict(sorted(symbols.items())), "match": True}
+    return HOOKS.check(source)
