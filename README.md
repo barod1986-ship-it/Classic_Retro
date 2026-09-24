@@ -126,4 +126,15 @@ of the prologue (5 messages) are in Arabic. See
 [the Fire Emblem testing guide](docs/FIRE_EMBLEM_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/FIRE_EMBLEM_ARABIC_RENDERER.md).
 
+The sixth reference target is **Pokémon Mystery Dungeon: Red Rescue Team (USA, Australia)**.
+The pret/pmd-red decompilation rebuilds the ROM and gave every address, but its data is still
+extracted from the original, so a binary overlay patches your own ROM inside its own padding (it
+stays 32 MiB): Arabic glyphs join the game's charmap under unused two-byte codes and carry a
+right-to-left flag, and Thumb hooks draw such glyphs at the mirrored position of the game's cursor,
+so its floating text, dialogue box, key arrow and menus (cursor included) turn right-to-left. The
+whole personality test a new game starts with is in Arabic: the intro, all 56 questions with their
+answers and the gender question (158 strings). See
+[the Mystery Dungeon testing guide](docs/PMD_RED_ARABIC_TEST_AR.md) and
+[the renderer notes](docs/PMD_RED_ARABIC_RENDERER.md).
+
 See [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md).

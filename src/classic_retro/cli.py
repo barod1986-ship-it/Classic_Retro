@@ -15,12 +15,13 @@ from classic_retro.codec.table import TableTextCodec
 from classic_retro.core.errors import ClassicRetroError
 from classic_retro.core.identity import fingerprint_file
 from classic_retro.engines.fire_emblem_arabic import TalkBox
+from classic_retro.engines.pmd_arabic import PmdTextBox
 from classic_retro.engines.pokemon_gen3_arabic import PokemonGen3ArabicEncoder
 from classic_retro.media.resolve import resolve_media
 from classic_retro.rebuild.bps import apply_bps, create_bps
 from classic_retro.rebuild.model import load_rebuild_plan
 from classic_retro.rebuild.pipeline import verify_round_trip
-from classic_retro.rom import fire_emblem_arabic, golden_sun_arabic
+from classic_retro.rom import fire_emblem_arabic, golden_sun_arabic, pmd_arabic
 from classic_retro.rom.ff6a_arabic import (
     build_ff6a_arabic_rom,
     check_ff6a_translations,
@@ -392,6 +393,69 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     fire_emblem_encode.set_defaults(handler=_cmd_fire_emblem_encode_arabic)
 
+    pmd = subcommands.add_parser(
+        "pmd",
+        help="Pokémon Mystery Dungeon: Red Rescue Team (USA) Arabic ROM overlay helpers",
+    )
+    pmd_commands = pmd.add_subparsers(dest="pmd_command", required=True)
+
+    pmd_check = pmd_commands.add_parser(
+        "check-translations",
+        help="Validate the Arabic script without the ROM; with --font, measure every line",
+    )
+    pmd_check.add_argument(
+        "--font",
+        type=Path,
+        help="Arabic TTF/OTF; also builds the font and measures every translated line",
+    )
+    pmd_check.add_argument(
+        "--preview", type=Path, help="Write the generated Arabic glyph atlas as PNG"
+    )
+    pmd_check.add_argument(
+        "--text-preview",
+        type=Path,
+        help="Write every translated string, laid out as the game draws it, as one PNG",
+    )
+    pmd_check.set_defaults(handler=_cmd_pmd_check_translations)
+
+    pmd_hooks = pmd_commands.add_parser(
+        "check-hooks",
+        help="Re-assemble the Thumb hooks with arm-none-eabi binutils and compare the bytes",
+    )
+    pmd_hooks.set_defaults(handler=_cmd_pmd_check_hooks)
+
+    pmd_build = pmd_commands.add_parser(
+        "build-arabic",
+        help="Build the Arabic BPS patch (and optionally the patched image) from the ROM",
+    )
+    pmd_build.add_argument("rom", type=Path)
+    pmd_build.add_argument("--font", type=Path, required=True)
+    pmd_build.add_argument("--out-dir", type=Path, required=True)
+    pmd_build.add_argument(
+        "--write-rom",
+        metavar="NAME",
+        help="Also write the patched image into --out-dir under this name (local use only)",
+    )
+    pmd_build.set_defaults(handler=_cmd_pmd_build_arabic)
+
+    pmd_encode = pmd_commands.add_parser(
+        "encode-arabic",
+        help="Encode logical Arabic text ({CENTER_ALIGN}, {WAIT_PRESS}... allowed) in paint order",
+    )
+    pmd_encode.add_argument("text")
+    pmd_encode.add_argument(
+        "--font",
+        type=Path,
+        help="Arabic TTF/OTF used to report the pixel width of each line",
+    )
+    pmd_encode.add_argument(
+        "--box",
+        choices=[box.value for box in PmdTextBox],
+        default=PmdTextBox.DIALOGUE.value,
+        help="Floating text, dialogue box or menu item (decides the line width)",
+    )
+    pmd_encode.set_defaults(handler=_cmd_pmd_encode_arabic)
+
     adapters = subcommands.add_parser("adapters", help="List loaded adapter IDs")
     adapters.set_defaults(handler=_cmd_adapters)
 
@@ -667,6 +731,35 @@ def _cmd_fire_emblem_encode_arabic(args: argparse.Namespace) -> int:
     result = fire_emblem_arabic.encode_fire_emblem_arabic_line(
         args.text, args.font, TalkBox(args.box)
     )
+    print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_pmd_check_translations(args: argparse.Namespace) -> int:
+    result = pmd_arabic.check_pmd_translations(args.font, args.preview, args.text_preview)
+    print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_pmd_check_hooks(_: argparse.Namespace) -> int:
+    result = pmd_arabic.check_hook_code()
+    print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_pmd_build_arabic(args: argparse.Namespace) -> int:
+    build = pmd_arabic.build_pmd_arabic_rom(args.rom.read_bytes(), args.font)
+    written = pmd_arabic.write_build_outputs(build, args.out_dir, rom_name=args.write_rom)
+    report = {**build.report, "outputs": written}
+    (args.out_dir / "build-report.json").write_text(
+        json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_pmd_encode_arabic(args: argparse.Namespace) -> int:
+    result = pmd_arabic.encode_pmd_arabic_line(args.text, args.font, PmdTextBox(args.box))
     print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
     return 0
 
