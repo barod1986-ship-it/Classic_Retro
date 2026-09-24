@@ -27,16 +27,14 @@ assembly source with GNU binutils so CI can prove they match.
 from __future__ import annotations
 
 import hashlib
-import shutil
 import struct
-import subprocess
-import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
 
 from PIL import Image
 
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
+from classic_retro.cpu.thumb import bl_veneer_patch, literal_jump
 from classic_retro.engines.fomt import (
     ROM_BASE,
     FomtScript,
@@ -70,6 +68,9 @@ from classic_retro.engines.fomt_arabic import (
     text_pages,
     validate_command_skeleton,
 )
+from classic_retro.patching.hooks import HookProgram
+from classic_retro.patching.image import ImageSpec
+from classic_retro.patching.outputs import base_report, write_image, write_patch
 from classic_retro.rebuild.bps import BpsPatch, create_bps
 from classic_retro.rom.fomt_arabic_script import (
     OPENING_SCRIPT,
@@ -100,6 +101,7 @@ SCRIPT_EXPANDER = 0x0803B4DD
 STORY_EXPANDER_SLOT = 0x080E79F4
 STORY_EXPANDER = 0x080E19A5
 
+PATCH_NAME = "harvest-moon-fomt-usa-arabic-opening.bps"
 # 0xFF padding from 0x0875C244 to the end of the image.
 PADDING_START = 0x0875C244
 PADDING_END = 0x08800000
@@ -128,6 +130,8 @@ HOOK_SYMBOLS = {
     "hook_expand_script": 0xA6,
     "hook_expand_story": 0xB8,
 }
+IMAGE = ImageSpec("Harvest Moon: Friends of Mineral Town (USA)", USA_SHA256, USA_SIZE, ROM_BASE)
+HOOKS = HookProgram("FoMT hooks", HOOK_SOURCE, HOOK_CODE_ADDRESS, HOOK_CODE, HOOK_SYMBOLS)
 
 
 @dataclass(frozen=True, slots=True)
@@ -141,40 +145,16 @@ class FomtArabicBuild:
     report: dict[str, object] = field(default_factory=dict)
 
 
-def _offset(address: int) -> int:
-    return address - ROM_BASE
+_offset = IMAGE.offset
+_word = IMAGE.word
 
 
-def _word(rom: bytes, address: int) -> int:
-    (value,) = struct.unpack_from("<I", rom, _offset(address))
-    return value
-
-
-def bl_instruction(address: int, target: int) -> bytes:
-    offset = target - (address + 4)
-    if not -0x400000 <= offset < 0x400000 or offset % 2:
-        raise ClassicRetroError(
-            ErrorCode.WRITE_OUT_OF_BOUNDS, f"{target:#x} is out of BL range from {address:#x}"
-        )
-    return struct.pack("<HH", 0xF000 | offset >> 12 & 0x7FF, 0xF800 | offset >> 1 & 0x7FF)
-
-
-def branch_instruction(address: int, target: int) -> bytes:
-    offset = target - (address + 4)
-    if not -0x800 <= offset < 0x800 or offset % 2:
-        raise ClassicRetroError(
-            ErrorCode.WRITE_OUT_OF_BOUNDS, f"{target:#x} is out of B range from {address:#x}"
-        )
-    return struct.pack("<H", 0xE000 | offset >> 1 & 0x7FF)
-
-
-def _hook(name: str) -> int:
-    return HOOK_CODE_ADDRESS + HOOK_SYMBOLS[name] | 1
+_hook = HOOKS.thumb_entry
 
 
 def glyph_site_patch() -> bytes:
     """``ldr r2, [pc, #0]; bx r2; .word hook_glyph``: r2 is free at the entry."""
-    code = bytes.fromhex("004a1047") + struct.pack("<I", _hook("hook_glyph"))
+    code = literal_jump(GLYPH_SITE, 2, _hook("hook_glyph"))
     if len(code) != len(GLYPH_SITE_ORIGINAL):
         raise ClassicRetroError(ErrorCode.BUILD_VALIDATION_FAILED, "Glyph site patch size")
     return code
@@ -186,23 +166,14 @@ def draw_site_patch() -> bytes:
     The BL leaves the return address in lr; r0 is free there (the replaced
     code sets it too).
     """
-    veneer = DRAW_SITE + 8
-    code = bl_instruction(DRAW_SITE, veneer)
-    code += branch_instruction(DRAW_SITE + 4, DRAW_RESUME)
-    code += bytes.fromhex("c046")  # nop
-    code += bytes.fromhex("00480047")  # ldr r0, [pc, #0]; bx r0
-    code += struct.pack("<I", _hook("hook_mirror"))
+    code = bl_veneer_patch(DRAW_SITE, DRAW_RESUME, _hook("hook_mirror"))
     if len(code) != len(DRAW_SITE_ORIGINAL):
         raise ClassicRetroError(ErrorCode.BUILD_VALIDATION_FAILED, "Draw site patch size")
     return code
 
 
 def verify_usa_image(rom: bytes) -> None:
-    if len(rom) != USA_SIZE or hashlib.sha256(rom).hexdigest() != USA_SHA256:
-        raise ClassicRetroError(
-            ErrorCode.UNKNOWN_GAME_REVISION,
-            "Input is not Harvest Moon: Friends of Mineral Town (USA) with SHA-256 " + USA_SHA256,
-        )
+    IMAGE.verify(rom)
 
 
 def _verify_anchors(rom: bytes) -> None:
@@ -226,8 +197,7 @@ def _verify_anchors(rom: bytes) -> None:
             raise ClassicRetroError(
                 ErrorCode.SOURCE_BASELINE_MISMATCH, f"The expander slot {slot:#x} differs"
             )
-    region = rom[_offset(PADDING_START) : _offset(PADDING_END)]
-    if region.count(0xFF) != len(region):
+    if not IMAGE.filled(rom, PADDING_START, PADDING_END, 0xFF):
         raise ClassicRetroError(
             ErrorCode.SAFE_REGION_CONTENT_MISMATCH,
             f"{PADDING_START:#x}..{PADDING_END:#x} is not empty padding",
@@ -294,15 +264,6 @@ def _verify_original(string: FomtArabicString, original: bytes) -> None:
         )
 
 
-def _references(rom: bytes, addresses: set[int]) -> dict[int, list[int]]:
-    """Every aligned word of the image that holds one of ``addresses``."""
-    found: dict[int, list[int]] = {address: [] for address in addresses}
-    for number, (value,) in enumerate(struct.iter_unpack("<I", rom)):
-        if value in found:
-            found[value].append(ROM_BASE + 4 * number)
-    return found
-
-
 def _verify_story(
     rom: bytes,
     strings: tuple[FomtArabicString, ...],
@@ -313,7 +274,7 @@ def _verify_story(
         (string.key, string.address or 0, string.literals) for string in story
     ]
     targets += [(name.key, name.address, name.literals) for name in names]
-    references = _references(rom, {address for _, address, _ in targets})
+    references = IMAGE.references(rom, {address for _, address, _ in targets})
     for key, address, literals in targets:
         if sorted(references[address]) != sorted(literals):
             raise ClassicRetroError(
@@ -440,13 +401,7 @@ def build_fomt_arabic_rom(
     _verify_output(output, rom, strings, names, texts, tags, addresses, script_address, end)
     patch = create_bps(rom, output)
     report: dict[str, object] = {
-        "game": "Harvest Moon: Friends of Mineral Town (USA)",
-        "base_sha1": hashlib.sha1(rom).hexdigest(),
-        "base_sha256": hashlib.sha256(rom).hexdigest(),
-        "target_sha256": hashlib.sha256(output).hexdigest(),
-        "patch_sha256": hashlib.sha256(patch.data).hexdigest(),
-        "patch_bytes": len(patch.data),
-        "target_bytes": len(output),
+        **base_report(IMAGE.title, rom, output, patch),
         "strings": len(strings),
         "speaker_names": len(names),
         "line_cells": {key: [line.cells for line in text.lines] for key, text in texts.items()},
@@ -652,61 +607,17 @@ def encode_fomt_arabic_text(
 def write_build_outputs(
     build: FomtArabicBuild, out_dir: Path, *, rom_name: str | None
 ) -> dict[str, str]:
-    out_dir.mkdir(parents=True, exist_ok=True)
-    patch_path = out_dir / "harvest-moon-fomt-usa-arabic-opening.bps"
-    patch_path.write_bytes(build.patch.data)
+    patch_path = write_patch(out_dir, PATCH_NAME, build.patch)
     preview_path = out_dir / "arabic_text_preview.png"
     previews_sheet(translation_previews(build.texts, build.tags, build.tag_bank)).save(preview_path)
     written = {"patch": str(patch_path), "text_preview": str(preview_path)}
-    if rom_name:
-        rom_path = out_dir / rom_name
-        rom_path.write_bytes(build.rom)
-        written["rom"] = str(rom_path)
-    return written
+    return written | write_image(out_dir, rom_name, build.rom)
 
 
 def assemble_hooks(source: Path = HOOK_SOURCE) -> tuple[bytes, dict[str, int]]:
     """Assemble the hook source with GNU binutils (arm-none-eabi-*) and read its symbols."""
-    tools = {name: shutil.which(f"arm-none-eabi-{name}") for name in ("as", "ld", "objcopy", "nm")}
-    missing = sorted(name for name, path in tools.items() if path is None)
-    if missing:
-        raise ClassicRetroError(
-            ErrorCode.BUILD_VALIDATION_FAILED,
-            "Missing GNU ARM binutils: " + ", ".join(f"arm-none-eabi-{name}" for name in missing),
-        )
-    with tempfile.TemporaryDirectory() as work:
-        folder = Path(work)
-        steps = (
-            [tools["as"], "-mcpu=arm7tdmi", "-o", folder / "hooks.o", source],
-            [tools["ld"], "-e", "0", "-Ttext", f"{HOOK_CODE_ADDRESS:#x}"]
-            + ["-o", folder / "hooks.elf", folder / "hooks.o"],
-            [tools["objcopy"], "-O", "binary", folder / "hooks.elf", folder / "hooks.bin"],
-            [tools["nm"], folder / "hooks.elf"],
-        )
-        try:
-            listing = [
-                subprocess.run(step, check=True, capture_output=True, text=True).stdout
-                for step in steps
-            ][-1]
-        except subprocess.CalledProcessError as exc:
-            raise ClassicRetroError(
-                ErrorCode.BUILD_VALIDATION_FAILED,
-                f"Assembling the FoMT hooks failed: {exc.stderr.strip()}",
-            ) from exc
-        code = (folder / "hooks.bin").read_bytes()
-    symbols = {}
-    for line in listing.splitlines():
-        parts = line.split()
-        if len(parts) == 3 and parts[2] in HOOK_SYMBOLS:
-            symbols[parts[2]] = int(parts[0], 16) - HOOK_CODE_ADDRESS
-    return code, symbols
+    return HOOKS.assemble(source)
 
 
 def check_hook_code(source: Path = HOOK_SOURCE) -> dict[str, object]:
-    code, symbols = assemble_hooks(source)
-    if code != HOOK_CODE or symbols != HOOK_SYMBOLS:
-        raise ClassicRetroError(
-            ErrorCode.BUILD_VALIDATION_FAILED,
-            "Assembled FoMT hooks differ from the stored HOOK_CODE / HOOK_SYMBOLS",
-        )
-    return {"hook_bytes": len(code), "symbols": dict(sorted(symbols.items())), "match": True}
+    return HOOKS.check(source)

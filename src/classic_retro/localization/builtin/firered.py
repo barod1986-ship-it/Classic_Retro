@@ -1,0 +1,84 @@
+"""Pokémon FireRed (Rev 1): the source overlay on pret/pokefirered."""
+
+from __future__ import annotations
+
+import argparse
+from pathlib import Path
+
+from classic_retro.engines.pokemon_gen3_arabic import PokemonGen3ArabicEncoder
+from classic_retro.localization.targets import LocalizationTarget, print_json
+from classic_retro.source.pokefirered_arabic import (
+    check_pokefirered_arabic_source,
+    prepare_pokefirered_arabic_source,
+)
+from classic_retro.text.tokens import TextToken, TokenStream
+
+
+def _source_check(args: argparse.Namespace) -> int:
+    return print_json(check_pokefirered_arabic_source(args.source))
+
+
+def _prepare_arabic_source(args: argparse.Namespace) -> int:
+    return print_json(prepare_pokefirered_arabic_source(args.source, args.font))
+
+
+def _encode_arabic(args: argparse.Namespace) -> int:
+    encoder = PokemonGen3ArabicEncoder()
+    data = encoder.encode_message(
+        TokenStream((TextToken(args.text),)),
+        right_x=args.right_x,
+        terminator=True,
+    )
+    return print_json(
+        {
+            "right_x": args.right_x,
+            "bytes_hex": data.hex(),
+            "bytes": len(data),
+            "glyphs": len(encoder.glyph_map.characters),
+        }
+    )
+
+
+def register_cli(subcommands: argparse._SubParsersAction) -> None:
+    pokemon = subcommands.add_parser(
+        "pokemon-gen3",
+        help="Pokémon Generation III engine helpers",
+    )
+    pokemon_commands = pokemon.add_subparsers(dest="pokemon_command", required=True)
+
+    source_check = pokemon_commands.add_parser(
+        "source-check",
+        help="Verify the pinned pokefirered source and Arabic overlay anchors",
+    )
+    source_check.add_argument("source", type=Path)
+    source_check.set_defaults(handler=_source_check)
+
+    prepare_source = pokemon_commands.add_parser(
+        "prepare-arabic-source",
+        help="Patch pinned pokefirered source for RTL and build the Arabic font atlas",
+    )
+    prepare_source.add_argument("source", type=Path)
+    prepare_source.add_argument("--font", type=Path, required=True)
+    prepare_source.set_defaults(handler=_prepare_arabic_source)
+
+    compile_arabic = pokemon_commands.add_parser(
+        "encode-arabic",
+        help="Encode one logical Arabic line to Gen III RTL paint-order bytes",
+    )
+    compile_arabic.add_argument("text")
+    compile_arabic.add_argument("--right-x", type=int, default=224)
+    compile_arabic.set_defaults(handler=_encode_arabic)
+
+
+TARGET = LocalizationTarget(
+    id="firered",
+    game_id="pokemon-firered-rev1-en",
+    title="Pokémon FireRed Version (USA, Europe) (Rev 1)",
+    platform_id="gba",
+    kind="source-overlay",
+    strategies=("glyph-font",),
+    scope="The 13 Professor Oak speech strings of the new-game intro",
+    guide="docs/FIRERED_ARABIC_TEST_AR.md",
+    notes="docs/POKEMON_GEN3_ARABIC_RENDERER.md",
+    register_cli=register_cli,
+)

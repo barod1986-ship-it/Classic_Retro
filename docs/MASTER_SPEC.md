@@ -1,6 +1,6 @@
 # Classic Retro — Master Specification
 
-Version: 0.2 (Multi-platform Foundation)
+Version: 0.3 (Localization platform: nine reference targets)
 
 ## 1. Purpose
 
@@ -143,6 +143,92 @@ It may define:
 - build hooks
 
 Game adapters should stay small. Reusable discoveries must move upward into the engine or platform layer.
+
+### 3.5 Localization targets
+
+A localization target (`classic_retro.localization.targets`) is one supported game
+revision together with the way it is put into Arabic. It names its game adapter,
+its platform, its kind, the rendering strategies it uses, its scope, its guide and
+notes, and the operations the toolkit runs the same way for every target:
+
+- `check_hooks()`: re-assemble the hook code and compare it with the stored bytes;
+- `check_translations(font, preview_dir)`: validate the script without the game
+  image; with a font, lay out every string and write the target's previews;
+- `build(rom, font, out_dir, rom_name)`: build the patch from the user's image.
+
+Kinds:
+
+- `rom-overlay`: a patch built from the user's own image and shipped as BPS;
+- `source-overlay`: a patched source tree of a decompilation that builds the image.
+
+`classic-retro targets list | strategies | check-hooks | check-translations | build`
+runs any target by id, and CI builds its target jobs from `targets list`. Each target
+also keeps its own command group for commands specific to it. A rom-overlay target
+records `reference_patch_sha256`, the hash of the patch built from its pinned image
+with the reference font. `targets build` reports whether a build matches it.
+
+Targets are registered in `classic_retro.localization.builtin`. External packages add
+theirs through the `classic_retro.targets.v1` entry point group. The registry refuses
+duplicate ids, unknown kinds and strategies that are not registered.
+[ADDING_A_TARGET.md](ADDING_A_TARGET.md) is the playbook for a new target.
+
+### 3.6 Rendering strategies
+
+A rendering strategy (`classic_retro.localization.strategies`) is a way of drawing
+Arabic through a game's renderer. It records what it needs from the engine, which
+core modules it builds on, and what it costs. The nine targets proved three:
+
+- `glyph-font`: a right-to-left glyph font in the game's own format;
+- `line-cells`: lines shaped with HarfBuzz and cut into the engine's fixed cells;
+- `text-images`: text the game shows as images, redrawn.
+
+This is a starting set, not a closed list. A new strategy is registered in-tree or
+through the `classic_retro.strategies.v1` entry point group. It starts as
+`experimental` and becomes `proven` once a target ships with it. The
+right-to-left techniques around the strategies (mirrored draw or reversed pen, the
+direction markers, where glyph codes come from, runtime names) are catalogued in
+[ARABIC_STRATEGIES.md](ARABIC_STRATEGIES.md).
+
+### 3.7 Binary patching kit
+
+Binary overlays share one recipe:
+
+1. verify the exact image;
+2. verify every byte replaced;
+3. place hooks and data in proven free space;
+4. repoint references;
+5. read everything back;
+6. ship a BPS patch.
+
+The parts that do not depend on the game live in:
+
+- `classic_retro.patching`:
+  - `image.ImageSpec`: identity, address/offset conversion, reference scans, free-space checks
+  - `hooks.HookProgram`: hook code stored as bytes, re-assembled from source in CI
+    with an assembler registered per CPU
+  - `outputs`: the common report fields and patch/image files
+- `classic_retro.cpu`: one module per instruction set, holding the calls, branches
+  and far jumps written over game code. `cpu.thumb` covers the ARM7TDMI's Thumb
+  code.
+
+A game's overlay module keeps only what is its own: addresses, hook source,
+script, and the strategy-specific drawing.
+
+### 3.8 The package as built
+
+| Layer | Packages |
+|-------|----------|
+| Core | `core`, `text`, `codec`, `layout`, `arabic`, `font`, `rebuild`, `transform`, `media`, `schemas` |
+| Platform | `platforms`, `cpu` |
+| Engine | `engines` |
+| Game | `games` |
+| Localization | `localization` (targets, strategies, the `targets` commands), `rom` (binary overlays), `source` (source overlays) |
+| Shared overlay machinery | `patching` |
+
+Adapter discovery (`classic_retro.{platforms,engines,games}.v1`), target discovery
+(`classic_retro.targets.v1`), strategy discovery (`classic_retro.strategies.v1`) and
+assembler registration are all open. A new platform, engine, game, target, strategy
+or CPU is added without editing the others.
 
 ## 4. Game-image identity and safety
 
@@ -290,7 +376,9 @@ Possible strategies:
 - runtime contextual shaping,
 - hybrid rendering for dynamic strings.
 
-The adapter declares which strategy it supports.
+Each localization target declares the registered rendering strategies it uses (§3.6).
+The three proven ones shape at build time. Runtime shaping remains a candidate for
+text assembled at run time ([ARABIC_STRATEGIES.md](ARABIC_STRATEGIES.md)).
 
 ### 8.2 Bidirectional text
 
@@ -503,6 +591,10 @@ Distributed project artifacts should favor patches rather than copyrighted origi
 
 The patch format may differ by platform and container type.
 
+Every rom-overlay build writes the patch and `build-report.json` (base, target and
+patch hashes and sizes). The patched image is written only when asked, for local
+use.
+
 ## 17. Error model
 
 Errors must be explicit and actionable.
@@ -571,6 +663,10 @@ Before adding each substantially different game/engine, reusable code from previ
 - Generated files do not become source-of-truth inputs.
 - Clean rebuilds must be possible from documented inputs.
 - A platform is not considered supported merely because its directory exists.
+- A change to shared code keeps every target's results byte-identical: its reference
+  patch hash, its previews and its translation report. A target's results change only
+  with its own translation or renderer, and its reference hash is updated in the same
+  commit.
 
 ## 21. Foundation acceptance criteria
 
