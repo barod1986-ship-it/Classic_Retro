@@ -137,4 +137,16 @@ answers and the gender question (158 strings). See
 [the Mystery Dungeon testing guide](docs/PMD_RED_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/PMD_RED_ARABIC_RENDERER.md).
 
+The seventh reference target is **Mega Man Battle Network (USA)**. The Silenthal/bn1 disassembly
+matches the ROM and gave every address, but its assets are extracted from the original, so a binary
+overlay patches your own ROM inside its padding (it stays 8 MiB). The game draws text in monospace
+8x16 cells, which Arabic cannot use one letter at a time: every translated line is shaped with
+HarfBuzz and drawn ahead of time, each page's cells become a glyph bank of their own, and two Thumb
+hooks pick the page's bank by the address of its text and fill its lines from the right edge of the
+box (Latin words such as PET keep the game's glyphs). Lan's first morning, from a new game to the
+school gate, is in Arabic: waking up, the PET, the house (Mom, breakfast, the rooms' objects,
+MegaMan's L Button advice) and the walk to school (50 script sections). See
+[the Mega Man testing guide](docs/MMBN_ARABIC_TEST_AR.md) and
+[the renderer notes](docs/MMBN_ARABIC_RENDERER.md).
+
 See [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md).
