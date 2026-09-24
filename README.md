@@ -149,4 +149,15 @@ MegaMan's L Button advice) and the walk to school (50 script sections). See
 [the Mega Man testing guide](docs/MMBN_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/MMBN_ARABIC_RENDERER.md).
 
+The eighth reference target is **Mario & Luigi: Superstar Saga (USA)**. The jellees/mlss
+decompilation builds the ROM, but its data is extracted from the original, so a binary overlay
+patches your own ROM inside its zero padding (it stays 16 MiB). The game's printer takes up to six
+fonts per font list, selected by a prefix byte, and the USA image leaves five slots empty: a 16x12
+Arabic font drawn from the reference font becomes font 1 of every list, so the game's own measuring
+sizes the speech bubbles and centres the subtitles, and one Thumb hook draws its glyphs at the
+mirrored pen position, from the right edge of the box. The opening up to the first battle is in
+Arabic: the castle subtitles, the Toad's run to the Mario Bros.' house and his search for Mario, and
+Bowser's taunt (12 messages). See [the Mario & Luigi testing guide](docs/MLSS_ARABIC_TEST_AR.md) and
+[the renderer notes](docs/MLSS_ARABIC_RENDERER.md).
+
 See [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md).
