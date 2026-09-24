@@ -160,4 +160,16 @@ Arabic: the castle subtitles, the Toad's run to the Mario Bros.' house and his s
 Bowser's taunt (12 messages). See [the Mario & Luigi testing guide](docs/MLSS_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/MLSS_ARABIC_RENDERER.md).
 
+The ninth reference target is **Harvest Moon: Friends of Mineral Town (USA)**, which has no
+decompilation: a binary overlay patches your own ROM inside its padding (it stays 8 MiB). The game
+draws fixed 8x16 cells, so every translated line is shaped with HarfBuzz and drawn ahead of time,
+its cells joining one bank under two-byte codes the game treats like Shift-JIS; Thumb hooks copy a
+cell where the game would unpack a glyph and draw it at the mirrored column, so lines fill from the
+right edge of the box. The player's name keeps the game's glyphs and reads left to right inside the
+Arabic line (the character expanders hand it over reversed), and the flashback's speaker names get
+16-pixel cells of their own. The whole opening is in Arabic: Thomas on the farm, the flashback of
+the summer at the old man's farm and the first morning (33 strings and 5 name tags). See
+[the Harvest Moon testing guide](docs/FOMT_ARABIC_TEST_AR.md) and
+[the renderer notes](docs/FOMT_ARABIC_RENDERER.md).
+
 See [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md).
