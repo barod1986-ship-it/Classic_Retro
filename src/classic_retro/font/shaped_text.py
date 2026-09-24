@@ -88,7 +88,13 @@ class ShapedLineRenderer:
 
     def draw(self, canvas: Image.Image, text: str, x: float, baseline: float) -> None:
         """Draw ``text`` with its visual left edge at ``x`` (coverage, lighter wins)."""
-        for glyph in self.shape(text):
+        self.draw_glyphs(canvas, self.shape(text), x, baseline)
+
+    def draw_glyphs(
+        self, canvas: Image.Image, glyphs: list[ShapedGlyph], x: float, baseline: float
+    ) -> None:
+        """Draw shaped glyphs in visual order from ``x`` (coverage, lighter wins)."""
+        for glyph in glyphs:
             layer = Image.new("L", canvas.size, 0)
             ImageDraw.Draw(layer).text(
                 (x + glyph.x_offset, baseline - glyph.y_offset),
