@@ -40,6 +40,7 @@ from classic_retro.rom.fire_emblem_arabic_script import (
 )
 from classic_retro.rom.fomt_arabic_script import fomt_arabic_names, fomt_arabic_strings
 from classic_retro.rom.golden_sun_arabic_script import golden_sun_arabic_messages
+from classic_retro.rom.metroid_fusion_arabic_script import metroid_fusion_arabic_messages
 from classic_retro.rom.mlss_arabic_script import mlss_arabic_messages
 from classic_retro.rom.mmbn_arabic_script import mmbn_arabic_sections
 from classic_retro.rom.pmd_arabic_script import pmd_arabic_strings
@@ -58,6 +59,7 @@ TARGETS = (
     "mlss",
     "fomt",
     "advance-wars",
+    "metroid-fusion",
 )
 RLE = chr(0x202B)
 
@@ -85,6 +87,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "mlss": len(mlss_arabic_messages()),
         "fomt": len(fomt_arabic_strings()) + len(fomt_arabic_names()),
         "advance-wars": len(advance_wars_arabic_messages()),
+        "metroid-fusion": len(metroid_fusion_arabic_messages()),
     }
     assert counts == {
         "firered": 13,
@@ -97,6 +100,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "mlss": 12,
         "fomt": 38,
         "advance-wars": 14,
+        "metroid-fusion": 12,
     }
     for target in TARGETS:
         translations = builtin_translation_set(target)

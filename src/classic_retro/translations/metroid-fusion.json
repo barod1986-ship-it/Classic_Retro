@@ -1,0 +1,110 @@
+{
+  "schema_version": "1.0",
+  "target": "metroid-fusion",
+  "language": "ar",
+  "notation": "Logical Arabic in the engine notation (engines.metroid_fusion). Keep every control unit of the original, in order: {FC00} shows the arrow and waits for A, {FD00} starts a new page and {E1xx} waits xx frames. Line ends after text (\\n) may move; a page of the intro's strip holds two lines, a page of the monologue nine, of at most 224 pixels. Samus narrates in the first person, as a woman.",
+  "glossary": [
+    {
+      "term": "SR388",
+      "text": "إس آر ٣٨٨"
+    },
+    {
+      "term": "X (the parasite)",
+      "text": "إكس"
+    },
+    {
+      "term": "Biologic",
+      "text": "بيولوجيك"
+    },
+    {
+      "term": "Biologic Space Labs",
+      "text": "مختبرات بيولوجيك الفضائية"
+    },
+    {
+      "term": "B.S.L",
+      "text": "بي إس إل"
+    },
+    {
+      "term": "Galactic Federation",
+      "text": "الاتحاد المجري"
+    },
+    {
+      "term": "Power Suit",
+      "text": "بدلة القوة"
+    },
+    {
+      "term": "Metroid",
+      "text": "ميترويد"
+    },
+    {
+      "term": "the ship's computer",
+      "text": "حاسوب السفينة"
+    },
+    {
+      "term": "CO",
+      "text": "القائد"
+    }
+  ],
+  "entries": [
+    {
+      "id": "watching_biologic",
+      "context": "Samus; monologue 8",
+      "text": "كنت مكلفة بحراسة فريق\nالأبحاث التابع لبيولوجيك،{FC00}{FD00}فوجدت نفسي مرة أخرى على\nسطح الكوكب إس آر ٣٨٨.{FC00}"
+    },
+    {
+      "id": "attacked",
+      "context": "Samus; monologue 9",
+      "text": "وهناك تعرضت لهجوم كائن حي{FC00}{FD00}لم أعرف له مثيلا من قبل.{FC00}"
+    },
+    {
+      "id": "the_x",
+      "context": "Samus; monologue 10",
+      "text": "ولم أعرف إلا فيما بعد\nهوية من هاجمني:{FC00}{FD00}إنه الكائن الطفيلي الذي\nنعرفه اليوم باسم إكس.{FC00}{FD00}ودون أن أدري بحالتي، كنت\nفي طريق عودتي إلى المحطة{FC00}{FD00}حين وقعت الكارثة.{FC00}"
+    },
+    {
+      "id": "asteroid_belt",
+      "context": "Samus; monologue 11",
+      "text": "وما إن تغلغلت طفيليات إكس\nفي جهازي العصبي المركزي حتى{FC00}{FD00}فقدت وعيي، وانجرفت سفينتي\nنحو حزام من الكويكبات.{FC00}"
+    },
+    {
+      "id": "escape_pod",
+      "context": "Samus; monologue 12",
+      "text": "قذفت أنظمة الطوارئ في\nالسفينة كبسولة النجاة تلقائيا{FC00}{FD00}قبل الاصطدام، فانتشلتها\nسفينة تابعة لبيولوجيك{FC00}{FD00}ونقلتني إلى مقر الاتحاد المجري.{FC00}{FC00}{FD00}{E132}لكن طفيليات إكس تكاثرت\nفي جسدي أثناء الرحلة،{FC00}{FD00}وأفسدت أجزاء واسعة من بدلة القوة.{FC00}"
+    },
+    {
+      "id": "suit_integrated",
+      "context": "Samus; monologue 13",
+      "text": "ثم تبين أن المكونات\nالعضوية في بدلة القوة{FC00}{FD00}قد اندمجت بجسدي اندماجا تاما،{FC00}{FD00}فتعذر نزعها عني وأنا فاقدة الوعي.{FC00}"
+    },
+    {
+      "id": "surgery",
+      "context": "Samus; monologue 14",
+      "text": "فاضطر الأطباء إلى نزع أجزاء\nكبيرة من بدلتي جراحيا،{FC00}{FD00}مما غير مظهري تغييرا\nجذريا. لكن طفيليات إكس{FC00}{FD00}كانت متغلغلة في جهازي\nالعصبي المركزي إلى حد{FC00}{FD00}يستحيل معه استئصالها بأمان،\nفكانت فرص نجاتي ضئيلة.{FC00}"
+    },
+    {
+      "id": "vaccine",
+      "context": "Samus; monologue 15",
+      "text": "ثم وجد أحدهم علاجا.{FC00}{FC00}{FD00}إذ اقترح استخدام خلايا ميترويد\nلصنع لقاح مضاد لإكس.{FC00}{FD00}ويبدو أن الاتحاد كان قد تمكن من حفظ{FC00}{FD00}مزرعة خلايا من آخر صغير\nميترويد من إس آر ٣٨٨.{FC00}{FD00}فحضر المصل وحقنت به دون إبطاء.{FC00}"
+    },
+    {
+      "id": "reborn",
+      "context": "Samus; monologue 16",
+      "text": "فقضي على طفيليات إكس في الحال{FC00}{FD00}قضاء تاما.{FC00}{FC00}{FD00}أما أنا، فقد انتهت حياة...\nلكنني نجوت، وولدت من جديد{FC00}{FD00}كائنا مختلفا.{FC00}"
+    },
+    {
+      "id": "metroid_hatchling",
+      "context": "Samus; monologue 17",
+      "text": "وحين أتأمل ذلك، أدرك...{FC00}{FD00}أنني مدينة لصغير\nالميترويد بحياتي مرتين.{FC00}"
+    },
+    {
+      "id": "arriving",
+      "context": "the ship's computer; monologue 18",
+      "text": "سنصل قريبا إلى محطة\nالأبحاث بي إس إل.{FC00}{FD00}علي أن أستعد للالتحام.{FC00}"
+    },
+    {
+      "id": "new_mission",
+      "context": "Samus; monologue 0",
+      "text": "أبلغني حاسوب السفينة باقترابنا من\nمختبرات بيولوجيك الفضائية، أي محطة\nالأبحاث بي إس إل. فأثناء خضوعي\nللجراحة، أرسل فريق الأبحاث إلى هناك\nآخر دفعة من الكائنات التي أسرناها،\nومعها الأجزاء المصابة من بدلة\nالقوة. وبعد أن{FC00}{FD00}استعدت وعيي، علمت أن انفجارا غامضا\nهز المحطة. ولسبب ما، أيقظ ذلك في\nقلبي خوفا لا اسم له، وها أنا ذي أرسل\nالآن إلى هناك للتحقيق.{FC00}{FD00}وسيشرف على مهمتي في محطة\nبي إس إل حاسوب سفينتي الجديد.\nوعلي أن أحتمل طاعة أوامر هذا القائد\nالآلي الفظ، فقد كان ذلك شرطا\nلتسلمي السفينة. وبالنسبة لمن تكره\nتلقي الأوامر مثلي، هذه هي{FC00}{FD00}المرة الثانية التي أجد فيها نفسي\nمضطرة إلى ذلك. وهذا يذكرني\nبقائدي الآخر...{FC00}"
+    }
+  ]
+}

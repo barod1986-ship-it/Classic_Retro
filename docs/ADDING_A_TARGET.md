@@ -3,13 +3,13 @@
 Version: 1
 
 A **localization target** is one supported game revision together with the way it
-is put into Arabic. Ten targets are registered today:
+is put into Arabic. Eleven targets are registered today:
 
 ```text
 classic-retro targets list
 ```
 
-This guide collects what those ten taught, in the order the work happens. It is a
+This guide collects what those eleven taught, in the order the work happens. It is a
 checklist, not a template: every game gets its own research, and a game that fits
 none of the existing methods gets a new one (see
 [ARABIC_STRATEGIES.md](ARABIC_STRATEGIES.md)).
@@ -93,7 +93,14 @@ and the script belong to the game.
   - `bl_instruction` and `branch_instruction`.
   - `literal_jump`: `ldr`/`bx` with its literal on the next word boundary.
   - `bl_veneer_patch`: replaces a block with a call and a resume.
-  - `arm_veneer`: reaches Thumb code from ARM code.
+  - `arm_veneer`: reaches Thumb code from ARM code, or any hook through `ip`.
+
+  A hook more than 4 MiB from its site (the padding of an 8 MiB image) is reached
+  through a veneer near the site, in code nothing calls: the site keeps a 4-byte
+  `BL`. Each veneer jumps through a register its sites no longer need: `ip` at a
+  call (the callee may use it), otherwise a register the code reloads after the
+  site. Metroid Fusion's fade keeps a loop's end in `ip`; a veneer through `ip`
+  hung it.
 
   Another CPU gets a module of its own under `cpu/`.
 - `patching.hooks.HookProgram`: the hook source (`rom/<game>_arabic_hooks.s`), its
