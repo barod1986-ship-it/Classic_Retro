@@ -29,6 +29,7 @@ from classic_retro.font.glyph_raster import (
     drawn_mark,
     drop_shadow,
     form_bounds,
+    kept_marks,
     largest_fitting_size,
     pattern_pixels,
     raised_form,
@@ -138,6 +139,22 @@ def test_joining_forms_end_at_their_ink_and_others_keep_the_font_advance(font):
     assert draw_form(font, ALEF, 10).advance == 4
     # ...and gets one more pixel when its ink fills it, so it never touches the next word.
     assert draw_form(font, ISOLATED, 10).advance == 6
+
+
+def test_a_mark_under_the_ink_level_keeps_its_strongest_pixel():
+    coverage = {
+        # A stroke that reaches the ink level.
+        (0, 0): 200,
+        (0, 1): 180,
+        # A dot just under it everywhere: its strongest pixel is kept.
+        (3, 5): 120,
+        (4, 5): 139,
+        (4, 6): 90,
+        # A faint speck under the mark level is no mark.
+        (7, 7): 50,
+    }
+    assert kept_marks(coverage, ink_level=140, mark_level=60) == [(4, 5)]
+    assert kept_marks(coverage, ink_level=100, mark_level=60) == []
 
 
 def test_soft_pixels_are_the_coverage_between_the_two_levels(font):

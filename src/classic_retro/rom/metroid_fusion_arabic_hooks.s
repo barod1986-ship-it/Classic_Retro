@@ -9,24 +9,29 @@
 @ in ip. hook_width replaces GetCharacterWidth itself (a literal jump at its
 @ entry).
 @
-@ The new-file intro's text routines draw a line from left to right into a
-@ strip of 4bpp tiles, 32 bytes a column and 0x400 bytes a row of tiles, a
-@ line taking two rows: IntroProcessText and NewFileIntroProcessAdamText at
-@ 0x0600D000 (two lines, one character every three frames), and
-@ SpecialCutsceneProcessMonologue at 0x06000000 (nine lines, whose tiles
-@ then fade in one by one). They keep their pen; for text of the Arabic bank
-@ the hooks mirror where each glyph lands, on a line 224 pixels wide:
+@ The text routines draw a line from left to right into a strip of 4bpp
+@ tiles, 32 bytes a column and 0x400 bytes a row of tiles, a line taking two
+@ rows: the new-file intro's IntroProcessText and NewFileIntroProcessAdamText
+@ at 0x0600D000 (two lines, one character every three frames) and
+@ SpecialCutsceneProcessMonologue at 0x06000000 (nine lines, whose tiles then
+@ fade in one by one); the briefings' NavigationConversationProcessText at
+@ 0x06007000 or 0x06006000 (two lines, the second 0x800 bytes down) and their
+@ question (0x0807A0FC) at 0x06007000. They keep their pen; the hooks mirror
+@ where each right-to-left glyph lands, on a line 224 pixels wide:
 @
 @     left' = LINE_WIDTH - pen - width
 @
-@ - hook_width: the widths of the right-to-left glyphs (codes 0x9000 up);
-@ - hook_draw: DrawCharacter at the mirrored place;
+@ - hook_width: the widths of the right-to-left glyphs (codes 0xB040 up);
+@ - hook_draw: DrawCharacter at the mirrored place, for those codes;
 @ - hook_fade: the fade of a monologue page's tile in its mirrored column;
-@ - hook_arrow: the next-page arrow at the bottom left, not the bottom right;
-@ - hook_cursor: the ship computer's typing cursor left of its text.
+@ - hook_arrow: the intro's next-page arrow at the bottom left, not right;
+@ - hook_cursor: the ship computer's typing cursor left of its text;
+@ - hook_nav_cursor, hook_nav_cursor_start: a briefing's typing cursor left of
+@   its text, and at the right end of the line before the first character.
 @
-@ The text being drawn is the intro's first word (gNonGameplayRam, 0x03001484):
-@ a text of the Arabic bank is right to left.
+@ A text is right to left when it lies in the Arabic bank: the intro's is the
+@ first word of gNonGameplayRam (0x03001484); a briefing's is found as the
+@ game finds it, in the list of the language for the conversation.
 
     .syntax unified
     .cpu arm7tdmi
@@ -34,11 +39,15 @@
     .text
 
     .equ NONGAMEPLAY_RAM, 0x03001484
-    .equ ARABIC_TEXT, 0x087B4000
+    .equ CONVERSATION, 0x220
+    .equ PREVIOUS_CONVERSATION, 0x03000B88
+    .equ LANGUAGE, 0x03000011
+    .equ NAVIGATION_LANGUAGES, 0x0879C0F0
+    .equ ARABIC_TEXT, 0x087A0000
     .equ ARABIC_BANK, 0x4000
     .equ GAME_WIDTHS, 0x08576234
     .equ GAME_CODES, 0x04A0
-    .equ RTL_FIRST_CODE, 0x9000
+    .equ RTL_FIRST_CODE, 0xB040
     .equ RTL_CODES, 0x0800
     .equ RTL_WIDTHS, 0x0879F800
     .equ DEFAULT_WIDTH, 10
@@ -49,10 +58,14 @@
     .equ ARROW_X_RTL, 4
     .equ CURSOR_OFFSET, 14
     .equ CURSOR_MIRROR, 240 - CURSOR_OFFSET
+    .equ SECOND_LINE, 0xE0
+    .equ NAV_CURSOR_OFFSET, 8
+    .equ NAV_CURSOR_WIDTH, 6
+    .equ NAV_CURSOR_MIRROR, 240 - NAV_CURSOR_OFFSET - NAV_CURSOR_WIDTH
 
 @ ---------------------------------------------------------------------------
 @ GetCharacterWidth (0x08079118), r0 = character: the game's width table up
-@ to 0x49F, the right-to-left widths from 0x9000, otherwise 10 as before.
+@ to 0x49F, the right-to-left widths from 0xB040, otherwise 10 as before.
     .global hook_width
     .thumb_func
 hook_width:
@@ -79,20 +92,19 @@ hook_width:
     bx lr
 
 @ ---------------------------------------------------------------------------
-@ At 0x08098690, 0x080988D4 and 0x080980CC, for `bl DrawCharacter`:
+@ At the five `bl DrawCharacter` of the text routines:
 @ r0 = character, r1 = its tile (row base + 32 * the pen's column), r2 = width,
-@ r3 = the pen's pixel inside the column, [sp] = colour. The call goes on to
-@ DrawCharacter with the caller's lr, r4, r5 and stack, so it returns to the
-@ caller and finds its fifth argument.
+@ r3 = the pen's pixel inside the column, [sp] = colour. A right-to-left glyph
+@ goes to its mirrored place. The call goes on to DrawCharacter with the
+@ caller's lr, r4, r5 and stack, so it returns to the caller and finds its
+@ fifth argument.
     .global hook_draw
     .thumb_func
 hook_draw:
     push {r4, r5}
-    ldr r4, =NONGAMEPLAY_RAM
-    ldr r4, [r4]
-    ldr r5, =ARABIC_TEXT
-    subs r4, r4, r5
-    ldr r5, =ARABIC_BANK
+    ldr r4, =RTL_FIRST_CODE
+    subs r4, r0, r4
+    ldr r5, =RTL_CODES
     cmp r4, r5
     bhs 2f
     lsrs r4, r1, #5
@@ -180,11 +192,90 @@ hook_cursor:
     bx r4
 
 @ ---------------------------------------------------------------------------
+@ In NavigationConversationHandler, where the typing cursor follows the pen:
+@ at 0x0807A696 for `adds r1, r2, #0; adds r1, #8` (the first line) and at
+@ 0x0807A65A for `ldr r4, =0xFF28; adds r1, r2, r4` (the second, whose pen
+@ starts at 0xE0). r2 = the pen; r0 = the cursor's sprite and r3 =
+@ gNonGameplayRam (both kept). r1 = the cursor's x: 8 pixels past the pen on
+@ its line, or in Arabic its mirror (the cursor is 6 pixels wide).
+    .global hook_nav_cursor
+    .thumb_func
+hook_nav_cursor:
+    push {r0, r3, r5, lr}
+    cmp r2, #SECOND_LINE
+    blo 1f
+    subs r2, #SECOND_LINE
+1:
+    bl navigation_arabic
+    bcs 2f
+    movs r1, #NAV_CURSOR_MIRROR
+    subs r1, r1, r2
+    b 3f
+2:
+    movs r1, #NAV_CURSOR_OFFSET
+    adds r1, r1, r2
+3:
+    pop {r0, r3, r5}
+    pop {r4}
+    bx r4
+
+@ ---------------------------------------------------------------------------
+@ In NavigationConversationHandler, where a briefing starts (0x0807AB5C) and
+@ where it starts again when its question is answered No (0x0807ADF6), for
+@ `movs r1, #8; strh r1, [r0, #0x2e]`: the typing cursor before the first
+@ character, 8 pixels past the start of the line, or in Arabic at its mirror.
+@ r0 = the cursor's sprite; r2 to r7 are kept.
+    .global hook_nav_cursor_start
+    .thumb_func
+hook_nav_cursor_start:
+    push {r0, r2, r3, r4, r5, lr}
+    bl navigation_arabic
+    movs r1, #NAV_CURSOR_OFFSET
+    bcs 1f
+    movs r1, #NAV_CURSOR_MIRROR
+1:
+    pop {r0, r2, r3, r4, r5}
+    strh r1, [r0, #0x2e]
+    pop {r0}
+    bx r0
+
+@ ---------------------------------------------------------------------------
 @ Carry clear when the text being drawn lies in the Arabic bank. Uses r4, r5.
     .thumb_func
 arabic_text:
     ldr r4, =NONGAMEPLAY_RAM
     ldr r4, [r4]
+    ldr r5, =ARABIC_TEXT
+    subs r4, r4, r5
+    ldr r5, =ARABIC_BANK
+    cmp r4, r5
+    bx lr
+
+@ ---------------------------------------------------------------------------
+@ Carry clear when the briefing's text lies in the Arabic bank: the text the
+@ game reads, the list of the language's entry (conversation - 1) * 2, one
+@ more when the conversation comes again. Uses r0, r3, r4, r5.
+    .thumb_func
+navigation_arabic:
+    ldr r3, =NONGAMEPLAY_RAM
+    ldr r4, =CONVERSATION
+    ldrb r0, [r3, r4]
+    subs r5, r0, #1
+    lsls r5, r5, #1
+    ldr r4, =PREVIOUS_CONVERSATION
+    ldrb r4, [r4]
+    cmp r0, r4
+    bne 1f
+    adds r5, #1
+1:
+    ldr r4, =LANGUAGE
+    movs r0, #0
+    ldrsb r4, [r4, r0]
+    lsls r4, r4, #2
+    ldr r3, =NAVIGATION_LANGUAGES
+    ldr r4, [r3, r4]
+    lsls r5, r5, #2
+    ldr r4, [r4, r5]
     ldr r5, =ARABIC_TEXT
     subs r4, r4, r5
     ldr r5, =ARABIC_BANK

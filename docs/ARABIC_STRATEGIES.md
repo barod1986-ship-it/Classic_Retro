@@ -91,9 +91,10 @@ may need a third way, and that should be recorded here when it appears.
 Things that sit outside the text also need mirroring. Examples are a menu cursor
 (`pmd-red` moves it to the window's right edge, flipped), a key or page arrow
 (`firered` and `pmd-red` place it left of the text, `metroid-fusion` at the other end
-of the bottom line), a typing cursor (`metroid-fusion` keeps it left of the text) and
-an effect tied to the pen's tiles (`metroid-fusion` fades each tile of a monologue page
-in at its mirrored column).
+of the bottom line), a typing cursor (`metroid-fusion` keeps it left of the text), an
+effect tied to the pen's tiles (`metroid-fusion` fades each tile of a monologue page
+in at its mirrored column) and a choice between options (`metroid-fusion` puts the
+cursor at each Arabic option and swaps the left and right keys).
 
 ## How right-to-left text is marked
 
@@ -101,8 +102,8 @@ in at its mirrored column).
 |--------|---------|
 | Direction control codes the source overlay adds (`FC 19 xx` / `FC 1A`, `04 16` / `04 17`) | `firered`, `minish-cap` |
 | The first code of a message (`0x5FF`, `0x0B`, `0x1E`) | `ff6a`, `golden-sun`, `fire-emblem` |
-| The glyph itself: a charmap flag, or a glyph of the right-to-left font | `pmd-red`, `mlss` |
-| The text's own codes or address: cell codes, a bank table sorted by text address, or the address range of the Arabic bank | `fomt`, `mmbn`, `advance-wars`, `metroid-fusion` |
+| The glyph itself: a charmap flag, or a glyph of the right-to-left font | `pmd-red`, `mlss`, `metroid-fusion` (where a glyph is drawn) |
+| The text's own codes or address: cell codes, a bank table sorted by text address, or the address range of the Arabic bank | `fomt`, `mmbn`, `advance-wars`, `metroid-fusion` (its cursors, arrow and fade) |
 
 English text never carries the marker, so untranslated messages keep the original
 path.
@@ -116,8 +117,10 @@ path.
 - Codes above the game's glyph range that the decoder is taught to keep: Golden Sun
   (`0x100 + slot`, with its own Huffman trees for the translated strings).
 - Codes whose glyph, by the game's own address formula, falls in the padding at the end
-  of the image: Metroid Fusion (`0x9000` up; the game reads glyph `c` at
-  `sheet + 32 * c`, so only the widths need a hook).
+  of the image: Metroid Fusion (`0xB040` up; the game reads glyph `c` at
+  `sheet + 32 * c`, so only the widths need a hook). Every routine that will draw them
+  must read them as glyphs: the briefings read `0x9xxx` as sounds, so the first
+  build's `0x9000` had to move.
 - Unused two-byte codes added to the charmap: Pokémon Mystery Dungeon.
 - An empty font slot the game already selects with a prefix byte: Mario & Luigi
   (font 1 of every font list).
@@ -150,6 +153,8 @@ The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
 - Draw marks that vanish at that size by hand:
   - hamza or madda over alef (Mario & Luigi, Pokémon Mystery Dungeon, Metroid Fusion)
   - hamza on a carrier (Harvest Moon)
+- Or keep a dot that stays just under the ink level: its strongest pixel becomes ink
+  (`draw_form(..., mark_level=...)`; Metroid Fusion's medial beh).
 - Adjust a form that does not fit: raise final yeh, or split a 13-pixel seen into
   two glyphs (Advance Wars splits every form wider than its 8-pixel glyphs).
 - Medial and final forms end at their last ink column, so joins touch the glyph

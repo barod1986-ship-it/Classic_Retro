@@ -5,18 +5,20 @@ shifted and takes its data from the original, so the overlay patches the
 user's image (``AMTE``, SHA-256 below) and ships as a BPS patch:
 
 1. the input hash and every original byte that is replaced or relied on are
-   verified, and every translated monologue's original is checked against its
-   pinned hash and control units, and against the English monologue list;
+   verified, and every translated text's original is checked against its
+   pinned hash and commands, and against its English list;
 2. the Thumb hooks (``metroid_fusion_arabic_hooks.s``), the right-to-left
    glyph widths and sheet (``engines.metroid_fusion_arabic``) and the
-   translated monologues go into the 0xFF padding at the end of the image; the
+   translated texts go into the 0xFF padding at the end of the image; the
    image stays 8 MiB;
-3. ``GetCharacterWidth`` jumps to its hook, and six sites in the intro's text
-   routines call theirs through veneers written over Dma3Transfer_Unused1,
-   since the padding is out of a BL's reach;
-4. the English list's pointer to every translated monologue is repointed to
-   the Arabic one. A text of the Arabic bank is what the hooks turn right to
-   left.
+3. ``GetCharacterWidth`` jumps to its hook, and twelve sites in the text routines
+   call theirs through veneers written over Dma3Transfer_Unused1, since the
+   padding is out of a BL's reach;
+4. a translated question's cursor stands left of each Arabic option, and the
+   right and left keys choose the option on that side: immediates of the
+   questions' handler;
+5. the English lists' pointer to every translated text is repointed to the
+   Arabic one. A text of the Arabic bank is what the hooks turn right to left.
 
 The hook bytes are stored here; ``assemble_hooks`` rebuilds them from the
 assembly source with GNU binutils so CI can prove they match.
@@ -26,6 +28,7 @@ from __future__ import annotations
 
 import hashlib
 import struct
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -39,8 +42,9 @@ from classic_retro.engines.metroid_fusion import (
     FONT_CODES,
     FONT_GRAPHICS,
     FONT_WIDTHS,
+    MESSAGE_LANGUAGES,
     MONOLOGUE_LANGUAGES,
-    MONOLOGUES,
+    NAVIGATION_LANGUAGES,
     ROM_BASE,
     TILE_BYTES,
     command_skeleton,
@@ -52,7 +56,11 @@ from classic_retro.engines.metroid_fusion import (
 )
 from classic_retro.engines.metroid_fusion_arabic import (
     BASELINE,
+    BRIEFING,
     LINE_WIDTH,
+    PAGE,
+    QUESTION_BOX,
+    RENDERER_DIALECTS,
     RTL_CODE_SPAN,
     RTL_FIRST_CODE,
     SPACE,
@@ -64,6 +72,8 @@ from classic_retro.engines.metroid_fusion_arabic import (
     font_preview,
     message_preview,
     messages_sheet,
+    question_cursor_x,
+    question_options,
     validate_command_skeleton,
 )
 from classic_retro.localization.translations import TranslationSet
@@ -72,22 +82,26 @@ from classic_retro.patching.image import ImageSpec
 from classic_retro.patching.outputs import base_report, write_image, write_patch
 from classic_retro.rebuild.bps import BpsPatch, create_bps
 from classic_retro.rom.metroid_fusion_arabic_script import (
+    MESSAGE_LIST,
     MONOLOGUE_LIST,
+    NAVIGATION_LIST,
     MfArabicMessage,
+    MfTextList,
     metroid_fusion_arabic_messages,
 )
 
 USA_SHA256 = "a56ce3d7f8f3f4f4d0468d421fff5dd3ee3aec99a58244377e43aae769dc3fe8"
 USA_SIZE = 0x800000
+IMAGE_END = ROM_BASE + USA_SIZE
 
-# The 0xFF padding at the end of the image (from 0x0879ECC8).
+# The 0xFF padding at the end of the image (from 0x0879ECC8 to its end).
 HOOK_CODE_ADDRESS = 0x0879F000
 RTL_WIDTHS_ADDRESS = 0x0879F800
+ARABIC_TEXT_ADDRESS = 0x087A0000
+ARABIC_TEXT_END = 0x087A4000
 # DrawCharacter reads glyph c at FONT_GRAPHICS + 32 * c.
 FONT_ADDRESS = FONT_GRAPHICS + TILE_BYTES * RTL_FIRST_CODE
 FONT_END = FONT_ADDRESS + TILE_BYTES * RTL_CODE_SPAN
-ARABIC_TEXT_ADDRESS = 0x087B4000
-REGION_END = 0x087B8000
 PADDING = 0xFF
 HOOK_SOURCE = Path(__file__).with_name("metroid_fusion_arabic_hooks.s")
 
@@ -95,6 +109,8 @@ HOOK_SOURCE = Path(__file__).with_name("metroid_fusion_arabic_hooks.s")
 GET_CHARACTER_WIDTH = 0x08079118
 DRAW_CHARACTER = 0x0807913C
 NONGAMEPLAY_RAM = 0x03001484
+PREVIOUS_CONVERSATION = 0x03000B88
+LANGUAGE = 0x03000011
 # Dma3Transfer_Unused1: 64 bytes nothing calls, near the intro's text routines
 # (the SHA-256 of its code).
 VENEER_AREA = 0x08098940
@@ -103,24 +119,29 @@ VENEER_AREA_SHA256 = "db472d6b4ef115eee7a30b5b677aaad91223e1740781c1cbeedd33e663
 
 # arm-none-eabi-as -mcpu=arm7tdmi metroid_fusion_arabic_hooks.s; ld -Ttext 0x0879F000; objcopy
 HOOK_CODE = bytes.fromhex(
-    "0004000c2a49884202d22a49085c70472949401a05d32949884202d22849085c"
-    "70470a20704730b4264c2468264d641b264dac4210d24c091f252c40e400e418"
-    "a418e0252c1b00d50024890a8902e5086d014919072323401d4ca44630bc6047"
-    "30b5720000f01df801d236218a1af80130bc02bc084730b500f013f8eb2000d2"
-    "0420908130bc02bc084730b500f009f802d2e221081a00e00e30002130bc10bc"
-    "2047084c2468084d641b084dac427047a0040000346257080090000000080000"
-    "00f879088414000300407b08004000003d910708"
+    "0004000c4149884202d24149085c70474049401a05d34049884202d23f49085c"
+    "70470a20704730b43a4c041b3a4dac4210d24c091f252c40e400e418a418e025"
+    "2c1b00d50024890a8902e5086d01491907232340324ca44630bc604730b57200"
+    "00f036f801d236218a1af80130bc02bc084730b500f02cf8eb2000d204209081"
+    "30bc02bc084730b500f022f802d2e221081a00e00e30002130bc10bc204729b5"
+    "e02a00d3e03a00f01af802d2e221891a01e00821891829bc10bc20473db500f0"
+    "0ef8082100d2e2213dbcc18501bc0047144c2468144d641b144dac427047114b"
+    "134c185d451e6d00124c2478a04200d10135114c00202456a400104b1c59ad00"
+    "6459094d641b094dac427047a00400003462570840b000000008000000f87908"
+    "3d9107088414000300007a080040000020020000880b000311000003f0c07908"
 )
 HOOK_SYMBOLS = {
-    "hook_arrow": 0x76,
-    "hook_cursor": 0x8A,
+    "hook_arrow": 0x72,
+    "hook_cursor": 0x86,
     "hook_draw": 0x26,
-    "hook_fade": 0x60,
+    "hook_fade": 0x5C,
+    "hook_nav_cursor": 0x9E,
+    "hook_nav_cursor_start": 0xBC,
     "hook_width": 0x00,
 }
 IMAGE = ImageSpec("Metroid Fusion (USA)", USA_SHA256, USA_SIZE, ROM_BASE)
 HOOKS = HookProgram("Metroid Fusion hooks", HOOK_SOURCE, HOOK_CODE_ADDRESS, HOOK_CODE, HOOK_SYMBOLS)
-PATCH_NAME = "metroid-fusion-usa-arabic-intro.bps"
+PATCH_NAME = "metroid-fusion-usa-arabic-opening.bps"
 
 
 @dataclass(frozen=True, slots=True)
@@ -145,12 +166,15 @@ class Veneer:
 VENEERS = {
     veneer.hook: veneer
     for veneer in (
-        # At the three DrawCharacter calls: ip.
+        # At the five DrawCharacter calls: ip.
         Veneer(0x08098940, "hook_draw"),
         # In the fade, ip holds the loop's end; r3 is reloaded after the site.
         Veneer(0x08098950, "hook_fade", 3),
         Veneer(0x08098958, "hook_arrow", 1),
         Veneer(0x08098960, "hook_cursor", 1),
+        # r1 is the cursor's x the hook returns, or stores.
+        Veneer(0x08098968, "hook_nav_cursor", 1),
+        Veneer(0x08098970, "hook_nav_cursor_start", 1),
     )
 }
 
@@ -173,20 +197,85 @@ def _call_site(address: int, hook: str) -> Site:
 
 
 SITES = (
-    # IntroProcessText, NewFileIntroProcessAdamText, SpecialCutsceneProcessMonologue.
+    # IntroProcessText, NewFileIntroProcessAdamText, SpecialCutsceneProcessMonologue,
+    # NavigationConversationProcessText and the questions (0x0807A0FC).
     _call_site(0x08098690, "hook_draw"),
     _call_site(0x080988D4, "hook_draw"),
     _call_site(0x080980CC, "hook_draw"),
+    _call_site(0x0807A076, "hook_draw"),
+    _call_site(0x0807A28E, "hook_draw"),
     # The monologue's fade (0x08098158): `lsls r2, r6, #1; lsls r0, r7, #7`.
     Site(0x080981F8, bytes.fromhex("7200f801"), "hook_fade"),
     # NewFileIntroProcessTextCursor: `movs r0, #235; strh r0, [r2, #12]`.
     Site(0x08098C1E, bytes.fromhex("eb209081"), "hook_arrow"),
     # NewFileIntroProcessAdamTextCursor: `adds r0, #14; movs r1, #0`.
     Site(0x08090740, bytes.fromhex("0e300021"), "hook_cursor"),
+    # NavigationConversationHandler, the briefing's typing cursor: on the second
+    # line `ldr r4, =0xFF28; adds r1, r2, r4`, on the first `adds r1, r2, #0; adds r1, #8`.
+    Site(0x0807A65A, bytes.fromhex("0a4c1119"), "hook_nav_cursor"),
+    Site(0x0807A696, bytes.fromhex("111c0831"), "hook_nav_cursor"),
+    # Its x before the first character, as a briefing starts and when it starts
+    # again: `movs r1, #8; strh r1, [r0, #0x2e]`.
+    Site(0x0807AB5C, bytes.fromhex("0821c185"), "hook_nav_cursor_start"),
+    Site(0x0807ADF6, bytes.fromhex("0821c185"), "hook_nav_cursor_start"),
 )
 # GetCharacterWidth's first eight bytes, replaced by a jump to hook_width
 # (`push {lr}; lsls r0, r0, #16; lsrs r1, r0, #16; ldr r0, =0x49F`).
 WIDTH_ENTRY = bytes.fromhex("00b50004010c0348")
+
+# The questions' keys (gChangedInput).
+KEY_RIGHT = 0x10
+KEY_LEFT = 0x20
+YES = "yes"
+NO = "no"
+YES_KEY = "yes key"
+NO_KEY = "no key"
+
+
+@dataclass(frozen=True, slots=True)
+class QuestionSite:
+    """A ``movs rN, #imm8`` of the questions' handler: the Yes/No cursor's x or a key.
+
+    ``YES`` and ``NO`` are the cursor's x on that option, ``YES_KEY`` and
+    ``NO_KEY`` the key that moves it there. In English Yes is on the left.
+    """
+
+    address: int
+    register: int
+    original: int
+    role: str
+
+    def code(self, value: int) -> bytes:
+        return bytes((value, 0x20 | self.register))
+
+
+# NavigationConversationHandler, for each question (by its message): the
+# cursor's x as the question starts, then on Yes and on No; the keys.
+# fmt: off
+QUESTION_SITES: dict[int, tuple[QuestionSite, ...]] = {
+    43: (
+        QuestionSite(0x0807A88A, 1, 0x34, YES),
+        QuestionSite(0x0807A90C, 0, 0x34, YES),
+        QuestionSite(0x0807A91A, 0, 0x84, NO),
+        QuestionSite(0x0807A8A8, 0, KEY_LEFT, YES_KEY),
+        QuestionSite(0x0807A8D0, 0, KEY_RIGHT, NO_KEY),
+    ),
+    44: (
+        QuestionSite(0x0807ACA2, 1, 0x84, NO),
+        QuestionSite(0x0807AD28, 0, 0x34, YES),
+        QuestionSite(0x0807AD36, 0, 0x84, NO),
+        QuestionSite(0x0807ACC6, 0, KEY_LEFT, YES_KEY),
+        QuestionSite(0x0807ACEC, 0, KEY_RIGHT, NO_KEY),
+    ),
+}
+# fmt: on
+# Which list each renderer's texts come from.
+RENDERER_LISTS = {
+    STRIP: MONOLOGUE_LIST,
+    PAGE: MONOLOGUE_LIST,
+    BRIEFING: NAVIGATION_LIST,
+    QUESTION_BOX: MESSAGE_LIST,
+}
 
 # Bytes the hooks rely on without replacing them:
 ANCHORS = {
@@ -209,8 +298,25 @@ ANCHORS = {
     0x0809823C: struct.pack("<II", 0x06004842, 0x06004882),
     # the typing cursor's pen (`ldrh r0, [r3, #12]` ... `adds r0, r0, r1`);
     0x08090734: bytes.fromhex("9889084c1919c00009784018"),
-    # the English monologue list.
-    MONOLOGUE_LANGUAGES + 4 * ENGLISH: struct.pack("<I", MONOLOGUE_LIST),
+    # how a briefing finds its text, which hook_nav_cursor repeats: the entry
+    # (conversation - 1) * 2, one more when it comes again, of the language's list;
+    0x08079CCE: bytes.fromhex("88229200a8180178481e430012480078814200d10133"),
+    0x08079CE4: bytes.fromhex("10491148007800060016800040180168980040180668"),
+    0x08079D24: struct.pack("<III", PREVIOUS_CONVERSATION, NAVIGATION_LANGUAGES, LANGUAGE),
+    # the question (0x0807A0FC): message 43 + its number, in the box of the
+    # first panel; 83A0 16 pixels before 0xA0;
+    0x0807A14E: bytes.fromhex("ac30"),
+    0x0807A174: struct.pack("<III", MESSAGE_LANGUAGES, LANGUAGE, 0x06007000),
+    0x0807A1D0: bytes.fromhex("1038"),
+    0x0807A1DC: struct.pack("<I", 0x83A0),
+    # the sprites the cursors are: a briefing's typing cursor (x - 5, the
+    # line under the pen) and the question's triangle (x - 5 to x - 3);
+    0x08565EBA: bytes.fromhex("0100fc00fb012332"),
+    0x08565F08: bytes.fromhex("0100f880fb0141320100f880fc0141320100f880fd014132"),
+    # the English lists.
+    MONOLOGUE_LANGUAGES + 4 * ENGLISH: struct.pack("<I", MONOLOGUE_LIST.address),
+    NAVIGATION_LANGUAGES + 4 * ENGLISH: struct.pack("<I", NAVIGATION_LIST.address),
+    MESSAGE_LANGUAGES + 4 * ENGLISH: struct.pack("<I", MESSAGE_LIST.address),
 }
 
 
@@ -227,7 +333,7 @@ _word = IMAGE.word
 
 
 def source_digest(units: tuple[int, ...]) -> str:
-    """SHA-256 of an original monologue's units, up to its final ``FF00``."""
+    """SHA-256 of an original text's units, up to its final ``FF00``."""
     return hashlib.sha256(pack_units(units)).hexdigest()
 
 
@@ -241,6 +347,10 @@ def verify_usa_image(rom: bytes) -> None:
     IMAGE.verify(rom)
 
 
+def _question_sites() -> tuple[QuestionSite, ...]:
+    return tuple(site for sites in QUESTION_SITES.values() for site in sites)
+
+
 def _verify_anchors(rom: bytes) -> None:
     """Every byte the overlay relies on or replaces, checked before any change."""
     if len(rom) != USA_SIZE:
@@ -248,6 +358,7 @@ def _verify_anchors(rom: bytes) -> None:
     expected = {
         GET_CHARACTER_WIDTH: WIDTH_ENTRY,
         **{site.address: site.original for site in SITES},
+        **{site.address: site.code(site.original) for site in _question_sites()},
         **ANCHORS,
     }
     for address, original in expected.items():
@@ -260,21 +371,24 @@ def _verify_anchors(rom: bytes) -> None:
         raise ClassicRetroError(
             ErrorCode.SOURCE_BASELINE_MISMATCH, f"Unexpected code at {VENEER_AREA:#x}"
         )
-    if not IMAGE.filled(rom, HOOK_CODE_ADDRESS, REGION_END, PADDING):
+    if not IMAGE.filled(rom, HOOK_CODE_ADDRESS, IMAGE_END, PADDING):
         raise ClassicRetroError(
             ErrorCode.SAFE_REGION_CONTENT_MISMATCH,
-            f"{HOOK_CODE_ADDRESS:#x}..{REGION_END:#x} is not empty padding",
+            f"{HOOK_CODE_ADDRESS:#x}..{IMAGE_END:#x} is not empty padding",
         )
     # The hooks' literals: the bank and its size, the widths and their codes,
-    # the game's widths, the intro's data and DrawCharacter.
+    # the game's widths, the text's data, the briefings' lists and DrawCharacter.
     for value in (
         ARABIC_TEXT_ADDRESS,
-        REGION_END - ARABIC_TEXT_ADDRESS,
+        ARABIC_TEXT_END - ARABIC_TEXT_ADDRESS,
         RTL_WIDTHS_ADDRESS,
         RTL_FIRST_CODE,
         RTL_CODE_SPAN,
         FONT_WIDTHS,
         NONGAMEPLAY_RAM,
+        PREVIOUS_CONVERSATION,
+        LANGUAGE,
+        NAVIGATION_LANGUAGES,
         DRAW_CHARACTER | 1,
     ):
         if struct.pack("<I", value) not in HOOK_CODE:
@@ -287,7 +401,8 @@ def _verify_source(rom: bytes, message: MfArabicMessage) -> tuple[int, ...]:
     if _word(rom, message.pointer) != message.source_address:
         raise ClassicRetroError(
             ErrorCode.SOURCE_BASELINE_MISMATCH,
-            f"{message.key}: monologue {message.index} is not at {message.source_address:#x}",
+            f"{message.key}: {message.text_list.name} {message.index} is not at "
+            f"{message.source_address:#x}",
         )
     try:
         original = read_text(rom, message.source_address)
@@ -302,40 +417,101 @@ def _verify_source(rom: bytes, message: MfArabicMessage) -> tuple[int, ...]:
             f"{message.key}: the original at {message.source_address:#x} differs from the "
             "pinned USA script",
         )
-    if command_skeleton(original) != message.source_skeleton:
+    if command_skeleton(original, message.dialect) != message.source_skeleton:
         raise ClassicRetroError(
             ErrorCode.SOURCE_BASELINE_MISMATCH,
-            f"{message.key}: the original has different control units than pinned",
+            f"{message.key}: the original has different commands than pinned",
         )
     return original
 
 
+def _check_place(message: MfArabicMessage, places: set[tuple[str, int]]) -> None:
+    """A text of its renderer's list, once, and a question the handler asks."""
+    text_list: MfTextList = message.text_list
+    if RENDERER_LISTS.get(message.renderer) != text_list:
+        raise ClassicRetroError(
+            ErrorCode.INVALID_REFERENCE,
+            f"{message.key}: the {message.renderer} does not show {text_list.name} texts",
+        )
+    if not 0 <= message.index < text_list.length:
+        raise ClassicRetroError(
+            ErrorCode.INVALID_REFERENCE, f"{message.key}: no {text_list.name} {message.index}"
+        )
+    if message.renderer == QUESTION_BOX and message.index not in QUESTION_SITES:
+        raise ClassicRetroError(
+            ErrorCode.INVALID_REFERENCE,
+            f"{message.key}: message {message.index} is not a question of the briefings",
+        )
+    place = (text_list.name, message.index)
+    if place in places:
+        raise ClassicRetroError(
+            ErrorCode.DUPLICATE_ENTRY_ID,
+            f"{message.key} shares {text_list.name} {message.index}",
+        )
+    places.add(place)
+
+
+@dataclass(frozen=True, slots=True)
+class MfEncodedText:
+    """A translated text as the bank stores it, its units and, with a font, its line widths."""
+
+    stored: bytes
+    units: tuple[int, ...]
+    line_widths: tuple[int, ...]
+
+
 def encode_messages(
     encoder: MfArabicEncoder, messages: tuple[MfArabicMessage, ...] | None = None
-) -> dict[str, tuple[bytes, tuple[int, ...]]]:
-    """Validate every translation against its original's control units and encode it.
-
-    The result is each stored text and, with a font, its line widths.
-    """
-    encoded: dict[str, tuple[bytes, tuple[int, ...]]] = {}
-    indexes: set[int] = set()
+) -> dict[str, MfEncodedText]:
+    """Validate every translation against its original's commands and encode it."""
+    encoded: dict[str, MfEncodedText] = {}
+    places: set[tuple[str, int]] = set()
     for message in messages or metroid_fusion_arabic_messages():
         if message.key in encoded:
-            raise ClassicRetroError(ErrorCode.DUPLICATE_ENTRY_ID, f"Monologue {message.key} twice")
-        if message.index in indexes:
-            raise ClassicRetroError(
-                ErrorCode.DUPLICATE_ENTRY_ID, f"{message.key} shares monologue {message.index}"
-            )
-        if not 0 <= message.index < MONOLOGUES:
-            raise ClassicRetroError(
-                ErrorCode.INVALID_REFERENCE, f"{message.key}: no monologue {message.index}"
-            )
-        indexes.add(message.index)
+            raise ClassicRetroError(ErrorCode.DUPLICATE_ENTRY_ID, f"Text {message.key} twice")
+        _check_place(message, places)
         pieces = message.pieces
         validate_command_skeleton(message.source_skeleton, pieces)
         result = encoder.encode(pieces, message.renderer)
-        encoded[message.key] = (stored_text(result.units), result.line_widths or ())
+        encoded[message.key] = MfEncodedText(
+            stored_text(result.units), result.units, result.line_widths or ()
+        )
     return encoded
+
+
+def question_patches(
+    font: MfRtlFont, messages: Sequence[MfArabicMessage], encoded: dict[str, MfEncodedText]
+) -> dict[int, bytes]:
+    """The handler's code for every translated question: its cursor and its keys.
+
+    The cursor stands left of each Arabic option, and the right key chooses
+    Yes (on the right), the left key No.
+    """
+    patches: dict[int, bytes] = {}
+    for message in messages:
+        if message.renderer != QUESTION_BOX:
+            continue
+        options = question_options(encoded[message.key].units, font.width)
+        if len(options) != 2:
+            raise ClassicRetroError(
+                ErrorCode.BUILD_VALIDATION_FAILED,
+                f"{message.key}: a question needs two options, Yes then No",
+            )
+        values = {
+            YES: question_cursor_x(options[0]),
+            NO: question_cursor_x(options[1]),
+            YES_KEY: KEY_RIGHT,
+            NO_KEY: KEY_LEFT,
+        }
+        for site in QUESTION_SITES[message.index]:
+            value = values[site.role]
+            if not 0 <= value <= 0xFF:
+                raise ClassicRetroError(
+                    ErrorCode.BUILD_VALIDATION_FAILED,
+                    f"{message.key}: the cursor's x ({value}) does not fit its instruction",
+                )
+            patches[site.address] = site.code(value)
+    return patches
 
 
 def build_metroid_fusion_arabic_rom(
@@ -362,7 +538,7 @@ def build_metroid_fusion_arabic_rom(
     widths = font.width_table()
     if HOOK_CODE_ADDRESS + len(HOOK_CODE) > RTL_WIDTHS_ADDRESS:
         raise ClassicRetroError(ErrorCode.RELOCATION_OVERFLOW, "Hook code exceeds its region")
-    if FONT_ADDRESS + len(sheet) > FONT_END or FONT_END > ARABIC_TEXT_ADDRESS:
+    if FONT_ADDRESS + len(sheet) > FONT_END or FONT_END > IMAGE_END:
         raise ClassicRetroError(ErrorCode.RELOCATION_OVERFLOW, "The glyphs exceed their region")
 
     encoded = encode_messages(MfArabicEncoder(font), messages)
@@ -370,9 +546,10 @@ def build_metroid_fusion_arabic_rom(
     addresses: dict[str, int] = {}
     for message in messages:
         addresses[message.key] = ARABIC_TEXT_ADDRESS + len(texts)
-        texts += encoded[message.key][0]
-    if ARABIC_TEXT_ADDRESS + len(texts) > REGION_END:
+        texts += encoded[message.key].stored
+    if ARABIC_TEXT_ADDRESS + len(texts) > ARABIC_TEXT_END:
         raise ClassicRetroError(ErrorCode.RELOCATION_OVERFLOW, "Arabic texts exceed the region")
+    questions = question_patches(font, messages, encoded)
 
     target = bytearray(rom)
 
@@ -389,16 +566,20 @@ def build_metroid_fusion_arabic_rom(
     write(GET_CHARACTER_WIDTH, _width_jump())
     for site in SITES:
         write(site.address, site.patch())
+    for address, code in questions.items():
+        write(address, code)
     for message in messages:
         write(message.pointer, struct.pack("<I", addresses[message.key]))
 
     output = bytes(target)
-    _verify_output(output, rom, widths, sheet, messages, encoded, addresses)
+    _verify_output(output, rom, widths, sheet, messages, encoded, addresses, questions)
     patch = create_bps(rom, output)
     report: dict[str, object] = {
         **base_report(IMAGE.title, rom, output, patch),
         "messages": len(messages),
-        "message_lines": {message.key: list(encoded[message.key][1]) for message in messages},
+        "message_lines": {
+            message.key: list(encoded[message.key].line_widths) for message in messages
+        },
         "line_width_limit": LINE_WIDTH,
         "rtl_glyphs": len(font.glyphs),
         "rtl_codes": f"{min(font.glyphs):04X}..{max(font.glyphs):04X}",
@@ -407,6 +588,7 @@ def build_metroid_fusion_arabic_rom(
         "font_sha256": hashlib.sha256(font_path.read_bytes()).hexdigest(),
         "hook_sites": len(SITES) + 1,
         "veneers": len(VENEERS),
+        "question_sites": len(questions),
         "hook_code_address": f"{HOOK_CODE_ADDRESS:#x}",
         "font_address": f"{FONT_ADDRESS:#x}",
         "arabic_text_address": f"{ARABIC_TEXT_ADDRESS:#x}",
@@ -425,8 +607,9 @@ def _verify_output(
     widths: bytes,
     sheet: bytes,
     messages: tuple[MfArabicMessage, ...],
-    encoded: dict[str, tuple[bytes, tuple[int, ...]]],
+    encoded: dict[str, MfEncodedText],
     addresses: dict[str, int],
+    questions: dict[int, bytes],
 ) -> None:
     changed = {
         start
@@ -437,6 +620,7 @@ def _verify_output(
         (GET_CHARACTER_WIDTH, len(WIDTH_ENTRY)),
         (VENEER_AREA, VENEER_AREA_SIZE),
         *((site.address, len(site.original)) for site in SITES),
+        *((address, len(code)) for address, code in questions.items()),
         *((message.pointer, 4) for message in messages),
     ]
     allowed = {
@@ -444,7 +628,7 @@ def _verify_output(
         for address, length in written
         for delta in (0, length - 1)
     }
-    allowed |= set(range(_offset(HOOK_CODE_ADDRESS) & ~0xFFF, _offset(REGION_END), 0x1000))
+    allowed |= set(range(_offset(HOOK_CODE_ADDRESS) & ~0xFFF, _offset(IMAGE_END), 0x1000))
     if not changed <= allowed:
         raise ClassicRetroError(
             ErrorCode.BUILD_VALIDATION_FAILED, "The overlay changed bytes outside its sites"
@@ -456,6 +640,7 @@ def _verify_output(
         GET_CHARACTER_WIDTH: _width_jump(),
         **{veneer.address: veneer.code() for veneer in VENEERS.values()},
         **{site.address: site.patch() for site in SITES},
+        **questions,
     }
     for address, data in expected.items():
         if IMAGE.read(output, address, len(data)) != data:
@@ -468,7 +653,7 @@ def _verify_output(
             raise ClassicRetroError(
                 ErrorCode.BUILD_VALIDATION_FAILED, f"{message.key}: pointer not repointed"
             )
-        stored = encoded[message.key][0]
+        stored = encoded[message.key].stored
         if (
             IMAGE.read(output, address, len(stored)) != stored
             or stored_text(read_text(output, address)) != stored
@@ -496,20 +681,21 @@ def check_metroid_fusion_translations(
     if font is not None and text_preview_path is not None:
         messages_sheet(
             [
-                (message.key, stored_preview(font, encoded[message.key][0], message.renderer))
+                (message.key, message_preview(font, encoded[message.key].units, message.renderer))
                 for message in messages
             ]
         ).save(text_preview_path)
     report: dict[str, object] = {
         "messages": len(messages),
         "lines_measured": font is not None,
-        "encoded_units": sum(len(text_units(data, 0)) for data, _ in encoded.values()),
+        "encoded_units": sum(len(text.units) for text in encoded.values()),
     }
     if font is not None:
         report["font_size"] = font.font_size
         report["font_baseline"] = BASELINE
         report["rtl_glyphs"] = len(font.glyphs)
-        report["widest_line"] = max(max(widths) for _, widths in encoded.values())
+        report["widest_line"] = max(max(text.line_widths) for text in encoded.values())
+        report["question_sites"] = len(question_patches(font, messages, encoded))
     return report
 
 
@@ -523,7 +709,8 @@ def encode_metroid_fusion_arabic_message(
 ) -> dict[str, object]:
     """Encode one text in notation; with a font, the width of each line."""
     font = build_metroid_fusion_rtl_font(font_path) if font_path is not None else None
-    result = MfArabicEncoder(font).encode(parse_notation(text), renderer)
+    pieces = parse_notation(text, RENDERER_DIALECTS[renderer])
+    result = MfArabicEncoder(font).encode(pieces, renderer)
     payload: dict[str, object] = {
         "units": " ".join(f"{unit:04X}" for unit in result.units),
         "count": len(result.units),
@@ -563,7 +750,10 @@ def extract_originals(
         verify_usa_image(rom)
     messages = messages or metroid_fusion_arabic_messages(translations)
     _verify_anchors(rom)
-    return {message.key: text_notation(_verify_source(rom, message)) for message in messages}
+    return {
+        message.key: text_notation(_verify_source(rom, message), message.dialect)
+        for message in messages
+    }
 
 
 def check_hook_code(source: Path = HOOK_SOURCE) -> dict[str, object]:

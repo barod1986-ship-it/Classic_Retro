@@ -124,15 +124,20 @@ def draw_form(
     *,
     ink_level: int = INK_THRESHOLD,
     soft_level: int | None = None,
+    mark_level: int | None = None,
 ) -> DrawnForm:
-    """``character`` drawn on the cell's ``baseline`` row, with the shared advance rule."""
+    """``character`` drawn on the cell's ``baseline`` row, with the shared advance rule.
+
+    With ``mark_level``, a mark whose coverage stays under the ink level (a dot
+    that falls between pixels) keeps its strongest pixel as ink (``kept_marks``).
+    """
     left, top, right, bottom = font.getbbox(character, anchor="ls")
     pad = 2
     canvas = Image.new("L", (right - left + 2 * pad, bottom - top + 2 * pad), 0)
     origin_x, origin_y = pad - left, pad - top
     ImageDraw.Draw(canvas).text((origin_x, origin_y), character, font=font, fill=255, anchor="ls")
     pixels = canvas.load()
-    lowest = ink_level if soft_level is None else min(soft_level, ink_level)
+    lowest = min(level for level in (ink_level, soft_level, mark_level) if level is not None)
     coverage = {
         (x, y): pixels[x, y]
         for y in range(canvas.height)
@@ -140,6 +145,10 @@ def draw_form(
         if pixels[x, y] >= lowest
     }
     ink_pixels = [pixel for pixel, level in coverage.items() if level >= ink_level]
+    if mark_level is not None:
+        ink_pixels += kept_marks(coverage, ink_level, mark_level)
+    if soft_level is None:
+        coverage = {pixel: level for pixel, level in coverage.items() if level >= ink_level}
     if not ink_pixels:
         raise ClassicRetroError(
             ErrorCode.FONT_BUILD_FAILED,
@@ -148,13 +157,40 @@ def draw_form(
     ink_left = min(x for x, _ in ink_pixels)
     shift_y = baseline - origin_y
     ink = frozenset((x - ink_left, y + shift_y) for x, y in ink_pixels)
-    soft = frozenset(
-        (x - ink_left, y + shift_y)
-        for (x, y), level in coverage.items()
-        if level < ink_level and x >= ink_left
+    soft = (
+        frozenset(
+            (x - ink_left, y + shift_y)
+            for (x, y), level in coverage.items()
+            if level < ink_level and x >= ink_left
+        )
+        - ink
     )
     ink_right = max(x for x, _ in ink)
     return DrawnForm(ink, soft, contextual_advance(font, character, ink_right, right - left))
+
+
+def kept_marks(coverage: dict[Pixel, int], ink_level: int, mark_level: int) -> list[Pixel]:
+    """The strongest pixel of every mark that never reaches ``ink_level``.
+
+    A mark is a group of touching pixels (by side or corner) of at least
+    ``mark_level`` coverage. At a small size a dot can fall between pixels
+    and stay just under the ink level everywhere; it would vanish.
+    """
+    left = {pixel for pixel, level in coverage.items() if level >= mark_level}
+    kept: list[Pixel] = []
+    while left:
+        stack = [left.pop()]
+        mark = set(stack)
+        while stack:
+            x, y = stack.pop()
+            for neighbour in ((x + dx, y + dy) for dx in (-1, 0, 1) for dy in (-1, 0, 1)):
+                if neighbour in left:
+                    left.remove(neighbour)
+                    mark.add(neighbour)
+                    stack.append(neighbour)
+        if all(coverage[pixel] < ink_level for pixel in mark):
+            kept.append(max(sorted(mark), key=lambda pixel: coverage[pixel]))
+    return kept
 
 
 def contextual_advance(

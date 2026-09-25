@@ -8,19 +8,26 @@ from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.metroid_fusion import (
     ARROW,
     DEFAULT_WIDTH,
+    DIALECTS,
     END,
     FONT_CODES,
     FONT_GRAPHICS,
     FONT_WIDTHS,
+    INTRO,
     LATIN_CODES,
+    NAVIGATION,
     NEW_PAGE,
     NEWLINE,
+    QUESTION,
+    QUESTION_PROMPT,
     ROM_BASE,
     TILE_ROW_BYTES,
     MfCommand,
     MfFont,
     command_skeleton,
     encode_text,
+    is_command,
+    lay_out,
     line_widths,
     notation_skeleton,
     pack_units,
@@ -157,3 +164,96 @@ def test_lines_add_up_glyph_widths():
     font = MfFont(tuple([8] * 0x40 + [6] + [7] * (FONT_CODES - 0x41)), b"")
     units = pieces_units(parse_notation("ab c\nd{FC00}{FD00}ef{E120}"))
     assert line_widths(units, font) == (7 + 7 + 6 + 7, 7, 14)
+
+
+# ---------------------------------------------------------------------------
+# The briefings and their question
+
+BRIEFING_SAMPLE = (
+    "{B003}Go to the {8102}Old Dock{8100}.{FD00}Stay low\nand {E000}wait.{FC00}"
+    "{E105}Then {8103}run{8100}.{FB00}Done."
+)
+QUESTION_SAMPLE = "{8017}Ready{char 041F}\n{8057}{8340}Yes {83A0}No"
+
+
+@pytest.mark.parametrize(
+    ("unit", "commands"),
+    [
+        (NEWLINE, {INTRO, NAVIGATION, QUESTION}),
+        (ARROW, {INTRO, NAVIGATION}),
+        (QUESTION_PROMPT, {NAVIGATION}),
+        (0xE105, {INTRO, NAVIGATION}),
+        (0xE000, {NAVIGATION}),
+        (0x8102, {NAVIGATION}),
+        (0x8017, {NAVIGATION, QUESTION}),
+        (0x83A0, {NAVIGATION, QUESTION}),
+        (0x9123, {NAVIGATION}),
+        (0xB003, {NAVIGATION}),
+        # Glyphs everywhere: a briefing draws Bxxx past its events, Dxxx and odd Fxxx.
+        (0xB040, set()),
+        (0xD120, set()),
+        (0xFA00, set()),
+        (0x0081, set()),
+    ],
+)
+def test_each_routine_reads_its_own_commands(unit, commands):
+    assert {dialect for dialect in DIALECTS if is_command(unit, dialect)} == commands
+
+
+def test_an_unknown_dialect_is_refused():
+    with pytest.raises(ValueError):
+        is_command(NEWLINE, "menu")
+
+
+@pytest.mark.parametrize(
+    ("text", "dialect"), [(BRIEFING_SAMPLE, NAVIGATION), (QUESTION_SAMPLE, QUESTION)]
+)
+def test_briefing_and_question_notation_round_trips(text, dialect):
+    units = pieces_units(parse_notation(text, dialect), dialect)
+    assert text_notation(units, dialect) == text
+    # The intro reads their commands as glyphs, and has no notation for them.
+    with pytest.raises(ClassicRetroError) as caught:
+        parse_notation(text)
+    assert caught.value.code is ErrorCode.UNSUPPORTED_CONTROL_CODE
+
+
+def test_skeletons_leave_out_moving_line_ends_and_pen_amounts():
+    # A line end after a colour still follows text; a pen advance keeps its place.
+    assert notation_skeleton(parse_notation("a{8102}b{8100}\nc{FD00}\nd", NAVIGATION)) == (
+        "{8102}",
+        "{8100}",
+        "{FD00}",
+        "\n",
+    )
+    assert command_skeleton(pieces_units(parse_notation(QUESTION_SAMPLE, QUESTION), QUESTION),
+                            QUESTION) == ("{80xx}", "{80xx}", "{8340}", "{83A0}")  # fmt: skip
+
+
+def test_a_briefing_lays_out_its_boxes():
+    units = pieces_units(parse_notation(BRIEFING_SAMPLE, NAVIGATION), NAVIGATION)
+    lines = lay_out(units, lambda unit: 6 if unit == 0x40 else 8, NAVIGATION)
+    shape = [(line.page, line.number, line.start, line.waits) for line in lines]
+    assert shape == [
+        (0, 0, 0, True),
+        (1, 0, 0, False),
+        (1, 1, NEWLINE, True),
+        (1, 2, ARROW, True),
+        (2, 0, 0, False),
+    ]
+    # "Go to the " is white, the name in colour 2; the line ends after its full stop.
+    first = lines[0].places
+    assert [place.colour for place in first] == [0] * 10 + [2] * 8 + [0]
+    assert lines[0].width == 7 * 8 + 3 * 6 + 7 * 8 + 6 + 8
+    assert {place.colour for place in lines[3].places} == {0, 3}
+
+
+def test_the_question_places_its_options():
+    units = pieces_units(parse_notation(QUESTION_SAMPLE, QUESTION), QUESTION)
+    first, second = lay_out(units, lambda unit: 8, QUESTION)
+    assert first.places[0].pen == 0x17 and second.start == NEWLINE
+    pens = [place.pen for place in second.places]
+    # Yes at 0x40; No at 0xA0 less the question's 16 pixels.
+    assert pens == [0x40, 0x48, 0x50, 0x58, 0x90, 0x98]
+    # A briefing puts 83A0 at 0xA0 itself.
+    (line,) = lay_out((0x83A0, 0xC1), lambda unit: 8, NAVIGATION)
+    assert line.places[0].pen == 0xA0
