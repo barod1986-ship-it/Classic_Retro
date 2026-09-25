@@ -94,6 +94,7 @@ runs the same way for every target.
 | `mmbn` | Mega Man Battle Network (USA) | ROM overlay | `line-cells` |
 | `mlss` | Mario & Luigi: Superstar Saga (USA) | ROM overlay | `glyph-font` |
 | `fomt` | Harvest Moon: Friends of Mineral Town (USA) | ROM overlay | `line-cells` |
+| `advance-wars` | Advance Wars (USA, Rev 1) | ROM overlay | `glyph-font` |
 
 ```text
 classic-retro targets list                          # every target, its documents and operations
@@ -127,7 +128,7 @@ classic-retro targets strip fomt.workspace.json --out fomt.json
 Every check and build holds a translations file against the originals pinned in the
 target's code. See [the translator's guide](docs/TRANSLATING_AR.md) (in Arabic).
 
-The three rendering strategies are what the nine targets proved, not the only ones
+The three rendering strategies are what the ten targets proved, not the only ones
 possible. Games on other platforms will need other methods, and the strategy and
 target registries accept them from this repository or from other packages through
 entry points. See [the rendering strategies](docs/ARABIC_STRATEGIES.md) and
@@ -155,7 +156,7 @@ A script holds commands such as `run 300`, `tap START`, `shot menu.png`,
 
 ## Repository status
 
-**Localization platform with nine reference targets, all on the Game Boy Advance so far.**
+**Localization platform with ten reference targets, all on the Game Boy Advance so far.**
 
 The first end-to-end example translates the 13 Professor OAK speech strings in
 the new-game intro. This is a renderer/font test, not a complete game translation.
@@ -247,5 +248,17 @@ Arabic line (the character expanders hand it over reversed), and the flashback's
 the summer at the old man's farm and the first morning (33 strings and 5 name tags). See
 [the Harvest Moon testing guide](docs/FOMT_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/FOMT_ARABIC_RENDERER.md).
+
+The tenth reference target is **Advance Wars (USA, Rev 1)**, which has no decompilation: a
+binary overlay patches your own ROM inside its padding (it stays 4 MiB). The game's printer draws
+a whole line left to right into a strip of 8x16 tile columns, so the overlay leaves the pen alone
+and mirrors the result: thirteen small Thumb hooks put each tile column into the tilemap at its
+mirror with the hardware's horizontal flip, draw Arabic glyphs stored flipped from a font of their
+own, drop the one-pixel gap between letters, and lay out the Yes/No answers and cursor right to
+left. The player's name keeps the game's letters (reversed in place while drawn, each one flipped)
+and reads left to right inside the Arabic line. Nell's whole opening is in Arabic, with both
+answers to both of her questions (14 messages). See
+[the Advance Wars testing guide](docs/ADVANCE_WARS_ARABIC_TEST_AR.md) and
+[the renderer notes](docs/ADVANCE_WARS_ARABIC_RENDERER.md).
 
 See [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md).

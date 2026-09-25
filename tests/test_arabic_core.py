@@ -31,6 +31,7 @@ from classic_retro.font.glyph_raster import (
     form_bounds,
     largest_fitting_size,
     pattern_pixels,
+    raised_form,
     sized_font,
     two_bit_rows,
 )
@@ -225,6 +226,18 @@ def test_alef_with_mark_needs_stroke_below_the_mark():
     short = DrawnForm(frozenset({(0, 0), (0, 1)}), frozenset(), 2)
     with pytest.raises(FormDoesNotFit):
         alef_with_mark(ALEF, short, ("##", "#."))
+
+
+def test_a_form_below_the_cell_is_raised_and_keeps_its_join():
+    form = DrawnForm(frozenset({(0, 12), (3, 12), (5, 8)}), frozenset({(1, 12)}), 6)
+    final = raised_form(ALEF_FINAL, form, height=12, baseline=9)
+    assert final.ink == frozenset({(0, 11), (3, 11), (5, 7), (5, 8)})
+    assert final.soft == frozenset({(1, 11)}) and final.advance == 6
+    # An isolated form does not join: no pixel is added.
+    assert raised_form(ALEF, form, height=12, baseline=9).ink == frozenset(
+        {(0, 11), (3, 11), (5, 7)}
+    )
+    assert raised_form(ALEF, form, height=13, baseline=9) == form
 
 
 def test_drop_shadow_stays_inside_the_glyph_and_off_its_ink():

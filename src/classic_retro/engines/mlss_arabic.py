@@ -59,7 +59,7 @@ from classic_retro.engines.mlss import (
     measure_text,
     notation_skeleton,
 )
-from classic_retro.font.arabic_outline import contextual_font_data, joins_right_neighbour
+from classic_retro.font.arabic_outline import contextual_font_data
 from classic_retro.font.glyph_raster import (
     DrawnForm,
     FormDoesNotFit,
@@ -67,6 +67,7 @@ from classic_retro.font.glyph_raster import (
     arabic_font_file,
     draw_form,
     largest_fitting_size,
+    raised_form,
 )
 from classic_retro.font.previews import glyph_atlas, pages_right_to_left, preview_sheet
 from classic_retro.text.commands import command_codes, command_token, require_same_commands
@@ -303,15 +304,7 @@ def _values(form: DrawnForm) -> dict[tuple[int, int], int]:
 
 def _raised(character: str, form: DrawnForm) -> DrawnForm:
     """One row up when the form reaches below the cell, keeping its join."""
-    if max(y for _, y in form.ink | form.soft) < CELL_HEIGHT:
-        return form
-    ink = {(x, y - 1) for x, y in form.ink}
-    soft = {(x, y - 1) for x, y in form.soft}
-    if joins_right_neighbour(character):
-        join = (form.advance - 1, BASELINE - 1)
-        ink.add(join)
-        soft.discard(join)
-    return DrawnForm(frozenset(ink), frozenset(soft), form.advance)
+    return raised_form(character, form, height=CELL_HEIGHT, baseline=BASELINE)
 
 
 def arabic_command_token(token_id: str, command: MlssCommand) -> InlineToken:

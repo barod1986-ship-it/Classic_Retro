@@ -17,6 +17,7 @@
 | `mmbn.json` | Mega Man Battle Network |
 | `mlss.json` | Mario & Luigi: Superstar Saga |
 | `fomt.json` | Harvest Moon: Friends of Mineral Town |
+| `advance-wars.json` | Advance Wars |
 
 في كل ملف:
 

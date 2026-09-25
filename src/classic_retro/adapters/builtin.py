@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from classic_retro.adapters.registry import AdapterRegistry
+from classic_retro.engines.advance_wars import AdvanceWarsEngineAdapter
 from classic_retro.engines.ff6a import Ff6aEngineAdapter
 from classic_retro.engines.fire_emblem import FireEmblemEngineAdapter
 from classic_retro.engines.fomt import FomtEngineAdapter
@@ -10,6 +11,7 @@ from classic_retro.engines.mmbn import MmbnEngineAdapter
 from classic_retro.engines.pmd import PmdEngineAdapter
 from classic_retro.engines.pokemon_gen3 import PokemonGen3EngineAdapter
 from classic_retro.engines.tmc import TmcEngineAdapter
+from classic_retro.games.advance_wars import AdvanceWarsUsaGameAdapter
 from classic_retro.games.final_fantasy_vi_advance import FinalFantasyVIAdvanceUsaGameAdapter
 from classic_retro.games.fire_emblem_sacred_stones import FireEmblemSacredStonesUsaGameAdapter
 from classic_retro.games.golden_sun import GoldenSunUsaEuropeGameAdapter
@@ -50,6 +52,7 @@ def register_builtin_adapters(registry: AdapterRegistry) -> None:
     registry.register_engine(MmbnEngineAdapter())
     registry.register_engine(MlssEngineAdapter())
     registry.register_engine(FomtEngineAdapter())
+    registry.register_engine(AdvanceWarsEngineAdapter())
     registry.register_game(PokemonFireRedRev1GameAdapter())
     registry.register_game(ZeldaMinishCapUsaGameAdapter())
     registry.register_game(FinalFantasyVIAdvanceUsaGameAdapter())
@@ -59,3 +62,4 @@ def register_builtin_adapters(registry: AdapterRegistry) -> None:
     registry.register_game(MegaManBattleNetworkUsaGameAdapter())
     registry.register_game(MarioLuigiSuperstarSagaUsaGameAdapter())
     registry.register_game(HarvestMoonFomtUsaGameAdapter())
+    registry.register_game(AdvanceWarsUsaGameAdapter())

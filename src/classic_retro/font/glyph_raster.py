@@ -211,6 +211,24 @@ def alef_with_mark(
     return DrawnForm(frozenset(ink), frozenset(soft), advance)
 
 
+def raised_form(character: str, form: DrawnForm, *, height: int, baseline: int) -> DrawnForm:
+    """One row up when the form reaches below a cell ``height`` rows tall.
+
+    Only the dots or tail of a few forms (final and isolated yeh) go that low.
+    A form that joins the glyph on its right keeps a pixel on the joining row,
+    just above ``baseline``, at its right edge.
+    """
+    if max(y for _, y in form.ink | form.soft) < height:
+        return form
+    ink = {(x, y - 1) for x, y in form.ink}
+    soft = {(x, y - 1) for x, y in form.soft}
+    if joins_right_neighbour(character):
+        join = (form.advance - 1, baseline - 1)
+        ink.add(join)
+        soft.discard(join)
+    return DrawnForm(frozenset(ink), frozenset(soft), form.advance)
+
+
 def drop_shadow(
     ink: Collection[Pixel], offsets: Iterable[Pixel], width: int, height: int
 ) -> set[Pixel]:

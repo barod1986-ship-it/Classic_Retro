@@ -32,6 +32,7 @@ from classic_retro.localization.translations import (
     load_translation_set,
     translation_set_from_dict,
 )
+from classic_retro.rom.advance_wars_arabic_script import advance_wars_arabic_messages
 from classic_retro.rom.ff6a_arabic_script import ff6a_arabic_messages
 from classic_retro.rom.fire_emblem_arabic_script import (
     fire_emblem_arabic_legend,
@@ -56,6 +57,7 @@ TARGETS = (
     "mmbn",
     "mlss",
     "fomt",
+    "advance-wars",
 )
 RLE = chr(0x202B)
 
@@ -82,6 +84,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "mmbn": len(mmbn_arabic_sections()),
         "mlss": len(mlss_arabic_messages()),
         "fomt": len(fomt_arabic_strings()) + len(fomt_arabic_names()),
+        "advance-wars": len(advance_wars_arabic_messages()),
     }
     assert counts == {
         "firered": 13,
@@ -93,6 +96,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "mmbn": 50,
         "mlss": 12,
         "fomt": 38,
+        "advance-wars": 14,
     }
     for target in TARGETS:
         translations = builtin_translation_set(target)
