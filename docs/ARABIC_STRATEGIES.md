@@ -2,7 +2,7 @@
 
 Version: 1
 
-The ten reference targets put Arabic on screen with three rendering strategies.
+The eleven reference targets put Arabic on screen with three rendering strategies.
 They are a starting set, not a closed list. Engines on other platforms will need
 other methods, and the registry (`classic_retro.localization.strategies`) accepts
 them the same way it holds these three:
@@ -22,7 +22,7 @@ already worked.
 ### `glyph-font`: right-to-left glyph font (proven)
 
 Used by: `firered`, `minish-cap`, `ff6a`, `golden-sun`, `fire-emblem` (dialogue),
-`pmd-red`, `mlss`, `advance-wars`.
+`pmd-red`, `mlss`, `advance-wars`, `metroid-fusion`.
 
 Every contextual form of the letters (the 133 presentation forms of
 `arabic/repertoire.py`) is drawn from the reference font into the game's own font
@@ -74,7 +74,7 @@ HarfBuzz and redrawn in the game's own image format and palette.
 
 | Way | How | Targets |
 |-----|-----|---------|
-| Mirrored draw | The game's pen keeps advancing left to right. Only where a glyph (or cell) is drawn moves to the mirror of the pen inside the line: `draw_x = left + right - pen - width`, or column `27 - x` for 28-column cells | `minish-cap`, `ff6a`, `golden-sun`, `fire-emblem`, `pmd-red`, `mlss`, `mmbn`, `fomt` |
+| Mirrored draw | The game's pen keeps advancing left to right. Only where a glyph (or cell) is drawn moves to the mirror of the pen inside the line: `draw_x = left + right - pen - width`, or column `27 - x` for 28-column cells | `minish-cap`, `ff6a`, `golden-sun`, `fire-emblem`, `pmd-red`, `mlss`, `mmbn`, `fomt`, `metroid-fusion` |
 | Mirrored tilemap | The game draws the line left to right into its tiles as usual; each tile column goes into the tilemap at its mirror inside the text area, with the hardware's horizontal flip, and the glyphs are stored flipped | `advance-wars` |
 | Reversed pen | The pen starts at the line's right edge and subtracts each advance before drawing. Newline, page clear and scroll restore the right edge | `firered` |
 
@@ -89,8 +89,11 @@ are valid. A renderer that allows neither
 may need a third way, and that should be recorded here when it appears.
 
 Things that sit outside the text also need mirroring. Examples are a menu cursor
-(`pmd-red` moves it to the window's right edge, flipped) and a key or page arrow
-(`firered` and `pmd-red` place it left of the text).
+(`pmd-red` moves it to the window's right edge, flipped), a key or page arrow
+(`firered` and `pmd-red` place it left of the text, `metroid-fusion` at the other end
+of the bottom line), a typing cursor (`metroid-fusion` keeps it left of the text) and
+an effect tied to the pen's tiles (`metroid-fusion` fades each tile of a monologue page
+in at its mirrored column).
 
 ## How right-to-left text is marked
 
@@ -99,7 +102,7 @@ Things that sit outside the text also need mirroring. Examples are a menu cursor
 | Direction control codes the source overlay adds (`FC 19 xx` / `FC 1A`, `04 16` / `04 17`) | `firered`, `minish-cap` |
 | The first code of a message (`0x5FF`, `0x0B`, `0x1E`) | `ff6a`, `golden-sun`, `fire-emblem` |
 | The glyph itself: a charmap flag, or a glyph of the right-to-left font | `pmd-red`, `mlss` |
-| The text's own codes or address: cell codes, a bank table sorted by text address, or the address range of the Arabic bank | `fomt`, `mmbn`, `advance-wars` |
+| The text's own codes or address: cell codes, a bank table sorted by text address, or the address range of the Arabic bank | `fomt`, `mmbn`, `advance-wars`, `metroid-fusion` |
 
 English text never carries the marker, so untranslated messages keep the original
 path.
@@ -112,6 +115,9 @@ path.
   of its own, drawn by the overlay's routine for text of the Arabic bank).
 - Codes above the game's glyph range that the decoder is taught to keep: Golden Sun
   (`0x100 + slot`, with its own Huffman trees for the translated strings).
+- Codes whose glyph, by the game's own address formula, falls in the padding at the end
+  of the image: Metroid Fusion (`0x9000` up; the game reads glyph `c` at
+  `sheet + 32 * c`, so only the widths need a hook).
 - Unused two-byte codes added to the charmap: Pokémon Mystery Dungeon.
 - An empty font slot the game already selects with a prefix byte: Mario & Luigi
   (font 1 of every font list).
@@ -140,9 +146,9 @@ The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
 - Use the largest size whose forms fit the game's rows around its baseline:
   - 10 px for FF6 Advance, Golden Sun, Mario & Luigi, Harvest Moon and Advance Wars
   - 9 px for Pokémon Mystery Dungeon
-  - 11 px for Mega Man Battle Network
+  - 11 px for Mega Man Battle Network and Metroid Fusion
 - Draw marks that vanish at that size by hand:
-  - hamza or madda over alef (Mario & Luigi, Pokémon Mystery Dungeon)
+  - hamza or madda over alef (Mario & Luigi, Pokémon Mystery Dungeon, Metroid Fusion)
   - hamza on a carrier (Harvest Moon)
 - Adjust a form that does not fit: raise final yeh, or split a 13-pixel seen into
   two glyphs (Advance Wars splits every form wider than its 8-pixel glyphs).
@@ -152,6 +158,8 @@ The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
   `font/glyph_raster.py`; FireRed, the first target, keeps its own older rule.
 - Shadows follow the game's own. Golden Sun keeps each glyph's shadow inside its
   advance. Harvest Moon shades the whole line, so the shadow crosses cell edges.
+  Metroid Fusion outlines each glyph on its eight sides, like its Latin letters, and
+  leaves the outline out on a joining side, where the neighbour's ink goes on.
 
 ## The shared core
 
@@ -195,7 +203,7 @@ commands.
 ## Candidates for other platforms (not implemented)
 
 None of these has been built or tested. They are research notes for engines the
-ten targets did not cover, and each becomes an `experimental` strategy together
+eleven targets did not cover, and each becomes an `experimental` strategy together
 with its first target.
 
 - **Tile-composed variable-width text.** Many NES, Game Boy and SNES engines put

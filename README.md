@@ -95,6 +95,7 @@ runs the same way for every target.
 | `mlss` | Mario & Luigi: Superstar Saga (USA) | ROM overlay | `glyph-font` |
 | `fomt` | Harvest Moon: Friends of Mineral Town (USA) | ROM overlay | `line-cells` |
 | `advance-wars` | Advance Wars (USA, Rev 1) | ROM overlay | `glyph-font` |
+| `metroid-fusion` | Metroid Fusion (USA) | ROM overlay | `glyph-font` |
 
 ```text
 classic-retro targets list                          # every target, its documents and operations
@@ -128,7 +129,7 @@ classic-retro targets strip fomt.workspace.json --out fomt.json
 Every check and build holds a translations file against the originals pinned in the
 target's code. See [the translator's guide](docs/TRANSLATING_AR.md) (in Arabic).
 
-The three rendering strategies are what the ten targets proved, not the only ones
+The three rendering strategies are what the eleven targets proved, not the only ones
 possible. Games on other platforms will need other methods, and the strategy and
 target registries accept them from this repository or from other packages through
 entry points. See [the rendering strategies](docs/ARABIC_STRATEGIES.md) and
@@ -156,7 +157,7 @@ A script holds commands such as `run 300`, `tap START`, `shot menu.png`,
 
 ## Repository status
 
-**Localization platform with ten reference targets, all on the Game Boy Advance so far.**
+**Localization platform with eleven reference targets, all on the Game Boy Advance so far.**
 
 The first end-to-end example translates the 13 Professor OAK speech strings in
 the new-game intro. This is a renderer/font test, not a complete game translation.
@@ -260,5 +261,17 @@ and reads left to right inside the Arabic line. Nell's whole opening is in Arabi
 answers to both of her questions (14 messages). See
 [the Advance Wars testing guide](docs/ADVANCE_WARS_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/ADVANCE_WARS_ARABIC_RENDERER.md).
+
+The eleventh reference target is **Metroid Fusion (USA)**. Its decompilation names the code but
+takes its data from the original, so a binary overlay patches your own ROM inside its padding (it
+stays 8 MiB). The intro's three text routines keep their pen; Thumb hooks mirror where each glyph
+lands on the 224-pixel line, fade a monologue page's tiles in from the right, and move the
+next-page arrow and the ship computer's typing cursor to the other side. The padding is 7 MiB from
+the code, beyond a BL's reach, so the hooks are called through veneers written over an unused
+function. Arabic glyph codes start at 0x9000, where the game's own glyph address formula lands in
+the padding: the glyphs are outlined like the game's letters and up to 16 pixels wide. The whole
+new-game intro is in Arabic, Samus's narration from SR388 to her new mission on the B.S.L station
+(12 monologues). See [the Metroid Fusion testing guide](docs/METROID_FUSION_ARABIC_TEST_AR.md) and
+[the renderer notes](docs/METROID_FUSION_ARABIC_RENDERER.md).
 
 See [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md).

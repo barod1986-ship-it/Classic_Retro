@@ -18,6 +18,7 @@
 | `mlss.json` | Mario & Luigi: Superstar Saga |
 | `fomt.json` | Harvest Moon: Friends of Mineral Town |
 | `advance-wars.json` | Advance Wars |
+| `metroid-fusion.json` | Metroid Fusion |
 
 في كل ملف:
 
