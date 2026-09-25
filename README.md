@@ -272,8 +272,8 @@ padding is 7 MiB from the code, beyond a BL's reach, so the hooks are called thr
 written over an unused function. Arabic glyph codes start at 0xB040, where the game's own glyph
 address formula lands in the padding and no routine reads a command: the glyphs are outlined like
 the game's letters and up to 16 pixels wide. The opening is in Arabic: Samus's narration from
-SR388 to her new mission on the B.S.L station (12 monologues), then the first briefing on the
-station's map with its names in colour and its two questions. See
+SR388 to her new mission on the B.S.L station (12 monologues), then the first two briefings on
+the station's map with their names in colour and the two questions. See
 [the Metroid Fusion testing guide](docs/METROID_FUSION_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/METROID_FUSION_ARABIC_RENDERER.md).
 

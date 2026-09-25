@@ -100,7 +100,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "mlss": 12,
         "fomt": 38,
         "advance-wars": 14,
-        "metroid-fusion": 16,
+        "metroid-fusion": 18,
     }
     for target in TARGETS:
         translations = builtin_translation_set(target)
