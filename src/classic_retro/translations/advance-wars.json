@@ -1,0 +1,120 @@
+{
+  "schema_version": "1.0",
+  "target": "advance-wars",
+  "language": "ar",
+  "notation": "Logical Arabic in the engine notation (engines.advance_wars). Keep every control code of the original, in order: {0F} ends a page (Nell waits for a key), {15} is the player's name and {16} asks Yes/No; put it on a line of its own, where the answers are drawn. Line ends after text (\\n) may move; a page holds two lines of at most 176 pixels.",
+  "glossary": [
+    {
+      "term": "Advance Wars",
+      "text": "أدفانس وورز"
+    },
+    {
+      "term": "Nell",
+      "text": "نيل"
+    },
+    {
+      "term": "Orange Star",
+      "text": "النجمة البرتقالية"
+    },
+    {
+      "term": "Field Training",
+      "text": "التدريب الميداني"
+    },
+    {
+      "term": "Vs. Mode",
+      "text": "نمط المواجهة"
+    },
+    {
+      "term": "Link Mode",
+      "text": "نمط الربط"
+    },
+    {
+      "term": "Mode Select Menu",
+      "text": "قائمة اختيار النمط"
+    },
+    {
+      "term": "Troop Orders",
+      "text": "أوامر القوات"
+    },
+    {
+      "term": "Fog of War",
+      "text": "ضباب الحرب"
+    },
+    {
+      "term": "Game Boy Advance",
+      "text": "جيم بوي أدفانس"
+    }
+  ],
+  "entries": [
+    {
+      "id": "welcome",
+      "context": "Nell; script pointer 0x082f0b7c",
+      "text": "أهلا بك في أدفانس وورز!{0F}"
+    },
+    {
+      "id": "name_prompt",
+      "context": "Nell; script pointer 0x082f06bc",
+      "text": "من فضلك، اكتب اسمك.{0F}"
+    },
+    {
+      "id": "name_confirm",
+      "context": "Nell; script pointer 0x082f087c",
+      "text": "هل هذا صحيح؟\n{16}"
+    },
+    {
+      "id": "nice_to_meet",
+      "context": "Nell; script pointer 0x082f0c0c",
+      "text": "سعدت بلقائك يا\n{15}.{0F}أنا نيل.{0F}"
+    },
+    {
+      "id": "orange_star_co",
+      "context": "Nell; script pointer 0x082f0c2c",
+      "text": "أنا قائدة في جيش\nالنجمة البرتقالية.{0F}"
+    },
+    {
+      "id": "first_time",
+      "context": "Nell; script pointer 0x082f0c4c",
+      "text": "هل هذه أول مرة تلعب فيها؟\n{16}"
+    },
+    {
+      "id": "modes_first_time",
+      "context": "Nell; script pointer 0x082f0d3c",
+      "text": "حسنا، دعني أشرح لك\nبعض الأمور باختصار.{0F}في اللعبة عدة أنماط\nمختلفة للعب.{0F}نمط المواجهة للعب الجماعي\nعلى جهاز جيم بوي أدفانس واحد.{0F}لتلعب أدفانس وورز على عدة أجهزة،\nصل جهازك بأجهزة أصدقائك{0F}وجرب نمط الربط.{0F}ثم هناك التدريب الميداني.{0F}إن كانت هذه أول مرة تلعب فيها،\nفابدأ بالتدريب الميداني.{0F}من فضلك اختر التدريب الميداني\nمن قائمة اختيار النمط.{0F}في التدريب الميداني سأعلمك\nكيف تتحكم في اللعبة{0F}وأساسيات خطط القتال.{0F}وحين تدخل التدريب الميداني،\nأكمل المهام بالترتيب{0F}من الأعلى إلى الأسفل.{0F}"
+    },
+    {
+      "id": "first_lesson",
+      "context": "Nell; script pointer 0x082f0d5c",
+      "text": "الدرس الأول عن أوامر القوات.\nلنبدأ من هنا!{0F}"
+    },
+    {
+      "id": "quick_way",
+      "context": "Nell; script pointer 0x082f0c6c",
+      "text": "آه، فهمت.{0F}في أدفانس وورز أقدم لك\nنصائح في اللعب والخطط{0F}في التدريب الميداني.{0F}وفيه أيضا شرح\nلكل قواعد اللعبة.{0F}إن كنت لا تريد ذلك حقا، يمكنني\nأن أعلمك طريقة لتجاوز{0F}التدريب الميداني بسرعة، لكن...{0F}هل تريد أن تخوض{0F}التدريب الميداني كاملا؟\n{16}"
+    },
+    {
+      "id": "for_the_best",
+      "context": "Nell; script pointer 0x082f0dfc",
+      "text": "أظن أن هذا هو الأفضل!{0F}"
+    },
+    {
+      "id": "mode_select",
+      "context": "Nell; script pointer 0x082f0e1c",
+      "text": "تصل إلى التدريب الميداني\nمن قائمة اختيار النمط.{0F}وفي القائمة أيضا نمط المواجهة،\nوهو نمط للعب الجماعي{0F}على جهاز جيم بوي أدفانس واحد.{0F}وهناك نمط الربط، للعب الجماعي\nعلى عدة أجهزة.{0F}ثم التدريب الميداني. من فضلك\nادخله وأكمل المهام{0F}بالترتيب من الأعلى إلى الأسفل.{0F}"
+    },
+    {
+      "id": "first_lesson_luck",
+      "context": "Nell; script pointer 0x082f0e3c",
+      "text": "الدرس الأول عن أوامر القوات.\nبالتوفيق!{0F}"
+    },
+    {
+      "id": "modes_fog_of_war",
+      "context": "Nell; script pointer 0x082f0c8c",
+      "text": "حسنا، دعني أشرح لك\nبعض الأمور باختصار.{0F}في اللعبة عدة أنماط\nمختلفة للعب.{0F}نمط المواجهة للعب الجماعي\nعلى جهاز جيم بوي أدفانس واحد.{0F}لتلعب أدفانس وورز على عدة أجهزة،\nصل جهازك بأجهزة أصدقائك{0F}وجرب نمط الربط.{0F}ثم هناك التدريب الميداني،\nحيث أقدم نصائح اللعب{0F}وإرشادات الخطط.{0F}عليك على الأقل أن تنهي آخر مهمة\nفي التدريب الميداني: ضباب الحرب.{0F}وحين تنهيها، ستفتح لك\nأنماط أخرى للعب.{0F}"
+    },
+    {
+      "id": "move_out",
+      "context": "Nell; script pointer 0x082f0cac",
+      "text": "انطلق، وبالتوفيق!{0F}"
+    }
+  ]
+}

@@ -3,13 +3,13 @@
 Version: 1
 
 A **localization target** is one supported game revision together with the way it
-is put into Arabic. Nine targets are registered today:
+is put into Arabic. Ten targets are registered today:
 
 ```text
 classic-retro targets list
 ```
 
-This guide collects what those nine taught, in the order the work happens. It is a
+This guide collects what those ten taught, in the order the work happens. It is a
 checklist, not a template: every game gets its own research, and a game that fits
 none of the existing methods gets a new one (see
 [ARABIC_STRATEGIES.md](ARABIC_STRATEGIES.md)).

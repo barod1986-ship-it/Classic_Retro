@@ -2,7 +2,7 @@
 
 Version: 1
 
-The nine reference targets put Arabic on screen with three rendering strategies.
+The ten reference targets put Arabic on screen with three rendering strategies.
 They are a starting set, not a closed list. Engines on other platforms will need
 other methods, and the registry (`classic_retro.localization.strategies`) accepts
 them the same way it holds these three:
@@ -22,7 +22,7 @@ already worked.
 ### `glyph-font`: right-to-left glyph font (proven)
 
 Used by: `firered`, `minish-cap`, `ff6a`, `golden-sun`, `fire-emblem` (dialogue),
-`pmd-red`, `mlss`.
+`pmd-red`, `mlss`, `advance-wars`.
 
 Every contextual form of the letters (the 133 presentation forms of
 `arabic/repertoire.py`) is drawn from the reference font into the game's own font
@@ -75,13 +75,17 @@ HarfBuzz and redrawn in the game's own image format and palette.
 | Way | How | Targets |
 |-----|-----|---------|
 | Mirrored draw | The game's pen keeps advancing left to right. Only where a glyph (or cell) is drawn moves to the mirror of the pen inside the line: `draw_x = left + right - pen - width`, or column `27 - x` for 28-column cells | `minish-cap`, `ff6a`, `golden-sun`, `fire-emblem`, `pmd-red`, `mlss`, `mmbn`, `fomt` |
+| Mirrored tilemap | The game draws the line left to right into its tiles as usual; each tile column goes into the tilemap at its mirror inside the text area, with the hardware's horizontal flip, and the glyphs are stored flipped | `advance-wars` |
 | Reversed pen | The pen starts at the line's right edge and subtracts each advance before drawing. Newline, page clear and scroll restore the right edge | `firered` |
 
 Mirrored draw became the default. It changes one point of the renderer, and the
 game's measuring, wrapping, centring, choices, typewriter and scrolling keep their
 meaning, so the typewriter reveals Arabic from the right with no further change.
 Reversed pen needs control over every place that moves or resets the pen. FireRed
-had that through its decompilation. Both are valid. A renderer that allows neither
+had that through its decompilation. Mirrored tilemap suits a printer that draws a whole
+line into a strip of tiles, where no single point places a glyph (Advance Wars): the
+tilemap write is that point, and the flip keeps the glyphs' pixels untouched. All three
+are valid. A renderer that allows neither
 may need a third way, and that should be recorded here when it appears.
 
 Things that sit outside the text also need mirroring. Examples are a menu cursor
@@ -95,7 +99,7 @@ Things that sit outside the text also need mirroring. Examples are a menu cursor
 | Direction control codes the source overlay adds (`FC 19 xx` / `FC 1A`, `04 16` / `04 17`) | `firered`, `minish-cap` |
 | The first code of a message (`0x5FF`, `0x0B`, `0x1E`) | `ff6a`, `golden-sun`, `fire-emblem` |
 | The glyph itself: a charmap flag, or a glyph of the right-to-left font | `pmd-red`, `mlss` |
-| The text's own codes or address: cell codes, or a bank table sorted by text address | `fomt`, `mmbn` |
+| The text's own codes or address: cell codes, a bank table sorted by text address, or the address range of the Arabic bank | `fomt`, `mmbn`, `advance-wars` |
 
 English text never carries the marker, so untranslated messages keep the original
 path.
@@ -104,7 +108,8 @@ path.
 
 - A free range of an existing code page: `F9 40..CF` in FireRed's extra-symbol page.
 - A font of its own, selected in right-to-left mode: FF6 Advance (a second `FONT`),
-  Fire Emblem (a second glyph table), Minish Cap (a font page).
+  Fire Emblem (a second glyph table), Minish Cap (a font page), Advance Wars (256 codes
+  of its own, drawn by the overlay's routine for text of the Arabic bank).
 - Codes above the game's glyph range that the decoder is taught to keep: Golden Sun
   (`0x100 + slot`, with its own Huffman trees for the translated strings).
 - Unused two-byte codes added to the charmap: Pokémon Mystery Dungeon.
@@ -121,7 +126,8 @@ right-to-left line.
 - Expand it reversed: FireRed (`FC 1B` expands a placeholder reversed by glyph
   units), Golden Sun (a hook reverses a copied name in right-to-left messages),
   Harvest Moon (the expanders hand the name over reversed, one game glyph per
-  character).
+  character), Advance Wars (a hook reverses the name in place while it is drawn and
+  flips each of the game's letters for the mirrored tilemap).
 - Reverse the variable buffers once when a dialogue changes direction: Minish Cap.
 - Static Latin words as islands in the game's glyphs: Mega Man Battle Network.
 - Refused for now, with the reason in each target's notes: FF6 Advance, Fire Emblem,
@@ -132,14 +138,14 @@ right-to-left line.
 The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
 
 - Use the largest size whose forms fit the game's rows around its baseline:
-  - 10 px for FF6 Advance, Golden Sun, Mario & Luigi and Harvest Moon
+  - 10 px for FF6 Advance, Golden Sun, Mario & Luigi, Harvest Moon and Advance Wars
   - 9 px for Pokémon Mystery Dungeon
   - 11 px for Mega Man Battle Network
 - Draw marks that vanish at that size by hand:
   - hamza or madda over alef (Mario & Luigi, Pokémon Mystery Dungeon)
   - hamza on a carrier (Harvest Moon)
 - Adjust a form that does not fit: raise final yeh, or split a 13-pixel seen into
-  two glyphs.
+  two glyphs (Advance Wars splits every form wider than its 8-pixel glyphs).
 - Medial and final forms end at their last ink column, so joins touch the glyph
   painted before them. An isolated form whose ink fills its advance gets one more
   pixel, so it never touches the next word. This rule lives in
@@ -158,7 +164,7 @@ commands.
 | `arabic/logical.py` | The checks on logical text: no direction controls, no presentation forms, no vowel marks where the renderer has none. Also the missing-glyph errors | Every target and the translation files |
 | `arabic/glyph_codes.py` | `GlyphCodes`: the codes each form takes, in order. A form drawn as two glyphs takes two | `glyph-font` |
 | `arabic/paint.py` | Right-to-left paint order. It refuses combining marks, mirrored brackets and raw newlines | `glyph-font` |
-| `font/glyph_raster.py` | The largest size that fits the cell. A form drawn at a coverage threshold from its first ink column, with the joining advance. Hand-drawn marks, hamza or madda over alef, shadows inside the advance, 2-bit pixel rows | `glyph-font`, and `fomt` for its shadow |
+| `font/glyph_raster.py` | The largest size that fits the cell. A form drawn at a coverage threshold from its first ink column, with the joining advance. Hand-drawn marks, hamza or madda over alef, a form raised by a row, shadows inside the advance, 2-bit pixel rows | `glyph-font`, and `fomt` for its shadow |
 | `font/tiles.py` | 4bpp tiles, stored row by row or column by column | `minish-cap`, `mmbn`, `fomt`, the Fire Emblem legend |
 | `font/shaped_text.py` | Whole lines shaped with HarfBuzz and drawn with the reference font | `line-cells`, `text-images` |
 | `font/previews.py` | The glyph atlas, a message's boxes side by side, and preview sheets | The review images of every target but `firered` |
@@ -189,7 +195,7 @@ commands.
 ## Candidates for other platforms (not implemented)
 
 None of these has been built or tested. They are research notes for engines the
-nine targets did not cover, and each becomes an `experimental` strategy together
+ten targets did not cover, and each becomes an `experimental` strategy together
 with its first target.
 
 - **Tile-composed variable-width text.** Many NES, Game Boy and SNES engines put

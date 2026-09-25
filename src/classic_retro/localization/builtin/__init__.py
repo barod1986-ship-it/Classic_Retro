@@ -1,4 +1,4 @@
-"""The nine reference targets, in the order their command groups appear."""
+"""The ten reference targets, in the order their command groups appear."""
 
 from __future__ import annotations
 
@@ -7,6 +7,7 @@ from classic_retro.localization.targets import LocalizationTarget
 
 def builtin_targets() -> tuple[LocalizationTarget, ...]:
     from classic_retro.localization.builtin import (
+        advance_wars,
         ff6a,
         fire_emblem,
         firered,
@@ -28,4 +29,5 @@ def builtin_targets() -> tuple[LocalizationTarget, ...]:
         mmbn.TARGET,
         mlss.TARGET,
         fomt.TARGET,
+        advance_wars.TARGET,
     )
