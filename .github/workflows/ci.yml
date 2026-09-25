@@ -310,6 +310,36 @@ jobs:
           classic-retro rebuild bps-apply flips.bps source.bin ours-out.bin
           cmp ours-out.bin target.bin
 
+  research-emulators:
+    # The research tools' emulator backends run a tiny generated GBA program (no
+    # game data): the mGBA harness built against libmgba, and mGBA's libretro
+    # core. Here a missing backend fails the tests instead of skipping them.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Classic Retro
+        uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - name: Install the emulator libraries and ARM binutils
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libmgba-dev libretro-mgba binutils-arm-none-eabi
+
+      - name: Install toolkit
+        run: python -m pip install -e ".[dev]"
+
+      - name: Build the mGBA harness
+        run: classic-retro research build-harness
+
+      - name: Run the research tests with every backend required
+        env:
+          CLASSIC_RETRO_REQUIRE_EMULATORS: "1"
+        run: pytest tests/test_research_emulator.py tests/test_research_script.py tests/test_research_scan.py
+
   localization-targets:
     # The targets CI checks come from the registry (classic-retro targets list):
     # every target with a check-translations operation gets an arabic-overlay

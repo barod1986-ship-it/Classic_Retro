@@ -224,6 +224,7 @@ script, and the strategy-specific drawing.
 | Game | `games` |
 | Localization | `localization` (targets, strategies, the `targets` commands), `rom` (binary overlays), `source` (source overlays) |
 | Shared overlay machinery | `patching` |
+| Research | `research` (the scripted emulator, its backends, the scanners) |
 
 Adapter discovery (`classic_retro.{platforms,engines,games}.v1`), target discovery
 (`classic_retro.targets.v1`), strategy discovery (`classic_retro.strategies.v1`) and
@@ -297,6 +298,17 @@ targeted reverse engineering
 ```
 
 The method is selected per game/engine, not per project globally.
+
+The `research` commands do this work on the user's own image
+([RESEARCH_TOOLS.md](RESEARCH_TOOLS.md)):
+
+- a scripted emulator session with screenshots, savestates, memory access,
+  breakpoints and watchpoints;
+- scanners for free space, pointers, pointer tables, text (ASCII, `.tbl` tables,
+  relative search) and byte patterns;
+- a disassembler.
+
+What these tools find comes from the game and stays local. Scripts hold only inputs.
 
 ## 6. Translation data model
 
