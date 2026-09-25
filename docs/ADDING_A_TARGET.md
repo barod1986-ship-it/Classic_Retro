@@ -68,6 +68,17 @@ where glyph codes come from, and how runtime names behave. The tables in
 [ARABIC_STRATEGIES.md](ARABIC_STRATEGIES.md) list what each target did. Prefer
 **mirrored draw**: it keeps the game's measuring, wrapping and typewriter.
 
+Write the engine's Arabic module (`engines/<engine>_arabic.py`) on
+[the shared core](ARABIC_STRATEGIES.md#the-shared-core). It already has:
+
+- the checks on logical text;
+- glyph codes and paint order;
+- drawing forms at the largest size that fits, with the joining advance;
+- 4bpp tiles, shadows and review images;
+- command tokens and the check that a translation keeps its commands.
+
+Only the game's formats and limits belong in the module.
+
 ## 4. Build a rom overlay with the kit
 
 The steps are the same for every binary target. Only the addresses, the hook source

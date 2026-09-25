@@ -40,10 +40,10 @@ from classic_retro.engines.golden_sun_arabic import (
     SPACE_ADVANCE,
     USA_LATIN_ADVANCES,
     GoldenSunArabicEncoder,
-    GoldenSunArabicGlyphMap,
     build_golden_sun_arabic_glyph_map,
     build_golden_sun_rtl_font,
     golden_sun_command,
+    golden_sun_glyph_codes,
     golden_sun_newline,
     latin_rtl_glyphs,
     validate_command_skeleton,
@@ -84,7 +84,7 @@ def test_glyph_map_uses_twelve_bit_codes_from_0x100():
 
     assert len(glyph_map.characters) <= 0x100
     assert len(set(glyph_map.characters)) == len(glyph_map.characters)
-    assert glyph_map.code("ﺑ") == ARABIC_CODE_BASE + glyph_map.slots["ﺑ"]
+    assert glyph_map.code("ﺑ") == ARABIC_CODE_BASE + glyph_map.characters.index("ﺑ")
     assert glyph_map.code("A") is None
     assert glyph_map.code(" ") is None
 
@@ -105,7 +105,7 @@ def test_text_is_stored_in_right_to_left_paint_order():
     result = _encoder().encode_message(_stream("بب", KEY_END))
 
     # Logical beh + beh: the right-hand glyph (initial form) is painted first.
-    assert _arabic_slots(result.codes) == [glyph_map.slots["ﺑ"], glyph_map.slots["ﺐ"]]
+    assert result.codes[1:3] == (glyph_map.code("ﺑ"), glyph_map.code("ﺐ"))
 
 
 def test_numbers_and_game_punctuation_keep_their_order_inside_arabic():
@@ -265,10 +265,7 @@ def _latin_font() -> GoldenSunFont:
 
 def test_font_uses_16_rows_with_a_shadow_inside_the_advance(contextual_font):
     characters = ("ﺏ", "ﺐ", "ﺑ", "ﺒ")
-    glyph_map = GoldenSunArabicGlyphMap(
-        characters=characters,
-        slots={character: index for index, character in enumerate(characters)},
-    )
+    glyph_map = golden_sun_glyph_codes(characters)
     font = build_golden_sun_rtl_font(contextual_font, _latin_font(), glyph_map=glyph_map)
 
     assert font.glyphs[SPACE].advance == SPACE_ADVANCE

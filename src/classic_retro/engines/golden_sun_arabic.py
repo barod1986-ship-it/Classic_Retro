@@ -21,18 +21,22 @@ bidi per segment and stores every line in right-to-left paint order.
 
 from __future__ import annotations
 
-import math
 import re
-import unicodedata
-from collections.abc import Sequence
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from functools import lru_cache
-from io import BytesIO
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageFont
 
-from classic_retro.arabic.paint import reject_combining_marks, rtl_paint_order
+from classic_retro.arabic.glyph_codes import GlyphCodes, assign_glyph_codes
+from classic_retro.arabic.logical import no_glyph
+from classic_retro.arabic.paint import (
+    reject_combining_marks,
+    reject_mirrored,
+    reject_text_newlines,
+    rtl_paint_order,
+)
 from classic_retro.arabic.repertoire import arabic_presentation_repertoire, legacy_renderer_pipeline
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.golden_sun import (
@@ -56,12 +60,23 @@ from classic_retro.engines.golden_sun import (
     command_skeleton,
     skeleton_notation,
 )
-from classic_retro.font.arabic_outline import (
-    contextual_font_data,
-    joins_left_neighbour,
-    joins_right_neighbour,
+from classic_retro.font.arabic_outline import contextual_font_data
+from classic_retro.font.glyph_raster import (
+    arabic_font_file,
+    draw_form,
+    drop_shadow,
+    form_bounds,
+    largest_fitting_size,
+    two_bit_rows,
 )
-from classic_retro.text.tokens import InlineToken, TextToken, TokenKind, TokenMovement, TokenStream
+from classic_retro.font.previews import glyph_atlas
+from classic_retro.text.commands import (
+    command_codes,
+    command_token,
+    is_inserted,
+    require_same_commands,
+)
+from classic_retro.text.tokens import InlineToken, TextToken, TokenKind, TokenStream
 
 ARABIC_CODE_BASE = 0x100
 RTL_MARKER = 0x0B
@@ -77,7 +92,6 @@ GLYPH_BYTES = CELL_HEIGHT * ROW_BYTES
 # shadow. The game's Latin glyphs (caps end on font row 10) move up one row.
 BASELINE = 10
 LATIN_ROW_SHIFT = BASELINE - 11
-INK_THRESHOLD = 96
 
 # The game's sprite typewriter: 5-pixel word space, two glyphs share a 16x16
 # sprite when their advances fit in 15 pixels.
@@ -91,9 +105,6 @@ NAME_COMMANDS = frozenset({LEADER_NAME, CHARACTER_NAME, PARTY_NAME})
 
 _PIXEL_INK = 1
 _PIXEL_SHADOW = 2
-
-# The game font cannot mirror, and the shared bidi step does not apply rule L4.
-_MIRRORED = frozenset("()[]{}<>«»‹›")
 # Latin glyphs of the USA/Europe dialogue font (0x08032224) that Arabic lines
 # may use, with their advances. The ROM build compares this table with the
 # font it reads before using it.
@@ -119,38 +130,21 @@ def golden_sun_command(token_id: str, *codes: int, inserted: bool = False) -> In
     kind = TokenKind.PAGE_BREAK if codes[0] == KEY_PAGE else TokenKind.CONTROL
     if codes[0] in NAME_COMMANDS:
         kind = TokenKind.VARIABLE
-    args: dict[str, str | bool] = {"codes": " ".join(f"{code:02X}" for code in codes)}
-    if inserted:
-        args["inserted"] = True
-    return InlineToken(
-        id=token_id,
-        kind=kind,
-        movement=TokenMovement.ORDERED,
+    return command_token(
+        token_id,
+        kind,
+        " ".join(f"{code:02X}" for code in codes),
         name=command_notation(codes[0]).strip("{}"),
-        args=args,
+        inserted=inserted,
     )
 
 
 def golden_sun_newline(token_id: str) -> InlineToken:
-    return InlineToken(
-        id=token_id,
-        kind=TokenKind.LINE_BREAK,
-        movement=TokenMovement.ORDERED,
-        args={"codes": f"{NEWLINE:02X}"},
-    )
+    return command_token(token_id, TokenKind.LINE_BREAK, f"{NEWLINE:02X}")
 
 
 def token_codes(token: InlineToken) -> tuple[int, ...]:
-    codes = token.args.get("codes")
-    if not isinstance(codes, str) or not codes:
-        raise ClassicRetroError(
-            ErrorCode.UNENCODABLE_TOKEN, f"Golden Sun token {token.id} carries no command codes"
-        )
-    return tuple(int(code, 16) for code in codes.split())
-
-
-def is_inserted(token: InlineToken) -> bool:
-    return bool(token.args.get("inserted", False))
+    return command_codes(token, "Golden Sun")
 
 
 # The translators' notation (translations/golden-sun.json and extracted
@@ -270,28 +264,18 @@ def golden_sun_codes_notation(codes: Sequence[int]) -> str:
     return "".join(parts)
 
 
-@dataclass(frozen=True, slots=True)
-class GoldenSunArabicGlyphMap:
-    characters: tuple[str, ...]
-    slots: dict[str, int]
-
-    def code(self, character: str) -> int | None:
-        slot = self.slots.get(character)
-        return None if slot is None else ARABIC_CODE_BASE + slot
+def golden_sun_glyph_codes(characters: Iterable[str]) -> GlyphCodes:
+    """Codes 0x100 onwards for ``characters``: the text model stores 12-bit codes."""
+    return assign_glyph_codes(
+        characters,
+        range(ARABIC_CODE_BASE, ARABIC_CODE_BASE + MAX_ARABIC_GLYPHS),
+        what="Golden Sun Arabic glyphs",
+    )
 
 
 @lru_cache(maxsize=1)
-def build_golden_sun_arabic_glyph_map() -> GoldenSunArabicGlyphMap:
-    characters = arabic_presentation_repertoire()
-    if len(characters) > MAX_ARABIC_GLYPHS:
-        raise ClassicRetroError(
-            ErrorCode.ARABIC_GLYPH_CAPACITY_EXCEEDED,
-            f"Arabic glyph set needs {len(characters)} codes; 0x100..0x1FF has 256",
-        )
-    return GoldenSunArabicGlyphMap(
-        characters=characters,
-        slots={character: index for index, character in enumerate(characters)},
-    )
+def build_golden_sun_arabic_glyph_map() -> GlyphCodes:
+    return golden_sun_glyph_codes(arabic_presentation_repertoire())
 
 
 @dataclass(frozen=True, slots=True)
@@ -308,22 +292,17 @@ class RtlGlyph:
         return b"".join(row.to_bytes(ROW_BYTES, "little") for row in self.rows)
 
 
-def _encode_rows(ink: set[tuple[int, int]], advance: int) -> RtlGlyph:
-    # The shadow stays inside the glyph's own advance: the neighbour on the
-    # right is painted first and must keep its joining stroke.
-    shadow = {
-        (x + 1, y + 1) for x, y in ink if x + 1 < min(advance, CELL_WIDTH) and y + 1 < CELL_HEIGHT
-    } - ink
-    rows = []
-    for y in range(CELL_HEIGHT):
-        value = 0
-        for x in range(CELL_WIDTH):
-            if (x, y) in ink:
-                value |= _PIXEL_INK << 2 * x
-            elif (x, y) in shadow:
-                value |= _PIXEL_SHADOW << 2 * x
-        rows.append(value)
-    return RtlGlyph(advance, tuple(rows))
+def _encode_rows(ink: set[tuple[int, int]] | frozenset[tuple[int, int]], advance: int) -> RtlGlyph:
+    shadow = drop_shadow(ink, ((1, 1),), min(advance, CELL_WIDTH), CELL_HEIGHT)
+    rows = two_bit_rows(
+        ink,
+        shadow,
+        columns=CELL_WIDTH,
+        height=CELL_HEIGHT,
+        ink_value=_PIXEL_INK,
+        shadow_value=_PIXEL_SHADOW,
+    )
+    return RtlGlyph(advance, rows)
 
 
 @dataclass(frozen=True, slots=True)
@@ -391,16 +370,17 @@ def build_golden_sun_rtl_font(
     font_path: Path,
     latin: GoldenSunFont | None = None,
     *,
-    glyph_map: GoldenSunArabicGlyphMap | None = None,
+    glyph_map: GlyphCodes | None = None,
 ) -> GoldenSunRtlFont:
     """Rasterize every Arabic presentation form (and copy the Latin glyphs) into 16x16 cells."""
     glyph_map = glyph_map or build_golden_sun_arabic_glyph_map()
-    font_path = font_path.expanduser()
-    if not font_path.is_file():
-        raise ClassicRetroError(
-            ErrorCode.FONT_BUILD_FAILED, f"Arabic font file not found: {font_path}"
-        )
-    font, size = _choose_font(contextual_font_data(font_path, glyph_map.characters), glyph_map)
+    characters = glyph_map.characters
+    font, size, _ = largest_fitting_size(
+        contextual_font_data(arabic_font_file(font_path), characters),
+        range(14, 5, -1),
+        lambda font: _fits(font, characters),
+        "Selected font cannot fit the Golden Sun 16x15 glyph area",
+    )
     glyphs: dict[int, RtlGlyph] = latin_rtl_glyphs(latin) if latin is not None else {}
     glyphs[SPACE] = RtlGlyph(SPACE_ADVANCE, (0,) * CELL_HEIGHT)
     widths: dict[str, int] = {}
@@ -413,84 +393,47 @@ def build_golden_sun_rtl_font(
     return GoldenSunRtlFont(glyphs=glyphs, font_size=size, arabic_widths=widths)
 
 
-def _choose_font(
-    font_data: bytes, glyph_map: GoldenSunArabicGlyphMap
-) -> tuple[ImageFont.FreeTypeFont, int]:
-    """Largest size whose ink fits rows 0..14 around the row-10 baseline."""
-    for size in range(14, 5, -1):
-        font = ImageFont.truetype(
-            BytesIO(font_data), size=size, layout_engine=ImageFont.Layout.BASIC
-        )
-        boxes = [font.getbbox(character, anchor="ls") for character in glyph_map.characters]
-        top = min(box[1] for box in boxes)
-        bottom = max(box[3] for box in boxes)
-        widest = max(box[2] - box[0] for box in boxes)
-        if BASELINE + top >= 0 and BASELINE + bottom <= CELL_HEIGHT - 1 and widest < CELL_WIDTH:
-            return font, size
-    raise ClassicRetroError(
-        ErrorCode.FONT_BUILD_FAILED, "Selected font cannot fit the Golden Sun 16x15 glyph area"
-    )
+def _fits(font: ImageFont.FreeTypeFont, characters: Sequence[str]) -> bool | None:
+    """Whether the ink fits rows 0..14 around the row-10 baseline, narrower than a cell."""
+    bounds = form_bounds(font, characters)
+    if (
+        BASELINE + bounds.top >= 0
+        and BASELINE + bounds.bottom <= CELL_HEIGHT - 1
+        and bounds.widest_ink < CELL_WIDTH
+    ):
+        return True
+    return None
 
 
-def _rasterize(font: ImageFont.FreeTypeFont, character: str) -> tuple[set[tuple[int, int]], int]:
-    cell = Image.new("L", (CELL_WIDTH * 3, CELL_HEIGHT), 0)
-    left, _, right, _ = font.getbbox(character, anchor="ls")
-    ImageDraw.Draw(cell).text(
-        (CELL_WIDTH - left, BASELINE), character, font=font, fill=255, anchor="ls"
-    )
-    pixels = cell.load()
-    ink = {
-        (x, y)
-        for y in range(CELL_HEIGHT)
-        for x in range(cell.width)
-        if pixels[x, y] >= INK_THRESHOLD
-    }
-    if not ink:
+def _rasterize(
+    font: ImageFont.FreeTypeFont, character: str
+) -> tuple[frozenset[tuple[int, int]], int]:
+    form = draw_form(font, character, BASELINE)
+    if form.advance > PAIR_WIDTH:
         raise ClassicRetroError(
             ErrorCode.FONT_BUILD_FAILED,
-            f"Selected font produced an empty glyph for U+{ord(character):04X}",
+            f"Glyph U+{ord(character):04X} needs {form.advance}px; a Golden Sun sprite holds 15",
         )
-    ink_left = min(x for x, _ in ink)
-    ink = {(x - ink_left, y) for x, y in ink}
-    ink_right = max(x for x, _ in ink)
-    if joins_right_neighbour(character):
-        # Medial and final forms end at their last ink column, touching the
-        # glyph painted before them (on their right).
-        advance = ink_right + 1
-    else:
-        advance = max(math.ceil(font.getlength(character)), right - left, ink_right + 1)
-        if not joins_left_neighbour(character) and advance == ink_right + 1:
-            advance += 1
-    if advance > PAIR_WIDTH:
-        raise ClassicRetroError(
-            ErrorCode.FONT_BUILD_FAILED,
-            f"Glyph U+{ord(character):04X} needs {advance}px; a Golden Sun sprite holds 15",
-        )
-    if any(y >= CELL_HEIGHT - 1 for _, y in ink):
+    if any(y >= CELL_HEIGHT - 1 for _, y in form.ink):
         raise ClassicRetroError(
             ErrorCode.FONT_BUILD_FAILED, f"Glyph U+{ord(character):04X} reaches the shadow row"
         )
-    return ink, advance
+    return form.ink, form.advance
 
 
 def font_preview(font: GoldenSunRtlFont) -> Image.Image:
     """Atlas of the right-to-left glyphs: ink white, shadow blue, advance dark red."""
     codes = sorted(font.glyphs)
-    cell = CELL_WIDTH + 2
-    atlas = Image.new("RGB", (16 * cell, math.ceil(len(codes) / 16) * cell), (40, 40, 40))
     colours = {0: (0, 0, 0), _PIXEL_INK: (255, 255, 255), _PIXEL_SHADOW: (90, 90, 150)}
-    for index, code in enumerate(codes):
-        glyph = font.glyphs[code]
-        origin_x = (index % 16) * cell + 1
-        origin_y = (index // 16) * cell + 1
-        for y in range(CELL_HEIGHT):
-            for x in range(CELL_WIDTH):
-                value = glyph.pixel(x, y)
-                colour = colours.get(value, (255, 0, 0))
-                if value == 0 and x >= glyph.advance:
-                    colour = (70, 20, 20)
-                atlas.putpixel((origin_x + x, origin_y + y), colour)
-    return atlas
+
+    def colour(index: int, x: int, y: int) -> tuple[int, int, int]:
+        glyph = font.glyphs[codes[index]]
+        value = glyph.pixel(x, y)
+        if value == 0 and x >= glyph.advance:
+            return (70, 20, 20)
+        return colours.get(value, (255, 0, 0))
+
+    return glyph_atlas(len(codes), CELL_WIDTH, CELL_HEIGHT, colour)
 
 
 @dataclass(frozen=True, slots=True)
@@ -513,7 +456,7 @@ class GoldenSunArabicEncoder:
         self,
         *,
         advances: dict[int, int],
-        glyph_map: GoldenSunArabicGlyphMap | None = None,
+        glyph_map: GlyphCodes | None = None,
     ) -> None:
         self.pipeline = legacy_renderer_pipeline()
         self.glyph_map = glyph_map or build_golden_sun_arabic_glyph_map()
@@ -521,20 +464,11 @@ class GoldenSunArabicEncoder:
 
     def prepare_paint_order(self, stream: TokenStream) -> TokenStream:
         reject_combining_marks(stream, "Golden Sun Arabic font v1")
-        for token in stream.tokens:
-            if isinstance(token, TextToken):
-                mirrored = sorted({character for character in token.text if character in _MIRRORED})
-                if mirrored:
-                    raise ClassicRetroError(
-                        ErrorCode.UNENCODABLE_TEXT,
-                        "Golden Sun Arabic v1 cannot mirror bracket glyphs: " + "".join(mirrored),
-                    )
-                if "\n" in token.text:
-                    raise ClassicRetroError(
-                        ErrorCode.UNENCODABLE_TEXT,
-                        "Use explicit Golden Sun newline tokens instead of '\\n' in text",
-                    )
-                continue
+        reject_mirrored(stream, "Golden Sun Arabic v1")
+        reject_text_newlines(
+            stream, "Use explicit Golden Sun newline tokens instead of '\\n' in text"
+        )
+        for token in stream.inline_tokens:
             codes = token_codes(token)
             command = codes[0]
             if command in RUNTIME_TEXT_COMMANDS - NAME_COMMANDS or command == DASH:
@@ -592,15 +526,7 @@ class GoldenSunArabicEncoder:
             code = ord(character)
         if code is not None and code in self.advances:
             return code
-        if unicodedata.category(character).startswith("L") and "ARABIC" in unicodedata.name(
-            character, ""
-        ):
-            raise ClassicRetroError(
-                ErrorCode.MISSING_GLYPH, f"No Golden Sun Arabic glyph for U+{ord(character):04X}"
-            )
-        raise ClassicRetroError(
-            ErrorCode.UNENCODABLE_TEXT, f"Golden Sun Arabic text has no glyph for {character!r}"
-        )
+        raise no_glyph(character, "Golden Sun Arabic")
 
 
 class _PageLayout:
@@ -658,15 +584,7 @@ def validate_command_skeleton(source_skeleton: tuple[int, ...], stream: TokenStr
             for code in token_codes(token)
         )
     )
-    source = _without_dashes(source_skeleton)
-    if target != source:
-        raise ClassicRetroError(
-            ErrorCode.TOKEN_ORDER_VIOLATION,
-            "Golden Sun commands differ from the original: "
-            + skeleton_notation(source)
-            + " != "
-            + skeleton_notation(target),
-        )
+    require_same_commands("Golden Sun", _without_dashes(source_skeleton), target, skeleton_notation)
 
 
 def _without_dashes(skeleton: tuple[int, ...]) -> tuple[int, ...]:

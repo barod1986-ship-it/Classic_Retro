@@ -122,13 +122,13 @@ def _fake_font(font_path, latin=None, **_kwargs) -> PmdRtlFont:
         tuple(0xF if x < 4 and 2 <= y < 8 else 0 for x in range(GLYPH_COLUMNS))
         for y in range(GLYPH_ROWS)
     )
+    space = glyph_map.code(" ")
     glyphs = {code: PmdRtlGlyph(5, ink) for code in glyph_map.all_codes()}
     for character in LATIN_COPIES:
-        glyphs[glyph_map.codes[character][0]] = latin[character]
-    glyphs[glyph_map.space] = PmdRtlGlyph(SPACE_ADVANCE, tuple((0,) * 12 for _ in range(12)))
-    sequences = {character: codes[:1] for character, codes in glyph_map.codes.items()}
-    sequences[" "] = (glyph_map.space,)
-    return PmdRtlFont(glyphs=glyphs, sequences=sequences, space=glyph_map.space, font_size=9)
+        glyphs[glyph_map.sequences[character][0]] = latin[character]
+    glyphs[space] = PmdRtlGlyph(SPACE_ADVANCE, tuple((0,) * 12 for _ in range(12)))
+    sequences = {character: codes[:1] for character, codes in glyph_map.sequences.items()}
+    return PmdRtlFont(glyphs=glyphs, sequences=sequences, space=space, font_size=9)
 
 
 @pytest.fixture(scope="module")
@@ -186,7 +186,7 @@ def test_new_charmap_keeps_the_game_glyphs_and_adds_right_to_left_ones(build):
     assert all(entry.flags == RTL_FLAG and entry.code >> 8 == ARABIC_LEAD for entry in added)
     assert len(added) == len(result.font.glyphs)
     # The right-to-left full stop is the game's own, one row higher.
-    dot = charmap.entry(build_pmd_arabic_glyph_map().codes["."][0])
+    dot = charmap.entry(build_pmd_arabic_glyph_map().code("."))
     pixels = charmap.pixels(result.rom, dot.code)
     assert dot.width == USA_LATIN_WIDTHS["."]
     assert [y for y in range(GLYPH_ROWS) if pixels[y][1]] == list(range(0, 8))
@@ -265,7 +265,7 @@ def test_changed_anchors_are_refused(synthetic, tmp_path, monkeypatch, damage):
         if damage == "width":
             struct.pack_into("<h", rom, entry + 6, 9)
         elif damage == "code":
-            struct.pack_into("<H", rom, entry + 4, build_pmd_arabic_glyph_map().space)
+            struct.pack_into("<H", rom, entry + 4, build_pmd_arabic_glyph_map().code(" "))
             # Keep the entries sorted so only the collision is reported.
             _resort(rom, entries)
         else:

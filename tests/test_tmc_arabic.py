@@ -15,9 +15,10 @@ from classic_retro.engines.tmc_arabic import (
     RTL_OFF_NOTATION,
     RTL_ON_NOTATION,
     TmcArabicEncoder,
-    TmcArabicGlyphMap,
     build_tmc_arabic_font,
     build_tmc_arabic_glyph_map,
+    glyph_notation,
+    tmc_glyph_codes,
 )
 from classic_retro.text.tokens import TextToken, TokenStream
 
@@ -43,9 +44,10 @@ def test_glyph_map_fits_the_arabic_font_page():
     assert len(glyph_map.characters) <= 0x100
     assert len(set(glyph_map.characters)) == len(glyph_map.characters)
     assert set(BASELINE_PUNCTUATION) <= set(glyph_map.characters)
-    beh_initial = glyph_map.slots["\ufe91"]
-    assert glyph_map.notation("\ufe91") == "{04:18:" + format(beh_initial, "02X") + "}"
-    assert glyph_map.notation("A") is None
+    beh_initial = glyph_map.code("\ufe91")
+    assert beh_initial == glyph_map.characters.index("\ufe91")
+    assert glyph_notation(beh_initial) == "{04:18:" + format(beh_initial, "02X") + "}"
+    assert glyph_map.code("A") is None
 
 
 def test_message_is_wrapped_in_rtl_on_and_off():
@@ -61,7 +63,7 @@ def test_text_is_stored_in_right_to_left_paint_order():
     notation = _encoder().encode_message(TokenStream((TextToken("بب"),)))
 
     # Logical beh + beh: the right-hand glyph (initial form) is painted first.
-    assert _slots(notation) == [glyph_map.slots["\ufe91"], glyph_map.slots["\ufe90"]]
+    assert _slots(notation) == [glyph_map.code("\ufe91"), glyph_map.code("\ufe90")]
 
 
 def test_numbers_and_latin_keep_their_reading_order_inside_arabic():
@@ -77,7 +79,7 @@ def test_runtime_player_name_keeps_execution_order():
         TokenStream((TextToken("أين "), tmc_player("p"), TextToken("؟")))
     )
     player = notation.index("{Player}")
-    question = build_tmc_arabic_glyph_map().notation("؟")
+    question = glyph_notation(build_tmc_arabic_glyph_map().code("؟"))
 
     assert notation.index(question) > player
     assert len(_slots(notation[:player])) == 3
@@ -95,7 +97,7 @@ def test_sentence_punctuation_uses_arabic_baseline_glyphs():
     glyph_map = build_tmc_arabic_glyph_map()
     notation = _encoder().encode_message(TokenStream((TextToken("نعم."),)))
 
-    assert _slots(notation)[-1] == glyph_map.slots["."]
+    assert _slots(notation)[-1] == glyph_map.code(".")
 
 
 @pytest.mark.parametrize("text", ["مَرحبا", "قال (نعم)"])
@@ -167,10 +169,7 @@ def _ink_columns(glyph: bytes) -> set[int]:
 
 def test_font_matches_engine_width_markers_and_joining_edges(contextual_font):
     characters = ("\ufe8f", "\ufe90", "\ufe91", "\ufe92", ".", "!")
-    glyph_map = TmcArabicGlyphMap(
-        characters=characters,
-        slots={character: index for index, character in enumerate(characters)},
-    )
+    glyph_map = tmc_glyph_codes(characters)
     result = build_tmc_arabic_font(contextual_font, glyph_map=glyph_map)
 
     assert result.glyphs == len(characters)

@@ -11,6 +11,7 @@ from classic_retro.engines.pokemon_gen3_arabic import (
     PokemonGen3ArabicEncoder,
     build_arabic_font_atlas,
     build_arabic_glyph_map,
+    charmap_lines,
     parse_pokemon_gen3_notation,
 )
 from classic_retro.localization.translations import TranslationSet, builtin_translation_set
@@ -55,8 +56,8 @@ def check_pokefirered_arabic_source(
         "files_verified": len(texts),
         "overlay_dry_run": True,
         "arabic_glyphs": len(glyph_map.characters),
-        "first_extra_symbol": f"0x{glyph_map.first_slot:02X}",
-        "last_extra_symbol": f"0x{glyph_map.last_slot:02X}",
+        "first_extra_symbol": f"0x{min(glyph_map.all_codes()):02X}",
+        "last_extra_symbol": f"0x{max(glyph_map.all_codes()):02X}",
         "oak_intro_arabic": True,
         "oak_intro_messages": len(OAK_SPEECH_LABELS),
         "oak_dynamic_ltr_placeholders": True,
@@ -493,7 +494,7 @@ def _patch_charmap(text: str) -> str:
     upstream_slots = {
         int(m.group(1), 16) for m in re.finditer(r"=\s*F9\s+([0-9A-Fa-f]{2})\b", text)
     }
-    collisions = sorted(set(glyph_map.slots.values()) & upstream_slots)
+    collisions = sorted(set(glyph_map.all_codes()) & upstream_slots)
     if collisions:
         values = ", ".join(f"F9 {value:02X}" for value in collisions)
         raise ClassicRetroError(
@@ -514,7 +515,7 @@ def _patch_charmap(text: str) -> str:
     return (
         text
         + "\n@ CLASSIC_RETRO_ARABIC_V1 presentation-form glyphs\n"
-        + "\n".join(glyph_map.charmap_lines())
+        + "\n".join(charmap_lines(glyph_map))
         + "\n"
     )
 

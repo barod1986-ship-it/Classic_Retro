@@ -13,6 +13,7 @@ from classic_retro.engines.pokemon_gen3_arabic import (
     PokemonGen3ArabicEncoder,
     _validate_fire_red_glyph_bounds,
     build_arabic_glyph_map,
+    encode_glyph,
     make_ltr_placeholder_token,
 )
 from classic_retro.text.tokens import TextToken, TokenStream
@@ -21,10 +22,10 @@ from classic_retro.text.tokens import TextToken, TokenStream
 def test_arabic_glyph_map_uses_only_reserved_extra_symbol_range():
     glyph_map = build_arabic_glyph_map()
 
-    assert glyph_map.first_slot == ARABIC_SLOT_FIRST
-    assert glyph_map.last_slot <= ARABIC_SLOT_LAST
+    assert min(glyph_map.all_codes()) == ARABIC_SLOT_FIRST
+    assert max(glyph_map.all_codes()) <= ARABIC_SLOT_LAST
     assert len(glyph_map.characters) == len(set(glyph_map.characters))
-    assert all(glyph_map.encode(character)[0] == 0xF9 for character in glyph_map.characters)
+    assert all(encode_glyph(glyph_map, character)[0] == 0xF9 for character in glyph_map.characters)
 
 
 def test_logical_arabic_encodes_to_rtl_control_and_extra_symbols():

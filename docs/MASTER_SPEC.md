@@ -189,6 +189,17 @@ right-to-left techniques around the strategies (mirrored draw or reversed pen, t
 direction markers, where glyph codes come from, runtime names) are catalogued in
 [ARABIC_STRATEGIES.md](ARABIC_STRATEGIES.md).
 
+The pieces the targets share are in the core:
+
+- `arabic.logical`: the checks on logical text;
+- `arabic.glyph_codes` and `arabic.paint`: glyph codes and paint order;
+- `font.glyph_raster`: forms drawn to the cell with the joining advance;
+- `font.tiles`: 4bpp tiles;
+- `font.previews`: review images;
+- `text.commands`: command tokens and the command check.
+
+An engine keeps only its formats and limits.
+
 ### 3.7 Binary patching kit
 
 Binary overlays share one recipe:

@@ -26,6 +26,7 @@ from importlib.resources import files
 from pathlib import Path
 from typing import Any
 
+from classic_retro.arabic.logical import DIRECTION_CONTROLS
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.core.schema import validate_document
 
@@ -34,11 +35,6 @@ SCHEMA_VERSION = "1.0"
 WORKSPACE_NOTICE = (
     "Local only: this workspace holds text from your own copy of the game. "
     "Do not commit or share it."
-)
-# Invisible direction controls: embeddings, overrides, isolates and marks. The
-# notation is logical text; direction is the toolkit's job.
-_DIRECTION_CONTROLS = frozenset(
-    chr(code) for code in (*range(0x202A, 0x202F), *range(0x2066, 0x206A), 0x200E, 0x200F, 0x061C)
 )
 
 
@@ -80,7 +76,8 @@ class TranslationSet:
                 )
             seen.add(entry.id)
             for field_name, value in (("text", entry.text), ("source", entry.source)):
-                controls = sorted(set(value or "") & _DIRECTION_CONTROLS)
+                # The notation is logical text; direction is the toolkit's job.
+                controls = sorted(set(value or "") & DIRECTION_CONTROLS)
                 if controls:
                     codes = ", ".join(f"U+{ord(character):04X}" for character in controls)
                     raise ClassicRetroError(

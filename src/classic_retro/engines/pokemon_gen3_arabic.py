@@ -3,13 +3,14 @@ from __future__ import annotations
 import math
 import re
 import unicodedata
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from functools import lru_cache
-from io import BytesIO
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
+from classic_retro.arabic.glyph_codes import GlyphCodes, assign_glyph_codes
 from classic_retro.arabic.paint import reject_combining_marks, rtl_paint_order
 from classic_retro.arabic.repertoire import (
     ARABIC_STATIC_CHARACTERS,
@@ -20,6 +21,13 @@ from classic_retro.arabic.repertoire import (
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.pokemon_gen3 import PokemonGen3TextCodec
 from classic_retro.font.arabic_outline import contextual_font_data, font_glyph_text
+from classic_retro.font.glyph_raster import (
+    INK_THRESHOLD,
+    arabic_font_file,
+    drop_shadow,
+    form_bounds,
+    largest_fitting_size,
+)
 from classic_retro.text.tokens import (
     InlineToken,
     TextToken,
@@ -40,43 +48,29 @@ _STANDARD_ARABIC_LETTERS = STANDARD_ARABIC_LETTERS
 _ARABIC_STATIC_CHARACTERS = ARABIC_STATIC_CHARACTERS
 
 
-@dataclass(frozen=True, slots=True)
-class ArabicGlyphMap:
-    characters: tuple[str, ...]
-    slots: dict[str, int]
-
-    @property
-    def first_slot(self) -> int:
-        return ARABIC_SLOT_FIRST
-
-    @property
-    def last_slot(self) -> int:
-        return ARABIC_SLOT_FIRST + len(self.characters) - 1
-
-    def encode(self, character: str) -> bytes | None:
-        slot = self.slots.get(character)
-        if slot is None:
-            return None
-        return bytes((EXTRA_SYMBOL_PREFIX, slot))
-
-    def charmap_lines(self) -> tuple[str, ...]:
-        return tuple(
-            f"'{character}' = F9 {self.slots[character]:02X}" for character in self.characters
-        )
+def firered_glyph_codes(characters: Iterable[str]) -> GlyphCodes:
+    """Extra-symbol slots ``F9 40``..``F9 CF`` for ``characters``, in order."""
+    return assign_glyph_codes(
+        characters, range(ARABIC_SLOT_FIRST, ARABIC_SLOT_LAST + 1), what="FireRed Arabic glyphs"
+    )
 
 
 @lru_cache(maxsize=1)
-def build_arabic_glyph_map() -> ArabicGlyphMap:
-    ordered = arabic_presentation_repertoire()
-    capacity = ARABIC_SLOT_LAST - ARABIC_SLOT_FIRST + 1
-    if len(ordered) > capacity:
-        raise ClassicRetroError(
-            ErrorCode.ARABIC_GLYPH_CAPACITY_EXCEEDED,
-            f"Arabic glyph set needs {len(ordered)} slots; only {capacity} are available",
-        )
+def build_arabic_glyph_map() -> GlyphCodes:
+    return firered_glyph_codes(arabic_presentation_repertoire())
 
-    slots = {character: ARABIC_SLOT_FIRST + index for index, character in enumerate(ordered)}
-    return ArabicGlyphMap(characters=ordered, slots=slots)
+
+def encode_glyph(glyph_map: GlyphCodes, character: str) -> bytes | None:
+    """The two bytes (``F9 slot``) that draw ``character``, or None."""
+    slot = glyph_map.code(character)
+    return None if slot is None else bytes((EXTRA_SYMBOL_PREFIX, slot))
+
+
+def charmap_lines(glyph_map: GlyphCodes) -> tuple[str, ...]:
+    """The glyphs as pokefirered ``charmap.txt`` lines."""
+    return tuple(
+        f"'{character}' = F9 {glyph_map.code(character):02X}" for character in glyph_map.characters
+    )
 
 
 def make_ltr_placeholder_token(
@@ -186,7 +180,7 @@ class PokemonGen3ArabicEncoder:
         for token in stream.tokens:
             if isinstance(token, TextToken):
                 for character in token.text:
-                    encoded = self.glyph_map.encode(character)
+                    encoded = encode_glyph(self.glyph_map, character)
                     if encoded is not None:
                         output.extend(encoded)
                     else:
@@ -229,18 +223,10 @@ def build_arabic_font_atlas(
     png_path: Path,
     widths_path: Path,
     *,
-    glyph_map: ArabicGlyphMap | None = None,
+    glyph_map: GlyphCodes | None = None,
 ) -> FontAtlasResult:
     glyph_map = glyph_map or build_arabic_glyph_map()
-    font_path = font_path.expanduser()
-
-    if not font_path.is_file():
-        raise ClassicRetroError(
-            ErrorCode.FONT_BUILD_FAILED,
-            f"Arabic font file not found: {font_path}",
-        )
-
-    font, font_size, top, _ = _choose_font(font_path, glyph_map.characters)
+    font, font_size, top = _choose_font(arabic_font_file(font_path), glyph_map.characters)
     rows = math.ceil(len(glyph_map.characters) / 16)
     atlas = Image.new("P", (256, rows * 16), 0)
     palette = [
@@ -279,7 +265,10 @@ def build_arabic_font_atlas(
 
         pixels = cell.load()
         foreground = [
-            (x_pos, y) for y in range(14) for x_pos in range(16) if pixels[x_pos, y] >= 96
+            (x_pos, y)
+            for y in range(14)
+            for x_pos in range(16)
+            if pixels[x_pos, y] >= INK_THRESHOLD
         ]
 
         if not foreground:
@@ -316,11 +305,8 @@ def build_arabic_font_atlas(
         # Keep the shadow inside the same advance. Extending the width for a
         # shadow pixel would introduce a one-pixel gap between connected Arabic
         # presentation forms.
-        for x_pos, y in foreground:
-            shadow_x = x_pos + 1
-            shadow_y = y + 1
-            if shadow_x < copy_width and shadow_y < 14:
-                colored_pixels[shadow_x, shadow_y] = 2
+        for x_pos, y in drop_shadow(foreground, ((1, 1),), copy_width, 14):
+            colored_pixels[x_pos, y] = 2
         for x_pos, y in foreground:
             colored_pixels[x_pos, y] = 1
 
@@ -381,31 +367,24 @@ def _validate_fire_red_glyph_bounds(
 
 def _choose_font(
     font_path: Path,
-    characters: tuple[str, ...],
-) -> tuple[ImageFont.FreeTypeFont, int, int, int]:
-    font_data = _contextual_font_data(font_path, characters)
-    for size in range(20, 5, -1):
-        # HarfBuzz has already selected each contextual glyph. BASIC prevents
-        # a second shaping pass and works on Windows without optional libraqm.
-        font = ImageFont.truetype(
-            BytesIO(font_data), size=size, layout_engine=ImageFont.Layout.BASIC
-        )
-        boxes = [font.getbbox(text, anchor="ls") for text in characters]
-        copy_widths = [
-            _glyph_copy_width(font, text, box[0], box[2])
-            for text, box in zip(characters, boxes, strict=True)
-        ]
-        top = min(box[1] for box in boxes)
-        bottom = max(box[3] for box in boxes)
-
-        # 13 foreground rows + one shadow row = FireRed's normal 14px height.
-        if max(copy_widths) <= 16 and bottom - top <= 13:
-            return font, size, top, bottom
-
-    raise ClassicRetroError(
-        ErrorCode.FONT_BUILD_FAILED,
+    characters: Sequence[str],
+) -> tuple[ImageFont.FreeTypeFont, int, int]:
+    """The largest size, and its top ink row, whose glyphs fit the copied 16x14 area."""
+    return largest_fitting_size(
+        _contextual_font_data(font_path, tuple(characters)),
+        range(20, 5, -1),
+        lambda font: _top_row(font, characters),
         "Selected font cannot fit the FireRed 16x14 copied glyph area",
     )
+
+
+def _top_row(font: ImageFont.FreeTypeFont, characters: Sequence[str]) -> int | None:
+    bounds = form_bounds(font, characters)
+    # 13 foreground rows + one shadow row = FireRed's normal 14px height; a glyph
+    # copies at least one column.
+    if max(1, bounds.widest_advance) <= 16 and bounds.bottom - bounds.top <= 13:
+        return bounds.top
+    return None
 
 
 _font_glyph_text = font_glyph_text

@@ -28,6 +28,7 @@ from PIL import Image
 
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.font.shaped_text import ShapedLineRenderer
+from classic_retro.font.tiles import pack_4bpp
 
 SCREEN_WIDTH = 240
 SCREEN_HEIGHT = 160
@@ -151,12 +152,13 @@ def encode_legend_image(image: LegendImage, budget: int = TILE_BUDGET) -> Encode
     for tile_y in range(TILES_Y):
         row = []
         for tile_x in range(TILES_X):
-            data = bytearray()
-            for y in range(TILE):
-                start = (tile_y * TILE + y) * SCREEN_WIDTH + tile_x * TILE
-                pixels = image.pixels[start : start + TILE]
-                data += bytes(pixels[x] | pixels[x + 1] << 4 for x in range(0, TILE, 2))
-            tile = bytes(data)
+            left = tile_y * TILE * SCREEN_WIDTH + tile_x * TILE
+            tile = pack_4bpp(
+                [
+                    image.pixels[left + y * SCREEN_WIDTH : left + y * SCREEN_WIDTH + TILE]
+                    for y in range(TILE)
+                ]
+            )
             if tile not in index:
                 index[tile] = len(tiles)
                 tiles.append(tile)

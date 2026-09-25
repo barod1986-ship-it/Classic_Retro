@@ -28,6 +28,37 @@ def reject_combining_marks(stream: TokenStream, profile: str) -> None:
         )
 
 
+# Characters a right-to-left run would draw mirrored. Game fonts cannot
+# mirror, and the shared bidi step does not apply rule L4, so a glyph target
+# refuses them (or draws its own mirrored copies).
+MIRRORED_BRACKETS = frozenset("()[]{}<>«»‹›")
+
+
+def reject_mirrored(
+    stream: TokenStream, profile: str, mirrored: frozenset[str] = MIRRORED_BRACKETS
+) -> None:
+    found = sorted(
+        {
+            character
+            for token in stream.tokens
+            if isinstance(token, TextToken)
+            for character in token.text
+            if character in mirrored
+        }
+    )
+    if found:
+        raise ClassicRetroError(
+            ErrorCode.UNENCODABLE_TEXT,
+            f"{profile} cannot mirror bracket glyphs: " + "".join(found),
+        )
+
+
+def reject_text_newlines(stream: TokenStream, advice: str) -> None:
+    """Refuse a raw newline in text where the engine has its own line command."""
+    if any("\n" in token.text for token in stream.tokens if isinstance(token, TextToken)):
+        raise ClassicRetroError(ErrorCode.UNENCODABLE_TEXT, advice)
+
+
 def reverse_visual_stream(stream: TokenStream) -> TokenStream:
     output: list[Token] = []
     for token in reversed(stream.tokens):

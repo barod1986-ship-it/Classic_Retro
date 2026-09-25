@@ -7,27 +7,9 @@ from enum import StrEnum
 from arabic_reshaper import ArabicReshaper
 from bidi import get_display
 
+from classic_retro.arabic.logical import EXPLICIT_DIRECTION_CONTROLS, is_presentation_form
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.text.tokens import InlineToken, TextToken, Token, TokenStream
-
-_PRESENTATION_RANGES = (
-    (0xFB50, 0xFDFF),
-    (0xFE70, 0xFEFF),
-)
-
-_EXPLICIT_BIDI_CONTROLS = frozenset(
-    {
-        "\u202a",  # LRE
-        "\u202b",  # RLE
-        "\u202c",  # PDF
-        "\u202d",  # LRO
-        "\u202e",  # RLO
-        "\u2066",  # LRI
-        "\u2067",  # RLI
-        "\u2068",  # FSI
-        "\u2069",  # PDI
-    }
-)
 
 _MARKER_BOUNDARY = "\ufffc"
 _MARKER_CODES = tuple(chr(codepoint) for codepoint in range(0x2400, 0x2427))
@@ -93,9 +75,7 @@ class ArabicPipeline:
 
 
 def _contains_presentation_form(text: str) -> bool:
-    return any(
-        start <= ord(character) <= end for character in text for start, end in _PRESENTATION_RANGES
-    )
+    return any(is_presentation_form(character) for character in text)
 
 
 def _validate_logical_text(text: str) -> None:
@@ -111,7 +91,7 @@ def _validate_logical_text(text: str) -> None:
             "Translation text contains Arabic Presentation Forms; use logical Arabic letters",
         )
 
-    controls = sorted({character for character in text if character in _EXPLICIT_BIDI_CONTROLS})
+    controls = sorted({character for character in text if character in EXPLICIT_DIRECTION_CONTROLS})
     if controls:
         values = ", ".join(f"U+{ord(character):04X}" for character in controls)
         raise ClassicRetroError(

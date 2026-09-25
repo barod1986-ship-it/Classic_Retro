@@ -7,6 +7,7 @@ from fontTools.feaLib.builder import addOpenTypeFeaturesFromString
 from fontTools.fontBuilder import FontBuilder
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 
+from classic_retro.arabic.glyph_codes import GlyphCodes
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.pmd import GLYPH_COLUMNS, GLYPH_ROWS, parse_notation
 from classic_retro.engines.pmd_arabic import (
@@ -17,7 +18,6 @@ from classic_retro.engines.pmd_arabic import (
     SPACE_ADVANCE,
     USA_LATIN_WIDTHS,
     PmdArabicEncoder,
-    PmdArabicGlyphMap,
     PmdRtlFont,
     PmdRtlGlyph,
     PmdTextBox,
@@ -38,11 +38,11 @@ EMPTY = tuple((0,) * GLYPH_COLUMNS for _ in range(GLYPH_ROWS))
 
 def _fake_font(width: int = 5) -> PmdRtlFont:
     glyph_map = build_pmd_arabic_glyph_map()
+    space = glyph_map.code(" ")
     glyphs = {code: PmdRtlGlyph(width, EMPTY) for code in glyph_map.all_codes()}
-    glyphs[glyph_map.space] = PmdRtlGlyph(SPACE_ADVANCE, EMPTY)
-    sequences = {character: codes[:1] for character, codes in glyph_map.codes.items()}
-    sequences[" "] = (glyph_map.space,)
-    return PmdRtlFont(glyphs=glyphs, sequences=sequences, space=glyph_map.space, font_size=9)
+    glyphs[space] = PmdRtlGlyph(SPACE_ADVANCE, EMPTY)
+    sequences = {character: codes[:1] for character, codes in glyph_map.sequences.items()}
+    return PmdRtlFont(glyphs=glyphs, sequences=sequences, space=space, font_size=9)
 
 
 def _codes(data: bytes) -> list[int]:
@@ -59,7 +59,7 @@ def _codes(data: bytes) -> list[int]:
 
 
 def _code(character: str) -> int:
-    return build_pmd_arabic_glyph_map().codes[character][0]
+    return build_pmd_arabic_glyph_map().sequences[character][0]
 
 
 def test_glyph_map_uses_free_0x84_codes_and_two_for_wide_forms():
@@ -70,11 +70,11 @@ def test_glyph_map_uses_free_0x84_codes_and_two_for_wide_forms():
     assert all(code >> 8 == ARABIC_LEAD for code in codes)
     assert not {code & 0xFF for code in codes} & {0x7E, 0x7F, 0x86, 0x87}
     assert all(0x40 <= code & 0xFF <= 0xFC for code in codes)
-    assert glyph_map.space == 0x8440
-    assert len(glyph_map.codes["ﺲ"]) == 2 and len(glyph_map.codes["ﺏ"]) == 1
-    assert set(LATIN_COPIES) <= set(glyph_map.codes)
+    assert glyph_map.code(" ") == 0x8440
+    assert len(glyph_map.sequences["ﺲ"]) == 2 and len(glyph_map.sequences["ﺏ"]) == 1
+    assert set(LATIN_COPIES) <= set(glyph_map.sequences)
     # Arabic-Indic digits, the question mark and the comma all have glyphs.
-    assert {"٠", "٩", "؟", "،", "؛"} <= set(glyph_map.codes)
+    assert {"٠", "٩", "؟", "،", "؛"} <= set(glyph_map.sequences)
 
 
 def test_strings_are_stored_in_right_to_left_paint_order():
@@ -199,11 +199,11 @@ def contextual_font(tmp_path):
     return path
 
 
-def _small_map() -> PmdArabicGlyphMap:
+def _small_map() -> GlyphCodes:
     full = build_pmd_arabic_glyph_map()
-    characters = (*LATIN_COPIES, "ﺍ", "ﺎ", "ﺃ", "ﺄ", "ﺏ", "ﺐ", "ﺑ", "ﺒ", "ﺱ", "،")
-    return PmdArabicGlyphMap(
-        space=full.space, codes={character: full.codes[character] for character in characters}
+    characters = (" ", *LATIN_COPIES, "ﺍ", "ﺎ", "ﺃ", "ﺄ", "ﺏ", "ﺐ", "ﺑ", "ﺒ", "ﺱ", "،")
+    return GlyphCodes(
+        characters, {character: full.sequences[character] for character in characters}
     )
 
 
@@ -215,7 +215,7 @@ def test_font_fits_the_cell_joins_and_splits_wide_forms(contextual_font):
     glyph_map = _small_map()
     font = build_pmd_rtl_font(contextual_font, glyph_map=glyph_map)
 
-    assert font.glyphs[glyph_map.space].width == SPACE_ADVANCE
+    assert font.glyphs[glyph_map.code(" ")].width == SPACE_ADVANCE
     for character, codes in font.sequences.items():
         for code in codes:
             glyph = font.glyphs[code]

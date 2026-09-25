@@ -23,11 +23,11 @@ from classic_retro.engines.fire_emblem_arabic import (
     USA_TALK_ADVANCES,
     WAIT_KEY_ALLOWANCE,
     FireEmblemArabicEncoder,
-    FireEmblemArabicGlyphMap,
     TalkBox,
     build_fire_emblem_arabic_glyph_map,
     build_fire_emblem_rtl_font,
     fire_emblem_command,
+    fire_emblem_glyph_codes,
     fire_emblem_stream,
     latin_rtl_glyphs,
     validate_command_skeleton,
@@ -72,7 +72,10 @@ def test_message_starts_with_the_marker_and_is_stored_in_paint_order():
     assert data[0] == RTL_MARKER
     assert data[-2:] == b"\x03\x00"
     # Logical beh + beh: the right-hand glyph (initial form) is painted first.
-    assert _arabic_slots(data) == [glyph_map.slots["ﺑ"], glyph_map.slots["ﺐ"]]
+    assert [slot + ARABIC_CODE_BASE for slot in _arabic_slots(data)] == [
+        glyph_map.code("ﺑ"),
+        glyph_map.code("ﺐ"),
+    ]
 
 
 def test_digits_and_punctuation_keep_their_order_inside_arabic():
@@ -222,10 +225,7 @@ def _talk_font() -> FireEmblemFont:
 
 def test_font_keeps_ink_and_shade_inside_each_width(contextual_font):
     characters = ("ﺏ", "ﺐ", "ﺑ", "ﺒ", "،")
-    glyph_map = FireEmblemArabicGlyphMap(
-        characters=characters,
-        slots={character: index for index, character in enumerate(characters)},
-    )
+    glyph_map = fire_emblem_glyph_codes(characters)
     font = build_fire_emblem_rtl_font(contextual_font, _talk_font(), glyph_map=glyph_map)
 
     assert font.glyphs[SPACE].width == SPACE_ADVANCE

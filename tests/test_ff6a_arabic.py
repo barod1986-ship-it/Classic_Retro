@@ -25,11 +25,11 @@ from classic_retro.engines.ff6a_arabic import (
     RTL_MARKER,
     USA_LATIN_GLYPHS,
     Ff6aArabicEncoder,
-    Ff6aArabicGlyphMap,
     Ff6aLayout,
     build_ff6a_arabic_font,
     build_ff6a_arabic_glyph_map,
     ff6a_command,
+    ff6a_glyph_codes,
     ff6a_newline,
     validate_command_skeleton,
 )
@@ -66,8 +66,8 @@ def test_glyph_map_uses_codes_from_0x600():
 
     assert len(glyph_map.characters) <= 0x100
     assert len(set(glyph_map.characters)) == len(glyph_map.characters)
-    assert " " in glyph_map.slots
-    assert glyph_map.code("\ufe91") == ARABIC_CODE_BASE + glyph_map.slots["\ufe91"]
+    assert " " in glyph_map.characters
+    assert glyph_map.code("\ufe91") == ARABIC_CODE_BASE + glyph_map.characters.index("\ufe91")
     assert glyph_map.code("A") is None
 
 
@@ -85,7 +85,10 @@ def test_text_is_stored_in_right_to_left_paint_order():
     result = _encoder().encode_message(_stream("بب", END), layout=Ff6aLayout.DIALOGUE)
 
     # Logical beh + beh: the right-hand glyph (initial form) is painted first.
-    assert _arabic_slots(result.codes) == [glyph_map.slots["\ufe91"], glyph_map.slots["\ufe90"]]
+    assert [code + ARABIC_CODE_BASE for code in _arabic_slots(result.codes)] == [
+        glyph_map.code("\ufe91"),
+        glyph_map.code("\ufe90"),
+    ]
 
 
 def test_numbers_and_game_punctuation_keep_their_order_inside_arabic():
@@ -244,10 +247,7 @@ def contextual_font(tmp_path):
 
 def test_font_uses_the_game_format_with_a_shadow_inside_the_advance(contextual_font):
     characters = ("\ufe8f", "\ufe90", "\ufe91", "\ufe92", " ")
-    glyph_map = Ff6aArabicGlyphMap(
-        characters=characters,
-        slots={character: index for index, character in enumerate(characters)},
-    )
+    glyph_map = ff6a_glyph_codes(characters)
     result = build_ff6a_arabic_font(contextual_font, glyph_map=glyph_map)
     font = result.font
 

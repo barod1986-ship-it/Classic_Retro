@@ -14,16 +14,16 @@ resolves bidi per line, and stores them in right-to-left paint order.
 
 from __future__ import annotations
 
-import math
-import unicodedata
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from functools import lru_cache
-from io import BytesIO
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageFont
 
-from classic_retro.arabic.paint import reject_combining_marks, rtl_paint_order
+from classic_retro.arabic.glyph_codes import GlyphCodes, assign_glyph_codes
+from classic_retro.arabic.logical import no_glyph
+from classic_retro.arabic.paint import reject_combining_marks, reject_mirrored, rtl_paint_order
 from classic_retro.arabic.repertoire import arabic_presentation_repertoire, legacy_renderer_pipeline
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.tmc import (
@@ -31,11 +31,15 @@ from classic_retro.engines.tmc import (
     render_tmc_string,
     token_notation,
 )
-from classic_retro.font.arabic_outline import (
-    contextual_font_data,
-    joins_left_neighbour,
-    joins_right_neighbour,
+from classic_retro.font.arabic_outline import contextual_font_data
+from classic_retro.font.glyph_raster import (
+    arabic_font_file,
+    draw_form,
+    form_bounds,
+    largest_fitting_size,
 )
+from classic_retro.font.previews import glyph_atlas
+from classic_retro.font.tiles import pack_4bpp, unpack_4bpp
 from classic_retro.text.tokens import InlineToken, TextToken, TokenKind, TokenStream
 
 TMC_ARABIC_FONT_PAGE = 9
@@ -55,15 +59,10 @@ GLYPH_BYTES = 128
 FIRST_INK_ROW = 1
 # The Latin font sits on row 13 (its capitals end there).
 LATIN_BASELINE = 14
-INK_THRESHOLD = 96
 
 _NIBBLE_UNUSED = 0xF
 _NIBBLE_BACKGROUND = 0x0
 _NIBBLE_INK = 0xE
-
-# Characters whose glyph must be mirrored in right-to-left runs. The game font
-# cannot mirror, and the shared bidi step does not apply rule L4.
-_MIRRORED = frozenset("()[]{}<>«»‹›")
 
 # Sentence punctuation drawn on the Arabic baseline. Arabic fonts often lack
 # these marks, and the game's Latin ones sit on the lower Latin baseline.
@@ -76,30 +75,19 @@ BASELINE_PUNCTUATION: dict[str, tuple[int, tuple[tuple[int, int], ...]]] = {
 }
 
 
-@dataclass(frozen=True, slots=True)
-class TmcArabicGlyphMap:
-    characters: tuple[str, ...]
-    slots: dict[str, int]
+def tmc_glyph_codes(characters: Iterable[str]) -> GlyphCodes:
+    """Slots 0..255 of the Arabic font page for ``characters``."""
+    return assign_glyph_codes(characters, range(0x100), what="Minish Cap Arabic glyphs")
 
-    def notation(self, character: str) -> str | None:
-        slot = self.slots.get(character)
-        if slot is None:
-            return None
-        return f"{{04:18:{slot:02X}}}"
+
+def glyph_notation(slot: int) -> str:
+    """The tmc_strings notation that draws slot ``slot`` of the Arabic font page."""
+    return f"{{04:18:{slot:02X}}}"
 
 
 @lru_cache(maxsize=1)
-def build_tmc_arabic_glyph_map() -> TmcArabicGlyphMap:
-    characters = arabic_presentation_repertoire() + tuple(BASELINE_PUNCTUATION)
-    if len(characters) > 0x100:
-        raise ClassicRetroError(
-            ErrorCode.ARABIC_GLYPH_CAPACITY_EXCEEDED,
-            f"Arabic glyph set needs {len(characters)} slots; the font page has 256",
-        )
-    return TmcArabicGlyphMap(
-        characters=characters,
-        slots={character: index for index, character in enumerate(characters)},
-    )
+def build_tmc_arabic_glyph_map() -> GlyphCodes:
+    return tmc_glyph_codes(arabic_presentation_repertoire() + tuple(BASELINE_PUNCTUATION))
 
 
 @dataclass(frozen=True, slots=True)
@@ -115,22 +103,19 @@ class TmcArabicFontResult:
 def build_tmc_arabic_font(
     font_path: Path,
     *,
-    glyph_map: TmcArabicGlyphMap | None = None,
+    glyph_map: GlyphCodes | None = None,
 ) -> TmcArabicFontResult:
     """Rasterize every presentation form into the engine's 16x16 two-half format."""
     glyph_map = glyph_map or build_tmc_arabic_glyph_map()
-    font_path = font_path.expanduser()
-    if not font_path.is_file():
-        raise ClassicRetroError(
-            ErrorCode.FONT_BUILD_FAILED,
-            f"Arabic font file not found: {font_path}",
-        )
-
     outlined = tuple(
         character for character in glyph_map.characters if character not in BASELINE_PUNCTUATION
     )
-    font_data = contextual_font_data(font_path, outlined)
-    font, size, top, bottom = _choose_font(font_data, outlined)
+    font, size, (top, bottom) = largest_fitting_size(
+        contextual_font_data(arabic_font_file(font_path), outlined),
+        range(18, 5, -1),
+        lambda font: _ink_rows(font, outlined),
+        "Selected font cannot fit the Minish Cap 16x15 Arabic glyph area",
+    )
     # Share the Latin baseline when descenders allow it; otherwise raise the
     # baseline just enough to keep every contextual form inside the cell.
     baseline = min(LATIN_BASELINE, GLYPH_CELL_HEIGHT - bottom)
@@ -157,118 +142,70 @@ def build_tmc_arabic_font(
     )
 
 
-def _choose_font(
-    font_data: bytes, characters: tuple[str, ...]
-) -> tuple[ImageFont.FreeTypeFont, int, int, int]:
+def _ink_rows(font: ImageFont.FreeTypeFont, characters: Sequence[str]) -> tuple[int, int] | None:
+    """The forms' top and bottom rows when they fit rows 1..15 and 16 columns, else None."""
+    bounds = form_bounds(font, characters)
     rows = GLYPH_CELL_HEIGHT - FIRST_INK_ROW
-    for size in range(18, 5, -1):
-        font = ImageFont.truetype(
-            BytesIO(font_data), size=size, layout_engine=ImageFont.Layout.BASIC
-        )
-        boxes = [font.getbbox(character, anchor="ls") for character in characters]
-        top = min(box[1] for box in boxes)
-        bottom = max(box[3] for box in boxes)
-        widest = max(
-            max(math.ceil(font.getlength(character)), box[2] - box[0])
-            for character, box in zip(characters, boxes, strict=True)
-        )
-        if bottom - top <= rows and widest <= GLYPH_CELL_WIDTH:
-            return font, size, top, bottom
-    raise ClassicRetroError(
-        ErrorCode.FONT_BUILD_FAILED,
-        "Selected font cannot fit the Minish Cap 16x15 Arabic glyph area",
-    )
+    if bounds.bottom - bounds.top <= rows and bounds.widest_advance <= GLYPH_CELL_WIDTH:
+        return bounds.top, bounds.bottom
+    return None
 
 
 def _rasterize(
     font: ImageFont.FreeTypeFont, character: str, baseline: int
-) -> tuple[set[tuple[int, int]], int]:
-    cell = Image.new("L", (GLYPH_CELL_WIDTH * 2, GLYPH_CELL_HEIGHT), 0)
-    draw = ImageDraw.Draw(cell)
-    left, _, right, _ = font.getbbox(character, anchor="ls")
-    draw.text((-left, baseline), character, font=font, fill=255, anchor="ls")
-    pixels = cell.load()
-    ink = {
-        (x, y)
-        for y in range(GLYPH_CELL_HEIGHT)
-        for x in range(GLYPH_CELL_WIDTH * 2)
-        if pixels[x, y] >= INK_THRESHOLD
-    }
-    if not ink:
-        raise ClassicRetroError(
-            ErrorCode.FONT_BUILD_FAILED,
-            f"Selected font produced an empty glyph for U+{ord(character):04X}",
-        )
-
-    # Glyphs start at their first ink column. A left-joining form must touch
-    # the glyph painted after it (to its left) without a side-bearing gap.
-    ink_left = min(x for x, _ in ink)
-    ink = {(x - ink_left, y) for x, y in ink}
-    ink_right = max(x for x, _ in ink)
-    if joins_right_neighbour(character):
-        # The right edge meets the previous (right-hand) glyph exactly.
-        width = ink_right + 1
-    else:
-        # Non-joining right side: keep the font's advance as the gap to the
-        # right-hand neighbour.
-        width = max(math.ceil(font.getlength(character)), right - left, ink_right + 1)
-        if not joins_left_neighbour(character) and width == ink_right + 1:
-            width += 1
-
+) -> tuple[frozenset[tuple[int, int]], int]:
+    form = draw_form(font, character, baseline)
+    width = form.advance
     if width > GLYPH_CELL_WIDTH:
         raise ClassicRetroError(
             ErrorCode.FONT_BUILD_FAILED,
             f"Glyph U+{ord(character):04X} needs {width}px; the Minish Cap cell is 16px",
         )
-    outside = [(x, y) for x, y in ink if x >= width or y < FIRST_INK_ROW or y >= GLYPH_CELL_HEIGHT]
+    outside = [
+        (x, y) for x, y in form.ink if x >= width or y < FIRST_INK_ROW or y >= GLYPH_CELL_HEIGHT
+    ]
     if outside:
         raise ClassicRetroError(
             ErrorCode.FONT_BUILD_FAILED,
             f"Glyph U+{ord(character):04X} has pixels outside its {width}x16 cell",
         )
-    return ink, width
+    return form.ink, width
 
 
-def _encode_glyph(ink: set[tuple[int, int]], width: int) -> bytes:
-    output = bytearray()
-    for half in range(2):
-        for y in range(GLYPH_CELL_HEIGHT):
-            row = []
-            for column in range(8):
-                x = half * 8 + column
-                if x >= width:
-                    row.append(_NIBBLE_UNUSED)
-                elif (x, y) in ink:
-                    row.append(_NIBBLE_INK)
-                else:
-                    row.append(_NIBBLE_BACKGROUND)
-            output.extend(row[i] | (row[i + 1] << 4) for i in range(0, 8, 2))
-    return bytes(output)
+def _encode_glyph(ink: set[tuple[int, int]] | frozenset[tuple[int, int]], width: int) -> bytes:
+    """Two 8x16 halves, left then right; columns past the advance hold the unused marker."""
+    pixels = [
+        [
+            _NIBBLE_UNUSED if x >= width else _NIBBLE_INK if (x, y) in ink else _NIBBLE_BACKGROUND
+            for x in range(GLYPH_CELL_WIDTH)
+        ]
+        for y in range(GLYPH_CELL_HEIGHT)
+    ]
+    return pack_4bpp(pixels, columns=True)
 
 
-def font_preview(result: TmcArabicFontResult, glyph_map: TmcArabicGlyphMap) -> Image.Image:
+def font_preview(result: TmcArabicFontResult, glyph_map: GlyphCodes) -> Image.Image:
     """Atlas of the generated glyphs: 16 per row, ink white, unused columns dark red."""
-    rows = math.ceil(result.glyphs / 16)
-    atlas = Image.new("RGB", (16 * 18, rows * 18), (40, 40, 40))
     colours = {
         _NIBBLE_UNUSED: (90, 20, 20),
         _NIBBLE_BACKGROUND: (0, 0, 0),
         _NIBBLE_INK: (255, 255, 255),
     }
-    for index in range(result.glyphs):
-        glyph = result.data[index * GLYPH_BYTES : (index + 1) * GLYPH_BYTES]
-        origin_x = (index % 16) * 18 + 1
-        origin_y = (index // 16) * 18 + 1
-        for half in range(2):
-            for y in range(GLYPH_CELL_HEIGHT):
-                for column in range(8):
-                    value = glyph[half * 64 + y * 4 + column // 2]
-                    nibble = value & 0xF if column % 2 == 0 else value >> 4
-                    atlas.putpixel(
-                        (origin_x + half * 8 + column, origin_y + y),
-                        colours.get(nibble, (0, 0, 255)),
-                    )
-    return atlas
+    glyphs = [
+        unpack_4bpp(
+            result.data[index * GLYPH_BYTES : (index + 1) * GLYPH_BYTES],
+            GLYPH_CELL_WIDTH,
+            GLYPH_CELL_HEIGHT,
+            columns=True,
+        )
+        for index in range(result.glyphs)
+    ]
+    return glyph_atlas(
+        result.glyphs,
+        GLYPH_CELL_WIDTH,
+        GLYPH_CELL_HEIGHT,
+        lambda index, x, y: colours.get(glyphs[index][y][x], (0, 0, 255)),
+    )
 
 
 @dataclass(frozen=True, slots=True)
@@ -286,7 +223,7 @@ class TmcArabicEncoder:
         arabic_widths: dict[str, int],
         latin_widths: dict[str, int],
         player_width: int | None = None,
-        glyph_map: TmcArabicGlyphMap | None = None,
+        glyph_map: GlyphCodes | None = None,
     ) -> None:
         self.pipeline = legacy_renderer_pipeline()
         self.glyph_map = glyph_map or build_tmc_arabic_glyph_map()
@@ -298,20 +235,7 @@ class TmcArabicEncoder:
 
     def prepare_paint_order(self, stream: TokenStream) -> TokenStream:
         reject_combining_marks(stream, "Minish Cap Arabic font v1")
-        mirrored = sorted(
-            {
-                character
-                for token in stream.tokens
-                if isinstance(token, TextToken)
-                for character in token.text
-                if character in _MIRRORED
-            }
-        )
-        if mirrored:
-            raise ClassicRetroError(
-                ErrorCode.UNENCODABLE_TEXT,
-                "Minish Cap Arabic v1 cannot mirror bracket glyphs: " + "".join(mirrored),
-            )
+        reject_mirrored(stream, "Minish Cap Arabic v1")
         return rtl_paint_order(self.pipeline, stream)
 
     def line_widths(self, stream: TokenStream) -> tuple[TmcArabicLine, ...]:
@@ -369,9 +293,9 @@ class TmcArabicEncoder:
     def _encode_text(self, text: str) -> str:
         parts = []
         for character in text:
-            notation = self.glyph_map.notation(character)
-            if notation is not None:
-                parts.append(notation)
+            slot = self.glyph_map.code(character)
+            if slot is not None:
+                parts.append(glyph_notation(slot))
             else:
                 parts.append(render_tmc_string(TokenStream((TextToken(character),))))
         return "".join(parts)
@@ -381,15 +305,5 @@ class TmcArabicEncoder:
         if width is None:
             width = self.latin_widths.get(character)
         if width is None:
-            if unicodedata.category(character).startswith("L") and "ARABIC" in unicodedata.name(
-                character, ""
-            ):
-                raise ClassicRetroError(
-                    ErrorCode.MISSING_GLYPH,
-                    f"No Minish Cap Arabic glyph for U+{ord(character):04X}",
-                )
-            raise ClassicRetroError(
-                ErrorCode.UNENCODABLE_TEXT,
-                f"Minish Cap text has no glyph for {character!r}",
-            )
+            raise no_glyph(character, "Minish Cap Arabic")
         return width

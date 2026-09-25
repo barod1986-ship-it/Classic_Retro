@@ -26,17 +26,21 @@ final and isolated yeh do not fit at that size; see ``_MARKED_ALEF`` and
 
 from __future__ import annotations
 
-import math
-import unicodedata
-from collections.abc import Sequence
+from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from functools import lru_cache
-from io import BytesIO
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageFont
 
-from classic_retro.arabic.paint import reject_combining_marks, rtl_paint_order
+from classic_retro.arabic.glyph_codes import GlyphCodes, assign_glyph_codes
+from classic_retro.arabic.logical import no_glyph
+from classic_retro.arabic.paint import (
+    MIRRORED_BRACKETS,
+    reject_combining_marks,
+    reject_mirrored,
+    rtl_paint_order,
+)
 from classic_retro.arabic.repertoire import arabic_presentation_repertoire, legacy_renderer_pipeline
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.mlss import (
@@ -55,12 +59,18 @@ from classic_retro.engines.mlss import (
     measure_text,
     notation_skeleton,
 )
-from classic_retro.font.arabic_outline import (
-    contextual_font_data,
-    joins_left_neighbour,
-    joins_right_neighbour,
+from classic_retro.font.arabic_outline import contextual_font_data, joins_right_neighbour
+from classic_retro.font.glyph_raster import (
+    DrawnForm,
+    FormDoesNotFit,
+    alef_with_mark,
+    arabic_font_file,
+    draw_form,
+    largest_fitting_size,
 )
-from classic_retro.text.tokens import InlineToken, TextToken, TokenKind, TokenMovement, TokenStream
+from classic_retro.font.previews import glyph_atlas, pages_right_to_left, preview_sheet
+from classic_retro.text.commands import command_codes, command_token, require_same_commands
+from classic_retro.text.tokens import InlineToken, TextToken, TokenKind, TokenStream
 
 ARABIC_PREFIX = 0xFE
 ARABIC_FONT_INDEX = COMMAND - ARABIC_PREFIX
@@ -107,35 +117,28 @@ _MARKED_ALEF: dict[str, tuple[str, tuple[str, ...]]] = {
 # The dots of final and isolated yeh fall one row below the cell: these forms
 # are raised by a row; the final form keeps a pixel on the joining row.
 _RAISED_FORMS = frozenset("ﻱﻲ")
-# The font cannot mirror these, and the shared bidi step does not apply rule L4.
-_MIRRORED = frozenset("()[]{}<>‹›")
+# Guillemets have mirrored copies (``LATIN_COPIES``); other brackets cannot mirror.
+_MIRRORED = MIRRORED_BRACKETS - {"«", "»"}
 
 
-@dataclass(frozen=True, slots=True)
-class MlssArabicGlyphMap:
-    """Character -> code of the right-to-left font."""
-
-    space: int
-    codes: dict[str, int]
-
-    def all_codes(self) -> tuple[int, ...]:
-        return (self.space, *sorted(self.codes.values()))
+def mlss_glyph_codes(characters: Iterable[str]) -> GlyphCodes:
+    """Codes of the right-to-left font for ``characters``, in order."""
+    return assign_glyph_codes(characters, ARABIC_CODES, what="MLSS right-to-left glyphs")
 
 
 @lru_cache(maxsize=1)
-def build_mlss_arabic_glyph_map() -> MlssArabicGlyphMap:
-    characters = (*LATIN_COPIES, *arabic_presentation_repertoire())
-    if 1 + len(characters) > len(ARABIC_CODES):
-        raise ClassicRetroError(
-            ErrorCode.ARABIC_GLYPH_CAPACITY_EXCEEDED,
-            f"Right-to-left glyphs need {1 + len(characters)} codes; "
-            f"the font has {len(ARABIC_CODES)}",
-        )
-    codes = iter(ARABIC_CODES)
-    space = next(codes)
-    return MlssArabicGlyphMap(
-        space=space, codes={character: next(codes) for character in characters}
-    )
+def build_mlss_arabic_glyph_map() -> GlyphCodes:
+    """The space first, then the Latin copies and the Arabic forms."""
+    return mlss_glyph_codes((" ", *LATIN_COPIES, *arabic_presentation_repertoire()))
+
+
+def character_codes(glyph_map: GlyphCodes) -> dict[str, int]:
+    """Every character's code but the space's."""
+    return {
+        character: code
+        for character in glyph_map.characters
+        if character != " " and (code := glyph_map.code(character)) is not None
+    }
 
 
 @dataclass(frozen=True, slots=True)
@@ -232,143 +235,83 @@ def build_mlss_rtl_font(
     font_path: Path,
     latin: dict[str, MlssRtlGlyph] | None = None,
     *,
-    glyph_map: MlssArabicGlyphMap | None = None,
+    glyph_map: GlyphCodes | None = None,
 ) -> MlssRtlFont:
     """Rasterize the Arabic forms into 16x12 cells and add the Latin copies."""
     glyph_map = glyph_map or build_mlss_arabic_glyph_map()
-    font_path = font_path.expanduser()
-    if not font_path.is_file():
-        raise ClassicRetroError(
-            ErrorCode.FONT_BUILD_FAILED, f"Arabic font file not found: {font_path}"
-        )
     latin = latin if latin is not None else placeholder_latin_glyphs()
-    arabic = tuple(character for character in glyph_map.codes if character not in LATIN_COPIES)
+    codes = character_codes(glyph_map)
+    arabic = tuple(character for character in codes if character not in LATIN_COPIES)
     # Hamza above alef is drawn from the plain alef forms, not from the font.
     outlined = {character for character in arabic if character not in _MARKED_ALEF}
     outlined |= {alef for composed, (alef, _) in _MARKED_ALEF.items() if composed in arabic}
-    font_data = contextual_font_data(font_path, tuple(sorted(outlined, key=ord)))
-    size, rendered = _choose_size(font_data, arabic)
-    glyphs: dict[int, MlssRtlGlyph] = {glyph_map.space: _glyph({}, SPACE_ADVANCE)}
-    for character, code in glyph_map.codes.items():
+    _, size, rendered = largest_fitting_size(
+        contextual_font_data(arabic_font_file(font_path), tuple(sorted(outlined, key=ord))),
+        range(14, 5, -1),
+        lambda font: _forms(font, arabic),
+        "Selected font cannot fit the MLSS 16x12 glyph cell",
+    )
+    space = glyph_map.code(" ")
+    assert space is not None
+    glyphs: dict[int, MlssRtlGlyph] = {space: _glyph({}, SPACE_ADVANCE)}
+    for character, code in codes.items():
         if character in LATIN_COPIES:
             glyphs[code] = latin[character]
         else:
-            values, width = rendered[character]
-            glyphs[code] = _glyph(values, width)
-    return MlssRtlFont(
-        glyphs=glyphs, codes=dict(glyph_map.codes), space=glyph_map.space, font_size=size
-    )
+            glyphs[code] = _glyph(_values(rendered[character]), rendered[character].advance)
+    return MlssRtlFont(glyphs=glyphs, codes=codes, space=space, font_size=size)
 
 
-class _DoesNotFit(Exception):
-    pass
+def _forms(
+    font: ImageFont.FreeTypeFont, characters: tuple[str, ...]
+) -> dict[str, DrawnForm] | None:
+    """Every form at this size, or None when one leaves the 16x12 cell on the row-9 baseline."""
+    try:
+        rendered = {
+            character: _rasterize(font, character)
+            for character in characters
+            if character not in _MARKED_ALEF
+        }
+        for composed, (alef, mark) in _MARKED_ALEF.items():
+            if composed in characters:
+                source = rendered[alef] if alef in rendered else _rasterize(font, alef)
+                rendered[composed] = alef_with_mark(composed, source, mark)
+        for character in _RAISED_FORMS & set(rendered):
+            rendered[character] = _raised(character, rendered[character])
+    except FormDoesNotFit:
+        return None
+    if any(_leaves_cell(form) for form in rendered.values()):
+        return None
+    return rendered
 
 
-Rendered = tuple[dict[tuple[int, int], int], int]
+def _leaves_cell(form: DrawnForm) -> bool:
+    return any(not 0 <= y < CELL_HEIGHT for _, y in form.ink | form.soft)
 
 
-def _choose_size(font_data: bytes, characters: tuple[str, ...]) -> tuple[int, dict[str, Rendered]]:
-    """Largest size whose forms fit the 16x12 cell on the row-9 baseline."""
-    for size in range(14, 5, -1):
-        font = ImageFont.truetype(
-            BytesIO(font_data), size=size, layout_engine=ImageFont.Layout.BASIC
-        )
-        try:
-            rendered = {
-                character: _rasterize(font, character)
-                for character in characters
-                if character not in _MARKED_ALEF
-            }
-            for composed, (alef, mark) in _MARKED_ALEF.items():
-                if composed in characters:
-                    source = rendered[alef] if alef in rendered else _rasterize(font, alef)
-                    rendered[composed] = _marked_alef(composed, source, mark)
-            for character in _RAISED_FORMS & set(rendered):
-                rendered[character] = _raised(character, rendered[character])
-        except _DoesNotFit:
-            continue
-        if any(_leaves_cell(values) for values, _ in rendered.values()):
-            continue
-        return size, rendered
-    raise ClassicRetroError(
-        ErrorCode.FONT_BUILD_FAILED, "Selected font cannot fit the MLSS 16x12 glyph cell"
-    )
+def _rasterize(font: ImageFont.FreeTypeFont, character: str) -> DrawnForm:
+    form = draw_form(font, character, BASELINE, ink_level=INK_LEVEL, soft_level=SOFT_LEVEL)
+    if form.advance > CELL_WIDTH:
+        raise FormDoesNotFit
+    return form
 
 
-def _leaves_cell(values: dict[tuple[int, int], int]) -> bool:
-    return any(not 0 <= y < CELL_HEIGHT for _, y in values)
+def _values(form: DrawnForm) -> dict[tuple[int, int], int]:
+    """The form's pixels as the font's values: 1 ink, 3 soft."""
+    return {**dict.fromkeys(form.soft, SOFT), **dict.fromkeys(form.ink, TEXT)}
 
 
-def _rasterize(font: ImageFont.FreeTypeFont, character: str) -> Rendered:
-    margin = CELL_HEIGHT
-    cell = Image.new("L", (CELL_WIDTH * 4, CELL_HEIGHT + 2 * margin), 0)
-    left, _, right, _ = font.getbbox(character, anchor="ls")
-    ImageDraw.Draw(cell).text(
-        (CELL_WIDTH - left, margin + BASELINE), character, font=font, fill=255, anchor="ls"
-    )
-    pixels = cell.load()
-    coverage = {
-        (x, y - margin): pixels[x, y]
-        for y in range(cell.height)
-        for x in range(cell.width)
-        if pixels[x, y] >= SOFT_LEVEL
-    }
-    ink = [(x, y) for (x, y), level in coverage.items() if level >= INK_LEVEL]
-    if not ink:
-        raise ClassicRetroError(
-            ErrorCode.FONT_BUILD_FAILED,
-            f"Selected font produced an empty glyph for U+{ord(character):04X}",
-        )
-    ink_left = min(x for x, _ in ink)
-    ink_right = max(x for x, _ in ink) - ink_left
-    values = {
-        (x - ink_left, y): TEXT if level >= INK_LEVEL else SOFT
-        for (x, y), level in coverage.items()
-        if x >= ink_left
-    }
-    if joins_right_neighbour(character):
-        # Medial and final forms end at their last ink column, touching the
-        # glyph painted before them (on their right).
-        width = ink_right + 1
-    else:
-        width = max(math.ceil(font.getlength(character)), right - left, ink_right + 1)
-        if not joins_left_neighbour(character) and width == ink_right + 1:
-            width += 1
-    if width > CELL_WIDTH:
-        raise _DoesNotFit
-    return values, width
-
-
-def _marked_alef(character: str, alef: Rendered, mark: tuple[str, ...]) -> Rendered:
-    """The alef cut one row below ``mark``, with the mark drawn from its stroke."""
-    values, width = alef
-    stroke = min(x for (x, _), value in values.items() if value == TEXT)
-    kept = {(x, y): value for (x, y), value in values.items() if y > len(mark)}
-    if not any(value == TEXT for value in kept.values()):
-        raise _DoesNotFit
-    for y, row in enumerate(mark):
-        for x, pixel in enumerate(row):
-            if pixel == "#":
-                kept[(stroke + x, y)] = TEXT
-    left = min(x for x, _ in kept)
-    kept = {(x - left, y): value for (x, y), value in kept.items()}
-    right = max(x for (x, _), value in kept.items() if value == TEXT)
-    if joins_right_neighbour(character):
-        width = right + 1
-    else:
-        width = max(width - left, right + 2)
-    return kept, width
-
-
-def _raised(character: str, rendered: Rendered) -> Rendered:
+def _raised(character: str, form: DrawnForm) -> DrawnForm:
     """One row up when the form reaches below the cell, keeping its join."""
-    values, width = rendered
-    if max(y for _, y in values) < CELL_HEIGHT:
-        return rendered
-    raised = {(x, y - 1): value for (x, y), value in values.items()}
+    if max(y for _, y in form.ink | form.soft) < CELL_HEIGHT:
+        return form
+    ink = {(x, y - 1) for x, y in form.ink}
+    soft = {(x, y - 1) for x, y in form.soft}
     if joins_right_neighbour(character):
-        raised[(width - 1, BASELINE - 1)] = TEXT
-    return raised, width
+        join = (form.advance - 1, BASELINE - 1)
+        ink.add(join)
+        soft.discard(join)
+    return DrawnForm(frozenset(ink), frozenset(soft), form.advance)
 
 
 def arabic_command_token(token_id: str, command: MlssCommand) -> InlineToken:
@@ -378,13 +321,7 @@ def arabic_command_token(token_id: str, command: MlssCommand) -> InlineToken:
         kind = TokenKind.PAGE_BREAK
     else:
         kind = TokenKind.CONTROL
-    return InlineToken(
-        id=token_id,
-        kind=kind,
-        movement=TokenMovement.ORDERED,
-        name=f"FF{command.code:02X}",
-        args={"codes": command.data.hex(" ")},
-    )
+    return command_token(token_id, kind, command.data.hex(" "), name=f"FF{command.code:02X}")
 
 
 def arabic_stream(pieces: Sequence[Piece], prefix: str = "t") -> TokenStream:
@@ -421,8 +358,12 @@ class MlssArabicEncoder:
         self.pipeline = legacy_renderer_pipeline()
         self.font = font
         glyph_map = build_mlss_arabic_glyph_map()
-        self.codes = dict(font.codes) if font is not None else dict(glyph_map.codes)
-        self.space = font.space if font is not None else glyph_map.space
+        self.codes: Mapping[str, int] = (
+            dict(font.codes) if font is not None else character_codes(glyph_map)
+        )
+        space = font.space if font is not None else glyph_map.code(" ")
+        assert space is not None
+        self.space = space
         self.fonts: list[MlssFont | None] | None = None
         if font is not None:
             # Font 0 only gives an empty line its height: the game's 12 rows.
@@ -434,15 +375,8 @@ class MlssArabicEncoder:
         """Encode a message text; its last piece must be ``FF 0A``."""
         if not pieces or not isinstance(pieces[-1], MlssCommand) or not pieces[-1].is_end:
             raise ClassicRetroError(ErrorCode.MISSING_TERMINATOR, "Arabic text must end with FF 0A")
-        for piece in pieces:
-            if isinstance(piece, str):
-                mirrored = sorted({character for character in piece if character in _MIRRORED})
-                if mirrored:
-                    raise ClassicRetroError(
-                        ErrorCode.UNENCODABLE_TEXT,
-                        "MLSS Arabic v1 cannot mirror bracket glyphs: " + "".join(mirrored),
-                    )
         stream = arabic_stream(pieces)
+        reject_mirrored(stream, "MLSS Arabic v1", _MIRRORED)
         reject_combining_marks(stream, "MLSS Arabic font v1")
         data = bytearray()
         for token in rtl_paint_order(self.pipeline, stream).tokens:
@@ -450,7 +384,7 @@ class MlssArabicEncoder:
                 for character in token.text:
                     data += bytes((ARABIC_PREFIX, self.code(character)))
             else:
-                data += bytes.fromhex(str(token.args["codes"]))
+                data += bytes(command_codes(token, "MLSS"))
         body = bytes(data)
         if self.fonts is None:
             return MlssArabicEncoding(body, None)
@@ -469,25 +403,12 @@ class MlssArabicEncoder:
         code = self.codes.get(character)
         if code is not None:
             return code
-        if unicodedata.category(character).startswith("L") and "ARABIC" in unicodedata.name(
-            character, ""
-        ):
-            raise ClassicRetroError(
-                ErrorCode.MISSING_GLYPH, f"No MLSS Arabic glyph for U+{ord(character):04X}"
-            )
-        raise ClassicRetroError(
-            ErrorCode.UNENCODABLE_TEXT, f"MLSS Arabic text has no glyph for {character!r}"
-        )
+        raise no_glyph(character, "MLSS Arabic")
 
 
 def validate_command_skeleton(source: tuple[str, ...], pieces: Sequence[Piece]) -> None:
     """The translation's commands must equal the original's; only line ends may move."""
-    target = notation_skeleton(pieces)
-    if target != source:
-        raise ClassicRetroError(
-            ErrorCode.TOKEN_ORDER_VIOLATION,
-            "MLSS commands differ from the original: " + "".join(source) + " != " + "".join(target),
-        )
+    require_same_commands("MLSS", source, notation_skeleton(pieces), "".join)
 
 
 # Palette of the previews: the speech bubbles' white box, ink and grey.
@@ -503,26 +424,21 @@ BOX_EXTRA_TILES = 5
 def font_preview(font: MlssRtlFont) -> Image.Image:
     """Atlas of the right-to-left glyphs: ink white, advance dark red, baseline blue."""
     codes = sorted(font.glyphs)
-    cell_w, cell_h = CELL_WIDTH + 2, CELL_HEIGHT + 2
-    atlas = Image.new("RGB", (16 * cell_w, math.ceil(len(codes) / 16) * cell_h), (40, 40, 40))
-    for index, code in enumerate(codes):
-        glyph = font.glyphs[code]
-        origin_x = (index % 16) * cell_w + 1
-        origin_y = (index // 16) * cell_h + 1
-        for y in range(CELL_HEIGHT):
-            for x in range(CELL_WIDTH):
-                value = glyph.pixels[y][x]
-                colour = (0, 0, 0)
-                if value == TEXT:
-                    colour = (255, 255, 255)
-                elif value == SOFT:
-                    colour = (140, 140, 160)
-                elif x >= glyph.width:
-                    colour = (70, 20, 20)
-                elif y == BASELINE - 1:
-                    colour = (20, 20, 70)
-                atlas.putpixel((origin_x + x, origin_y + y), colour)
-    return atlas
+
+    def colour(index: int, x: int, y: int) -> tuple[int, int, int]:
+        glyph = font.glyphs[codes[index]]
+        value = glyph.pixels[y][x]
+        if value == TEXT:
+            return (255, 255, 255)
+        if value == SOFT:
+            return (140, 140, 160)
+        if x >= glyph.width:
+            return (70, 20, 20)
+        if y == BASELINE - 1:
+            return (20, 20, 70)
+        return (0, 0, 0)
+
+    return glyph_atlas(len(codes), CELL_WIDTH, CELL_HEIGHT, colour)
 
 
 def message_preview(font: MlssRtlFont, header: tuple[int, int], body: bytes) -> Image.Image:
@@ -587,10 +503,7 @@ def message_preview(font: MlssRtlFont, header: tuple[int, int], body: bytes) -> 
                         if 0 <= px < width and 0 <= py < height:
                             pages[-1].putpixel((px, py), PREVIEW_COLOURS[value])
         x += drawn
-    image = Image.new("RGB", (len(pages) * (width + 4) - 4, height), (0, 0, 0))
-    for number, page in enumerate(reversed(pages)):
-        image.paste(page, (number * (width + 4), 0))
-    return image
+    return pages_right_to_left(pages)
 
 
 def _line_width(font: MlssRtlFont, body: bytes, index: int) -> int:
@@ -613,13 +526,4 @@ def _line_width(font: MlssRtlFont, body: bytes, index: int) -> int:
 
 def messages_sheet(images: list[tuple[str, Image.Image]]) -> Image.Image:
     """Previews one under another, each with its key on the left."""
-    label = 120
-    width = label + max(image.width for _, image in images)
-    sheet = Image.new("RGB", (width, sum(image.height + 4 for _, image in images)), (12, 12, 12))
-    draw = ImageDraw.Draw(sheet)
-    y = 0
-    for key, image in images:
-        draw.text((2, y + 2), key, fill=(200, 200, 120))
-        sheet.paste(image, (width - image.width, y))
-        y += image.height + 4
-    return sheet
+    return preview_sheet(images, 120)
