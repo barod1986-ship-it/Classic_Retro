@@ -2,7 +2,7 @@
 
 Version: 1
 
-The eleven reference targets put Arabic on screen with three rendering strategies.
+The twelve reference targets put Arabic on screen with three rendering strategies.
 They are a starting set, not a closed list. Engines on other platforms will need
 other methods, and the registry (`classic_retro.localization.strategies`) accepts
 them the same way it holds these three:
@@ -22,7 +22,7 @@ already worked.
 ### `glyph-font`: right-to-left glyph font (proven)
 
 Used by: `firered`, `minish-cap`, `ff6a`, `golden-sun`, `fire-emblem` (dialogue),
-`pmd-red`, `mlss`, `advance-wars`, `metroid-fusion`.
+`pmd-red`, `mlss`, `advance-wars`, `metroid-fusion`, `tactics-ogre`.
 
 Every contextual form of the letters (the 133 presentation forms of
 `arabic/repertoire.py`) is drawn from the reference font into the game's own font
@@ -74,13 +74,17 @@ HarfBuzz and redrawn in the game's own image format and palette.
 
 | Way | How | Targets |
 |-----|-----|---------|
-| Mirrored draw | The game's pen keeps advancing left to right. Only where a glyph (or cell) is drawn moves to the mirror of the pen inside the line: `draw_x = left + right - pen - width`, or column `27 - x` for 28-column cells | `minish-cap`, `ff6a`, `golden-sun`, `fire-emblem`, `pmd-red`, `mlss`, `mmbn`, `fomt`, `metroid-fusion` |
+| Mirrored draw | The game's pen keeps advancing left to right. Only where a glyph (or cell) is drawn moves to the mirror of the pen inside the line: `draw_x = left + right - pen - width`, or column `27 - x` for 28-column cells | `minish-cap`, `ff6a`, `golden-sun`, `fire-emblem`, `pmd-red`, `mlss`, `mmbn`, `fomt`, `metroid-fusion`, `tactics-ogre` |
 | Mirrored tilemap | The game draws the line left to right into its tiles as usual; each tile column goes into the tilemap at its mirror inside the text area, with the hardware's horizontal flip, and the glyphs are stored flipped | `advance-wars` |
 | Reversed pen | The pen starts at the line's right edge and subtracts each advance before drawing. Newline, page clear and scroll restore the right edge | `firered` |
 
 Mirrored draw became the default. It changes one point of the renderer, and the
 game's measuring, wrapping, centring, choices, typewriter and scrolling keep their
 meaning, so the typewriter reveals Arabic from the right with no further change.
+Where the game's routine composes a glyph in a scratch column and writes whole
+columns (Tactics Ogre), a mirrored glyph cannot share its columns: the hook takes
+every glyph of a right-to-left message, the space included, ORs it into the
+cleared tiles at its mirrored place and moves the game's pen as the routine would.
 Reversed pen needs control over every place that moves or resets the pen. FireRed
 had that through its decompilation. Mirrored tilemap suits a printer that draws a whole
 line into a strip of tiles, where no single point places a glyph (Advance Wars): the
@@ -103,10 +107,12 @@ cursor at each Arabic option and swaps the left and right keys).
 | Direction control codes the source overlay adds (`FC 19 xx` / `FC 1A`, `04 16` / `04 17`) | `firered`, `minish-cap` |
 | The first code of a message (`0x5FF`, `0x0B`, `0x1E`) | `ff6a`, `golden-sun`, `fire-emblem` |
 | The glyph itself: a charmap flag, or a glyph of the right-to-left font | `pmd-red`, `mlss`, `metroid-fusion` (where a glyph is drawn) |
-| The text's own codes or address: cell codes, a bank table sorted by text address, or the address range of the Arabic bank | `fomt`, `mmbn`, `advance-wars`, `metroid-fusion` (its cursors, arrow and fade) |
+| The text's own codes or address: cell codes, a bank table sorted by text address, or the address range of the Arabic bank | `fomt`, `mmbn`, `advance-wars`, `metroid-fusion` (its cursors, arrow and fade), `tactics-ogre` |
 
 English text never carries the marker, so untranslated messages keep the original
-path.
+path. When a whole block of messages must move to reach the bank (Tactics Ogre finds a
+message by a 16-bit offset from its scene's block), the copy keeps the untranslated
+messages in English outside the bank.
 
 ## Where Arabic glyphs get their codes
 
@@ -126,6 +132,9 @@ path.
   (font 1 of every font list).
 - Lead bytes the game pairs like Shift-JIS: Harvest Moon (`F0 40..FA FC`).
 - Page banks chosen by the text's address: Mega Man Battle Network.
+- The game's whole glyph range, read as a second font in text of the Arabic bank:
+  Tactics Ogre (its routines read only `00..7F` as glyphs; codes 2 to 127 go to the
+  forms the script uses, measured and drawn by the hooks from tables of their own).
 
 ## Runtime names inside Arabic lines
 
@@ -142,6 +151,11 @@ right-to-left line.
 - Refused for now, with the reason in each target's notes: FF6 Advance, Fire Emblem,
   Pokémon Mystery Dungeon, Mario & Luigi.
 
+A fixed name the game inserts from a list of its own (a character's name, not the
+player's) can be Arabic instead: Tactics Ogre keeps the command (`87xx`) in the
+translation and writes the script's Arabic name out in its place at build time, so the
+name is shaped with the line and the list stays English for the rest of the game.
+
 ## Fitting the reference font to the game
 
 The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
@@ -149,7 +163,7 @@ The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
 - Use the largest size whose forms fit the game's rows around its baseline:
   - 10 px for FF6 Advance, Golden Sun, Mario & Luigi, Harvest Moon and Advance Wars
   - 9 px for Pokémon Mystery Dungeon
-  - 11 px for Mega Man Battle Network and Metroid Fusion
+  - 11 px for Mega Man Battle Network, Metroid Fusion and Tactics Ogre
 - Draw marks that vanish at that size by hand:
   - hamza or madda over alef (Mario & Luigi, Pokémon Mystery Dungeon, Metroid Fusion)
   - hamza on a carrier (Harvest Moon)
@@ -157,6 +171,8 @@ The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
   (`draw_form(..., mark_level=...)`; Metroid Fusion's medial beh).
 - Adjust a form that does not fit: raise final yeh, or split a 13-pixel seen into
   two glyphs (Advance Wars splits every form wider than its 8-pixel glyphs).
+- When only the forms a script uses get codes (Tactics Ogre), choose the size over the
+  whole repertoire anyway, so a new word never changes the size of the others.
 - Medial and final forms end at their last ink column, so joins touch the glyph
   painted before them. An isolated form whose ink fills its advance gets one more
   pixel, so it never touches the next word. This rule lives in
@@ -165,6 +181,9 @@ The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
   advance. Harvest Moon shades the whole line, so the shadow crosses cell edges.
   Metroid Fusion outlines each glyph on its eight sides, like its Latin letters, and
   leaves the outline out on a joining side, where the neighbour's ink goes on.
+  Advance Wars, Mario & Luigi and Tactics Ogre draw the grey around the strokes as a
+  second ink value, like their letters; Tactics Ogre leaves out the grey beyond a
+  glyph's advance, since its hook ORs neighbours together.
 
 ## The shared core
 
@@ -208,7 +227,7 @@ commands.
 ## Candidates for other platforms (not implemented)
 
 None of these has been built or tested. They are research notes for engines the
-eleven targets did not cover, and each becomes an `experimental` strategy together
+twelve targets did not cover, and each becomes an `experimental` strategy together
 with its first target.
 
 - **Tile-composed variable-width text.** Many NES, Game Boy and SNES engines put

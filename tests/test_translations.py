@@ -44,6 +44,10 @@ from classic_retro.rom.metroid_fusion_arabic_script import metroid_fusion_arabic
 from classic_retro.rom.mlss_arabic_script import mlss_arabic_messages
 from classic_retro.rom.mmbn_arabic_script import mmbn_arabic_sections
 from classic_retro.rom.pmd_arabic_script import pmd_arabic_strings
+from classic_retro.rom.tactics_ogre_arabic_script import (
+    tactics_ogre_arabic_messages,
+    tactics_ogre_arabic_names,
+)
 from classic_retro.source.pokefirered_arabic import OAK_SPEECH_LABELS, _oak_speech_streams
 from classic_retro.source.tmc_arabic import tmc_arabic_messages
 from classic_retro.text.tokens import InlineToken, TextToken
@@ -60,6 +64,7 @@ TARGETS = (
     "fomt",
     "advance-wars",
     "metroid-fusion",
+    "tactics-ogre",
 )
 RLE = chr(0x202B)
 
@@ -88,6 +93,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "fomt": len(fomt_arabic_strings()) + len(fomt_arabic_names()),
         "advance-wars": len(advance_wars_arabic_messages()),
         "metroid-fusion": len(metroid_fusion_arabic_messages()),
+        "tactics-ogre": len(tactics_ogre_arabic_messages()) + len(tactics_ogre_arabic_names()),
     }
     assert counts == {
         "firered": 13,
@@ -101,6 +107,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "fomt": 38,
         "advance-wars": 14,
         "metroid-fusion": 18,
+        "tactics-ogre": 16,
     }
     for target in TARGETS:
         translations = builtin_translation_set(target)
