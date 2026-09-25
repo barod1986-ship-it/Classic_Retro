@@ -1,0 +1,114 @@
+{
+  "schema_version": "1.0",
+  "target": "tactics-ogre",
+  "language": "ar",
+  "notation": "Logical Arabic in the engine notation (engines.tactics_ogre). Keep every command of the original, in order. A message starts with its speaker's name between {8B} and {8C} (shown at once), then a line end; {8E}{8A} waits for A and starts the next page, {8D}{8A} ends the message. {8705} is Rictor's name, written out from the entry rictor. Line ends after text (\\n) may move; a page holds the lines of its window (three, or two in some messages, the name's line included), of at most 176 pixels. Speech has no quotation marks. No vowel marks: the font has none.",
+  "glossary": [
+    {
+      "term": "Rictor",
+      "text": "ريكتور"
+    },
+    {
+      "term": "Lasanti (Rictor's family name)",
+      "text": "لاسانتي"
+    },
+    {
+      "term": "Loeher (the hero's new family name)",
+      "text": "لوهير"
+    },
+    {
+      "term": "Commander",
+      "text": "القائد"
+    },
+    {
+      "term": "Dark-Haired Knight (the hero, before he is named)",
+      "text": "فارس داكن الشعر"
+    },
+    {
+      "term": "Fortune Teller",
+      "text": "العرافة"
+    }
+  ],
+  "entries": [
+    {
+      "id": "farewell",
+      "context": "Rictor, before his name is shown; message 0 of the first scene",
+      "text": "{8B}شاب أنيق الملبس{8C}\nإذن، هل بالغت أمك\nفي وداعك؟{8D}{8A}"
+    },
+    {
+      "id": "family_name",
+      "context": "The hero, not yet named; message 1",
+      "text": "{8B}فارس داكن الشعر{8C}\nليس لدي وقت لهذا\nيا {8705}.{8E}{8A}ما يشغلني أكثر هو اسم\nعائلتي الجديد... فحين\nأسمع اسم لوهير،{8E}{8A}لا أشعر أنه يخصني.\nكنت أفضل ألا يتغير\nأبدا.{8D}{8A}"
+    },
+    {
+      "id": "ship_departs",
+      "context": "Rictor, named at last; message 2",
+      "text": "{8B}شاب يدعى {8705}{8C}\nهيا، لا تكن جافا هكذا.{8E}{8A}فحين تبحر سفينتنا،\nلن تتمكن من رؤيتها\nلفترة طويلة.{8D}{8A}"
+    },
+    {
+      "id": "first_voyage",
+      "context": "The hero; message 3",
+      "text": "{8B}فارس داكن الشعر{8C}\nأخيرا سنرحل...\nإنها أول رحلة لي خارج البلاد.{8D}{8A}"
+    },
+    {
+      "id": "no_holiday",
+      "context": "Rictor; message 4",
+      "text": "{8B}{8705}{8C}\nيبدو أنك تظن\nأنها ستكون نزهة!{8E}{8A}لست متأكدا أنك تدرك\nما الذي نقحم أنفسنا فيه.{8D}{8A}"
+    },
+    {
+      "id": "commander",
+      "context": "The hero teases Rictor, their commander; message 13",
+      "text": "{8B}فارس داكن الشعر{8C}\nعذرا أيها القائد\nلاسانتي.{8D}{8A}"
+    },
+    {
+      "id": "first_command",
+      "context": "Rictor; message 14",
+      "text": "{8B}{8705}{8C}\nأكانت تلك سخرية؟{8E}{8A}قد تكون هذه أول مرة\nأتولى فيها القيادة... لكنني\nأنتظر منك الكثير.{8D}{8A}"
+    },
+    {
+      "id": "count_on_me",
+      "context": "The hero; message 15",
+      "text": "{8B}فارس داكن الشعر{8C}\nاعتمد علي يا سيدي.{8D}{8A}"
+    },
+    {
+      "id": "fortune_offer",
+      "context": "A mysterious woman, the fortune teller; message 5",
+      "text": "{8B}امرأة غامضة{8C}\nمرحبا، أتود أن\nأقرأ لك طالعك؟{8D}{8A}"
+    },
+    {
+      "id": "no_time",
+      "context": "Rictor; message 6",
+      "text": "{8B}{8705}{8C}\nلا وقت لدينا لهذا.\nسنبحر غدا في الصباح الباكر.{8D}{8A}"
+    },
+    {
+      "id": "silence",
+      "context": "The hero says nothing; message 7",
+      "text": "{8B}فارس داكن الشعر{8C}\n......{8D}{8A}"
+    },
+    {
+      "id": "sudden_interest",
+      "context": "Rictor; message 8",
+      "text": "{8B}{8705}{8C}\nما خطبك اليوم؟{8E}{8A}لماذا هذا الاهتمام المفاجئ\nبقراءة الطالع؟{8D}{8A}"
+    },
+    {
+      "id": "heading_back",
+      "context": "Rictor leaves; message 10",
+      "text": "{8B}{8705}{8C}\nحسنا، افعل ما يحلو لك.{8E}{8A}سأعود الآن.\nولا تتأخر أنت أيضا.{8D}{8A}"
+    },
+    {
+      "id": "i_know",
+      "context": "The hero; message 11",
+      "text": "{8B}فارس داكن الشعر{8C}\nنعم، أعلم.{8D}{8A}"
+    },
+    {
+      "id": "fortune_teller",
+      "context": "The fortune teller, before the name screen; message 12",
+      "text": "{8B}العرافة{8C}\nكل امرئ يبحث عن إشارات\nإلى مستقبله، حتى لو{8E}{8A}غيرت تلك الإشارات طريقه.\nمرحبا بك. من فضلك أدخل\nاسمك وتاريخ ميلادك.{8D}{8A}"
+    },
+    {
+      "id": "rictor",
+      "context": "Name 5 of the characters' list, written where a message has {8705}",
+      "text": "ريكتور"
+    }
+  ]
+}

@@ -3,13 +3,13 @@
 Version: 1
 
 A **localization target** is one supported game revision together with the way it
-is put into Arabic. Eleven targets are registered today:
+is put into Arabic. Twelve targets are registered today:
 
 ```text
 classic-retro targets list
 ```
 
-This guide collects what those eleven taught, in the order the work happens. It is a
+This guide collects what those twelve taught, in the order the work happens. It is a
 checklist, not a template: every game gets its own research, and a game that fits
 none of the existing methods gets a new one (see
 [ARABIC_STRATEGIES.md](ARABIC_STRATEGIES.md)).
@@ -105,6 +105,20 @@ and the script belong to the game.
   Choose the right-to-left glyph codes against every routine that will draw them,
   not only the first one: Metroid Fusion's briefings read the intro's glyph codes
   (`0x9xxx`) as sounds, and its glyphs had to move to `0xB040`.
+
+  Without a decompilation's names, unused code for veneers is found with the
+  research tools: no `bl` reaches the function in the disassembly, no word of the
+  image points to it (`research pointers`, odd and even), and a breakpoint on it never
+  fires through the scenes you test (Tactics Ogre's `sub_0801C498`).
+
+  Read how the game's routine writes a glyph before mirroring it. One that ORs a
+  glyph into its tiles (Metroid Fusion) can draw at the mirrored place; one that
+  composes a scratch column and writes whole columns (Tactics Ogre) would erase the
+  mirrored glyphs, so the hook draws every glyph of right-to-left text itself.
+
+  When the game finds a message by a small offset from a block (Tactics Ogre's
+  16-bit offsets), copy the block: the translated messages go to the bank, the others
+  stay in English next to the copied table, outside the bank.
 
   Another CPU gets a module of its own under `cpu/`.
 - `patching.hooks.HookProgram`: the hook source (`rom/<game>_arabic_hooks.s`), its

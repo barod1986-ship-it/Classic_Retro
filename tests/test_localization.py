@@ -46,6 +46,7 @@ ROM_OVERLAYS = (
     "fomt",
     "advance-wars",
     "metroid-fusion",
+    "tactics-ogre",
 )
 
 
@@ -92,7 +93,7 @@ class _EntryPoint:
         return self._loaded
 
 
-def test_the_eleven_reference_targets_keep_their_order_and_strategies():
+def test_the_twelve_reference_targets_keep_their_order_and_strategies():
     registry = build_target_registry(load_external=False)
     described = {target.id: target for target in registry}
     assert list(described) == [
@@ -107,6 +108,7 @@ def test_the_eleven_reference_targets_keep_their_order_and_strategies():
         "fomt",
         "advance-wars",
         "metroid-fusion",
+        "tactics-ogre",
     ]
     assert registry.using("line-cells") == ["mmbn", "fomt"]
     assert registry.using("text-images") == ["fire-emblem"]
@@ -450,6 +452,7 @@ def test_the_cli_keeps_every_command_group_and_adds_targets(capsys):
         "fomt",
         "advance-wars",
         "metroid-fusion",
+        "tactics-ogre",
         "targets",
     ):
         with pytest.raises(SystemExit) as exit_:
@@ -460,6 +463,6 @@ def test_the_cli_keeps_every_command_group_and_adds_targets(capsys):
 
     assert main(["targets", "list"]) == 0
     listed = json.loads(capsys.readouterr().out)
-    assert [target["id"] for target in listed][-1] == "metroid-fusion"
+    assert [target["id"] for target in listed][-1] == "tactics-ogre"
     assert main(["targets", "check-hooks", "not-a-target"]) == 2
     assert capsys.readouterr().err.startswith("INVALID_REFERENCE: Unknown localization target")

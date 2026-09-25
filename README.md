@@ -96,6 +96,7 @@ runs the same way for every target.
 | `fomt` | Harvest Moon: Friends of Mineral Town (USA) | ROM overlay | `line-cells` |
 | `advance-wars` | Advance Wars (USA, Rev 1) | ROM overlay | `glyph-font` |
 | `metroid-fusion` | Metroid Fusion (USA) | ROM overlay | `glyph-font` |
+| `tactics-ogre` | Tactics Ogre: The Knight of Lodis (USA) | ROM overlay | `glyph-font` |
 
 ```text
 classic-retro targets list                          # every target, its documents and operations
@@ -129,7 +130,7 @@ classic-retro targets strip fomt.workspace.json --out fomt.json
 Every check and build holds a translations file against the originals pinned in the
 target's code. See [the translator's guide](docs/TRANSLATING_AR.md) (in Arabic).
 
-The three rendering strategies are what the eleven targets proved, not the only ones
+The three rendering strategies are what the twelve targets proved, not the only ones
 possible. Games on other platforms will need other methods, and the strategy and
 target registries accept them from this repository or from other packages through
 entry points. See [the rendering strategies](docs/ARABIC_STRATEGIES.md) and
@@ -157,7 +158,7 @@ A script holds commands such as `run 300`, `tap START`, `shot menu.png`,
 
 ## Repository status
 
-**Localization platform with eleven reference targets, all on the Game Boy Advance so far.**
+**Localization platform with twelve reference targets, all on the Game Boy Advance so far.**
 
 The first end-to-end example translates the 13 Professor OAK speech strings in
 the new-game intro. This is a renderer/font test, not a complete game translation.
@@ -276,5 +277,19 @@ SR388 to her new mission on the B.S.L station (12 monologues), then the first tw
 the station's map with their names in colour and the two questions. See
 [the Metroid Fusion testing guide](docs/METROID_FUSION_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/METROID_FUSION_ARABIC_RENDERER.md).
+
+The twelfth reference target is **Tactics Ogre: The Knight of Lodis (USA)**. Its disassembly
+builds the image but takes its data from the original, so a binary overlay patches your own ROM
+in the zeros after its data (it stays 8 MiB). The dialogue draws a glyph at a time into columns of
+tiles and writes whole columns, so the draw hook takes every glyph of an Arabic message: it ORs the
+glyph into the window's cleared tiles at the mirror of the pen on the window's line, and moves the
+game's pen on; a second hook gives the Arabic widths, so the window is sized to the Arabic lines.
+Only the 128 bytes below the commands are glyphs to the game, so in a message of the Arabic bank
+they are the glyphs of a right-to-left font of up to 16x16 pixels, given only to the forms the
+script uses. The scene's block is copied with its untranslated messages kept in English, and a
+character's name from the game's list is written out in Arabic at build time. The opening scene
+in the harbour town is in Arabic, up to the name screen (15 messages). See
+[the Tactics Ogre testing guide](docs/TACTICS_OGRE_ARABIC_TEST_AR.md) and
+[the renderer notes](docs/TACTICS_OGRE_ARABIC_RENDERER.md).
 
 See [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md).

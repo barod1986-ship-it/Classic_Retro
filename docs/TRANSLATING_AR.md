@@ -19,6 +19,7 @@
 | `fomt.json` | Harvest Moon: Friends of Mineral Town |
 | `advance-wars.json` | Advance Wars |
 | `metroid-fusion.json` | Metroid Fusion |
+| `tactics-ogre.json` | Tactics Ogre: The Knight of Lodis |
 
 في كل ملف:
 
