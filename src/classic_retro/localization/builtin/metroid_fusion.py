@@ -148,7 +148,7 @@ TARGET = LocalizationTarget(
     strategies=("glyph-font",),
     scope=(
         "The new-game intro (Samus's narration up to her new mission, 12 monologues) and the "
-        "first briefing on the map with its questions"
+        "first two briefings on the map with their questions"
     ),
     guide="docs/METROID_FUSION_ARABIC_TEST_AR.md",
     notes="docs/METROID_FUSION_ARABIC_RENDERER.md",
@@ -158,5 +158,5 @@ TARGET = LocalizationTarget(
     build=build,
     extract=extract,
     previews=PREVIEWS,
-    reference_patch_sha256="4f54b61ceb6f1f046cdb3b57b34998b571a980905f7c7208e07fd482e4adbb4f",
+    reference_patch_sha256="4e2f7a836557447e9a508ae988de644442956075a1a5dbfb1f67a3f509d0af47",
 )

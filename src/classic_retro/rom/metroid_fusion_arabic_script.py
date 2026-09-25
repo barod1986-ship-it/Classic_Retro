@@ -10,12 +10,15 @@ eleven go through its two-line strip (``STRIP``; the ship computer's line is
 typed with a sound in its own box), and the last one fills a page of nine
 lines (``PAGE``).
 
-On the station, the ship's computer gives Samus her first briefing on the map
-(``BRIEFING``): the first text of the briefings' list ``NAVIGATION_LIST``,
-and the second, what it says when she comes back. The briefing asks whether
-her objective is clear, and the game asks again, later, whether she confirms
-it: the two questions (``QUESTION_BOX``) are messages 43 and 44 of
-``MESSAGE_LIST``, the same in every briefing.
+On the station, the ship's computer gives Samus her briefings on the map
+(``BRIEFING``): conversation ``n`` is entry ``(n - 1) * 2`` of the briefings'
+list ``NAVIGATION_LIST``, and the next entry is what it says when she comes
+back. The first two conversations are translated: the first briefing, as she
+lands, and the second, in the Navigation Room on the way to the Quarantine
+Bay. A briefing asks whether her objective is clear, and the game asks again,
+later, whether she wants to hear it again: the two questions
+(``QUESTION_BOX``) are messages 43 and 44 of ``MESSAGE_LIST``, the same in
+every briefing.
 
 For each text the original is pinned by its list, its index there, its
 address, the SHA-256 of its units (up to its final ``FF00``) and its commands,
@@ -172,6 +175,15 @@ _SOURCES: dict[str, tuple[MfTextList, int, int, str, str, str, str]] = {
     "first_briefing_again": (
         NAVIGATION_LIST, 1, 0x086CEC7A, BRIEFING, "the ship's computer",
         "4f36144d6147efd4a4b1547e75b1f98e9fdab4abcc6f43454a20b9a14e9076de", _PLACE,
+    ),
+    "second_briefing": (
+        NAVIGATION_LIST, 2, 0x086CECB2, BRIEFING, "the ship's computer",
+        "fe90b58159b4600e7436829e0fef592bdb1b087d8c1d97a889a8815b86fc44f4",
+        _PLACE + "{FD00}{8103}{8100}",
+    ),
+    "second_briefing_again": (
+        NAVIGATION_LIST, 3, 0x086CED3E, BRIEFING, "the ship's computer",
+        "ce83a874e099fd4ec91cea54b878b3366b3a0fc57e131b0568cff69891481456", _PLACE,
     ),
     "objective_clear": (
         MESSAGE_LIST, 43, 0x086B5984, QUESTION_BOX, "the ship's computer",

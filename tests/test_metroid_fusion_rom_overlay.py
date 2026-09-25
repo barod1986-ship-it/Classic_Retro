@@ -245,6 +245,10 @@ def test_the_glyphs_and_their_widths_are_written(build):
     # DrawCharacter finds glyph c at 0x08682FAC + 32 * c.
     code = min(result.font.glyphs)
     assert overlay.FONT_ADDRESS == 0x08682FAC + 32 * code
+    # The hooks, widths, bank and sheet follow each other in the padding.
+    assert overlay.HOOK_CODE_ADDRESS + len(overlay.HOOK_CODE) <= overlay.RTL_WIDTHS_ADDRESS
+    assert overlay.RTL_WIDTHS_ADDRESS + len(widths) <= overlay.ARABIC_TEXT_ADDRESS
+    assert overlay.ARABIC_TEXT_END <= overlay.FONT_ADDRESS < overlay.FONT_END <= overlay.IMAGE_END
 
 
 def test_only_the_sites_pointers_and_padding_change(build):
@@ -389,7 +393,7 @@ def _moved(message: MfArabicMessage, **changes) -> MfArabicMessage:
 
 def test_shipped_translations_check_without_the_rom():
     report = overlay.check_metroid_fusion_translations()
-    assert report["messages"] == len(metroid_fusion_arabic_messages()) == 16
+    assert report["messages"] == len(metroid_fusion_arabic_messages()) == 18
     assert report["lines_measured"] is False
     lists = {message.key: message.text_list for message in metroid_fusion_arabic_messages()}
     assert lists["first_briefing"] == NAVIGATION_LIST

@@ -482,15 +482,23 @@ def validate_command_skeleton(source: tuple[str, ...], pieces: Sequence[Piece]) 
 
 # The screen: a line from x = 8 to 232 on a 240-pixel screen, 16 pixels a
 # line, white ink in a dark outline over the cutscene or in the briefing's
-# box; a briefing draws colour n as 2 + 2n (ink) and 3 + 2n (outline).
+# box. A briefing draws colour n as 2 + 2n (ink) and 3 + 2n (outline): its
+# palette has red, magenta, yellow, green, blue and cyan for colours 1 to 6,
+# each outlined in black.
+_BRIEFING_INKS = (
+    (255, 0, 0),
+    (255, 0, 255),
+    (255, 255, 0),
+    (0, 255, 0),
+    (0, 0, 255),
+    (0, 255, 255),
+)
 PREVIEW_COLOURS = {
     0: (24, 36, 80),
     INK: (248, 248, 248),
     OUTLINE: (16, 16, 24),
-    INK + 4: (255, 0, 255),
-    OUTLINE + 4: (0, 0, 0),
-    INK + 6: (255, 255, 0),
-    OUTLINE + 6: (0, 0, 0),
+    **{INK + 2 * colour: ink for colour, ink in enumerate(_BRIEFING_INKS, 1)},
+    **{OUTLINE + 2 * colour: (0, 0, 0) for colour in range(1, len(_BRIEFING_INKS) + 1)},
 }
 PREVIEW_WIDTH = 240
 PREVIEW_RIGHT = LINE_RIGHT

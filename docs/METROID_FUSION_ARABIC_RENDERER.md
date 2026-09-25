@@ -158,11 +158,11 @@ uses.
 |---------|---------|
 | `0x0879F000` | Thumb hooks (`src/classic_retro/rom/metroid_fusion_arabic_hooks.s`, 320 bytes) |
 | `0x0879F800` | The right-to-left widths: a byte for each code from `0xB040` (2 KiB) |
-| `0x087A0000` | The Arabic bank: the 16 translated texts, up to `0x087A4000` |
+| `0x087A0000` | The Arabic bank: the 18 translated texts, up to `0x087E0000` (256 KiB: every free byte before the sheet, room for every text of the game) |
 | `0x087E37AC` | The right-to-left glyph sheet: glyph `0xB040` onwards, 136 glyphs in 9 rows of `0x800` bytes |
 | `0x08098940` | The six veneers (56 bytes) |
 | `0x08079118` | `GetCharacterWidth`: a jump to `hook_width` |
-| The English lists | The 16 pointers, now to the Arabic texts |
+| The English lists | The 18 pointers, now to the Arabic texts |
 
 A stored text ends with `FF00`, then zeros up to a word. The overlay checks the input
 hash, the code at every site and the entry of `GetCharacterWidth`, the SHA-256 of
@@ -225,7 +225,7 @@ and compares the result with the bytes stored in `metroid_fusion_arabic.py` (run
 
 The script (`src/classic_retro/translations/metroid-fusion.json`; its originals are
 pinned in `src/classic_retro/rom/metroid_fusion_arabic_script.py`) covers the
-opening: 16 texts.
+opening: 18 texts.
 
 - The whole new-file intro, 12 monologues. Eleven go through the two-line strip:
   Samus's mission on SR388 and the X that attacked her, her ship drifting into an
@@ -237,6 +237,9 @@ opening: 16 texts.
   what it holds, the target on the map, Samus's lost abilities and the Navigation Room
   on the way, then the question and the order to go. Its second text is what the
   computer says when Samus comes back.
+- The second briefing, in the Navigation Room on the way: the bay ahead and the signs
+  of life found there, and its own text for when she comes back. It took no change of
+  code: two pinned originals and their translations.
 - The two questions and their options.
 
 For each text its list, its index there, its address, its SHA-256 and its commands are
@@ -247,6 +250,27 @@ between words, since the text on each side of it is shaped apart. Names are
 transliterated (إس آر ٣٨٨ with Arabic-Indic digits, بي إس إل, بيولوجيك, إكس, ميترويد,
 سامس) and terms translated (الاتحاد المجري, بدلة القوة, حاسوب السفينة, عنبر الحجر
 الصحي, غرفة الملاحة); Samus narrates as a woman, and the computer speaks to her as one.
+
+## What the game's briefings use
+
+Every one of the 201 English briefings, read from the image, and what the overlay
+does with each case. The first two briefings use only colours 2 and 3, line and box
+ends, the target, the music and the question; the rest of the game adds:
+
+| Case | Briefings | In Arabic |
+|------|-----------|-----------|
+| Colours 1 to 6 (red, magenta, yellow, green, blue, cyan) | 63 | The game's palette draws them; the previews show them |
+| Sounds (`9xxx`, `Axxx`), events (`B001..B003`), waits (`E1xx`), flags (`E3xx`), the target (`E000`) | 3 to 22 each | Kept in order; they move no pen |
+| The objective question (`FB00`) | 28 | Messages 43 and 44, in Arabic for every briefing |
+| A dialogue across two panels (`E200..E202`: the box at the bottom and one at the top of the screen) | 6 | The same hooks: checked with a text written for the purpose in conversation 26 (text mirrored across the whole top box, its cursor on the left) |
+| A third line after `FC00` | 1 | Allowed: the reader has pressed A |
+| A line the game wraps itself | 1 | The translation ends its lines itself |
+| The game's second `?` (`0x41F`) | 13 | The Arabic `؟` |
+| An opening quotation mark (`0x311`) | 2 | Not yet: quotation marks and brackets are mirrored characters, which the shared bidi step does not mirror, so every engine refuses them |
+| Latin letters in brackets (the sector name `SRX`, codes `0x452`, `0x453`, `0x458`) | 1 | Not yet: the brackets as above; the name can be transliterated, and Latin letters inside an Arabic line would need a left-to-right run |
+
+No English briefing scrolls its box with a line end on the second line, so the
+Arabic ones do not either.
 
 ## Verification
 
@@ -264,17 +288,22 @@ In mGBA, with the patch built from the reference font:
   after نعم the last order and the room; after لا, the briefing again from its start.
 - The second question, with the conversation marked as coming again: centred, its
   cursor on لا, right taking it to نعم, which replays the briefing.
+- The second briefing and its text for coming back, with the conversation number set
+  to 2 as the game sets it in that room: typed from the right, in their colours, with
+  the cursor on the left.
 - With the same input from power-on and from a savestate on the landing, the title
   screen, the file select screen and the landing are pixel-identical to the original
-  image's (20 screens). With the conversation switched to an English one, the English
-  briefing is too, its typing cursor included (60 screens).
+  image's (20 screens). With the conversation switched to English ones, the English
+  briefings are too, their typing cursor included (conversations 3 and 4, 180
+  screens).
 
 ## Limits
 
-- Only the new-file intro and the first briefing are in Arabic. The other briefings, the
-  game's messages and menus, and the in-game cutscenes are in English. The two
-  questions are the game's for every briefing, so they are in Arabic after English
-  briefings too.
+- Only the new-file intro and the first two briefings are in Arabic. The other
+  briefings, the game's messages and menus, and the in-game cutscenes are in English.
+  The two questions are the game's for every briefing, so they are in Arabic after
+  English briefings too.
+- Quotation marks and brackets cannot be written yet (see the table above).
 - Words drawn in the intro's pictures (the vaccine's name, the labels) stay as they are.
 - The question's cursor points right, left of each option: the game has no sprite
   pointing left.

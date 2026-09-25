@@ -59,6 +59,10 @@
     {
       "term": "X parasites",
       "text": "طفيليات إكس"
+    },
+    {
+      "term": "bio-signs",
+      "text": "علامات حياة"
     }
   ],
   "entries": [
@@ -131,6 +135,16 @@
       "id": "first_briefing_again",
       "context": "the ship's computer; briefing 1 (the first, when Samus comes back)",
       "text": "اذهبي إلى {8102}عنبر الحجر الصحي{8100}."
+    },
+    {
+      "id": "second_briefing",
+      "context": "the ship's computer; briefing 2 (the Navigation Room before the Quarantine Bay)",
+      "text": "{8102}عنبر الحجر الصحي{8100} أمامك.{FD00}تأكد وجود {8103}علامات حياة{8100}.\nكوني حذرة."
+    },
+    {
+      "id": "second_briefing_again",
+      "context": "the ship's computer; briefing 3 (the second, when Samus comes back)",
+      "text": "{8102}عنبر الحجر الصحي{8100} أمامك مباشرة."
     },
     {
       "id": "objective_clear",
