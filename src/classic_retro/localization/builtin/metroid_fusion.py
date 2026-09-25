@@ -97,7 +97,7 @@ def register_cli(subcommands: argparse._SubParsersAction) -> None:
     check.add_argument(
         "--text-preview",
         type=Path,
-        help="Write every translated monologue, laid out as the intro shows it, as one PNG",
+        help="Write every translated text, laid out as the game shows it, as one PNG",
     )
     check.set_defaults(handler=_check_translations_command)
 
@@ -123,7 +123,7 @@ def register_cli(subcommands: argparse._SubParsersAction) -> None:
 
     encode = commands.add_parser(
         "encode-arabic",
-        help="Encode one text in notation ({FC00}, {FD00}, {E1xx}, \\n) in paint order",
+        help="Encode one text in notation ({FC00}, {FD00}, {81xx}, \\n...) in paint order",
     )
     encode.add_argument("text")
     encode.add_argument(
@@ -133,7 +133,8 @@ def register_cli(subcommands: argparse._SubParsersAction) -> None:
         "--renderer",
         choices=sorted(LINES_PER_PAGE),
         default=STRIP,
-        help="The intro's two-line strip (default) or a monologue page of nine lines",
+        help="The intro's two-line strip (default), a monologue page of nine lines, a "
+        "briefing's two-line box or the objective question",
     )
     encode.set_defaults(handler=_encode_command)
 
@@ -145,7 +146,10 @@ TARGET = LocalizationTarget(
     platform_id="gba",
     kind="rom-overlay",
     strategies=("glyph-font",),
-    scope="The new-game intro: Samus's narration up to her new mission (12 monologues)",
+    scope=(
+        "The new-game intro (Samus's narration up to her new mission, 12 monologues) and the "
+        "first briefing on the map with its questions"
+    ),
     guide="docs/METROID_FUSION_ARABIC_TEST_AR.md",
     notes="docs/METROID_FUSION_ARABIC_RENDERER.md",
     register_cli=register_cli,
@@ -154,5 +158,5 @@ TARGET = LocalizationTarget(
     build=build,
     extract=extract,
     previews=PREVIEWS,
-    reference_patch_sha256="a00ca35692d914536ece56d6d64fa8aedf6baed099d082d31b0e1cac7ad32f5f",
+    reference_patch_sha256="4f54b61ceb6f1f046cdb3b57b34998b571a980905f7c7208e07fd482e4adbb4f",
 )

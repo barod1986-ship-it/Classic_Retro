@@ -264,14 +264,17 @@ answers to both of her questions (14 messages). See
 
 The eleventh reference target is **Metroid Fusion (USA)**. Its decompilation names the code but
 takes its data from the original, so a binary overlay patches your own ROM inside its padding (it
-stays 8 MiB). The intro's three text routines keep their pen; Thumb hooks mirror where each glyph
-lands on the 224-pixel line, fade a monologue page's tiles in from the right, and move the
-next-page arrow and the ship computer's typing cursor to the other side. The padding is 7 MiB from
-the code, beyond a BL's reach, so the hooks are called through veneers written over an unused
-function. Arabic glyph codes start at 0x9000, where the game's own glyph address formula lands in
-the padding: the glyphs are outlined like the game's letters and up to 16 pixels wide. The whole
-new-game intro is in Arabic, Samus's narration from SR388 to her new mission on the B.S.L station
-(12 monologues). See [the Metroid Fusion testing guide](docs/METROID_FUSION_ARABIC_TEST_AR.md) and
+stays 8 MiB). The text routines of the intro and of the briefings on the map keep their pen; Thumb
+hooks mirror where each Arabic glyph lands on the 224-pixel line, fade a monologue page's tiles in
+from the right, and move the next-page arrow and the typing cursors to the other side. The
+briefing's question shows its options the other way round, and the arrow keys follow them. The
+padding is 7 MiB from the code, beyond a BL's reach, so the hooks are called through veneers
+written over an unused function. Arabic glyph codes start at 0xB040, where the game's own glyph
+address formula lands in the padding and no routine reads a command: the glyphs are outlined like
+the game's letters and up to 16 pixels wide. The opening is in Arabic: Samus's narration from
+SR388 to her new mission on the B.S.L station (12 monologues), then the first briefing on the
+station's map with its names in colour and its two questions. See
+[the Metroid Fusion testing guide](docs/METROID_FUSION_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/METROID_FUSION_ARABIC_RENDERER.md).
 
 See [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md).

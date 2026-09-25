@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "target": "metroid-fusion",
   "language": "ar",
-  "notation": "Logical Arabic in the engine notation (engines.metroid_fusion). Keep every control unit of the original, in order: {FC00} shows the arrow and waits for A, {FD00} starts a new page and {E1xx} waits xx frames. Line ends after text (\\n) may move; a page of the intro's strip holds two lines, a page of the monologue nine, of at most 224 pixels. Samus narrates in the first person, as a woman.",
+  "notation": "Logical Arabic in the engine notation (engines.metroid_fusion). Keep every command of the original, in order. In the intro, {FC00} shows the arrow and waits for A, {FD00} starts a new page and {E1xx} waits xx frames. In a briefing, {81xx} colours the words that follow ({8100} ends the colour), {B003} starts its music, {E000} shows the target on the map, {FD00} waits for A and clears the box and {FB00} asks the objective question; keep colour commands between words. A question pushes its line to the middle ({80xx}, whose amount may change) and places its options with {8340} and {83A0}; it ends with a glyph. Line ends after text (\\n) may move; a page of the intro's strip holds two lines, a page of the monologue nine, a briefing's box two, of at most 224 pixels. Samus narrates in the first person, as a woman; the ship's computer speaks to her.",
   "glossary": [
     {
       "term": "SR388",
@@ -43,6 +43,22 @@
     {
       "term": "CO",
       "text": "القائد"
+    },
+    {
+      "term": "Samus",
+      "text": "سامس"
+    },
+    {
+      "term": "Quarantine Bay",
+      "text": "عنبر الحجر الصحي"
+    },
+    {
+      "term": "Navigation Room",
+      "text": "غرفة الملاحة"
+    },
+    {
+      "term": "X parasites",
+      "text": "طفيليات إكس"
     }
   ],
   "entries": [
@@ -105,6 +121,26 @@
       "id": "new_mission",
       "context": "Samus; monologue 0",
       "text": "أبلغني حاسوب السفينة باقترابنا من\nمختبرات بيولوجيك الفضائية، أي محطة\nالأبحاث بي إس إل. فأثناء خضوعي\nللجراحة، أرسل فريق الأبحاث إلى هناك\nآخر دفعة من الكائنات التي أسرناها،\nومعها الأجزاء المصابة من بدلة\nالقوة. وبعد أن{FC00}{FD00}استعدت وعيي، علمت أن انفجارا غامضا\nهز المحطة. ولسبب ما، أيقظ ذلك في\nقلبي خوفا لا اسم له، وها أنا ذي أرسل\nالآن إلى هناك للتحقيق.{FC00}{FD00}وسيشرف على مهمتي في محطة\nبي إس إل حاسوب سفينتي الجديد.\nوعلي أن أحتمل طاعة أوامر هذا القائد\nالآلي الفظ، فقد كان ذلك شرطا\nلتسلمي السفينة. وبالنسبة لمن تكره\nتلقي الأوامر مثلي، هذه هي{FC00}{FD00}المرة الثانية التي أجد فيها نفسي\nمضطرة إلى ذلك. وهذا يذكرني\nبقائدي الآخر...{FC00}"
+    },
+    {
+      "id": "first_briefing",
+      "context": "the ship's computer; briefing 0 (the first, on the station's map)",
+      "text": "{B003}وقع انفجار في {8102}عنبر الحجر الصحي{8100}.{FD00}يضم العنبر حاليا كبسولات تحوي عينات\nجمعت مؤخرا{FD00}من {8102}إس آر ٣٨٨{8100}، وأجزاء من بدلتك\nأصابتها{FD00}{8103}طفيليات إكس{8100}.{FD00}سبب الانفجار غير معروف بعد.\nحققي في الأمر{E000}.{FD00}يقع {8102}عنبر الحجر الصحي{8100} هنا.{FD00}تحركي بسرعة وهدوء...{FD00}ما زلت عاجزة عن استخدام معظم\n{8103}قدراتك الكامنة{8100}.{FD00}لا تنسي ذلك يا سامس.{FD00}توقفي في {8102}غرفة الملاحة{8100} في طريقك،\nواتصلي بي من هناك.{FB00}والآن، اذهبي إلى {8102}عنبر الحجر الصحي{8100}."
+    },
+    {
+      "id": "first_briefing_again",
+      "context": "the ship's computer; briefing 1 (the first, when Samus comes back)",
+      "text": "اذهبي إلى {8102}عنبر الحجر الصحي{8100}."
+    },
+    {
+      "id": "objective_clear",
+      "context": "the ship's computer; message 43 (the question after a briefing)",
+      "text": "{8041}هل هدفك واضح؟\n{8057}{8340}نعم {83A0}لا"
+    },
+    {
+      "id": "confirm_objective",
+      "context": "the ship's computer; message 44 (the question when a briefing comes again)",
+      "text": "{800C}هل تريدين التأكد من هدف المهمة؟\n{8057}{8340}نعم {83A0}لا"
     }
   ]
 }

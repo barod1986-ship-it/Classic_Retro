@@ -1,10 +1,10 @@
 """Arabic support for the *Metroid Fusion* text engine.
 
 The ROM overlay (``classic_retro.rom.metroid_fusion_arabic``) turns the
-new-file intro's text right to left without changing how its routines move
-their pen. They still lay a line out from the left; for a text of the Arabic
-bank, the hooks draw each glyph at the mirror of its place on a line of
-``LINE_WIDTH`` pixels:
+new-file intro's text and the briefings on the map right to left without
+changing how their routines move their pen. They still lay a line out from
+the left; the hooks draw each right-to-left glyph at the mirror of its place
+on a line of ``LINE_WIDTH`` pixels:
 
     left' = LINE_WIDTH - pen - width
 
@@ -13,25 +13,29 @@ reveals it from the right. The glyphs are not flipped: only their places are
 mirrored. A translated text holds them in right-to-left paint order, the
 first glyph of a line being its rightmost one.
 
-The right-to-left glyphs have codes from 0x9000 (``RTL_GLYPH_CODES``): the
-game's ``DrawCharacter`` reads glyph ``c`` at ``0x08682FAC + 32 * c``, which
-for these codes falls in the padding at the end of the image, where the
-overlay puts their sheet; a hook gives their widths. Every glyph takes two
-tile columns, so it may be 16 pixels wide: no form is split.
+The right-to-left glyphs have codes from 0xB040 (``RTL_GLYPH_CODES``), which
+every routine draws as glyphs (a briefing reads 0x8000 up as commands but
+``Bxxx`` other than ``B001``..``B003``): the game's ``DrawCharacter`` reads
+glyph ``c`` at ``0x08682FAC + 32 * c``, which for these codes falls in the
+padding at the end of the image, where the overlay puts their sheet; a hook
+gives their widths. Every glyph takes two tile columns, so it may be 16 pixels
+wide: no form is split.
 
 Glyphs are drawn in the game's style, ink (2) inside a one-pixel outline (3)
 on all eight sides, from the reference font at the largest size whose forms
 fit the 16x16 cell with their outline: ink on rows 1..14, the letters on the
 baseline of row 11. Joined letters touch: a form has no outline column on a
-side where it joins its neighbour, and its ink reaches that edge. At the
-reference size, hamza above alef is drawn by hand above a shortened alef, and
-final and isolated yeh are raised a row. The space is the game's own
+side where it joins its neighbour, and its ink reaches that edge. A dot whose
+coverage stays just under the ink level keeps its strongest pixel (medial
+beh's, at the reference size). At the reference size, hamza above alef is
+drawn by hand above a shortened alef, and final and isolated yeh are raised a
+row. The space is the game's own
 (``SPACE``, 6 pixels), and ``.``, ``!`` and ``:`` are drawn by hand.
 """
 
 from __future__ import annotations
 
-from collections.abc import Iterable, Mapping, Sequence
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
@@ -44,18 +48,24 @@ from classic_retro.arabic.paint import reject_combining_marks, reject_mirrored, 
 from classic_retro.arabic.repertoire import arabic_presentation_repertoire, legacy_renderer_pipeline
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.metroid_fusion import (
-    ARROW,
     GLYPH_COLUMNS,
     GLYPH_ROWS,
     INK,
+    INTRO,
+    NAVIGATION,
     NEW_PAGE,
     NEWLINE,
     OUTLINE,
+    PEN_SET,
+    QUESTION,
     TILE_BYTES,
     TILE_ROW_BYTES,
-    WAIT,
     MfCommand,
+    MfLine,
     Piece,
+    is_command,
+    lay_out,
+    moved_pen,
     notation_skeleton,
 )
 from classic_retro.font.arabic_outline import (
@@ -82,6 +92,8 @@ from classic_retro.text.tokens import InlineToken, TextToken, TokenKind, TokenSt
 
 BASELINE = 11
 INK_LEVEL = 140
+# A dot whose coverage stays under the ink level keeps its strongest pixel.
+MARK_LEVEL = 60
 SIZES = range(14, 7, -1)
 # The outline needs a free row above and below the ink.
 TOP_INK_ROW = 1
@@ -89,10 +101,12 @@ BOTTOM_INK_ROW = GLYPH_ROWS - 2
 # The game's space and its width in the USA font; the ROM build checks it.
 SPACE = 0x0040
 SPACE_WIDTH = 6
-# Right-to-left glyph codes: 0x9000 up, one code every two in each row of 32
+# Right-to-left glyph codes: 0xB040 up, one code every two in each row of 32
 # (a glyph uses the next code's tiles for its right half), rows of 32 codes
-# alternating with the rows of their lower halves.
-RTL_FIRST_CODE = 0x9000
+# alternating with the rows of their lower halves. A briefing reads 0x8000 up
+# as commands but the glyphs Bxxx (from B004) and Dxxx; the first row starts
+# past B001..B003.
+RTL_FIRST_CODE = 0xB040
 RTL_CODE_SPAN = 0x800
 CODES_PER_ROW = 64
 GLYPHS_PER_ROW = 16
@@ -122,11 +136,21 @@ _RAISED_FORMS = frozenset("ﻱﻲ")
 _RING = tuple((dx, dy) for dy in (-1, 0, 1) for dx in (-1, 0, 1) if dx or dy)
 
 # The text routines: a line of 224 pixels; the intro's two-line strip and the
-# ship computer's box, or a monologue page of nine lines.
+# ship computer's box, a monologue page of nine lines, a briefing's two-line
+# box and the objective question (a line, then its two options).
 LINE_WIDTH = 224
 STRIP = "strip"
 PAGE = "page"
-LINES_PER_PAGE = {STRIP: 2, PAGE: 9}
+BRIEFING = "briefing"
+QUESTION_BOX = "question"
+LINES_PER_PAGE = {STRIP: 2, PAGE: 9, BRIEFING: 2, QUESTION_BOX: 2}
+RENDERER_DIALECTS = {STRIP: INTRO, PAGE: INTRO, BRIEFING: NAVIGATION, QUESTION_BOX: QUESTION}
+# A stretch of a line, in pixels from its start: (start, end).
+Span = tuple[int, int]
+# Where a line ends on the 240-pixel screen: it starts at x = 8.
+LINE_RIGHT = 8 + LINE_WIDTH
+# The question's cursor stands this far left of an option's end.
+QUESTION_CURSOR_GAP = 12
 
 
 def mf_glyph_codes(characters: Iterable[str]) -> GlyphCodes:
@@ -259,13 +283,13 @@ def _outlined_forms(
     """Every form at this size, outlined, or None when one leaves the 16x16 cell."""
     try:
         rendered = {
-            character: draw_form(font, character, BASELINE, ink_level=INK_LEVEL)
+            character: _drawn(font, character)
             for character in characters
             if character not in _MARKED_ALEF
         }
         for composed, (alef, mark) in _MARKED_ALEF.items():
             if composed in characters:
-                source = rendered.get(alef) or draw_form(font, alef, BASELINE, ink_level=INK_LEVEL)
+                source = rendered.get(alef) or _drawn(font, alef)
                 rendered[composed] = alef_with_mark(composed, source, mark)
         for character in _RAISED_FORMS & set(rendered):
             rendered[character] = raised_form(
@@ -274,6 +298,10 @@ def _outlined_forms(
         return {character: _outlined(character, form) for character, form in rendered.items()}
     except FormDoesNotFit:
         return None
+
+
+def _drawn(font: ImageFont.FreeTypeFont, character: str) -> DrawnForm:
+    return draw_form(font, character, BASELINE, ink_level=INK_LEVEL, mark_level=MARK_LEVEL)
 
 
 def _outlined(character: str, form: DrawnForm) -> MfRtlGlyph:
@@ -308,10 +336,6 @@ def arabic_stream(pieces: Sequence[Piece], prefix: str = "t") -> TokenStream:
     return TokenStream(tuple(tokens))
 
 
-def _supported(unit: int) -> bool:
-    return unit in (NEWLINE, NEW_PAGE, ARROW) or unit & 0xFF00 == WAIT
-
-
 @dataclass(frozen=True, slots=True)
 class MfArabicEncoding:
     """A translated text (without its final ``FF00``) and, with a font, its line widths."""
@@ -333,48 +357,40 @@ class MfArabicEncoder:
         )
 
     def encode(self, pieces: Sequence[Piece], renderer: str = STRIP) -> MfArabicEncoding:
+        dialect = RENDERER_DIALECTS[renderer]
         for piece in pieces:
-            if isinstance(piece, MfCommand) and not _supported(piece.unit):
+            if isinstance(piece, MfCommand) and not is_command(piece.unit, dialect):
                 raise ClassicRetroError(
                     ErrorCode.UNSUPPORTED_CONTROL_CODE,
-                    f"Metroid Fusion Arabic v1 does not support {piece.notation}",
+                    f"The {renderer} does not read {piece.notation} as a command",
                 )
-        limit = LINES_PER_PAGE[renderer]
         stream = arabic_stream(pieces)
         reject_mirrored(stream, "Metroid Fusion Arabic v1")
         reject_combining_marks(stream, "Metroid Fusion Arabic font v1")
         units: list[int] = []
-        lines: list[int] = [0]
-        page_lines = 1
         for token in rtl_paint_order(self.pipeline, stream).tokens:
             if isinstance(token, TextToken):
                 for character in token.text:
-                    for code in self.codes(character):
-                        units.append(code)
-                        lines[-1] += self._width(code)
+                    units.extend(self.codes(character))
                 continue
-            (unit,) = command_codes(token, "Metroid Fusion")
-            units.append(unit)
-            if unit == NEWLINE:
-                lines.append(0)
-                page_lines += 1
-                if page_lines > limit:
-                    raise ClassicRetroError(
-                        ErrorCode.TEXT_BOX_OVERFLOW,
-                        f"A page of the {renderer} holds {limit} lines",
-                    )
-            elif unit == NEW_PAGE:
-                lines.append(0)
-                page_lines = 1
+            units.extend(command_codes(token, "Metroid Fusion"))
+        lines = lay_out(units, self._width, dialect)
+        _check_lines(lines, renderer)
+        if renderer == QUESTION_BOX and (not units or is_command(units[-1], dialect)):
+            # The question reads the unit after its last glyph as the end.
+            raise ClassicRetroError(
+                ErrorCode.TOKEN_ORDER_VIOLATION, "The question must end with a glyph"
+            )
         if self.font is None:
             return MfArabicEncoding(tuple(units), None)
-        for number, width in enumerate(lines, 1):
-            if width > LINE_WIDTH:
+        for number, line in enumerate(lines, 1):
+            if line.width > LINE_WIDTH:
                 raise ClassicRetroError(
                     ErrorCode.TEXT_BOX_OVERFLOW,
-                    f"Line {number} needs {width}px; it holds {LINE_WIDTH}px",
+                    f"Line {number} needs {line.width}px; it holds {LINE_WIDTH}px",
                 )
-        return MfArabicEncoding(tuple(units), tuple(lines))
+            _check_overlap(line, number)
+        return MfArabicEncoding(tuple(units), tuple(line.width for line in lines))
 
     def _width(self, code: int) -> int:
         return self.font.width(code) if self.font is not None else 0
@@ -386,8 +402,78 @@ class MfArabicEncoder:
         raise no_glyph(character, "Metroid Fusion Arabic")
 
 
+def _check_lines(lines: Sequence[MfLine], renderer: str) -> None:
+    """Every page holds its lines; a briefing's box scrolls only when the reader presses A."""
+    limit = LINES_PER_PAGE[renderer]
+    for line in lines:
+        if renderer == BRIEFING:
+            if line.start == NEWLINE and line.number >= limit:
+                raise ClassicRetroError(
+                    ErrorCode.TEXT_BOX_OVERFLOW,
+                    f"A briefing's box holds {limit} lines: a line end on the second would "
+                    "scroll it at once ({FC00} waits for A, {FD00} clears the box)",
+                )
+        elif line.number >= limit:
+            raise ClassicRetroError(
+                ErrorCode.TEXT_BOX_OVERFLOW, f"A page of the {renderer} holds {limit} lines"
+            )
+
+
+def _check_overlap(line: MfLine, number: int) -> None:
+    """A pen command must not put a glyph over another (spaces are blank)."""
+    end = None
+    for place in sorted(line.places, key=lambda place: place.pen):
+        if place.unit == SPACE:
+            continue
+        if end is not None and place.pen < end:
+            raise ClassicRetroError(
+                ErrorCode.TEXT_BOX_OVERFLOW, f"Line {number}: glyphs overlap at pen {place.pen}"
+            )
+        end = place.end
+
+
+def question_options(units: Sequence[int], width: Callable[[int], int]) -> tuple[Span, ...]:
+    """Where the question's options lie on its second line: from pen to end.
+
+    An option is the glyphs a ``83xx`` puts on the line, spaces aside.
+    """
+    # Each option's start and, once it has a glyph, its end.
+    options: list[list[int]] = []
+    pen = 0
+    second_line = False
+    for unit in units:
+        if unit == NEWLINE:
+            second_line, pen = True, 0
+        elif is_command(unit, QUESTION):
+            pen = moved_pen(unit, pen, QUESTION)
+            if second_line and unit & 0xFF00 == PEN_SET:
+                options.append([])
+        else:
+            glyph_width = width(unit)
+            if options and unit != SPACE:
+                option = options[-1]
+                if not option:
+                    option.append(pen)
+                option[1:] = [pen + glyph_width]
+            pen += glyph_width
+    return tuple((option[0], option[1]) for option in options if option)
+
+
+def question_cursor_x(option: Span) -> int:
+    """The x of the question's cursor on an option: left of its mirrored place.
+
+    The cursor is a triangle pointing right, drawn from x - 1 to x + 5 as it
+    bobs; an option at ``start``..``end`` on the line shows at ``LINE_RIGHT - end``
+    up to ``LINE_RIGHT - start`` on the screen.
+    """
+    return LINE_RIGHT - option[1] - QUESTION_CURSOR_GAP
+
+
 def validate_command_skeleton(source: tuple[str, ...], pieces: Sequence[Piece]) -> None:
-    """The translation's control units must equal the original's; only line ends may move."""
+    """The translation's commands must equal the original's; only line ends may move.
+
+    A pen advance (``80xx``) keeps its place, not its amount.
+    """
     require_same_commands("Metroid Fusion", source, notation_skeleton(pieces), "".join)
 
 
@@ -395,10 +481,19 @@ def validate_command_skeleton(source: tuple[str, ...], pieces: Sequence[Piece]) 
 # Previews
 
 # The screen: a line from x = 8 to 232 on a 240-pixel screen, 16 pixels a
-# line, white ink in a dark outline over the cutscene.
-PREVIEW_COLOURS = {0: (24, 36, 80), INK: (248, 248, 248), OUTLINE: (16, 16, 24)}
+# line, white ink in a dark outline over the cutscene or in the briefing's
+# box; a briefing draws colour n as 2 + 2n (ink) and 3 + 2n (outline).
+PREVIEW_COLOURS = {
+    0: (24, 36, 80),
+    INK: (248, 248, 248),
+    OUTLINE: (16, 16, 24),
+    INK + 4: (255, 0, 255),
+    OUTLINE + 4: (0, 0, 0),
+    INK + 6: (255, 255, 0),
+    OUTLINE + 6: (0, 0, 0),
+}
 PREVIEW_WIDTH = 240
-PREVIEW_RIGHT = 8 + LINE_WIDTH
+PREVIEW_RIGHT = LINE_RIGHT
 PREVIEW_ARROW = (240, 200, 40)
 
 
@@ -423,38 +518,35 @@ def font_preview(font: MfRtlFont) -> Image.Image:
 
 
 def message_preview(font: MfRtlFont, units: Sequence[int], renderer: str = STRIP) -> Image.Image:
-    """A translated text as the intro shows it: pages side by side, the first on the right.
+    """A translated text as the game shows it: pages side by side, the first on the right.
 
-    Every line ends at the right edge of the text and grows leftwards. The
-    arrow that waits for A is a triangle: at the bottom left in the strip, in
-    the middle under the text on a page.
+    Every line ends at the right edge of the text and grows leftwards; a
+    briefing's colours show. The arrow that waits for A is a triangle: at the
+    bottom left in the strip, in the middle under the text on a page and at
+    the bottom of a briefing's box. The question's cursor points at its first
+    option, from its left.
     """
-    lines = LINES_PER_PAGE[renderer]
-    pages = [_page(lines)]
-    pen = 0
-    row = 0
-    for unit in units:
-        if unit == NEWLINE:
-            pen, row = 0, row + 1
-        elif unit == NEW_PAGE:
-            pages.append(_page(lines))
-            pen, row = 0, 0
-        elif unit == ARROW:
-            _arrow(pages[-1], renderer, row)
-        elif unit & 0xFF00 == WAIT:
-            continue
-        else:
-            width = font.width(unit)
-            if unit != SPACE:
-                glyph = font.glyphs[unit]
-                left = PREVIEW_RIGHT - pen - width
-                for y, values in enumerate(glyph.pixels):
-                    for x, value in enumerate(values[:width]):
-                        if value:
-                            pages[-1].putpixel(
-                                (left + x, 4 + row * GLYPH_ROWS + y), PREVIEW_COLOURS[value]
-                            )
-            pen += width
+    lines = lay_out(units, font.width, RENDERER_DIALECTS[renderer])
+    rows = max(LINES_PER_PAGE[renderer], *(line.number + 1 for line in lines))
+    pages = [_page(rows) for _ in range(lines[-1].page + 1)]
+    for line in lines:
+        page = pages[line.page]
+        for place in line.places:
+            if place.unit == SPACE:
+                continue
+            left = PREVIEW_RIGHT - place.end
+            shift = 2 * place.colour
+            for y, values in enumerate(font.glyphs[place.unit].pixels):
+                for x, value in enumerate(values[: place.width]):
+                    if value:
+                        colour = PREVIEW_COLOURS.get(value + shift, PREVIEW_COLOURS[value])
+                        page.putpixel((left + x, 4 + line.number * GLYPH_ROWS + y), colour)
+        if line.waits:
+            _arrow(page, renderer, line.number)
+    if renderer == QUESTION_BOX:
+        options = question_options(units, font.width)
+        if options:
+            _cursor(pages[0], question_cursor_x(options[0]))
     return pages_right_to_left(pages)
 
 
@@ -465,10 +557,19 @@ def _page(lines: int) -> Image.Image:
 def _arrow(page: Image.Image, renderer: str, row: int) -> None:
     if renderer == STRIP:
         left, top = 1, page.height - 7
-    else:
+    elif renderer == PAGE:
         left, top = PREVIEW_WIDTH // 2 - 5, 4 + (row + 1) * GLYPH_ROWS
+    else:
+        left, top = PREVIEW_WIDTH // 2 - 3, page.height - 5
     ImageDraw.Draw(page).polygon(
         [(left, top), (left + 6, top), (left + 3, top + 3)], fill=PREVIEW_ARROW
+    )
+
+
+def _cursor(page: Image.Image, x: int) -> None:
+    top = 4 + GLYPH_ROWS + 4
+    ImageDraw.Draw(page).polygon(
+        [(x + 1, top), (x + 1, top + 7), (x + 4, top + 4)], fill=PREVIEW_ARROW
     )
 
 

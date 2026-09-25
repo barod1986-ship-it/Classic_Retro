@@ -102,6 +102,10 @@ and the script belong to the game.
   site. Metroid Fusion's fade keeps a loop's end in `ip`; a veneer through `ip`
   hung it.
 
+  Choose the right-to-left glyph codes against every routine that will draw them,
+  not only the first one: Metroid Fusion's briefings read the intro's glyph codes
+  (`0x9xxx`) as sounds, and its glyphs had to move to `0xB040`.
+
   Another CPU gets a module of its own under `cpu/`.
 - `patching.hooks.HookProgram`: the hook source (`rom/<game>_arabic_hooks.s`), its
   assembled bytes and symbol offsets stored in Python.

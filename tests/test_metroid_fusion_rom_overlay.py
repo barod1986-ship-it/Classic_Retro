@@ -22,7 +22,10 @@ from classic_retro.engines.metroid_fusion import (
 )
 from classic_retro.engines.metroid_fusion_arabic import (
     BASELINE,
+    BRIEFING,
     PAGE,
+    QUESTION_BOX,
+    RENDERER_DIALECTS,
     SPACE,
     STRIP,
     MfRtlFont,
@@ -32,28 +35,45 @@ from classic_retro.engines.metroid_fusion_arabic import (
 from classic_retro.rebuild.bps import apply_bps
 from classic_retro.rom import metroid_fusion_arabic as overlay
 from classic_retro.rom.metroid_fusion_arabic_script import (
+    MESSAGE_LIST,
     MONOLOGUE_LIST,
+    NAVIGATION_LIST,
     MfArabicMessage,
     metroid_fusion_arabic_messages,
 )
 
 TEXTS = 0x08700000
-# Invented originals and translations: (monologue index, renderer, text).
+# Invented originals and translations: (list, index, renderer, text).
 ENGLISH = {
-    "dusk": (8, STRIP, "Stars at dusk\nand a quiet hum.{FC00}{FD00}We fly on.{FC00}"),
-    "count": (9, STRIP, "Count to three.{FC00}{FC00}{FD00}{E10A}Then land.{FC00}"),
-    "log": (0, PAGE, "A longer log\nwith three lines\nof its own.{FC00}{FD00}The end.{FC00}"),
-}
+    "dusk": (MONOLOGUE_LIST, 8, STRIP, "Stars at dusk\nand a quiet hum.{FC00}{FD00}We fly on.{FC00}"),
+    "count": (MONOLOGUE_LIST, 9, STRIP, "Count to three.{FC00}{FC00}{FD00}{E10A}Then land.{FC00}"),
+    "log": (
+        MONOLOGUE_LIST, 0, PAGE, "A longer log\nwith three lines\nof its own.{FC00}{FD00}The end.{FC00}"
+    ),
+    "orders": (
+        NAVIGATION_LIST, 0, BRIEFING,
+        "{B003}Head to the {8102}Old Dock{8100}\nright now.{FD00}Keep your eyes open.{FB00}"
+        "Then report {8103}back{8100}.",
+    ),
+    "ready": (MESSAGE_LIST, 43, QUESTION_BOX, "{8020}Ready to go{char 041F}\n{8057}{8340}Yes {83A0}No"),
+}  # fmt: skip
 ARABIC = {
     "dusk": "نجوم عند الغروب\nوطنين هادئ.{FC00}{FD00}ونواصل الطيران.{FC00}",
     "count": "عد إلى ثلاثة.{FC00}{FC00}{FD00}{E10A}ثم اهبط.{FC00}",
     "log": "سجل أطول\nفيه ثلاثة أسطر\nخاصة به.{FC00}{FD00}النهاية.{FC00}",
+    "orders": (
+        "{B003}توجهي إلى {8102}الرصيف القديم{8100} الآن.{FD00}ابقي متيقظة.{FB00}"
+        "ثم عودي {8103}للإبلاغ{8100}."
+    ),
+    "ready": "{8040}هل أنت جاهزة؟\n{8057}{8340}نعم {83A0}لا",
 }
 VENEER_AREA = bytes(range(64))
 
 
 def _english(key: str) -> tuple[int, ...]:
-    return pieces_units(parse_notation(ENGLISH[key][2]))
+    _, _, renderer, text = ENGLISH[key]
+    dialect = RENDERER_DIALECTS[renderer]
+    return pieces_units(parse_notation(text, dialect), dialect)
 
 
 def _synthetic_rom() -> tuple[bytes, dict[str, int]]:
@@ -66,19 +86,22 @@ def _synthetic_rom() -> tuple[bytes, dict[str, int]]:
     put(overlay.VENEER_AREA, VENEER_AREA)
     for site in overlay.SITES:
         put(site.address, site.original)
+    for sites in overlay.QUESTION_SITES.values():
+        for question_site in sites:
+            put(question_site.address, question_site.code(question_site.original))
     for address, expected in overlay.ANCHORS.items():
         put(address, expected)
     put(
         overlay.HOOK_CODE_ADDRESS,
-        bytes((0xFF,)) * (overlay.REGION_END - overlay.HOOK_CODE_ADDRESS),
+        bytes((0xFF,)) * (overlay.IMAGE_END - overlay.HOOK_CODE_ADDRESS),
     )
     addresses = {}
     cursor = TEXTS
-    for key, (index, _, _) in ENGLISH.items():
+    for key, (text_list, index, _, _) in ENGLISH.items():
         data = pack_units((*_english(key), END))
         addresses[key] = cursor
         put(cursor, data)
-        put(MONOLOGUE_LIST + 4 * index, struct.pack("<I", cursor))
+        put(text_list.address + 4 * index, struct.pack("<I", cursor))
         cursor += len(data) + 3 & ~3
     return bytes(rom), addresses
 
@@ -87,15 +110,16 @@ def _translations(addresses: dict[str, int]) -> tuple[MfArabicMessage, ...]:
     return tuple(
         MfArabicMessage(
             key=key,
+            text_list=text_list,
             index=index,
             source_address=addresses[key],
             renderer=renderer,
             speaker="test",
             source_sha256=hashlib.sha256(pack_units(_english(key))).hexdigest(),
-            source_skeleton=command_skeleton(_english(key)),
+            source_skeleton=command_skeleton(_english(key), RENDERER_DIALECTS[renderer]),
             notation=ARABIC[key],
         )
-        for key, (index, renderer, _) in ENGLISH.items()
+        for key, (text_list, index, renderer, _) in ENGLISH.items()
     )
 
 
@@ -176,21 +200,40 @@ def test_every_site_calls_its_hook_through_a_veneer(build):
     assert end <= overlay.VENEER_AREA + overlay.VENEER_AREA_SIZE
 
 
-def test_every_monologue_pointer_leads_to_its_arabic_text(build):
+def test_every_pointer_leads_to_its_arabic_text(build):
     _, _, result = build
     output = result.rom
     seen = set()
-    for key, (index, _, _) in ENGLISH.items():
-        (address,) = struct.unpack_from("<I", output, MONOLOGUE_LIST + 4 * index - ROM_BASE)
-        assert overlay.ARABIC_TEXT_ADDRESS <= address < overlay.REGION_END
+    for key, (text_list, index, renderer, _) in ENGLISH.items():
+        dialect = RENDERER_DIALECTS[renderer]
+        (address,) = struct.unpack_from("<I", output, text_list.address + 4 * index - ROM_BASE)
+        assert overlay.ARABIC_TEXT_ADDRESS <= address < overlay.ARABIC_TEXT_END
         assert address % 4 == 0 and address not in seen
         seen.add(address)
         units = read_text(output, address)
-        assert command_skeleton(units) == command_skeleton(_english(key))
-        glyphs = [unit for unit in units if not is_command(unit)]
+        assert command_skeleton(units, dialect) == command_skeleton(_english(key), dialect)
+        glyphs = [unit for unit in units if not is_command(unit, dialect)]
         assert glyphs and all(unit in result.font.glyphs or unit == SPACE for unit in glyphs)
     assert result.report["messages"] == len(ENGLISH)
     assert result.report["hook_sites"] == len(overlay.SITES) + 1
+
+
+def test_a_translated_question_moves_its_cursor_and_swaps_its_keys(build):
+    rom, _, result = build
+    # The fake glyphs are 5 pixels wide: Yes (3 glyphs) at 64..79 and No (2) at
+    # 144..154 on the line; the cursor stands 12 pixels left of their mirrored end.
+    expected = {
+        overlay.YES: 8 + 224 - 79 - 12,
+        overlay.NO: 8 + 224 - 154 - 12,
+        overlay.YES_KEY: overlay.KEY_RIGHT,
+        overlay.NO_KEY: overlay.KEY_LEFT,
+    }
+    for site in overlay.QUESTION_SITES[43]:
+        assert _read(result.rom, site.address, 2) == site.code(expected[site.role])
+    # Message 44 is not translated here: its question keeps the game's code.
+    for site in overlay.QUESTION_SITES[44]:
+        assert _read(result.rom, site.address, 2) == _read(rom, site.address, 2)
+    assert result.report["question_sites"] == len(overlay.QUESTION_SITES[43])
 
 
 def test_the_glyphs_and_their_widths_are_written(build):
@@ -212,15 +255,17 @@ def test_only_the_sites_pointers_and_padding_change(build):
         for start in range(0, len(rom), 0x1000)
         if output[start : start + 0x1000] != rom[start : start + 0x1000]
     }
-    allowed = {(site.address - ROM_BASE) & ~0xFFF for site in overlay.SITES}
-    allowed |= {(address - ROM_BASE) & ~0xFFF for address in (
-        overlay.GET_CHARACTER_WIDTH, overlay.VENEER_AREA, MONOLOGUE_LIST)}  # fmt: skip
+    written = [site.address for site in overlay.SITES]
+    written += [site.address for sites in overlay.QUESTION_SITES.values() for site in sites]
+    written += [overlay.GET_CHARACTER_WIDTH, overlay.VENEER_AREA]
+    written += [text_list.address + 4 * index for text_list, index, _, _ in ENGLISH.values()]
+    allowed = {(address - ROM_BASE) & ~0xFFF for address in written}
     allowed |= set(
-        range(overlay.HOOK_CODE_ADDRESS - ROM_BASE, overlay.REGION_END - ROM_BASE, 0x1000)
+        range(overlay.HOOK_CODE_ADDRESS - ROM_BASE, overlay.IMAGE_END - ROM_BASE, 0x1000)
     )
     assert changed <= allowed
     text_end = overlay.ARABIC_TEXT_ADDRESS + result.report["arabic_text_bytes"]
-    assert set(output[text_end - ROM_BASE : overlay.REGION_END - ROM_BASE]) == {0xFF}
+    assert set(output[text_end - ROM_BASE : overlay.ARABIC_TEXT_END - ROM_BASE]) == {0xFF}
 
 
 def test_bps_patch_reproduces_the_arabic_image(build):
@@ -244,7 +289,9 @@ def test_unknown_image_is_refused():
     assert caught.value.code is ErrorCode.UNKNOWN_GAME_REVISION
 
 
-@pytest.mark.parametrize("damage", ["site", "entry", "anchor", "space", "padding", "veneers"])
+@pytest.mark.parametrize(
+    "damage", ["site", "entry", "anchor", "space", "padding", "font", "veneers", "question"]
+)
 def test_changed_anchors_are_refused(synthetic, tmp_path, monkeypatch, damage):
     monkeypatch.setattr(overlay, "build_metroid_fusion_rtl_font", _fake_font)
     rom, addresses = synthetic
@@ -259,8 +306,12 @@ def test_changed_anchors_are_refused(synthetic, tmp_path, monkeypatch, damage):
         rom[0x08576234 + SPACE - ROM_BASE] = 5
     elif damage == "padding":
         rom[overlay.ARABIC_TEXT_ADDRESS - ROM_BASE + 7] = 0
-    else:
+    elif damage == "font":
+        rom[overlay.FONT_ADDRESS - ROM_BASE + 0x41] = 0
+    elif damage == "veneers":
         rom[overlay.VENEER_AREA - ROM_BASE + 9] ^= 1
+    else:
+        rom[overlay.QUESTION_SITES[44][0].address - ROM_BASE] ^= 1
     font_file = tmp_path / "font.ttf"
     font_file.write_bytes(b"x")
     with pytest.raises(ClassicRetroError) as caught:
@@ -287,6 +338,7 @@ def test_changed_originals_are_refused(synthetic, tmp_path, monkeypatch, damage)
     else:
         messages[1] = MfArabicMessage(
             count.key,
+            count.text_list,
             count.index,
             count.source_address,
             count.renderer,
@@ -309,13 +361,39 @@ def test_extract_gives_every_original_in_notation(synthetic):
     originals = overlay.extract_originals(
         rom, messages=_translations(addresses), verify_identity=False
     )
-    assert originals == {key: text for key, (_, _, text) in ENGLISH.items()}
+    assert originals == {key: text for key, (_, _, _, text) in ENGLISH.items()}
+
+
+@pytest.mark.parametrize("wrong", ["list", "index", "question", "twice"])
+def test_texts_out_of_place_are_refused(synthetic, wrong):
+    _, addresses = synthetic
+    messages = list(_translations(addresses))
+    ready = messages[-1]
+    if wrong == "list":
+        messages[-1] = _moved(ready, text_list=NAVIGATION_LIST)
+    elif wrong == "index":
+        messages[-1] = _moved(ready, index=overlay.MESSAGE_LIST.length)
+    elif wrong == "question":
+        messages[-1] = _moved(ready, index=42)
+    else:
+        messages.append(_moved(messages[0], key="dusk again"))
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.encode_messages(overlay.MfArabicEncoder(_fake_font()), tuple(messages))
+    assert caught.value.code in {ErrorCode.INVALID_REFERENCE, ErrorCode.DUPLICATE_ENTRY_ID}
+
+
+def _moved(message: MfArabicMessage, **changes) -> MfArabicMessage:
+    fields = {name: getattr(message, name) for name in MfArabicMessage.__dataclass_fields__}
+    return MfArabicMessage(**(fields | changes))
 
 
 def test_shipped_translations_check_without_the_rom():
     report = overlay.check_metroid_fusion_translations()
-    assert report["messages"] == len(metroid_fusion_arabic_messages()) == 12
+    assert report["messages"] == len(metroid_fusion_arabic_messages()) == 16
     assert report["lines_measured"] is False
+    lists = {message.key: message.text_list for message in metroid_fusion_arabic_messages()}
+    assert lists["first_briefing"] == NAVIGATION_LIST
+    assert lists["objective_clear"] == lists["confirm_objective"] == MESSAGE_LIST
 
 
 def test_translations_are_measured_and_previewed_with_a_font(tmp_path, monkeypatch):
@@ -333,6 +411,12 @@ def test_encode_command_prints_the_units(capsys):
     units = payload["units"].split()
     assert units[-1] == "FC00" and "FE00" in units and "0040" in units
     assert main(["metroid-fusion", "encode-arabic", "ب\nب\nب{FC00}", "--renderer", "page"]) == 0
+    capsys.readouterr()
+    briefing = "{8102}ب{8100} ب{FD00}ب"
+    assert main(["metroid-fusion", "encode-arabic", briefing, "--renderer", "briefing"]) == 0
+    assert json.loads(capsys.readouterr().out)["units"].split()[0] == "8102"
+    question = "{8040}ب\n{8340}ب {83A0}ب"
+    assert main(["metroid-fusion", "encode-arabic", question, "--renderer", "question"]) == 0
 
 
 @pytest.mark.skipif(shutil.which("arm-none-eabi-as") is None, reason="needs GNU ARM binutils")

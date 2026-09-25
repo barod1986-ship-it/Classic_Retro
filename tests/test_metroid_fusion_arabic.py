@@ -12,23 +12,33 @@ from classic_retro.arabic.glyph_codes import GlyphCodes
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.metroid_fusion import (
     ARROW,
+    DIALECTS,
     GLYPH_COLUMNS,
     GLYPH_ROWS,
     INK,
+    NAVIGATION,
     NEW_PAGE,
     NEWLINE,
     OUTLINE,
+    QUESTION,
     TILE_ROW_BYTES,
+    MfCommand,
     is_command,
     parse_notation,
 )
 from classic_retro.engines.metroid_fusion_arabic import (
     BASELINE,
     BOTTOM_INK_ROW,
+    BRIEFING,
     CODES_PER_ROW,
+    LINE_RIGHT,
     LINE_WIDTH,
     LINES_PER_PAGE,
     PAGE,
+    PREVIEW_ARROW,
+    PREVIEW_COLOURS,
+    QUESTION_BOX,
+    QUESTION_CURSOR_GAP,
     RTL_CODE_SPAN,
     RTL_FIRST_CODE,
     RTL_GLYPH_CODES,
@@ -46,6 +56,8 @@ from classic_retro.engines.metroid_fusion_arabic import (
     message_preview,
     messages_sheet,
     outlined_glyph,
+    question_cursor_x,
+    question_options,
     validate_command_skeleton,
 )
 from classic_retro.font.glyph_raster import FormDoesNotFit
@@ -72,11 +84,12 @@ def test_glyph_codes_fall_in_the_sheet_in_the_padding():
     glyph_map = build_metroid_fusion_arabic_glyph_map()
     codes = glyph_map.all_codes()
     assert len(codes) == len(set(codes))
-    # The game's own space, then right-to-left codes: none is a control unit.
+    # The game's own space, then right-to-left codes: no routine reads one as a command.
     assert glyph_map.code(" ") == SPACE == 0x40
     rtl = set(codes) - {SPACE}
     assert rtl <= set(RTL_GLYPH_CODES)
-    assert not any(is_command(code) or code >= 0xE000 for code in rtl)
+    assert not any(is_command(code, dialect) for code in RTL_GLYPH_CODES for dialect in DIALECTS)
+    assert RTL_FIRST_CODE == 0xB040 and max(RTL_GLYPH_CODES) < 0xC000
     for code in rtl:
         offset = code - RTL_FIRST_CODE
         # A top-half row, and an even slot: the next code's tiles are the right half.
@@ -310,3 +323,82 @@ def test_previews_draw_pages_from_the_right():
     assert font_preview(font).size[0] == 16 * (GLYPH_COLUMNS + 2)
     sheet = messages_sheet([("one", strip), ("two", page)])
     assert sheet.height == strip.height + page.height + 8
+
+
+# ---------------------------------------------------------------------------
+# The briefings and their question
+
+
+def _briefing(text: str) -> tuple:
+    return parse_notation(text, NAVIGATION)
+
+
+def _question(text: str) -> tuple:
+    return parse_notation(text, QUESTION)
+
+
+def test_a_briefing_keeps_its_colours_around_their_words():
+    units = MfArabicEncoder().encode(_briefing("في {8102}بب{8100} ب."), BRIEFING).units
+    # Painted from the right: the first word, then the coloured one, then the last.
+    first = units.index(0x8102)
+    assert units[first - 1] == SPACE and units[first + 3] == 0x8100
+    assert units[first + 1 : first + 3] == (_code(BEH["INITIAL"]), _code(BEH["FINAL"]))
+
+
+def test_a_briefing_box_scrolls_only_when_the_reader_presses_a():
+    encoder = MfArabicEncoder()
+    for fine in ("ب\nب{FD00}ب", "ب\nب{FC00}ب{FC00}ب", "ب{FB00}ب\nب"):
+        encoder.encode(_briefing(fine), BRIEFING)
+    with pytest.raises(ClassicRetroError) as caught:
+        encoder.encode(_briefing("ب\nب\nب"), BRIEFING)
+    assert caught.value.code is ErrorCode.TEXT_BOX_OVERFLOW
+    with pytest.raises(ClassicRetroError):
+        encoder.encode(_briefing("ب{FC00}ب\nب"), BRIEFING)
+
+
+def test_commands_of_another_routine_are_refused():
+    with pytest.raises(ClassicRetroError) as caught:
+        MfArabicEncoder().encode((MfCommand(0x8102), "ب"), STRIP)
+    assert caught.value.code is ErrorCode.UNSUPPORTED_CONTROL_CODE
+    with pytest.raises(ClassicRetroError) as caught:
+        MfArabicEncoder().encode((MfCommand(0xFD00), "ب"), QUESTION_BOX)
+    assert caught.value.code is ErrorCode.UNSUPPORTED_CONTROL_CODE
+
+
+def test_a_question_ends_with_a_glyph_and_places_its_options():
+    font = _fake_font(5)
+    encoder = MfArabicEncoder(font)
+    encoding = encoder.encode(_question("{8040}ب\n{8057}{8340}بب {83A0}ب"), QUESTION_BOX)
+    assert encoding.line_widths == (0x40 + 5, 0x90 + 5)
+    options = question_options(encoding.units, font.width)
+    assert options == ((0x40, 0x40 + 10), (0x90, 0x90 + 5))
+    # Left of the option's mirrored place on the screen.
+    assert question_cursor_x(options[0]) == LINE_RIGHT - 0x4A - QUESTION_CURSOR_GAP
+    with pytest.raises(ClassicRetroError) as caught:
+        encoder.encode(_question("{8040}ب\n{8340}ب {83A0}"), QUESTION_BOX)
+    assert caught.value.code is ErrorCode.TOKEN_ORDER_VIOLATION
+
+
+def test_glyphs_put_over_others_are_refused():
+    encoder = MfArabicEncoder(_fake_font(5))
+    crowded = "{8040}ب\n{8340}" + "ب" * 17 + " {83A0}ب"
+    with pytest.raises(ClassicRetroError) as caught:
+        encoder.encode(_question(crowded), QUESTION_BOX)
+    assert caught.value.code is ErrorCode.TEXT_BOX_OVERFLOW
+    assert "overlap" in str(caught.value)
+
+
+def test_previews_show_a_briefing_in_colour_and_the_question_with_its_cursor():
+    font = _fake_font(6)
+    briefing = MfArabicEncoder(font).encode(_briefing("{8102}ب{8100}\nب{FD00}ب"), BRIEFING)
+    image = message_preview(font, briefing.units, BRIEFING)
+    assert image.size == (2 * 240 + 4, 2 * GLYPH_ROWS + 8)
+    first = image.crop((244, 0, 484, image.height))
+    colours = {first.getpixel((x, y)) for x in range(240) for y in range(first.height)}
+    assert PREVIEW_COLOURS[INK + 4] in colours and PREVIEW_ARROW in colours
+    question = MfArabicEncoder(font).encode(
+        _question("{8040}ب\n{8057}{8340}ب {83A0}ب"), QUESTION_BOX
+    )
+    box = message_preview(font, question.units, QUESTION_BOX)
+    x = question_cursor_x(question_options(question.units, font.width)[0])
+    assert box.getpixel((x + 2, 4 + GLYPH_ROWS + 8)) == PREVIEW_ARROW
