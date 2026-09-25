@@ -133,6 +133,26 @@ target registries accept them from this repository or from other packages throug
 entry points. See [the rendering strategies](docs/ARABIC_STRATEGIES.md) and
 [adding a target](docs/ADDING_A_TARGET.md).
 
+## Research tools
+
+A new game is studied before it becomes a target. The `research` commands run it under
+an emulator from a script, and scan its image:
+
+```text
+classic-retro research run game.gba reach-the-scene.txt --out-dir shots   # mGBA, with breakpoints
+classic-retro research run game.sfc script.txt --core snes9x_libretro.so  # any libretro core
+classic-retro research free-space game.gba
+classic-retro research pointers game.gba --to 0x08123456
+classic-retro research pointer-tables game.gba
+classic-retro research text game.gba --table game.tbl
+classic-retro research relative-search game.gba WORD
+classic-retro research disasm game.gba 0x08012345
+```
+
+A script holds commands such as `run 300`, `tap START`, `shot menu.png`,
+`save menu.state`, `watch write 0x03001234` and `break 0x08012345 5 r0 16`. See
+[the research tools](docs/RESEARCH_TOOLS.md).
+
 ## Repository status
 
 **Localization platform with nine reference targets, all on the Game Boy Advance so far.**

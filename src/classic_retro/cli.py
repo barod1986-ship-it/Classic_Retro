@@ -20,6 +20,7 @@ from classic_retro.media.resolve import resolve_media
 from classic_retro.rebuild.bps import apply_bps, create_bps
 from classic_retro.rebuild.model import load_rebuild_plan
 from classic_retro.rebuild.pipeline import verify_round_trip
+from classic_retro.research.commands import register_cli as register_research_cli
 from classic_retro.text.document import load_translation_file
 from classic_retro.transform.profile import build_pipeline, load_transform_profile
 from classic_retro.transform.registry import build_transform_registry
@@ -144,6 +145,7 @@ def _build_parser() -> argparse.ArgumentParser:
     verify_codec.set_defaults(handler=_cmd_codec_verify)
 
     register_target_cli(subcommands, build_target_registry())
+    register_research_cli(subcommands)
 
     adapters = subcommands.add_parser("adapters", help="List loaded adapter IDs")
     adapters.set_defaults(handler=_cmd_adapters)

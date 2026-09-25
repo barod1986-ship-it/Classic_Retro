@@ -27,7 +27,10 @@ none of the existing methods gets a new one (see
 ## 2. Research before code
 
 Answer each question and write the answers into the target's renderer notes
-(`docs/<GAME>_ARABIC_RENDERER.md`) before relying on them.
+(`docs/<GAME>_ARABIC_RENDERER.md`) before relying on them. The
+[research tools](RESEARCH_TOOLS.md) answer them on your own copy of the game. They
+include an emulator you run from a script, with screenshots, savestates, breakpoints
+and watchpoints, and scanners for free space, pointers and text.
 
 1. **Sources.** Is there a decompilation or disassembly? Does it build the image?
    Does it take its data from the original?
@@ -46,9 +49,10 @@ Answer each question and write the answers into the target's renderer notes
    are measured, wrapped and centred. Also the typewriter, scrolling, choices,
    cursors and key arrows.
 6. **Free space.** Padding in the image (`0xFF` or `0x00` runs) for hooks, fonts
-   and text, and whether the image may grow.
+   and text, and whether the image may grow (`research free-space`).
 7. **Reaching the scene.** The inputs that take a new game to the translated text in
-   an emulator, so every build can be checked on screen.
+   an emulator, so every build can be checked on screen. A `research run` script
+   records them: it holds only inputs, so it can be kept with the target's guide.
 
 ## 3. Choose the strategy
 
