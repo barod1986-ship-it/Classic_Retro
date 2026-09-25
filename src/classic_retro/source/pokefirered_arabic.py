@@ -11,9 +11,10 @@ from classic_retro.engines.pokemon_gen3_arabic import (
     PokemonGen3ArabicEncoder,
     build_arabic_font_atlas,
     build_arabic_glyph_map,
-    make_ltr_placeholder_token,
+    parse_pokemon_gen3_notation,
 )
-from classic_retro.text.tokens import InlineToken, TextToken, TokenKind, TokenMovement, TokenStream
+from classic_retro.localization.translations import TranslationSet, builtin_translation_set
+from classic_retro.text.tokens import TokenStream
 
 PINNED_COMMIT = "c75f352304d529f6ba92d4f74b9cf8b5c3810788"
 _PATCH_MARKER = "CLASSIC_RETRO_ARABIC_V1"
@@ -36,10 +37,12 @@ _PINNED_BLOBS = {
 _OAK_INTRO_RIGHT_X = 26 * 8
 
 
-def check_pokefirered_arabic_source(source: Path) -> dict[str, object]:
+def check_pokefirered_arabic_source(
+    source: Path, translations: TranslationSet | None = None
+) -> dict[str, object]:
     source = source.expanduser().resolve()
     texts = _read_pristine_source(source)
-    patched = _patch_all(texts)
+    patched = _patch_all(texts, translations)
     if not all(_PATCH_MARKER in value for value in patched.values()):
         raise ClassicRetroError(
             ErrorCode.SOURCE_PATCH_FAILED,
@@ -55,13 +58,15 @@ def check_pokefirered_arabic_source(source: Path) -> dict[str, object]:
         "first_extra_symbol": f"0x{glyph_map.first_slot:02X}",
         "last_extra_symbol": f"0x{glyph_map.last_slot:02X}",
         "oak_intro_arabic": True,
-        "oak_intro_messages": len(_oak_speech_streams()),
+        "oak_intro_messages": len(OAK_SPEECH_LABELS),
         "oak_dynamic_ltr_placeholders": True,
-        "oak_intro_bytes": len(_oak_intro_bytes()),
+        "oak_intro_bytes": len(_oak_intro_bytes(translations)),
     }
 
 
-def prepare_pokefirered_arabic_source(source: Path, font_path: Path) -> dict[str, object]:
+def prepare_pokefirered_arabic_source(
+    source: Path, font_path: Path, translations: TranslationSet | None = None
+) -> dict[str, object]:
     source = source.expanduser().resolve()
     text_c = source / "src/text.c"
     already_patched = text_c.is_file() and _PATCH_MARKER in text_c.read_text(encoding="utf-8")
@@ -71,7 +76,7 @@ def prepare_pokefirered_arabic_source(source: Path, font_path: Path) -> dict[str
         patched = {}
     else:
         texts = _read_pristine_source(source)
-        patched = _patch_all(texts)
+        patched = _patch_all(texts, translations)
 
     atlas = source / "graphics/fonts/arabic_normal.png"
     widths = source / "graphics/fonts/arabic_normal_widths.bin"
@@ -110,7 +115,7 @@ def prepare_pokefirered_arabic_source(source: Path, font_path: Path) -> dict[str
         "widths": str(widths),
         "build_target": "firered_rev1",
         "oak_intro_arabic": True,
-        "oak_intro_messages": len(_oak_speech_streams()),
+        "oak_intro_messages": len(OAK_SPEECH_LABELS),
         "oak_dynamic_ltr_placeholders": True,
         "oak_intro_right_x": _OAK_INTRO_RIGHT_X,
     }
@@ -190,7 +195,7 @@ def _git_blob_sha(data: bytes) -> str:
     return hashlib.sha1(header + data, usedforsecurity=False).hexdigest()
 
 
-def _patch_all(texts: dict[str, str]) -> dict[str, str]:
+def _patch_all(texts: dict[str, str], translations: TranslationSet | None = None) -> dict[str, str]:
     glyph_map = build_arabic_glyph_map()
     count = len(glyph_map.characters)
 
@@ -203,153 +208,74 @@ def _patch_all(texts: dict[str, str]) -> dict[str, str]:
     result["src/text.c"] = _patch_text_c(result["src/text.c"], count)
     result["src/string_util.c"] = _patch_string_util(result["src/string_util.c"])
     result["data/text/new_game_intro.inc"] = _patch_oak_intro(
-        result["data/text/new_game_intro.inc"]
+        result["data/text/new_game_intro.inc"], translations
     )
     return result
 
 
-def _line(token_id: str) -> InlineToken:
-    return InlineToken(
-        id=token_id,
-        kind=TokenKind.LINE_BREAK,
-        movement=TokenMovement.ORDERED,
-    )
+TARGET = "firered"
+# The Oak speech labels of data/text/new_game_intro.inc that the overlay translates;
+# their Arabic lives in classic_retro/translations/firered.json.
+OAK_SPEECH_LABELS = (
+    "gOakSpeech_Text_AskPlayerGender",
+    "gOakSpeech_Text_WelcomeToTheWorld",
+    "gOakSpeech_Text_ThisWorld",
+    "gOakSpeech_Text_IsInhabitedFarAndWide",
+    "gOakSpeech_Text_IStudyPokemon",
+    "gOakSpeech_Text_TellMeALittleAboutYourself",
+    "gOakSpeech_Text_YourNameWhatIsIt",
+    "gOakSpeech_Text_SoYourNameIsPlayer",
+    "gOakSpeech_Text_WhatWasHisName",
+    "gOakSpeech_Text_YourRivalsNameWhatWasIt",
+    "gOakSpeech_Text_ConfirmRivalName",
+    "gOakSpeech_Text_RememberRivalsName",
+    "gOakSpeech_Text_LetsGo",
+)
 
 
-def _page(token_id: str) -> InlineToken:
-    return InlineToken(
-        id=token_id,
-        kind=TokenKind.CONTROL,
-        movement=TokenMovement.ORDERED,
-        name="PROMPT_CLEAR",
-        args={"raw_hex": "fb"},
-    )
+def _oak_speech_streams(translations: TranslationSet | None = None) -> dict[str, TokenStream]:
+    texts = (translations or builtin_translation_set(TARGET)).texts(OAK_SPEECH_LABELS)
+    return {label: parse_pokemon_gen3_notation(text, f"{label}_") for label, text in texts.items()}
 
 
-def _player(token_id: str) -> InlineToken:
-    return make_ltr_placeholder_token(token_id, "PLAYER", 0x01)
+# One line of a data/text .inc block: .string "...", its escapes kept.
+_STRING_LINE = re.compile(r'^\s*\.string\s+"((?:[^"\\]|\\.)*)"\s*$')
 
 
-def _rival(token_id: str) -> InlineToken:
-    return make_ltr_placeholder_token(token_id, "RIVAL", 0x06)
+def extract_pokefirered_originals(
+    source: Path, translations: TranslationSet | None = None
+) -> dict[str, str]:
+    """The Oak speech of a pristine pokefirered checkout, by label, in the translators' notation.
+
+    Lines of a label's block are joined, the ``$`` terminator dropped and ``\\n``
+    made a line end; ``\\p`` and the placeholders stay as they are written.
+    """
+    texts = _read_pristine_source(source.expanduser().resolve())
+    _oak_speech_streams(translations)
+    intro = texts["data/text/new_game_intro.inc"]
+    originals: dict[str, str] = {}
+    for label in OAK_SPEECH_LABELS:
+        start = intro.find(label + "::\n")
+        if start < 0:
+            raise ClassicRetroError(
+                ErrorCode.SOURCE_PATCH_FAILED, f"OAK speech label not found: {label}"
+            )
+        end = intro.find("\n\n", start)
+        block = intro[start + len(label) + 3 : end if end >= 0 else len(intro)]
+        parts = []
+        for line in block.splitlines():
+            match = _STRING_LINE.match(line)
+            if match is None:
+                raise ClassicRetroError(
+                    ErrorCode.SOURCE_BASELINE_MISMATCH, f"{label}: unexpected line {line!r}"
+                )
+            parts.append(match.group(1))
+        originals[label] = "".join(parts).removesuffix("$").replace("\\n", "\n")
+    return originals
 
 
-def _oak_speech_streams() -> dict[str, TokenStream]:
-    return {
-        "gOakSpeech_Text_AskPlayerGender": TokenStream(
-            (
-                TextToken("والآن أخبرني."),
-                _line("gender_line"),
-                TextToken("هل أنت ولد أم بنت؟"),
-            )
-        ),
-        "gOakSpeech_Text_WelcomeToTheWorld": TokenStream(
-            (
-                TextToken("مرحبا بك!"),
-                _line("welcome_line_1"),
-                TextToken("سعيد بلقائك!"),
-                _page("welcome_page_1"),
-                TextToken("أهلا بك في عالم بوكيمون!"),
-                _page("welcome_page_2"),
-                TextToken("اسمي أوك."),
-                _page("welcome_page_3"),
-                TextToken("يناديني الناس بمحبة"),
-                _line("welcome_line_2"),
-                TextToken("بروفيسور بوكيمون."),
-                _page("welcome_page_4"),
-            )
-        ),
-        "gOakSpeech_Text_ThisWorld": TokenStream((TextToken("هذا العالم..."),)),
-        "gOakSpeech_Text_IsInhabitedFarAndWide": TokenStream(
-            (
-                TextToken("تعيش فيه في كل مكان"),
-                _line("world_line"),
-                TextToken("مخلوقات تسمى بوكيمون."),
-                _page("world_page"),
-            )
-        ),
-        "gOakSpeech_Text_IStudyPokemon": TokenStream(
-            (
-                TextToken("لبعض الناس، بوكيمون أصدقاء."),
-                _line("study_line_1"),
-                TextToken("وآخرون يقاتلون بهم."),
-                _page("study_page_1"),
-                TextToken("أما أنا..."),
-                _page("study_page_2"),
-                TextToken("فأدرس بوكيمون كمهنة."),
-                _page("study_page_3"),
-            )
-        ),
-        "gOakSpeech_Text_TellMeALittleAboutYourself": TokenStream(
-            (
-                TextToken("لكن أولا، أخبرني قليلا"),
-                _line("yourself_line"),
-                TextToken("عن نفسك."),
-                _page("yourself_page"),
-            )
-        ),
-        "gOakSpeech_Text_YourNameWhatIsIt": TokenStream(
-            (
-                TextToken("لنبدأ باسمك."),
-                _line("name_line"),
-                TextToken("ما اسمك؟"),
-                _page("name_page"),
-            )
-        ),
-        "gOakSpeech_Text_SoYourNameIsPlayer": TokenStream(
-            (
-                TextToken("حسنا..."),
-                _line("player_name_line"),
-                TextToken("إذن اسمك "),
-                _player("player_name"),
-            )
-        ),
-        "gOakSpeech_Text_WhatWasHisName": TokenStream(
-            (
-                TextToken("هذا حفيدي."),
-                _page("rival_intro_page_1"),
-                TextToken("إنه منافسك منذ كنتما"),
-                _line("rival_intro_line"),
-                TextToken("صغيرين."),
-                _page("rival_intro_page_2"),
-                TextToken("همم... ما كان اسمه؟"),
-            )
-        ),
-        "gOakSpeech_Text_YourRivalsNameWhatWasIt": TokenStream((TextToken("ما اسم منافسك؟"),)),
-        "gOakSpeech_Text_ConfirmRivalName": TokenStream(
-            (
-                TextToken("هل كان اسمه"),
-                _line("confirm_rival_line"),
-                _rival("confirm_rival_name"),
-            )
-        ),
-        "gOakSpeech_Text_RememberRivalsName": TokenStream(
-            (
-                TextToken("صحيح! تذكرت الآن!"),
-                _line("remember_rival_line"),
-                TextToken("اسمه "),
-                _rival("remember_rival_name"),
-                _page("remember_rival_page"),
-            )
-        ),
-        "gOakSpeech_Text_LetsGo": TokenStream(
-            (
-                _player("lets_go_player"),
-                _page("lets_go_page_1"),
-                TextToken("حان وقت بدء أسطورتك"),
-                _line("lets_go_line_1"),
-                TextToken("الخاصة مع بوكيمون!"),
-                _page("lets_go_page_2"),
-                TextToken("عالم الأحلام والمغامرات"),
-                _line("lets_go_line_2"),
-                TextToken("ينتظرك. هيا بنا!"),
-            )
-        ),
-    }
-
-
-def _oak_message_bytes(label: str) -> bytes:
-    streams = _oak_speech_streams()
+def _oak_message_bytes(label: str, translations: TranslationSet | None = None) -> bytes:
+    streams = _oak_speech_streams(translations)
     try:
         stream = streams[label]
     except KeyError as exc:
@@ -361,8 +287,8 @@ def _oak_message_bytes(label: str) -> bytes:
     )
 
 
-def _oak_intro_bytes() -> bytes:
-    return _oak_message_bytes("gOakSpeech_Text_WelcomeToTheWorld")
+def _oak_intro_bytes(translations: TranslationSet | None = None) -> bytes:
+    return _oak_message_bytes("gOakSpeech_Text_WelcomeToTheWorld", translations)
 
 
 def _format_asm_bytes(data: bytes) -> str:
@@ -374,8 +300,8 @@ def _format_asm_bytes(data: bytes) -> str:
     return "\n".join(lines)
 
 
-def _patch_oak_intro(text: str) -> str:
-    for label in _oak_speech_streams():
+def _patch_oak_intro(text: str, translations: TranslationSet | None = None) -> str:
+    for label in OAK_SPEECH_LABELS:
         start = text.find(label + "::\n")
         if start < 0:
             raise ClassicRetroError(
@@ -392,7 +318,7 @@ def _patch_oak_intro(text: str) -> str:
             label
             + "::\n"
             + "    @ CLASSIC_RETRO_ARABIC_V1 — Arabic OAK speech\n"
-            + _format_asm_bytes(_oak_message_bytes(label))
+            + _format_asm_bytes(_oak_message_bytes(label, translations))
             + "\n"
         )
         text = text[:start] + replacement + text[tail:]

@@ -7,11 +7,28 @@ from pathlib import Path
 
 from classic_retro.engines.pokemon_gen3_arabic import PokemonGen3ArabicEncoder
 from classic_retro.localization.targets import LocalizationTarget, print_json
+from classic_retro.localization.translations import TranslationSet
 from classic_retro.source.pokefirered_arabic import (
+    PINNED_COMMIT,
     check_pokefirered_arabic_source,
+    extract_pokefirered_originals,
     prepare_pokefirered_arabic_source,
 )
 from classic_retro.text.tokens import TextToken, TokenStream
+
+
+def prepare(
+    source: Path, font: Path, translations: TranslationSet | None = None
+) -> dict[str, object]:
+    """Patch the user's pristine checkout: the overlay, the font and the Arabic text."""
+    return prepare_pokefirered_arabic_source(source, font, translations)
+
+
+def extract(source: Path, translations: TranslationSet | None = None) -> tuple[str, dict[str, str]]:
+    """The original of every entry, read from the user's pristine checkout."""
+    return f"pret/pokefirered at {PINNED_COMMIT}", extract_pokefirered_originals(
+        source, translations
+    )
 
 
 def _source_check(args: argparse.Namespace) -> int:
@@ -81,4 +98,6 @@ TARGET = LocalizationTarget(
     guide="docs/FIRERED_ARABIC_TEST_AR.md",
     notes="docs/POKEMON_GEN3_ARABIC_RENDERER.md",
     register_cli=register_cli,
+    prepare=prepare,
+    extract=extract,
 )

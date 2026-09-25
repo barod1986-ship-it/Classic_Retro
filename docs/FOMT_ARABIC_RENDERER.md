@@ -125,7 +125,8 @@ compares the result with the bytes stored in `fomt_arabic.py` (run in CI).
 
 ## Translations
 
-The script (`src/classic_retro/rom/fomt_arabic_script.py`) covers the opening, from
+The script (`src/classic_retro/translations/fomt.json`; its originals are pinned in
+`src/classic_retro/rom/fomt_arabic_script.py`) covers the opening, from
 the naming screens to the first morning on the farm: 33 strings and 5 speaker names.
 
 - Script 867, strings 0-4: Thomas stops the newcomer, hears that they knew the late

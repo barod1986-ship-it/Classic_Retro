@@ -54,9 +54,11 @@ from classic_retro.engines.golden_sun_arabic import (
     build_golden_sun_arabic_glyph_map,
     build_golden_sun_rtl_font,
     font_preview,
+    golden_sun_codes_notation,
     golden_sun_command,
     validate_command_skeleton,
 )
+from classic_retro.localization.translations import TranslationSet
 from classic_retro.patching.hooks import HookProgram
 from classic_retro.patching.image import ImageSpec
 from classic_retro.patching.outputs import base_report, write_image, write_patch
@@ -295,6 +297,7 @@ def build_golden_sun_arabic_rom(
     font_path: Path,
     *,
     messages: tuple[GoldenSunArabicMessage, ...] | None = None,
+    translations: TranslationSet | None = None,
     verify_identity: bool = True,
 ) -> GoldenSunArabicBuild:
     """Build the Arabic image and its BPS patch from the original USA/Europe image.
@@ -305,7 +308,7 @@ def build_golden_sun_arabic_rom(
     if verify_identity:
         verify_usa_image(rom)
     latin, bank = _verify_anchors(rom)
-    messages = messages or golden_sun_arabic_messages()
+    messages = messages or golden_sun_arabic_messages(translations)
     for message in messages:
         _verify_source_message(bank, message)
     font = build_golden_sun_rtl_font(font_path, latin)
@@ -408,7 +411,10 @@ def _verify_output(
 
 
 def check_golden_sun_translations(
-    font_path: Path | None = None, preview_path: Path | None = None
+    font_path: Path | None = None,
+    preview_path: Path | None = None,
+    *,
+    translations: TranslationSet | None = None,
 ) -> dict[str, object]:
     """Validate the translations without the ROM; with a font, measure every line."""
     glyph_map = build_golden_sun_arabic_glyph_map()
@@ -418,7 +424,10 @@ def check_golden_sun_translations(
             raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, "A preview needs --font")
         font_preview(font).save(preview_path)
     advances = font.advances() if font is not None else _unmeasured_advances()
-    encoded = encode_translations(GoldenSunArabicEncoder(advances=advances, glyph_map=glyph_map))
+    encoded = encode_translations(
+        GoldenSunArabicEncoder(advances=advances, glyph_map=glyph_map),
+        golden_sun_arabic_messages(translations),
+    )
     report: dict[str, object] = {
         "strings": sorted(encoded),
         "arabic_glyphs": len(glyph_map.characters),
@@ -472,6 +481,30 @@ def write_build_outputs(
 def assemble_hooks(source: Path = HOOK_SOURCE) -> tuple[bytes, dict[str, int]]:
     """Assemble the hook source with GNU binutils (arm-none-eabi-*) and read its symbols."""
     return HOOKS.assemble(source)
+
+
+def extract_originals(
+    rom: bytes,
+    translations: TranslationSet | None = None,
+    *,
+    messages: tuple[GoldenSunArabicMessage, ...] | None = None,
+    verify_identity: bool = True,
+) -> dict[str, str]:
+    """Every pinned original, verified, in the translators' notation, by entry id.
+
+    The keyword arguments exist for synthetic tests, as in the build.
+    """
+    if verify_identity:
+        verify_usa_image(rom)
+    messages = messages or golden_sun_arabic_messages(translations)
+    _, bank = _verify_anchors(rom)
+    originals: dict[str, str] = {}
+    for message in messages:
+        _verify_source_message(bank, message)
+        originals[f"message.{message.index}"] = golden_sun_codes_notation(
+            bank.strings[message.index]
+        )
+    return originals
 
 
 def check_hook_code(source: Path = HOOK_SOURCE) -> dict[str, object]:

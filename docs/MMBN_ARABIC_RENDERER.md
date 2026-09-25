@@ -136,7 +136,8 @@ compares the result with the bytes stored in `mmbn_arabic.py` (run in CI).
 
 ## Translations
 
-The script (`src/classic_retro/rom/mmbn_arabic_script.py`) covers Lan's first
+The script (`src/classic_retro/translations/mmbn.json`; its originals are pinned in
+`src/classic_retro/rom/mmbn_arabic_script.py`) covers Lan's first
 morning, from a new game to the school gate: 50 sections, 61 pages.
 
 - `story_00` (9 sections): MegaMan wakes Lan up, the net news, the mail from Dad.

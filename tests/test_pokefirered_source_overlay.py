@@ -262,7 +262,9 @@ def source_tree(tmp_path, monkeypatch):
         overlay, "_PINNED_BLOBS", {"src/text.c": overlay._git_blob_sha(b"pristine\n")}
     )
     monkeypatch.setattr(
-        overlay, "_patch_all", lambda texts: {path: overlay._PATCH_MARKER for path in texts}
+        overlay,
+        "_patch_all",
+        lambda texts, translations=None: {path: overlay._PATCH_MARKER for path in texts},
     )
     return source
 
@@ -299,3 +301,22 @@ def test_legacy_overlay_is_not_silently_reused(source_tree):
     (source_tree / "src/text.c").write_text(overlay._PATCH_MARKER, encoding="utf-8")
     with pytest.raises(ClassicRetroError, match="fresh checkout"):
         overlay.prepare_pokefirered_arabic_source(source_tree, source_tree / "font.ttf")
+
+
+def test_extract_reads_the_oak_speech_of_a_checkout(tmp_path, monkeypatch):
+    blocks = [
+        f'{label}::\n\t.string "Line {number} of an\\n"\n\t.string "invented speech, {{PLAYER}}!\\p$"\n'
+        for number, label in enumerate(overlay.OAK_SPEECH_LABELS)
+    ]
+    intro = "\n".join(blocks)
+    monkeypatch.setattr(
+        overlay, "_read_pristine_source", lambda source: {"data/text/new_game_intro.inc": intro}
+    )
+    originals = overlay.extract_pokefirered_originals(tmp_path)
+    assert list(originals) == list(overlay.OAK_SPEECH_LABELS)
+    assert originals[overlay.OAK_SPEECH_LABELS[2]] == "Line 2 of an\ninvented speech, {PLAYER}!\\p"
+    broken = {"data/text/new_game_intro.inc": intro.replace(".string", ".byte", 1)}
+    monkeypatch.setattr(overlay, "_read_pristine_source", lambda source: broken)
+    with pytest.raises(ClassicRetroError) as error:
+        overlay.extract_pokefirered_originals(tmp_path)
+    assert error.value.code is ErrorCode.SOURCE_BASELINE_MISMATCH

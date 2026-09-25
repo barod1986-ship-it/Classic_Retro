@@ -15,7 +15,9 @@ segment and stores every line in right-to-left paint order.
 from __future__ import annotations
 
 import math
+import re
 import unicodedata
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from functools import lru_cache
 from io import BytesIO
@@ -29,11 +31,13 @@ from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.ff6a import (
     CENTER,
     CHOICE,
+    COMMAND_NAMES,
     COMMANDS_WITH_ARGUMENT,
     END,
     FONT_ASCII_ENTRIES,
     FONT_NO_GLYPH,
     KEY_PAGE,
+    LAST_GLYPH,
     MAX_GLYPH_ROW_BYTES,
     NEWLINE,
     PAGE,
@@ -137,6 +141,149 @@ def token_codes(token: InlineToken) -> tuple[int, ...]:
 
 def is_inserted(token: InlineToken) -> bool:
     return bool(token.args.get("inserted", False))
+
+
+# The translators' notation (translations/ff6a.json and extracted originals):
+# text, \n for a new line, and every other command by name in braces, its
+# argument in hex after it: {CENTER}, {PAUSE 14C}, {TIMED_CLOSE 243}. {PAGE}
+# is a new page (the engine's PAGE and the newline after it). A brace may hold
+# several commands; a leading + marks a page break the translation adds:
+# {+KEY_PAGE}, {+PAUSE 14C PAGE}. Codes without a name are written as hex.
+_CODES_BY_NAME = {name: code for code, name in COMMAND_NAMES.items()}
+_BRACES = re.compile(r"\{([^{}]*)\}")
+
+
+def _code_words(codes: Sequence[int]) -> list[str]:
+    words: list[str] = []
+    position = 0
+    while position < len(codes):
+        code = codes[position]
+        following = codes[position + 1] if position + 1 < len(codes) else None
+        if code == PAGE and following == NEWLINE:
+            words.append("PAGE")
+            position += 2
+        elif code in COMMANDS_WITH_ARGUMENT and following is not None:
+            words.append(f"{COMMAND_NAMES[code]} {following:03X}")
+            position += 2
+        else:
+            words.append(COMMAND_NAMES.get(code, f"{code:03X}"))
+            position += 1
+    return words
+
+
+def ff6a_notation(stream: TokenStream) -> str:
+    """A translation's tokens in the translators' notation."""
+    parts: list[str] = []
+    for token in stream.tokens:
+        if isinstance(token, TextToken):
+            parts.append(token.text)
+        elif token.kind is TokenKind.LINE_BREAK and not is_inserted(token):
+            parts.append("\n")
+        else:
+            prefix = "+" if is_inserted(token) else ""
+            parts.append("{" + prefix + " ".join(_code_words(token_codes(token))) + "}")
+    return "".join(parts)
+
+
+def parse_ff6a_notation(text: str, prefix: str) -> TokenStream:
+    """Tokens of a translation in the translators' notation; ids ``<prefix><n>`` by part."""
+    tokens: list[InlineToken | TextToken] = []
+    position = 0
+    parts: list[str | tuple[tuple[int, ...], bool] | None] = []
+    for match in _BRACES.finditer(text):
+        parts.extend(_text_parts(text[position : match.start()]))
+        parts.append(_brace_codes(match.group(1)))
+        position = match.end()
+    parts.extend(_text_parts(text[position:]))
+    for number, part in enumerate(parts):
+        token_id = f"{prefix}{number}"
+        if part is None:
+            tokens.append(ff6a_newline(token_id))
+        elif isinstance(part, str):
+            tokens.append(TextToken(part))
+        else:
+            codes, inserted = part
+            tokens.append(ff6a_command(token_id, *codes, inserted=inserted))
+    return TokenStream(tuple(tokens))
+
+
+def _text_parts(text: str) -> list[str | tuple[tuple[int, ...], bool] | None]:
+    if "{" in text or "}" in text:
+        raise ClassicRetroError(
+            ErrorCode.UNSUPPORTED_CONTROL_CODE, f"Unbalanced brace in FF6A text: {text!r}"
+        )
+    parts: list[str | tuple[tuple[int, ...], bool] | None] = []
+    for number, line in enumerate(text.split("\n")):
+        if number:
+            parts.append(None)
+        if line:
+            parts.append(line)
+    return parts
+
+
+def _brace_codes(body: str) -> tuple[tuple[int, ...], bool]:
+    inserted = body.startswith("+")
+    words = body.removeprefix("+").split()
+    codes: list[int] = []
+    position = 0
+    while position < len(words):
+        word = words[position]
+        code = _CODES_BY_NAME.get(word)
+        if code is None:
+            code = _hex_code(word, body)
+        codes.append(code)
+        position += 1
+        if code == PAGE:
+            codes.append(NEWLINE)
+        elif code in COMMANDS_WITH_ARGUMENT:
+            if position == len(words):
+                raise ClassicRetroError(
+                    ErrorCode.UNSUPPORTED_CONTROL_CODE,
+                    f"FF6A command {word} needs its argument in the same braces: {{{body}}}",
+                )
+            codes.append(_hex_code(words[position], body))
+            position += 1
+    if not codes:
+        raise ClassicRetroError(ErrorCode.UNSUPPORTED_CONTROL_CODE, "Empty FF6A command {}")
+    return tuple(codes), inserted
+
+
+def _hex_code(word: str, body: str) -> int:
+    try:
+        return int(word, 16)
+    except ValueError:
+        raise ClassicRetroError(
+            ErrorCode.UNSUPPORTED_CONTROL_CODE, f"Unknown FF6A command {{{body}}}"
+        ) from None
+
+
+def ff6a_codes_notation(codes: Sequence[int], characters: Mapping[int, str]) -> str:
+    """An original message (English codes) in the translators' notation.
+
+    ``characters`` maps glyph codes back to ASCII (``Ff6aFont.character_codes``
+    inverted); other glyphs are written as hex.
+    """
+    parts: list[str] = []
+    position = 0
+    while position < len(codes):
+        code = codes[position]
+        following = codes[position + 1] if position + 1 < len(codes) else None
+        if code == NEWLINE:
+            parts.append("\n")
+            position += 1
+        elif code <= LAST_GLYPH:
+            character = characters.get(code)
+            parts.append(character if character and character not in "{}" else f"{{{code:03X}}}")
+            position += 1
+        else:
+            step = (
+                2
+                if code in COMMANDS_WITH_ARGUMENT or (code == PAGE and following == NEWLINE)
+                else 1
+            )
+            parts.append("{" + " ".join(_code_words(codes[position : position + step])) + "}")
+            position += step
+    return "".join(parts)
 
 
 @dataclass(frozen=True, slots=True)

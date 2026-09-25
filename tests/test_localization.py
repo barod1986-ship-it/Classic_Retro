@@ -25,6 +25,12 @@ from classic_retro.localization.targets import (
     preview_paths,
     write_build_report,
 )
+from classic_retro.localization.translations import (
+    GlossaryTerm,
+    Translation,
+    TranslationSet,
+    load_translation_set,
+)
 
 REPO = Path(__file__).resolve().parents[1]
 # Python 3.14 colours help output when the environment asks for colour.
@@ -94,11 +100,12 @@ def test_the_nine_reference_targets_keep_their_order_and_strategies():
     assert described["fire-emblem"].strategies == ("glyph-font", "text-images")
     for target_id in ("firered", "minish-cap"):
         assert described[target_id].kind == "source-overlay"
-        assert described[target_id].operations() == [] and described[target_id].previews == ()
+        assert described[target_id].operations() == ["prepare", "extract"]
+        assert described[target_id].previews == ()
     for target_id in ROM_OVERLAYS:
         target = described[target_id]
         assert target.kind == "rom-overlay" and target.platform_id == "gba"
-        assert target.operations() == ["check-hooks", "check-translations", "build"]
+        assert target.operations() == ["check-hooks", "check-translations", "build", "extract"]
         assert target.previews and all(name.endswith(".png") for name in target.previews)
         reference = target.reference_patch_sha256
         assert reference is None if target_id == "ff6a" else len(reference) == 64
@@ -218,19 +225,40 @@ def _run(registry: TargetRegistry, argv: list[str]) -> int:
     return args.handler(args)
 
 
+def _demo_translations(tmp_path, target: str = "demo", text: str = "مرحبا") -> Path:
+    """A translations file of the demo target; the invented original names Mila."""
+    translations = TranslationSet(
+        target,
+        "plain text",
+        (Translation("greeting", text, context="an invented line"),),
+        glossary=(GlossaryTerm("Mila", "ميلا"),),
+    )
+    path = tmp_path / f"{target}.json"
+    path.write_text(translations.dumps(), encoding="utf-8")
+    return path
+
+
 def _demo_registry(tmp_path) -> tuple[TargetRegistry, list]:
     calls = []
 
-    def check_translations(font, preview_dir):
+    def check_translations(font, preview_dir, translations=None):
         (preview,) = preview_paths(font, preview_dir, "demo_preview.png")
-        calls.append(("check-translations", font, preview))
+        calls.append(("check-translations", font, preview, translations))
         if preview is not None:
             preview.write_bytes(b"demo")
         return {"strings": 2, "preview": None if preview is None else preview.name}
 
-    def build(rom, font, out_dir, rom_name):
-        calls.append(("build", rom, font, out_dir, rom_name))
+    def build(rom, font, out_dir, rom_name, translations=None):
+        calls.append(("build", rom, font, out_dir, rom_name, translations))
         return {"patch_sha256": "ab" * 32}
+
+    def prepare(source, font, translations=None):
+        calls.append(("prepare", source, font, translations))
+        return {"prepared": source.name}
+
+    def extract(path, translations=None):
+        calls.append(("extract", path, translations))
+        return "an invented image", {"greeting": "Hello, Mila!"}
 
     registry = TargetRegistry(build_strategy_registry(load_external=False))
     registry.register(
@@ -238,13 +266,20 @@ def _demo_registry(tmp_path) -> tuple[TargetRegistry, list]:
             check_hooks=lambda: {"match": True},
             check_translations=check_translations,
             build=build,
+            extract=extract,
             previews=("demo_preview.png",),
             reference_patch_sha256="ab" * 32,
         )
     )
-    registry.register(_target("bare", kind="source-overlay", strategies=("line-cells",)))
     registry.register(
-        _target("sloppy", check_translations=lambda font, preview_dir: {}, previews=("a.png",))
+        _target("bare", kind="source-overlay", strategies=("line-cells",), prepare=prepare)
+    )
+    registry.register(
+        _target(
+            "sloppy",
+            check_translations=lambda font, preview_dir, translations=None: {},
+            previews=("a.png",),
+        )
     )
     return registry, calls
 
@@ -255,9 +290,9 @@ def test_targets_commands_run_any_target_by_id(tmp_path, capsys):
     assert _run(registry, ["targets", "list"]) == 0
     listed = json.loads(capsys.readouterr().out)
     assert [target["id"] for target in listed] == ["demo", "bare", "sloppy"]
-    assert listed[0]["operations"] == ["check-hooks", "check-translations", "build"]
+    assert listed[0]["operations"] == ["check-hooks", "check-translations", "build", "extract"]
     assert listed[0]["previews"] == ["demo_preview.png"]
-    assert listed[1]["operations"] == []
+    assert listed[1]["operations"] == ["prepare"]
 
     assert _run(registry, ["targets", "strategies"]) == 0
     strategies = {s["id"]: s["targets"] for s in json.loads(capsys.readouterr().out)}
@@ -274,7 +309,12 @@ def test_targets_commands_run_any_target_by_id(tmp_path, capsys):
     argv = ["targets", "check-translations", "demo", "--font", str(font)]
     assert _run(registry, [*argv, "--preview-dir", str(tmp_path / "previews")]) == 0
     assert json.loads(capsys.readouterr().out) == {"strings": 2, "preview": "demo_preview.png"}
-    assert calls[-1] == ("check-translations", font, tmp_path / "previews" / "demo_preview.png")
+    assert calls[-1] == (
+        "check-translations",
+        font,
+        tmp_path / "previews" / "demo_preview.png",
+        None,
+    )
     assert _run(registry, ["targets", "check-translations", "demo"]) == 0
     assert json.loads(capsys.readouterr().out) == {"strings": 2, "preview": None}
 
@@ -284,7 +324,73 @@ def test_targets_commands_run_any_target_by_id(tmp_path, capsys):
     assert _run(registry, [*argv, "--out-dir", str(tmp_path / "out"), "--write-rom", "x.gba"]) == 0
     built = json.loads(capsys.readouterr().out)
     assert built["target"] == "demo" and built["matches_reference"] is True
-    assert calls[-1] == ("build", b"\x01\x02", font, tmp_path / "out", "x.gba")
+    assert calls[-1] == ("build", b"\x01\x02", font, tmp_path / "out", "x.gba", None)
+
+    assert _run(registry, ["targets", "prepare", "bare", str(tmp_path / "src"), "--font", "f"]) == 0
+    assert json.loads(capsys.readouterr().out) == {"prepared": "src"}
+    assert calls[-1] == ("prepare", tmp_path / "src", Path("f"), None)
+
+
+def test_translations_files_reach_every_operation(tmp_path, capsys, monkeypatch):
+    registry, calls = _demo_registry(tmp_path)
+    monkeypatch.chdir(tmp_path)
+    shipped = _demo_translations(tmp_path)
+
+    assert (
+        _run(registry, ["targets", "extract", "demo", "game.gba", "--translations", str(shipped)])
+        == 0
+    )
+    summary = json.loads(capsys.readouterr().out)
+    assert summary == {
+        "target": "demo",
+        "workspace": "demo.workspace.json",
+        "from": "an invented image",
+        "entries": 1,
+        "with_original": 1,
+    }
+    assert calls[-1][:2] == ("extract", Path("game.gba"))
+    workspace = load_translation_set(tmp_path / "demo.workspace.json", "demo")
+    assert workspace.is_workspace and workspace.workspace_from == "an invented image"
+    assert workspace.entries[0].source == "Hello, Mila!" and workspace.entries[0].text == "مرحبا"
+
+    argv = ["targets", "extract", "demo", "game.gba", "--translations", str(shipped)]
+    with pytest.raises(ClassicRetroError) as error:
+        _run(registry, argv)
+    assert error.value.code is ErrorCode.OUTPUT_EXISTS
+    assert _run(registry, [*argv, "--force", "--out", "second.json"]) == 0
+    capsys.readouterr()
+
+    assert _run(registry, ["targets", "strip", "demo.workspace.json", "--out", "clean.json"]) == 0
+    assert json.loads(capsys.readouterr().out)["entries"] == 1
+    assert (tmp_path / "clean.json").read_text(encoding="utf-8") == shipped.read_text(
+        encoding="utf-8"
+    )
+    with pytest.raises(ClassicRetroError) as error:
+        _run(registry, ["targets", "strip", "demo.workspace.json", "--out", "clean.json"])
+    assert error.value.code is ErrorCode.OUTPUT_EXISTS
+
+    # The workspace's original names Mila, but its Arabic does not use the glossary's spelling.
+    check = ["targets", "check-translations", "demo", "--translations", "demo.workspace.json"]
+    assert _run(registry, check) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["translations"] == "demo.workspace.json"
+    assert report["glossary"] == [{"id": "greeting", "term": "Mila", "expected": "ميلا"}]
+    assert calls[-1][3] == workspace
+
+    rom = tmp_path / "game.gba"
+    rom.write_bytes(b"\x01")
+    build = ["targets", "build", "demo", str(rom), "--font", "f", "--out-dir", "out"]
+    assert _run(registry, [*build, "--translations", str(shipped)]) == 0
+    assert json.loads(capsys.readouterr().out)["translations"] == str(shipped)
+    assert calls[-1][5].entries[0].text == "مرحبا"
+
+    other = _demo_translations(tmp_path, target="bare")
+    with pytest.raises(ClassicRetroError) as error:
+        _run(registry, [*build, "--translations", str(other)])
+    assert error.value.code is ErrorCode.INVALID_TRANSLATION_DOCUMENT
+    with pytest.raises(ClassicRetroError) as error:
+        _run(registry, ["targets", "extract", "demo", "game.gba", "--out", "third.json"])
+    assert error.value.code is ErrorCode.INVALID_REFERENCE
 
 
 def test_targets_commands_refuse_what_a_target_cannot_do(tmp_path):
@@ -293,6 +399,8 @@ def test_targets_commands_refuse_what_a_target_cannot_do(tmp_path):
         ["targets", "check-hooks", "bare"],
         ["targets", "check-translations", "bare"],
         ["targets", "build", "bare", str(tmp_path / "x"), "--font", "f", "--out-dir", "o"],
+        ["targets", "prepare", "demo", str(tmp_path), "--font", "f"],
+        ["targets", "extract", "bare", str(tmp_path / "x"), "--out", str(tmp_path / "w.json")],
     ):
         with pytest.raises(ClassicRetroError) as error:
             _run(registry, argv)

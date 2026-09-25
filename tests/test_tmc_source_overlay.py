@@ -346,7 +346,9 @@ def source_tree(tmp_path, monkeypatch):
     monkeypatch.setattr(
         overlay,
         "_patch_all",
-        lambda texts, encoder, measure: {path: overlay._PATCH_MARKER for path in texts},
+        lambda texts, encoder, measure, translations=None: {
+            path: overlay._PATCH_MARKER for path in texts
+        },
     )
     return source
 
@@ -401,3 +403,19 @@ def test_pristine_check_reports_mismatched_files(tmp_path):
     assert caught.value.code is ErrorCode.SOURCE_BASELINE_MISMATCH
     assert "src/text.c:" in str(caught.value)
     assert "include/message.h:missing" in str(caught.value)
+
+
+def test_extract_reads_the_opening_of_a_checkout(tmp_path, monkeypatch):
+    tables = [[f"Text {table:02X}:{index:02X}." for index in range(0x60)] for table in range(0x30)]
+    monkeypatch.setattr(
+        overlay,
+        "_read_pristine_source",
+        lambda source: {"translations/USA.json": json.dumps(tables)},
+    )
+    originals = overlay.extract_tmc_originals(tmp_path)
+    assert list(originals) == list(overlay.ENTRY_IDS)
+    assert originals["0F01"] == "Text 0F:01." and originals["2502"] == "Text 25:02."
+    tables[0x25] = []
+    with pytest.raises(ClassicRetroError) as error:
+        overlay.extract_tmc_originals(tmp_path)
+    assert error.value.code is ErrorCode.SOURCE_PATCH_FAILED

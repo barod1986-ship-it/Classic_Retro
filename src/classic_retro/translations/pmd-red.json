@@ -1,0 +1,804 @@
+{
+  "schema_version": "1.0",
+  "target": "pmd-red",
+  "language": "ar",
+  "notation": "Logical Arabic in the engine notation (engines.pmd): {CENTER_ALIGN}, {WAIT_PRESS} and {EXTRA_MSG} keep their original order; line ends (\\n) may move. Floating text is centred on the black screen, dialogue fills the box, menu text is one answer.",
+  "glossary": [
+    {
+      "term": "Pokémon",
+      "text": "بوكيمون"
+    }
+  ],
+  "entries": [
+    {
+      "id": "intro.welcome",
+      "context": "floating text at 0x0826e1f4",
+      "text": "{CENTER_ALIGN}أهلا بك!"
+    },
+    {
+      "id": "intro.portal",
+      "context": "floating text at 0x0826e1b8",
+      "text": "{CENTER_ALIGN}هذه هي البوابة المؤدية\n{CENTER_ALIGN}إلى عالم بوكيمون!"
+    },
+    {
+      "id": "intro.questions",
+      "context": "floating text at 0x0826e16c",
+      "text": "{CENTER_ALIGN}لكن قبل أن أدعك تعبر،\n{CENTER_ALIGN}لدي عدة أسئلة لك."
+    },
+    {
+      "id": "intro.sincerely",
+      "context": "floating text at 0x0826e144",
+      "text": "{CENTER_ALIGN}أريدك أن تجيب عنها بصدق."
+    },
+    {
+      "id": "intro.ready",
+      "context": "floating text at 0x0826e130",
+      "text": "{CENTER_ALIGN}هل أنت مستعد؟"
+    },
+    {
+      "id": "intro.begin",
+      "context": "floating text at 0x0826e108",
+      "text": "{CENTER_ALIGN}حسنا...{WAIT_PRESS}\n{CENTER_ALIGN}فلتبدأ المقابلة!"
+    },
+    {
+      "id": "hardy.1",
+      "context": "dialogue text at 0x080f00e4",
+      "text": "هناك اختبار قريب.\nكيف تذاكر له؟"
+    },
+    {
+      "id": "hardy.1.0",
+      "context": "menu text at 0x080f00cc",
+      "text": "أذاكر بجد."
+    },
+    {
+      "id": "hardy.1.1",
+      "context": "menu text at 0x080f00b8",
+      "text": "في اللحظة الأخيرة."
+    },
+    {
+      "id": "hardy.1.2",
+      "context": "menu text at 0x080f00a4",
+      "text": "أتجاهله وألعب."
+    },
+    {
+      "id": "hardy.2",
+      "context": "dialogue text at 0x080f0168",
+      "text": "هل تستطيع التركيز على شيء تحبه؟"
+    },
+    {
+      "id": "yes",
+      "context": "menu text at 0x080f0154",
+      "text": "نعم."
+    },
+    {
+      "id": "no-space",
+      "context": "menu text at 0x080f014c",
+      "text": "لا."
+    },
+    {
+      "id": "hardy.3",
+      "context": "dialogue text at 0x080f01d8",
+      "text": "عندما تصعب الأمور،\nهل تزداد إصرارا؟"
+    },
+    {
+      "id": "no",
+      "context": "menu text at 0x080f01c8",
+      "text": "لا."
+    },
+    {
+      "id": "hardy.4",
+      "context": "dialogue text at 0x080f0280",
+      "text": "أمامك دلو. إذا صببت فيه الماء،\nإلى أي حد ستملؤه؟"
+    },
+    {
+      "id": "hardy.4.0",
+      "context": "menu text at 0x080f026c",
+      "text": "حتى آخره."
+    },
+    {
+      "id": "hardy.4.1",
+      "context": "menu text at 0x080f0264",
+      "text": "إلى نصفه."
+    },
+    {
+      "id": "a-little",
+      "context": "menu text at 0x080f0258",
+      "text": "قليلا."
+    },
+    {
+      "id": "docile.1",
+      "context": "dialogue text at 0x080f0324",
+      "text": "عرضوا عليك الاختيار بين هديتين.\nأيهما ستأخذ؟"
+    },
+    {
+      "id": "docile.1.0",
+      "context": "menu text at 0x080f030c",
+      "text": "الصندوق الكبير."
+    },
+    {
+      "id": "docile.1.1",
+      "context": "menu text at 0x080f0300",
+      "text": "الصندوق الصغير."
+    },
+    {
+      "id": "docile.2",
+      "context": "dialogue text at 0x080f03d8",
+      "text": "كسرت بيضة فاسدة في غرفتك!\nماذا ستفعل؟"
+    },
+    {
+      "id": "docile.2.0",
+      "context": "menu text at 0x080f03b0",
+      "text": "أفتح النافذة فورا."
+    },
+    {
+      "id": "docile.2.1",
+      "context": "menu text at 0x080f039c",
+      "text": "أشمها أولا."
+    },
+    {
+      "id": "docile.3",
+      "context": "dialogue text at 0x080f04bc",
+      "text": "أحضر لك صديقك شيئا كنت قد نسيته.{WAIT_PRESS}\nكيف تشكره؟"
+    },
+    {
+      "id": "docile.3.0",
+      "context": "menu text at 0x080f0494",
+      "text": "أشكره كالمعتاد."
+    },
+    {
+      "id": "docile.3.1",
+      "context": "menu text at 0x080f047c",
+      "text": "أشكره بمزحة."
+    },
+    {
+      "id": "docile.3.2",
+      "context": "menu text at 0x080f0460",
+      "text": "أشكره ببرود."
+    },
+    {
+      "id": "docile.4",
+      "context": "dialogue text at 0x080f05ac",
+      "text": "هناك محفظة على جانب الطريق."
+    },
+    {
+      "id": "docile.4.0",
+      "context": "menu text at 0x080f0584",
+      "text": "أسلمها للشرطة!"
+    },
+    {
+      "id": "docile.4.1",
+      "context": "menu text at 0x080f0578",
+      "text": "يا للحظ! يا للحظ!"
+    },
+    {
+      "id": "docile.4.2",
+      "context": "menu text at 0x080f0560",
+      "text": "هل يراني أحد...؟"
+    },
+    {
+      "id": "brave.1",
+      "context": "dialogue text at 0x080f061c",
+      "text": "ستقفز بالحبل المطاطي لأول مرة.{EXTRA_MSG}ولأن الأمر مخيف، قررت أن تجرب\nالقفزة بدمية أولا...{WAIT_PRESS}\nفانقطع الحبل!{EXTRA_MSG}هل ستحاول القفز رغم ذلك؟"
+    },
+    {
+      "id": "brave.2a",
+      "context": "dialogue text at 0x080f0750",
+      "text": "هناك غزو من الفضاء!\nماذا ستفعل؟"
+    },
+    {
+      "id": "brave.2a.0",
+      "context": "menu text at 0x080f073c",
+      "text": "أقاتل."
+    },
+    {
+      "id": "brave.2a.1",
+      "context": "menu text at 0x080f0734",
+      "text": "أهرب."
+    },
+    {
+      "id": "brave.2a.2",
+      "context": "menu text at 0x080f0728",
+      "text": "أتجاهله."
+    },
+    {
+      "id": "brave.3",
+      "context": "dialogue text at 0x080f0928",
+      "text": "سمعت صرخة من خلف باب!{WAIT_PRESS}\nكيف ستتصرف؟"
+    },
+    {
+      "id": "brave.3.0",
+      "context": "menu text at 0x080f0908",
+      "text": "أفتح الباب بقوة."
+    },
+    {
+      "id": "brave.3.1",
+      "context": "menu text at 0x080f08f4",
+      "text": "أصرخ معه."
+    },
+    {
+      "id": "brave.4",
+      "context": "dialogue text at 0x080f0a38",
+      "text": "مشاغب يضايق فتاة في شارع\nمزدحم في المدينة!{WAIT_PRESS}\nماذا ستفعل؟"
+    },
+    {
+      "id": "brave.4.0",
+      "context": "menu text at 0x080f0a10",
+      "text": "أساعدها دون تردد."
+    },
+    {
+      "id": "brave.4.1",
+      "context": "menu text at 0x080f09f8",
+      "text": "أساعدها رغم خوفي."
+    },
+    {
+      "id": "brave.4.2",
+      "context": "menu text at 0x080f09e4",
+      "text": "أتصل بالشرطة."
+    },
+    {
+      "id": "brave.4.3",
+      "context": "menu text at 0x080f09cc",
+      "text": "لا أفعل شيئا خوفا."
+    },
+    {
+      "id": "jolly.1",
+      "context": "dialogue text at 0x080f0ac8",
+      "text": "هل أنت شخص مرح؟"
+    },
+    {
+      "id": "jolly.2",
+      "context": "dialogue text at 0x080f0b2c",
+      "text": "هل تحب الاستمتاع بصخب\nمع الآخرين؟"
+    },
+    {
+      "id": "jolly.3",
+      "context": "dialogue text at 0x080f0bdc",
+      "text": "إنها العطلة الصيفية!\nإلى أين تحب أن تذهب؟"
+    },
+    {
+      "id": "jolly.3.0",
+      "context": "menu text at 0x080f0bc4",
+      "text": "إلى الشاطئ!"
+    },
+    {
+      "id": "jolly.3.1",
+      "context": "menu text at 0x080f0bbc",
+      "text": "إلى الينابيع الحارة."
+    },
+    {
+      "id": "jolly.3.2",
+      "context": "menu text at 0x080f0bb0",
+      "text": "إلى أي مكان."
+    },
+    {
+      "id": "jolly.4",
+      "context": "dialogue text at 0x080f0cc8",
+      "text": "بدأ شخص أجنبي يتحدث إليك.{EXTRA_MSG}بصراحة، لا تفهم شيئا مما\nيقوله هذا الشخص.{WAIT_PRESS}\nبم ترد عليه؟"
+    },
+    {
+      "id": "jolly.4.0",
+      "context": "menu text at 0x080f0ca4",
+      "text": "ها ها! نعم. مضحك جدا!"
+    },
+    {
+      "id": "jolly.4.1",
+      "context": "menu text at 0x080f0c84",
+      "text": "امم... هلا أعدت ما قلته؟"
+    },
+    {
+      "id": "jolly.4.2",
+      "context": "menu text at 0x080f0c64",
+      "text": "حسنا... علي أن أذهب."
+    },
+    {
+      "id": "impish.1",
+      "context": "dialogue text at 0x080f0da0",
+      "text": "هل حفرت يوما حفرة لتوقع بها أحدا؟"
+    },
+    {
+      "id": "impish.2",
+      "context": "dialogue text at 0x080f0e08",
+      "text": "هل تحب المقالب؟"
+    },
+    {
+      "id": "impish.3",
+      "context": "dialogue text at 0x080f0e60",
+      "text": "هل هناك أشياء كثيرة\nتود أن تفعلها؟"
+    },
+    {
+      "id": "impish.4",
+      "context": "dialogue text at 0x080f0f48",
+      "text": "صديقك يتعرض للتنمر!\nماذا تفعل؟"
+    },
+    {
+      "id": "impish.4.0",
+      "context": "menu text at 0x080f0f24",
+      "text": "أواجه المتنمر."
+    },
+    {
+      "id": "impish.4.1",
+      "context": "menu text at 0x080f0f04",
+      "text": "أحذر المتنمر من بعيد."
+    },
+    {
+      "id": "impish.4.2",
+      "context": "menu text at 0x080f0ee4",
+      "text": "أسخر من المتنمر من الخلف."
+    },
+    {
+      "id": "naive.1",
+      "context": "dialogue text at 0x080f0fec",
+      "text": "هل تحب النكات السخيفة؟"
+    },
+    {
+      "id": "love-them",
+      "context": "menu text at 0x080f0fd4",
+      "text": "أحبها!"
+    },
+    {
+      "id": "naive.1.2",
+      "context": "menu text at 0x080f0fc8",
+      "text": "ارحمني منها."
+    },
+    {
+      "id": "naive.2",
+      "context": "dialogue text at 0x080f1054",
+      "text": "هل تضحك كثيرا؟"
+    },
+    {
+      "id": "naive.3",
+      "context": "dialogue text at 0x080f10b4",
+      "text": "هل يصفك الآخرون غالبا بأنك طفولي؟"
+    },
+    {
+      "id": "naive.4",
+      "context": "dialogue text at 0x080f111c",
+      "text": "هل تحب أن تتخيل الأشياء\nلتسلي نفسك؟"
+    },
+    {
+      "id": "timid.1",
+      "context": "dialogue text at 0x080f11f4",
+      "text": "امتدت يد بشرية من المرحاض!\nماذا ستفعل؟"
+    },
+    {
+      "id": "timid.1.0",
+      "context": "menu text at 0x080f11d8",
+      "text": "أصرخ وأهرب."
+    },
+    {
+      "id": "timid.1.1",
+      "context": "menu text at 0x080f11b8",
+      "text": "أغلق الغطاء دون كلمة."
+    },
+    {
+      "id": "timid.1.2",
+      "context": "menu text at 0x080f11a0",
+      "text": "أصافحها."
+    },
+    {
+      "id": "timid.2",
+      "context": "dialogue text at 0x080f1304",
+      "text": "أمسك أحد أصابع يدك اليسرى\nبيدك اليمنى.{WAIT_PRESS}\nأي إصبع أمسكت؟"
+    },
+    {
+      "id": "timid.2.0",
+      "context": "menu text at 0x080f12f0",
+      "text": "الإبهام."
+    },
+    {
+      "id": "timid.2.1",
+      "context": "menu text at 0x080f12e0",
+      "text": "السبابة."
+    },
+    {
+      "id": "timid.2.2",
+      "context": "menu text at 0x080f12d0",
+      "text": "الوسطى."
+    },
+    {
+      "id": "timid.2.3",
+      "context": "menu text at 0x080f12c0",
+      "text": "البنصر."
+    },
+    {
+      "id": "timid.2.4",
+      "context": "menu text at 0x080f12b0",
+      "text": "الخنصر."
+    },
+    {
+      "id": "timid.3",
+      "context": "dialogue text at 0x080f13d8",
+      "text": "علقت فجأة داخل غرفة\nحالكة الظلام!{WAIT_PRESS}\nماذا تفعل؟"
+    },
+    {
+      "id": "timid.3.0",
+      "context": "menu text at 0x080f13bc",
+      "text": "أركل الباب."
+    },
+    {
+      "id": "timid.3.1",
+      "context": "menu text at 0x080f13b4",
+      "text": "أبكي."
+    },
+    {
+      "id": "timid.3.2",
+      "context": "menu text at 0x080f13a8",
+      "text": "أنظفها."
+    },
+    {
+      "id": "timid.4",
+      "context": "dialogue text at 0x080f14b0",
+      "text": "هل تستطيع دخول بيت مسكون؟"
+    },
+    {
+      "id": "timid.4.0",
+      "context": "menu text at 0x080f1498",
+      "text": "لا مشكلة!"
+    },
+    {
+      "id": "timid.4.1",
+      "context": "menu text at 0x080f1488",
+      "text": "آه... ل-لا..."
+    },
+    {
+      "id": "timid.4.2",
+      "context": "menu text at 0x080f1470",
+      "text": "مع شخص أحبه."
+    },
+    {
+      "id": "hasty.1",
+      "context": "dialogue text at 0x080f1568",
+      "text": "وصلتك هدية!{WAIT_PRESS}\nلكنك لا تعرف ما بداخلها.{WAIT_PRESS}\nأنت فضولي، فماذا تفعل؟"
+    },
+    {
+      "id": "hasty.1.0",
+      "context": "menu text at 0x080f154c",
+      "text": "أفتحها الآن."
+    },
+    {
+      "id": "hasty.1.1",
+      "context": "menu text at 0x080f153c",
+      "text": "أفتحها لاحقا."
+    },
+    {
+      "id": "hasty.1.2",
+      "context": "menu text at 0x080f1524",
+      "text": "أطلب من أحد أن يفتحها."
+    },
+    {
+      "id": "hasty.2",
+      "context": "dialogue text at 0x080f1654",
+      "text": "ربحت اليانصيب!{WAIT_PRESS}\nماذا تفعل بالمال؟"
+    },
+    {
+      "id": "hasty.2.0",
+      "context": "menu text at 0x080f1638",
+      "text": "أنفقه الآن."
+    },
+    {
+      "id": "hasty.2.1",
+      "context": "menu text at 0x080f162c",
+      "text": "أدخره."
+    },
+    {
+      "id": "hasty.2.2",
+      "context": "menu text at 0x080f161c",
+      "text": "أتبرع به."
+    },
+    {
+      "id": "hasty.3",
+      "context": "dialogue text at 0x080f1730",
+      "text": "وجدت صندوق كنز!\nماذا تفعل؟"
+    },
+    {
+      "id": "hasty.3.0",
+      "context": "menu text at 0x080f1710",
+      "text": "أفتحه فورا!"
+    },
+    {
+      "id": "hasty.3.1",
+      "context": "menu text at 0x080f16f4",
+      "text": "لا... قد يكون فخا..."
+    },
+    {
+      "id": "hasty.3.2",
+      "context": "menu text at 0x080f16d8",
+      "text": "سيكون فارغا حتما..."
+    },
+    {
+      "id": "hasty.4",
+      "context": "dialogue text at 0x080f17f8",
+      "text": "لم يأت صديقك إلى الموعد\nفي الوقت المتفق عليه.\nماذا تفعل؟"
+    },
+    {
+      "id": "hasty.4.0",
+      "context": "menu text at 0x080f17d8",
+      "text": "أنزعج."
+    },
+    {
+      "id": "hasty.4.1",
+      "context": "menu text at 0x080f17c8",
+      "text": "أنتظر بصبر."
+    },
+    {
+      "id": "hasty.4.2",
+      "context": "menu text at 0x080f17b4",
+      "text": "أغضب وأرحل."
+    },
+    {
+      "id": "sassy.1",
+      "context": "dialogue text at 0x080f18d8",
+      "text": "قائد بلدك يقف أمامك.\nكيف تتحدث إليه؟"
+    },
+    {
+      "id": "sassy.1.0",
+      "context": "menu text at 0x080f18bc",
+      "text": "أتحدث بهدوء."
+    },
+    {
+      "id": "sassy.1.1",
+      "context": "menu text at 0x080f18a8",
+      "text": "أتحدث بتوتر."
+    },
+    {
+      "id": "sassy.1.2",
+      "context": "menu text at 0x080f189c",
+      "text": "لا يهمني!!"
+    },
+    {
+      "id": "sassy.2",
+      "context": "dialogue text at 0x080f1968",
+      "text": "هل ينصحك الآخرون بالانتباه لكلامك؟"
+    },
+    {
+      "id": "sassy.3",
+      "context": "dialogue text at 0x080f19d8",
+      "text": "هل ترى نفسك رائعا؟\nكن صادقا."
+    },
+    {
+      "id": "sassy.4",
+      "context": "dialogue text at 0x080f1a44",
+      "text": "هل تستطيع أن تشكر أحدا بصدق\nعندما تشعر بالامتنان؟"
+    },
+    {
+      "id": "calm.1",
+      "context": "dialogue text at 0x080f1ac0",
+      "text": "هل ترى نفسك أحيانا مملا\nوحذرا أكثر من اللازم؟"
+    },
+    {
+      "id": "calm.2",
+      "context": "dialogue text at 0x080f1b44",
+      "text": "هل تحلم بالاسترخاء دون عمل\nوبلا إثارة تذكر؟"
+    },
+    {
+      "id": "calm.3",
+      "context": "dialogue text at 0x080f1bc8",
+      "text": "هل تحب القتال؟"
+    },
+    {
+      "id": "calm.4",
+      "context": "dialogue text at 0x080f1c24",
+      "text": "هل تتثاءب كثيرا؟"
+    },
+    {
+      "id": "relaxed.1",
+      "context": "dialogue text at 0x080f1c7c",
+      "text": "هل تتأخر كثيرا عن المدرسة أو المواعيد؟"
+    },
+    {
+      "id": "relaxed.2",
+      "context": "dialogue text at 0x080f1cec",
+      "text": "هل تشعر أنك أصبحت أبطأ\nفي الآونة الأخيرة؟"
+    },
+    {
+      "id": "relaxed.3",
+      "context": "dialogue text at 0x080f1dbc",
+      "text": "إنه يوم جميل على الشاطئ.\nبم تشعر؟"
+    },
+    {
+      "id": "relaxed.3.0",
+      "context": "menu text at 0x080f1d9c",
+      "text": "شعور رائع!"
+    },
+    {
+      "id": "relaxed.3.1",
+      "context": "menu text at 0x080f1d90",
+      "text": "شخير..."
+    },
+    {
+      "id": "relaxed.3.2",
+      "context": "menu text at 0x080f1d78",
+      "text": "أريد العودة إلى البيت!"
+    },
+    {
+      "id": "relaxed.4",
+      "context": "dialogue text at 0x080f1e34",
+      "text": "هل تغفو دون أن تشعر؟"
+    },
+    {
+      "id": "lonely.1",
+      "context": "dialogue text at 0x080f1ea0",
+      "text": "هل تشعر بالوحدة عندما تكون وحدك؟"
+    },
+    {
+      "id": "lonely.2",
+      "context": "dialogue text at 0x080f1f10",
+      "text": "هل تكره أن تكون آخر من يغادر\nالفصل في نهاية اليوم الدراسي؟"
+    },
+    {
+      "id": "lonely.3",
+      "context": "dialogue text at 0x080f1fc4",
+      "text": "ماذا تفعل بضوء غرفتك\nعندما تذهب للنوم ليلا؟"
+    },
+    {
+      "id": "lonely.3.0",
+      "context": "menu text at 0x080f1fa8",
+      "text": "أتركه مضاء."
+    },
+    {
+      "id": "lonely.3.1",
+      "context": "menu text at 0x080f1f98",
+      "text": "أطفئه."
+    },
+    {
+      "id": "lonely.4",
+      "context": "dialogue text at 0x080f20ac",
+      "text": "إنها عطلة نهاية الأسبوع، لكن\nلا أحد يريد اللعب معك...\nماذا تفعل؟"
+    },
+    {
+      "id": "lonely.4.0",
+      "context": "menu text at 0x080f2090",
+      "text": "أذهب في رحلة."
+    },
+    {
+      "id": "lonely.4.1",
+      "context": "menu text at 0x080f2078",
+      "text": "أتسكع بلا هدف."
+    },
+    {
+      "id": "lonely.4.2",
+      "context": "menu text at 0x080f2064",
+      "text": "أنزوي في ركن."
+    },
+    {
+      "id": "quirky.1",
+      "context": "dialogue text at 0x080f2138",
+      "text": "هل يحدث أن تجد نفسك فجأة\nبلا شيء تفعله؟"
+    },
+    {
+      "id": "quirky.2",
+      "context": "dialogue text at 0x080f2210",
+      "text": "بأي سرعة ترد على البريد الإلكتروني؟"
+    },
+    {
+      "id": "quirky.2.0",
+      "context": "menu text at 0x080f21f0",
+      "text": "أرد فورا."
+    },
+    {
+      "id": "quirky.2.1",
+      "context": "menu text at 0x080f21d8",
+      "text": "قد أرد وقد لا أرد."
+    },
+    {
+      "id": "quirky.2.2",
+      "context": "menu text at 0x080f21c4",
+      "text": "الأمر مرهق جدا."
+    },
+    {
+      "id": "quirky.3",
+      "context": "dialogue text at 0x080f2310",
+      "text": "هناك شخص تحبه...{WAIT_PRESS}\nلكن لا توجد فرصة للتقرب منه.\nماذا تفعل؟"
+    },
+    {
+      "id": "quirky.3.0",
+      "context": "menu text at 0x080f22e8",
+      "text": "أعترف بحبي بشجاعة."
+    },
+    {
+      "id": "quirky.3.1",
+      "context": "menu text at 0x080f22d4",
+      "text": "ربما ألقي التحية..."
+    },
+    {
+      "id": "quirky.3.2",
+      "context": "menu text at 0x080f22b4",
+      "text": "أدبر مقلبا لألفت انتباهه."
+    },
+    {
+      "id": "quirky.3.3",
+      "context": "menu text at 0x080f22a4",
+      "text": "أراقبه من بعيد."
+    },
+    {
+      "id": "quirky.4",
+      "context": "dialogue text at 0x080f2408",
+      "text": "يتفرع الطريق يمينا ويسارا.\nقيل لك إن هناك كنزا في الجهة\nاليمنى. ماذا تفعل؟"
+    },
+    {
+      "id": "quirky.4.0",
+      "context": "menu text at 0x080f23e8",
+      "text": "أتجه يمينا فورا."
+    },
+    {
+      "id": "quirky.4.1",
+      "context": "menu text at 0x080f23d0",
+      "text": "إنه فخ! أتجه يسارا."
+    },
+    {
+      "id": "quirky.4.2",
+      "context": "menu text at 0x080f23bc",
+      "text": "أختار أي جهة."
+    },
+    {
+      "id": "misc.1",
+      "context": "dialogue text at 0x080f24d4",
+      "text": "في رحلات العطلة، تفضل أن..."
+    },
+    {
+      "id": "misc.1.0",
+      "context": "menu text at 0x080f24bc",
+      "text": "أذهب وحدي."
+    },
+    {
+      "id": "misc.1.1",
+      "context": "menu text at 0x080f24ac",
+      "text": "أذهب مع الآخرين."
+    },
+    {
+      "id": "misc.2",
+      "context": "dialogue text at 0x080f2550",
+      "text": "إنه مهرجان الصيف!\nهل تحب الاحتفالات؟"
+    },
+    {
+      "id": "misc.2.1",
+      "context": "menu text at 0x080f2534",
+      "text": "لا تهمني."
+    },
+    {
+      "id": "misc.3",
+      "context": "dialogue text at 0x080f25dc",
+      "text": "وصفك أحدهم بأنك غريب لكن مضحك.\nبم يشعرك ذلك؟"
+    },
+    {
+      "id": "misc.3.0",
+      "context": "menu text at 0x080f25c8",
+      "text": "أنا سعيد!"
+    },
+    {
+      "id": "misc.3.1",
+      "context": "menu text at 0x080f25bc",
+      "text": "لست سعيدا."
+    },
+    {
+      "id": "brave.2b",
+      "context": "dialogue text at 0x080f07e4",
+      "text": "تقاتل الفضائيين ببسالة...{WAIT_PRESS}\nلكنك تهزم...{EXTRA_MSG}يقول لك أحد الفضائيين...{EXTRA_MSG}لقد أثرت إعجابنا.\nكان قتالك متعة للنظر.{EXTRA_MSG}انضم إلينا، وسنحكم العالم معا.{WAIT_PRESS}\nماذا ستفعل؟"
+    },
+    {
+      "id": "brave.2b.0",
+      "context": "menu text at 0x080f07c0",
+      "text": "أحكم مع الفضائيين."
+    },
+    {
+      "id": "brave.2b.1",
+      "context": "menu text at 0x080f07b8",
+      "text": "أرفض."
+    },
+    {
+      "id": "gender",
+      "context": "dialogue text at 0x080f273c",
+      "text": "هل أنت ولد أم بنت؟"
+    },
+    {
+      "id": "gender.boy",
+      "context": "menu text at 0x080f277c",
+      "text": "ولد."
+    },
+    {
+      "id": "gender.girl",
+      "context": "menu text at 0x080f2774",
+      "text": "بنت."
+    }
+  ]
+}

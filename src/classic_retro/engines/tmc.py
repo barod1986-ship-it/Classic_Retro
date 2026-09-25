@@ -142,8 +142,12 @@ def token_notation(token: InlineToken) -> str:
     return notation
 
 
-def parse_tmc_string(text: str, *, id_prefix: str = "t") -> TokenStream:
-    """Parse one tmc_strings JSON string into text and ordered engine tokens."""
+def parse_tmc_string(text: str, *, id_prefix: str = "t", glyph_text: bool = True) -> TokenStream:
+    """Parse one tmc_strings JSON string into text and ordered engine tokens.
+
+    ``glyph_text=False`` reads a translation, whose text the Arabic encoder maps
+    later: any character is text there.
+    """
     output: list[Token] = []
     buffer: list[str] = []
     index = 0
@@ -174,7 +178,7 @@ def parse_tmc_string(text: str, *, id_prefix: str = "t") -> TokenStream:
             counter += 1
             index = match.end()
             continue
-        if character not in _BYTES_BY_CHARACTER:
+        if glyph_text and character not in _BYTES_BY_CHARACTER:
             raise ClassicRetroError(
                 ErrorCode.UNENCODABLE_TEXT,
                 f"Minish Cap text has no glyph byte for {character!r}",
@@ -218,13 +222,16 @@ def _parse_command(notation: str, body: str, token_id: str) -> InlineToken:
     )
 
 
-def render_tmc_string(stream: TokenStream) -> str:
-    """Render tokens as a tmc_strings JSON string (glyph text must be TMC characters)."""
+def render_tmc_string(stream: TokenStream, *, glyph_text: bool = True) -> str:
+    """Render tokens as a tmc_strings JSON string (glyph text must be TMC characters).
+
+    ``glyph_text=False`` writes a translation's notation, whose text may be anything.
+    """
     parts: list[str] = []
     for token in stream.tokens:
         if isinstance(token, TextToken):
             for character in token.text:
-                if character not in _LITERAL_SAFE:
+                if glyph_text and character not in _LITERAL_SAFE:
                     raise ClassicRetroError(
                         ErrorCode.UNENCODABLE_TEXT,
                         f"Minish Cap text has no glyph byte for {character!r}",

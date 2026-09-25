@@ -44,6 +44,7 @@ from classic_retro.engines.mlss import (
     measure_text,
     message_body,
     parse_notation,
+    text_notation,
 )
 from classic_retro.engines.mlss_arabic import (
     ARABIC_FONT_INDEX,
@@ -60,6 +61,7 @@ from classic_retro.engines.mlss_arabic import (
     messages_sheet,
     validate_command_skeleton,
 )
+from classic_retro.localization.translations import TranslationSet
 from classic_retro.patching.hooks import HookProgram
 from classic_retro.patching.image import ImageSpec
 from classic_retro.patching.outputs import base_report, write_image, write_patch
@@ -259,6 +261,7 @@ def build_mlss_arabic_rom(
     font_path: Path,
     *,
     messages: tuple[MlssArabicMessage, ...] | None = None,
+    translations: TranslationSet | None = None,
     verify_identity: bool = True,
 ) -> MlssArabicBuild:
     """Build the Arabic image and its BPS patch from the original USA image.
@@ -269,7 +272,7 @@ def build_mlss_arabic_rom(
     if verify_identity:
         verify_usa_image(rom)
     game_font = _verify_anchors(rom)
-    messages = messages or mlss_arabic_messages()
+    messages = messages or mlss_arabic_messages(translations)
     for message in messages:
         _verify_source(rom, message, game_font)
     font = build_mlss_rtl_font(font_path, latin_rtl_glyphs(game_font))
@@ -405,6 +408,8 @@ def check_mlss_translations(
     font_path: Path | None = None,
     preview_path: Path | None = None,
     text_preview_path: Path | None = None,
+    *,
+    translations: TranslationSet | None = None,
 ) -> dict[str, object]:
     """Validate the translations without the ROM; with a font, measure and draw every message."""
     font = build_mlss_rtl_font(font_path) if font_path is not None else None
@@ -412,7 +417,7 @@ def check_mlss_translations(
         raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, "A preview needs --font")
     if font is not None and preview_path is not None:
         font_preview(font).save(preview_path)
-    messages = mlss_arabic_messages()
+    messages = mlss_arabic_messages(translations)
     encoded = encode_messages(MlssArabicEncoder(font), messages)
     if font is not None and text_preview_path is not None:
         messages_sheet(
@@ -456,6 +461,27 @@ def write_build_outputs(
 def assemble_hooks(source: Path = HOOK_SOURCE) -> tuple[bytes, dict[str, int]]:
     """Assemble the hook source with GNU binutils (arm-none-eabi-*) and read its symbols."""
     return HOOKS.assemble(source)
+
+
+def extract_originals(
+    rom: bytes,
+    translations: TranslationSet | None = None,
+    *,
+    messages: tuple[MlssArabicMessage, ...] | None = None,
+    verify_identity: bool = True,
+) -> dict[str, str]:
+    """Every pinned original, verified, in the engine's notation, by entry id.
+
+    The keyword arguments exist for synthetic tests, as in the build.
+    """
+    if verify_identity:
+        verify_usa_image(rom)
+    messages = messages or mlss_arabic_messages(translations)
+    game_font = _verify_anchors(rom)
+    return {
+        message.key: text_notation(_verify_source(rom, message, game_font).body)
+        for message in messages
+    }
 
 
 def check_hook_code(source: Path = HOOK_SOURCE) -> dict[str, object]:

@@ -40,6 +40,7 @@ from classic_retro.engines.pmd import (
     PmdGlyphEntry,
     command_skeleton,
     parse_notation,
+    pmd_notation,
     read_string,
 )
 from classic_retro.engines.pmd_arabic import (
@@ -62,6 +63,7 @@ from classic_retro.engines.pmd_arabic import (
     strings_sheet,
     validate_command_skeleton,
 )
+from classic_retro.localization.translations import TranslationSet
 from classic_retro.patching.hooks import HookProgram
 from classic_retro.patching.image import ImageSpec
 from classic_retro.patching.outputs import base_report, write_image, write_patch
@@ -298,6 +300,7 @@ def build_pmd_arabic_rom(
     font_path: Path,
     *,
     strings: tuple[PmdArabicString, ...] | None = None,
+    translations: TranslationSet | None = None,
     verify_identity: bool = True,
 ) -> PmdArabicBuild:
     """Build the Arabic image and its BPS patch from the original USA image.
@@ -308,7 +311,7 @@ def build_pmd_arabic_rom(
     if verify_identity:
         verify_usa_image(rom)
     charmap = _verify_anchors(rom)
-    strings = strings or pmd_arabic_strings()
+    strings = strings or pmd_arabic_strings(translations)
     for string in strings:
         _verify_source(rom, string)
     font = build_pmd_rtl_font(font_path, game_latin_glyphs(rom, charmap))
@@ -427,6 +430,8 @@ def check_pmd_translations(
     font_path: Path | None = None,
     preview_path: Path | None = None,
     text_preview_path: Path | None = None,
+    *,
+    translations: TranslationSet | None = None,
 ) -> dict[str, object]:
     """Validate the translations without the ROM; with a font, measure and draw every line."""
     font = build_pmd_rtl_font(font_path) if font_path is not None else None
@@ -434,7 +439,7 @@ def check_pmd_translations(
         raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, "A preview needs --font")
     if font is not None and preview_path is not None:
         font_preview(font).save(preview_path)
-    strings = pmd_arabic_strings()
+    strings = pmd_arabic_strings(translations)
     encoded = encode_strings(PmdArabicEncoder(font), strings)
     if font is not None and text_preview_path is not None:
         strings_sheet(
@@ -488,6 +493,24 @@ def write_build_outputs(
 def assemble_hooks(source: Path = HOOK_SOURCE) -> tuple[bytes, dict[str, int]]:
     """Assemble the hook source with GNU binutils (arm-none-eabi-*) and read its symbols."""
     return HOOKS.assemble(source)
+
+
+def extract_originals(
+    rom: bytes,
+    translations: TranslationSet | None = None,
+    *,
+    strings: tuple[PmdArabicString, ...] | None = None,
+    verify_identity: bool = True,
+) -> dict[str, str]:
+    """Every pinned original, verified, in the engine's notation, by entry id.
+
+    The keyword arguments exist for synthetic tests, as in the build.
+    """
+    if verify_identity:
+        verify_usa_image(rom)
+    strings = strings or pmd_arabic_strings(translations)
+    _verify_anchors(rom)
+    return {string.key: pmd_notation(_verify_source(rom, string)) for string in strings}
 
 
 def check_hook_code(source: Path = HOOK_SOURCE) -> dict[str, object]:

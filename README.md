@@ -101,10 +101,31 @@ classic-retro targets strategies                    # the ways of drawing Arabic
 classic-retro targets check-hooks [TARGET ...]      # re-assemble hook code, compare with stored bytes
 classic-retro targets check-translations TARGET --font FONT [--preview-dir DIR]
 classic-retro targets build TARGET ROM --font FONT --out-dir DIR [--write-rom NAME]
+classic-retro targets prepare TARGET SOURCE --font FONT      # source overlays: patch a checkout
+classic-retro targets extract TARGET INPUT [--out FILE]      # a translator's workspace
+classic-retro targets strip WORKSPACE [--out FILE]           # the workspace, ready to commit
 ```
 
 `targets build` also reports whether the patch matches the target's recorded
 reference patch. Every game keeps its own command group too (`classic-retro fomt ...`).
+
+### Translating
+
+The Arabic of every target lives in `src/classic_retro/translations/<target>.json`:
+entries by stable id, a note on the target's notation, and a glossary, with no text of
+the game. A translator works in a local workspace that adds each entry's original from
+their own copy, checks and builds from it, then strips it for review:
+
+```text
+classic-retro targets extract fomt "path/to/game.gba"      # writes fomt.workspace.json (stays local)
+classic-retro targets check-translations fomt --translations fomt.workspace.json --font FONT
+classic-retro targets build fomt "path/to/game.gba" --font FONT --out-dir build \
+  --translations fomt.workspace.json
+classic-retro targets strip fomt.workspace.json --out fomt.json
+```
+
+Every check and build holds a translations file against the originals pinned in the
+target's code. See [the translator's guide](docs/TRANSLATING_AR.md) (in Arabic).
 
 The three rendering strategies are what the nine targets proved, not the only ones
 possible. Games on other platforms will need other methods, and the strategy and

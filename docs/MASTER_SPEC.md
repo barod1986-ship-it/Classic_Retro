@@ -318,6 +318,34 @@ Stable logical IDs are preferred over raw offsets, sectors, or file positions.
 
 Binary locations belong to adapter/build metadata, not translator-facing text.
 
+### 6.1 Target translation files
+
+Each localization target keeps its Arabic in `classic_retro/translations/<target>.json`
+(`target-translations.schema.json`):
+
+- `entries`: one per translated text, each with a stable `id`, the Arabic `text` in the
+  target's notation, and optional `context` and `notes` for people;
+- `notation`: what the commands inside the texts mean for this engine;
+- `glossary`: how the names and terms of the original are written in Arabic.
+
+A committed file holds no text of the game. Where each original is and what it must
+match (addresses, SHA-256 pins, command skeletons) stays in the target's code, and every
+check and build holds the file against those pins: a missing or unknown entry, or a
+translation that drops or reorders the original's commands, is refused.
+
+`classic-retro targets extract` writes a *workspace*: the same file with each original
+(`source`) decoded from the user's own copy and verified against its pin, so the
+translator sees what every entry translates. A workspace stays on the user's machine
+(`*.workspace.json` is ignored by git), and `targets strip` writes it back without the
+originals. `--translations` gives a file or a workspace to `check-translations`, `build`
+and `prepare`. With a workspace, `check-translations` also lists the entries whose
+original names a glossary term that their Arabic does not use.
+[TRANSLATING_AR.md](TRANSLATING_AR.md) is the translator's guide.
+
+The token-stream documents of `translation.schema.json` (`classic-retro translation`)
+remain the foundation's generic model. The targets' files use each engine's own
+notation instead, which is what a translator reads and what the targets' checks parse.
+
 ## 7. Control codes and placeholders
 
 Control codes and dynamic placeholders must never be flattened into ordinary translated text.

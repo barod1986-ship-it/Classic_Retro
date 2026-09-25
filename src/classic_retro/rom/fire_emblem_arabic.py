@@ -38,6 +38,7 @@ from classic_retro.engines.fire_emblem import (
     FireEmblemHuffmanModel,
     FireEmblemTextBank,
     command_skeleton,
+    message_notation,
     read_message,
 )
 from classic_retro.engines.fire_emblem_arabic import (
@@ -69,6 +70,7 @@ from classic_retro.engines.fire_emblem_legend import (
     validate_legend_lines,
 )
 from classic_retro.font.shaped_text import ShapedLineRenderer
+from classic_retro.localization.translations import TranslationSet
 from classic_retro.patching.hooks import HookProgram
 from classic_retro.patching.image import ImageSpec
 from classic_retro.patching.outputs import base_report, write_image, write_patch
@@ -336,6 +338,7 @@ def build_fire_emblem_arabic_rom(
     font_path: Path,
     *,
     messages: tuple[FireEmblemArabicMessage, ...] | None = None,
+    translations: TranslationSet | None = None,
     verify_identity: bool = True,
 ) -> FireEmblemArabicBuild:
     """Build the Arabic image and its BPS patch from the original USA image.
@@ -346,7 +349,7 @@ def build_fire_emblem_arabic_rom(
     if verify_identity:
         verify_usa_image(rom)
     talk, bank = _verify_anchors(rom)
-    messages = messages or fire_emblem_arabic_messages()
+    messages = messages or fire_emblem_arabic_messages(translations)
     for message in messages:
         _verify_source_message(bank, message)
     font = build_fire_emblem_rtl_font(font_path, talk)
@@ -366,7 +369,7 @@ def build_fire_emblem_arabic_rom(
     if ARABIC_TEXT_ADDRESS + len(texts) > ARABIC_LEGEND_ADDRESS:
         raise ClassicRetroError(ErrorCode.RELOCATION_OVERFLOW, "Arabic messages exceed the region")
 
-    legend = build_legend(font_path)
+    legend = build_legend(font_path, fire_emblem_arabic_legend(translations))
     blobs = bytearray()
     legend_pointers: list[tuple[int, int]] = []
     for item in legend.items:
@@ -539,10 +542,12 @@ def check_fire_emblem_translations(
     font_path: Path | None = None,
     preview_path: Path | None = None,
     legend_preview_path: Path | None = None,
+    *,
+    translations: TranslationSet | None = None,
 ) -> dict[str, object]:
     """Validate the translations without the ROM; with a font, measure and draw everything."""
     glyph_map = build_fire_emblem_arabic_glyph_map()
-    subtitles = fire_emblem_arabic_legend()
+    subtitles = fire_emblem_arabic_legend(translations)
     for subtitle in subtitles:
         validate_legend_lines(subtitle.lines)
     font = build_fire_emblem_rtl_font(font_path) if font_path is not None else None
@@ -551,7 +556,10 @@ def check_fire_emblem_translations(
             raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, "A preview needs --font")
         font_preview(font).save(preview_path)
     advances = font.advances() if font is not None else _unmeasured_advances()
-    encoded = encode_translations(FireEmblemArabicEncoder(advances=advances, glyph_map=glyph_map))
+    encoded = encode_translations(
+        FireEmblemArabicEncoder(advances=advances, glyph_map=glyph_map),
+        fire_emblem_arabic_messages(translations),
+    )
     report: dict[str, object] = {
         "messages": [f"{index:#x}" for index in sorted(encoded)],
         "arabic_glyphs": len(glyph_map.characters),
@@ -619,6 +627,30 @@ def write_build_outputs(
 def assemble_hooks(source: Path = HOOK_SOURCE) -> tuple[bytes, dict[str, int]]:
     """Assemble the hook source with GNU binutils (arm-none-eabi-*) and read its symbols."""
     return HOOKS.assemble(source)
+
+
+def extract_originals(
+    rom: bytes,
+    translations: TranslationSet | None = None,
+    *,
+    messages: tuple[FireEmblemArabicMessage, ...] | None = None,
+    verify_identity: bool = True,
+) -> dict[str, str]:
+    """Every pinned message, verified, in the engine's notation, by entry id.
+
+    The legend is seven images, not text: its entries have no original to extract.
+
+    The keyword arguments exist for synthetic tests, as in the build.
+    """
+    if verify_identity:
+        verify_usa_image(rom)
+    messages = messages or fire_emblem_arabic_messages(translations)
+    _, bank = _verify_anchors(rom)
+    originals: dict[str, str] = {}
+    for message in messages:
+        _verify_source_message(bank, message)
+        originals[f"message.{message.index:#x}"] = message_notation(bank.messages[message.index])
+    return originals
 
 
 def check_hook_code(source: Path = HOOK_SOURCE) -> dict[str, object]:

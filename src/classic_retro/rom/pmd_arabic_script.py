@@ -1,11 +1,11 @@
 """Arabic translation of the *Pokémon Mystery Dungeon: Red Rescue Team* (USA) personality test.
 
 A new game starts with the personality test: six floating messages on a
-black screen ("Welcome!" to "Let the interview begin!"), then eight of 55
+black screen (from the welcome to the start of the interview), then eight of 55
 questions picked at random, each in the dialogue box with its answers in a
 menu (one more question follows an answer of the alien invasion), then the
 gender question. Every one of those strings is translated here: 158 strings
-behind 206 pointers ("Yes." and "No." are shared by most questions).
+behind 206 pointers (the yes and no answers are shared by most questions).
 
 For each string the original is pinned by its ROM address, the SHA-256 of its
 bytes and its command skeleton (commands in order, line ends excluded), and
@@ -13,7 +13,8 @@ every pointer to it (a scan of the image finds no other) is listed, so the
 translation can be checked without the ROM and the ROM build can refuse a
 different script.
 
-Translations are logical Unicode Arabic in the engine's notation
+The Arabic lives in ``classic_retro/translations/pmd-red.json``: logical
+Unicode Arabic in the engine's notation
 (``engines.pmd``): ``{CENTER_ALIGN}``, ``{WAIT_PRESS}`` and ``{EXTRA_MSG}``
 keep their original order, and line ends (``\\n``) may move.
 """
@@ -24,6 +25,7 @@ from dataclasses import dataclass
 
 from classic_retro.engines.pmd import Piece, notation_skeleton, parse_notation
 from classic_retro.engines.pmd_arabic import PmdTextBox
+from classic_retro.localization.translations import TranslationSet, builtin_translation_set
 
 FLOATING = PmdTextBox.FLOATING
 DIALOGUE = PmdTextBox.DIALOGUE
@@ -209,172 +211,16 @@ _SOURCES: dict[str, tuple[PmdTextBox, int, tuple[int, ...], str, str]] = {
 }
 # fmt: on
 
-_ARABIC: dict[str, str] = {
-    "intro.welcome": "{CENTER_ALIGN}أهلا بك!",
-    "intro.portal": "{CENTER_ALIGN}هذه هي البوابة المؤدية\n{CENTER_ALIGN}إلى عالم بوكيمون!",
-    "intro.questions": "{CENTER_ALIGN}لكن قبل أن أدعك تعبر،\n{CENTER_ALIGN}لدي عدة أسئلة لك.",
-    "intro.sincerely": "{CENTER_ALIGN}أريدك أن تجيب عنها بصدق.",
-    "intro.ready": "{CENTER_ALIGN}هل أنت مستعد؟",
-    "intro.begin": "{CENTER_ALIGN}حسنا...{WAIT_PRESS}\n{CENTER_ALIGN}فلتبدأ المقابلة!",
-    "hardy.1": "هناك اختبار قريب.\nكيف تذاكر له؟",
-    "hardy.1.0": "أذاكر بجد.",
-    "hardy.1.1": "في اللحظة الأخيرة.",
-    "hardy.1.2": "أتجاهله وألعب.",
-    "hardy.2": "هل تستطيع التركيز على شيء تحبه؟",
-    "yes": "نعم.",
-    "no-space": "لا.",
-    "hardy.3": "عندما تصعب الأمور،\nهل تزداد إصرارا؟",
-    "no": "لا.",
-    "hardy.4": "أمامك دلو. إذا صببت فيه الماء،\nإلى أي حد ستملؤه؟",
-    "hardy.4.0": "حتى آخره.",
-    "hardy.4.1": "إلى نصفه.",
-    "a-little": "قليلا.",
-    "docile.1": "عرضوا عليك الاختيار بين هديتين.\nأيهما ستأخذ؟",
-    "docile.1.0": "الصندوق الكبير.",
-    "docile.1.1": "الصندوق الصغير.",
-    "docile.2": "كسرت بيضة فاسدة في غرفتك!\nماذا ستفعل؟",
-    "docile.2.0": "أفتح النافذة فورا.",
-    "docile.2.1": "أشمها أولا.",
-    "docile.3": "أحضر لك صديقك شيئا كنت قد نسيته.{WAIT_PRESS}\nكيف تشكره؟",
-    "docile.3.0": "أشكره كالمعتاد.",
-    "docile.3.1": "أشكره بمزحة.",
-    "docile.3.2": "أشكره ببرود.",
-    "docile.4": "هناك محفظة على جانب الطريق.",
-    "docile.4.0": "أسلمها للشرطة!",
-    "docile.4.1": "يا للحظ! يا للحظ!",
-    "docile.4.2": "هل يراني أحد...؟",
-    "brave.1": "ستقفز بالحبل المطاطي لأول مرة.{EXTRA_MSG}ولأن الأمر مخيف، قررت أن تجرب\nالقفزة بدمية أولا...{WAIT_PRESS}\nفانقطع الحبل!{EXTRA_MSG}هل ستحاول القفز رغم ذلك؟",
-    "brave.2a": "هناك غزو من الفضاء!\nماذا ستفعل؟",
-    "brave.2a.0": "أقاتل.",
-    "brave.2a.1": "أهرب.",
-    "brave.2a.2": "أتجاهله.",
-    "brave.3": "سمعت صرخة من خلف باب!{WAIT_PRESS}\nكيف ستتصرف؟",
-    "brave.3.0": "أفتح الباب بقوة.",
-    "brave.3.1": "أصرخ معه.",
-    "brave.4": "مشاغب يضايق فتاة في شارع\nمزدحم في المدينة!{WAIT_PRESS}\nماذا ستفعل؟",
-    "brave.4.0": "أساعدها دون تردد.",
-    "brave.4.1": "أساعدها رغم خوفي.",
-    "brave.4.2": "أتصل بالشرطة.",
-    "brave.4.3": "لا أفعل شيئا خوفا.",
-    "jolly.1": "هل أنت شخص مرح؟",
-    "jolly.2": "هل تحب الاستمتاع بصخب\nمع الآخرين؟",
-    "jolly.3": "إنها العطلة الصيفية!\nإلى أين تحب أن تذهب؟",
-    "jolly.3.0": "إلى الشاطئ!",
-    "jolly.3.1": "إلى الينابيع الحارة.",
-    "jolly.3.2": "إلى أي مكان.",
-    "jolly.4": "بدأ شخص أجنبي يتحدث إليك.{EXTRA_MSG}بصراحة، لا تفهم شيئا مما\nيقوله هذا الشخص.{WAIT_PRESS}\nبم ترد عليه؟",
-    "jolly.4.0": "ها ها! نعم. مضحك جدا!",
-    "jolly.4.1": "امم... هلا أعدت ما قلته؟",
-    "jolly.4.2": "حسنا... علي أن أذهب.",
-    "impish.1": "هل حفرت يوما حفرة لتوقع بها أحدا؟",
-    "impish.2": "هل تحب المقالب؟",
-    "impish.3": "هل هناك أشياء كثيرة\nتود أن تفعلها؟",
-    "impish.4": "صديقك يتعرض للتنمر!\nماذا تفعل؟",
-    "impish.4.0": "أواجه المتنمر.",
-    "impish.4.1": "أحذر المتنمر من بعيد.",
-    "impish.4.2": "أسخر من المتنمر من الخلف.",
-    "naive.1": "هل تحب النكات السخيفة؟",
-    "love-them": "أحبها!",
-    "naive.1.2": "ارحمني منها.",
-    "naive.2": "هل تضحك كثيرا؟",
-    "naive.3": "هل يصفك الآخرون غالبا بأنك طفولي؟",
-    "naive.4": "هل تحب أن تتخيل الأشياء\nلتسلي نفسك؟",
-    "timid.1": "امتدت يد بشرية من المرحاض!\nماذا ستفعل؟",
-    "timid.1.0": "أصرخ وأهرب.",
-    "timid.1.1": "أغلق الغطاء دون كلمة.",
-    "timid.1.2": "أصافحها.",
-    "timid.2": "أمسك أحد أصابع يدك اليسرى\nبيدك اليمنى.{WAIT_PRESS}\nأي إصبع أمسكت؟",
-    "timid.2.0": "الإبهام.",
-    "timid.2.1": "السبابة.",
-    "timid.2.2": "الوسطى.",
-    "timid.2.3": "البنصر.",
-    "timid.2.4": "الخنصر.",
-    "timid.3": "علقت فجأة داخل غرفة\nحالكة الظلام!{WAIT_PRESS}\nماذا تفعل؟",
-    "timid.3.0": "أركل الباب.",
-    "timid.3.1": "أبكي.",
-    "timid.3.2": "أنظفها.",
-    "timid.4": "هل تستطيع دخول بيت مسكون؟",
-    "timid.4.0": "لا مشكلة!",
-    "timid.4.1": "آه... ل-لا...",
-    "timid.4.2": "مع شخص أحبه.",
-    "hasty.1": "وصلتك هدية!{WAIT_PRESS}\nلكنك لا تعرف ما بداخلها.{WAIT_PRESS}\nأنت فضولي، فماذا تفعل؟",
-    "hasty.1.0": "أفتحها الآن.",
-    "hasty.1.1": "أفتحها لاحقا.",
-    "hasty.1.2": "أطلب من أحد أن يفتحها.",
-    "hasty.2": "ربحت اليانصيب!{WAIT_PRESS}\nماذا تفعل بالمال؟",
-    "hasty.2.0": "أنفقه الآن.",
-    "hasty.2.1": "أدخره.",
-    "hasty.2.2": "أتبرع به.",
-    "hasty.3": "وجدت صندوق كنز!\nماذا تفعل؟",
-    "hasty.3.0": "أفتحه فورا!",
-    "hasty.3.1": "لا... قد يكون فخا...",
-    "hasty.3.2": "سيكون فارغا حتما...",
-    "hasty.4": "لم يأت صديقك إلى الموعد\nفي الوقت المتفق عليه.\nماذا تفعل؟",
-    "hasty.4.0": "أنزعج.",
-    "hasty.4.1": "أنتظر بصبر.",
-    "hasty.4.2": "أغضب وأرحل.",
-    "sassy.1": "قائد بلدك يقف أمامك.\nكيف تتحدث إليه؟",
-    "sassy.1.0": "أتحدث بهدوء.",
-    "sassy.1.1": "أتحدث بتوتر.",
-    "sassy.1.2": "لا يهمني!!",
-    "sassy.2": "هل ينصحك الآخرون بالانتباه لكلامك؟",
-    "sassy.3": "هل ترى نفسك رائعا؟\nكن صادقا.",
-    "sassy.4": "هل تستطيع أن تشكر أحدا بصدق\nعندما تشعر بالامتنان؟",
-    "calm.1": "هل ترى نفسك أحيانا مملا\nوحذرا أكثر من اللازم؟",
-    "calm.2": "هل تحلم بالاسترخاء دون عمل\nوبلا إثارة تذكر؟",
-    "calm.3": "هل تحب القتال؟",
-    "calm.4": "هل تتثاءب كثيرا؟",
-    "relaxed.1": "هل تتأخر كثيرا عن المدرسة أو المواعيد؟",
-    "relaxed.2": "هل تشعر أنك أصبحت أبطأ\nفي الآونة الأخيرة؟",
-    "relaxed.3": "إنه يوم جميل على الشاطئ.\nبم تشعر؟",
-    "relaxed.3.0": "شعور رائع!",
-    "relaxed.3.1": "شخير...",
-    "relaxed.3.2": "أريد العودة إلى البيت!",
-    "relaxed.4": "هل تغفو دون أن تشعر؟",
-    "lonely.1": "هل تشعر بالوحدة عندما تكون وحدك؟",
-    "lonely.2": "هل تكره أن تكون آخر من يغادر\nالفصل في نهاية اليوم الدراسي؟",
-    "lonely.3": "ماذا تفعل بضوء غرفتك\nعندما تذهب للنوم ليلا؟",
-    "lonely.3.0": "أتركه مضاء.",
-    "lonely.3.1": "أطفئه.",
-    "lonely.4": "إنها عطلة نهاية الأسبوع، لكن\nلا أحد يريد اللعب معك...\nماذا تفعل؟",
-    "lonely.4.0": "أذهب في رحلة.",
-    "lonely.4.1": "أتسكع بلا هدف.",
-    "lonely.4.2": "أنزوي في ركن.",
-    "quirky.1": "هل يحدث أن تجد نفسك فجأة\nبلا شيء تفعله؟",
-    "quirky.2": "بأي سرعة ترد على البريد الإلكتروني؟",
-    "quirky.2.0": "أرد فورا.",
-    "quirky.2.1": "قد أرد وقد لا أرد.",
-    "quirky.2.2": "الأمر مرهق جدا.",
-    "quirky.3": "هناك شخص تحبه...{WAIT_PRESS}\nلكن لا توجد فرصة للتقرب منه.\nماذا تفعل؟",
-    "quirky.3.0": "أعترف بحبي بشجاعة.",
-    "quirky.3.1": "ربما ألقي التحية...",
-    "quirky.3.2": "أدبر مقلبا لألفت انتباهه.",
-    "quirky.3.3": "أراقبه من بعيد.",
-    "quirky.4": "يتفرع الطريق يمينا ويسارا.\nقيل لك إن هناك كنزا في الجهة\nاليمنى. ماذا تفعل؟",
-    "quirky.4.0": "أتجه يمينا فورا.",
-    "quirky.4.1": "إنه فخ! أتجه يسارا.",
-    "quirky.4.2": "أختار أي جهة.",
-    "misc.1": "في رحلات العطلة، تفضل أن...",
-    "misc.1.0": "أذهب وحدي.",
-    "misc.1.1": "أذهب مع الآخرين.",
-    "misc.2": "إنه مهرجان الصيف!\nهل تحب الاحتفالات؟",
-    "misc.2.1": "لا تهمني.",
-    "misc.3": "وصفك أحدهم بأنك غريب لكن مضحك.\nبم يشعرك ذلك؟",
-    "misc.3.0": "أنا سعيد!",
-    "misc.3.1": "لست سعيدا.",
-    "brave.2b": "تقاتل الفضائيين ببسالة...{WAIT_PRESS}\nلكنك تهزم...{EXTRA_MSG}يقول لك أحد الفضائيين...{EXTRA_MSG}لقد أثرت إعجابنا.\nكان قتالك متعة للنظر.{EXTRA_MSG}انضم إلينا، وسنحكم العالم معا.{WAIT_PRESS}\nماذا ستفعل؟",
-    "brave.2b.0": "أحكم مع الفضائيين.",
-    "brave.2b.1": "أرفض.",
-    "gender": "هل أنت ولد أم بنت؟",
-    "gender.boy": "ولد.",
-    "gender.girl": "بنت.",
-}
+TARGET = "pmd-red"
 
 
-def pmd_arabic_strings() -> tuple[PmdArabicString, ...]:
+def _texts(translations: TranslationSet | None) -> dict[str, str]:
+    return (translations or builtin_translation_set(TARGET)).texts(tuple(_SOURCES))
+
+
+def pmd_arabic_strings(translations: TranslationSet | None = None) -> tuple[PmdArabicString, ...]:
     """The personality test's intro, then every question with its answers, then the gender."""
-    if set(_SOURCES) != set(_ARABIC):
-        raise ValueError("every pinned PMD string needs exactly one translation")
+    texts = _texts(translations)
     return tuple(
         PmdArabicString(
             key=key,
@@ -383,7 +229,7 @@ def pmd_arabic_strings() -> tuple[PmdArabicString, ...]:
             references=references,
             source_sha256=digest,
             source_skeleton=notation_skeleton(parse_notation(skeleton)),
-            notation=_ARABIC[key],
+            notation=texts[key],
         )
         for key, (box, source, references, digest, skeleton) in _SOURCES.items()
     )

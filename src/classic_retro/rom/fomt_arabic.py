@@ -43,6 +43,7 @@ from classic_retro.engines.fomt import (
     parse_notation,
     read_string,
     split_text,
+    text_notation,
 )
 from classic_retro.engines.fomt_arabic import (
     BASELINE,
@@ -68,6 +69,7 @@ from classic_retro.engines.fomt_arabic import (
     text_pages,
     validate_command_skeleton,
 )
+from classic_retro.localization.translations import TranslationSet
 from classic_retro.patching.hooks import HookProgram
 from classic_retro.patching.image import ImageSpec
 from classic_retro.patching.outputs import base_report, write_image, write_patch
@@ -320,6 +322,7 @@ def build_fomt_arabic_rom(
     *,
     strings: tuple[FomtArabicString, ...] | None = None,
     names: tuple[FomtArabicName, ...] | None = None,
+    translations: TranslationSet | None = None,
     verify_identity: bool = True,
 ) -> FomtArabicBuild:
     """Build the Arabic image and its BPS patch from the original USA image.
@@ -330,8 +333,8 @@ def build_fomt_arabic_rom(
     if verify_identity:
         verify_usa_image(rom)
     _verify_anchors(rom)
-    strings = strings or fomt_arabic_strings()
-    names = names or fomt_arabic_names()
+    strings = strings or fomt_arabic_strings(translations)
+    names = names or fomt_arabic_names(translations)
     script = _verify_script(rom, strings)
     _verify_story(rom, strings, names)
 
@@ -559,11 +562,14 @@ def translation_previews(
 
 
 def check_fomt_translations(
-    font_path: Path | None = None, preview_path: Path | None = None
+    font_path: Path | None = None,
+    preview_path: Path | None = None,
+    *,
+    translations: TranslationSet | None = None,
 ) -> dict[str, object]:
     """Validate the translations without the ROM; with a font, draw and lay out every one."""
-    strings = fomt_arabic_strings()
-    names = fomt_arabic_names()
+    strings = fomt_arabic_strings(translations)
+    names = fomt_arabic_names(translations)
     for string in strings:
         validate_command_skeleton(string.source_skeleton, string.pieces)
     report: dict[str, object] = {
@@ -617,6 +623,37 @@ def write_build_outputs(
 def assemble_hooks(source: Path = HOOK_SOURCE) -> tuple[bytes, dict[str, int]]:
     """Assemble the hook source with GNU binutils (arm-none-eabi-*) and read its symbols."""
     return HOOKS.assemble(source)
+
+
+def extract_originals(
+    rom: bytes,
+    translations: TranslationSet | None = None,
+    *,
+    strings: tuple[FomtArabicString, ...] | None = None,
+    names: tuple[FomtArabicName, ...] | None = None,
+    verify_identity: bool = True,
+) -> dict[str, str]:
+    """Every pinned original, verified, in the engine's notation, by entry id.
+
+    The keyword arguments exist for synthetic tests, as in the build.
+    """
+    if verify_identity:
+        verify_usa_image(rom)
+    strings = strings or fomt_arabic_strings(translations)
+    names = names or fomt_arabic_names(translations)
+    script = _verify_script(rom, strings)
+    _verify_story(rom, strings, names)
+    originals: dict[str, str] = {}
+    for string in strings:
+        if string.index is not None:
+            original = script.strings[string.index]
+        else:
+            original = read_string(rom, _offset(string.address or 0))
+        originals[string.key] = text_notation(split_text(original, string.style))
+    for name in names:
+        original = read_string(rom, _offset(name.address))
+        originals[f"name.{name.key}"] = text_notation(split_text(original, PlaceholderStyle.STORY))
+    return originals
 
 
 def check_hook_code(source: Path = HOOK_SOURCE) -> dict[str, object]:

@@ -1,0 +1,156 @@
+{
+  "schema_version": "1.0",
+  "target": "minish-cap",
+  "language": "ar",
+  "notation": "Logical Arabic in the tmc decompilation's text notation (translations/USA.json): \\n starts a new line; {Sound:xx:yy} plays a sound, {Color:Green} and {Color:White} colour a name, {Player} is the player's name (drawn left to right), {04:10:00} moves the window and {07:tt:ii} continues with another text. Keep every command of the original in order; colours and line ends may move.",
+  "glossary": [
+    {
+      "term": "Zelda",
+      "text": "زيلدا"
+    },
+    {
+      "term": "Smith",
+      "text": "سميث"
+    },
+    {
+      "term": "Picori",
+      "text": "بيكوري"
+    },
+    {
+      "term": "Hyrule",
+      "text": "هايرول"
+    }
+  ],
+  "entries": [
+    {
+      "id": "0F01",
+      "context": "storybook prologue page; text 0F:01, lines of at most 240 pixels",
+      "text": "منذ زمن بعيد جدا..."
+    },
+    {
+      "id": "0F02",
+      "context": "storybook prologue page; text 0F:02, lines of at most 240 pixels",
+      "text": "حين كان العالم على وشك\nأن يبتلعه الظلام..."
+    },
+    {
+      "id": "0F03",
+      "context": "storybook prologue, beside the picture; text 0F:03, lines of at most 120 pixels",
+      "text": "ظهر البيكوري\nالصغار من السماء،\nحاملين لبطل\nالبشر سيفا\nونورا ذهبيا."
+    },
+    {
+      "id": "0F04",
+      "context": "storybook prologue, beside the picture; text 0F:04, lines of at most 120 pixels",
+      "text": "بالحكمة والشجاعة،\nطرد البطل\nالظلام."
+    },
+    {
+      "id": "0F05",
+      "context": "storybook prologue page; text 0F:05, lines of at most 240 pixels",
+      "text": "وحين عاد السلام، حفظ الناس\nذلك السيف في مزار بكل عناية."
+    },
+    {
+      "id": "0F06",
+      "context": "storybook prologue page; text 0F:06, lines of at most 240 pixels",
+      "text": "أما قوة النور الذهبي، فقد تجسدت\nفي أميرة هايرول،\nوأشرقت على كل الأرجاء."
+    },
+    {
+      "id": "0F07",
+      "context": "dialogue; text 0F:07, lines of at most 208 pixels",
+      "text": "{Sound:01:E8}هه هه هه...\nإذن هذا هو معناها..."
+    },
+    {
+      "id": "1001",
+      "context": "dialogue; text 10:01, lines of at most 208 pixels",
+      "text": "{Sound:00:95}صباح الخير يا {Color:Green}معلم سميث{Color:White}."
+    },
+    {
+      "id": "1002",
+      "context": "dialogue; text 10:02, lines of at most 208 pixels",
+      "text": "{Sound:00:C2}يا للعجب! {Color:Green}الأميرة زيلدا{Color:White}!\n\nهل تسللت من القلعة\nوجئت كل هذه المسافة وحدك؟\nلا بد أن الوزير قلق عليك!\nتعرفين كيف يكون حاله!"
+    },
+    {
+      "id": "1003",
+      "context": "dialogue; text 10:03, lines of at most 208 pixels",
+      "text": "لا تقلق بشأنه! سيكون بخير.\nأين {Player}؟\nالبلدة كلها تحتفل بقدوم\n{Color:Blue}مهرجان بيكوري{Color:White} السنوي!\nفكرت أن نذهب إليه معا.\nهل تمانع؟"
+    },
+    {
+      "id": "1004",
+      "context": "dialogue; text 10:04, lines of at most 208 pixels",
+      "text": "آه، أهذا ما جئت من أجله؟\n\nحسنا، سهر {Player} يساعدني\nليلة أمس، وما زال نائما...\nلكن لدي مهمة في\nالقلعة... نعم، لا بأس بذلك.\n{07:10:05}"
+    },
+    {
+      "id": "1005",
+      "context": "dialogue; text 10:05, lines of at most 208 pixels",
+      "text": "{Player}، حان وقت الاستيقاظ!"
+    },
+    {
+      "id": "1009",
+      "context": "dialogue; text 10:09, lines of at most 208 pixels",
+      "text": "{04:10:00}هيه يا {Player}!\n\n{Color:Green}الأميرة زيلدا{Color:White} هنا. تريد أن تعرف\nإن كنت ستذهب معها إلى المهرجان."
+    },
+    {
+      "id": "100A",
+      "context": "dialogue; text 10:0A, lines of at most 208 pixels",
+      "text": "نعم يا {Player}. هيا بنا!\nلنذهب إلى المهرجان معا!\n{Color:Green}المعلم سميث{Color:White} سمح لي\nبأن آخذك معي!"
+    },
+    {
+      "id": "100B",
+      "context": "dialogue; text 10:0B, lines of at most 208 pixels",
+      "text": "{04:10:00}نعم. فالمهرجان لا يأتي إلا\nمرة في السنة. اذهب واستمتع!\nوبينما أنت هناك، أريد منك\nخدمة صغيرة.\nلقد أنهيت صنع هذا {Color:Red}السيف{Color:White} لوزير\n{Color:Green}قلعة هايرول{Color:White}.\nأريدك أن توصله إليه."
+    },
+    {
+      "id": "100C",
+      "context": "dialogue; text 10:0C, lines of at most 208 pixels",
+      "text": "{04:10:00}هذا هو السيف الذي سيقدم\nللفائز في المسابقة.\nلا تضيعه. ومع أنكما\nصديقا طفولة، تذكر...\n{07:10:0E}"
+    },
+    {
+      "id": "100D",
+      "context": "dialogue; text 10:0D, lines of at most 208 pixels",
+      "text": "كف عن القلق يا معلم سميث!\nسنكون بأمان تام.\nهيا يا {Player}! لنذهب\nإلى المهرجان!"
+    },
+    {
+      "id": "100E",
+      "context": "dialogue; text 10:0E, lines of at most 208 pixels",
+      "text": "{04:10:00}زيلدا هي أميرة هايرول.\n\nاعتن بها جيدا، ولا تدع\nأي مكروه يصيبها."
+    },
+    {
+      "id": "1010",
+      "context": "dialogue; text 10:10, lines of at most 208 pixels",
+      "text": "{Sound:00:94}{Player}! من هنا!\n"
+    },
+    {
+      "id": "1011",
+      "context": "dialogue; text 10:11, lines of at most 208 pixels",
+      "text": "هيا يا {Player}. لنسرع\nإلى القلعة."
+    },
+    {
+      "id": "1012",
+      "context": "dialogue; text 10:12, lines of at most 208 pixels",
+      "text": "{Sound:00:95}{Player}!\nأسرع! هيا بنا!"
+    },
+    {
+      "id": "1013",
+      "context": "dialogue; text 10:13, lines of at most 208 pixels",
+      "text": "من هنا! هيا!\nأسرع!"
+    },
+    {
+      "id": "1014",
+      "context": "dialogue; text 10:14, lines of at most 208 pixels",
+      "text": "ها قد وصلنا إلى {Color:Green}بلدة هايرول{Color:White}!"
+    },
+    {
+      "id": "0534",
+      "context": "dialogue; text 05:34, lines of at most 208 pixels",
+      "text": "{04:10:0E}لقد استلمت {Color:Red}سيف سميث{Color:White}!\n\nاحرص على ألا تفقد هذه\nالأمانة البالغة الأهمية!"
+    },
+    {
+      "id": "2501",
+      "context": "dialogue; text 25:01, lines of at most 208 pixels",
+      "text": "ها نحن هنا يا {Player}!\nأليس المكان ممتعا؟\n{07:25:02}"
+    },
+    {
+      "id": "2502",
+      "context": "dialogue; text 25:02, lines of at most 208 pixels",
+      "text": "هيا! لنتجول في المكان!"
+    }
+  ]
+}

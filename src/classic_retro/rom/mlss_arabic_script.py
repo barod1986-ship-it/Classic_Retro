@@ -19,7 +19,8 @@ including ``FF 0A``) and its command skeleton (commands in order; line ends
 after text excluded), so the translation can be checked without the ROM and
 the ROM build can refuse a different script.
 
-Translations are logical Unicode Arabic in the engine's notation
+The Arabic lives in ``classic_retro/translations/mlss.json``: logical
+Unicode Arabic in the engine's notation
 (``engines.mlss``): they keep every command of the original, in order;
 ``{FF 0B 01}`` opens a page, ``{FF 01 00}`` starts the next one, ``{FF 0C nn}``
 waits, ``{FF 11 01}`` waits for a key, ``{FF 31}``/``{FF 33}`` double the
@@ -33,6 +34,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from classic_retro.engines.mlss import Piece, notation_skeleton, parse_notation
+from classic_retro.localization.translations import TranslationSet, builtin_translation_set
 
 # The story text table's groups start at 0x084E8898 (2434 of them).
 STORY_TABLE = 0x084E8898
@@ -127,41 +129,18 @@ _SOURCES: dict[str, tuple[int, int, str, str, str]] = {
 }
 # fmt: on
 
-_ARABIC: dict[str, str] = {
-    "castle_ambassador": (
-        _SUBTITLE_START
-        + "لقد وصل سفير النوايا الحسنة{FF 0C 3C}{FF 01 00}"
-        + _SUBTITLE_PAGE
-        + "من مملكة الفاصولياء.{FF 0C 5A}{FF 0A}"
-    ),
-    "castle_wish": (
-        _SUBTITLE_START
-        + "«أود أن أوطد روابط مملكتي{FF 0C 41}{FF 01 00}"
-        + _SUBTITLE_PAGE
-        + "بمملكة الفطر.»{FF 0C 50}{FF 0A}"
-    ),
-    "castle_gift": _SUBTITLE_START + "«جئت بهدية من ملكة الفاصولياء.»{FF 0C 46}{FF 0A}",
-    "castle_laugh": "{FF 0B 01}\n{FF 03}{FF 41}{FF 25}«هيييه ها ها ها ها!»{FF 0C 3C}{FF 0A}",
-    "house_emergency": "{FF 0B 01}{FF 03}{FF 31}{FF 35}ح-ح-ح-حالة طوارئ!{FF 11 01}{FF 0A}",
-    "house_courier": "{FF 0B 01}{FF 03}{FF 31}{FF 35}هل رأيت صحيفة المملكة؟{FF 11 01}{FF 0A}",
-    "house_mario": "{FF 0B 01}{FF 03}{FF 35}{FF 33}ماريووووو!!!{FF 0C 1E}{FF 0A}",
-    "house_find_mario": "{FF 0B 01}يجب أن أجد ماريو فورا!{FF 11 01}{FF 0A}",
-    "house_humming": "{FF 0B 01}همم... أسمع دندنة...{FF 11 01}{FF 0A}",
-    "house_eek": "{FF 0B 01}{FF 03}{FF 35}{FF 33}آآآآآه!!!{FF 0C 1E}{FF 0A}",
-    "house_peach": (
-        "{FF 0B 01}الـ-الـ-الأميرة بـ-بـ-بيتش...\nالـ-الـ-الأميرة بـ-بـ-بيتش...{FF 11 01}{FF 0A}"
-    ),
-    "castle_bowser": (
-        "{FF 0B 01}تهاجمني وأنا أدير ظهري، ها؟\nهذا متوقع منكما!\n"
-        "تعاليا أيها الجبانان الخارقان!!!{FF 11 01}{FF 0A}"
-    ),
-}
+TARGET = "mlss"
 
 
-def mlss_arabic_messages() -> tuple[MlssArabicMessage, ...]:
+def _texts(translations: TranslationSet | None) -> dict[str, str]:
+    return (translations or builtin_translation_set(TARGET)).texts(tuple(_SOURCES))
+
+
+def mlss_arabic_messages(
+    translations: TranslationSet | None = None,
+) -> tuple[MlssArabicMessage, ...]:
     """Every translated message, in the order the opening shows them."""
-    if set(_SOURCES) != set(_ARABIC):
-        raise ValueError("every pinned MLSS message needs exactly one translation")
+    texts = _texts(translations)
     return tuple(
         MlssArabicMessage(
             key=key,
@@ -170,7 +149,7 @@ def mlss_arabic_messages() -> tuple[MlssArabicMessage, ...]:
             speaker=speaker,
             source_sha256=digest,
             source_skeleton=notation_skeleton(parse_notation(skeleton)),
-            notation=_ARABIC[key],
+            notation=texts[key],
         )
         for key, (group, source, speaker, digest, skeleton) in _SOURCES.items()
     )

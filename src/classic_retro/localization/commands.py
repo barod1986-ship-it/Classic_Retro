@@ -2,16 +2,26 @@
 
 Each target also keeps its own command group; these commands take a target id
 instead, so a script or a CI matrix can run any target without knowing its
-module.
+module. ``--translations`` gives any of them a translations file or workspace
+(``classic_retro.localization.translations``) instead of the shipped one.
 """
 
 from __future__ import annotations
 
 import argparse
+from dataclasses import replace
 from pathlib import Path
 
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
-from classic_retro.localization.targets import TargetRegistry, print_json
+from classic_retro.localization.targets import LocalizationTarget, TargetRegistry, print_json
+from classic_retro.localization.translations import (
+    TranslationSet,
+    builtin_translation_set,
+    glossary_report,
+    load_translation_set,
+)
+
+_TRANSLATIONS_HELP = "Use this translations file or workspace instead of the shipped one"
 
 
 def register_cli(subcommands: argparse._SubParsersAction, registry: TargetRegistry) -> None:
@@ -59,6 +69,7 @@ def register_cli(subcommands: argparse._SubParsersAction, registry: TargetRegist
     check.add_argument(
         "--preview-dir", type=Path, help="With --font: write the target's previews into it"
     )
+    check.add_argument("--translations", type=Path, help=_TRANSLATIONS_HELP)
     check.set_defaults(handler=lambda args: _check_translations(registry, args))
 
     build = commands.add_parser(
@@ -73,7 +84,50 @@ def register_cli(subcommands: argparse._SubParsersAction, registry: TargetRegist
         metavar="NAME",
         help="Also write the patched image into --out-dir under this name (local use only)",
     )
+    build.add_argument("--translations", type=Path, help=_TRANSLATIONS_HELP)
     build.set_defaults(handler=lambda args: _build(registry, args))
+
+    prepare = commands.add_parser(
+        "prepare",
+        help="Patch a pristine decompilation checkout of a source-overlay target",
+    )
+    prepare.add_argument("target")
+    prepare.add_argument("source", type=Path)
+    prepare.add_argument("--font", type=Path, required=True)
+    prepare.add_argument("--translations", type=Path, help=_TRANSLATIONS_HELP)
+    prepare.set_defaults(handler=lambda args: _prepare(registry, args))
+
+    extract = commands.add_parser(
+        "extract",
+        help="Write a translator's workspace: every entry with its original from your own copy",
+    )
+    extract.add_argument("target")
+    extract.add_argument(
+        "input", type=Path, help="Your game image, or your checkout of the decompilation"
+    )
+    extract.add_argument(
+        "--out",
+        type=Path,
+        help="Workspace to write (default: <target>.workspace.json); it stays local",
+    )
+    extract.add_argument(
+        "--translations",
+        type=Path,
+        help="Take the Arabic from this file or workspace instead of the shipped one",
+    )
+    extract.add_argument("--force", action="store_true", help="Replace an existing workspace")
+    extract.set_defaults(handler=lambda args: _extract(registry, args))
+
+    strip = commands.add_parser(
+        "strip",
+        help="Write a workspace's translations without the originals, ready to commit",
+    )
+    strip.add_argument("workspace", type=Path)
+    strip.add_argument(
+        "--out", type=Path, help="Translations file to write (default: <target>.json)"
+    )
+    strip.add_argument("--force", action="store_true", help="Replace an existing file")
+    strip.set_defaults(handler=lambda args: _strip(registry, args))
 
 
 def _unsupported(target_id: str, operation: str) -> ClassicRetroError:
@@ -96,13 +150,18 @@ def _check_hooks(registry: TargetRegistry, target_ids: list[str]) -> int:
     return print_json(results)
 
 
+def _translations(target: LocalizationTarget, path: Path | None) -> TranslationSet | None:
+    return None if path is None else load_translation_set(path, target.id)
+
+
 def _check_translations(registry: TargetRegistry, args: argparse.Namespace) -> int:
     target = registry.get(args.target)
     if target.check_translations is None:
         raise _unsupported(target.id, "check-translations")
     if args.preview_dir is not None and args.font is None:
         raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, "A preview needs --font")
-    report = target.check_translations(args.font, args.preview_dir)
+    translations = _translations(target, args.translations)
+    report = target.check_translations(args.font, args.preview_dir, translations)
     if args.preview_dir is not None:
         missing = [name for name in target.previews if not (args.preview_dir / name).is_file()]
         if missing:
@@ -110,6 +169,10 @@ def _check_translations(registry: TargetRegistry, args: argparse.Namespace) -> i
                 ErrorCode.BUILD_VALIDATION_FAILED,
                 f"Target {target.id} did not write {', '.join(missing)}",
             )
+    if translations is not None:
+        report = {**report, "translations": str(args.translations)}
+        if translations.is_workspace:
+            report["glossary"] = glossary_report(translations)
     return print_json(report)
 
 
@@ -117,7 +180,12 @@ def _build(registry: TargetRegistry, args: argparse.Namespace) -> int:
     target = registry.get(args.target)
     if target.build is None:
         raise _unsupported(target.id, "build")
-    report = target.build(args.rom.read_bytes(), args.font, args.out_dir, args.write_rom)
+    translations = _translations(target, args.translations)
+    report = target.build(
+        args.rom.read_bytes(), args.font, args.out_dir, args.write_rom, translations
+    )
+    if translations is not None:
+        report = {**report, "translations": str(args.translations)}
     reference = target.reference_patch_sha256
     return print_json(
         {
@@ -126,4 +194,55 @@ def _build(registry: TargetRegistry, args: argparse.Namespace) -> int:
             "reference_patch_sha256": reference,
             "matches_reference": None if reference is None else report["patch_sha256"] == reference,
         }
+    )
+
+
+def _prepare(registry: TargetRegistry, args: argparse.Namespace) -> int:
+    target = registry.get(args.target)
+    if target.prepare is None:
+        raise _unsupported(target.id, "prepare")
+    translations = _translations(target, args.translations)
+    return print_json(target.prepare(args.source, args.font, translations))
+
+
+def _writable(out: Path, force: bool) -> Path:
+    if out.exists() and not force:
+        raise ClassicRetroError(
+            ErrorCode.OUTPUT_EXISTS, f"{out} exists; pass --force to replace it"
+        )
+    return out
+
+
+def _extract(registry: TargetRegistry, args: argparse.Namespace) -> int:
+    target = registry.get(args.target)
+    if target.extract is None:
+        raise _unsupported(target.id, "extract")
+    out = _writable(args.out or Path(f"{target.id}.workspace.json"), args.force)
+    translations = _translations(target, args.translations) or builtin_translation_set(target.id)
+    origin, originals = target.extract(args.input, translations)
+    workspace = translations.with_sources(originals, origin)
+    out.write_text(workspace.dumps(), encoding="utf-8")
+    return print_json(
+        {
+            "target": target.id,
+            "workspace": str(out),
+            "from": origin,
+            "entries": len(workspace.entries),
+            "with_original": sum(entry.source is not None for entry in workspace.entries),
+        }
+    )
+
+
+def _strip(registry: TargetRegistry, args: argparse.Namespace) -> int:
+    workspace = load_translation_set(args.workspace)
+    target = registry.get(workspace.target)
+    translations = replace(
+        workspace,
+        entries=tuple(replace(entry, source=None) for entry in workspace.entries),
+        workspace_from=None,
+    )
+    out = _writable(args.out or Path(f"{target.id}.json"), args.force)
+    out.write_text(translations.dumps(), encoding="utf-8")
+    return print_json(
+        {"target": target.id, "translations": str(out), "entries": len(translations.entries)}
     )

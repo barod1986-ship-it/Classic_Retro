@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+import re
 import unicodedata
 from dataclasses import dataclass
 from functools import lru_cache
@@ -94,6 +95,80 @@ def make_ltr_placeholder_token(
             "raw_hex": (f"{EXT_CTRL_PREFIX:02x}{EXT_CTRL_LTR_PLACEHOLDER:02x}{placeholder_id:02x}")
         },
     )
+
+
+# The translators' notation (translations/firered.json), as in pokefirered's
+# data/text: text, \n for a new line, \p for a new page after a key press
+# (PROMPT_CLEAR), and {PLAYER} and {RIVAL} for the names, which stay left to right.
+LTR_PLACEHOLDERS = {"PLAYER": 0x01, "RIVAL": 0x06}
+PROMPT_CLEAR = 0xFB
+_NOTATION = re.compile(r"\n|\\p|\{([A-Z_]+)\}")
+
+
+def line_break_token(token_id: str) -> InlineToken:
+    return InlineToken(id=token_id, kind=TokenKind.LINE_BREAK, movement=TokenMovement.ORDERED)
+
+
+def prompt_clear_token(token_id: str) -> InlineToken:
+    return InlineToken(
+        id=token_id,
+        kind=TokenKind.CONTROL,
+        movement=TokenMovement.ORDERED,
+        name="PROMPT_CLEAR",
+        args={"raw_hex": f"{PROMPT_CLEAR:02x}"},
+    )
+
+
+def parse_pokemon_gen3_notation(text: str, prefix: str) -> TokenStream:
+    """Tokens of a translation in the translators' notation; ids ``<prefix><n>``."""
+    tokens: list[TextToken | InlineToken] = []
+    position = 0
+    for match in _NOTATION.finditer(text):
+        _append_text(tokens, text[position : match.start()])
+        token_id = f"{prefix}{len(tokens)}"
+        if match.group(0) == "\n":
+            tokens.append(line_break_token(token_id))
+        elif match.group(0) == "\\p":
+            tokens.append(prompt_clear_token(token_id))
+        elif match.group(1) in LTR_PLACEHOLDERS:
+            name = match.group(1)
+            tokens.append(make_ltr_placeholder_token(token_id, name, LTR_PLACEHOLDERS[name]))
+        else:
+            raise ClassicRetroError(
+                ErrorCode.UNSUPPORTED_CONTROL_CODE,
+                f"Unsupported placeholder {match.group(0)} (only {{PLAYER}} and {{RIVAL}})",
+            )
+        position = match.end()
+    _append_text(tokens, text[position:])
+    return TokenStream(tuple(tokens))
+
+
+def _append_text(tokens: list[TextToken | InlineToken], text: str) -> None:
+    if "{" in text or "}" in text or "\\" in text:
+        raise ClassicRetroError(
+            ErrorCode.UNSUPPORTED_CONTROL_CODE, f"Unsupported command in FireRed text: {text!r}"
+        )
+    if text:
+        tokens.append(TextToken(text))
+
+
+def pokemon_gen3_notation(stream: TokenStream) -> str:
+    """A translation's tokens in the translators' notation."""
+    parts: list[str] = []
+    for token in stream.tokens:
+        if isinstance(token, TextToken):
+            parts.append(token.text)
+        elif token.kind is TokenKind.LINE_BREAK:
+            parts.append("\n")
+        elif token.name == "PROMPT_CLEAR":
+            parts.append("\\p")
+        elif token.name in LTR_PLACEHOLDERS:
+            parts.append(f"{{{token.name}}}")
+        else:
+            raise ClassicRetroError(
+                ErrorCode.UNENCODABLE_TOKEN, f"No FireRed notation for token {token.id}"
+            )
+    return "".join(parts)
 
 
 class PokemonGen3ArabicEncoder:

@@ -123,8 +123,9 @@ CI).
 
 ## Translations
 
-The script (`src/classic_retro/rom/fire_emblem_arabic_script.py`) is logical
-Unicode Arabic in bracket notation (`[OpenMidLeft]`, `[LoadFace 51 01]`, `[A]`,
+The script (`src/classic_retro/translations/fire-emblem.json`; its originals are pinned
+in `src/classic_retro/rom/fire_emblem_arabic_script.py`) is logical Unicode Arabic in
+bracket notation (`[OpenMidLeft]`, `[LoadFace 51 01]`, `[A]`,
 `[LF]`, `[.]`...). For each message:
 
 1. the SHA-256 of the original decoded bytes and its command skeleton are pinned;

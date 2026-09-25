@@ -43,10 +43,12 @@ from classic_retro.engines.ff6a_arabic import (
     Ff6aLayout,
     build_ff6a_arabic_font,
     build_ff6a_arabic_glyph_map,
+    ff6a_codes_notation,
     ff6a_command,
     font_preview,
     validate_command_skeleton,
 )
+from classic_retro.localization.translations import TranslationSet
 from classic_retro.patching.hooks import HookProgram
 from classic_retro.patching.image import ImageSpec
 from classic_retro.patching.outputs import base_report, write_image, write_patch
@@ -214,6 +216,7 @@ def build_ff6a_arabic_rom(
     font_path: Path,
     *,
     messages: tuple[Ff6aArabicMessage, ...] | None = None,
+    translations: TranslationSet | None = None,
     verify_identity: bool = True,
 ) -> Ff6aArabicBuild:
     """Build the Arabic image and its BPS patch from the original USA image.
@@ -224,7 +227,7 @@ def build_ff6a_arabic_rom(
     if verify_identity:
         verify_usa_image(rom)
     _, bank = _verify_anchors(rom)
-    messages = messages or ff6a_arabic_messages()
+    messages = messages or ff6a_arabic_messages(translations)
     tails = {message.index: _verify_source_message(bank, message) for message in messages}
     font = build_ff6a_arabic_font(font_path)
     font_data = font.data
@@ -307,7 +310,10 @@ def _verify_output(
 
 
 def check_ff6a_translations(
-    font_path: Path | None = None, preview_path: Path | None = None
+    font_path: Path | None = None,
+    preview_path: Path | None = None,
+    *,
+    translations: TranslationSet | None = None,
 ) -> dict[str, object]:
     """Validate the translations without the ROM; with a font, measure every line."""
     glyph_map = build_ff6a_arabic_glyph_map()
@@ -317,7 +323,9 @@ def check_ff6a_translations(
             raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, "A preview needs --font")
         font_preview(font).save(preview_path)
     widths = font.widths if font is not None else dict.fromkeys(glyph_map.characters, 0)
-    encoded = encode_translations(Ff6aArabicEncoder(arabic_widths=widths))
+    encoded = encode_translations(
+        Ff6aArabicEncoder(arabic_widths=widths), ff6a_arabic_messages(translations)
+    )
     report: dict[str, object] = {
         "messages": sorted(encoded),
         "arabic_glyphs": len(glyph_map.characters),
@@ -366,6 +374,30 @@ def write_build_outputs(
 def assemble_hooks(source: Path = HOOK_SOURCE) -> tuple[bytes, dict[str, int]]:
     """Assemble the hook source with GNU binutils (arm-none-eabi-*) and read its symbols."""
     return HOOKS.assemble(source)
+
+
+def extract_originals(
+    rom: bytes,
+    translations: TranslationSet | None = None,
+    *,
+    messages: tuple[Ff6aArabicMessage, ...] | None = None,
+    verify_identity: bool = True,
+) -> dict[str, str]:
+    """Every pinned original, verified, in the translators' notation, by entry id.
+
+    The keyword arguments exist for synthetic tests, as in the build.
+    """
+    if verify_identity:
+        verify_usa_image(rom)
+    messages = messages or ff6a_arabic_messages(translations)
+    latin, bank = _verify_anchors(rom)
+    characters = {code: character for character, code in latin.character_codes().items()}
+    originals: dict[str, str] = {}
+    for message in messages:
+        _verify_source_message(bank, message)
+        codes, _ = split_message(bank.message(message.index))
+        originals[f"message.{message.index}"] = ff6a_codes_notation(codes, characters)
+    return originals
 
 
 def check_hook_code(source: Path = HOOK_SOURCE) -> dict[str, object]:

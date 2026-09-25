@@ -124,8 +124,10 @@ binutils and compares the result with the bytes stored in
 
 ## Translations
 
-The script (`src/classic_retro/rom/golden_sun_arabic_script.py`) stays logical
-Unicode Arabic. For each string:
+The script (`src/classic_retro/translations/golden-sun.json`; its originals are pinned
+in `src/classic_retro/rom/golden_sun_arabic_script.py`) stays logical Unicode Arabic,
+with the engine's commands by name (`{KEY_END}`, `{CHARACTER_NAME 01}`). For each
+string:
 
 1. the SHA-256 of the original codes and its command skeleton are pinned; the
    ROM build refuses a different script;

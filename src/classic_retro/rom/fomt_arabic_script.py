@@ -19,11 +19,13 @@ the SHA-256 of its bytes and its command skeleton (``{wait}``, ``{clear}``,
 ``{name}`` in order; line ends excluded), so the translation can be checked
 without the ROM and the ROM build can refuse a different script.
 
-Translations are logical Unicode Arabic in the engine's notation
-(``engines.fomt``): ``\\n`` ends a line, ``{wait}`` waits for a key, ``{clear}``
-empties the box and ``{name}`` is the player's name. They keep every command
-of the original, in order; line ends may move (a fourth line scrolls the box,
-so it follows a ``{wait}`` that shows the first).
+The Arabic lives in ``classic_retro/translations/fomt.json``: logical
+Unicode Arabic in the engine's notation (``engines.fomt``): ``\\n`` ends a line,
+``{wait}`` waits for a key, ``{clear}`` empties the box and ``{name}`` is the
+player's name. Translations keep every command of the original, in order; line
+ends may move (a fourth line scrolls the box, so it follows a ``{wait}`` that
+shows the first). This module keeps only where each original is and what it
+must match.
 """
 
 from __future__ import annotations
@@ -31,6 +33,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from classic_retro.engines.fomt import Piece, PlaceholderStyle, command_skeleton, parse_notation
+from classic_retro.localization.translations import TranslationSet, builtin_translation_set
 
 # The event script table: 1329 pointers to RIFF "SCR " files.
 SCRIPT_TABLE = 0x080F89D4
@@ -269,89 +272,22 @@ _NAME_SOURCES: dict[str, tuple[int, tuple[int, ...], str]] = {
 }
 # fmt: on
 
-_ARABIC: dict[str, str] = {
-    # Script 867: Thomas and the newcomer.
-    "thomas_owner": (
-        "مهلا! صاحب هذه المزرعة\nتوفي منذ مدة.{wait}{clear}"
-        "لا يمكنك أن تدخل إلى هنا\nهكذا وكأن المكان مكانك!{wait}"
-    ),
-    "thomas_knew": "ماذا؟ أكنت تعرفه؟{wait}{clear}ولم تكن تعلم\nبأنه قد مات...؟{wait}",
-    "thomas_will": (
-        "لقد مات منذ...{wait}{clear}"
-        "منذ ستة أشهر تقريبا على ما أظن.\nوحين كنت أرتب بيته\nوجدت وصيته.{wait}{clear}"
-        "وقد كتب فيها: أترك مزرعتي\nإلى {name}.{wait}{clear}"
-        "لذا سأعتني أنا بالمزرعة\nإلى أن يظهر صاحب هذا الاسم.{wait}"
-    ),
-    "thomas_you": "ماذا؟ هل تقول إنك أنت\n{name}؟{wait}",
-    "thomas_tell": "هلا أخبرتني كيف تعرفت\nعلى ذلك الرجل العجوز...؟{wait}",
-    "thomas_letters": (
-        "إذن كنتما تتراسلان، ها؟{wait}{clear}"
-        "ولما توقف عن الرد على رسائلك\nجئت لتطمئن عليه، صحيح؟{wait}"
-    ),
-    "thomas_yours": "بما أنه أوصى لك بالمزرعة\nفهي لك إن أردتها.{wait}{clear}فما رأيك؟{wait}",
-    "thomas_great": "رائع! من اليوم فصاعدا\nهذا المكان ملكك!{wait}",
-    "thomas_proud": "لن يكون الأمر سهلا، ولكن\nإن اجتهدت فستنجز عملا\nيجعله فخورا بك.{wait}",
-    "next_day": "\nوفي اليوم التالي...{wait}",
-    # The flashback.
-    "mother_trip": "{clear}ما رأيك يا {name}؟\nألست سعيدا لأنك جئت\nفي هذه الرحلة؟{wait}",
-    "father_fishing": (
-        "{clear}وأنا أيضا سعيد بهذه العطلة.\nهيا، ما رأيك أن نذهب\nلصيد السمك في النهر؟{wait}"
-    ),
-    "mother_lost": "{clear}{name}؟{wait}{clear}يا إلهي! لا أجد\n{name}!{wait}",
-    "father_what": "{clear}ماذا...؟{wait}",
-    "old_man_crying": (
-        "{clear}مرحبا يا بني.\nلماذا تبكي؟\nهل أضعت طريقك؟{wait}"
-        "\nما هذا؟ هل هذا رقم هاتفكم\nالمكتوب على حقيبتك؟{wait}"
-        "\nهيا نتصل بوالديك.{wait}"
-    ),
-    "mother_thanks": "{clear}شكرا جزيلا لك\nلأنك ساعدتنا في العثور على ابننا!{wait}",
-    "father_city": (
-        "{clear}نحن نعيش في المدينة، لكننا\nأردنا أن نري ابننا الريف\nفي هذه الرحلة.{wait}"
-    ),
-    "old_man_farm": (
-        "{clear}أهكذا إذن؟{wait}{clear}في هذه الحالة، لم لا تأتون\nلتقضوا بضعة أيام\nفي مزرعتي؟{wait}"
-    ),
-    "father_mean_it": "{clear}هل تعني ذلك حقا؟{wait}",
-    "old_man_alone": ("{clear}بالتأكيد! أنا أعيش وحيدا،\nفلن تزعجوا أحدا.\nوستسعدني صحبتكم.{wait}"),
-    "mother_great": (
-        "{clear}أليس هذا رائعا يا\n{name}؟{wait}\nستكون لديك مزرعة كاملة\nتلعب فيها!{wait}"
-    ),
-    "voice_hey": "{clear}يـ...{wait}{clear}يا...{wait}{clear}يا أنت.{wait}",
-    "child_start": "{clear}!{wait}",
-    "girl_quiet": "{clear}كنت صامتا جدا\nحتى ظننتك ميتا!{wait}",
-    "girl_play": "{clear}هذا ممتاز. كنت أبحث\nعن أحد ألعب معه.{wait}\nأظن أنك ستفي بالغرض.{wait}",
-    "girl_no_fun": (
-        "{clear}ليس من الممتع أن تجلس\nهكذا دون أن تقول شيئا!{wait}{clear}"
-        "لم لا تحدثني عن نفسك؟{wait}"
-    ),
-    "old_man_fun": (
-        "{clear}هل استمتعت بوقتك؟{wait}{clear}"
-        "أنا استمتعت كثيرا برفقتك.\nفليس لي أحفاد\nكما تعلم...{wait}{clear}"
-        "حسنا، عليك أن تذهب الآن.\nوداعا!...{wait}"
-    ),
-    "old_man_letter": "{clear}هل لك أن تكتب لهذا العجوز\nرسالة من حين لآخر...؟{wait}",
-    "old_man_address": "{clear}حقا؟\nإذن هذا عنواني.{wait}",
-    "girl_leaving": "{clear}هل سترحل بهذه السرعة؟{wait}",
-    "girl_come_back": (
-        "{clear}إن رحلت فسأشعر بالملل\nوالوحدة من جديد...{wait}{clear}يجب أن تعود، اتفقنا؟{wait}"
-    ),
-    "old_man_friend": "{clear}يبدو أنك كسبت صديقة!\nهذا سبب آخر للعودة\nعلى ما أظن.{wait}",
-    "old_man_waiting": "{clear}سأنتظر رسالتك...{wait}",
-}
-
-_NAMES: dict[str, str] = {
-    "mother": "الأم",
-    "father": "الأب",
-    "old_man": "العجوز",
-    "voice": "؟؟؟",
-    "girl": "الفتاة",
-}
+TARGET = "fomt"
+# Every entry of translations/fomt.json: the strings in play order, then the name tags.
+ENTRY_IDS: tuple[str, ...] = (
+    *_SCRIPT_SOURCES,
+    *_STORY_SOURCES,
+    *(f"name.{key}" for key in _NAME_SOURCES),
+)
 
 
-def fomt_arabic_strings() -> tuple[FomtArabicString, ...]:
+def _texts(translations: TranslationSet | None) -> dict[str, str]:
+    return (translations or builtin_translation_set(TARGET)).texts(ENTRY_IDS)
+
+
+def fomt_arabic_strings(translations: TranslationSet | None = None) -> tuple[FomtArabicString, ...]:
     """Every translated string: the script's in index order, then the story's."""
-    if set(_SCRIPT_SOURCES) | set(_STORY_SOURCES) != set(_ARABIC):
-        raise ValueError("every pinned FoMT string needs exactly one translation")
+    texts = _texts(translations)
     strings = [
         FomtArabicString(
             key=key,
@@ -362,7 +298,7 @@ def fomt_arabic_strings() -> tuple[FomtArabicString, ...]:
             speaker=speaker,
             source_sha256=digest,
             source_skeleton=_skeleton(skeleton),
-            notation=_ARABIC[key],
+            notation=texts[key],
         )
         for key, (index, speaker, digest, skeleton) in _SCRIPT_SOURCES.items()
     ]
@@ -376,17 +312,16 @@ def fomt_arabic_strings() -> tuple[FomtArabicString, ...]:
             speaker=speaker,
             source_sha256=digest,
             source_skeleton=_skeleton(skeleton),
-            notation=_ARABIC[key],
+            notation=texts[key],
         )
         for key, (address, literals, speaker, digest, skeleton) in _STORY_SOURCES.items()
     ]
     return tuple(strings)
 
 
-def fomt_arabic_names() -> tuple[FomtArabicName, ...]:
-    if set(_NAME_SOURCES) != set(_NAMES):
-        raise ValueError("every pinned FoMT speaker name needs exactly one translation")
+def fomt_arabic_names(translations: TranslationSet | None = None) -> tuple[FomtArabicName, ...]:
+    texts = _texts(translations)
     return tuple(
-        FomtArabicName(key, address, literals, digest, _NAMES[key])
+        FomtArabicName(key, address, literals, digest, texts[f"name.{key}"])
         for key, (address, literals, digest) in _NAME_SOURCES.items()
     )

@@ -89,8 +89,10 @@ Text boxes do not reverse variables in v1.
 
 ## Translations
 
-Translations stay logical Unicode Arabic in `source/tmc_arabic.py`. Before a
-string replaces its English original in `translations/USA.json`:
+Translations stay logical Unicode Arabic in
+`src/classic_retro/translations/minish-cap.json`, in the decompilation's text notation;
+`source/tmc_arabic.py` keeps where each one goes. Before a string replaces its English
+original in `translations/USA.json`:
 
 1. its engine commands (sounds, window position, player name, continued texts)
    must match the English string in order; colours and line breaks may move;

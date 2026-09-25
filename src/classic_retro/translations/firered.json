@@ -1,0 +1,83 @@
+{
+  "schema_version": "1.0",
+  "target": "firered",
+  "language": "ar",
+  "notation": "Logical Arabic in pokefirered's text notation (data/text): \\n starts a new line, \\p waits for a key and clears the box (a new page), and {PLAYER} and {RIVAL} are the names the player chose, drawn left to right inside the Arabic line. Keep {PLAYER} and {RIVAL} where the original has them; lines hold at most 208 pixels.",
+  "glossary": [
+    {
+      "term": "OAK",
+      "text": "أوك"
+    },
+    {
+      "term": "POKéMON",
+      "text": "بوكيمون"
+    }
+  ],
+  "entries": [
+    {
+      "id": "gOakSpeech_Text_AskPlayerGender",
+      "context": "Professor Oak, new-game intro",
+      "text": "والآن أخبرني.\nهل أنت ولد أم بنت؟"
+    },
+    {
+      "id": "gOakSpeech_Text_WelcomeToTheWorld",
+      "context": "Professor Oak, new-game intro",
+      "text": "مرحبا بك!\nسعيد بلقائك!\\pأهلا بك في عالم بوكيمون!\\pاسمي أوك.\\pيناديني الناس بمحبة\nبروفيسور بوكيمون.\\p"
+    },
+    {
+      "id": "gOakSpeech_Text_ThisWorld",
+      "context": "Professor Oak, new-game intro",
+      "text": "هذا العالم..."
+    },
+    {
+      "id": "gOakSpeech_Text_IsInhabitedFarAndWide",
+      "context": "Professor Oak, new-game intro",
+      "text": "تعيش فيه في كل مكان\nمخلوقات تسمى بوكيمون.\\p"
+    },
+    {
+      "id": "gOakSpeech_Text_IStudyPokemon",
+      "context": "Professor Oak, new-game intro",
+      "text": "لبعض الناس، بوكيمون أصدقاء.\nوآخرون يقاتلون بهم.\\pأما أنا...\\pفأدرس بوكيمون كمهنة.\\p"
+    },
+    {
+      "id": "gOakSpeech_Text_TellMeALittleAboutYourself",
+      "context": "Professor Oak, new-game intro",
+      "text": "لكن أولا، أخبرني قليلا\nعن نفسك.\\p"
+    },
+    {
+      "id": "gOakSpeech_Text_YourNameWhatIsIt",
+      "context": "Professor Oak, new-game intro",
+      "text": "لنبدأ باسمك.\nما اسمك؟\\p"
+    },
+    {
+      "id": "gOakSpeech_Text_SoYourNameIsPlayer",
+      "context": "Professor Oak, new-game intro",
+      "text": "حسنا...\nإذن اسمك {PLAYER}"
+    },
+    {
+      "id": "gOakSpeech_Text_WhatWasHisName",
+      "context": "Professor Oak, new-game intro",
+      "text": "هذا حفيدي.\\pإنه منافسك منذ كنتما\nصغيرين.\\pهمم... ما كان اسمه؟"
+    },
+    {
+      "id": "gOakSpeech_Text_YourRivalsNameWhatWasIt",
+      "context": "Professor Oak, new-game intro",
+      "text": "ما اسم منافسك؟"
+    },
+    {
+      "id": "gOakSpeech_Text_ConfirmRivalName",
+      "context": "Professor Oak, new-game intro",
+      "text": "هل كان اسمه\n{RIVAL}"
+    },
+    {
+      "id": "gOakSpeech_Text_RememberRivalsName",
+      "context": "Professor Oak, new-game intro",
+      "text": "صحيح! تذكرت الآن!\nاسمه {RIVAL}\\p"
+    },
+    {
+      "id": "gOakSpeech_Text_LetsGo",
+      "context": "Professor Oak, new-game intro",
+      "text": "{PLAYER}\\pحان وقت بدء أسطورتك\nالخاصة مع بوكيمون!\\pعالم الأحلام والمغامرات\nينتظرك. هيا بنا!"
+    }
+  ]
+}

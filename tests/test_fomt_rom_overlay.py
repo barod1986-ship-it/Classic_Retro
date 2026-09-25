@@ -440,3 +440,20 @@ def test_cli_refuses_another_image(tmp_path, arabic_font, capsys):
     assert code == 2
     assert "UNKNOWN_GAME_REVISION" in capsys.readouterr().err
     assert parse_notation("{wait}", PlaceholderStyle.SCRIPT)
+
+
+def test_extract_reads_every_original_in_the_notation(synthetic):
+    originals = overlay.extract_originals(
+        synthetic, strings=_strings(), names=_names(), verify_identity=False
+    )
+    assert originals == {
+        "script_0": "Good morning! The barn\nis open today.{wait}",
+        "script_1": "You must be {name}!{wait}{clear}Welcome to town.{wait}",
+        "story_hello": "{clear}Hello there, {name}?{wait}",
+        "story_bye": "{clear}See you soon!{wait}{clear}Take care.{wait}",
+        "name.aunt": "Aunt",
+        "name.uncle": "Uncle",
+    }
+    with pytest.raises(ClassicRetroError) as error:
+        overlay.extract_originals(synthetic, strings=_strings(), names=_names())
+    assert error.value.code is ErrorCode.UNKNOWN_GAME_REVISION

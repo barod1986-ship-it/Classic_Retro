@@ -295,3 +295,13 @@ def test_cli_refuses_an_unknown_rom(tmp_path, capsys):
     )
     assert code == 2
     assert "UNKNOWN_GAME_REVISION" in capsys.readouterr().err
+
+
+def test_extract_reads_every_string_in_the_notation(english):
+    originals = overlay.extract_originals(
+        _synthetic_rom(english), messages=_translations(english), verify_identity=False
+    )
+    assert originals == {
+        "message.1": "{CHARACTER_NAME 01}, wake up!{KEY_END}",
+        "message.2": "The Boulder\nis falling!{KEY_END}",
+    }

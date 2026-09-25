@@ -353,3 +353,15 @@ def test_cli_encodes_a_menu_item(capsys):
     report = json.loads(capsys.readouterr().out)
     assert report["bytes"].startswith("84") and report["bytes"].endswith("00")
     assert main(["pmd", "encode-arabic", "{CENTER_ALIGN}نعم", "--box", "menu"]) == 2
+
+
+def test_extract_reads_every_original_in_the_notation(synthetic):
+    rom, addresses = synthetic
+    originals = overlay.extract_originals(
+        rom, strings=_translations(addresses), verify_identity=False
+    )
+    assert originals == {
+        "welcome": "{CENTER_ALIGN}Hello there!",
+        "question": "Is this a drill?{WAIT_PRESS}\nWhat would you pick, then?",
+        "yes": "Yes.",
+    }

@@ -11,6 +11,7 @@ from classic_retro.localization.targets import (
     print_json,
     write_build_report,
 )
+from classic_retro.localization.translations import TranslationSet
 from classic_retro.rom import fomt_arabic
 
 PREVIEWS = ("arabic_text_preview.png",)
@@ -20,16 +21,30 @@ def check_hooks() -> dict[str, object]:
     return fomt_arabic.check_hook_code()
 
 
-def check_translations(font: Path | None, preview_dir: Path | None) -> dict[str, object]:
+def check_translations(
+    font: Path | None, preview_dir: Path | None, translations: TranslationSet | None = None
+) -> dict[str, object]:
     """The script checked without the ROM; with a font and a folder, its previews too."""
     previews = preview_paths(font, preview_dir, *PREVIEWS)
-    return fomt_arabic.check_fomt_translations(font, *previews)
+    return fomt_arabic.check_fomt_translations(font, *previews, translations=translations)
 
 
-def build(rom: bytes, font: Path, out_dir: Path, rom_name: str | None) -> dict[str, object]:
-    result = fomt_arabic.build_fomt_arabic_rom(rom, font)
+def build(
+    rom: bytes,
+    font: Path,
+    out_dir: Path,
+    rom_name: str | None,
+    translations: TranslationSet | None = None,
+) -> dict[str, object]:
+    result = fomt_arabic.build_fomt_arabic_rom(rom, font, translations=translations)
     written = fomt_arabic.write_build_outputs(result, out_dir, rom_name=rom_name)
     return write_build_report(out_dir, {**result.report, "outputs": written})
+
+
+def extract(image: Path, translations: TranslationSet | None = None) -> tuple[str, dict[str, str]]:
+    """The original of every entry, read and verified from the user's own image."""
+    origin = f"{fomt_arabic.IMAGE.title} image, SHA-256 {fomt_arabic.IMAGE.sha256}"
+    return origin, fomt_arabic.extract_originals(image.read_bytes(), translations)
 
 
 def _check_translations_command(args: argparse.Namespace) -> int:
@@ -119,6 +134,7 @@ TARGET = LocalizationTarget(
     check_hooks=check_hooks,
     check_translations=check_translations,
     build=build,
+    extract=extract,
     previews=PREVIEWS,
     reference_patch_sha256="8f565de602ec34b11b110886807eefac34ea2db8a36bf86191c5cb0cfa88058f",
 )

@@ -1,0 +1,127 @@
+{
+  "schema_version": "1.0",
+  "target": "golden-sun",
+  "language": "ar",
+  "notation": "Logical Arabic with the engine's commands by name in braces (engines.golden_sun): \\n starts a new line, {KEY_END} ends the message after a key press, {QUESTION} ends it with the Yes/No menu, and {CHARACTER_NAME 01} is the hero's name, typed by the player in Latin letters and drawn left to right inside the Arabic line. Keep every command of the original, in order; only line ends may move, and {DASH} may be dropped (Arabic punctuation replaces it). A message holds at most three lines per page.",
+  "glossary": [
+    {
+      "term": "Dora",
+      "text": "دورا"
+    },
+    {
+      "term": "Kyle",
+      "text": "كايل"
+    },
+    {
+      "term": "Mt. Aleph",
+      "text": "جبل أليف"
+    }
+  ],
+  "entries": [
+    {
+      "id": "message.3666",
+      "context": "Dora; message 3666",
+      "text": "{CHARACTER_NAME 01}، استيقظ!{KEY_END}"
+    },
+    {
+      "id": "message.3667",
+      "context": "Dora; message 3667",
+      "text": "أرجوك يا عزيزي، استيقظ!{KEY_END}"
+    },
+    {
+      "id": "message.3668",
+      "context": "Dora; message 3668",
+      "text": "صخرة جبل أليف\nعلى وشك السقوط!{KEY_END}"
+    },
+    {
+      "id": "message.3669",
+      "context": "Dora; message 3669",
+      "text": "هيا يا {CHARACTER_NAME 01}.\nعلينا أن نذهب الآن!{KEY_END}"
+    },
+    {
+      "id": "message.3670",
+      "context": "Dora; message 3670",
+      "text": "{CHARACTER_NAME 01}! لقد نسيت شيئا ما!{KEY_END}"
+    },
+    {
+      "id": "message.3671",
+      "context": "Dora; message 3671",
+      "text": "المطر ينهمر في الخارج!\nلا تخرج من دون سترتك!{KEY_END}"
+    },
+    {
+      "id": "message.3672",
+      "context": "Dora; message 3672",
+      "text": "هل أخذت كل ما تحتاج إليه؟{QUESTION}"
+    },
+    {
+      "id": "message.3673",
+      "context": "Dora; message 3673",
+      "text": "آسفة، لكن لا وقت لدينا...\nسيكون عليك أن تتركه خلفك.{KEY_END}"
+    },
+    {
+      "id": "message.3674",
+      "context": "Dora; message 3674",
+      "text": "أحسنت يا {CHARACTER_NAME 01}.\nما يضيع من المتاع يعوض،\nأما الحياة فلا تعوض.{KEY_END}"
+    },
+    {
+      "id": "message.3675",
+      "context": "Kyle; message 3675",
+      "text": "{CHARACTER_NAME 01}، دورا، أسرعا!\nقد تسقط الصخرة\nفي أي لحظة!{KEY_END}"
+    },
+    {
+      "id": "message.3676",
+      "context": "Dora; message 3676",
+      "text": "كايل... هل سيتمكنون\nمن إيقاف الصخرة؟{KEY_END}"
+    },
+    {
+      "id": "message.3677",
+      "context": "Kyle; message 3677",
+      "text": "لا أظن ذلك...\nليس لوقت طويل على أي حال...{KEY_END}"
+    },
+    {
+      "id": "message.3678",
+      "context": "Kyle; message 3678",
+      "text": "اذهبا أنتما أولا\nواحتميا في الساحة.{KEY_END}"
+    },
+    {
+      "id": "message.3679",
+      "context": "Dora; message 3679",
+      "text": "ألن تأتي معنا؟{KEY_END}"
+    },
+    {
+      "id": "message.3680",
+      "context": "Kyle; message 3680",
+      "text": "علي أن أساعد في إجلاء\nبقية أهل القرية.{KEY_END}"
+    },
+    {
+      "id": "message.3681",
+      "context": "Dora; message 3681",
+      "text": "دعني أساعدك يا كايل!{KEY_END}"
+    },
+    {
+      "id": "message.3682",
+      "context": "Kyle; message 3682",
+      "text": "الأمر بالغ الخطورة يا دورا.\nأرجوك، اعتني جيدا\nبابننا {CHARACTER_NAME 01}!{KEY_END}"
+    },
+    {
+      "id": "message.3683",
+      "context": "Kyle; message 3683",
+      "text": "{CHARACTER_NAME 01} كبير بما يكفي\nليصل إلى الساحة وحده.{KEY_END}"
+    },
+    {
+      "id": "message.3684",
+      "context": "Kyle; message 3684",
+      "text": "تستطيع أن تجد طريقك بنفسك،\nأليس كذلك يا {CHARACTER_NAME 01}؟{QUESTION}"
+    },
+    {
+      "id": "message.3685",
+      "context": "Kyle; message 3685",
+      "text": "لقد صرت كبيرا الآن\nيا {CHARACTER_NAME 01}. لم لا تذهب وحدك؟{QUESTION}"
+    },
+    {
+      "id": "message.3686",
+      "context": "Kyle; message 3686",
+      "text": "أنت تعرف الطريق...\nاتجه جنوبا لتصل إلى الساحة.\nانتبه لنفسك!{KEY_END}"
+    }
+  ]
+}

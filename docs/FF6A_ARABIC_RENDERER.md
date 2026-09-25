@@ -106,8 +106,9 @@ compares the result with the bytes stored in `ff6a_arabic.py` (run in CI).
 
 ## Translations
 
-The script (`src/classic_retro/rom/ff6a_arabic_script.py`) stays logical
-Unicode Arabic. For each message:
+The script (`src/classic_retro/translations/ff6a.json`; its originals are pinned in
+`src/classic_retro/rom/ff6a_arabic_script.py`) stays logical Unicode Arabic, with the
+engine's commands by name (`{PAGE}`, `{PAUSE 14C}`, `{+KEY_PAGE}`). For each message:
 
 1. the original's SHA-256 and command skeleton are pinned; the ROM build
    refuses a different script;
