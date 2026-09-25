@@ -300,3 +300,10 @@ def test_real_script_checks_without_the_rom(capsys):
 @pytest.mark.skipif(shutil.which("arm-none-eabi-as") is None, reason="needs GNU ARM binutils")
 def test_stored_hook_bytes_match_the_assembly():
     assert overlay.check_hook_code()["match"] is True
+
+
+def test_extract_reads_every_original_in_the_notation():
+    originals = overlay.extract_originals(
+        _synthetic_rom(), sections=_sections(), archives=_archives(), verify_identity=False
+    )
+    assert originals == {"scene.0": SCENE[0], "scene.1": SCENE[1], "room.1": ROOM[1]}

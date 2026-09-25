@@ -54,6 +54,7 @@ from classic_retro.engines.mmbn import (
     command_skeleton,
     decode_command,
     parse_notation,
+    script_notation,
 )
 from classic_retro.engines.mmbn_arabic import (
     BASELINE,
@@ -67,6 +68,7 @@ from classic_retro.engines.mmbn_arabic import (
     pages_sheet,
     validate_command_skeleton,
 )
+from classic_retro.localization.translations import TranslationSet
 from classic_retro.patching.hooks import HookProgram
 from classic_retro.patching.image import ImageSpec
 from classic_retro.patching.outputs import base_report, write_image, write_patch
@@ -362,6 +364,7 @@ def build_mmbn_arabic_rom(
     *,
     sections: tuple[MmbnArabicSection, ...] | None = None,
     archives: tuple[MmbnScriptArchive, ...] | None = None,
+    translations: TranslationSet | None = None,
     verify_identity: bool = True,
 ) -> MmbnArabicBuild:
     """Build the Arabic image and its BPS patch from the original USA image.
@@ -372,7 +375,7 @@ def build_mmbn_arabic_rom(
     if verify_identity:
         verify_usa_image(rom)
     archives = archives or mmbn_script_archives()
-    sections = sections or mmbn_arabic_sections()
+    sections = sections or mmbn_arabic_sections(translations)
     by_key = check_script_layout(archives, sections)
     _verify_anchors(rom, archives)
     for section in sections:
@@ -579,13 +582,16 @@ def _verify_output(
 
 
 def check_mmbn_translations(
-    font_path: Path | None = None, text_preview_path: Path | None = None
+    font_path: Path | None = None,
+    text_preview_path: Path | None = None,
+    *,
+    translations: TranslationSet | None = None,
 ) -> dict[str, object]:
     """Validate the translations without the ROM; with a font, draw and measure every page."""
     if font_path is None and text_preview_path is not None:
         raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, "A preview needs --font")
     archives = mmbn_script_archives()
-    sections = mmbn_arabic_sections()
+    sections = mmbn_arabic_sections(translations)
     check_script_layout(archives, sections)
     for section in sections:
         validate_command_skeleton(section.source_skeleton, section.pieces)
@@ -657,6 +663,32 @@ def write_build_outputs(
 def assemble_hooks(source: Path = HOOK_SOURCE) -> tuple[bytes, dict[str, int]]:
     """Assemble the hook source with GNU binutils (arm-none-eabi-*) and read its symbols."""
     return HOOKS.assemble(source)
+
+
+def extract_originals(
+    rom: bytes,
+    translations: TranslationSet | None = None,
+    *,
+    sections: tuple[MmbnArabicSection, ...] | None = None,
+    archives: tuple[MmbnScriptArchive, ...] | None = None,
+    verify_identity: bool = True,
+) -> dict[str, str]:
+    """Every pinned original section, verified, in the engine's notation, by entry id.
+
+    The keyword arguments exist for synthetic tests, as in the build.
+    """
+    if verify_identity:
+        verify_usa_image(rom)
+    sections = sections or mmbn_arabic_sections(translations)
+    by_key = {archive.key: archive for archive in archives or mmbn_script_archives()}
+    _verify_anchors(rom, tuple(by_key.values()))
+    originals: dict[str, str] = {}
+    for section in sections:
+        archive = by_key[section.archive]
+        _verify_source(rom, section, archive)
+        script = ScriptArchive.parse(rom, archive.address).section(rom, section.index)
+        originals[section.key] = script_notation(script)
+    return originals
 
 
 def check_hook_code(source: Path = HOOK_SOURCE) -> dict[str, object]:

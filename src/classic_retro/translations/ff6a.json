@@ -1,0 +1,129 @@
+{
+  "schema_version": "1.0",
+  "target": "ff6a",
+  "language": "ar",
+  "notation": "Logical Arabic with the engine's commands by name in braces (engines.ff6a): \\n starts a new line, {CENTER} centres it, {NARRATION} opens the window-less narration band, {PAUSE nnn} waits (nnn - 144 quarter seconds, in hex), {PAGE} turns the page, {KEY_PAGE} turns it after a key press, {TIMED_CLOSE nnn}, {CLOSE} and {END} end the message. Keep every command of the original, in order; only line ends and {CENTER} may move. A window holds two Arabic lines, the narration band four: a page that needs more is split with an inserted page, {+PAUSE nnn PAGE} in a timed cutscene or {+KEY_PAGE} in dialogue.",
+  "glossary": [
+    {
+      "term": "War of the Magi",
+      "text": "حرب السحرة"
+    },
+    {
+      "term": "Narshe",
+      "text": "نارشي"
+    },
+    {
+      "term": "Esper",
+      "text": "إسبر"
+    },
+    {
+      "term": "Magitek",
+      "text": "ماجيتك"
+    },
+    {
+      "term": "Wedge",
+      "text": "ويدج"
+    },
+    {
+      "term": "Biggs",
+      "text": "بيغز"
+    }
+  ],
+  "entries": [
+    {
+      "id": "message.6",
+      "context": "narration; message 6",
+      "text": "{NARRATION}{CENTER}حرب السحرة القديمة...\n{CENTER}وحين خمدت نيرانها أخيرا،\n{CENTER}لم يبق من العالم سوى هيكل متفحم.\n{CENTER}حتى قوة السحر نفسها ضاعت...{TIMED_CLOSE 243}{CLOSE}{END}"
+    },
+    {
+      "id": "message.7",
+      "context": "narration; message 7",
+      "text": "{NARRATION}{CENTER}وفي الألف عام التي تلت ذلك،\n{CENTER}حل الحديد والبارود والمحركات البخارية\n{CENTER}محل السحر، وعادت الحياة رويدا رويدا\n{CENTER}إلى الأرض القاحلة...{TIMED_CLOSE 243}{CLOSE}{END}"
+    },
+    {
+      "id": "message.8",
+      "context": "narration; message 8",
+      "text": "{NARRATION}{CENTER}لكن ثمة الآن من يسعى\n{CENTER}إلى إيقاظ سحر العصور الغابرة،\n{CENTER}واستخدام قوته المرعبة وسيلة\n{CENTER}لغزو العالم بأسره...{TIMED_CLOSE 243}{CLOSE}{END}"
+    },
+    {
+      "id": "message.9",
+      "context": "dialogue; message 9",
+      "text": "{CENTER}...هل يعقل أن يكون أحد بهذه الحماقة\n{CENTER}ليكرر ذلك الخطأ؟{TIMED_CLOSE 16E}{CLOSE}{END}"
+    },
+    {
+      "id": "message.1",
+      "context": "dialogue; message 1",
+      "text": "ويدج: ها هي المدينة...{PAUSE 14C}{PAGE}بيغز: يصعب تصديق أنهم وجدوا هناك إسبر\nمتجمدا منذ ألف عام، منذ حرب السحرة...{PAUSE 15C}{CLOSE}{END}"
+    },
+    {
+      "id": "message.2",
+      "context": "dialogue; message 2",
+      "text": "بيغز: هه! على الأرجح أنها مجرد\nمطاردة عبثية أخرى...{PAUSE 154}{PAGE}ويدج: لا أدري...{PAUSE 14C}{PAGE}ما كانوا ليسمحوا لنا باستخدامها\nلو لم يكونوا واثقين من صحة المعلومات.{PAUSE 15C}{CLOSE}{END}"
+    },
+    {
+      "id": "message.3",
+      "context": "dialogue; message 3",
+      "text": "بيغز: آه، صحيح... ساحرتنا.{PAUSE 14C}{PAGE}سمعت أنها أحرقت خمسين من جنودنا\nبدروع الماجيتك في ثلاث دقائق...{+PAUSE 154 PAGE}أمر يقشعر له البدن، أليس كذلك؟{PAUSE 15C}{CLOSE}{END}"
+    },
+    {
+      "id": "message.4",
+      "context": "dialogue; message 4",
+      "text": "ويدج: اطمئن. مع ذلك الشيء على رأسها\nليست سوى دمية بلا عقل.{PAUSE 154}{PAGE}لن تتنفس الفتاة حتى\nما لم نأمرها بذلك.{PAUSE 154}{CLOSE}{END}"
+    },
+    {
+      "id": "message.5",
+      "context": "dialogue; message 5",
+      "text": "ويدج: سنقترب من جهة الشرق.\nتحركوا!{PAUSE 154}{CLOSE}{END}"
+    },
+    {
+      "id": "message.11",
+      "context": "dialogue; message 11",
+      "text": "ويدج: الفتاة في المقدمة. ولا تضيعوا\nالوقت مع الرعاع! تذكروا سبب مجيئنا. هيا بنا!{END}"
+    },
+    {
+      "id": "message.12",
+      "context": "dialogue; message 12",
+      "text": "ويدج: لا بد أن الإسبر هنا.\nلنواصل البحث!{END}"
+    },
+    {
+      "id": "message.13",
+      "context": "dialogue; message 13",
+      "text": "حارس: دروع ماجيتك إمبراطورية؟!\nحتى نارشي لم تعد آمنة!{END}"
+    },
+    {
+      "id": "message.14",
+      "context": "dialogue; message 14",
+      "text": "حارس: ليس للإمبراطورية أي شأن\nفي هذا المكان!{END}"
+    },
+    {
+      "id": "message.15",
+      "context": "dialogue; message 15",
+      "text": "حارس: من أجل نارشي!{END}"
+    },
+    {
+      "id": "message.16",
+      "context": "dialogue; message 16",
+      "text": "ويدج: حسب مصدرنا، عثروا على الإسبر\nالمتجمد في منجم جديد كانوا يحفرونه...{KEY_PAGE}لا بد أنه هنا.{END}"
+    },
+    {
+      "id": "message.17",
+      "context": "dialogue; message 17",
+      "text": "بيغز: سأتولى الأمر. تراجعوا!{END}"
+    },
+    {
+      "id": "message.18",
+      "context": "dialogue; message 18",
+      "text": "حارس: لقد حاصرناهم الآن!{END}"
+    },
+    {
+      "id": "message.19",
+      "context": "dialogue; message 19",
+      "text": "حارس: دافعوا عن المناجم!{END}"
+    },
+    {
+      "id": "message.20",
+      "context": "dialogue; message 20",
+      "text": "\n{CENTER}إنه مقفل.{END}"
+    }
+  ]
+}

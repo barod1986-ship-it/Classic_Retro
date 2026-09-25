@@ -418,3 +418,17 @@ def test_cli_refuses_an_unknown_rom(tmp_path, capsys):
     )
     assert code == 2
     assert "UNKNOWN_GAME_REVISION" in capsys.readouterr().err
+
+
+def test_extract_reads_every_message_in_the_notation(english):
+    originals = overlay.extract_originals(
+        _synthetic_rom(english), messages=_translations(english), verify_identity=False
+    )
+    assert originals == {
+        f"message.{NARRATION:#x}": (
+            "The continent.[A][LF]Magvel.[.][A][CR][LF][BreakTalk]Renais.[A][LF][BreakTalk][X]"
+        ),
+        f"message.{BUBBLE:#x}": (
+            "[OpenMidLeft][LoadFace 51 01][OpenMidLeft]Your Majesty.[.][A][LF]Go now![A][X]"
+        ),
+    }

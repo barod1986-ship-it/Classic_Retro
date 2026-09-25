@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0",
+  "target": "mlss",
+  "language": "ar",
+  "notation": "Logical Arabic in the engine notation (engines.mlss). Keep every command of the original, in order: {FF 0B 01} opens a page, {FF 01 00} starts the next one, {FF 0C nn} waits, {FF 11 01} waits for a key, {FF 31} and {FF 33} double the glyphs, {FF 35} centres the line and {FF 41}{FF 25} pick the subtitle font list and colour. Line ends after text (\\n) may move; the empty first line of every subtitle page stays.",
+  "glossary": [
+    {
+      "term": "Mario",
+      "text": "ماريو"
+    },
+    {
+      "term": "Peach",
+      "text": "بيتش"
+    },
+    {
+      "term": "Beanbean Kingdom",
+      "text": "مملكة الفاصولياء"
+    },
+    {
+      "term": "Mushroom Kingdom",
+      "text": "مملكة الفطر"
+    }
+  ],
+  "entries": [
+    {
+      "id": "castle_ambassador",
+      "context": "subtitle; story text group 0x084ea738",
+      "text": "{FF 0B 01}\n{FF 03}{FF 35}{FF 41}{FF 25}لقد وصل سفير النوايا الحسنة{FF 0C 3C}{FF 01 00}{FF 0B 01}\n{FF 03}{FF 35}من مملكة الفاصولياء.{FF 0C 5A}{FF 0A}"
+    },
+    {
+      "id": "castle_wish",
+      "context": "subtitle; story text group 0x084ea74c",
+      "text": "{FF 0B 01}\n{FF 03}{FF 35}{FF 41}{FF 25}«أود أن أوطد روابط مملكتي{FF 0C 41}{FF 01 00}{FF 0B 01}\n{FF 03}{FF 35}بمملكة الفطر.»{FF 0C 50}{FF 0A}"
+    },
+    {
+      "id": "castle_gift",
+      "context": "subtitle; story text group 0x084ea760",
+      "text": "{FF 0B 01}\n{FF 03}{FF 35}{FF 41}{FF 25}«جئت بهدية من ملكة الفاصولياء.»{FF 0C 46}{FF 0A}"
+    },
+    {
+      "id": "castle_laugh",
+      "context": "subtitle; story text group 0x084ea774",
+      "text": "{FF 0B 01}\n{FF 03}{FF 41}{FF 25}«هيييه ها ها ها ها!»{FF 0C 3C}{FF 0A}"
+    },
+    {
+      "id": "house_emergency",
+      "context": "Toad; story text group 0x084e998c",
+      "text": "{FF 0B 01}{FF 03}{FF 31}{FF 35}ح-ح-ح-حالة طوارئ!{FF 11 01}{FF 0A}"
+    },
+    {
+      "id": "house_courier",
+      "context": "Toad; story text group 0x084e99a0",
+      "text": "{FF 0B 01}{FF 03}{FF 31}{FF 35}هل رأيت صحيفة المملكة؟{FF 11 01}{FF 0A}"
+    },
+    {
+      "id": "house_mario",
+      "context": "Toad; story text group 0x084e99b4",
+      "text": "{FF 0B 01}{FF 03}{FF 35}{FF 33}ماريووووو!!!{FF 0C 1E}{FF 0A}"
+    },
+    {
+      "id": "house_find_mario",
+      "context": "Toad; story text group 0x084e99c8",
+      "text": "{FF 0B 01}يجب أن أجد ماريو فورا!{FF 11 01}{FF 0A}"
+    },
+    {
+      "id": "house_humming",
+      "context": "Toad; story text group 0x084e99dc",
+      "text": "{FF 0B 01}همم... أسمع دندنة...{FF 11 01}{FF 0A}"
+    },
+    {
+      "id": "house_eek",
+      "context": "Mario; story text group 0x084e99f0",
+      "text": "{FF 0B 01}{FF 03}{FF 35}{FF 33}آآآآآه!!!{FF 0C 1E}{FF 0A}"
+    },
+    {
+      "id": "house_peach",
+      "context": "Toad; story text group 0x084e9a04",
+      "text": "{FF 0B 01}الـ-الـ-الأميرة بـ-بـ-بيتش...\nالـ-الـ-الأميرة بـ-بـ-بيتش...{FF 11 01}{FF 0A}"
+    },
+    {
+      "id": "castle_bowser",
+      "context": "Bowser; story text group 0x084e9a18",
+      "text": "{FF 0B 01}تهاجمني وأنا أدير ظهري، ها؟\nهذا متوقع منكما!\nتعاليا أيها الجبانان الخارقان!!!{FF 11 01}{FF 0A}"
+    }
+  ]
+}

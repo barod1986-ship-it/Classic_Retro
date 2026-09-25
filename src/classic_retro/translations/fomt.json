@@ -1,0 +1,220 @@
+{
+  "schema_version": "1.0",
+  "target": "fomt",
+  "language": "ar",
+  "notation": "Logical Arabic in the engine notation (engines.fomt): \\n ends a line, {wait} waits for a key, {clear} empties the box and {name} is the player's name. Keep every command of the original, in order; line ends may move, but a fourth line scrolls the box, so it must follow a {wait}. Name tags (name.*) are plain text, at most six 16-pixel cells.",
+  "glossary": [
+    {
+      "term": "Mother",
+      "text": "الأم",
+      "notes": "the flashback's name tags"
+    },
+    {
+      "term": "Father",
+      "text": "الأب",
+      "notes": "the flashback's name tags"
+    },
+    {
+      "term": "Old Man",
+      "text": "العجوز",
+      "notes": "the flashback's name tags"
+    },
+    {
+      "term": "Girl",
+      "text": "الفتاة",
+      "notes": "the flashback's name tags"
+    }
+  ],
+  "entries": [
+    {
+      "id": "thomas_owner",
+      "context": "Thomas; event script 867, string 0",
+      "text": "مهلا! صاحب هذه المزرعة\nتوفي منذ مدة.{wait}{clear}لا يمكنك أن تدخل إلى هنا\nهكذا وكأن المكان مكانك!{wait}"
+    },
+    {
+      "id": "thomas_knew",
+      "context": "Thomas; event script 867, string 1",
+      "text": "ماذا؟ أكنت تعرفه؟{wait}{clear}ولم تكن تعلم\nبأنه قد مات...؟{wait}"
+    },
+    {
+      "id": "thomas_will",
+      "context": "Thomas; event script 867, string 2",
+      "text": "لقد مات منذ...{wait}{clear}منذ ستة أشهر تقريبا على ما أظن.\nوحين كنت أرتب بيته\nوجدت وصيته.{wait}{clear}وقد كتب فيها: أترك مزرعتي\nإلى {name}.{wait}{clear}لذا سأعتني أنا بالمزرعة\nإلى أن يظهر صاحب هذا الاسم.{wait}"
+    },
+    {
+      "id": "thomas_you",
+      "context": "Thomas; event script 867, string 3",
+      "text": "ماذا؟ هل تقول إنك أنت\n{name}؟{wait}"
+    },
+    {
+      "id": "thomas_tell",
+      "context": "Thomas; event script 867, string 4",
+      "text": "هلا أخبرتني كيف تعرفت\nعلى ذلك الرجل العجوز...؟{wait}"
+    },
+    {
+      "id": "thomas_letters",
+      "context": "Thomas; event script 867, string 5",
+      "text": "إذن كنتما تتراسلان، ها؟{wait}{clear}ولما توقف عن الرد على رسائلك\nجئت لتطمئن عليه، صحيح؟{wait}"
+    },
+    {
+      "id": "thomas_yours",
+      "context": "Thomas; event script 867, string 6",
+      "text": "بما أنه أوصى لك بالمزرعة\nفهي لك إن أردتها.{wait}{clear}فما رأيك؟{wait}"
+    },
+    {
+      "id": "thomas_great",
+      "context": "Thomas; event script 867, string 7",
+      "text": "رائع! من اليوم فصاعدا\nهذا المكان ملكك!{wait}"
+    },
+    {
+      "id": "thomas_proud",
+      "context": "Thomas; event script 867, string 8",
+      "text": "لن يكون الأمر سهلا، ولكن\nإن اجتهدت فستنجز عملا\nيجعله فخورا بك.{wait}"
+    },
+    {
+      "id": "next_day",
+      "context": "narration; event script 867, string 9",
+      "text": "\nوفي اليوم التالي...{wait}"
+    },
+    {
+      "id": "mother_trip",
+      "context": "mother; the flashback scene, string 0x080fb23c",
+      "text": "{clear}ما رأيك يا {name}؟\nألست سعيدا لأنك جئت\nفي هذه الرحلة؟{wait}"
+    },
+    {
+      "id": "father_fishing",
+      "context": "father; the flashback scene, string 0x080fb284",
+      "text": "{clear}وأنا أيضا سعيد بهذه العطلة.\nهيا، ما رأيك أن نذهب\nلصيد السمك في النهر؟{wait}"
+    },
+    {
+      "id": "mother_lost",
+      "context": "mother; the flashback scene, string 0x080fb2d0",
+      "text": "{clear}{name}؟{wait}{clear}يا إلهي! لا أجد\n{name}!{wait}"
+    },
+    {
+      "id": "father_what",
+      "context": "father; the flashback scene, string 0x080fb2f4",
+      "text": "{clear}ماذا...؟{wait}"
+    },
+    {
+      "id": "old_man_crying",
+      "context": "old_man; the flashback scene, string 0x080fb308",
+      "text": "{clear}مرحبا يا بني.\nلماذا تبكي؟\nهل أضعت طريقك؟{wait}\nما هذا؟ هل هذا رقم هاتفكم\nالمكتوب على حقيبتك؟{wait}\nهيا نتصل بوالديك.{wait}"
+    },
+    {
+      "id": "mother_thanks",
+      "context": "mother; the flashback scene, string 0x080fb398",
+      "text": "{clear}شكرا جزيلا لك\nلأنك ساعدتنا في العثور على ابننا!{wait}"
+    },
+    {
+      "id": "father_city",
+      "context": "father; the flashback scene, string 0x080fb3cc",
+      "text": "{clear}نحن نعيش في المدينة، لكننا\nأردنا أن نري ابننا الريف\nفي هذه الرحلة.{wait}"
+    },
+    {
+      "id": "old_man_farm",
+      "context": "old_man; the flashback scene, string 0x080fb420",
+      "text": "{clear}أهكذا إذن؟{wait}{clear}في هذه الحالة، لم لا تأتون\nلتقضوا بضعة أيام\nفي مزرعتي؟{wait}"
+    },
+    {
+      "id": "father_mean_it",
+      "context": "father; the flashback scene, string 0x080fb46c",
+      "text": "{clear}هل تعني ذلك حقا؟{wait}"
+    },
+    {
+      "id": "old_man_alone",
+      "context": "old_man; the flashback scene, string 0x080fb484",
+      "text": "{clear}بالتأكيد! أنا أعيش وحيدا،\nفلن تزعجوا أحدا.\nوستسعدني صحبتكم.{wait}"
+    },
+    {
+      "id": "mother_great",
+      "context": "mother; the flashback scene, string 0x080fb4d4",
+      "text": "{clear}أليس هذا رائعا يا\n{name}؟{wait}\nستكون لديك مزرعة كاملة\nتلعب فيها!{wait}"
+    },
+    {
+      "id": "voice_hey",
+      "context": "voice; the flashback scene, string 0x080fb520",
+      "text": "{clear}يـ...{wait}{clear}يا...{wait}{clear}يا أنت.{wait}"
+    },
+    {
+      "id": "child_start",
+      "context": "child; the flashback scene, string 0x080fb534",
+      "text": "{clear}!{wait}"
+    },
+    {
+      "id": "girl_quiet",
+      "context": "girl; the flashback scene, string 0x080fb544",
+      "text": "{clear}كنت صامتا جدا\nحتى ظننتك ميتا!{wait}"
+    },
+    {
+      "id": "girl_play",
+      "context": "girl; the flashback scene, string 0x080fb578",
+      "text": "{clear}هذا ممتاز. كنت أبحث\nعن أحد ألعب معه.{wait}\nأظن أنك ستفي بالغرض.{wait}"
+    },
+    {
+      "id": "girl_no_fun",
+      "context": "girl; the flashback scene, string 0x080fb5d4",
+      "text": "{clear}ليس من الممتع أن تجلس\nهكذا دون أن تقول شيئا!{wait}{clear}لم لا تحدثني عن نفسك؟{wait}"
+    },
+    {
+      "id": "old_man_fun",
+      "context": "old_man; the flashback scene, string 0x080fb634",
+      "text": "{clear}هل استمتعت بوقتك؟{wait}{clear}أنا استمتعت كثيرا برفقتك.\nفليس لي أحفاد\nكما تعلم...{wait}{clear}حسنا، عليك أن تذهب الآن.\nوداعا!...{wait}"
+    },
+    {
+      "id": "old_man_letter",
+      "context": "old_man; the flashback scene, string 0x080fb6c0",
+      "text": "{clear}هل لك أن تكتب لهذا العجوز\nرسالة من حين لآخر...؟{wait}"
+    },
+    {
+      "id": "old_man_address",
+      "context": "old_man; the flashback scene, string 0x080fb710",
+      "text": "{clear}حقا؟\nإذن هذا عنواني.{wait}"
+    },
+    {
+      "id": "girl_leaving",
+      "context": "girl; the flashback scene, string 0x080fb738",
+      "text": "{clear}هل سترحل بهذه السرعة؟{wait}"
+    },
+    {
+      "id": "girl_come_back",
+      "context": "girl; the flashback scene, string 0x080fb754",
+      "text": "{clear}إن رحلت فسأشعر بالملل\nوالوحدة من جديد...{wait}{clear}يجب أن تعود، اتفقنا؟{wait}"
+    },
+    {
+      "id": "old_man_friend",
+      "context": "old_man; the flashback scene, string 0x080fb7a0",
+      "text": "{clear}يبدو أنك كسبت صديقة!\nهذا سبب آخر للعودة\nعلى ما أظن.{wait}"
+    },
+    {
+      "id": "old_man_waiting",
+      "context": "old_man; the flashback scene, string 0x080fb7f0",
+      "text": "{clear}سأنتظر رسالتك...{wait}"
+    },
+    {
+      "id": "name.mother",
+      "context": "name tag of the mother in the flashback",
+      "text": "الأم"
+    },
+    {
+      "id": "name.father",
+      "context": "name tag of the father in the flashback",
+      "text": "الأب"
+    },
+    {
+      "id": "name.old_man",
+      "context": "name tag of the old man in the flashback",
+      "text": "العجوز"
+    },
+    {
+      "id": "name.voice",
+      "context": "name tag of the voice in the flashback",
+      "text": "؟؟؟"
+    },
+    {
+      "id": "name.girl",
+      "context": "name tag of the girl in the flashback",
+      "text": "الفتاة"
+    }
+  ]
+}

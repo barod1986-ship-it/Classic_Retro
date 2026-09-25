@@ -425,3 +425,11 @@ def test_cli_encodes_a_message(capsys):
     data = bytes.fromhex(payload["bytes"])
     assert data.startswith(b"\xff\x0b\x01\xfe") and data.endswith(b"\xff\x11\x01\xff\x0a")
     assert payload["count"] == len(data)
+
+
+def test_extract_reads_every_original_in_the_notation(synthetic):
+    rom, addresses = synthetic
+    originals = overlay.extract_originals(
+        rom, messages=_translations(addresses), verify_identity=False
+    )
+    assert originals == ENGLISH

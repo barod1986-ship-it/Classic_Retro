@@ -22,7 +22,9 @@ bidi per segment and stores every line in right-to-left paint order.
 from __future__ import annotations
 
 import math
+import re
 import unicodedata
+from collections.abc import Sequence
 from dataclasses import dataclass
 from functools import lru_cache
 from io import BytesIO
@@ -35,8 +37,10 @@ from classic_retro.arabic.repertoire import arabic_presentation_repertoire, lega
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.golden_sun import (
     CHARACTER_NAME,
+    COMMAND_NAMES,
     COMMANDS_WITH_ARGUMENT,
     DASH,
+    FIRST_GLYPH,
     FONT_FIRST,
     FONT_GLYPHS,
     FONT_ROWS,
@@ -147,6 +151,123 @@ def token_codes(token: InlineToken) -> tuple[int, ...]:
 
 def is_inserted(token: InlineToken) -> bool:
     return bool(token.args.get("inserted", False))
+
+
+# The translators' notation (translations/golden-sun.json and extracted
+# originals): text, \n for a new line, and every other command by name in
+# braces with its argument code in hex: {KEY_END}, {QUESTION}, {CHARACTER_NAME 01}
+# (the hero's name). {+KEY_PAGE} is a page break the translation adds. Codes
+# without a name, and glyphs outside printable ASCII, are written as hex: {1C}.
+_CODES_BY_NAME = {name: code for code, name in COMMAND_NAMES.items()}
+_BRACES = re.compile(r"\{([^{}]*)\}")
+
+
+def _code_notation(code: int) -> str:
+    return COMMAND_NAMES.get(code, f"{code:02X}")
+
+
+def golden_sun_notation(stream: TokenStream) -> str:
+    """A translation's tokens in the translators' notation."""
+    parts: list[str] = []
+    for token in stream.tokens:
+        if isinstance(token, TextToken):
+            parts.append(token.text)
+            continue
+        codes = token_codes(token)
+        if codes == (NEWLINE,) and token.kind is TokenKind.LINE_BREAK:
+            parts.append("\n")
+            continue
+        words = [_code_notation(codes[0]), *(f"{code:02X}" for code in codes[1:])]
+        parts.append("{" + ("+" if is_inserted(token) else "") + " ".join(words) + "}")
+    return "".join(parts)
+
+
+def parse_golden_sun_notation(text: str, prefix: str) -> TokenStream:
+    """Tokens of a translation in the translators' notation; ids ``<prefix><n>`` by part."""
+    tokens: list[InlineToken | TextToken] = []
+    for number, part in enumerate(_notation_parts(text)):
+        token_id = f"{prefix}{number}"
+        if isinstance(part, str):
+            tokens.append(TextToken(part))
+        elif part == ((NEWLINE,), False):
+            tokens.append(golden_sun_newline(token_id))
+        else:
+            codes, inserted = part
+            tokens.append(golden_sun_command(token_id, *codes, inserted=inserted))
+    return TokenStream(tuple(tokens))
+
+
+def _notation_parts(text: str) -> list[str | tuple[tuple[int, ...], bool]]:
+    parts: list[str | tuple[tuple[int, ...], bool]] = []
+    position = 0
+    for match in _BRACES.finditer(text):
+        parts.extend(_text_parts(text[position : match.start()]))
+        parts.append(_command_codes(match.group(1)))
+        position = match.end()
+    parts.extend(_text_parts(text[position:]))
+    return parts
+
+
+def _text_parts(text: str) -> list[str | tuple[tuple[int, ...], bool]]:
+    if "{" in text or "}" in text:
+        raise ClassicRetroError(
+            ErrorCode.UNSUPPORTED_CONTROL_CODE, f"Unbalanced brace in Golden Sun text: {text!r}"
+        )
+    parts: list[str | tuple[tuple[int, ...], bool]] = []
+    for number, line in enumerate(text.split("\n")):
+        if number:
+            parts.append(((NEWLINE,), False))
+        if line:
+            parts.append(line)
+    return parts
+
+
+def _command_codes(body: str) -> tuple[tuple[int, ...], bool]:
+    inserted = body.startswith("+")
+    words = body.removeprefix("+").split()
+    if not words:
+        raise ClassicRetroError(ErrorCode.UNSUPPORTED_CONTROL_CODE, "Empty Golden Sun command {}")
+    name, *arguments = words
+    code = _CODES_BY_NAME.get(name)
+    if code is None:
+        code = _hex_code(name, body)
+    expected = 1 if code in COMMANDS_WITH_ARGUMENT else 0
+    if len(arguments) != expected:
+        raise ClassicRetroError(
+            ErrorCode.UNSUPPORTED_CONTROL_CODE,
+            f"Golden Sun command {{{body}}} needs {expected} argument code(s)",
+        )
+    return (code, *(_hex_code(argument, body) for argument in arguments)), inserted
+
+
+def _hex_code(word: str, body: str) -> int:
+    try:
+        return int(word, 16)
+    except ValueError:
+        raise ClassicRetroError(
+            ErrorCode.UNSUPPORTED_CONTROL_CODE, f"Unknown Golden Sun command {{{body}}}"
+        ) from None
+
+
+def golden_sun_codes_notation(codes: Sequence[int]) -> str:
+    """An original string (English codes, terminator included) in the translators' notation."""
+    parts: list[str] = []
+    argument_of: int | None = None
+    for code in codes:
+        if argument_of is not None:
+            parts[-1] = parts[-1][:-1] + f" {code:02X}}}"
+            argument_of = None
+        elif code == NEWLINE:
+            parts.append("\n")
+        elif code < FIRST_GLYPH:
+            parts.append("{" + _code_notation(code) + "}")
+            if code in COMMANDS_WITH_ARGUMENT:
+                argument_of = code
+        elif 0x20 <= code < 0x7F and chr(code) not in "{}":
+            parts.append(chr(code))
+        else:
+            parts.append(f"{{{code:02X}}}")
+    return "".join(parts)
 
 
 @dataclass(frozen=True, slots=True)

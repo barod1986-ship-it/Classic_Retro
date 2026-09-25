@@ -21,7 +21,8 @@ command skeleton (commands in order; line ends and item names excluded), so
 the translation can be checked without the ROM and the ROM build can refuse a
 different script.
 
-Translations are logical Unicode Arabic in the engine's notation
+The Arabic lives in ``classic_retro/translations/mmbn.json``: logical
+Unicode Arabic in the engine's notation
 (``engines.mmbn``). They keep every command of the original, in order: ``<``
 and ``>`` move the speaker's mouth, ``\\p`` waits for a key, ``{cls N}`` clears
 the box, ``{d N}``/``{fd N}`` wait inside the text, and the ``{raw ...}``
@@ -36,6 +37,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from classic_retro.engines.mmbn import Piece, notation_skeleton, parse_notation
+from classic_retro.localization.translations import TranslationSet, builtin_translation_set
 
 
 @dataclass(frozen=True, slots=True)
@@ -132,130 +134,22 @@ _SOURCES: dict[str, tuple[str, int, str, str, str]] = {
 }
 # fmt: on
 
-# The room sections repeat their commands: Lan's animation around a new item
-# (FA 00/04/0C/08), its flags (F3), the item given (F7) and a sound (FC 00).
-_GOT_ITEM = "{raw FA 00}{raw FA 04 1E}"
-
-_ARABIC: dict[str, str] = {
-    "wake-up.0": "{dialog_up}<لان، استيقظ!>\\p{cls 5}{jump 1}",
-    "wake-up.1": "{pic 0 0}{dialog_up}{a 0}.{d 30}.{d 30}.{d 30}{a 0}\\p{cls 5}{jump 2}",
-    "wake-up.2": "{hidepic}{dialog_up}<إذا لم تنهض الآن\nفستتأخر عن المدرسة!>\\p{cls 5}{jump 3}",
-    "wake-up.3": "{pic 0 0}{dialog_up}{a 0}.{d 30}.{d 30}.{d 30}{a 0}\\p{cls 5}{jump 4}",
-    "wake-up.4": (
-        "{hidepic}{dialog_up}<أخبار الشبكة على PET:\nجرائم WWW في ازدياد!>\\p{cls 0}"
-        "<ويقال إن خطة WWW\nللسيطرة على الشبكة\nربما بدأت!>\\p{cls 5}{jump 5}"
-    ),
-    "wake-up.5": "{pic 0 0}{dialog_up}<آه...\nأريد أن أنام...>\\p{cls 5}{jump 6}",
-    "wake-up.6": (
-        "{hidepic}{dialog_up}<ووصلتك رسالة من\nأبيك أيضا! انظر:>\\p{cls 0}"
-        "<آسف لأنني لم أستطع\nترك العمل يوم الأحد.\nسأعود قريبا.>\\p{cls 0}"
-        "<ويقول: هذه هدية لك!>\\p{cls 0}"
-        "<ومعها بيانات\nرقاقة معركة!>\\p{end 5}"
-    ),
-    "wake-up.7": "{pic 0 0}{dialog_up}<هاااه>...{d 30}\n<كنت في منتصف\nحلم رائع...>\\p{cls 5}{jump 8}",
-    "wake-up.8": (
-        "{hidepic}{dialog_up}<سأجهز بيانات الرقاقة،\nفتفقد PET لاحقا،\nاتفقنا؟>\\p{end 5}"
-    ),
-    "lan-room.00": (
-        "{dialog_up}{raw F3 00 80 02}{raw F3 04 10 04}" + _GOT_ITEM + "{raw F7 00 00 01 FF FF FF}"
-        "حصل لان على\nجهاز PET!{raw FA 0C}{raw FA 04 04}{raw FA 08}\\p{cls 0}"
-        "اضغط START لرؤية\nبيانات الرقاقات\nوقراءة البريد.\\p{cls 0}"
-        + _GOT_ITEM
-        + "{raw FC 00 85 00}حصل لان على برنامج\nملاحة ذكي:\nMegaMan.EXE!"
-        "{raw FA 0C}{raw FA 04 04}{raw FA 08}\\p{cls 0}{dialog_down}{hidepic}{jump 2}"
-    ),
-    "lan-room.01": "{dialog_up}لان، لا تنس\nجهاز PET!!\\p{end 5}",
-    "lan-room.02": "{pic 34 0}{dialog_up}<لان! صباح الخير!>\\p{cls 0}{jump 3}",
-    "lan-room.03": "{pic 0 0}{dialog_up}<صباح النور يا ميغامان!>\\p{cls 0}{jump 4}",
-    "lan-room.04": (
-        "{pic 34 0}{dialog_up}<إذا أردت أن تكلمني\nفاضغط الزر L.>\\p{cls 0}"
-        "<هيا بنا إلى\nالمدرسة!>\\p{end 0}"
-    ),
-    "lan-room.07": ("{pic 34 0}{dialog_up}<أتريد دخول الشبكة؟\nلنفعل ذلك بعد\nالمدرسة!>\\p{end 5}"),
-    "lan-room.08": (
-        "{pic 34 0}{dialog_up}{raw F3 08 00 00}{raw F3 08 01 00}<لان! تفقد بريدك\nمرة أخرى!>\\p{end 5}"
-    ),
-    "lan-room.0C": (
-        "{pic 34 0}{dialog_up}<لان، ليس هذا وقت\nدخول الشبكة!\nاذهب إلى أمك!>\\p{end 5}"
-    ),
-    "lan-room.DC": "{raw F4 00 81 02 DD FF}{dialog_up}هنا يخبئ لان\nأدواته السرية\\p{end 5}",
-    "lan-room.DE": (
-        "{dialog_up}خبأ لان في رف الكتب\nهذا إجابات بعض\nالاختبارات\\p{cls 0}"
-        "عسى ألا تعثر\nعليها أمه...\\p{end 5}"
-    ),
-    "lan-room.DF": "{raw F4 00 80 02 E0 FF}{dialog_up}هذا ليس جهاز\nPET الخاص بك!!\\p{end 5}",
-    "lan-room.E0": (
-        "{dialog_up}حاسوبك. إذا دخلت\nالشبكة من هنا يمكنك\nإرسال ميغامان إليها\\p{end 5}"
-    ),
-    "lan-room.E1": "{dialog_up}ما زال الوقت مبكرا\nعلى النوم\\p{end 5}",
-    "lan-room-talk.01": "{pic 34 0}{dialog_up}<أسرع! هيا بنا\nإلى المدرسة!>\\p{end 5}",
-    "living-room.00": (
-        "{raw F4 00 96 00 04 FF}{raw F3 00 96 00}{pic 12 0}{dialog_up}"
-        "<صباح الخير يا لان!>\\p{cls 5}{jump 2}"
-    ),
-    "living-room.01": (
-        "{dialog_up}تناول لان فطوره\nعلى عجل.\n.{d 30}.{d 30}.لذيذ!\\p{cls 0}"
-        "وجد لان رقاقة\nتحت الطبق!\\p{cls 0}"
-        "{raw F3 00 86 02}" + _GOT_ITEM + "{raw F7 10 43 00 01 FF FF FF}"
-        "حصل لان على رقاقة\nRecov10 A!{raw FA 0C}{raw FA 08}\\p{end 5}"
-    ),
-    "living-room.02": "{pic 0 0}{dialog_up}<صباح النور يا أمي!>\\p{cls 5}{jump 3}",
-    "living-room.03": ("{pic 12 0}{dialog_up}<الفطور على المائدة!\nهل لديك وقت\nلتأكل؟>\\p{end 5}"),
-    # Under Mom's mugshot the USA script gives her Lan's words about being
-    # late; the translation lets her say what she means: hurry, or be late.
-    "living-room.04": "{pic 12 0}{dialog_up}<أسرع وإلا\nستتأخر!>\\p{end 5}",
-    "living-room.DC": ("{dialog_up}لمسة بسيطة مثل هذه\nالمزهرية تبهج\nالمكان حقا\\p{end 5}"),
-    "living-room.DD": (
-        "{raw F4 04 04 04 E7 FF}{raw F4 04 03 05 E6 FF}{raw F4 04 23 27 E5 FF}{dialog_up}"
-        "في هذا القدر شيء\nرائحته طيبة جدا!\nلذيذ!\\p{end 5}"
-    ),
-    "living-room.DE": (
-        "{raw F4 04 04 04 E7 FF}{raw F4 04 03 05 E6 FF}{dialog_up}الثلاجة مليئة\nبالطعام\\p{end 5}"
-    ),
-    "living-room.DF": (
-        "{raw F4 04 04 04 E7 FF}{raw F4 04 03 05 E6 FF}{raw F4 04 06 5F E0 FF}{dialog_up}"
-        "الفطائر التي تخبزها\nأمي في هذا الفرن\nهي الأفضل!\\p{end 5}"
-    ),
-    "living-room.E1": "{dialog_up}تحب أمي أن تجمع\nكل هذه الأطباق\\p{end 5}",
-    "living-room.E2": (
-        "{dialog_up}هذا التلفاز قديم\nجدا، وليس فيه منفذ\nللدخول إلى الشبكة\\p{end 5}"
-    ),
-    "living-room.E3": "{dialog_up}حامل جميل جدا.\nاختارته أمي\nبالطبع\\p{end 5}",
-    "living-room.E4": ("{dialog_up}هذه اللوحة تتحكم\nفي كل الأجهزة\nالكهربائية في البيت\\p{end 5}"),
-    "living-room-talk.01": ("{pic 34 0}{dialog_up}<ما بك؟ هيا\nلنسرع إلى\nالمدرسة!>\\p{end 5}"),
-    "to-school.0": "{pic 8 0}{dialog_up}<لان! لقد تأخرت!>\\p{cls 5}{jump 1}",
-    "to-school.1": "{pic 34 0}{dialog_up}<أوه، لا>...{d 30}\n<تبدو ميل غاضبة...>\\p{cls 5}{jump 2}",
-    "to-school.2": "{pic 0 0}{dialog_up}<لم يطلب منك أحد\nأن تنتظريني...>\\p{cls 5}{jump 3}",
-    "to-school.3": "{pic 8 0}{dialog_up}<هم؟ هل قلت شيئا\nالآن؟\nهيا!>{d 30}< لنذهب!>\\p{cls 5}{jump 4}",
-    "to-school.4": "{pic 0 0}{dialog_up}<لماذا علينا دائما\nأن نمشي معا\nإلى المدرسة؟>\\p{cls 5}{jump 5}",
-    "to-school.5": (
-        "{pic 8 0}{dialog_up}<يا لك من سخيف! لأن\nلدينا دائما الكثير\nلنتحدث عنه!>\\p{cls 5}{jump 6}"
-    ),
-    "to-school.6": (
-        "{pic 34 0}{dialog_up}<تقصد أنها هي من لديها\nالكثير لتقوله،\nوأنت تستمع فقط...>\\p{cls 5}{jump 7}"
-    ),
-    "to-school.7": "{pic 0 0}{dialog_up}<اسكت!>\\p{end 5}",
-    "to-school.8": (
-        "{input_off}{fd 160}{pic 8 0}{dialog_up}<هل سمعت عن حوادث\nالأفران؟>{cls 60}"
-        "<صارت أفران الناس\nتقذف النار فجأة!>{fd 60}{jump 9}"
-    ),
-    "to-school.9": "{pic 0 0}{dialog_up}<همم...>{fd 60}{jump 10}",
-    "to-school.10": "{pic 8 0}{dialog_up}<أراهن أنه فيروس\nآخر أطلقته WWW!>{fd 60}{jump 11}",
-    "to-school.11": "{pic 0 0}{dialog_up}<أنت تتوهمين\nفقط...>{fd 60}{jump 12}",
-    "to-school.12": (
-        "{pic 8 0}{dialog_up}<ربما>...{fd 90}\n<ها قد وصلنا!\nهيا إلى الفصل!>{input_on}{end 60}"
-    ),
-}
+TARGET = "mmbn"
 
 
 def mmbn_script_archives() -> tuple[MmbnScriptArchive, ...]:
     return ARCHIVES
 
 
-def mmbn_arabic_sections() -> tuple[MmbnArabicSection, ...]:
+def _texts(translations: TranslationSet | None) -> dict[str, str]:
+    return (translations or builtin_translation_set(TARGET)).texts(tuple(_SOURCES))
+
+
+def mmbn_arabic_sections(
+    translations: TranslationSet | None = None,
+) -> tuple[MmbnArabicSection, ...]:
     """Every translated section, in the order the morning plays them."""
-    if set(_SOURCES) != set(_ARABIC):
-        raise ValueError("every pinned MMBN section needs exactly one translation")
+    texts = _texts(translations)
     return tuple(
         MmbnArabicSection(
             key=key,
@@ -264,7 +158,7 @@ def mmbn_arabic_sections() -> tuple[MmbnArabicSection, ...]:
             speaker=speaker,
             source_sha256=digest,
             source_skeleton=notation_skeleton(parse_notation(skeleton)),
-            notation=_ARABIC[key],
+            notation=texts[key],
         )
         for key, (archive, index, speaker, digest, skeleton) in _SOURCES.items()
     )

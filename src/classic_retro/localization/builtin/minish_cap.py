@@ -6,11 +6,26 @@ import argparse
 from pathlib import Path
 
 from classic_retro.localization.targets import LocalizationTarget, print_json
+from classic_retro.localization.translations import TranslationSet
 from classic_retro.source.tmc_arabic import (
+    PINNED_COMMIT,
     check_tmc_arabic_source,
     encode_tmc_arabic_line,
+    extract_tmc_originals,
     prepare_tmc_arabic_source,
 )
+
+
+def prepare(
+    source: Path, font: Path, translations: TranslationSet | None = None
+) -> dict[str, object]:
+    """Patch the user's pristine checkout: the overlay, the font and the Arabic text."""
+    return prepare_tmc_arabic_source(source, font, translations=translations)
+
+
+def extract(source: Path, translations: TranslationSet | None = None) -> tuple[str, dict[str, str]]:
+    """The original of every entry, read from the user's pristine checkout."""
+    return f"zeldaret/tmc at {PINNED_COMMIT}", extract_tmc_originals(source, translations)
 
 
 def _source_check(args: argparse.Namespace) -> int:
@@ -76,4 +91,6 @@ TARGET = LocalizationTarget(
     guide="docs/MINISH_CAP_ARABIC_TEST_AR.md",
     notes="docs/TMC_ARABIC_RENDERER.md",
     register_cli=register_cli,
+    prepare=prepare,
+    extract=extract,
 )

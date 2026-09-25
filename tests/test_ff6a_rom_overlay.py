@@ -237,3 +237,15 @@ def test_cli_refuses_an_unknown_rom(tmp_path, capsys):
     )
     assert code == 2
     assert "UNKNOWN_GAME_REVISION" in capsys.readouterr().err
+
+
+def test_extract_reads_every_message_in_the_notation():
+    english = [_english(index) for index in range(24)]
+    originals = overlay.extract_originals(
+        _synthetic_rom(english), messages=_translations(english), verify_identity=False
+    )
+    # The synthetic font prints only the space; the other glyphs are written as hex.
+    assert originals == {
+        "message.1": "{01F}{009}{001} {001}{PAUSE 14C}{PAGE}{002}{END}",
+        "message.6": "{NARRATION}{CENTER}{01F}{009}{001} {006}{TIMED_CLOSE 243}{CLOSE}{END}",
+    }

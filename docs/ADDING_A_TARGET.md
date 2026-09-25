@@ -92,9 +92,14 @@ and the script belong to the game.
 - `rebuild.bps.create_bps` builds the patch. `patching.outputs` supplies the common
   report fields and writes the patch file, plus the patched image only when asked
   (local use).
-- The script module (`rom/<game>_arabic_script.py`) pins each original string by
-  address, the SHA-256 of its bytes and its command skeleton. It holds the Arabic,
-  never the English, so translations are checked without the image.
+- The script module (`rom/<game>_arabic_script.py`) pins each original by address,
+  the SHA-256 of its bytes and its command skeleton, and names each entry with a
+  stable id. The Arabic goes into `translations/<target>.json` (MASTER_SPEC §6.1),
+  never into code, and the English goes nowhere: translations are checked without
+  the image.
+- `extract_originals(rom, translations)` verifies the image and every original and
+  returns each entry's original in the engine's notation, for a translator's
+  workspace.
 
 ## 5. Register the target
 
@@ -116,6 +121,7 @@ TARGET = LocalizationTarget(
     check_hooks=check_hooks,
     check_translations=check_translations,
     build=build,
+    extract=extract,  # each entry's original, for a translator's workspace
     previews=PREVIEWS,  # files check_translations writes, given a font
     reference_patch_sha256="...",  # the patch built from the pinned image
 )
@@ -124,7 +130,11 @@ TARGET = LocalizationTarget(
 A target from another package uses the `classic_retro.targets.v1` entry point group,
 where the object or a zero-argument callable returns a `LocalizationTarget`. Its
 strategies must be registered first, either built in or through
-`classic_retro.strategies.v1`.
+`classic_retro.strategies.v1`. It ships its translations itself and passes them with
+`--translations`.
+
+A source overlay has `prepare(source, font, translations)` instead of `build`: it
+patches the user's pristine checkout of the decompilation, which then builds the image.
 
 Every target then runs the same way:
 
@@ -132,6 +142,7 @@ Every target then runs the same way:
 classic-retro targets check-hooks my-game
 classic-retro targets check-translations my-game --font reference-font.ttf --preview-dir previews
 classic-retro targets build my-game "path/to/game.gba" --font reference-font.ttf --out-dir build
+classic-retro targets extract my-game "path/to/game.gba"
 ```
 
 `targets build` reports `matches_reference`, which is true when the patch equals the
@@ -141,6 +152,8 @@ recorded `reference_patch_sha256`.
 
 - Unit tests use synthetic data only: invented strings, generated images and fonts
   drawn in the test. No game bytes.
+- `tests/test_translations.py` holds every shipped translations file against its
+  target's pinned entries; add the new target there.
 - CI finds the target by itself. The `localization-targets` job reads
   `classic-retro targets list`. Every target with a `check-translations` operation
   gets an `<id>-arabic-overlay` job, which does three things:

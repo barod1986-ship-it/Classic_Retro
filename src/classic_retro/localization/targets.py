@@ -5,10 +5,18 @@ rendering strategies it uses, its documents, and the operations the toolkit
 runs the same way for every target (``classic-retro targets ...``):
 
 - ``check_hooks()``: re-assemble the hook code and compare it with the stored bytes;
-- ``check_translations(font, preview_dir)``: validate the script without the game
-  image; with a font, lay out every string and write the target's ``previews``
-  into ``preview_dir``;
-- ``build(rom, font, out_dir, rom_name)``: build the patch from the user's image.
+- ``check_translations(font, preview_dir, translations)``: validate the script
+  without the game image; with a font, lay out every string and write the
+  target's ``previews`` into ``preview_dir``;
+- ``build(rom, font, out_dir, rom_name, translations)``: build the patch from the
+  user's image (a rom overlay);
+- ``prepare(source, font, translations)``: patch the user's decompilation checkout
+  (a source overlay);
+- ``extract(input, translations)``: read the original of every entry from the
+  user's own copy (the image, or the checkout), for a translator's workspace.
+
+``translations`` is a ``TranslationSet`` to use instead of the target's shipped
+``classic_retro/translations/<target>.json``, or None for the shipped one.
 
 A target also keeps its own command group (``classic-retro fomt ...``) with any
 command specific to it. Targets come from ``classic_retro.localization.builtin``
@@ -27,6 +35,7 @@ from pathlib import Path
 
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.localization.strategies import StrategyRegistry, build_strategy_registry
+from classic_retro.localization.translations import TranslationSet
 
 TARGET_ENTRY_POINT_GROUP = "classic_retro.targets.v1"
 # How a target changes the game: a patch built from the user's image, or a
@@ -34,8 +43,11 @@ TARGET_ENTRY_POINT_GROUP = "classic_retro.targets.v1"
 KINDS = ("rom-overlay", "source-overlay")
 
 HookCheck = Callable[[], dict[str, object]]
-TranslationCheck = Callable[[Path | None, Path | None], dict[str, object]]
-Build = Callable[[bytes, Path, Path, str | None], dict[str, object]]
+TranslationCheck = Callable[[Path | None, Path | None, TranslationSet | None], dict[str, object]]
+Build = Callable[[bytes, Path, Path, str | None, TranslationSet | None], dict[str, object]]
+Prepare = Callable[[Path, Path, TranslationSet | None], dict[str, object]]
+# Where the originals come from (for the workspace), and each entry's original by id.
+Extract = Callable[[Path, TranslationSet | None], tuple[str, dict[str, str]]]
 RegisterCli = Callable[[argparse._SubParsersAction], None]
 
 
@@ -54,6 +66,8 @@ class LocalizationTarget:
     check_hooks: HookCheck | None = None
     check_translations: TranslationCheck | None = None
     build: Build | None = None
+    prepare: Prepare | None = None
+    extract: Extract | None = None
     # Files ``check_translations`` writes into its preview folder when given a font.
     previews: tuple[str, ...] = ()
     # SHA-256 of the patch built from the pinned image with the reference font.
@@ -64,6 +78,8 @@ class LocalizationTarget:
             "check-hooks": self.check_hooks,
             "check-translations": self.check_translations,
             "build": self.build,
+            "prepare": self.prepare,
+            "extract": self.extract,
         }
         return [name for name, operation in names.items() if operation is not None]
 

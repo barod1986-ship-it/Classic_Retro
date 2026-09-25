@@ -12,6 +12,7 @@ from classic_retro.localization.targets import (
     print_json,
     write_build_report,
 )
+from classic_retro.localization.translations import TranslationSet
 from classic_retro.rom import fire_emblem_arabic
 
 PREVIEWS = ("arabic_font_preview.png", "arabic_legend_preview.png")
@@ -21,16 +22,32 @@ def check_hooks() -> dict[str, object]:
     return fire_emblem_arabic.check_hook_code()
 
 
-def check_translations(font: Path | None, preview_dir: Path | None) -> dict[str, object]:
+def check_translations(
+    font: Path | None, preview_dir: Path | None, translations: TranslationSet | None = None
+) -> dict[str, object]:
     """The script checked without the ROM; with a font and a folder, its previews too."""
     previews = preview_paths(font, preview_dir, *PREVIEWS)
-    return fire_emblem_arabic.check_fire_emblem_translations(font, *previews)
+    return fire_emblem_arabic.check_fire_emblem_translations(
+        font, *previews, translations=translations
+    )
 
 
-def build(rom: bytes, font: Path, out_dir: Path, rom_name: str | None) -> dict[str, object]:
-    result = fire_emblem_arabic.build_fire_emblem_arabic_rom(rom, font)
+def build(
+    rom: bytes,
+    font: Path,
+    out_dir: Path,
+    rom_name: str | None,
+    translations: TranslationSet | None = None,
+) -> dict[str, object]:
+    result = fire_emblem_arabic.build_fire_emblem_arabic_rom(rom, font, translations=translations)
     written = fire_emblem_arabic.write_build_outputs(result, out_dir, rom_name=rom_name)
     return write_build_report(out_dir, {**result.report, "outputs": written})
+
+
+def extract(image: Path, translations: TranslationSet | None = None) -> tuple[str, dict[str, str]]:
+    """The original of every entry, read and verified from the user's own image."""
+    origin = f"{fire_emblem_arabic.IMAGE.title} image, SHA-256 {fire_emblem_arabic.IMAGE.sha256}"
+    return origin, fire_emblem_arabic.extract_originals(image.read_bytes(), translations)
 
 
 def _check_translations_command(args: argparse.Namespace) -> int:
@@ -132,6 +149,7 @@ TARGET = LocalizationTarget(
     check_hooks=check_hooks,
     check_translations=check_translations,
     build=build,
+    extract=extract,
     previews=PREVIEWS,
     reference_patch_sha256="f955d6235b3c5958e414a9fab9bb350ccdcc88158249fef9efec19ef30756784",
 )

@@ -1,0 +1,134 @@
+{
+  "schema_version": "1.0",
+  "target": "fire-emblem",
+  "language": "ar",
+  "notation": "Logical Arabic in the engine's bracket notation (engines.fire_emblem): commands keep their original order; only [LF] and [.] may move, and [CR][LF] stays one unit (the narration box skips the byte after [CR]). Legend entries (legend.*) are the lines of one legend image, one line per line.",
+  "glossary": [
+    {
+      "term": "Magvel",
+      "text": "ماغفيل"
+    },
+    {
+      "term": "Sacred Stones",
+      "text": "الأحجار المقدسة"
+    },
+    {
+      "term": "Renais",
+      "text": "رينيه"
+    },
+    {
+      "term": "Fado",
+      "text": "فادو"
+    },
+    {
+      "term": "Ephraim",
+      "text": "إفرايم"
+    },
+    {
+      "term": "Eirika",
+      "text": "إيريكا"
+    },
+    {
+      "term": "Seth",
+      "text": "سيث"
+    },
+    {
+      "term": "Frelia",
+      "text": "فريليا"
+    },
+    {
+      "term": "Hayden",
+      "text": "هايدن"
+    },
+    {
+      "term": "Jehanna",
+      "text": "جيهانا"
+    },
+    {
+      "term": "Ismaire",
+      "text": "إسمير"
+    },
+    {
+      "term": "Rausten",
+      "text": "راوستن"
+    },
+    {
+      "term": "Mansel",
+      "text": "مانسل"
+    },
+    {
+      "term": "Grado",
+      "text": "غرادو"
+    },
+    {
+      "term": "Vigarde",
+      "text": "فيغارد"
+    },
+    {
+      "term": "Carcino",
+      "text": "كاركينو"
+    }
+  ],
+  "entries": [
+    {
+      "id": "message.0x8db",
+      "context": "Narrator; world-map message 0x8db",
+      "text": "القارة ماغفيل.[A][LF]منذ نحو 800 عام، ساد سلام هادئ[.][LF]في غياب الظلام الرهيب.[.][A][LF]وتوارثت الأجيال الأحجار المقدسة[LF]جيلا بعد جيل.[.][A][LF]وقامت الأمم على قوتها[.][LF]وإرثها.[.][A][CR][LF][BreakTalk]مملكة رينيه، يحكمها فادو،[LF]الملك المحارب الذي لا يضاهى.[A][CR][LF][BreakTalk]مملكة فريليا، يحكمها هايدن،[LF]الملك الحكيم الموقر.[A][CR][LF][BreakTalk]مملكة جيهانا، تحكمها إسمير،[LF]ملكة الكثبان البيضاء.[.][A][CR][LF][BreakTalk]دولة راوستن الدينية، يحكمها مانسل،[.][LF]الإمبراطور المقدس.[.][A][CR][LF][BreakTalk]إمبراطورية غرادو، يحكمها فيغارد،[LF]الإمبراطور الصامت الراسخ.[A][CR][LF][BreakTalk]هذه الدول الخمس تحتضن قوة[LF]الأحجار المقدسة.[A][LF][BreakTalk]وتنضم إليها جمهورية كاركينو[.][LF]التجارية الناشئة.[A][CR][LF][BreakTalk]في زمن السلام هذا، صارت حكايات[LF]حروب الماضي أساطير،[A][LF]وتلاشت ذكريات فنون الظلام القديمة[.][LF]أو كادت.[A][CR][LF][BreakTalk]نحن الآن في عام 803...[.][A][LF][BreakTalk]وفي لحظة، باتت ماغفيل كلها[LF]مهددة بفاجعة لم يتوقعها أحد.[.][A][LF][BreakTalk]فإمبراطورية غرادو، أكبر دول[.][LF]الأحجار المقدسة،[.][A][LF][BreakTalk]غزت مملكة رينيه بأمر من[LF]الإمبراطور فيغارد.[A][LF][BreakTalk]باغت الهجوم رينيه، حليفة غرادو القديمة،[LF]فعجزت عن إبداء أي مقاومة.[A][LF][BreakTalk]تقدمت قوات غرادو بسرعة،[LF]تستولي على الأقاليم واحدا تلو الآخر.[A][LF][BreakTalk]ومما زاد هموم الملك فادو أن ابنه،[.][LF]الأمير إفرايم، قد اختفى.[.][A][CR][LF][BreakTalk]ويمضي زحف غرادو بجيوشها حتى[.][LF]أبواب قلعة رينيه نفسها.[A][LF][BreakTalk]ستسقط رينيه...[.][LF]لا مفر من ذلك.[.][A][LF][BreakTalk][X]"
+    },
+    {
+      "id": "message.0x903",
+      "context": "Soldier, Fado; bubble message 0x903",
+      "text": "[OpenMidLeft][LoadFace 51 01][OpenFarFarRight][LoadFace 6A 01][OpenFarFarRight][MoveMidRight][OpenMidRight]مولاي، أحمل إليك أنباء سيئة.[A][CloseSpeechSlow][OpenMidRight]لقد اخترق العدو بوابة القلعة.[A][LF]قوات الإمبراطور فيغارد صارت[.][LF]داخل أسوار القلعة.[.][A][OpenMidLeft]فهمت.[.][A][OpenMidRight]لقد سقطت الحامية.[A][LF]انقطع اتصالنا بالأمير إفرايم،[LF]ولا أمل لنا في عون من رجاله.[.][A][LF]مولاي، ماذا نفعل؟[A][OpenMidLeft][ToggleMouthMove]...[.][ToggleMouthMove]وماذا عسانا نفعل؟[A][LF]مر رجالك بأن يلقوا[.][LF]أسلحتهم.[A][X]"
+    },
+    {
+      "id": "message.0x904",
+      "context": "Eirika, Fado, Seth; bubble message 0x904",
+      "text": "[OpenMidLeft][LoadFace 51 01][OpenMidRight][LoadFace 02 01][OpenMidRight][MoveRight][OpenRight]أبي[ToggleMouthMove]...[.][ToggleMouthMove][A][OpenMidLeft]إيريكا.[.][A][LF]هل ترتدين السوار[.][LF]الذي أهديتك إياه؟[A][OpenRight]نعم، إنه معي هنا.[A][OpenMidLeft]حسنا.[.][A][CloseSpeechSlow][OpenMidLeft]سيث.[.][A][OpenFarRight][LoadFace 04 01][OpenFarRight]نعم يا مولاي؟[A][OpenMidLeft]خذ إيريكا واتجها إلى فريليا.[A][LF]الملك هايدن رجل شريف،[LF]وأثق أنه سيحميكما.[A][OpenFarRight]سمعا وطاعة.[.][A][LF]وماذا عنك يا مولاي؟[.][A][OpenMidLeft]أنا؟ سأبقى هنا.[A][LF]لطالما عددنا غرادو من أعز[.][LF]حلفائنا، والآن يهاجموننا؟[.][A][LF]لا بد أن أعرف السبب.[A][CloseSpeechSlow][OpenMidLeft]هل أنا المسؤول عن هذا بطريقة ما؟[LF]هل أخطأت في قيادتي؟[A][LF]رينيه أمانة في عنقي[.][ToggleMouthMove]... [ToggleMouthMove]كيف[.][LF]خذلتها هكذا؟[.][A][SendToBack][OpenRight][MoveRight][OpenRight]أبي، لا يمكنك البقاء! لا يجوز![A][LF]إن بقيت هنا، فسأبقى معك![A][OpenMidLeft]اذهب الآن يا سيث! انطلق![.][LF]خذها إلى بر الأمان![.][A][X]"
+    },
+    {
+      "id": "message.0x905",
+      "context": "Eirika, Seth; bubble message 0x905",
+      "text": "[OpenRight][LoadFace 02 01][OpenFarRight][LoadFace 04 01][OpenRight]أبي![.][A][SendToBack][OpenFarRight]سامحيني،[.][LF]يا صاحبة السمو.[A][X]"
+    },
+    {
+      "id": "message.0x906",
+      "context": "Fado; bubble message 0x906",
+      "text": "[OpenMidLeft][LoadFace 51 01][OpenMidLeft]إفرايم، إيريكا[.][ToggleMouthMove]...[.][ToggleMouthMove][LF]يجب أن تنجوا.[.][A][X]"
+    },
+    {
+      "id": "legend.0",
+      "context": "legend image 1 of 7: an age when darkness ruled and humanity nearly perished",
+      "text": "في زمن غابر...\nطغى الشر على الأرض.\nوعاثت مخلوقات المد المظلم\nفسادا، ودفعت البشرية\nإلى حافة الفناء."
+    },
+    {
+      "id": "legend.1",
+      "context": "legend image 2 of 7: humanity's prayer is answered by a light",
+      "text": "وفي يأسها، تضرعت البشرية\nإلى السماء، فانبثق الأمل\nمن نور يخطف الأبصار."
+    },
+    {
+      "id": "legend.2",
+      "context": "legend image 3 of 7: the title card, the game's name",
+      "text": "الأحجار المقدسة"
+    },
+    {
+      "id": "legend.3",
+      "context": "legend image 4 of 7: the five treasures able to drive evil away",
+      "text": "هذه الكنوز الخمسة المجيدة\nحملت قوة تبدد الشر."
+    },
+    {
+      "id": "legend.4",
+      "context": "legend image 5 of 7: the hero and his warriors seal the demon king inside the stones",
+      "text": "استخدم البطل غرادو ومحاربوه\nالأحجار المقدسة لمحاربة ظلام الشر،\nفهزموا ملك الشياطين،\nوحبسوا روحه\nداخل الأحجار."
+    },
+    {
+      "id": "legend.5",
+      "context": "legend image 6 of 7: the continent at peace again",
+      "text": "وبعد أن غدا الظلام سجينا،\nعاد السلام إلى ماغفيل."
+    },
+    {
+      "id": "legend.6",
+      "context": "legend image 7 of 7: a warning that the calm will end",
+      "text": "لكن هذا السلام لم يكن ليدوم..."
+    }
+  ]
+}

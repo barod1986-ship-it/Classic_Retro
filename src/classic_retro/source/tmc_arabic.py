@@ -21,12 +21,6 @@ from classic_retro.engines.tmc import (
     glyph_advance,
     latin_glyph_widths,
     parse_tmc_string,
-    tmc_color,
-    tmc_jump,
-    tmc_line,
-    tmc_player,
-    tmc_raw,
-    tmc_sound,
 )
 from classic_retro.engines.tmc_arabic import (
     TmcArabicEncoder,
@@ -35,7 +29,8 @@ from classic_retro.engines.tmc_arabic import (
     build_tmc_arabic_glyph_map,
     font_preview,
 )
-from classic_retro.text.tokens import InlineToken, TextToken, Token, TokenStream
+from classic_retro.localization.translations import TranslationSet, builtin_translation_set
+from classic_retro.text.tokens import TextToken, TokenStream
 
 PINNED_COMMIT = "d92d4581e202ae531bdcc206a7d6a90ddb8fd907"
 USA_ROM_SHA1 = "b4bd50e4131b027c334547b4524e2dbbd4227130"
@@ -86,310 +81,87 @@ class TmcArabicMessage:
         return f"{self.table:02X}{self.index:02X}"
 
 
-def _text(value: str) -> TextToken:
-    return TextToken(value)
+TARGET = "minish-cap"
+# (table, text, widest line in pixels) of every translated text, in play order;
+# their Arabic lives in classic_retro/translations/minish-cap.json.
+_SOURCES: tuple[tuple[int, int, int], ...] = (
+    (0x0F, 0x01, _PROLOGUE_WIDE),
+    (0x0F, 0x02, _PROLOGUE_WIDE),
+    (0x0F, 0x03, _PROLOGUE_NARROW),
+    (0x0F, 0x04, _PROLOGUE_NARROW),
+    (0x0F, 0x05, _PROLOGUE_WIDE),
+    (0x0F, 0x06, _PROLOGUE_WIDE),
+    (0x0F, 0x07, TMC_DIALOGUE_LINE_WIDTH),
+    (0x10, 0x01, TMC_DIALOGUE_LINE_WIDTH),
+    (0x10, 0x02, TMC_DIALOGUE_LINE_WIDTH),
+    (0x10, 0x03, TMC_DIALOGUE_LINE_WIDTH),
+    (0x10, 0x04, TMC_DIALOGUE_LINE_WIDTH),
+    (0x10, 0x05, TMC_DIALOGUE_LINE_WIDTH),
+    (0x10, 0x09, TMC_DIALOGUE_LINE_WIDTH),
+    (0x10, 0x0A, TMC_DIALOGUE_LINE_WIDTH),
+    (0x10, 0x0B, TMC_DIALOGUE_LINE_WIDTH),
+    (0x10, 0x0C, TMC_DIALOGUE_LINE_WIDTH),
+    (0x10, 0x0D, TMC_DIALOGUE_LINE_WIDTH),
+    (0x10, 0x0E, TMC_DIALOGUE_LINE_WIDTH),
+    (0x10, 0x10, TMC_DIALOGUE_LINE_WIDTH),
+    (0x10, 0x11, TMC_DIALOGUE_LINE_WIDTH),
+    (0x10, 0x12, TMC_DIALOGUE_LINE_WIDTH),
+    (0x10, 0x13, TMC_DIALOGUE_LINE_WIDTH),
+    (0x10, 0x14, TMC_DIALOGUE_LINE_WIDTH),
+    (0x05, 0x34, TMC_DIALOGUE_LINE_WIDTH),
+    (0x25, 0x01, TMC_DIALOGUE_LINE_WIDTH),
+    (0x25, 0x02, TMC_DIALOGUE_LINE_WIDTH),
+)
+ENTRY_IDS: tuple[str, ...] = tuple(f"{table:02X}{index:02X}" for table, index, _ in _SOURCES)
 
 
-def _lines(label: str, *parts: str | Token) -> TokenStream:
-    """Build a stream where '\\n' inside strings becomes an ordered line break."""
-    tokens: list[Token] = []
-    counter = 0
-    for part in parts:
-        if isinstance(part, str):
-            chunks = part.split("\n")
-            for number, chunk in enumerate(chunks):
-                if number:
-                    tokens.append(tmc_line(f"{label}_line{counter}"))
-                    counter += 1
-                if chunk:
-                    tokens.append(_text(chunk))
-        else:
-            tokens.append(part)
-    return TokenStream(tuple(tokens))
-
-
-def _green(label: str) -> InlineToken:
-    return tmc_color(f"{label}_green", "Green")
-
-
-def _white(label: str) -> InlineToken:
-    return tmc_color(f"{label}_white", "White")
-
-
-def _player(label: str) -> InlineToken:
-    return tmc_player(f"{label}_player")
-
-
-def _window_y(label: str) -> InlineToken:
-    return tmc_raw(f"{label}_window", "{04:10:00}", "RENDER_CONTROL")
-
-
-def tmc_arabic_messages() -> tuple[TmcArabicMessage, ...]:
+def tmc_arabic_messages(
+    translations: TranslationSet | None = None,
+) -> tuple[TmcArabicMessage, ...]:
     """The new-game opening: storybook prologue, the Smith house scene and the walk to town."""
-    d = TMC_DIALOGUE_LINE_WIDTH
-    return (
-        TmcArabicMessage(0x0F, 0x01, _PROLOGUE_WIDE, _lines("0f01", "منذ زمن بعيد جدا...")),
+    texts = (translations or builtin_translation_set(TARGET)).texts(ENTRY_IDS)
+    return tuple(
         TmcArabicMessage(
-            0x0F,
-            0x02,
-            _PROLOGUE_WIDE,
-            _lines("0f02", "حين كان العالم على وشك\nأن يبتلعه الظلام..."),
-        ),
-        TmcArabicMessage(
-            0x0F,
-            0x03,
-            _PROLOGUE_NARROW,
-            _lines(
-                "0f03", "ظهر البيكوري\nالصغار من السماء،\nحاملين لبطل\nالبشر سيفا\nونورا ذهبيا."
+            table,
+            index,
+            width,
+            parse_tmc_string(
+                texts[f"{table:02X}{index:02X}"],
+                id_prefix=f"{table:02x}{index:02x}_",
+                glyph_text=False,
             ),
-        ),
-        TmcArabicMessage(
-            0x0F,
-            0x04,
-            _PROLOGUE_NARROW,
-            _lines("0f04", "بالحكمة والشجاعة،\nطرد البطل\nالظلام."),
-        ),
-        TmcArabicMessage(
-            0x0F,
-            0x05,
-            _PROLOGUE_WIDE,
-            _lines("0f05", "وحين عاد السلام، حفظ الناس\nذلك السيف في مزار بكل عناية."),
-        ),
-        TmcArabicMessage(
-            0x0F,
-            0x06,
-            _PROLOGUE_WIDE,
-            _lines(
-                "0f06",
-                "أما قوة النور الذهبي، فقد تجسدت\nفي أميرة هايرول،\nوأشرقت على كل الأرجاء.",
-            ),
-        ),
-        TmcArabicMessage(
-            0x0F,
-            0x07,
-            d,
-            _lines(
-                "0f07", tmc_sound("0f07_sound", 0x01, 0xE8), "هه هه هه...\nإذن هذا هو معناها..."
-            ),
-        ),
-        TmcArabicMessage(
-            0x10,
-            0x01,
-            d,
-            _lines(
-                "1001",
-                tmc_sound("1001_sound", 0x00, 0x95),
-                "صباح الخير يا ",
-                _green("1001"),
-                "معلم سميث",
-                _white("1001"),
-                ".",
-            ),
-        ),
-        TmcArabicMessage(
-            0x10,
-            0x02,
-            d,
-            _lines(
-                "1002",
-                tmc_sound("1002_sound", 0x00, 0xC2),
-                "يا للعجب! ",
-                _green("1002"),
-                "الأميرة زيلدا",
-                _white("1002"),
-                "!\n\nهل تسللت من القلعة\nوجئت كل هذه المسافة وحدك؟\n"
-                "لا بد أن الوزير قلق عليك!\nتعرفين كيف يكون حاله!",
-            ),
-        ),
-        TmcArabicMessage(
-            0x10,
-            0x03,
-            d,
-            _lines(
-                "1003",
-                "لا تقلق بشأنه! سيكون بخير.\nأين ",
-                _player("1003"),
-                "؟\nالبلدة كلها تحتفل بقدوم\n",
-                tmc_color("1003_blue", "Blue"),
-                "مهرجان بيكوري",
-                _white("1003"),
-                " السنوي!\nفكرت أن نذهب إليه معا.\nهل تمانع؟",
-            ),
-        ),
-        TmcArabicMessage(
-            0x10,
-            0x04,
-            d,
-            _lines(
-                "1004",
-                "آه، أهذا ما جئت من أجله؟\n\nحسنا، سهر ",
-                _player("1004"),
-                " يساعدني\nليلة أمس، وما زال نائما...\nلكن لدي مهمة في\n"
-                "القلعة... نعم، لا بأس بذلك.\n",
-                tmc_jump("1004_next", 0x10, 0x05),
-            ),
-        ),
-        TmcArabicMessage(
-            0x10,
-            0x05,
-            d,
-            _lines("1005", _player("1005"), "، حان وقت الاستيقاظ!"),
-        ),
-        TmcArabicMessage(
-            0x10,
-            0x09,
-            d,
-            _lines(
-                "1009",
-                _window_y("1009"),
-                "هيه يا ",
-                _player("1009"),
-                "!\n\n",
-                _green("1009"),
-                "الأميرة زيلدا",
-                _white("1009"),
-                " هنا. تريد أن تعرف\nإن كنت ستذهب معها إلى المهرجان.",
-            ),
-        ),
-        TmcArabicMessage(
-            0x10,
-            0x0A,
-            d,
-            _lines(
-                "100a",
-                "نعم يا ",
-                _player("100a"),
-                ". هيا بنا!\nلنذهب إلى المهرجان معا!\n",
-                _green("100a"),
-                "المعلم سميث",
-                _white("100a"),
-                " سمح لي\nبأن آخذك معي!",
-            ),
-        ),
-        TmcArabicMessage(
-            0x10,
-            0x0B,
-            d,
-            _lines(
-                "100b",
-                _window_y("100b"),
-                "نعم. فالمهرجان لا يأتي إلا\nمرة في السنة. اذهب واستمتع!\n"
-                "وبينما أنت هناك، أريد منك\nخدمة صغيرة.\nلقد أنهيت صنع هذا ",
-                tmc_color("100b_red", "Red"),
-                "السيف",
-                _white("100b_sword"),
-                " لوزير\n",
-                _green("100b"),
-                "قلعة هايرول",
-                _white("100b"),
-                ".\nأريدك أن توصله إليه.",
-            ),
-        ),
-        TmcArabicMessage(
-            0x10,
-            0x0C,
-            d,
-            _lines(
-                "100c",
-                _window_y("100c"),
-                "هذا هو السيف الذي سيقدم\nللفائز في المسابقة.\n"
-                "لا تضيعه. ومع أنكما\nصديقا طفولة، تذكر...\n",
-                tmc_jump("100c_next", 0x10, 0x0E),
-            ),
-        ),
-        TmcArabicMessage(
-            0x10,
-            0x0D,
-            d,
-            _lines(
-                "100d",
-                "كف عن القلق يا معلم سميث!\nسنكون بأمان تام.\nهيا يا ",
-                _player("100d"),
-                "! لنذهب\nإلى المهرجان!",
-            ),
-        ),
-        TmcArabicMessage(
-            0x10,
-            0x0E,
-            d,
-            _lines(
-                "100e",
-                _window_y("100e"),
-                "زيلدا هي أميرة هايرول.\n\nاعتن بها جيدا، ولا تدع\nأي مكروه يصيبها.",
-            ),
-        ),
-        TmcArabicMessage(
-            0x10,
-            0x10,
-            d,
-            _lines("1010", tmc_sound("1010_sound", 0x00, 0x94), _player("1010"), "! من هنا!\n"),
-        ),
-        TmcArabicMessage(
-            0x10,
-            0x11,
-            d,
-            _lines("1011", "هيا يا ", _player("1011"), ". لنسرع\nإلى القلعة."),
-        ),
-        TmcArabicMessage(
-            0x10,
-            0x12,
-            d,
-            _lines(
-                "1012", tmc_sound("1012_sound", 0x00, 0x95), _player("1012"), "!\nأسرع! هيا بنا!"
-            ),
-        ),
-        TmcArabicMessage(0x10, 0x13, d, _lines("1013", "من هنا! هيا!\nأسرع!")),
-        TmcArabicMessage(
-            0x10,
-            0x14,
-            d,
-            _lines(
-                "1014",
-                "ها قد وصلنا إلى ",
-                _green("1014"),
-                "بلدة هايرول",
-                _white("1014"),
-                "!",
-            ),
-        ),
-        # Received inside the Smith's house scene.
-        TmcArabicMessage(
-            0x05,
-            0x34,
-            d,
-            _lines(
-                "0534",
-                tmc_raw("0534_window", "{04:10:0E}", "RENDER_CONTROL"),
-                "لقد استلمت ",
-                tmc_color("0534_red", "Red"),
-                "سيف سميث",
-                _white("0534"),
-                "!\n\nاحرص على ألا تفقد هذه\nالأمانة البالغة الأهمية!",
-            ),
-        ),
-        # Arrival at the festival in Hyrule Town.
-        TmcArabicMessage(
-            0x25,
-            0x01,
-            d,
-            _lines(
-                "2501",
-                "ها نحن هنا يا ",
-                _player("2501"),
-                "!\nأليس المكان ممتعا؟\n",
-                tmc_jump("2501_next", 0x25, 0x02),
-            ),
-        ),
-        TmcArabicMessage(0x25, 0x02, d, _lines("2502", "هيا! لنتجول في المكان!")),
+        )
+        for table, index, width in _SOURCES
     )
 
 
-def check_tmc_arabic_source(source: Path, font_path: Path | None = None) -> dict[str, object]:
+def extract_tmc_originals(
+    source: Path, translations: TranslationSet | None = None
+) -> dict[str, str]:
+    """The opening's texts of a pristine tmc checkout (translations/USA.json), by entry id."""
+    texts = _read_pristine_source(source.expanduser().resolve())
+    tables = json.loads(texts["translations/USA.json"])
+    originals: dict[str, str] = {}
+    for message in tmc_arabic_messages(translations):
+        try:
+            originals[message.label] = tables[message.table][message.index]
+        except IndexError as exc:
+            raise ClassicRetroError(
+                ErrorCode.SOURCE_PATCH_FAILED, f"Text {message.label} not found"
+            ) from exc
+    return originals
+
+
+def check_tmc_arabic_source(
+    source: Path, font_path: Path | None = None, translations: TranslationSet | None = None
+) -> dict[str, object]:
     """Dry run against a pristine checkout; with a font, also measure every line."""
     source = source.expanduser().resolve()
     texts = _read_pristine_source(source)
     font = build_tmc_arabic_font(font_path) if font_path is not None else None
-    patched = _patch_all(texts, _encoder(source, font), measure=font is not None)
+    patched = _patch_all(
+        texts, _encoder(source, font), measure=font is not None, translations=translations
+    )
     translated = patched.pop("translations/USA.json")
     if not all(_PATCH_MARKER in value for value in patched.values()):
         raise ClassicRetroError(
@@ -402,7 +174,7 @@ def check_tmc_arabic_source(source: Path, font_path: Path | None = None) -> dict
         "overlay_dry_run": True,
         "arabic_glyphs": len(build_tmc_arabic_glyph_map().characters),
         "arabic_font_page": 9,
-        "messages": len(tmc_arabic_messages()),
+        "messages": len(_SOURCES),
         "lines_measured": font is not None,
         "translated_json_bytes": len(translated.encode("utf-8")),
     }
@@ -430,7 +202,11 @@ def encode_tmc_arabic_line(text: str, font_path: Path | None = None) -> dict[str
 
 
 def prepare_tmc_arabic_source(
-    source: Path, font_path: Path, *, preview: bool = True
+    source: Path,
+    font_path: Path,
+    *,
+    preview: bool = True,
+    translations: TranslationSet | None = None,
 ) -> dict[str, object]:
     source = source.expanduser().resolve()
     text_c = source / "src/text.c"
@@ -446,7 +222,7 @@ def prepare_tmc_arabic_source(
     font = build_tmc_arabic_font(font_path)
     encoder = _encoder(source, font)
     if texts is not None:
-        patched = _patch_all(texts, encoder, measure=True)
+        patched = _patch_all(texts, encoder, measure=True, translations=translations)
         for relative, content in patched.items():
             (source / relative).write_text(content, encoding="utf-8", newline="\n")
         asm = source / "data/classic_retro_arabic.s"
@@ -479,7 +255,7 @@ def prepare_tmc_arabic_source(
         "font_sha256": hashlib.sha256(font_path.expanduser().read_bytes()).hexdigest(),
         "font_binary": str(binary),
         "font_binary_sha256": hashlib.sha256(font.data).hexdigest(),
-        "messages": [message.label for message in tmc_arabic_messages()],
+        "messages": list(ENTRY_IDS),
         "build_command": "make CUSTOM=1",
         "base_rom_sha1": USA_ROM_SHA1,
     }
@@ -520,9 +296,14 @@ def _latin_widths(source: Path) -> dict[str, int]:
     return widths
 
 
-def _translate(json_text: str, encoder: TmcArabicEncoder, measure: bool) -> str:
+def _translate(
+    json_text: str,
+    encoder: TmcArabicEncoder,
+    measure: bool,
+    translations: TranslationSet | None = None,
+) -> str:
     tables = json.loads(json_text)
-    for message in tmc_arabic_messages():
+    for message in tmc_arabic_messages(translations):
         try:
             original = tables[message.table][message.index]
         except IndexError as exc:
@@ -619,10 +400,16 @@ def _replace_once(text: str, old: str, new: str, label: str) -> str:
 
 
 def _patch_all(
-    texts: dict[str, str], encoder: TmcArabicEncoder, *, measure: bool
+    texts: dict[str, str],
+    encoder: TmcArabicEncoder,
+    *,
+    measure: bool,
+    translations: TranslationSet | None = None,
 ) -> dict[str, str]:
     patched = _patch_sources(texts)
-    patched["translations/USA.json"] = _translate(texts["translations/USA.json"], encoder, measure)
+    patched["translations/USA.json"] = _translate(
+        texts["translations/USA.json"], encoder, measure, translations
+    )
     return patched
 
 

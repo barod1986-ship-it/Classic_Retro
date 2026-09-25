@@ -184,7 +184,7 @@ def test_shipped_legend_has_one_valid_entry_per_image():
 
     assert [subtitle.index for subtitle in legend] == list(range(7))
     for subtitle in legend:
-        assert subtitle.english
+        assert subtitle.lines
         validate_legend_lines(subtitle.lines)
     assert legend[2].lines == ("الأحجار المقدسة",)
 

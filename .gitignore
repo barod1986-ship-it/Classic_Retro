@@ -38,3 +38,6 @@ artifacts/
 *.bps
 *.xdelta
 *.xdelta3
+
+# Translator workspaces hold text from the user's own copy of a game: never commit them
+*.workspace.json

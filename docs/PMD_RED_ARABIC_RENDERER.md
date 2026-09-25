@@ -127,11 +127,12 @@ compares the result with the bytes stored in `pmd_arabic.py` (run in CI).
 
 ## Translations
 
-The script (`src/classic_retro/rom/pmd_arabic_script.py`) covers the whole
-personality test that a new game starts with: the six floating messages ("Welcome!"
-to "Let the interview begin!"), all 56 questions (55 drawn at random, eight per
+The script (`src/classic_retro/translations/pmd-red.json`; its originals are pinned in
+`src/classic_retro/rom/pmd_arabic_script.py`) covers the whole personality test that a
+new game starts with: the six floating messages (from the welcome to the start of
+the interview), all 56 questions (55 drawn at random, eight per
 game, plus the second half of the alien invasion) with their answers, and the
-gender question: 158 strings behind 206 pointers ("Yes." and "No." are shared by
+gender question: 158 strings behind 206 pointers (the yes and no answers are shared by
 most questions). For each string:
 
 1. its ROM address, the SHA-256 of its bytes and its command skeleton are pinned,

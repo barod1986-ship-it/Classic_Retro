@@ -16,7 +16,8 @@ Reserved Arabic v1 range:
 
 ## Shaping, bidi, and paint order
 
-Translations remain logical Unicode Arabic.
+Translations remain logical Unicode Arabic, in `src/classic_retro/translations/firered.json`
+and pokefirered's own notation (`\n`, `\p`, `{PLAYER}`, `{RIVAL}`).
 
 Classic Retro:
 

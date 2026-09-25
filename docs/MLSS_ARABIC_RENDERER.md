@@ -129,7 +129,8 @@ binutils and compares the result with the bytes stored in `mlss_arabic.py` (run 
 
 ## Translations
 
-The script (`src/classic_retro/rom/mlss_arabic_script.py`) covers the opening, from a
+The script (`src/classic_retro/translations/mlss.json`; its originals are pinned in
+`src/classic_retro/rom/mlss_arabic_script.py`) covers the opening, from a
 new game to the first battle: 12 messages.
 
 - Princess Peach's castle, subtitles: the Beanbean ambassador arrives, her wish and
