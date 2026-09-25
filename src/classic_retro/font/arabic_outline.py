@@ -45,8 +45,8 @@ def font_glyph_text(character: str) -> str:
     decomposition = unicodedata.decomposition(character).split()
     if len(decomposition) == 2 and decomposition[0] in _JOINING_FORMS:
         form, codepoint = decomposition
-        before = "‍" if form in {"<medial>", "<final>"} else ""
-        after = "‍" if form in {"<medial>", "<initial>"} else ""
+        before = "\u200d" if form in {"<medial>", "<final>"} else ""
+        after = "\u200d" if form in {"<medial>", "<initial>"} else ""
         return before + chr(int(codepoint, 16)) + after
     return character
 

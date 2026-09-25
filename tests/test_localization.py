@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib
 import json
 import re
 from pathlib import Path
@@ -128,6 +129,12 @@ def test_the_proven_strategies_are_a_starting_set():
     targets = TargetRegistry(registry)
     targets.register(_target(strategies=("texture-font",)))
     assert targets.using("texture-font") == ["demo"]
+
+
+def test_the_core_modules_of_every_strategy_exist():
+    for strategy in build_strategy_registry(load_external=False):
+        for module in strategy.core:
+            importlib.import_module(module)
 
 
 def test_strategy_registry_checks_what_it_is_given():

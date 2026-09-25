@@ -24,6 +24,7 @@ from fontTools.ttLib import TTFont, TTLibError
 from PIL import Image, ImageChops, ImageDraw, ImageFont
 
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
+from classic_retro.font.glyph_raster import arabic_font_file
 
 PRIVATE_USE_START = 0xE000
 PRIVATE_USE_END = 0xF8FF
@@ -45,12 +46,7 @@ class ShapedLineRenderer:
     """Right-to-left lines of one font at one pixel size."""
 
     def __init__(self, font_path: Path, size: int) -> None:
-        font_path = font_path.expanduser()
-        if not font_path.is_file():
-            raise ClassicRetroError(
-                ErrorCode.FONT_BUILD_FAILED, f"Arabic font file not found: {font_path}"
-            )
-        data = _with_punctuation(font_path.read_bytes())
+        data = _with_punctuation(arabic_font_file(font_path).read_bytes())
         self.size = size
         face = hb.Face(data)
         self._font = hb.Font(face)

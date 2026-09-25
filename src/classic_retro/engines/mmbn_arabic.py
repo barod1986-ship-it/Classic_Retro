@@ -25,13 +25,13 @@ from __future__ import annotations
 
 import math
 import re
-import unicodedata
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 from pathlib import Path
 
 from PIL import Image, ImageChops, ImageDraw
 
+from classic_retro.arabic.logical import check_logical_arabic
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.mmbn import (
     BACKGROUND,
@@ -55,7 +55,9 @@ from classic_retro.engines.mmbn import (
     glyph_code,
     notation_skeleton,
 )
+from classic_retro.font.previews import enlarged_preview_sheet
 from classic_retro.font.shaped_text import ShapedLineRenderer
+from classic_retro.text.commands import require_same_commands
 
 FONT_SIZE = 11
 # Arabic letters sit on row 11 of the 16-row cell: at 11 px the reference
@@ -82,11 +84,6 @@ ALLOWED_COMMANDS = frozenset(
     {0xE7, 0xE8, 0xE9, 0xEA, 0xEB, 0xEC, 0xED, 0xEE, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7}
     | {0xF9, 0xFA, 0xFC}
 )
-_BIDI_CONTROLS = frozenset("\u200e\u200f\u202a\u202b\u202c\u202d\u202e\u2066\u2067\u2068\u2069")
-
-
-def _presentation_form(character: str) -> bool:
-    return "\ufb50" <= character <= "\ufdff" or "\ufe70" <= character <= "\ufeff"
 
 
 def placeholder_latin_cells() -> dict[str, tuple[tuple[int, ...], ...]]:
@@ -270,21 +267,8 @@ def split_runs(text: str) -> tuple[tuple[str, bool], ...]:
 
 def check_text(text: str) -> None:
     """Reject what the line renderer cannot draw faithfully."""
+    check_logical_arabic(text, "MMBN Arabic")
     for character in text:
-        if character in _BIDI_CONTROLS:
-            raise ClassicRetroError(
-                ErrorCode.EXPLICIT_BIDI_CONTROL, "MMBN Arabic text takes no bidi controls"
-            )
-        if _presentation_form(character):
-            raise ClassicRetroError(
-                ErrorCode.PRE_SHAPED_ARABIC_INPUT,
-                f"Write logical Arabic, not presentation form U+{ord(character):04X}",
-            )
-        if unicodedata.category(character) == "Mn":
-            raise ClassicRetroError(
-                ErrorCode.UNSUPPORTED_ARABIC_MARK,
-                f"MMBN Arabic v1 has no vowel marks (U+{ord(character):04X})",
-            )
         if "\u0660" <= character <= "\u0669" or "\u06f0" <= character <= "\u06f9":
             raise ClassicRetroError(
                 ErrorCode.UNENCODABLE_TEXT, "Write numbers with the game's digits (0-9)"
@@ -314,12 +298,7 @@ class MmbnArabicScript:
 
 def validate_command_skeleton(source: tuple[str, ...], pieces: tuple[Piece, ...]) -> None:
     """The translation's commands must equal the original's; only line ends may move."""
-    target = notation_skeleton(pieces)
-    if target != source:
-        raise ClassicRetroError(
-            ErrorCode.TOKEN_ORDER_VIOLATION,
-            "MMBN commands differ from the original: " + "".join(source) + " != " + "".join(target),
-        )
+    require_same_commands("MMBN", source, notation_skeleton(pieces), "".join)
 
 
 def check_pieces(pieces: tuple[Piece, ...]) -> None:
@@ -444,18 +423,7 @@ def page_preview(page: MmbnArabicPage) -> Image.Image:
 
 def pages_sheet(pages: list[tuple[str, MmbnArabicPage]]) -> Image.Image:
     """Page previews one under another, each with its key on the left, at twice the size."""
-    label = 110
-    previews = [(key, page_preview(page)) for key, page in pages]
-    width = label + 2 * max(image.width for _, image in previews)
-    height = sum(2 * image.height + 6 for _, image in previews)
-    sheet = Image.new("RGB", (width, height), (16, 16, 16))
-    draw = ImageDraw.Draw(sheet)
-    y = 0
-    for key, image in previews:
-        draw.text((4, y + 4), key, fill=(220, 220, 140))
-        sheet.paste(image.resize((image.width * 2, image.height * 2), Image.NEAREST), (label, y))
-        y += 2 * image.height + 6
-    return sheet
+    return enlarged_preview_sheet([(key, page_preview(page)) for key, page in pages], 110)
 
 
 def cells_needed(renderer: MmbnLineRenderer, text: str) -> int:

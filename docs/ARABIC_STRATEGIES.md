@@ -141,9 +141,30 @@ The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
 - Adjust a form that does not fit: raise final yeh, or split a 13-pixel seen into
   two glyphs.
 - Medial and final forms end at their last ink column, so joins touch the glyph
-  painted before them.
+  painted before them. An isolated form whose ink fills its advance gets one more
+  pixel, so it never touches the next word. This rule lives in
+  `font/glyph_raster.py`; FireRed, the first target, keeps its own older rule.
 - Shadows follow the game's own. Golden Sun keeps each glyph's shadow inside its
   advance. Harvest Moon shades the whole line, so the shadow crosses cell edges.
+
+## The shared core
+
+What the targets do alike lives in the core. An engine's Arabic module keeps only
+what is its own: cell size, baseline, limits, pixel format, shadow colours and
+commands.
+
+| Module | What it gives | Used by |
+|--------|---------------|---------|
+| `arabic/logical.py` | The checks on logical text: no direction controls, no presentation forms, no vowel marks where the renderer has none. Also the missing-glyph errors | Every target and the translation files |
+| `arabic/glyph_codes.py` | `GlyphCodes`: the codes each form takes, in order. A form drawn as two glyphs takes two | `glyph-font` |
+| `arabic/paint.py` | Right-to-left paint order. It refuses combining marks, mirrored brackets and raw newlines | `glyph-font` |
+| `font/glyph_raster.py` | The largest size that fits the cell. A form drawn at a coverage threshold from its first ink column, with the joining advance. Hand-drawn marks, hamza or madda over alef, shadows inside the advance, 2-bit pixel rows | `glyph-font`, and `fomt` for its shadow |
+| `font/tiles.py` | 4bpp tiles, stored row by row or column by column | `minish-cap`, `mmbn`, `fomt`, the Fire Emblem legend |
+| `font/shaped_text.py` | Whole lines shaped with HarfBuzz and drawn with the reference font | `line-cells`, `text-images` |
+| `font/previews.py` | The glyph atlas, a message's boxes side by side, and preview sheets | The review images of every target but `firered` |
+| `text/commands.py` | Command tokens that carry their codes, and the check that a translation keeps the original's commands | Every rom overlay |
+
+`tests/test_arabic_core.py` checks these pieces with a font drawn in the test.
 
 ## Adding a strategy
 
@@ -159,8 +180,9 @@ The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
    texture-font = "my_package.strategies:TEXTURE_FONT"
    ```
 
-3. Put reusable pieces in the core (`arabic/`, `font/`, `layout/`), not in the
-   target.
+3. Put reusable pieces in the core (`arabic/`, `font/`, `layout/`, `text/`), not in
+   the target. Start from [the shared core](#the-shared-core), and list the modules
+   the strategy uses in its `core` field.
 4. It becomes `proven` when a target ships with it: the target is built from its
    pinned image, checked in an emulator, and its reference patch hash is recorded.
 

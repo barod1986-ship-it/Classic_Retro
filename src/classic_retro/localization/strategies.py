@@ -72,7 +72,13 @@ GLYPH_FONT = RenderingStrategy(
     core=(
         "classic_retro.arabic.repertoire",
         "classic_retro.arabic.paint",
+        "classic_retro.arabic.glyph_codes",
+        "classic_retro.arabic.logical",
         "classic_retro.font.arabic_outline",
+        "classic_retro.font.glyph_raster",
+        "classic_retro.font.tiles",
+        "classic_retro.font.previews",
+        "classic_retro.text.commands",
     ),
     tradeoffs=(
         "no ligatures (lam and alef stay separate forms) and no kerning",
@@ -96,7 +102,14 @@ LINE_CELLS = RenderingStrategy(
         "enough codes and tile memory for the distinct cells of a page or a script",
         "one place that decides a character's column",
     ),
-    core=("classic_retro.font.shaped_text",),
+    core=(
+        "classic_retro.font.shaped_text",
+        "classic_retro.arabic.logical",
+        "classic_retro.font.glyph_raster",
+        "classic_retro.font.tiles",
+        "classic_retro.font.previews",
+        "classic_retro.text.commands",
+    ),
     tradeoffs=(
         "full HarfBuzz shaping: ligatures, kerning, joined letters across cells",
         "text cannot change at run time; names are islands drawn with the game's glyphs",
@@ -113,7 +126,7 @@ TEXT_IMAGES = RenderingStrategy(
         "HarfBuzz and drawn into the game's own image format and palette."
     ),
     engine_needs=("the text is an image the game decodes (tiles, a tile map, a palette)",),
-    core=("classic_retro.font.shaped_text",),
+    core=("classic_retro.font.shaped_text", "classic_retro.font.tiles"),
     tradeoffs=(
         "no hook needed: the images replace the originals",
         "every image must fit the original's budget (size, colours, VRAM)",

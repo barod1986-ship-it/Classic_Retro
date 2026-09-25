@@ -33,6 +33,7 @@ from classic_retro.engines.mlss_arabic import (
     MlssRtlFont,
     MlssRtlGlyph,
     build_mlss_arabic_glyph_map,
+    character_codes,
     validate_command_skeleton,
 )
 from classic_retro.rebuild.bps import apply_bps
@@ -126,14 +127,13 @@ def _fake_font(font_path, latin=None, **_kwargs) -> MlssRtlFont:
         tuple(TEXT if x < 4 and 2 <= y < 9 else 0 for x in range(CELL_WIDTH))
         for y in range(CELL_HEIGHT)
     )
+    space = glyph_map.code(" ")
     glyphs = {code: MlssRtlGlyph(5, ink) for code in glyph_map.all_codes()}
     for character in LATIN_COPIES:
-        glyphs[glyph_map.codes[character]] = latin[character]
+        glyphs[glyph_map.code(character)] = latin[character]
     empty = tuple((0,) * CELL_WIDTH for _ in range(CELL_HEIGHT))
-    glyphs[glyph_map.space] = MlssRtlGlyph(SPACE_ADVANCE, empty)
-    return MlssRtlFont(
-        glyphs=glyphs, codes=dict(glyph_map.codes), space=glyph_map.space, font_size=10
-    )
+    glyphs[space] = MlssRtlGlyph(SPACE_ADVANCE, empty)
+    return MlssRtlFont(glyphs=glyphs, codes=character_codes(glyph_map), space=space, font_size=10)
 
 
 @pytest.fixture(scope="module")

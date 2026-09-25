@@ -24,17 +24,17 @@ side, and hamza or madda above alef get a small drawn mark (see _MARKED_ALEF).
 
 from __future__ import annotations
 
-import math
-import unicodedata
+from collections.abc import Iterable
 from dataclasses import dataclass
 from enum import StrEnum
 from functools import lru_cache
-from io import BytesIO
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
-from classic_retro.arabic.paint import reject_combining_marks, rtl_paint_order
+from classic_retro.arabic.glyph_codes import GlyphCodes, assign_glyph_codes
+from classic_retro.arabic.logical import no_glyph
+from classic_retro.arabic.paint import reject_combining_marks, reject_mirrored, rtl_paint_order
 from classic_retro.arabic.repertoire import arabic_presentation_repertoire, legacy_renderer_pipeline
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.pmd import (
@@ -49,12 +49,19 @@ from classic_retro.engines.pmd import (
     glyph_bitmap,
     notation_skeleton,
 )
-from classic_retro.font.arabic_outline import (
-    contextual_font_data,
-    joins_left_neighbour,
-    joins_right_neighbour,
+from classic_retro.font.arabic_outline import contextual_font_data
+from classic_retro.font.glyph_raster import (
+    DrawnForm,
+    FormDoesNotFit,
+    alef_with_mark,
+    arabic_font_file,
+    draw_form,
+    drawn_mark,
+    largest_fitting_size,
 )
-from classic_retro.text.tokens import InlineToken, TextToken, TokenKind, TokenMovement, TokenStream
+from classic_retro.font.previews import glyph_atlas, pages_right_to_left, preview_sheet
+from classic_retro.text.commands import command_codes, command_token, require_same_commands
+from classic_retro.text.tokens import InlineToken, TextToken, TokenKind, TokenStream
 
 ARABIC_LEAD = 0x84
 # Second bytes for right-to-left glyphs: 0x8486/0x8487 are the game's own
@@ -66,7 +73,6 @@ RTL_STYLE = STYLE_SHADOW
 
 BASELINE = 8
 LATIN_ROW_SHIFT = -1
-INK_THRESHOLD = 96
 SPACE_ADVANCE = 4
 SPLIT_WIDTH = 2 * GLYPH_COLUMNS
 
@@ -97,8 +103,6 @@ _MARKED_ALEF: dict[str, tuple[str, tuple[str, ...], int]] = {
     "ﺁ": ("ﺍ", _MADDA_MARK, -1),
     "ﺂ": ("ﺎ", _MADDA_MARK, -1),
 }
-# The game font cannot mirror, and the shared bidi step does not apply rule L4.
-_MIRRORED = frozenset("()[]{}<>«»‹›")
 
 
 class PmdTextBox(StrEnum):
@@ -134,33 +138,20 @@ def code_bytes(code: int) -> bytes:
     return bytes((code >> 8, code & 0xFF))
 
 
-@dataclass(frozen=True, slots=True)
-class PmdArabicGlyphMap:
-    """Character -> right-to-left codes (two for forms that may split)."""
-
-    space: int
-    codes: dict[str, tuple[int, ...]]
-
-    def all_codes(self) -> tuple[int, ...]:
-        return (self.space, *sorted({code for codes in self.codes.values() for code in codes}))
+def pmd_glyph_codes(characters: Iterable[str]) -> GlyphCodes:
+    """Codes ``84 XX`` for ``characters`` in order; a form that may split takes two."""
+    return assign_glyph_codes(
+        characters,
+        (ARABIC_LEAD << 8 | trail for trail in ARABIC_TRAILS),
+        what="PMD right-to-left glyphs",
+        doubled=SPLIT_FORMS,
+    )
 
 
 @lru_cache(maxsize=1)
-def build_pmd_arabic_glyph_map() -> PmdArabicGlyphMap:
-    characters = (*LATIN_COPIES, *arabic_presentation_repertoire())
-    needed = 1 + len(characters) + sum(1 for character in characters if character in SPLIT_FORMS)
-    if needed > len(ARABIC_TRAILS):
-        raise ClassicRetroError(
-            ErrorCode.ARABIC_GLYPH_CAPACITY_EXCEEDED,
-            f"Right-to-left glyphs need {needed} codes; 0x84XX has {len(ARABIC_TRAILS)}",
-        )
-    trails = iter(ARABIC_TRAILS)
-    space = ARABIC_LEAD << 8 | next(trails)
-    codes: dict[str, tuple[int, ...]] = {}
-    for character in characters:
-        count = 2 if character in SPLIT_FORMS else 1
-        codes[character] = tuple(ARABIC_LEAD << 8 | next(trails) for _ in range(count))
-    return PmdArabicGlyphMap(space=space, codes=codes)
+def build_pmd_arabic_glyph_map() -> GlyphCodes:
+    """The space first, then the Latin copies and the Arabic forms."""
+    return pmd_glyph_codes((" ", *LATIN_COPIES, *arabic_presentation_repertoire()))
 
 
 @dataclass(frozen=True, slots=True)
@@ -244,41 +235,48 @@ def build_pmd_rtl_font(
     font_path: Path,
     latin: dict[str, PmdRtlGlyph] | None = None,
     *,
-    glyph_map: PmdArabicGlyphMap | None = None,
+    glyph_map: GlyphCodes | None = None,
 ) -> PmdRtlFont:
     """Rasterize the Arabic forms into 12x12 cells and add the Latin copies."""
     glyph_map = glyph_map or build_pmd_arabic_glyph_map()
-    font_path = font_path.expanduser()
-    if not font_path.is_file():
-        raise ClassicRetroError(
-            ErrorCode.FONT_BUILD_FAILED, f"Arabic font file not found: {font_path}"
-        )
     latin = latin if latin is not None else placeholder_latin_glyphs()
     arabic = tuple(
         character
-        for character in glyph_map.codes
-        if character not in LATIN_COPIES and character not in _PUNCTUATION_INK
+        for character in glyph_map.characters
+        if character != " " and character not in LATIN_COPIES and character not in _PUNCTUATION_INK
     )
     # Hamza and madda over alef are drawn from the alef forms, not from the font.
     outlined = tuple(character for character in arabic if character not in _MARKED_ALEF)
-    size, rendered = _choose_size(contextual_font_data(font_path, outlined), arabic)
-    glyphs: dict[int, PmdRtlGlyph] = {glyph_map.space: _glyph(set(), SPACE_ADVANCE)}
-    sequences: dict[str, tuple[int, ...]] = {" ": (glyph_map.space,)}
-    for character, codes in glyph_map.codes.items():
+    _, size, rendered = largest_fitting_size(
+        contextual_font_data(arabic_font_file(font_path), outlined),
+        range(12, 5, -1),
+        lambda font: _forms(font, arabic),
+        "Selected font cannot fit the PMD 12x12 glyph cell",
+    )
+    space = glyph_map.code(" ")
+    assert space is not None
+    glyphs: dict[int, PmdRtlGlyph] = {space: _glyph(set(), SPACE_ADVANCE)}
+    sequences: dict[str, tuple[int, ...]] = {" ": (space,)}
+    for character in glyph_map.characters:
+        codes = glyph_map.sequences[character]
+        if character == " ":
+            continue
         if character in LATIN_COPIES:
             pieces: tuple[PmdRtlGlyph, ...] = (latin[character],)
         elif character in _PUNCTUATION_INK:
-            pieces = (_drawn_punctuation(character),)
+            pieces = (_glyph(*drawn_mark(_PUNCTUATION_INK[character], BASELINE)),)
         else:
-            ink, width = rendered[character]
-            pieces = _split(character, ink, width)
+            form = rendered[character]
+            pieces = _split(character, form.ink, form.advance)
         for code, piece in zip(codes, pieces, strict=False):
             glyphs[code] = piece
         sequences[character] = codes[: len(pieces)]
-    return PmdRtlFont(glyphs=glyphs, sequences=sequences, space=glyph_map.space, font_size=size)
+    return PmdRtlFont(glyphs=glyphs, sequences=sequences, space=space, font_size=size)
 
 
-def _split(character: str, ink: set[tuple[int, int]], width: int) -> tuple[PmdRtlGlyph, ...]:
+def _split(
+    character: str, ink: set[tuple[int, int]] | frozenset[tuple[int, int]], width: int
+) -> tuple[PmdRtlGlyph, ...]:
     """One glyph, or its right part then its left part (paint order)."""
     if width <= GLYPH_COLUMNS:
         return (_glyph(ink, width),)
@@ -286,137 +284,56 @@ def _split(character: str, ink: set[tuple[int, int]], width: int) -> tuple[PmdRt
     return (_glyph(ink, GLYPH_COLUMNS, left), _glyph(ink, left, columns=left))
 
 
-def _choose_size(
-    font_data: bytes, characters: tuple[str, ...]
-) -> tuple[int, dict[str, tuple[set[tuple[int, int]], int]]]:
-    """Largest size whose forms fit 12 rows around the row-8 anchor (and 12 columns)."""
-    for size in range(12, 5, -1):
-        font = ImageFont.truetype(
-            BytesIO(font_data), size=size, layout_engine=ImageFont.Layout.BASIC
-        )
-        try:
-            rendered = {
-                character: _rasterize(font, character)
-                for character in characters
-                if character not in _MARKED_ALEF
-            }
-            for composed, (alef, mark, shift) in _MARKED_ALEF.items():
-                if composed in characters:
-                    if alef not in rendered:
-                        rendered[alef] = _rasterize(font, alef)
-                    rendered[composed] = _marked_alef(composed, *rendered[alef], mark, shift)
-            if any(_leaves_cell(ink) for ink, _ in rendered.values()):
-                continue
-        except _DoesNotFit:
-            continue
-        return size, rendered
-    raise ClassicRetroError(
-        ErrorCode.FONT_BUILD_FAILED, "Selected font cannot fit the PMD 12x12 glyph cell"
-    )
+def _forms(
+    font: ImageFont.FreeTypeFont, characters: tuple[str, ...]
+) -> dict[str, DrawnForm] | None:
+    """Every form at this size, or None when one leaves the 12x12 cell (rows around the
+    row-8 anchor, and 12 columns or 24 for a form that splits)."""
+    try:
+        rendered = {
+            character: _rasterize(font, character)
+            for character in characters
+            if character not in _MARKED_ALEF
+        }
+        for composed, (alef, mark, shift) in _MARKED_ALEF.items():
+            if composed in characters:
+                if alef not in rendered:
+                    rendered[alef] = _rasterize(font, alef)
+                rendered[composed] = alef_with_mark(composed, rendered[alef], mark, shift)
+    except FormDoesNotFit:
+        return None
+    if any(_leaves_cell(form.ink) for form in rendered.values()):
+        return None
+    return rendered
 
 
-class _DoesNotFit(Exception):
-    pass
-
-
-def _leaves_cell(ink: set[tuple[int, int]]) -> bool:
+def _leaves_cell(ink: frozenset[tuple[int, int]]) -> bool:
     return any(not 0 <= y < GLYPH_ROWS for _, y in ink)
 
 
-def _rasterize(font: ImageFont.FreeTypeFont, character: str) -> tuple[set[tuple[int, int]], int]:
-    margin = GLYPH_ROWS
-    cell = Image.new("L", (GLYPH_COLUMNS * 4, GLYPH_ROWS + 2 * margin), 0)
-    left, _, right, _ = font.getbbox(character, anchor="ls")
-    ImageDraw.Draw(cell).text(
-        (GLYPH_COLUMNS - left, margin + BASELINE), character, font=font, fill=255, anchor="ls"
-    )
-    pixels = cell.load()
-    ink = {
-        (x, y - margin)
-        for y in range(cell.height)
-        for x in range(cell.width)
-        if pixels[x, y] >= INK_THRESHOLD
-    }
-    if not ink:
-        raise ClassicRetroError(
-            ErrorCode.FONT_BUILD_FAILED,
-            f"Selected font produced an empty glyph for U+{ord(character):04X}",
-        )
-    ink_left = min(x for x, _ in ink)
-    ink = {(x - ink_left, y) for x, y in ink}
-    ink_right = max(x for x, _ in ink)
-    if joins_right_neighbour(character):
-        # Medial and final forms end at their last ink column, touching the
-        # glyph painted before them (on their right).
-        width = ink_right + 1
-    else:
-        width = max(math.ceil(font.getlength(character)), right - left, ink_right + 1)
-        if not joins_left_neighbour(character) and width == ink_right + 1:
-            width += 1
+def _rasterize(font: ImageFont.FreeTypeFont, character: str) -> DrawnForm:
+    form = draw_form(font, character, BASELINE)
     limit = SPLIT_WIDTH if character in SPLIT_FORMS else GLYPH_COLUMNS
-    if width > limit:
-        raise _DoesNotFit
-    return ink, width
-
-
-def _marked_alef(
-    character: str,
-    alef: set[tuple[int, int]],
-    width: int,
-    mark: tuple[str, ...],
-    shift: int,
-) -> tuple[set[tuple[int, int]], int]:
-    """The alef cut one row below ``mark``, with the mark drawn from its stroke plus ``shift``."""
-    stroke = min(x for x, _ in alef)
-    kept = {(x, y) for x, y in alef if y > len(mark)}
-    marked = {
-        (stroke + shift + x, y)
-        for y, row in enumerate(mark)
-        for x, pixel in enumerate(row)
-        if pixel == "#"
-    }
-    if not kept:
-        raise _DoesNotFit
-    ink = kept | marked
-    left = min(x for x, _ in ink)
-    ink = {(x - left, y) for x, y in ink}
-    right = max(x for x, _ in ink)
-    if joins_right_neighbour(character):
-        width = right + 1
-    else:
-        width = max(width - left, right + 2)
-    return ink, width
-
-
-def _drawn_punctuation(character: str) -> PmdRtlGlyph:
-    rows = _PUNCTUATION_INK[character]
-    top = BASELINE - len(rows)
-    ink = {
-        (x, top + y) for y, row in enumerate(rows) for x, pixel in enumerate(row) if pixel == "#"
-    }
-    return _glyph(ink, len(rows[0]) + 1)
+    if form.advance > limit:
+        raise FormDoesNotFit
+    return form
 
 
 def font_preview(font: PmdRtlFont) -> Image.Image:
     """Atlas of the right-to-left glyphs: ink white, width dark red, baseline blue."""
     codes = sorted(font.glyphs)
-    cell = GLYPH_COLUMNS + 2
-    atlas = Image.new("RGB", (16 * cell, math.ceil(len(codes) / 16) * cell), (40, 40, 40))
-    for index, code in enumerate(codes):
-        glyph = font.glyphs[code]
-        origin_x = (index % 16) * cell + 1
-        origin_y = (index // 16) * cell + 1
-        for y in range(GLYPH_ROWS):
-            for x in range(GLYPH_COLUMNS):
-                colour = (0, 0, 0)
-                if glyph.pixels[y][x]:
-                    colour = (255, 255, 255)
-                elif x >= glyph.width:
-                    colour = (70, 20, 20)
-                elif y == BASELINE:
-                    colour = (20, 20, 70)
-                atlas.putpixel((origin_x + x, origin_y + y), colour)
-    return atlas
+
+    def colour(index: int, x: int, y: int) -> tuple[int, int, int]:
+        glyph = font.glyphs[codes[index]]
+        if glyph.pixels[y][x]:
+            return (255, 255, 255)
+        if x >= glyph.width:
+            return (70, 20, 20)
+        if y == BASELINE:
+            return (20, 20, 70)
+        return (0, 0, 0)
+
+    return glyph_atlas(len(codes), GLYPH_COLUMNS, GLYPH_ROWS, colour)
 
 
 def string_preview(font: PmdRtlFont, data: bytes, box: PmdTextBox) -> Image.Image:
@@ -460,11 +377,7 @@ def string_preview(font: PmdRtlFont, data: bytes, box: PmdTextBox) -> Image.Imag
             boxes.append(Image.new("RGB", (width, height), (24, 32, 72)))
             x, y = start, 2
         index += 1 if byte == ord("\n") else 2
-    image = Image.new("RGB", (len(boxes) * (width + 4) - 4, height), (0, 0, 0))
-    for number, panel in enumerate(reversed(boxes)):
-        # The first box is on the right, like the text.
-        image.paste(panel, (number * (width + 4), 0))
-    return image
+    return pages_right_to_left(boxes)
 
 
 def _line_width(font: PmdRtlFont, data: bytes, index: int) -> int:
@@ -481,16 +394,7 @@ def _line_width(font: PmdRtlFont, data: bytes, index: int) -> int:
 
 def strings_sheet(images: list[tuple[str, Image.Image]]) -> Image.Image:
     """Previews one under another, each with its key on the left."""
-    label = 90
-    width = label + max(image.width for _, image in images)
-    sheet = Image.new("RGB", (width, sum(image.height + 4 for _, image in images)), (12, 12, 12))
-    draw = ImageDraw.Draw(sheet)
-    y = 0
-    for key, image in images:
-        draw.text((2, y + 2), key, fill=(200, 200, 120))
-        sheet.paste(image, (width - image.width, y))
-        y += image.height + 4
-    return sheet
+    return preview_sheet(images, 90)
 
 
 def pmd_command_token(token_id: str, command: PmdCommand) -> InlineToken:
@@ -500,13 +404,7 @@ def pmd_command_token(token_id: str, command: PmdCommand) -> InlineToken:
         kind = TokenKind.PAGE_BREAK
     else:
         kind = TokenKind.CONTROL
-    return InlineToken(
-        id=token_id,
-        kind=kind,
-        movement=TokenMovement.ORDERED,
-        name=command.name,
-        args={"codes": command.data.hex(" ")},
-    )
+    return command_token(token_id, kind, command.data.hex(" "), name=command.name)
 
 
 def pmd_stream(pieces: tuple[Piece, ...], prefix: str = "t") -> TokenStream:
@@ -537,8 +435,9 @@ class PmdArabicEncoder:
             self.advances: dict[int, int] | None = font.advances()
         else:
             # Without a font, forms that may split keep one code and widths are unknown.
-            self.sequences = {character: codes[:1] for character, codes in glyph_map.codes.items()}
-            self.sequences[" "] = (glyph_map.space,)
+            self.sequences = {
+                character: codes[:1] for character, codes in glyph_map.sequences.items()
+            }
             self.advances = None
 
     def encode(self, pieces: tuple[Piece, ...], box: PmdTextBox) -> PmdArabicEncoding:
@@ -550,14 +449,8 @@ class PmdArabicEncoder:
                     ErrorCode.UNSUPPORTED_CONTROL_CODE,
                     f"PMD Arabic v1 does not support {piece.notation!r} in {box} text",
                 )
-            if isinstance(piece, str):
-                mirrored = sorted({character for character in piece if character in _MIRRORED})
-                if mirrored:
-                    raise ClassicRetroError(
-                        ErrorCode.UNENCODABLE_TEXT,
-                        "PMD Arabic v1 cannot mirror bracket glyphs: " + "".join(mirrored),
-                    )
         stream = pmd_stream(pieces)
+        reject_mirrored(stream, "PMD Arabic v1")
         reject_combining_marks(stream, "PMD Arabic font v1")
         data = bytearray()
         widths = [0]
@@ -570,7 +463,7 @@ class PmdArabicEncoder:
                         if self.advances is not None:
                             widths[-1] += self.advances[code]
                 continue
-            command = bytes.fromhex(str(token.args["codes"]))
+            command = bytes(command_codes(token, "PMD"))
             data += command
             if token.name == NEWLINE_COMMAND.name:
                 widths.append(0)
@@ -598,22 +491,9 @@ class PmdArabicEncoder:
         sequence = self.sequences.get(character)
         if sequence is not None:
             return sequence
-        if unicodedata.category(character).startswith("L") and "ARABIC" in unicodedata.name(
-            character, ""
-        ):
-            raise ClassicRetroError(
-                ErrorCode.MISSING_GLYPH, f"No PMD Arabic glyph for U+{ord(character):04X}"
-            )
-        raise ClassicRetroError(
-            ErrorCode.UNENCODABLE_TEXT, f"PMD Arabic text has no glyph for {character!r}"
-        )
+        raise no_glyph(character, "PMD Arabic")
 
 
 def validate_command_skeleton(source: tuple[str, ...], pieces: tuple[Piece, ...]) -> None:
     """The translation's commands must equal the original's; only line ends may move."""
-    target = notation_skeleton(pieces)
-    if target != source:
-        raise ClassicRetroError(
-            ErrorCode.TOKEN_ORDER_VIOLATION,
-            "PMD commands differ from the original: " + "".join(source) + " != " + "".join(target),
-        )
+    require_same_commands("PMD", source, notation_skeleton(pieces), "".join)

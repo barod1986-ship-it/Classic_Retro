@@ -5,6 +5,7 @@ from fontTools.feaLib.builder import addOpenTypeFeaturesFromString
 from fontTools.fontBuilder import FontBuilder
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 
+from classic_retro.arabic.glyph_codes import GlyphCodes
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines import mlss_arabic
 from classic_retro.engines.mlss import MlssFont, glyph_bytes, parse_notation
@@ -24,11 +25,11 @@ from classic_retro.engines.mlss_arabic import (
     SPACE_ADVANCE,
     TEXT,
     MlssArabicEncoder,
-    MlssArabicGlyphMap,
     MlssRtlFont,
     MlssRtlGlyph,
     build_mlss_arabic_glyph_map,
     build_mlss_rtl_font,
+    character_codes,
     font_preview,
     latin_rtl_glyphs,
     message_preview,
@@ -36,6 +37,7 @@ from classic_retro.engines.mlss_arabic import (
     placeholder_latin_glyphs,
     validate_command_skeleton,
 )
+from classic_retro.font.glyph_raster import DrawnForm
 
 EMPTY = tuple((0,) * CELL_WIDTH for _ in range(CELL_HEIGHT))
 
@@ -46,11 +48,10 @@ def _fake_font(width: int = 5) -> MlssRtlFont:
         tuple(TEXT if x < 4 and 2 <= y < 9 else 0 for x in range(CELL_WIDTH))
         for y in range(CELL_HEIGHT)
     )
+    space = glyph_map.code(" ")
     glyphs = {code: MlssRtlGlyph(width, ink) for code in glyph_map.all_codes()}
-    glyphs[glyph_map.space] = MlssRtlGlyph(SPACE_ADVANCE, EMPTY)
-    return MlssRtlFont(
-        glyphs=glyphs, codes=dict(glyph_map.codes), space=glyph_map.space, font_size=10
-    )
+    glyphs[space] = MlssRtlGlyph(SPACE_ADVANCE, EMPTY)
+    return MlssRtlFont(glyphs=glyphs, codes=character_codes(glyph_map), space=space, font_size=10)
 
 
 def _codes(data: bytes) -> list[int]:
@@ -67,7 +68,7 @@ def _codes(data: bytes) -> list[int]:
 
 
 def _code(character: str) -> int:
-    return build_mlss_arabic_glyph_map().codes[character]
+    return build_mlss_arabic_glyph_map().code(character)
 
 
 def test_glyph_map_uses_printable_codes_below_the_font_prefixes():
@@ -77,9 +78,9 @@ def test_glyph_map_uses_printable_codes_below_the_font_prefixes():
     assert len(codes) == len(set(codes))
     assert all(code in ARABIC_CODES for code in codes)
     assert min(ARABIC_CODES) == 0x21 and max(ARABIC_CODES) < 0xFA
-    assert glyph_map.space == 0x21
-    assert set(LATIN_COPIES) <= set(glyph_map.codes)
-    assert {"٠", "٩", "؟", "،", "؛", "ﺃ", "ﻲ"} <= set(glyph_map.codes)
+    assert glyph_map.code(" ") == 0x21
+    assert set(LATIN_COPIES) <= set(glyph_map.characters)
+    assert {"٠", "٩", "؟", "،", "؛", "ﺃ", "ﻲ"} <= set(glyph_map.characters)
 
 
 def test_text_is_stored_in_right_to_left_paint_order():
@@ -215,11 +216,11 @@ def contextual_font(tmp_path):
     return path
 
 
-def _small_map() -> MlssArabicGlyphMap:
+def _small_map() -> GlyphCodes:
     full = build_mlss_arabic_glyph_map()
-    characters = (*LATIN_COPIES, "ﺃ", "ﺄ", "ﺏ", "ﺐ", "ﺑ", "ﺒ")
-    return MlssArabicGlyphMap(
-        space=full.space, codes={character: full.codes[character] for character in characters}
+    characters = (" ", *LATIN_COPIES, "ﺃ", "ﺄ", "ﺏ", "ﺐ", "ﺑ", "ﺒ")
+    return GlyphCodes(
+        characters, {character: full.sequences[character] for character in characters}
     )
 
 
@@ -231,7 +232,7 @@ def test_font_fits_the_cell_and_joins(contextual_font):
     glyph_map = _small_map()
     font = build_mlss_rtl_font(contextual_font, glyph_map=glyph_map)
 
-    assert font.glyphs[glyph_map.space].width == SPACE_ADVANCE
+    assert font.glyphs[glyph_map.code(" ")].width == SPACE_ADVANCE
     for code, glyph in font.glyphs.items():
         assert 1 <= glyph.width <= CELL_WIDTH
         assert all(value in (0, TEXT, SOFT) for row in glyph.pixels for value in row)
@@ -249,7 +250,7 @@ def test_font_fits_the_cell_and_joins(contextual_font):
 
     packed = font.game_font()
     assert (packed.cell_width, packed.cell_height) == (CELL_WIDTH, CELL_HEIGHT)
-    assert packed.widths[glyph_map.space] == SPACE_ADVANCE and packed.widths[0xF9] == 1
+    assert packed.widths[glyph_map.code(" ")] == SPACE_ADVANCE and packed.widths[0xF9] == 1
     assert packed.glyphs[font.codes["ﺏ"]] == font.glyphs[font.codes["ﺏ"]].data()
 
 
@@ -263,15 +264,16 @@ def test_hamza_on_alef_keeps_an_empty_row_above_the_stroke(contextual_font):
 
 
 def test_raised_forms_move_up_and_keep_their_join():
-    values = {(0, 12): TEXT, (3, 12): TEXT, (5, 8): TEXT, (5, 5): TEXT, (0, 10): TEXT}
-    final, width = mlss_arabic._raised("ﻲ", (values, 6))
-    assert width == 6 and max(y for _, y in final) == CELL_HEIGHT - 1
-    assert (5, BASELINE - 1) in final and (5, 7) in final
-    isolated, _ = mlss_arabic._raised("ﻱ", (values, 6))
-    assert (5, BASELINE - 1) not in isolated
+    ink = frozenset({(0, 12), (3, 12), (5, 8), (5, 5), (0, 10)})
+    form = DrawnForm(ink, frozenset({(1, 12)}), 6)
+    final = mlss_arabic._raised("ﻲ", form)
+    assert final.advance == 6 and max(y for _, y in final.ink | final.soft) == CELL_HEIGHT - 1
+    assert (5, BASELINE - 1) in final.ink and (5, 7) in final.ink and (1, 11) in final.soft
+    isolated = mlss_arabic._raised("ﻱ", form)
+    assert (5, BASELINE - 1) not in isolated.ink
     # A form that already fits is left alone.
-    inside = {(0, 3): TEXT}
-    assert mlss_arabic._raised("ﻱ", (inside, 4)) == (inside, 4)
+    inside = DrawnForm(frozenset({(0, 3)}), frozenset(), 4)
+    assert mlss_arabic._raised("ﻱ", inside) == inside
 
 
 def _latin_font(**changes: int) -> MlssFont:

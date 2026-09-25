@@ -133,4 +133,10 @@ Automatic font shrinking or arbitrary mid-word breaks are not performed. An engi
 
 This layer describes glyph identity and layout metrics only.
 
-It does not yet convert PNG/TTF artwork to console tile data, patch a ROM font, or assign binary character codes. Those are engine/platform build responsibilities that will use this shared model.
+Building a game's Arabic font uses other shared modules:
+
+- `font.glyph_raster` draws each form from the TTF into the game's cell.
+- `font.tiles` stores pixels as 4bpp tiles.
+- `arabic.glyph_codes` gives each form its character codes.
+
+Writing a ROM font in the game's own format stays with each engine (see [ARABIC_STRATEGIES.md](ARABIC_STRATEGIES.md#the-shared-core)).

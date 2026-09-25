@@ -50,9 +50,7 @@ def test_opentype_font_without_presentation_cmap_renders_four_distinct_forms(
 ):
     monkeypatch.setattr(features, "check_feature", lambda feature: False)
     characters = ("\ufe8f", "\ufe90", "\ufe91", "\ufe92")
-    glyphs = arabic.ArabicGlyphMap(
-        characters, dict(zip(characters, range(0x40, 0x44), strict=True))
-    )
+    glyphs = arabic.firered_glyph_codes(characters)
     atlas_path = tmp_path / "font.png"
     widths_path = tmp_path / "widths.bin"
     result = arabic.build_arabic_font_atlas(

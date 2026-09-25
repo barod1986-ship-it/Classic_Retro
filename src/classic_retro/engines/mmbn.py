@@ -37,6 +37,7 @@ from dataclasses import dataclass
 
 from classic_retro.adapters.base import EngineAdapter
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
+from classic_retro.font.tiles import pack_4bpp, unpack_4bpp
 
 ROM_BASE = 0x08000000
 SYMBOL_LEAD = 0xE5
@@ -485,22 +486,13 @@ def cell_data(pixels: Iterable[Iterable[int]]) -> bytes:
     rows = [list(row) for row in pixels]
     if len(rows) != CELL_HEIGHT or any(len(row) != CELL_WIDTH for row in rows):
         raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, "An MMBN cell is 8x16 pixels")
-    data = bytearray()
-    for row in rows:
-        for x in range(0, CELL_WIDTH, 2):
-            if not (0 <= row[x] <= 0xF and 0 <= row[x + 1] <= 0xF):
-                raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, "An MMBN pixel has 4 bits")
-            data.append(row[x] | row[x + 1] << 4)
-    return bytes(data)
+    return pack_4bpp(rows)
 
 
 def cell_pixels(data: bytes) -> tuple[tuple[int, ...], ...]:
     if len(data) != CELL_BYTES:
         raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, "An MMBN cell is 64 bytes")
-    return tuple(
-        tuple(data[y * 4 + x // 2] >> 4 * (x & 1) & 0xF for x in range(CELL_WIDTH))
-        for y in range(CELL_HEIGHT)
-    )
+    return unpack_4bpp(data, CELL_WIDTH, CELL_HEIGHT)
 
 
 def font_cell(rom: bytes, font_address: int, code: int) -> tuple[tuple[int, ...], ...]:

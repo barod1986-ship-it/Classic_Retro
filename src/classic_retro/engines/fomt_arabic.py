@@ -31,13 +31,13 @@ the font puts its own (found by comparing the two glyphs at a large size).
 from __future__ import annotations
 
 import math
-import unicodedata
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 
 from PIL import Image, ImageChops, ImageDraw
 
+from classic_retro.arabic.logical import check_logical_arabic
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.fomt import (
     BOX_COLUMNS,
@@ -54,7 +54,11 @@ from classic_retro.engines.fomt import (
     Piece,
     command_skeleton,
 )
+from classic_retro.font.glyph_raster import drop_shadow
+from classic_retro.font.previews import enlarged_preview_sheet
 from classic_retro.font.shaped_text import ShapedGlyph, ShapedLineRenderer
+from classic_retro.font.tiles import pack_4bpp, unpack_4bpp
+from classic_retro.text.commands import require_same_commands
 
 FONT_SIZE = 10
 # Arabic letters sit on row 11 of the 16-row cell (flat letters end on row
@@ -99,33 +103,15 @@ HAMZA = ("##", "#.")
 HAMZA_GAP = 1
 PROBE_SIZE = 100
 
-_BIDI_CONTROLS = frozenset("\u200e\u200f\u202a\u202b\u202c\u202d\u202e\u2066\u2067\u2068\u2069")
 # Characters a translation may use besides Arabic letters.
 PUNCTUATION = frozenset(" .!:\u060c\u061b\u061f")
 DIGITS = frozenset("0123456789")
 
 
-def _presentation_form(character: str) -> bool:
-    return "\ufb50" <= character <= "\ufdff" or "\ufe70" <= character <= "\ufeff"
-
-
 def check_text(text: str) -> None:
     """Reject what the cell renderer cannot draw faithfully."""
+    check_logical_arabic(text, "FoMT Arabic")
     for character in text:
-        if character in _BIDI_CONTROLS:
-            raise ClassicRetroError(
-                ErrorCode.EXPLICIT_BIDI_CONTROL, "FoMT Arabic text takes no bidi controls"
-            )
-        if _presentation_form(character):
-            raise ClassicRetroError(
-                ErrorCode.PRE_SHAPED_ARABIC_INPUT,
-                f"Write logical Arabic, not presentation form U+{ord(character):04X}",
-            )
-        if unicodedata.category(character) == "Mn":
-            raise ClassicRetroError(
-                ErrorCode.UNSUPPORTED_ARABIC_MARK,
-                f"FoMT Arabic v1 has no vowel marks (U+{ord(character):04X})",
-            )
         if not (
             "\u0621" <= character <= "\u064a" or character in PUNCTUATION or character in DIGITS
         ):
@@ -144,42 +130,22 @@ Pixels = tuple[tuple[int, ...], ...]
 
 def cell_data(pixels: Sequence[Sequence[int]]) -> bytes:
     """The tiles of a cell (8 or 16 pixels wide, 16 tall), line by line."""
-    width = len(pixels[0])
-    data = bytearray()
-    for tile_row in range(CELL_HEIGHT // 8):
-        for tile_column in range(width // 8):
-            for y in range(8):
-                row = pixels[tile_row * 8 + y]
-                for x in range(tile_column * 8, tile_column * 8 + 8, 2):
-                    data.append(row[x] | (row[x + 1] << 4))
-    return bytes(data)
+    return pack_4bpp(pixels)
 
 
 def cell_pixels(data: bytes, width: int = CELL_WIDTH) -> Pixels:
-    columns = width // 8
-    rows: list[list[int]] = [[0] * width for _ in range(CELL_HEIGHT)]
-    for tile in range(len(data) // 32):
-        tile_row, tile_column = divmod(tile, columns)
-        for y in range(8):
-            for x in range(0, 8, 2):
-                value = data[tile * 32 + y * 4 + x // 2]
-                rows[tile_row * 8 + y][tile_column * 8 + x] = value & 0xF
-                rows[tile_row * 8 + y][tile_column * 8 + x + 1] = value >> 4
-    return tuple(tuple(row) for row in rows)
+    return unpack_4bpp(data, width, CELL_HEIGHT)
 
 
 def with_shadow(ink: Sequence[Sequence[bool]]) -> list[list[int]]:
     """Ink as colour 1 and the game's shadow (right, down-right) as colour 2."""
     height, width = len(ink), len(ink[0])
-    pixels = [[INK if ink[y][x] else 0 for x in range(width)] for y in range(height)]
-    for y in range(height):
-        for x in range(width):
-            if not ink[y][x]:
-                continue
-            for dx, dy in SHADOW_OFFSETS:
-                if 0 <= x + dx < width and 0 <= y + dy < height and not ink[y + dy][x + dx]:
-                    pixels[y + dy][x + dx] = SHADOW
-    return pixels
+    drawn = {(x, y) for y in range(height) for x in range(width) if ink[y][x]}
+    shadow = drop_shadow(drawn, SHADOW_OFFSETS, width, height)
+    return [
+        [INK if (x, y) in drawn else SHADOW if (x, y) in shadow else 0 for x in range(width)]
+        for y in range(height)
+    ]
 
 
 @dataclass(frozen=True, slots=True)
@@ -397,12 +363,7 @@ class FomtArabicText:
 
 def validate_command_skeleton(source: tuple[str, ...], pieces: Sequence[Piece]) -> None:
     """The translation's commands must equal the original's; only line ends may move."""
-    target = command_skeleton(pieces)
-    if target != source:
-        raise ClassicRetroError(
-            ErrorCode.TOKEN_ORDER_VIOLATION,
-            "FoMT commands differ from the original: " + "".join(source) + " != " + "".join(target),
-        )
+    require_same_commands("FoMT", source, command_skeleton(pieces), "".join)
 
 
 class FomtArabicEncoder:
@@ -594,15 +555,4 @@ def tag_preview(codes: bytes, bank: TagBank) -> Image.Image:
 
 def previews_sheet(previews: Iterable[tuple[str, Image.Image]]) -> Image.Image:
     """Previews one under another, each with its key on the left, at twice the size."""
-    label = 150
-    items = list(previews)
-    width = label + 2 * max(image.width for _, image in items)
-    height = sum(2 * image.height + 6 for _, image in items)
-    sheet = Image.new("RGB", (width, height), (16, 16, 16))
-    draw = ImageDraw.Draw(sheet)
-    y = 0
-    for key, image in items:
-        draw.text((4, y + 4), key, fill=(220, 220, 140))
-        sheet.paste(image.resize((image.width * 2, image.height * 2), Image.NEAREST), (label, y))
-        y += 2 * image.height + 6
-    return sheet
+    return enlarged_preview_sheet(list(previews), 150)

@@ -23,17 +23,22 @@ right-to-left paint order.
 
 from __future__ import annotations
 
-import math
-import unicodedata
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from enum import StrEnum
 from functools import lru_cache
-from io import BytesIO
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageFont
 
-from classic_retro.arabic.paint import reject_combining_marks, rtl_paint_order
+from classic_retro.arabic.glyph_codes import GlyphCodes, assign_glyph_codes
+from classic_retro.arabic.logical import no_glyph
+from classic_retro.arabic.paint import (
+    reject_combining_marks,
+    reject_mirrored,
+    reject_text_newlines,
+    rtl_paint_order,
+)
 from classic_retro.arabic.repertoire import arabic_presentation_repertoire, legacy_renderer_pipeline
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.fire_emblem import (
@@ -55,12 +60,19 @@ from classic_retro.engines.fire_emblem import (
     skeleton_notation,
     split_notation,
 )
-from classic_retro.font.arabic_outline import (
-    contextual_font_data,
-    joins_left_neighbour,
-    joins_right_neighbour,
+from classic_retro.font.arabic_outline import contextual_font_data
+from classic_retro.font.glyph_raster import (
+    arabic_font_file,
+    draw_form,
+    drawn_mark,
+    drop_shadow,
+    form_bounds,
+    largest_fitting_size,
+    two_bit_rows,
 )
-from classic_retro.text.tokens import InlineToken, TextToken, TokenKind, TokenMovement, TokenStream
+from classic_retro.font.previews import glyph_atlas
+from classic_retro.text.commands import command_codes, command_token, require_same_commands
+from classic_retro.text.tokens import InlineToken, TextToken, TokenKind, TokenStream
 
 RTL_MARKER = 0x1E
 ARABIC_CODE_BASE = 0x82
@@ -74,7 +86,6 @@ CELL_WIDTH = 16
 # rows 1..15. The game's Latin glyphs end on row 13 and move up three rows.
 BASELINE = 11
 LATIN_ROW_SHIFT = -3
-INK_THRESHOLD = 96
 PIXEL_INK = 3
 PIXEL_SHADE = 2
 
@@ -86,8 +97,6 @@ TAB_ADVANCE = 6
 
 # Arabic-Indic digits have no code left; translations use Western digits.
 _EXCLUDED = frozenset(chr(code) for code in range(0x0660, 0x066A))
-# The game font cannot mirror, and the shared bidi step does not apply rule L4.
-_MIRRORED = frozenset("()[]{}<>«»‹›")
 # At 10 pixels the reference font draws the Arabic comma as two pixels; these
 # follow its slanted Kufi comma at a readable size (rows end on the baseline).
 _PUNCTUATION_INK: dict[str, tuple[str, ...]] = {
@@ -137,12 +146,8 @@ def fire_emblem_command(token_id: str, command: bytes) -> InlineToken:
         kind = TokenKind.PAGE_BREAK
     else:
         kind = TokenKind.CONTROL
-    return InlineToken(
-        id=token_id,
-        kind=kind,
-        movement=TokenMovement.ORDERED,
-        name=command_notation(command).strip("[]"),
-        args={"codes": command.hex(" ")},
+    return command_token(
+        token_id, kind, command.hex(" "), name=command_notation(command).strip("[]")
     )
 
 
@@ -158,55 +163,36 @@ def fire_emblem_stream(notation: str, prefix: str = "t") -> TokenStream:
 
 
 def token_command(token: InlineToken) -> bytes:
-    codes = token.args.get("codes")
-    if not isinstance(codes, str) or not codes:
-        raise ClassicRetroError(
-            ErrorCode.UNENCODABLE_TOKEN, f"Fire Emblem token {token.id} carries no command bytes"
-        )
-    return bytes.fromhex(codes)
+    return bytes(command_codes(token, "Fire Emblem"))
 
 
-@dataclass(frozen=True, slots=True)
-class FireEmblemArabicGlyphMap:
-    characters: tuple[str, ...]
-    slots: dict[str, int]
-
-    def code(self, character: str) -> int | None:
-        slot = self.slots.get(character)
-        return None if slot is None else ARABIC_CODE_BASE + slot
+def fire_emblem_glyph_codes(characters: Iterable[str]) -> GlyphCodes:
+    """Codes 0x82..0xFE for ``characters``: the byte codes the talk font leaves free."""
+    return assign_glyph_codes(
+        characters, range(ARABIC_CODE_BASE, LAST_ARABIC_CODE + 1), what="Fire Emblem Arabic glyphs"
+    )
 
 
 @lru_cache(maxsize=1)
-def build_fire_emblem_arabic_glyph_map() -> FireEmblemArabicGlyphMap:
-    characters = tuple(
+def build_fire_emblem_arabic_glyph_map() -> GlyphCodes:
+    return fire_emblem_glyph_codes(
         character for character in arabic_presentation_repertoire() if character not in _EXCLUDED
     )
-    if ARABIC_CODE_BASE + len(characters) - 1 > LAST_ARABIC_CODE:
-        raise ClassicRetroError(
-            ErrorCode.ARABIC_GLYPH_CAPACITY_EXCEEDED,
-            f"Arabic glyph set needs {len(characters)} codes; 0x82..0xFE has "
-            f"{LAST_ARABIC_CODE - ARABIC_CODE_BASE + 1}",
-        )
-    return FireEmblemArabicGlyphMap(
-        characters=characters,
-        slots={character: index for index, character in enumerate(characters)},
+
+
+def _encode_rows(
+    ink: set[tuple[int, int]] | frozenset[tuple[int, int]], width: int
+) -> FireEmblemGlyph:
+    shade = drop_shadow(ink, ((1, 0),), min(width, CELL_WIDTH), CELL_HEIGHT)
+    rows = two_bit_rows(
+        ink,
+        shade,
+        columns=CELL_WIDTH,
+        height=CELL_HEIGHT,
+        ink_value=PIXEL_INK,
+        shadow_value=PIXEL_SHADE,
     )
-
-
-def _encode_rows(ink: set[tuple[int, int]], width: int) -> FireEmblemGlyph:
-    # The shade stays inside the glyph's own width: the neighbour on the right
-    # is painted first and must keep its joining stroke.
-    shade = {(x + 1, y) for x, y in ink if x + 1 < min(width, CELL_WIDTH)} - ink
-    rows = []
-    for y in range(CELL_HEIGHT):
-        value = 0
-        for x in range(CELL_WIDTH):
-            if (x, y) in ink:
-                value |= PIXEL_INK << 2 * x
-            elif (x, y) in shade:
-                value |= PIXEL_SHADE << 2 * x
-        rows.append(value)
-    return FireEmblemGlyph(width, tuple(rows))
+    return FireEmblemGlyph(width, rows)
 
 
 @dataclass(frozen=True, slots=True)
@@ -263,17 +249,17 @@ def build_fire_emblem_rtl_font(
     font_path: Path,
     talk: FireEmblemFont | None = None,
     *,
-    glyph_map: FireEmblemArabicGlyphMap | None = None,
+    glyph_map: GlyphCodes | None = None,
 ) -> FireEmblemRtlFont:
     """Rasterize the Arabic forms into 16x16 cells and add the game's own Latin glyphs."""
     glyph_map = glyph_map or build_fire_emblem_arabic_glyph_map()
-    font_path = font_path.expanduser()
-    if not font_path.is_file():
-        raise ClassicRetroError(
-            ErrorCode.FONT_BUILD_FAILED, f"Arabic font file not found: {font_path}"
-        )
     outlined = tuple(c for c in glyph_map.characters if c not in _PUNCTUATION_INK)
-    font, size = _choose_font(contextual_font_data(font_path, outlined), outlined)
+    font, size, _ = largest_fitting_size(
+        contextual_font_data(arabic_font_file(font_path), outlined),
+        range(14, 5, -1),
+        lambda font: _fits(font, outlined),
+        "Selected font cannot fit the Fire Emblem 16x15 glyph area",
+    )
     glyphs: dict[int, FireEmblemGlyph] = latin_rtl_glyphs(talk) if talk is not None else {}
     if talk is None:
         glyphs[FALLBACK_CODE] = _encode_rows(set(), USA_TALK_ADVANCES["?"])
@@ -282,7 +268,7 @@ def build_fire_emblem_rtl_font(
     widths: dict[str, int] = {}
     for character in glyph_map.characters:
         if character in _PUNCTUATION_INK:
-            ink, width = _drawn_punctuation(character)
+            ink, width = drawn_mark(_PUNCTUATION_INK[character], BASELINE)
         else:
             ink, width = _rasterize(font, character)
         code = glyph_map.code(character)
@@ -292,89 +278,43 @@ def build_fire_emblem_rtl_font(
     return FireEmblemRtlFont(glyphs=glyphs, font_size=size, arabic_widths=widths)
 
 
-def _choose_font(
-    font_data: bytes, characters: tuple[str, ...]
-) -> tuple[ImageFont.FreeTypeFont, int]:
-    """Largest size whose ink fits rows 1..15 around the row-11 anchor."""
-    for size in range(14, 5, -1):
-        font = ImageFont.truetype(
-            BytesIO(font_data), size=size, layout_engine=ImageFont.Layout.BASIC
-        )
-        boxes = [font.getbbox(character, anchor="ls") for character in characters]
-        top = min(box[1] for box in boxes)
-        bottom = max(box[3] for box in boxes)
-        widest = max(box[2] - box[0] for box in boxes)
-        if BASELINE + top >= 1 and BASELINE + bottom <= CELL_HEIGHT and widest < CELL_WIDTH:
-            return font, size
-    raise ClassicRetroError(
-        ErrorCode.FONT_BUILD_FAILED, "Selected font cannot fit the Fire Emblem 16x15 glyph area"
-    )
+def _fits(font: ImageFont.FreeTypeFont, characters: Sequence[str]) -> bool | None:
+    """Whether the ink fits rows 1..15 around the row-11 anchor, narrower than a cell."""
+    bounds = form_bounds(font, characters)
+    if (
+        BASELINE + bounds.top >= 1
+        and BASELINE + bounds.bottom <= CELL_HEIGHT
+        and bounds.widest_ink < CELL_WIDTH
+    ):
+        return True
+    return None
 
 
-def _rasterize(font: ImageFont.FreeTypeFont, character: str) -> tuple[set[tuple[int, int]], int]:
-    cell = Image.new("L", (CELL_WIDTH * 3, CELL_HEIGHT), 0)
-    left, _, right, _ = font.getbbox(character, anchor="ls")
-    ImageDraw.Draw(cell).text(
-        (CELL_WIDTH - left, BASELINE), character, font=font, fill=255, anchor="ls"
-    )
-    pixels = cell.load()
-    ink = {
-        (x, y)
-        for y in range(CELL_HEIGHT)
-        for x in range(cell.width)
-        if pixels[x, y] >= INK_THRESHOLD
-    }
-    if not ink:
+def _rasterize(
+    font: ImageFont.FreeTypeFont, character: str
+) -> tuple[frozenset[tuple[int, int]], int]:
+    form = draw_form(font, character, BASELINE)
+    if form.advance > CELL_WIDTH:
         raise ClassicRetroError(
             ErrorCode.FONT_BUILD_FAILED,
-            f"Selected font produced an empty glyph for U+{ord(character):04X}",
+            f"Glyph U+{ord(character):04X} needs {form.advance}px; a Fire Emblem glyph holds 16",
         )
-    ink_left = min(x for x, _ in ink)
-    ink = {(x - ink_left, y) for x, y in ink}
-    ink_right = max(x for x, _ in ink)
-    if joins_right_neighbour(character):
-        # Medial and final forms end at their last ink column, touching the
-        # glyph painted before them (on their right).
-        width = ink_right + 1
-    else:
-        width = max(math.ceil(font.getlength(character)), right - left, ink_right + 1)
-        if not joins_left_neighbour(character) and width == ink_right + 1:
-            width += 1
-    if width > CELL_WIDTH:
-        raise ClassicRetroError(
-            ErrorCode.FONT_BUILD_FAILED,
-            f"Glyph U+{ord(character):04X} needs {width}px; a Fire Emblem glyph holds 16",
-        )
-    return ink, width
-
-
-def _drawn_punctuation(character: str) -> tuple[set[tuple[int, int]], int]:
-    rows = _PUNCTUATION_INK[character]
-    top = BASELINE - len(rows)
-    ink = {
-        (x, top + y) for y, row in enumerate(rows) for x, pixel in enumerate(row) if pixel == "#"
-    }
-    return ink, len(rows[0]) + 1
+    return form.ink, form.advance
 
 
 def font_preview(font: FireEmblemRtlFont) -> Image.Image:
     """Atlas of the right-to-left glyphs: ink white, shade grey, width dark red."""
     codes = sorted(font.glyphs)
-    cell = CELL_WIDTH + 2
-    atlas = Image.new("RGB", (16 * cell, math.ceil(len(codes) / 16) * cell), (40, 40, 40))
     colours = {0: (0, 0, 0), PIXEL_INK: (255, 255, 255), PIXEL_SHADE: (130, 130, 150)}
-    for index, code in enumerate(codes):
-        glyph = font.glyphs[code]
-        origin_x = (index % 16) * cell + 1
-        origin_y = (index // 16) * cell + 1
-        for y in range(CELL_HEIGHT):
-            for x in range(CELL_WIDTH):
-                value = glyph.pixel(x, y)
-                colour = colours.get(value, (255, 0, 0))
-                if value == 0 and x >= glyph.width:
-                    colour = (70, 20, 20)
-                atlas.putpixel((origin_x + x, origin_y + y), colour)
-    return atlas
+
+    def colour(index: int, x: int, y: int) -> tuple[int, int, int]:
+        glyph = font.glyphs[codes[index]]
+        value = glyph.pixel(x, y)
+        if value == 0 and x >= glyph.width:
+            return (70, 20, 20)
+        return colours.get(value, (255, 0, 0))
+
+    return glyph_atlas(len(codes), CELL_WIDTH, CELL_HEIGHT, colour)
 
 
 @dataclass(frozen=True, slots=True)
@@ -395,7 +335,7 @@ class FireEmblemArabicEncoder:
         self,
         *,
         advances: dict[int, int],
-        glyph_map: FireEmblemArabicGlyphMap | None = None,
+        glyph_map: GlyphCodes | None = None,
     ) -> None:
         self.pipeline = legacy_renderer_pipeline()
         self.glyph_map = glyph_map or build_fire_emblem_arabic_glyph_map()
@@ -403,20 +343,9 @@ class FireEmblemArabicEncoder:
 
     def prepare_paint_order(self, stream: TokenStream) -> TokenStream:
         reject_combining_marks(stream, "Fire Emblem Arabic font v1")
-        for token in stream.tokens:
-            if isinstance(token, TextToken):
-                mirrored = sorted({character for character in token.text if character in _MIRRORED})
-                if mirrored:
-                    raise ClassicRetroError(
-                        ErrorCode.UNENCODABLE_TEXT,
-                        "Fire Emblem Arabic v1 cannot mirror bracket glyphs: " + "".join(mirrored),
-                    )
-                if "\n" in token.text:
-                    raise ClassicRetroError(
-                        ErrorCode.UNENCODABLE_TEXT,
-                        "Use [LF] tokens instead of '\\n' in Fire Emblem text",
-                    )
-                continue
+        reject_mirrored(stream, "Fire Emblem Arabic v1")
+        reject_text_newlines(stream, "Use [LF] tokens instead of '\\n' in Fire Emblem text")
+        for token in stream.inline_tokens:
             command = token_command(token)
             if command[0] == EXTENDED and len(command) == 2 and command[1] in RUNTIME_TEXT_COMMANDS:
                 raise ClassicRetroError(
@@ -507,15 +436,7 @@ class FireEmblemArabicEncoder:
                 ErrorCode.MISSING_GLYPH,
                 "Fire Emblem Arabic v1 has no Arabic-Indic digits; use 0-9",
             )
-        if unicodedata.category(character).startswith("L") and "ARABIC" in unicodedata.name(
-            character, ""
-        ):
-            raise ClassicRetroError(
-                ErrorCode.MISSING_GLYPH, f"No Fire Emblem Arabic glyph for U+{ord(character):04X}"
-            )
-        raise ClassicRetroError(
-            ErrorCode.UNENCODABLE_TEXT, f"Fire Emblem Arabic text has no glyph for {character!r}"
-        )
+        raise no_glyph(character, "Fire Emblem Arabic")
 
 
 def validate_command_skeleton(source_skeleton: tuple[bytes, ...], stream: TokenStream) -> None:
@@ -525,12 +446,6 @@ def validate_command_skeleton(source_skeleton: tuple[bytes, ...], stream: TokenS
         token_command(token) if isinstance(token, InlineToken) else b"a" * len(token.text)
         for token in stream.tokens
     )
-    target = command_skeleton(layout)
-    if target != source_skeleton:
-        raise ClassicRetroError(
-            ErrorCode.TOKEN_ORDER_VIOLATION,
-            "Fire Emblem commands differ from the original: "
-            + skeleton_notation(source_skeleton)
-            + " != "
-            + skeleton_notation(target),
-        )
+    require_same_commands(
+        "Fire Emblem", source_skeleton, command_skeleton(layout), skeleton_notation
+    )
