@@ -103,7 +103,7 @@ renderer as `code | next << 16 | 1 << 31` so the two can never be confused.
 The game's code treats `r4` as a scratch register; the hooks keep nothing in
 it across a call into the game.
 
-`classic-retro golden-sun check-hooks` re-assembles the source with GNU
+`classic-retro targets check-hooks golden-sun` re-assembles the source with GNU
 binutils and compares the result with the bytes stored in
 `golden_sun_arabic.py` (run in CI).
 
@@ -156,10 +156,10 @@ With mGBA 0.10.2 (libmgba, headless, scripted input) on the patched build:
 ## Commands
 
 ```sh
-classic-retro golden-sun check-translations --font NotoKufiArabic-SemiBold.ttf
-classic-retro golden-sun build-arabic original.gba --font NotoKufiArabic-SemiBold.ttf --out-dir out
+classic-retro targets check-translations golden-sun --font NotoKufiArabic-SemiBold.ttf
+classic-retro targets build golden-sun original.gba --font NotoKufiArabic-SemiBold.ttf --out-dir out
 classic-retro golden-sun encode-arabic "صباح الخير" --font NotoKufiArabic-SemiBold.ttf
-classic-retro golden-sun check-hooks
+classic-retro targets check-hooks golden-sun
 ```
 
 ## v1 boundary

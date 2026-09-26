@@ -51,8 +51,11 @@ curl -L -o NotoKufiArabic-SemiBold.ttf "https://raw.githubusercontent.com/notofo
 3. ابنِ الرقعة:
 
 ```sh
-classic-retro mlss build-arabic "Mario & Luigi - Superstar Saga (USA).gba" --font NotoKufiArabic-SemiBold.ttf --out-dir mlss-arabic
+classic-retro targets build mlss "Mario & Luigi - Superstar Saga (USA).gba" --font NotoKufiArabic-SemiBold.ttf --out-dir mlss-arabic
 ```
+
+يطبع الأمر تقرير البناء، ويجب أن تكون فيه `matches_reference` صحيحة (`true`): الرقعة مطابقة للرقعة
+المرجعية عند البناء بالخط المرجعي.
 
 يكتب الأمر في المجلد `mlss-arabic`:
 
@@ -62,8 +65,8 @@ classic-retro mlss build-arabic "Mario & Luigi - Superstar Saga (USA).gba" --fon
 - `arabic_font_preview.png`: كل حروف الخط العربي كما ستُرسم.
 
 أضف `--write-rom mlss-arabic-test.gba` إذا أردت الناتج مباشرة دون تطبيق الرقعة، و
-`classic-retro mlss check-translations --font NotoKufiArabic-SemiBold.ttf --text-preview messages.png`
-إذا أردت صورة لكل الرسائل دون النسخة.
+`classic-retro targets check-translations mlss --font NotoKufiArabic-SemiBold.ttf --preview-dir previews`
+إذا أردت صورة لكل الرسائل دون النسخة (`previews/arabic_messages_preview.png`).
 
 ## تطبيق الرقعة
 

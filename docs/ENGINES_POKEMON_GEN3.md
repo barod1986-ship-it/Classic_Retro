@@ -82,10 +82,8 @@ Relevant upstream areas:
 - graphics/fonts/
 - charmap.txt
 
-The generic Arabic pipeline remains responsible for logical Arabic, shaping/BiDi, and layout policy. The Pokémon engine adapter will decide which prepared representation is consumed by the modified renderer.
+The shared Arabic core (`arabic/`) shapes the logical text and puts it in visual order; `engines/pokemon_gen3_arabic.py` encodes it in the modified renderer's right-to-left paint order, through this codec.
 
-## Current boundary
+## The Arabic target
 
-This step makes FireRed Rev 1 an exact detected game and establishes a lossless Gen III text codec.
-
-It does not yet inject Arabic glyph graphics or alter the upstream renderer. Those are the next engine-specific steps and will be developed against the pinned source build, keeping compare_firered_rev1 as the pre-localization baseline.
+FireRed Rev 1 is the `firered` localization target: `source/pokefirered_arabic.py` patches the pinned pokefirered checkout (the right-to-left renderer, the Arabic font and the 13 Professor Oak speech strings), which then builds the image. See [the renderer notes](POKEMON_GEN3_ARABIC_RENDERER.md).

@@ -1,8 +1,7 @@
-"""Built-in game-engine adapters."""
+"""Game-engine adapters and the text engines they describe.
 
-from classic_retro.engines.pokemon_gen3 import (
-    PokemonGen3EngineAdapter,
-    PokemonGen3TextCodec,
-)
-
-__all__ = ["PokemonGen3EngineAdapter", "PokemonGen3TextCodec"]
+Each engine module holds what the toolkit knows of a text engine: its encoding
+and commands and, where a target needs them, its font and text box rules. Its
+``*_arabic`` module turns logical Arabic into what that engine draws. The
+targets in ``classic_retro.localization.builtin`` use them.
+"""

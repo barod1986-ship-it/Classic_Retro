@@ -47,18 +47,6 @@ def extract(image: Path, translations: TranslationSet | None = None) -> tuple[st
     return origin, ff6a_arabic.extract_originals(image.read_bytes(), translations)
 
 
-def _check_translations_command(args: argparse.Namespace) -> int:
-    return print_json(ff6a_arabic.check_ff6a_translations(args.font, args.preview))
-
-
-def _check_hooks_command(_: argparse.Namespace) -> int:
-    return print_json(check_hooks())
-
-
-def _build_command(args: argparse.Namespace) -> int:
-    return print_json(build(args.rom.read_bytes(), args.font, args.out_dir, args.write_rom))
-
-
 def _encode_command(args: argparse.Namespace) -> int:
     return print_json(ff6a_arabic.encode_ff6a_arabic_line(args.text, args.font))
 
@@ -69,40 +57,6 @@ def register_cli(subcommands: argparse._SubParsersAction) -> None:
         help="Final Fantasy VI Advance (USA) Arabic ROM overlay helpers",
     )
     ff6a_commands = ff6a.add_subparsers(dest="ff6a_command", required=True)
-
-    ff6a_check = ff6a_commands.add_parser(
-        "check-translations",
-        help="Validate the Arabic script without the ROM; with --font, measure every line",
-    )
-    ff6a_check.add_argument(
-        "--font",
-        type=Path,
-        help="Arabic TTF/OTF; also builds the font and measures every translated line",
-    )
-    ff6a_check.add_argument(
-        "--preview", type=Path, help="Write the generated Arabic glyph atlas as PNG"
-    )
-    ff6a_check.set_defaults(handler=_check_translations_command)
-
-    ff6a_hooks = ff6a_commands.add_parser(
-        "check-hooks",
-        help="Re-assemble the Thumb hooks with arm-none-eabi binutils and compare the bytes",
-    )
-    ff6a_hooks.set_defaults(handler=_check_hooks_command)
-
-    ff6a_build = ff6a_commands.add_parser(
-        "build-arabic",
-        help="Build the Arabic BPS patch (and optionally the patched image) from the USA ROM",
-    )
-    ff6a_build.add_argument("rom", type=Path)
-    ff6a_build.add_argument("--font", type=Path, required=True)
-    ff6a_build.add_argument("--out-dir", type=Path, required=True)
-    ff6a_build.add_argument(
-        "--write-rom",
-        metavar="NAME",
-        help="Also write the patched image into --out-dir under this name (local use only)",
-    )
-    ff6a_build.set_defaults(handler=_build_command)
 
     ff6a_encode = ff6a_commands.add_parser(
         "encode-arabic",

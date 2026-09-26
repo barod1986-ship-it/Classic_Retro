@@ -53,26 +53,22 @@ curl -L -o NotoKufiArabic-SemiBold.ttf "https://raw.githubusercontent.com/notofo
 3. ابنِ الرقعة:
 
 ```sh
-classic-retro phantom-hourglass build-arabic "Legend of Zelda, The - Phantom Hourglass (USA) (En,Fr,Es).nds" --font NotoKufiArabic-SemiBold.ttf --out-dir ph-arabic
-```
-
-أو بالأمر العام الذي يقارن الرقعة بالمرجعية:
-
-```sh
 classic-retro targets build phantom-hourglass "Legend of Zelda, The - Phantom Hourglass (USA) (En,Fr,Es).nds" --font NotoKufiArabic-SemiBold.ttf --out-dir ph-arabic
 ```
+
+يطبع الأمر تقرير البناء، ويجب أن تكون فيه `matches_reference` صحيحة (`true`): الرقعة مطابقة للرقعة
+المرجعية عند البناء بالخط المرجعي.
 
 يستغرق البناء بضع ثوانٍ، ويكتب في المجلد `ph-arabic`:
 
 - `zelda-phantom-hourglass-usa-arabic-prologue.bps`: الرقعة (حوالي 7 كيلوبايت). تحمل الحروف العربية
   المرسومة مكان حروف الكانا في خط اللعبة والنصوص المعرّبة وشيفرة الاتجاه، لا نصوص اللعبة ولا شيفرتها.
-- `build-report.json`: بصمات النسخة والناتج والرقعة، وعرض كل سطر عربي بالبكسل، وأين وُضعت الملفات. مع
-  `targets build` يجب أن تكون `matches_reference` صحيحة.
+- `build-report.json`: بصمات النسخة والناتج والرقعة، وعرض كل سطر عربي بالبكسل، وأين وُضعت الملفات.
 - `arabic_font_preview.png`: كل حروف الخط العربي التي يستخدمها النص كما ستُرسم.
 
 أضف `--write-rom ph-arabic-test.nds` إذا أردت الناتج مباشرة دون تطبيق الرقعة، و
-`classic-retro phantom-hourglass check-translations --font NotoKufiArabic-SemiBold.ttf --text-preview messages.png`
-إذا أردت صورة لكل صفحات المقدمة كما يعرضها صندوقها دون النسخة.
+`classic-retro targets check-translations phantom-hourglass --font NotoKufiArabic-SemiBold.ttf --preview-dir previews`
+إذا أردت صورة لكل صفحات المقدمة كما يعرضها صندوقها دون النسخة (`previews/arabic_messages_preview.png`).
 
 ## تطبيق الرقعة
 

@@ -51,26 +51,22 @@ curl -L -o NotoKufiArabic-SemiBold.ttf "https://raw.githubusercontent.com/notofo
 3. ابنِ الرقعة:
 
 ```sh
-classic-retro tactics-ogre build-arabic "Tactics Ogre - The Knight of Lodis (USA).gba" --font NotoKufiArabic-SemiBold.ttf --out-dir tactics-ogre-arabic
-```
-
-أو بالأمر العام الذي يقارن الرقعة بالمرجعية:
-
-```sh
 classic-retro targets build tactics-ogre "Tactics Ogre - The Knight of Lodis (USA).gba" --font NotoKufiArabic-SemiBold.ttf --out-dir tactics-ogre-arabic
 ```
+
+يطبع الأمر تقرير البناء، ويجب أن تكون فيه `matches_reference` صحيحة (`true`): الرقعة مطابقة للرقعة
+المرجعية عند البناء بالخط المرجعي.
 
 يكتب الأمر في المجلد `tactics-ogre-arabic`:
 
 - `tactics-ogre-usa-arabic-opening.bps`: الرقعة (حوالي 5 كيلوبايت). الرسائل الإنجليزية لا تتغير؛ الخط
   العربي والرسائل المعرّبة تُخزن في المساحة الفارغة في آخر النسخة، فلا تحمل الرقعة نصوص اللعبة.
-- `build-report.json`: بصمات النسخة والناتج والرقعة، وعرض كل سطر عربي بالبكسل. مع `targets build`
-  يجب أن تكون `matches_reference` صحيحة.
+- `build-report.json`: بصمات النسخة والناتج والرقعة، وعرض كل سطر عربي بالبكسل.
 - `arabic_font_preview.png`: كل حروف الخط العربي التي يستخدمها النص كما ستُرسم.
 
 أضف `--write-rom tactics-ogre-arabic-test.gba` إذا أردت الناتج مباشرة دون تطبيق الرقعة، و
-`classic-retro tactics-ogre check-translations --font NotoKufiArabic-SemiBold.ttf --text-preview messages.png`
-إذا أردت صورة لكل الرسائل دون النسخة.
+`classic-retro targets check-translations tactics-ogre --font NotoKufiArabic-SemiBold.ttf --preview-dir previews`
+إذا أردت صورة لكل الرسائل دون النسخة (`previews/arabic_messages_preview.png`).
 
 ## تطبيق الرقعة
 

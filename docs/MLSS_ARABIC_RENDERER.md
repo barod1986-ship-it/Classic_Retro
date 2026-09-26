@@ -105,7 +105,7 @@ keep their pointers.
 | `0x0819975C` | 16 bytes of the printer's pen-x code (`ldrb r4, [r5, #12]` ...) | `bl` to a veneer, `b 0x0819977A`, `nop`, then the veneer: `ldr r0, =hook_draw_x; bx r0` |
 
 The hook area is out of `BL` range from the printer, hence the veneer inside the
-replaced code. `classic-retro mlss check-hooks` re-assembles the source with GNU
+replaced code. `classic-retro targets check-hooks mlss` re-assembles the source with GNU
 binutils and compares the result with the bytes stored in `mlss_arabic.py` (run in CI).
 
 ## Font

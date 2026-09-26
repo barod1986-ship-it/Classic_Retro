@@ -58,26 +58,22 @@ curl -L -o NotoKufiArabic-SemiBold.ttf "https://raw.githubusercontent.com/notofo
 3. ابنِ الرقعة:
 
 ```sh
-classic-retro platinum build-arabic "Pokemon - Platinum Version (USA).nds" --font NotoKufiArabic-SemiBold.ttf --out-dir platinum-arabic
-```
-
-أو بالأمر العام الذي يقارن الرقعة بالمرجعية لنسختك:
-
-```sh
 classic-retro targets build platinum "Pokemon - Platinum Version (USA).nds" --font NotoKufiArabic-SemiBold.ttf --out-dir platinum-arabic
 ```
+
+يطبع الأمر تقرير البناء، ويجب أن تكون فيه `matches_reference` صحيحة (`true`): الرقعة مطابقة للرقعة
+المرجعية لنسختك عند البناء بالخط المرجعي.
 
 يستغرق البناء بضع ثوانٍ ويحتاج نحو 1 غيغابايت من الذاكرة، ويكتب في المجلد `platinum-arabic`:
 
 - `platinum-usa-arabic-intro.bps`: الرقعة (حوالي 13 كيلوبايت). تحمل الحروف العربية المضافة إلى خطي اللعبة
   والنصوص المعرّبة وشيفرة الاتجاه، لا نصوص اللعبة ولا شيفرتها.
-- `build-report.json`: بصمات النسخة والناتج والرقعة، وعرض كل سطر عربي بالبكسل، وأين وُضعت الملفات. مع
-  `targets build` يجب أن تكون `matches_reference` صحيحة.
+- `build-report.json`: بصمات النسخة والناتج والرقعة، وعرض كل سطر عربي بالبكسل، وأين وُضعت الملفات.
 - `arabic_font_preview.png`: كل حروف الخط العربي التي يستخدمها النص كما ستُرسم.
 
 أضف `--write-rom platinum-arabic-test.nds` إذا أردت الناتج مباشرة دون تطبيق الرقعة، و
-`classic-retro platinum check-translations --font NotoKufiArabic-SemiBold.ttf --text-preview messages.png`
-إذا أردت صورة لكل النصوص كما تعرضها نوافذها دون النسخة.
+`classic-retro targets check-translations platinum --font NotoKufiArabic-SemiBold.ttf --preview-dir previews`
+إذا أردت صورة لكل النصوص كما تعرضها نوافذها دون النسخة (`previews/arabic_messages_preview.png`).
 
 ## تطبيق الرقعة
 

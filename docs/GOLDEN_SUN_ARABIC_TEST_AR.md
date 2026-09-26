@@ -42,8 +42,11 @@ curl -L -o NotoKufiArabic-SemiBold.ttf "https://raw.githubusercontent.com/notofo
 3. ابنِ الرقعة:
 
 ```sh
-classic-retro golden-sun build-arabic "Golden Sun (USA, Europe).gba" --font NotoKufiArabic-SemiBold.ttf --out-dir golden-sun-arabic
+classic-retro targets build golden-sun "Golden Sun (USA, Europe).gba" --font NotoKufiArabic-SemiBold.ttf --out-dir golden-sun-arabic
 ```
+
+يطبع الأمر تقرير البناء، ويجب أن تكون فيه `matches_reference` صحيحة (`true`): الرقعة مطابقة للرقعة
+المرجعية عند البناء بالخط المرجعي.
 
 يكتب الأمر في المجلد `golden-sun-arabic`:
 

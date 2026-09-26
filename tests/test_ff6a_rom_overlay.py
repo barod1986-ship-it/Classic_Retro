@@ -215,7 +215,7 @@ def test_changed_code_or_script_is_refused(tmp_path, monkeypatch):
 
 
 def test_cli_checks_the_script_and_encodes_a_line(capsys):
-    assert main(["ff6a", "check-translations"]) == 0
+    assert main(["targets", "check-translations", "ff6a"]) == 0
     report = json.loads(capsys.readouterr().out)
     assert report["lines_measured"] is False
     assert 1 in report["messages"] and 20 in report["messages"]
@@ -233,7 +233,16 @@ def test_cli_refuses_an_unknown_rom(tmp_path, capsys):
     font.write_bytes(b"x")
 
     code = main(
-        ["ff6a", "build-arabic", str(rom), "--font", str(font), "--out-dir", str(tmp_path / "o")]
+        [
+            "targets",
+            "build",
+            "ff6a",
+            str(rom),
+            "--font",
+            str(font),
+            "--out-dir",
+            str(tmp_path / "o"),
+        ]
     )
     assert code == 2
     assert "UNKNOWN_GAME_REVISION" in capsys.readouterr().err

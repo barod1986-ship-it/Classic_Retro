@@ -69,7 +69,7 @@ make tools
 cp "/path/to/Legend of Zelda, The - The Minish Cap (USA).gba" baserom.gba
 make            # يبني النسخة الأصلية ويتحقق من SHA-1 قبل أي تعديل
 
-classic-retro tmc prepare-arabic-source . --font /path/to/NotoKufiArabic-SemiBold.ttf
+classic-retro targets prepare minish-cap . --font /path/to/NotoKufiArabic-SemiBold.ttf
 make CUSTOM=1
 flips --create --exact --bps baserom.gba tmc.gba minish-cap-usa-arabic-opening.bps
 ```
@@ -77,7 +77,7 @@ flips --create --exact --bps baserom.gba tmc.gba minish-cap-usa-arabic-opening.b
 الخط المرجعي هو Noto Kufi Arabic SemiBold نفسه المستخدم في تجربة FireRed
 (رخصة SIL Open Font License 1.1)، وبصمته SHA-256:
 `aa30cd2663f1eb1c940c9cd6a898877f307c2572e72a8a352896fe23f512018e`.
-يكتب الأمر `prepare-arabic-source` معاينة للخط في
+يكتب الأمر `targets prepare` معاينة للخط في
 `data/classic_retro/arabic_font_preview.png`.
 
 إذا سبق تجهيز المصدر بإصدار قديم من التعديل، استخدم نسخة نظيفة من الـ commit المحدد.

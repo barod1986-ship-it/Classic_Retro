@@ -6,7 +6,7 @@ Version: 1
 
 Classic Retro stores Arabic translation in logical Unicode order and prepares it for different classes of game renderer.
 
-The canonical translation document must never store already-shaped, already-reversed visual text.
+A target's translations file (`translations/<target>.json`) holds logical Arabic, never shaped or reversed visual text.
 
 ## Standards basis
 
@@ -116,16 +116,19 @@ Explicit bidi controls are rejected because they introduce hidden directional st
 
 Harakat are preserved by default. They are not silently deleted.
 
-Actual glyph availability and pixel placement remain font/renderer concerns and will be validated by the later glyph/layout layer.
+No target's font places marks yet, so every target refuses a line that holds one instead of losing it (`arabic.paint.reject_combining_marks`; `arabic.logical.check_logical_arabic` for the targets that draw whole lines). Whether each form has a glyph and each line fits its box is the target's own check.
 
 UAX #53 describes Arabic combining-mark rendering as a rendering-stage process rather than a new normalization form.
 
-## CLI
+## How the targets use it
+
+- `arabic.logical` holds what logical text may contain: a translations file refuses direction controls, and an engine refuses presentation forms and characters its font cannot draw.
+- `arabic.repertoire.legacy_renderer_pipeline()` is the configuration every glyph target shapes with (no ligatures, nothing dropped), and `arabic_presentation_repertoire()` lists every form it can produce.
+- `arabic.paint` turns the visual output into the order a right-to-left renderer paints, and refuses marks and mirrored brackets a game font cannot draw.
+- `arabic.glyph_codes` gives the forms a script uses their codes in the game's font.
 
 ```text
-classic-retro arabic check translation.json
+classic-retro targets check-translations TARGET [--font FONT --preview-dir DIR]
 ```
 
-This validates the translation document and runs every Arabic target stream through normalization, shaping, bidi ordering, and protected-token restoration.
-
-A successful check means the logical Arabic stream can pass the generic Arabic core. It does not yet prove that a specific game font contains every required glyph.
+This runs a target's whole script through the pipeline and its engine: the logical-text checks, shaping, paint order and the original's commands; with a font, it also draws every form and measures every line against its box.

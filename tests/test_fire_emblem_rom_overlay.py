@@ -387,7 +387,7 @@ def test_hook_source_reassembles_to_the_stored_bytes():
 
 
 def test_cli_checks_the_script_and_encodes_a_line(capsys):
-    assert main(["fire-emblem", "check-translations"]) == 0
+    assert main(["targets", "check-translations", "fire-emblem"]) == 0
     report = json.loads(capsys.readouterr().out)
     assert report["lines_measured"] is False
     assert report["messages"] == ["0x8db", "0x903", "0x904", "0x905", "0x906"]
@@ -407,8 +407,9 @@ def test_cli_refuses_an_unknown_rom(tmp_path, capsys):
 
     code = main(
         [
+            "targets",
+            "build",
             "fire-emblem",
-            "build-arabic",
             str(rom),
             "--font",
             str(font),

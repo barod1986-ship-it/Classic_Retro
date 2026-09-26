@@ -50,22 +50,6 @@ def extract(image: Path, translations: TranslationSet | None = None) -> tuple[st
     return origin, fire_emblem_arabic.extract_originals(image.read_bytes(), translations)
 
 
-def _check_translations_command(args: argparse.Namespace) -> int:
-    return print_json(
-        fire_emblem_arabic.check_fire_emblem_translations(
-            args.font, args.preview, args.legend_preview
-        )
-    )
-
-
-def _check_hooks_command(_: argparse.Namespace) -> int:
-    return print_json(check_hooks())
-
-
-def _build_command(args: argparse.Namespace) -> int:
-    return print_json(build(args.rom.read_bytes(), args.font, args.out_dir, args.write_rom))
-
-
 def _encode_command(args: argparse.Namespace) -> int:
     return print_json(
         fire_emblem_arabic.encode_fire_emblem_arabic_line(args.text, args.font, TalkBox(args.box))
@@ -78,43 +62,6 @@ def register_cli(subcommands: argparse._SubParsersAction) -> None:
         help="Fire Emblem: The Sacred Stones (USA) Arabic ROM overlay helpers",
     )
     fire_emblem_commands = fire_emblem.add_subparsers(dest="fire_emblem_command", required=True)
-
-    fire_emblem_check = fire_emblem_commands.add_parser(
-        "check-translations",
-        help="Validate the Arabic script without the ROM; with --font, measure every line",
-    )
-    fire_emblem_check.add_argument(
-        "--font",
-        type=Path,
-        help="Arabic TTF/OTF; also builds the font and measures every translated line",
-    )
-    fire_emblem_check.add_argument(
-        "--preview", type=Path, help="Write the generated Arabic glyph atlas as PNG"
-    )
-    fire_emblem_check.add_argument(
-        "--legend-preview", type=Path, help="Write the seven Arabic legend images as one PNG"
-    )
-    fire_emblem_check.set_defaults(handler=_check_translations_command)
-
-    fire_emblem_hooks = fire_emblem_commands.add_parser(
-        "check-hooks",
-        help="Re-assemble the Thumb hooks with arm-none-eabi binutils and compare the bytes",
-    )
-    fire_emblem_hooks.set_defaults(handler=_check_hooks_command)
-
-    fire_emblem_build = fire_emblem_commands.add_parser(
-        "build-arabic",
-        help="Build the Arabic BPS patch (and optionally the patched image) from the ROM",
-    )
-    fire_emblem_build.add_argument("rom", type=Path)
-    fire_emblem_build.add_argument("--font", type=Path, required=True)
-    fire_emblem_build.add_argument("--out-dir", type=Path, required=True)
-    fire_emblem_build.add_argument(
-        "--write-rom",
-        metavar="NAME",
-        help="Also write the patched image into --out-dir under this name (local use only)",
-    )
-    fire_emblem_build.set_defaults(handler=_build_command)
 
     fire_emblem_encode = fire_emblem_commands.add_parser(
         "encode-arabic",

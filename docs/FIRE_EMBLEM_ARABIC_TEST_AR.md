@@ -50,8 +50,11 @@ curl -L -o NotoKufiArabic-SemiBold.ttf "https://raw.githubusercontent.com/notofo
 3. ابنِ الرقعة:
 
 ```sh
-classic-retro fire-emblem build-arabic "Fire Emblem - The Sacred Stones (USA, Australia).gba" --font NotoKufiArabic-SemiBold.ttf --out-dir fire-emblem-arabic
+classic-retro targets build fire-emblem "Fire Emblem - The Sacred Stones (USA, Australia).gba" --font NotoKufiArabic-SemiBold.ttf --out-dir fire-emblem-arabic
 ```
+
+يطبع الأمر تقرير البناء، ويجب أن تكون فيه `matches_reference` صحيحة (`true`): الرقعة مطابقة للرقعة
+المرجعية عند البناء بالخط المرجعي.
 
 يكتب الأمر في المجلد `fire-emblem-arabic`:
 

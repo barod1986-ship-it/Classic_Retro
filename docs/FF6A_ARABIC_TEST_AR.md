@@ -41,7 +41,7 @@ curl -L -o NotoKufiArabic-SemiBold.ttf "https://raw.githubusercontent.com/notofo
 3. ابنِ الرقعة:
 
 ```sh
-classic-retro ff6a build-arabic "Final Fantasy VI Advance (USA).gba" --font NotoKufiArabic-SemiBold.ttf --out-dir ff6a-arabic
+classic-retro targets build ff6a "Final Fantasy VI Advance (USA).gba" --font NotoKufiArabic-SemiBold.ttf --out-dir ff6a-arabic
 ```
 
 يكتب الأمر في المجلد `ff6a-arabic`:

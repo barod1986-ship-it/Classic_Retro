@@ -35,10 +35,6 @@ def _source_check(args: argparse.Namespace) -> int:
     return print_json(check_pokefirered_arabic_source(args.source))
 
 
-def _prepare_arabic_source(args: argparse.Namespace) -> int:
-    return print_json(prepare_pokefirered_arabic_source(args.source, args.font))
-
-
 def _encode_arabic(args: argparse.Namespace) -> int:
     encoder = PokemonGen3ArabicEncoder()
     data = encoder.encode_message(
@@ -69,14 +65,6 @@ def register_cli(subcommands: argparse._SubParsersAction) -> None:
     )
     source_check.add_argument("source", type=Path)
     source_check.set_defaults(handler=_source_check)
-
-    prepare_source = pokemon_commands.add_parser(
-        "prepare-arabic-source",
-        help="Patch pinned pokefirered source for RTL and build the Arabic font atlas",
-    )
-    prepare_source.add_argument("source", type=Path)
-    prepare_source.add_argument("--font", type=Path, required=True)
-    prepare_source.set_defaults(handler=_prepare_arabic_source)
 
     compile_arabic = pokemon_commands.add_parser(
         "encode-arabic",

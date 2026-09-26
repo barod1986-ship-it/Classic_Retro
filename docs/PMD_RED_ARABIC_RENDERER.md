@@ -105,7 +105,7 @@ English text never sets the byte, so everything else is drawn as before.
 | `0x08013690` | 12 bytes computing `cursorArrowPos.x` (`UpdateMenuCursorSpriteCoords`) | `BL hook_cursor_x`, `B 0x0801369C` |
 | `0x080132D2` | `F1 F7 ED FE` (`AddMenuCursorSprite_` → `AddSprite`) | `hook_cursor_sprite` (sets the sprite's horizontal flip) |
 
-`classic-retro pmd check-hooks` re-assembles the source with GNU binutils and
+`classic-retro targets check-hooks pmd-red` re-assembles the source with GNU binutils and
 compares the result with the bytes stored in `pmd_arabic.py` (run in CI).
 
 ## Font

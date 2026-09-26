@@ -343,7 +343,7 @@ def test_bl_and_branch_encoding_round_trip():
 
 
 def test_cli_checks_translations_without_rom(capsys):
-    assert main(["pmd", "check-translations"]) == 0
+    assert main(["targets", "check-translations", "pmd-red"]) == 0
     report = json.loads(capsys.readouterr().out)
     assert report["strings"] == 158 and report["lines_measured"] is False
 

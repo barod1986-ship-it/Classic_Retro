@@ -114,7 +114,7 @@ jobs:
           curl --fail --location "https://raw.githubusercontent.com/notofonts/noto-fonts/$NOTO_COMMIT/hinted/ttf/NotoKufiArabic/NotoKufiArabic-SemiBold.ttf" -o "$ARABIC_FONT"
           echo "aa30cd2663f1eb1c940c9cd6a898877f307c2572e72a8a352896fe23f512018e  $ARABIC_FONT" | sha256sum -c -
           curl --fail --location "https://raw.githubusercontent.com/notofonts/noto-fonts/$NOTO_COMMIT/LICENSE" -o ../artifact/FONT-LICENSE.txt
-          classic-retro pokemon-gen3 prepare-arabic-source ../upstream-target --font "$ARABIC_FONT" | tee ../artifact/build-report.json
+          classic-retro targets prepare firered ../upstream-target --font "$ARABIC_FONT" | tee ../artifact/build-report.json
           cp ../upstream-target/graphics/fonts/arabic_normal.png ../artifact/arabic_normal.png
           fc-scan --format '%{family}\n%{style}\n' "$ARABIC_FONT" > ../artifact/font-info.txt
 
@@ -232,7 +232,7 @@ jobs:
           curl --fail --location "https://raw.githubusercontent.com/notofonts/noto-fonts/$NOTO_COMMIT/hinted/ttf/NotoKufiArabic/NotoKufiArabic-SemiBold.ttf" -o "$ARABIC_FONT"
           echo "aa30cd2663f1eb1c940c9cd6a898877f307c2572e72a8a352896fe23f512018e  $ARABIC_FONT" | sha256sum -c -
           classic-retro tmc source-check ../upstream-tmc --font "$ARABIC_FONT"
-          classic-retro tmc prepare-arabic-source ../upstream-tmc --font "$ARABIC_FONT" | tee ../tmc-build-report.json
+          classic-retro targets prepare minish-cap ../upstream-tmc --font "$ARABIC_FONT" | tee ../tmc-build-report.json
 
       - name: Install agbcc into the tmc tree
         working-directory: agbcc

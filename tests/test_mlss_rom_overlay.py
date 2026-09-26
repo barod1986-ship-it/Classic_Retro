@@ -414,7 +414,7 @@ def test_hook_source_assembles_to_the_stored_bytes():
 
 
 def test_cli_checks_translations_without_rom(capsys):
-    assert main(["mlss", "check-translations"]) == 0
+    assert main(["targets", "check-translations", "mlss"]) == 0
     report = json.loads(capsys.readouterr().out)
     assert report["messages"] == 12 and report["lines_measured"] is False
 

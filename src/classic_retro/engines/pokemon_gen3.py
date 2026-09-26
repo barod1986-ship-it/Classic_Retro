@@ -1,7 +1,8 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
+
 from classic_retro.adapters.base import EngineAdapter
-from classic_retro.codec.base import DecodedMessage, GameTextCodec
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.text.tokens import (
     InlineToken,
@@ -159,12 +160,19 @@ class PokemonGen3EngineAdapter(EngineAdapter):
     display_name = "Pokémon Generation III text engine"
     platform_ids = ("gba",)
 
-    def text_codec(self) -> PokemonGen3TextCodec:
-        return PokemonGen3TextCodec()
+
+@dataclass(frozen=True, slots=True)
+class DecodedMessage:
+    stream: TokenStream
+    consumed_bytes: int
+    terminator_id: str | None
 
 
-class PokemonGen3TextCodec(GameTextCodec):
+class PokemonGen3TextCodec:
+    """Gen III text bytes to a token stream and back, every byte kept."""
+
     def decode(self, data: bytes, *, require_terminator: bool = False) -> DecodedMessage:
+        """Decode one message from the beginning of data."""
         output: list[Token] = []
         buffer: list[str] = []
         offset = 0
@@ -350,6 +358,40 @@ class PokemonGen3TextCodec(GameTextCodec):
             output.append(_EOS)
 
         return bytes(output)
+
+    def verify_round_trip(
+        self,
+        data: bytes,
+        *,
+        require_terminator: bool = False,
+    ) -> DecodedMessage:
+        """Decode one message and require its encoding to give back the same bytes."""
+        decoded = self.decode(data, require_terminator=require_terminator)
+        rebuilt = self.encode(decoded.stream, terminator_id=decoded.terminator_id)
+        original = data[: decoded.consumed_bytes]
+
+        if rebuilt != original:
+            mismatch = _first_mismatch(original, rebuilt)
+            raise ClassicRetroError(
+                ErrorCode.TEXT_CODEC_ROUNDTRIP_FAILED,
+                (
+                    "Text codec round-trip mismatch"
+                    if mismatch is None
+                    else f"Text codec round-trip mismatch at byte 0x{mismatch:X}"
+                ),
+            )
+
+        return decoded
+
+
+def _first_mismatch(left: bytes, right: bytes) -> int | None:
+    limit = min(len(left), len(right))
+    for index in range(limit):
+        if left[index] != right[index]:
+            return index
+    if len(left) != len(right):
+        return limit
+    return None
 
 
 def _control(offset: int, name: str, raw: bytes) -> InlineToken:

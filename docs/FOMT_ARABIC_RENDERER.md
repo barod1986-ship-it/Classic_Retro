@@ -104,7 +104,7 @@ code and chunks, the expected strings, the zero tail) and that nothing else chan
 | `0x080E79F4` | `0x080E19A5` (story expander) | `hook_expand_story` |
 
 The hook area is out of `BL` range from the sites, hence the jumps and the veneer.
-`classic-retro fomt check-hooks` re-assembles the source with GNU binutils and
+`classic-retro targets check-hooks fomt` re-assembles the source with GNU binutils and
 compares the result with the bytes stored in `fomt_arabic.py` (run in CI).
 
 ## Cells and font

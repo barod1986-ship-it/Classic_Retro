@@ -356,7 +356,7 @@ def _message_fields(message: NsmbArabicMessage) -> dict:
 
 
 def test_the_command_group_checks_and_encodes(capsys):
-    assert main(["nsmb", "check-translations"]) == 0
+    assert main(["targets", "check-translations", "nsmb"]) == 0
     report = json.loads(capsys.readouterr().out)
     assert report["messages"] == 42 and report["lines_measured"] is False
     assert main(["nsmb", "encode-arabic", "بب ب"]) == 0

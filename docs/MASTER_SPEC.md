@@ -1,6 +1,6 @@
 # Classic Retro — Master Specification
 
-Version: 0.3 (Localization platform: fifteen reference targets)
+Version: 0.4 (Fifteen reference targets on one pipeline)
 
 ## 1. Purpose
 
@@ -45,52 +45,52 @@ The foundation phase will not:
 ## 3. Architecture
 
 ```text
-classic_retro/
-  core/
-    detection/
-    text/
-    arabic/
-    layout/
-    validation/
-    build/
-  platforms/
-    gb/
-    gbc/
-    gba/
-    nes/
-    snes/
-    megadrive/
-    ps1/
-    n64/
-  engines/
-  games/
-  schemas/
-  tools/
-  tests/
-  docs/
+src/classic_retro/
+  core/           fingerprints, structured errors, JSON Schema validation
+  media/          input files and disc sets: single files, CUE/BIN, ISO 9660
+  adapters/       the platform, engine and game contracts, their registry, detection
+  platforms/      one adapter per system: gb/gbc, gba, nds, nes, snes, megadrive, ps1, n64
+  engines/        text engines, each with its Arabic module
+  games/          exact supported revisions
+  text/           the token model, engine commands, BMG message files
+  arabic/         logical-text checks, shaping and bidi, glyph codes, paint order
+  font/           Arabic forms drawn from the user's font, game font formats, previews
+  cpu/            instruction encoders for hooks (Thumb, ARM)
+  rebuild/        BPS patches, the LZ77 and BLZ compressions
+  patching/       the binary overlay kit, and DS images
+  rom/            one binary overlay per rom-overlay target
+  source/         source overlays (pokefirered, tmc)
+  localization/   targets, rendering strategies, translation files, `targets` commands
+  translations/   each target's Arabic
+  schemas/        target-translations.schema.json
+  research/       the scripted emulator, scanners, disassembler
+tests/            synthetic data only
+docs/
 ```
 
-Platform directories are created when real support work begins; the list above describes the intended adapter model, not a claim that all platforms are already implemented.
+Every system in the tree is detected; the Game Boy Advance and the Nintendo DS also
+have Arabic targets. A platform is supported when a target ships on it, not when its
+adapter exists.
+
+There is one pipeline: the localization targets (§3.5). The foundation phase also
+built a generic one: a JSON translation document of token streams, table-driven text
+codecs, a layout engine over font profiles, resource transforms, and rebuild plans
+with an allocator. No target used it: each engine needed its own encoding, measuring
+and placement, and the pieces the targets do share are the core modules below. It was
+removed once fifteen targets had shown this; §6, §7, §10, §12 and §13 describe what
+the targets do instead.
 
 ### 3.1 Core
 
-The core must contain only reusable behavior.
+The core must contain only reusable behavior:
 
-Expected responsibilities:
-
-- game-image identity model
-- hashes and revision verification
-- translation document model
-- token model
-- placeholders and control-code preservation
-- Arabic shaping
-- bidirectional text processing
-- line breaking / wrapping
-- glyph mapping abstraction
-- validation
-- build manifest
-- reproducibility metadata
-- diagnostics and structured errors
+- game-image identity: fingerprints and revision verification (`core.identity`, `media`);
+- the token model and engine commands (`text.tokens`, `text.commands`);
+- target translation files (`localization.translations`, `target-translations.schema.json`);
+- logical-text checks, Arabic shaping, bidi, glyph codes and paint order (`arabic`);
+- glyphs drawn from the user's font, whole shaped lines, tiles and previews (`font`);
+- patches and compression (`rebuild`);
+- structured errors (`core.errors`).
 
 The core must not know game-specific offsets, sectors, archives, banks, or addresses.
 
@@ -157,16 +157,20 @@ notes, and the operations the toolkit runs the same way for every target:
 - `check_hooks()`: re-assemble the hook code and compare it with the stored bytes;
 - `check_translations(font, preview_dir)`: validate the script without the game
   image; with a font, lay out every string and write the target's previews;
-- `build(rom, font, out_dir, rom_name)`: build the patch from the user's image.
+- `build(rom, font, out_dir, rom_name)`: build the patch from the user's image;
+- `prepare(source, font)`: patch the user's decompilation checkout (a source overlay);
+- `extract(input)`: read each entry's original from the user's own copy.
 
 Kinds:
 
 - `rom-overlay`: a patch built from the user's own image and shipped as BPS;
 - `source-overlay`: a patched source tree of a decompilation that builds the image.
 
-`classic-retro targets list | strategies | check-hooks | check-translations | build`
-runs any target by id, and CI builds its target jobs from `targets list`. Each target
-also keeps its own command group for commands specific to it. A rom-overlay target
+`classic-retro targets list | strategies | check-hooks | check-translations | build |
+prepare | extract | strip` is the one way to run these for any target, by id, and CI
+builds its target jobs from `targets list`. A target's own command group holds only its
+engine's tools: `encode-arabic` (one line in the game's encoding) and, for a source
+overlay, `source-check` (its anchors in a checkout, patching nothing). A rom-overlay target
 records `reference_patch_sha256`, the hash of the patch built from its pinned image
 with the reference font. A target that accepts several images (dumps that differ only
 in bytes the game never reads) records one patch for each in `reference_patches`, by the
@@ -234,7 +238,7 @@ script, and the strategy-specific drawing.
 
 | Layer | Packages |
 |-------|----------|
-| Core | `core`, `text`, `codec`, `layout`, `arabic`, `font`, `rebuild`, `transform`, `media`, `schemas` |
+| Core | `core`, `adapters`, `media`, `text`, `arabic`, `font`, `rebuild`, `schemas` |
 | Platform | `platforms`, `cpu` |
 | Engine | `engines` |
 | Game | `games` |
@@ -283,6 +287,10 @@ Rules:
 - Similar filenames never imply compatible game images.
 - A build manifest records the source hash(es), platform, adapter, and toolkit version.
 
+The revisions live in the game adapters (`games/`, `GameRevision`: SHA-256 and size),
+which `classic-retro detect` matches. A rom overlay's `ImageSpec` names the image it
+patches, and a test holds every such image to a revision of its target's game.
+
 ## 5. Research-first workflow
 
 Before implementing support for a new game:
@@ -330,16 +338,14 @@ What these tools find comes from the game and stays local. Scripts hold only inp
 
 Human translation files are UTF-8 and independent from binary addresses whenever possible.
 
-Conceptual record:
+An entry:
 
-```yaml
-id: intro.professor.001
-source: "Welcome to the world!"
-translation: "مرحبًا بك في هذا العالم!"
-context: "Opening dialogue"
-tokens: []
-constraints:
-  box: dialogue
+```json
+{
+  "id": "thomas_owner",
+  "context": "Thomas; event script 867, string 0",
+  "text": "مهلا! صاحب هذه المزرعة\nتوفي منذ مدة.{wait}{clear}لا يمكنك أن تدخل إلى هنا\nهكذا وكأن المكان مكانك!{wait}"
+}
 ```
 
 Stable logical IDs are preferred over raw offsets, sectors, or file positions.
@@ -370,15 +376,15 @@ and `prepare`. With a workspace, `check-translations` also lists the entries who
 original names a glossary term that their Arabic does not use.
 [TRANSLATING_AR.md](TRANSLATING_AR.md) is the translator's guide.
 
-The token-stream documents of `translation.schema.json` (`classic-retro translation`)
-remain the foundation's generic model. The targets' files use each engine's own
-notation instead, which is what a translator reads and what the targets' checks parse.
+These files are the toolkit's one translation format. The text of an entry is in its
+engine's own notation, which is what a translator reads; the engine parses it into the
+token model (§7).
 
 ## 7. Control codes and placeholders
 
 Control codes and dynamic placeholders must never be flattened into ordinary translated text.
 
-Conceptual representation:
+In a translation file they are written in the engine's notation:
 
 ```text
 Welcome, {PLAYER}!{WAIT}
@@ -397,6 +403,19 @@ A parser must distinguish:
 - engine opcodes.
 
 Validation must fail when required tokens are removed, duplicated, reordered illegally, or malformed.
+
+Inside the toolkit a message is a token stream (`text.tokens`): runs of text and
+inline tokens between them. An inline token is a `variable` (a name, a number), a
+`control` (a wait, a colour, a sound), a `line_break` or `page_break`, or an `opaque`
+command not yet named, which keeps its bytes. Each has an id unique in its message and
+a movement policy: `free` tokens (a runtime name) may move within the translation,
+`ordered` ones (waits, page breaks, sounds) keep their order among themselves.
+
+Engines carry each command's codes in its token (`text.commands`) and hold a
+translation's commands against the original's (`require_same_commands`): a command
+dropped, added, changed or reordered is refused. An engine may let a translation add a
+page break, and marks it as inserted. The Arabic pipeline shapes and orders the text
+around the tokens without altering them ([ARABIC_PIPELINE.md](ARABIC_PIPELINE.md)).
 
 ## 8. Arabic localization pipeline
 
@@ -477,14 +496,11 @@ Different platforms may impose radically different constraints: tile-based fonts
 
 Line wrapping must use rendered width, not Unicode character count.
 
-The layout engine should accept constraints such as:
-
-```yaml
-max_width_px: 208
-max_lines: 2
-line_height_px: 16
-overflow: error
-```
+Each engine knows its box: its width, its lines, how a page ends. A translation's line
+and page breaks are part of its text, and a target measures every line with the real
+advances of the glyphs it will draw, against that box. Widths come from shaped glyphs,
+and each line is shaped and put in visual order on its own, so joining at a line's
+ends is that of the line (UAX #9: shaping, then widths, then reordering per line).
 
 Validation should detect:
 
@@ -494,7 +510,8 @@ Validation should detect:
 - unsupported glyphs,
 - malformed tokens.
 
-Automatic wrapping must be deterministic.
+`targets check-translations` runs these checks for a target without its image. No
+target wraps automatically yet; when one does, its wrapping must be deterministic.
 
 ## 11. References, pointers, relocation, and storage
 
@@ -530,28 +547,22 @@ Every relocation must be validated.
 
 Compression/container handling is plugin/adapter behavior.
 
-Conceptual codec interface:
-
-```text
-decode(bytes) -> bytes
-encode(bytes) -> bytes
-verify(original_decoded, rebuilt_decoded)
-```
-
 A codec may be:
 
 - platform-common,
 - engine-specific,
 - game-specific.
 
-Container adapters may additionally expose operations such as:
+Each codec is a module of plain functions: the GBA/DS BIOS LZ77 (`rebuild.lz77`) and
+the DS backward LZ of ARM9 binaries (`rebuild.blz`) are shared, and an engine's own
+(Golden Sun's Huffman text) stays in its engine. A compressed
+binary is packed again so that its unchanged parts keep their original compressed
+bytes (`rebuild.blz.repack_blz`), and the patch carries only what changed.
 
-```text
-list_resources()
-extract_resource(id)
-replace_resource(id, bytes)
-rebuild()
-```
+Each container has its own module, which reads it and rebuilds it where a target
+needs to: `patching.nitro` (the DS header, NitroFS, NARC archives, the ARM9 and its
+autoload blocks), `text.bmg` (BMG messages), `font.nftr` (NFTR fonts), and `media`
+(CUE/BIN and ISO 9660, read only).
 
 No algorithm or archive layout should be assigned to the platform layer merely because several games happen to use it.
 
@@ -566,6 +577,11 @@ extract(original)
 ```
 
 An adapter should prove that it can round-trip unchanged data before Arabic modifications are trusted.
+
+The targets do: `text.bmg` rebuilds an unchanged message file byte for byte, the Gen
+III text codec re-encodes what it decodes (`verify_round_trip`), a packed ARM9 is
+packed again so that its unchanged parts keep their bytes, and every rom overlay reads
+its output back before it writes the patch (§3.7).
 
 Perfect byte identity may not be possible for every format or disc build, but semantic equivalence must be defined and tested.
 
@@ -610,16 +626,10 @@ Perfect byte identity may not be possible for every format or disc build, but se
 
 ## 15. Testing strategy
 
-Tests should be split into:
-
-```text
-tests/unit/
-tests/fixtures/
-tests/platforms/
-tests/engines/
-tests/games/
-tests/integration/
-```
+Tests live in `tests/`, a module per concern: the shared layers (`test_arabic_core.py`,
+`test_localization.py`, `test_translations.py`...) and, for each target, its engine
+(`test_<game>_engine.py`), its Arabic module (`test_<game>_arabic.py`) and its overlay
+(`test_<game>_rom_overlay.py`, `test_<game>_source_overlay.py`).
 
 Commercial game images are not committed.
 
@@ -729,7 +739,7 @@ Before adding each substantially different game/engine, reusable code from previ
 The foundation phase is accepted when:
 
 - multi-platform repository structure is agreed,
-- game-image identity schema is defined,
+- game-image identity model is defined,
 - platform/engine/game adapter contracts are defined,
 - translation schema is defined,
 - Arabic pipeline behavior is defined,

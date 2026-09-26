@@ -104,7 +104,7 @@ overlap. The typewriter reveals Arabic from right to left.
 at `0x08002BA4` is `ldr r2, [pc]; bx r2; .word hook_decomp`. Without the flag
 every hook runs the original function, so English text is untouched.
 
-`classic-retro fire-emblem check-hooks` re-assembles the source with GNU binutils
+`classic-retro targets check-hooks fire-emblem` re-assembles the source with GNU binutils
 and compares the result with the bytes stored in `fire_emblem_arabic.py` (run in
 CI).
 
@@ -191,10 +191,10 @@ new game (Easy mode):
 ## Commands
 
 ```sh
-classic-retro fire-emblem check-translations --font NotoKufiArabic-SemiBold.ttf --legend-preview legend.png
-classic-retro fire-emblem build-arabic original.gba --font NotoKufiArabic-SemiBold.ttf --out-dir out
+classic-retro targets check-translations fire-emblem --font NotoKufiArabic-SemiBold.ttf --preview-dir previews
+classic-retro targets build fire-emblem original.gba --font NotoKufiArabic-SemiBold.ttf --out-dir out
 classic-retro fire-emblem encode-arabic "مولاي، ماذا نفعل؟[A]" --font NotoKufiArabic-SemiBold.ttf
-classic-retro fire-emblem check-hooks
+classic-retro targets check-hooks fire-emblem
 ```
 
 ## v1 boundary

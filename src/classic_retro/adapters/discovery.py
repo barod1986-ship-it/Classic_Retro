@@ -167,8 +167,3 @@ def detect_input(path: Path, registry: AdapterRegistry) -> DetectionReport:
         game=game,
         supported=game is not None,
     )
-
-
-def detect_file(path: Path, registry: AdapterRegistry) -> DetectionReport:
-    """Compatibility alias for callers that previously passed only single files."""
-    return detect_input(path, registry)

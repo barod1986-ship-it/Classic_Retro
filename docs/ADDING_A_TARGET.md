@@ -198,7 +198,7 @@ TARGET = LocalizationTarget(
     scope="What is translated",
     guide="docs/MY_GAME_ARABIC_TEST_AR.md",
     notes="docs/MY_GAME_ARABIC_RENDERER.md",
-    register_cli=register_cli,  # the target's own command group
+    register_cli=register_cli,  # the engine's own tools, such as encode-arabic
     check_hooks=check_hooks,
     check_translations=check_translations,
     build=build,
@@ -225,6 +225,10 @@ classic-retro targets check-translations my-game --font reference-font.ttf --pre
 classic-retro targets build my-game "path/to/game.gba" --font reference-font.ttf --out-dir build
 classic-retro targets extract my-game "path/to/game.gba"
 ```
+
+These are the only commands for what every target does: a target's own command group
+(`register_cli`) holds just the tools of its engine, such as `encode-arabic` (one line in
+the game's encoding) or `source-check` (a source overlay's anchors, without patching).
 
 `targets build` reports `matches_reference`, which is true when the patch equals the
 recorded `reference_patch_sha256`. A target that accepts more than one image (dumps that

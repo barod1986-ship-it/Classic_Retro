@@ -1,45 +1,9 @@
-"""Safe binary resource extraction, relocation, and rebuild primitives."""
+"""The binary formats every image build writes.
 
-from classic_retro.rebuild.model import (
-    ByteOrder,
-    ByteRange,
-    IntegerReferenceCodec,
-    RebuildPlan,
-    ReferenceBaseKind,
-    ReferenceSite,
-    ResourceSpec,
-    SafeRegion,
-    load_rebuild_plan,
-)
-from classic_retro.rebuild.pipeline import (
-    RebuildResult,
-    ResourcePlacement,
-    extract_resources,
-    rebuild_resources,
-    verify_round_trip,
-)
-from classic_retro.rebuild.transformed import (
-    TransformedExtraction,
-    extract_transformed_resources,
-    rebuild_transformed_resources,
-)
+- ``bps``: BPS patches, the distributable output of binary ROM overlays;
+- ``lz77``: the GBA/DS BIOS LZ77 compression;
+- ``blz``: the DS backward LZ of ARM9 binaries and overlays;
+- ``lz_parse``: the optimal parse both LZ formats share.
 
-__all__ = [
-    "ByteOrder",
-    "ByteRange",
-    "IntegerReferenceCodec",
-    "RebuildPlan",
-    "RebuildResult",
-    "ReferenceBaseKind",
-    "ReferenceSite",
-    "ResourcePlacement",
-    "ResourceSpec",
-    "SafeRegion",
-    "TransformedExtraction",
-    "extract_resources",
-    "extract_transformed_resources",
-    "load_rebuild_plan",
-    "rebuild_resources",
-    "rebuild_transformed_resources",
-    "verify_round_trip",
-]
+Placing and checking a target's changes is ``classic_retro.patching``.
+"""

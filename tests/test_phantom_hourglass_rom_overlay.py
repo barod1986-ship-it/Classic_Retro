@@ -419,7 +419,7 @@ def test_the_stored_hook_matches_its_source():
 
 
 def test_the_command_group_checks_and_encodes(capsys):
-    assert main(["phantom-hourglass", "check-translations"]) == 0
+    assert main(["targets", "check-translations", "phantom-hourglass"]) == 0
     report = json.loads(capsys.readouterr().out)
     assert report["messages"] == 7 and report["lines_measured"] is False
     assert main(["phantom-hourglass", "encode-arabic", "بب ب{01:0A000800}."]) == 0

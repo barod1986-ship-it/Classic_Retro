@@ -5,11 +5,12 @@ import importlib
 import json
 import re
 from pathlib import Path
+from types import ModuleType
 
 import pytest
 
 from classic_retro.adapters.registry import build_registry
-from classic_retro.cli import main
+from classic_retro.cli import _build_parser, main
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.localization import strategies as strategies_module
 from classic_retro.localization import targets as targets_module
@@ -464,10 +465,19 @@ def test_targets_commands_refuse_what_a_target_cannot_do(tmp_path):
     assert error.value.code is ErrorCode.INVALID_REFERENCE
 
 
-def test_the_cli_keeps_every_command_group_and_adds_targets(capsys):
+def _subcommands(parser: argparse.ArgumentParser) -> dict[str, argparse.ArgumentParser]:
+    for action in parser._actions:
+        if isinstance(action, argparse._SubParsersAction):
+            return dict(action.choices)
+    return {}
+
+
+def test_game_groups_hold_only_their_engine_tools(capsys):
+    """What every target runs goes through ``targets``; a game's group adds its own tools."""
+    groups = _subcommands(_build_parser())
+    sources = ("pokemon-gen3", "tmc")
     for group in (
-        "pokemon-gen3",
-        "tmc",
+        *sources,
         "ff6a",
         "golden-sun",
         "fire-emblem",
@@ -481,8 +491,10 @@ def test_the_cli_keeps_every_command_group_and_adds_targets(capsys):
         "nsmb",
         "platinum",
         "phantom-hourglass",
-        "targets",
     ):
+        tools = ["encode-arabic", "source-check"] if group in sources else ["encode-arabic"]
+        assert sorted(_subcommands(groups[group])) == tools, group
+    for group in ("pokemon-gen3", "phantom-hourglass", "targets"):
         with pytest.raises(SystemExit) as exit_:
             main([group, "--help"])
         assert exit_.value.code == 0
@@ -494,3 +506,29 @@ def test_the_cli_keeps_every_command_group_and_adds_targets(capsys):
     assert [target["id"] for target in listed][-1] == "phantom-hourglass"
     assert main(["targets", "check-hooks", "not-a-target"]) == 2
     assert capsys.readouterr().err.startswith("INVALID_REFERENCE: Unknown localization target")
+
+
+def test_every_rom_overlay_builds_from_a_revision_detect_knows():
+    """An image a build accepts is a revision of the target's game, size included."""
+    adapters = build_registry(load_external=False)
+    checked = []
+    for target in build_target_registry(load_external=False):
+        if target.kind != "rom-overlay":
+            continue
+        builtin = importlib.import_module(target.build.__module__)
+        (overlay,) = (
+            value
+            for value in vars(builtin).values()
+            if isinstance(value, ModuleType) and value.__name__.startswith("classic_retro.rom.")
+        )
+        if hasattr(overlay, "ACCEPTED_SHA256"):
+            images = {digest: overlay.IMAGE_SIZE for digest in overlay.ACCEPTED_SHA256}
+        else:
+            images = {overlay.IMAGE.sha256: overlay.IMAGE.size}
+        revisions = {
+            revision.sha256: revision.size for revision in adapters.games[target.game_id].revisions
+        }
+        assert images.items() <= revisions.items(), target.id
+        assert set(target.reference_patches) <= set(images), target.id
+        checked.append(target.id)
+    assert len(checked) == 13
