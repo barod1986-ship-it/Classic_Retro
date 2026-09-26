@@ -4,11 +4,17 @@ Patches are the distributable output of binary ROM overlays. The encoder is a
 greedy matcher: unchanged bytes become SourceRead, byte runs become an
 overlapping TargetCopy, data moved inside the image becomes SourceCopy, and
 everything else is TargetRead. Every patch is checked by applying it again.
+
+SourceCopy finds moved data through an index of the source's 16-byte blocks.
+For a whole disc image (hundreds of MiB) that index would not fit in memory,
+so a build that knows where its moved data comes from gives those source
+ranges (``copy_from``) and only they are indexed.
 """
 
 from __future__ import annotations
 
 import zlib
+from collections.abc import Sequence
 from dataclasses import dataclass
 
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
@@ -86,10 +92,24 @@ class BpsPatch:
     target_crc32: int
 
 
-def create_bps(source: bytes, target: bytes, metadata: bytes = b"") -> BpsPatch:
+def create_bps(
+    source: bytes,
+    target: bytes,
+    metadata: bytes = b"",
+    *,
+    copy_from: Sequence[tuple[int, int]] | None = None,
+) -> BpsPatch:
+    """The patch from ``source`` to ``target``.
+
+    ``copy_from`` limits SourceCopy to these ``(start, end)`` ranges of the
+    source; by default the whole source is indexed.
+    """
     index: dict[bytes, int] = {}
-    for offset in range(0, len(source) - _BLOCK + 1, _BLOCK):
-        index.setdefault(source[offset : offset + _BLOCK], offset)
+    ranges = ((0, len(source)),) if copy_from is None else copy_from
+    for start, end in ranges:
+        first = start - start % _BLOCK
+        for offset in range(first, min(end, len(source)) - _BLOCK + 1, _BLOCK):
+            index.setdefault(source[offset : offset + _BLOCK], offset)
     source_view = memoryview(source)
     target_view = memoryview(target)
 

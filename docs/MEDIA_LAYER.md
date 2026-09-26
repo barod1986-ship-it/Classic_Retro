@@ -76,6 +76,10 @@ References:
 
 PyCdlib is LGPL-2.1-only.
 
+A disc overlay that repoints a file reads the directory records itself
+(`patching.cdrom.iso_file`), because it needs each record's sector and offset to
+rewrite it in place.
+
 ## PlayStation identification
 
 For a CUE/BIN input, the built-in PS1 probe currently requires all of the following:
@@ -93,9 +97,22 @@ Reference:
 
 This identifies the platform only. It does not mark a game revision as translation-supported.
 
+## Writing a data track
+
+`patching.cdrom` writes sectors of a CD data track in place, for a disc overlay
+(Castlevania: Symphony of the Night). A Mode 2 Form 1 sector is written whole: sync,
+header (its address in BCD minutes, seconds and frames), subheader, data, EDC (CRC-32
+with the polynomial `0x8001801B`, reflected) and the ECMA-130 P and Q parity, computed
+with the header counted as zero. The tests check the EDC against the CRC's check value
+and every P and Q codeword's syndromes; every sector of the files the overlay reads is
+checked on the user's disc. A file that grows moves to the empty sectors at the end of
+the data track and its ISO 9660 record is repointed; the track keeps its size, and the
+CUE sheet and the other tracks do not change.
+
 ## Deliberate limitations
 
-This phase does not rebuild raw BIN/CUE images.
+This phase does not rebuild a whole BIN/CUE image or change its layout: sectors are
+replaced in place, and Form 2 sectors, CDDA tracks and pregaps are not written.
 
 Correct rebuilding must account for details such as:
 

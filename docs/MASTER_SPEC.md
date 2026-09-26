@@ -1,6 +1,6 @@
 # Classic Retro — Master Specification
 
-Version: 0.4 (Fifteen reference targets on one pipeline)
+Version: 0.4 (Sixteen reference targets on one pipeline)
 
 ## 1. Purpose
 
@@ -55,9 +55,9 @@ src/classic_retro/
   text/           the token model, engine commands, BMG message files
   arabic/         logical-text checks, shaping and bidi, glyph codes, paint order
   font/           Arabic forms drawn from the user's font, game font formats, previews
-  cpu/            instruction encoders for hooks (Thumb, ARM)
+  cpu/            instruction encoders for hooks (Thumb, ARM, MIPS)
   rebuild/        BPS patches, the LZ77 and BLZ compressions
-  patching/       the binary overlay kit, and DS images
+  patching/       the binary overlay kit, DS images and CD data tracks
   rom/            one binary overlay per rom-overlay target
   source/         source overlays (pokefirered, tmc)
   localization/   targets, rendering strategies, translation files, `targets` commands
@@ -68,9 +68,9 @@ tests/            synthetic data only
 docs/
 ```
 
-Every system in the tree is detected; the Game Boy Advance and the Nintendo DS also
-have Arabic targets. A platform is supported when a target ships on it, not when its
-adapter exists.
+Every system in the tree is detected; the Game Boy Advance, the Nintendo DS and the
+PlayStation also have Arabic targets. A platform is supported when a target ships on
+it, not when its adapter exists.
 
 There is one pipeline: the localization targets (§3.5). The foundation phase also
 built a generic one: a JSON translation document of token streams, table-driven text
@@ -185,11 +185,13 @@ duplicate ids, unknown kinds and strategies that are not registered.
 
 A rendering strategy (`classic_retro.localization.strategies`) is a way of drawing
 Arabic through a game's renderer. It records what it needs from the engine, which
-core modules it builds on, and what it costs. The fifteen targets proved three:
+core modules it builds on, and what it costs. The sixteen targets proved four:
 
 - `glyph-font`: a right-to-left glyph font in the game's own format;
 - `line-cells`: lines shaped with HarfBuzz and cut into the engine's fixed cells;
-- `text-images`: text the game shows as images, redrawn.
+- `text-images`: text the game shows as images, redrawn;
+- `composed-lines`: a right-to-left glyph font that hooks compose into an image of
+  each line at run time.
 
 This is a starting set, not a closed list. A new strategy is registered in-tree or
 through the `classic_retro.strategies.v1` entry point group. It starts as
@@ -229,7 +231,7 @@ The parts that do not depend on the game live in:
   - `outputs`: the common report fields and patch/image files
 - `classic_retro.cpu`: one module per instruction set, holding the calls, branches
   and far jumps written over game code. `cpu.thumb` covers the ARM7TDMI's Thumb
-  code.
+  code, `cpu.arm` the ARM946E-S's ARM code and `cpu.mips` the PlayStation's MIPS I.
 
 A game's overlay module keeps only what is its own: addresses, hook source,
 script, and the strategy-specific drawing.
@@ -243,7 +245,7 @@ script, and the strategy-specific drawing.
 | Engine | `engines` |
 | Game | `games` |
 | Localization | `localization` (targets, strategies, the `targets` commands), `rom` (binary overlays), `source` (source overlays) |
-| Shared overlay machinery | `patching` (and `patching.nitro` for DS images: header, NitroFS, NARC, the ARM9's autoload blocks and overlay table) |
+| Shared overlay machinery | `patching` (and `patching.nitro` for DS images: header, NitroFS, NARC, the ARM9's autoload blocks and overlay table; `patching.cdrom` for CD data tracks: raw sectors with their EDC and ECC, ISO 9660 records) |
 | Research | `research` (the scripted emulator, its backends, the scanners) |
 
 Adapter discovery (`classic_retro.{platforms,engines,games}.v1`), target discovery
@@ -452,7 +454,7 @@ Possible strategies:
 - hybrid rendering for dynamic strings.
 
 Each localization target declares the registered rendering strategies it uses (§3.6).
-The three proven ones shape at build time. Runtime shaping remains a candidate for
+The four proven ones shape at build time. Runtime shaping remains a candidate for
 text assembled at run time ([ARABIC_STRATEGIES.md](ARABIC_STRATEGIES.md)).
 
 ### 8.2 Bidirectional text
@@ -561,8 +563,9 @@ bytes (`rebuild.blz.repack_blz`), and the patch carries only what changed.
 
 Each container has its own module, which reads it and rebuilds it where a target
 needs to: `patching.nitro` (the DS header, NitroFS, NARC archives, the ARM9 and its
-autoload blocks), `text.bmg` (BMG messages), `font.nftr` (NFTR fonts), and `media`
-(CUE/BIN and ISO 9660, read only).
+autoload blocks), `text.bmg` (BMG messages), `font.nftr` (NFTR fonts), `media`
+(CUE/BIN and ISO 9660, read only) and `patching.cdrom` (a CD data track's raw
+sectors, written back whole with their EDC and ECC, and ISO 9660 records repointed).
 
 No algorithm or archive layout should be assigned to the platform layer merely because several games happen to use it.
 

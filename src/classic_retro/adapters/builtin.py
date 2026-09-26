@@ -14,9 +14,11 @@ from classic_retro.engines.phantom_hourglass import PhantomHourglassEngineAdapte
 from classic_retro.engines.pmd import PmdEngineAdapter
 from classic_retro.engines.pokemon_gen3 import PokemonGen3EngineAdapter
 from classic_retro.engines.pokemon_gen4 import PokemonGen4EngineAdapter
+from classic_retro.engines.sotn import SotnEngineAdapter
 from classic_retro.engines.tactics_ogre import TacticsOgreEngineAdapter
 from classic_retro.engines.tmc import TmcEngineAdapter
 from classic_retro.games.advance_wars import AdvanceWarsUsaGameAdapter
+from classic_retro.games.castlevania_sotn import CastlevaniaSotnUsaGameAdapter
 from classic_retro.games.final_fantasy_vi_advance import FinalFantasyVIAdvanceUsaGameAdapter
 from classic_retro.games.fire_emblem_sacred_stones import FireEmblemSacredStonesUsaGameAdapter
 from classic_retro.games.golden_sun import GoldenSunUsaEuropeGameAdapter
@@ -70,6 +72,7 @@ def register_builtin_adapters(registry: AdapterRegistry) -> None:
     registry.register_engine(NsmbEngineAdapter())
     registry.register_engine(PokemonGen4EngineAdapter())
     registry.register_engine(PhantomHourglassEngineAdapter())
+    registry.register_engine(SotnEngineAdapter())
     registry.register_game(PokemonFireRedRev1GameAdapter())
     registry.register_game(ZeldaMinishCapUsaGameAdapter())
     registry.register_game(FinalFantasyVIAdvanceUsaGameAdapter())
@@ -85,3 +88,4 @@ def register_builtin_adapters(registry: AdapterRegistry) -> None:
     registry.register_game(NewSuperMarioBrosUsaGameAdapter())
     registry.register_game(PokemonPlatinumUsaGameAdapter())
     registry.register_game(ZeldaPhantomHourglassUsaGameAdapter())
+    registry.register_game(CastlevaniaSotnUsaGameAdapter())

@@ -172,6 +172,15 @@ A hit reports these fields:
     frames; wait generously before a shot.
   - DeSmuME writes its log to standard output too, ahead of the report: the report is the
     JSON object that ends the output.
+- For the PlayStation, `libretro-beetle-psx` (Beetle PSX, `mednafen_psx_libretro`) runs
+  a disc from its CUE sheet. It needs the console's BIOS: give `--system-dir` a folder
+  holding `scph5501.bin` for a US disc (`scph5500.bin` Japanese, `scph5502.bin`
+  European). A shot is the picture the core draws (280x240 for Symphony of the Night).
+  RetroPad `B` is the Cross button and `A` the Circle.
+  - `system_ram` is the 2 MiB of main RAM: `system_ram:0x1C24CC` is `0x801C24CC`. A
+    `peek` there shows a hook's `jal` in place, or what a hook keeps in memory.
+  - The core (0.9.44.1) gives no `video_ram`. VRAM is in a savestate: the chunk after
+    `GPURAM[0][0]` holds its 1 MiB, 1024 halfwords a row.
 
 A savestate belongs to the backend and core that wrote it.
 

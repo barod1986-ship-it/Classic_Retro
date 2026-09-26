@@ -377,9 +377,9 @@ jobs:
   arabic-overlay:
     # The rom-overlay targets patch the user's own image locally (each target's
     # guide, docs/*_ARABIC_TEST_AR.md, says how). CI runs the same checks for
-    # every one by target id: it re-assembles the hook code and compares it
-    # with the stored bytes, validates the Arabic script and lays out every
-    # string with the reference font, and uploads the target's previews.
+    # every one by target id: it re-assembles the hook code (ARM or MIPS) and
+    # compares it with the stored bytes, validates the Arabic script and lays out
+    # every string with the reference font, and uploads the target's previews.
     needs: localization-targets
     name: ${{ matrix.target.id }}-arabic-overlay
     runs-on: ubuntu-latest
@@ -402,7 +402,7 @@ jobs:
       - name: Install build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y binutils-arm-none-eabi
+          sudo apt-get install -y binutils-arm-none-eabi binutils-mipsel-linux-gnu
 
       - name: Install toolkit
         run: python -m pip install -e .
