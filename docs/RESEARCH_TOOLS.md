@@ -111,7 +111,7 @@ A hit reports these fields:
 
 | | `mgba` (default) | `libretro` (`--core`) |
 |---|---|---|
-| Consoles | Game Boy Advance, Game Boy, Game Boy Color | Whatever the core runs: SNES, Mega Drive, NES, PlayStation... |
+| Consoles | Game Boy Advance, Game Boy, Game Boy Color | Whatever the core runs: SNES, Mega Drive, NES, PlayStation, Nintendo DS... |
 | Breakpoints and watchpoints | Yes | No: libretro has no debugger |
 | Memory | Any bus address | Bus addresses through the core's memory map, or a named region (`save_ram:0x10`) |
 | Needs | A C compiler and libmgba's development files | The core's shared library |
@@ -145,6 +145,9 @@ A hit reports these fields:
   - A core without a map is read through its regions: `save_ram`, `system_ram`,
     `video_ram` and `rtc`.
 - A process runs one game per core at a time.
+- For the Nintendo DS, `libretro-desmume` (DeSmuME) boots an image without BIOS files. A
+  shot holds both screens, the top one above the bottom one (256x384). The RetroPad has
+  no touch screen, so a script reaches what the D-pad and buttons reach.
 
 A savestate belongs to the backend and core that wrote it.
 

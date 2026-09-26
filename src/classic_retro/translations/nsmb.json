@@ -1,0 +1,248 @@
+{
+  "schema_version": "1.0",
+  "target": "nsmb",
+  "language": "ar",
+  "notation": "Logical Arabic in the engine notation (engines.nsmb). Keep every escape and line end of the original, in order: {FF:00000100}{01:0100}{FF:00000000} is the number of Star Coins the game writes in, in colour; {FF:00000200} greys the choice that follows and {FF:00000000} ends it. A line holds Arabic, spaces and punctuation (. ! : ، ؟) only: no Latin letters or digits, since every line is stored reversed. Each line is centred on its own; a menu keeps one choice per line. No vowel marks: the font has none.",
+  "glossary": [
+    {
+      "term": "Star Coins",
+      "text": "العملات النجمية"
+    },
+    {
+      "term": "Continue (menu)",
+      "text": "متابعة"
+    },
+    {
+      "term": "Options (menu)",
+      "text": "خيارات"
+    },
+    {
+      "term": "Quit (menu)",
+      "text": "خروج"
+    },
+    {
+      "term": "Return to Map (menu)",
+      "text": "العودة إلى الخريطة"
+    },
+    {
+      "term": "Challenge mode",
+      "text": "وضع التحدي"
+    },
+    {
+      "term": "START (the button)",
+      "text": "زر البدء"
+    }
+  ],
+  "entries": [
+    {
+      "id": "file_select",
+      "context": "The file select, before a file is chosen",
+      "text": "اختر ملفا."
+    },
+    {
+      "id": "file_copy_from",
+      "context": "The file select: the file to copy from",
+      "text": "اختر الملف الذي تريد نسخه."
+    },
+    {
+      "id": "file_copy_to",
+      "context": "The file select: the file to copy onto",
+      "text": "اختر الملف الذي تريد النسخ إليه."
+    },
+    {
+      "id": "file_overwrite",
+      "context": "The file select: copying onto a file that holds a game",
+      "text": "هل تريد الكتابة فوق هذا الملف؟"
+    },
+    {
+      "id": "file_copying",
+      "context": "The file select, while a file is copied",
+      "text": "جار النسخ..."
+    },
+    {
+      "id": "file_copied",
+      "context": "The file select, when the copy is done",
+      "text": "تم نسخ الملف."
+    },
+    {
+      "id": "file_erase_select",
+      "context": "The file select: the file to erase",
+      "text": "اختر الملف الذي تريد مسحه."
+    },
+    {
+      "id": "file_erase_confirm",
+      "context": "The file select: confirming an erase",
+      "text": "هل تريد مسح هذا الملف؟"
+    },
+    {
+      "id": "file_erasing",
+      "context": "The file select, while a file is erased",
+      "text": "جار المسح..."
+    },
+    {
+      "id": "file_erased",
+      "context": "The file select, when the erase is done",
+      "text": "تم مسح الملف."
+    },
+    {
+      "id": "map_yes",
+      "context": "World map: the answer that accepts a prompt",
+      "text": "نعم"
+    },
+    {
+      "id": "map_no",
+      "context": "World map: the answer that declines a prompt",
+      "text": "لا"
+    },
+    {
+      "id": "map_continue",
+      "context": "World map menu: back to the map",
+      "text": "متابعة"
+    },
+    {
+      "id": "map_save",
+      "context": "World map menu: save the game",
+      "text": "حفظ"
+    },
+    {
+      "id": "map_options",
+      "context": "World map menu: sound and controls",
+      "text": "خيارات"
+    },
+    {
+      "id": "map_quit",
+      "context": "World map menu: back to the title",
+      "text": "خروج"
+    },
+    {
+      "id": "map_gate_spend",
+      "context": "World map: a Star Coin gate asks for the coins it costs (the number, in colour)",
+      "text": "يلزمك {FF:00000100}{01:0100}{FF:00000000} من العملات النجمية\nلتعبر من هنا. هل تريد\nأن تنفق هذه العملات؟"
+    },
+    {
+      "id": "map_save_prompt",
+      "context": "World map: asks whether to save",
+      "text": "هل تريد الحفظ؟"
+    },
+    {
+      "id": "map_quit_prompt",
+      "context": "World map: quitting loses what was not saved",
+      "text": "ستفقد كل ما لم تحفظه.\nهل تريد الخروج؟"
+    },
+    {
+      "id": "map_lose_data",
+      "context": "World map: a warning that the current progress will be lost",
+      "text": "ستفقد كل بياناتك الحالية.\nهل أنت متأكد؟"
+    },
+    {
+      "id": "map_gate_short",
+      "context": "World map: a Star Coin gate the player cannot pay for (the number, in colour)",
+      "text": "ليس لديك ما يكفي من العملات\nالنجمية! يلزمك {FF:00000100}{01:0100}{FF:00000000} منها\nلتعبر من هنا."
+    },
+    {
+      "id": "map_saving",
+      "context": "World map, while saving",
+      "text": "جار الحفظ..."
+    },
+    {
+      "id": "map_saved",
+      "context": "World map, when the game is saved",
+      "text": "تم الحفظ."
+    },
+    {
+      "id": "map_menu_save",
+      "context": "World map menu with saving: four choices, one per line",
+      "text": "متابعة\nحفظ\nخيارات\nخروج"
+    },
+    {
+      "id": "map_menu",
+      "context": "World map menu without saving: three choices, one per line",
+      "text": "متابعة\nخيارات\nخروج"
+    },
+    {
+      "id": "challenge_mode",
+      "context": "World map: the greeting of the secret Challenge mode, with how to leave a level",
+      "text": "مرحبا بك في وضع التحدي\nالسري. هل تظن أنك تستطيع\nبلوغ الهدف؟ إن علقت،\nفاضغط زر البدء واختر\nالعودة إلى الخريطة."
+    },
+    {
+      "id": "level_yes",
+      "context": "Inside a level: the answer that accepts a prompt",
+      "text": "نعم"
+    },
+    {
+      "id": "level_no",
+      "context": "Inside a level: the answer that declines a prompt",
+      "text": "لا"
+    },
+    {
+      "id": "level_continue",
+      "context": "Pause menu: back to the level",
+      "text": "متابعة"
+    },
+    {
+      "id": "level_options",
+      "context": "Pause menu: sound and controls",
+      "text": "خيارات"
+    },
+    {
+      "id": "level_quit",
+      "context": "Pause menu: back to the title",
+      "text": "خروج"
+    },
+    {
+      "id": "level_save_prompt",
+      "context": "After a tower or castle: asks whether to save",
+      "text": "هل تريد الحفظ؟"
+    },
+    {
+      "id": "level_no_save",
+      "context": "Quitting where the game cannot be saved",
+      "text": "لا يمكنك الحفظ هنا.\nهل تريد الخروج؟"
+    },
+    {
+      "id": "level_sure",
+      "context": "Inside a level: confirming a choice",
+      "text": "هل أنت متأكد؟"
+    },
+    {
+      "id": "level_saving",
+      "context": "Inside a level, while saving",
+      "text": "جار الحفظ..."
+    },
+    {
+      "id": "level_saved",
+      "context": "Inside a level, when the game is saved",
+      "text": "تم الحفظ."
+    },
+    {
+      "id": "pause_menu_locked",
+      "context": "Pause menu of a level not yet cleared: the second choice (back to the map) is greyed out",
+      "text": "متابعة\n{FF:00000200}العودة إلى الخريطة\n{FF:00000000}خيارات\nخروج"
+    },
+    {
+      "id": "pause_menu",
+      "context": "Pause menu of a cleared level: four choices, one per line",
+      "text": "متابعة\nالعودة إلى الخريطة\nخيارات\nخروج"
+    },
+    {
+      "id": "pause_menu_short",
+      "context": "Pause menu with two choices, one per line",
+      "text": "متابعة\nخروج"
+    },
+    {
+      "id": "level_gate_spend",
+      "context": "Inside a level: a gate asks for Star Coins (the number, in colour)",
+      "text": "هل تريد أن تنفق\n{FF:00000100}{01:0100}{FF:00000000} من العملات النجمية؟"
+    },
+    {
+      "id": "level_gate_short",
+      "context": "Inside a level: not enough Star Coins for a gate (the number, in colour)",
+      "text": "ليس لديك ما يكفي من العملات\nالنجمية! يلزمك {FF:00000100}{01:0100}{FF:00000000} منها."
+    },
+    {
+      "id": "stuck_hint",
+      "context": "Inside a level: how to leave a level when stuck",
+      "text": "إن علقت، فاضغط\nزر البدء واختر\nالعودة إلى الخريطة."
+    }
+  ]
+}

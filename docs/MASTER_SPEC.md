@@ -1,6 +1,6 @@
 # Classic Retro — Master Specification
 
-Version: 0.3 (Localization platform: twelve reference targets)
+Version: 0.3 (Localization platform: thirteen reference targets)
 
 ## 1. Purpose
 
@@ -12,6 +12,7 @@ Target systems may include:
 
 - Game Boy / Game Boy Color
 - Game Boy Advance
+- Nintendo DS
 - NES / Famicom
 - SNES / Super Famicom
 - Mega Drive / Genesis
@@ -34,7 +35,9 @@ The foundation phase will not:
 - use hard-coded offsets as a general architecture,
 - assume games on the same console share one text format,
 - assume cartridge-based and disc-based systems use the same storage model,
-- use naive string reversal as the Arabic solution,
+- use naive string reversal as the Arabic solution (a target that stores lines in
+  visual order stores the bidi algorithm's order of shaped text, and refuses a line it
+  would reorder differently),
 - commit commercial ROM or disc images,
 - silently modify unknown revisions,
 - build a GUI before the underlying pipeline is stable.
@@ -176,7 +179,7 @@ duplicate ids, unknown kinds and strategies that are not registered.
 
 A rendering strategy (`classic_retro.localization.strategies`) is a way of drawing
 Arabic through a game's renderer. It records what it needs from the engine, which
-core modules it builds on, and what it costs. The twelve targets proved three:
+core modules it builds on, and what it costs. The thirteen targets proved three:
 
 - `glyph-font`: a right-to-left glyph font in the game's own format;
 - `line-cells`: lines shaped with HarfBuzz and cut into the engine's fixed cells;
@@ -234,7 +237,7 @@ script, and the strategy-specific drawing.
 | Engine | `engines` |
 | Game | `games` |
 | Localization | `localization` (targets, strategies, the `targets` commands), `rom` (binary overlays), `source` (source overlays) |
-| Shared overlay machinery | `patching` |
+| Shared overlay machinery | `patching` (and `patching.nitro` for DS images: header, NitroFS, NARC) |
 | Research | `research` (the scripted emulator, its backends, the scanners) |
 
 Adapter discovery (`classic_retro.{platforms,engines,games}.v1`), target discovery
