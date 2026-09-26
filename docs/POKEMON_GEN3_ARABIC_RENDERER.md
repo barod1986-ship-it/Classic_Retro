@@ -54,7 +54,7 @@ RTL state is stored per TextPrinter, not globally.
 
 ## Font atlas
 
-The prepare-arabic-source command accepts a user-supplied Arabic-capable TTF or OTF. Classic Retro does not distribute a third-party font file.
+`classic-retro targets prepare firered` takes a user-supplied Arabic-capable TTF or OTF. Classic Retro does not distribute a third-party font file.
 
 The compiler:
 
@@ -87,7 +87,7 @@ Check the pinned source:
 
 Apply RTL/font support:
 
-    classic-retro pokemon-gen3 prepare-arabic-source /path/to/pokefirered --font /path/to/ArabicFont.ttf
+    classic-retro targets prepare firered /path/to/pokefirered --font /path/to/ArabicFont.ttf
 
 Inspect bytes produced for a logical Arabic line:
 

@@ -33,7 +33,7 @@ Reusable Arabic localization logic stays in the core. Platform, engine, and game
 - Prefer an existing source-matching decompilation/disassembly when appropriate.
 - Do not assume two games on the same console use the same text engine.
 - Do not assume one console is the default or primary platform.
-- Keep Arabic shaping, bidi/RTL handling, tokenization, wrapping, and glyph mapping reusable.
+- Keep Arabic shaping, bidi/RTL handling, the token model, glyph drawing and glyph codes reusable.
 - Keep game-specific offsets, pointers, compression, control codes, and rendering behavior outside the core.
 - Build reproducibly from a verified original game image supplied by the user.
 - Never commit copyrighted ROM/disc images to this repository.
@@ -41,41 +41,30 @@ Reusable Arabic localization logic stays in the core. Platform, engine, and game
 - Validate every supported revision by hashes and automated checks.
 - Document discoveries before turning them into assumptions.
 
-## Initial pipeline
+## How a target works
 
 ```text
-Verified Game Image
+Your own game image (or decompilation checkout)
    |
-Platform + Game / Revision Detection
+detect: platform, exact revision by SHA-256            adapters, platforms, games, media
    |
-Research + Engine Identification
+research: text engine, font, renderer, free space      research
    |
-Extractor
-   |-- text
-   |-- control codes
-   |-- pointers / references
-   |-- fonts / graphics metadata
+the target: pinned originals, notation, strategy       localization, engines
    |
-Translation Source (UTF-8 Arabic)
+translations/<target>.json: the Arabic, by entry id    localization.translations
    |
-Arabic Pipeline
-   |-- tokenization
-   |-- shaping
-   |-- bidi / RTL
-   |-- wrapping
-   |-- glyph mapping
+Arabic: logical-text checks, shaping, bidi,            arabic, font, text
+  glyphs drawn from the reference font, paint order
    |
-Rebuild
-   |-- relocation
-   |-- reference repair
-   |-- compression
-   |-- font build
-   |-- platform-specific finalization
+overlay: font, text, hooks, references,                rom or source, patching, cpu, rebuild
+  compression, read back and verified
    |
-Validation
-   |
-Patch / Build Artifact
+BPS patch (or a patched source tree) + build report
 ```
+
+There is one pipeline: a target's checks, builds and translator tools all run through
+`classic-retro targets`. [MASTER_SPEC.md](docs/MASTER_SPEC.md) (§3) maps the packages.
 
 ## Localization targets
 
@@ -113,7 +102,10 @@ classic-retro targets strip WORKSPACE [--out FILE]           # the workspace, re
 ```
 
 `targets build` also reports whether the patch matches the target's recorded
-reference patch. Every game keeps its own command group too (`classic-retro fomt ...`).
+reference patch. A game's own command group holds only its engine's tools:
+`encode-arabic` (a line in the game's encoding, for example
+`classic-retro fomt encode-arabic TEXT --font FONT`) and `source-check` for the source
+overlays.
 
 ### Translating
 
@@ -167,8 +159,8 @@ on the Nintendo DS.**
 
 The first end-to-end example translates the 13 Professor OAK speech strings in
 the new-game intro. This is a renderer/font test, not a complete game translation.
-Other platforms currently have detection or foundation components; they do not
-all have playable Arabic adapters.
+The other platforms have detection only (with the CUE/BIN and ISO 9660 readers for
+PlayStation discs); none has an Arabic target yet.
 
 Install with `python -m pip install -e ".[dev]"`, run `pytest`, and identify your
 own input with `classic-retro detect "path/to/game.gba"`.

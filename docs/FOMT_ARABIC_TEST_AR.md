@@ -49,8 +49,11 @@ curl -L -o NotoKufiArabic-SemiBold.ttf "https://raw.githubusercontent.com/notofo
 3. ابنِ الرقعة:
 
 ```sh
-classic-retro fomt build-arabic "Harvest Moon - Friends of Mineral Town (USA).gba" --font NotoKufiArabic-SemiBold.ttf --out-dir fomt-arabic
+classic-retro targets build fomt "Harvest Moon - Friends of Mineral Town (USA).gba" --font NotoKufiArabic-SemiBold.ttf --out-dir fomt-arabic
 ```
+
+يطبع الأمر تقرير البناء، ويجب أن تكون فيه `matches_reference` صحيحة (`true`): الرقعة مطابقة للرقعة
+المرجعية عند البناء بالخط المرجعي.
 
 يكتب الأمر في المجلد `fomt-arabic`:
 
@@ -62,8 +65,8 @@ classic-retro fomt build-arabic "Harvest Moon - Friends of Mineral Town (USA).gb
   فيها مثال فقط).
 
 أضف `--write-rom fomt-arabic-test.gba` إذا أردت الناتج مباشرة دون تطبيق الرقعة، و
-`classic-retro fomt check-translations --font NotoKufiArabic-SemiBold.ttf --text-preview boxes.png`
-إذا أردت صورة لكل الصناديق دون النسخة.
+`classic-retro targets check-translations fomt --font NotoKufiArabic-SemiBold.ttf --preview-dir previews`
+إذا أردت صورة لكل الصناديق دون النسخة (`previews/arabic_text_preview.png`).
 
 ## تطبيق الرقعة
 

@@ -52,7 +52,3 @@ class ImageSpec:
             if value in found:
                 found[value].append(self.base + 4 * number)
         return found
-
-
-def sha256_hex(data: bytes) -> str:
-    return hashlib.sha256(data).hexdigest()

@@ -50,8 +50,11 @@ curl -L -o NotoKufiArabic-SemiBold.ttf "https://raw.githubusercontent.com/notofo
 3. ابنِ الرقعة:
 
 ```sh
-classic-retro pmd build-arabic "Pokemon Mystery Dungeon - Red Rescue Team (USA, Australia).gba" --font NotoKufiArabic-SemiBold.ttf --out-dir pmd-arabic
+classic-retro targets build pmd-red "Pokemon Mystery Dungeon - Red Rescue Team (USA, Australia).gba" --font NotoKufiArabic-SemiBold.ttf --out-dir pmd-arabic
 ```
+
+يطبع الأمر تقرير البناء، ويجب أن تكون فيه `matches_reference` صحيحة (`true`): الرقعة مطابقة للرقعة
+المرجعية عند البناء بالخط المرجعي.
 
 يكتب الأمر في المجلد `pmd-arabic`:
 

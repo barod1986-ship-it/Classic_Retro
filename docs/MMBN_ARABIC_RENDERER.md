@@ -118,7 +118,7 @@ checks that English text outside the rebuilt archives gets no bank.
 | `0x080136F2` | `00 F0 65 F8` (`Text_Main` → `Text_CopyCharTile`) | `hook_copy` |
 | `0x08013806` | `AE 7B 70 1C A8 73 08 36` (`Text_LoadCharTileLayout`: `textCol + 8`, `textCol += 1`) | `BL hook_column`, two `NOP`s |
 
-`classic-retro mmbn check-hooks` re-assembles the source with GNU binutils and
+`classic-retro targets check-hooks mmbn` re-assembles the source with GNU binutils and
 compares the result with the bytes stored in `mmbn_arabic.py` (run in CI).
 
 ## Font

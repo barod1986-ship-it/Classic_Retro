@@ -32,10 +32,6 @@ def _source_check(args: argparse.Namespace) -> int:
     return print_json(check_tmc_arabic_source(args.source, args.font))
 
 
-def _prepare_arabic_source(args: argparse.Namespace) -> int:
-    return print_json(prepare_tmc_arabic_source(args.source, args.font))
-
-
 def _encode_arabic(args: argparse.Namespace) -> int:
     return print_json(encode_tmc_arabic_line(args.text, args.font))
 
@@ -58,14 +54,6 @@ def register_cli(subcommands: argparse._SubParsersAction) -> None:
         help="Arabic TTF/OTF; also builds the font and measures every translated line",
     )
     tmc_check.set_defaults(handler=_source_check)
-
-    tmc_prepare = tmc_commands.add_parser(
-        "prepare-arabic-source",
-        help="Patch pinned zeldaret/tmc for RTL Arabic text and write the Arabic font",
-    )
-    tmc_prepare.add_argument("source", type=Path)
-    tmc_prepare.add_argument("--font", type=Path, required=True)
-    tmc_prepare.set_defaults(handler=_prepare_arabic_source)
 
     tmc_encode = tmc_commands.add_parser(
         "encode-arabic",

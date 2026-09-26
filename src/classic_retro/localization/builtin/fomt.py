@@ -47,18 +47,6 @@ def extract(image: Path, translations: TranslationSet | None = None) -> tuple[st
     return origin, fomt_arabic.extract_originals(image.read_bytes(), translations)
 
 
-def _check_translations_command(args: argparse.Namespace) -> int:
-    return print_json(fomt_arabic.check_fomt_translations(args.font, args.text_preview))
-
-
-def _check_hooks_command(_: argparse.Namespace) -> int:
-    return print_json(check_hooks())
-
-
-def _build_command(args: argparse.Namespace) -> int:
-    return print_json(build(args.rom.read_bytes(), args.font, args.out_dir, args.write_rom))
-
-
 def _encode_command(args: argparse.Namespace) -> int:
     return print_json(fomt_arabic.encode_fomt_arabic_text(args.text, args.font, story=args.story))
 
@@ -69,40 +57,6 @@ def register_cli(subcommands: argparse._SubParsersAction) -> None:
         help="Harvest Moon: Friends of Mineral Town (USA) Arabic ROM overlay helpers",
     )
     fomt_commands = fomt.add_subparsers(dest="fomt_command", required=True)
-
-    fomt_check = fomt_commands.add_parser(
-        "check-translations",
-        help="Validate the Arabic script without the ROM; with --font, lay out every string",
-    )
-    fomt_check.add_argument(
-        "--font", type=Path, help="Arabic TTF/OTF; also draws every line and counts its cells"
-    )
-    fomt_check.add_argument(
-        "--text-preview",
-        type=Path,
-        help="Write every translated box and name tag, laid out as the game draws it, as one PNG",
-    )
-    fomt_check.set_defaults(handler=_check_translations_command)
-
-    fomt_hooks = fomt_commands.add_parser(
-        "check-hooks",
-        help="Re-assemble the Thumb hooks with arm-none-eabi binutils and compare the bytes",
-    )
-    fomt_hooks.set_defaults(handler=_check_hooks_command)
-
-    fomt_build = fomt_commands.add_parser(
-        "build-arabic",
-        help="Build the Arabic BPS patch (and optionally the patched image) from the ROM",
-    )
-    fomt_build.add_argument("rom", type=Path)
-    fomt_build.add_argument("--font", type=Path, required=True)
-    fomt_build.add_argument("--out-dir", type=Path, required=True)
-    fomt_build.add_argument(
-        "--write-rom",
-        metavar="NAME",
-        help="Also write the patched image into --out-dir under this name (local use only)",
-    )
-    fomt_build.set_defaults(handler=_build_command)
 
     fomt_encode = fomt_commands.add_parser(
         "encode-arabic",

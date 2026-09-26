@@ -13,8 +13,6 @@ from PIL import Image, ImageDraw, ImageFont
 from classic_retro.arabic.glyph_codes import GlyphCodes, assign_glyph_codes
 from classic_retro.arabic.paint import reject_combining_marks, rtl_paint_order
 from classic_retro.arabic.repertoire import (
-    ARABIC_STATIC_CHARACTERS,
-    STANDARD_ARABIC_LETTERS,
     arabic_presentation_repertoire,
     legacy_renderer_pipeline,
 )
@@ -43,9 +41,6 @@ EXT_CTRL_LTR = 0x1A
 EXT_CTRL_LTR_PLACEHOLDER = 0x1B
 ARABIC_SLOT_FIRST = 0x40
 ARABIC_SLOT_LAST = 0xCF
-
-_STANDARD_ARABIC_LETTERS = STANDARD_ARABIC_LETTERS
-_ARABIC_STATIC_CHARACTERS = ARABIC_STATIC_CHARACTERS
 
 
 def firered_glyph_codes(characters: Iterable[str]) -> GlyphCodes:

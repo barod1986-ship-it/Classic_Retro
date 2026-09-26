@@ -1,8 +1,9 @@
 """``classic-retro targets``: what every localization target runs the same way.
 
-Each target also keeps its own command group; these commands take a target id
-instead, so a script or a CI matrix can run any target without knowing its
-module. ``--translations`` gives any of them a translations file or workspace
+These commands take a target id, so a guide, a script or a CI matrix runs any
+target without knowing its module. A target's own command group holds only
+the tools of its engine (``encode-arabic``, ``source-check``).
+``--translations`` gives any of them a translations file or workspace
 (``classic_retro.localization.translations``) instead of the shipped one.
 """
 

@@ -1,11 +1,19 @@
+"""The text model the engines and the Arabic pipeline share.
+
+A message is a ``TokenStream``: runs of text (``TextToken``) and the engine's
+commands between them (``InlineToken``: a wait, a colour, a line or page break,
+a name), each with an id unique in its message. ``classic_retro.text.commands``
+says how engines carry a command's codes; ``classic_retro.arabic`` shapes the
+text and puts it in drawing order, keeping every token whole.
+"""
+
 from __future__ import annotations
 
-import json
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 from enum import StrEnum
 from types import MappingProxyType
-from typing import Any, TypeAlias
+from typing import TypeAlias
 
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 
@@ -28,9 +36,6 @@ class TokenMovement(StrEnum):
 @dataclass(frozen=True, slots=True)
 class TextToken:
     text: str
-
-    def to_dict(self) -> dict[str, Any]:
-        return {"type": "text", "text": self.text}
 
 
 @dataclass(frozen=True, slots=True)
@@ -81,31 +86,6 @@ class InlineToken:
 
         object.__setattr__(self, "args", MappingProxyType(dict(self.args)))
 
-    @property
-    def signature(self) -> str:
-        payload = {
-            "kind": self.kind.value,
-            "movement": self.movement.value,
-            "name": self.name,
-            "args": dict(self.args),
-            "data_hex": self.data_hex,
-        }
-        return json.dumps(payload, ensure_ascii=True, separators=(",", ":"), sort_keys=True)
-
-    def to_dict(self) -> dict[str, Any]:
-        result: dict[str, Any] = {
-            "type": self.kind.value,
-            "id": self.id,
-            "movement": self.movement.value,
-        }
-        if self.name is not None:
-            result["name"] = self.name
-        if self.args:
-            result["args"] = dict(self.args)
-        if self.data_hex is not None:
-            result["data_hex"] = self.data_hex
-        return result
-
 
 Token: TypeAlias = TextToken | InlineToken
 
@@ -133,64 +113,3 @@ class TokenStream:
     @property
     def inline_tokens(self) -> tuple[InlineToken, ...]:
         return tuple(token for token in self.tokens if isinstance(token, InlineToken))
-
-    def to_dict(self) -> dict[str, Any]:
-        return {"tokens": [token.to_dict() for token in self.tokens]}
-
-
-def token_from_dict(data: Mapping[str, Any]) -> Token:
-    token_type = data["type"]
-    if token_type == "text":
-        return TextToken(text=data["text"])
-
-    return InlineToken(
-        id=data["id"],
-        kind=TokenKind(token_type),
-        movement=TokenMovement(data["movement"]),
-        name=data.get("name"),
-        args=data.get("args", {}),
-        data_hex=data.get("data_hex"),
-    )
-
-
-def stream_from_dict(data: Mapping[str, Any]) -> TokenStream:
-    return TokenStream(tokens=tuple(token_from_dict(item) for item in data["tokens"]))
-
-
-def validate_token_preservation(source: TokenStream, target: TokenStream) -> None:
-    source_by_id = {token.id: token for token in source.inline_tokens}
-    target_by_id = {token.id: token for token in target.inline_tokens}
-
-    source_ids = set(source_by_id)
-    target_ids = set(target_by_id)
-    if source_ids != target_ids:
-        missing = sorted(source_ids - target_ids)
-        extra = sorted(target_ids - source_ids)
-        parts: list[str] = []
-        if missing:
-            parts.append(f"missing={','.join(missing)}")
-        if extra:
-            parts.append(f"extra={','.join(extra)}")
-        raise ClassicRetroError(
-            ErrorCode.TOKEN_SET_MISMATCH,
-            "Protected token set differs between source and target: " + "; ".join(parts),
-        )
-
-    for token_id, source_token in source_by_id.items():
-        if source_token.signature != target_by_id[token_id].signature:
-            raise ClassicRetroError(
-                ErrorCode.TOKEN_DEFINITION_MISMATCH,
-                f"Protected token definition changed: {token_id}",
-            )
-
-    source_order = [
-        token.id for token in source.inline_tokens if token.movement is TokenMovement.ORDERED
-    ]
-    target_order = [
-        token.id for token in target.inline_tokens if token.movement is TokenMovement.ORDERED
-    ]
-    if source_order != target_order:
-        raise ClassicRetroError(
-            ErrorCode.TOKEN_ORDER_VIOLATION,
-            "Ordered inline tokens changed relative order",
-        )

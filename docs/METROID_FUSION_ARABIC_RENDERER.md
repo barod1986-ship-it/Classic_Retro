@@ -198,7 +198,7 @@ The cursor's x is worked out from the Arabic question: 12 pixels left of each op
 mirrored end. The keys swap: right (`0x10`) chooses Yes, left (`0x20`) No. A question
 left untranslated keeps the game's code.
 
-`classic-retro metroid-fusion check-hooks` re-assembles the source with GNU binutils
+`classic-retro targets check-hooks metroid-fusion` re-assembles the source with GNU binutils
 and compares the result with the bytes stored in `metroid_fusion_arabic.py` (run in CI).
 
 ## Font

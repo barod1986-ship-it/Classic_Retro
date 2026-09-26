@@ -23,7 +23,6 @@ a line the next text starts in a new cell, so it only appears after the wait.
 
 from __future__ import annotations
 
-import math
 import re
 from collections.abc import Iterable
 from dataclasses import dataclass, field
@@ -424,8 +423,3 @@ def page_preview(page: MmbnArabicPage) -> Image.Image:
 def pages_sheet(pages: list[tuple[str, MmbnArabicPage]]) -> Image.Image:
     """Page previews one under another, each with its key on the left, at twice the size."""
     return enlarged_preview_sheet([(key, page_preview(page)) for key, page in pages], 110)
-
-
-def cells_needed(renderer: MmbnLineRenderer, text: str) -> int:
-    """Cells of a line of plain text (no commands), for writing translations."""
-    return math.ceil((renderer.text_width(text) + RIGHT_MARGIN) / CELL_WIDTH)

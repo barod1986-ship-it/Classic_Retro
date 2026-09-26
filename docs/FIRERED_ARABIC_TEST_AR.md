@@ -54,7 +54,7 @@ flips --apply firered-rev1-arabic-oak-full.bps original.gba firered-arabic-test.
 
 ```sh
 classic-retro pokemon-gen3 source-check /path/to/pokefirered
-classic-retro pokemon-gen3 prepare-arabic-source /path/to/pokefirered --font /path/to/ArabicFont.ttf
+classic-retro targets prepare firered /path/to/pokefirered --font /path/to/ArabicFont.ttf
 make -C /path/to/pokefirered -j2 firered_rev1
 ```
 

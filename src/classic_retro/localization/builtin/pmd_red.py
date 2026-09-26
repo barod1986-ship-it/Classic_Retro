@@ -48,18 +48,6 @@ def extract(image: Path, translations: TranslationSet | None = None) -> tuple[st
     return origin, pmd_arabic.extract_originals(image.read_bytes(), translations)
 
 
-def _check_translations_command(args: argparse.Namespace) -> int:
-    return print_json(pmd_arabic.check_pmd_translations(args.font, args.preview, args.text_preview))
-
-
-def _check_hooks_command(_: argparse.Namespace) -> int:
-    return print_json(check_hooks())
-
-
-def _build_command(args: argparse.Namespace) -> int:
-    return print_json(build(args.rom.read_bytes(), args.font, args.out_dir, args.write_rom))
-
-
 def _encode_command(args: argparse.Namespace) -> int:
     return print_json(pmd_arabic.encode_pmd_arabic_line(args.text, args.font, PmdTextBox(args.box)))
 
@@ -70,45 +58,6 @@ def register_cli(subcommands: argparse._SubParsersAction) -> None:
         help="Pokémon Mystery Dungeon: Red Rescue Team (USA) Arabic ROM overlay helpers",
     )
     pmd_commands = pmd.add_subparsers(dest="pmd_command", required=True)
-
-    pmd_check = pmd_commands.add_parser(
-        "check-translations",
-        help="Validate the Arabic script without the ROM; with --font, measure every line",
-    )
-    pmd_check.add_argument(
-        "--font",
-        type=Path,
-        help="Arabic TTF/OTF; also builds the font and measures every translated line",
-    )
-    pmd_check.add_argument(
-        "--preview", type=Path, help="Write the generated Arabic glyph atlas as PNG"
-    )
-    pmd_check.add_argument(
-        "--text-preview",
-        type=Path,
-        help="Write every translated string, laid out as the game draws it, as one PNG",
-    )
-    pmd_check.set_defaults(handler=_check_translations_command)
-
-    pmd_hooks = pmd_commands.add_parser(
-        "check-hooks",
-        help="Re-assemble the Thumb hooks with arm-none-eabi binutils and compare the bytes",
-    )
-    pmd_hooks.set_defaults(handler=_check_hooks_command)
-
-    pmd_build = pmd_commands.add_parser(
-        "build-arabic",
-        help="Build the Arabic BPS patch (and optionally the patched image) from the ROM",
-    )
-    pmd_build.add_argument("rom", type=Path)
-    pmd_build.add_argument("--font", type=Path, required=True)
-    pmd_build.add_argument("--out-dir", type=Path, required=True)
-    pmd_build.add_argument(
-        "--write-rom",
-        metavar="NAME",
-        help="Also write the patched image into --out-dir under this name (local use only)",
-    )
-    pmd_build.set_defaults(handler=_build_command)
 
     pmd_encode = pmd_commands.add_parser(
         "encode-arabic",

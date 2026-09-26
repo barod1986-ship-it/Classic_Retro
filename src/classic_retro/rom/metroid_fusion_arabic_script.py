@@ -71,7 +71,6 @@ class MfTextList:
 MONOLOGUE_LIST = MfTextList("monologue", 0x0879E6EC, MONOLOGUES)
 NAVIGATION_LIST = MfTextList("briefing", 0x0879D50C, NAVIGATION_TEXTS)
 MESSAGE_LIST = MfTextList("message", 0x0879C810, MESSAGES)
-TEXT_LISTS = (MONOLOGUE_LIST, NAVIGATION_LIST, MESSAGE_LIST)
 
 
 @dataclass(frozen=True, slots=True)

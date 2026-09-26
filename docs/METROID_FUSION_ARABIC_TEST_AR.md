@@ -62,26 +62,22 @@ curl -L -o NotoKufiArabic-SemiBold.ttf "https://raw.githubusercontent.com/notofo
 3. ابنِ الرقعة:
 
 ```sh
-classic-retro metroid-fusion build-arabic "Metroid Fusion (USA).gba" --font NotoKufiArabic-SemiBold.ttf --out-dir metroid-fusion-arabic
-```
-
-أو بالأمر العام الذي يقارن الرقعة بالمرجعية:
-
-```sh
 classic-retro targets build metroid-fusion "Metroid Fusion (USA).gba" --font NotoKufiArabic-SemiBold.ttf --out-dir metroid-fusion-arabic
 ```
+
+يطبع الأمر تقرير البناء، ويجب أن تكون فيه `matches_reference` صحيحة (`true`): الرقعة مطابقة للرقعة
+المرجعية عند البناء بالخط المرجعي.
 
 يكتب الأمر في المجلد `metroid-fusion-arabic`:
 
 - `metroid-fusion-usa-arabic-opening.bps`: الرقعة (حوالي 13 كيلوبايت). النصوص الإنجليزية لا تتغير؛
   الخط العربي والنصوص المعرّبة تُخزن في المساحة الفارغة في آخر النسخة، فلا تحمل الرقعة نصوص اللعبة.
-- `build-report.json`: بصمات النسخة والناتج والرقعة، وعرض كل سطر عربي بالبكسل. مع `targets build`
-  يجب أن تكون `matches_reference` صحيحة.
+- `build-report.json`: بصمات النسخة والناتج والرقعة، وعرض كل سطر عربي بالبكسل.
 - `arabic_font_preview.png`: كل حروف الخط العربي كما ستُرسم.
 
 أضف `--write-rom metroid-fusion-arabic-test.gba` إذا أردت الناتج مباشرة دون تطبيق الرقعة، و
-`classic-retro metroid-fusion check-translations --font NotoKufiArabic-SemiBold.ttf --text-preview messages.png`
-إذا أردت صورة لكل النصوص دون النسخة.
+`classic-retro targets check-translations metroid-fusion --font NotoKufiArabic-SemiBold.ttf --preview-dir previews`
+إذا أردت صورة لكل النصوص دون النسخة (`previews/arabic_messages_preview.png`).
 
 ## تطبيق الرقعة
 

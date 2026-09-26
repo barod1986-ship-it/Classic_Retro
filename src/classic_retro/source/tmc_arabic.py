@@ -18,7 +18,6 @@ from classic_retro.engines.tmc import (
     TMC_DIALOGUE_LINE_WIDTH,
     TMC_PLAYER_NAME_LENGTH,
     control_signature,
-    glyph_advance,
     latin_glyph_widths,
     parse_tmc_string,
 )
@@ -813,14 +812,3 @@ def _patch_linker(text: str) -> str:
         "    } >rom\n",
         "ROM Arabic font placement",
     )
-
-
-def font_glyph_row_markers(data: bytes) -> list[tuple[int, int]]:
-    """(first-half width, second-half width) of each glyph, as the engine reads them."""
-    return [
-        (
-            glyph_advance(data[offset : offset + 64]),
-            glyph_advance(data[offset + 64 : offset + 128]),
-        )
-        for offset in range(0, len(data), 128)
-    ]

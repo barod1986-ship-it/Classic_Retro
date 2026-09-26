@@ -89,7 +89,7 @@ bytes before writing.
 | `0x08151A04` | `71 7E 0C 31 0A 1C 02 40` | canvas rows copied after drawing |
 | `0x0813BFAC` | `3F 21 08 91 61 26 02 4A` | narration band: 72 scanlines |
 
-`classic-retro ff6a check-hooks` re-assembles the source with GNU binutils and
+`classic-retro targets check-hooks ff6a` re-assembles the source with GNU binutils and
 compares the result with the bytes stored in `ff6a_arabic.py` (run in CI).
 
 ## Font
@@ -140,10 +140,10 @@ patch; we apply a Flips patch); CI repeats this on synthetic data.
 ## Commands
 
 ```sh
-classic-retro ff6a check-translations --font NotoKufiArabic-SemiBold.ttf
-classic-retro ff6a build-arabic original.gba --font NotoKufiArabic-SemiBold.ttf --out-dir out
+classic-retro targets check-translations ff6a --font NotoKufiArabic-SemiBold.ttf
+classic-retro targets build ff6a original.gba --font NotoKufiArabic-SemiBold.ttf --out-dir out
 classic-retro ff6a encode-arabic "صباح الخير" --font NotoKufiArabic-SemiBold.ttf
-classic-retro ff6a check-hooks
+classic-retro targets check-hooks ff6a
 ```
 
 ## v1 boundary

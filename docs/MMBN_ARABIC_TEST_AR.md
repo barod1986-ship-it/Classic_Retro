@@ -54,8 +54,11 @@ curl -L -o NotoKufiArabic-SemiBold.ttf "https://raw.githubusercontent.com/notofo
 3. ابنِ الرقعة:
 
 ```sh
-classic-retro mmbn build-arabic "Mega Man Battle Network (USA).gba" --font NotoKufiArabic-SemiBold.ttf --out-dir mmbn-arabic
+classic-retro targets build mmbn "Mega Man Battle Network (USA).gba" --font NotoKufiArabic-SemiBold.ttf --out-dir mmbn-arabic
 ```
+
+يطبع الأمر تقرير البناء، ويجب أن تكون فيه `matches_reference` صحيحة (`true`): الرقعة مطابقة للرقعة
+المرجعية عند البناء بالخط المرجعي.
 
 يكتب الأمر في المجلد `mmbn-arabic`:
 

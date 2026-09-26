@@ -118,7 +118,7 @@ Each site is replaced by a `BL` to its hook (all within `BL` range of the paddin
 | `0x08018698`, `0x080186E8` | `bl 0x0801862C` (the cursor) | `hook_cursor` |
 | `0x080186C0`, `0x080186D8` | `movs r0, #0x20` / `#0x12`; `ldrh r1, [r1, #12]` (the keys) | `hook_keys_back`, `hook_keys_next` |
 
-`classic-retro advance-wars check-hooks` re-assembles the source with GNU binutils and
+`classic-retro targets check-hooks advance-wars` re-assembles the source with GNU binutils and
 compares the result with the bytes stored in `advance_wars_arabic.py` (run in CI).
 
 ## Font

@@ -48,26 +48,22 @@ curl -L -o NotoKufiArabic-SemiBold.ttf "https://raw.githubusercontent.com/notofo
 3. ابنِ الرقعة:
 
 ```sh
-classic-retro nsmb build-arabic "New Super Mario Bros. (USA).nds" --font NotoKufiArabic-SemiBold.ttf --out-dir nsmb-arabic
-```
-
-أو بالأمر العام الذي يقارن الرقعة بالمرجعية:
-
-```sh
 classic-retro targets build nsmb "New Super Mario Bros. (USA).nds" --font NotoKufiArabic-SemiBold.ttf --out-dir nsmb-arabic
 ```
+
+يطبع الأمر تقرير البناء، ويجب أن تكون فيه `matches_reference` صحيحة (`true`): الرقعة مطابقة للرقعة
+المرجعية عند البناء بالخط المرجعي.
 
 يستغرق البناء بضع ثوانٍ، ويكتب في المجلد `nsmb-arabic`:
 
 - `new-super-mario-bros-usa-arabic-menus.bps`: الرقعة (حوالي 8 كيلوبايت). تحمل الخط العربي والرسائل
   المعرّبة، لا شيفرة اللعبة: تُضغط الشيفرة الرئيسية من جديد بطريقة تُبقي بايتاتها المضغوطة كما هي حيث لم تتغير.
-- `build-report.json`: بصمات النسخة والناتج والرقعة، وعرض كل سطر عربي بالبكسل. مع `targets build`
-  يجب أن تكون `matches_reference` صحيحة.
+- `build-report.json`: بصمات النسخة والناتج والرقعة، وعرض كل سطر عربي بالبكسل.
 - `arabic_font_preview.png`: كل حروف الخط العربي التي يستخدمها النص كما ستُرسم.
 
 أضف `--write-rom nsmb-arabic-test.nds` إذا أردت الناتج مباشرة دون تطبيق الرقعة، و
-`classic-retro nsmb check-translations --font NotoKufiArabic-SemiBold.ttf --text-preview messages.png`
-إذا أردت صورة لكل الرسائل دون النسخة.
+`classic-retro targets check-translations nsmb --font NotoKufiArabic-SemiBold.ttf --preview-dir previews`
+إذا أردت صورة لكل الرسائل دون النسخة (`previews/arabic_messages_preview.png`).
 
 ## تطبيق الرقعة
 

@@ -291,7 +291,7 @@ def test_table_lookup_matches_a_linear_scan():
 
 
 def test_real_script_checks_without_the_rom(capsys):
-    assert main(["mmbn", "check-translations"]) == 0
+    assert main(["targets", "check-translations", "mmbn"]) == 0
     report = json.loads(capsys.readouterr().out)
     assert report["archives"] == 6 and report["sections"] >= 40
     assert report["pages_drawn"] is False

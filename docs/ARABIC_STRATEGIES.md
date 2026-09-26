@@ -281,8 +281,8 @@ commands.
    texture-font = "my_package.strategies:TEXTURE_FONT"
    ```
 
-3. Put reusable pieces in the core (`arabic/`, `font/`, `layout/`, `text/`), not in
-   the target. Start from [the shared core](#the-shared-core), and list the modules
+3. Put reusable pieces in the core (`arabic/`, `font/`, `text/`), not in the
+   target. Start from [the shared core](#the-shared-core), and list the modules
    the strategy uses in its `core` field.
 4. It becomes `proven` when a target ships with it: the target is built from its
    pinned image, checked in an emulator, and its reference patch hash is recorded.

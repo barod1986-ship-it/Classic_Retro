@@ -265,7 +265,7 @@ def test_changed_script_is_refused(english, tmp_path, monkeypatch):
 
 
 def test_cli_checks_the_script_and_encodes_a_line(capsys):
-    assert main(["golden-sun", "check-translations"]) == 0
+    assert main(["targets", "check-translations", "golden-sun"]) == 0
     report = json.loads(capsys.readouterr().out)
     assert report["lines_measured"] is False
     assert report["strings"][0] == 3666 and report["strings"][-1] == 3686
@@ -284,8 +284,9 @@ def test_cli_refuses_an_unknown_rom(tmp_path, capsys):
 
     code = main(
         [
+            "targets",
+            "build",
             "golden-sun",
-            "build-arabic",
             str(rom),
             "--font",
             str(font),

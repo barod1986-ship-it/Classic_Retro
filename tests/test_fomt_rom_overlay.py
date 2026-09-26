@@ -417,7 +417,7 @@ def test_hook_source_assembles_to_the_stored_bytes():
 
 
 def test_cli_checks_translations_without_rom(capsys):
-    assert main(["fomt", "check-translations"]) == 0
+    assert main(["targets", "check-translations", "fomt"]) == 0
     report = json.loads(capsys.readouterr().out)
     assert report == {"laid_out": False, "speaker_names": 5, "strings": 33}
 
@@ -435,7 +435,16 @@ def test_cli_refuses_another_image(tmp_path, arabic_font, capsys):
     rom = tmp_path / "other.gba"
     rom.write_bytes(bytes(1024))
     code = main(
-        ["fomt", "build-arabic", str(rom), "--font", str(arabic_font), "--out-dir", str(tmp_path)]
+        [
+            "targets",
+            "build",
+            "fomt",
+            str(rom),
+            "--font",
+            str(arabic_font),
+            "--out-dir",
+            str(tmp_path),
+        ]
     )
     assert code == 2
     assert "UNKNOWN_GAME_REVISION" in capsys.readouterr().err

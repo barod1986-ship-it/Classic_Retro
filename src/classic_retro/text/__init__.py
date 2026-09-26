@@ -1,27 +1,9 @@
-"""Canonical translation document and token model."""
+"""Game text: the shared token model and the formats engines share.
 
-from classic_retro.text.document import (
-    TranslationDocument,
-    TranslationEntry,
-    TranslationStatus,
-    load_translation_file,
-)
-from classic_retro.text.tokens import (
-    InlineToken,
-    TextToken,
-    TokenKind,
-    TokenMovement,
-    TokenStream,
-)
+- ``tokens``: a message as text runs and the engine's commands between them;
+- ``commands``: how engines carry a command's codes and hold a translation's
+  commands against the original's;
+- ``bmg``: BMG message files, the text of many Nintendo DS games.
 
-__all__ = [
-    "InlineToken",
-    "TextToken",
-    "TokenKind",
-    "TokenMovement",
-    "TokenStream",
-    "TranslationDocument",
-    "TranslationEntry",
-    "TranslationStatus",
-    "load_translation_file",
-]
+A target's translations are ``classic_retro.localization.translations``.
+"""

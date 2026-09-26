@@ -124,7 +124,7 @@ three ways before release:
 
 ```sh
 classic-retro tmc source-check /path/to/tmc --font NotoKufiArabic-SemiBold.ttf
-classic-retro tmc prepare-arabic-source /path/to/tmc --font NotoKufiArabic-SemiBold.ttf
+classic-retro targets prepare minish-cap /path/to/tmc --font NotoKufiArabic-SemiBold.ttf
 make -C /path/to/tmc CUSTOM=1
 classic-retro tmc encode-arabic "صباح الخير" --font NotoKufiArabic-SemiBold.ttf
 ```
