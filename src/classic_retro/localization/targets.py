@@ -27,8 +27,8 @@ from __future__ import annotations
 
 import argparse
 import json
-from collections.abc import Callable, Iterator
-from dataclasses import dataclass
+from collections.abc import Callable, Iterator, Mapping
+from dataclasses import dataclass, field
 from importlib.metadata import entry_points
 from inspect import isclass
 from pathlib import Path
@@ -72,6 +72,15 @@ class LocalizationTarget:
     previews: tuple[str, ...] = ()
     # SHA-256 of the patch built from the pinned image with the reference font.
     reference_patch_sha256: str | None = None
+    # A target that accepts more than one image: each image's reference patch,
+    # by the image's SHA-256 (``reference_patch_sha256`` is the first image's).
+    reference_patches: Mapping[str, str] = field(default_factory=dict)
+
+    def reference_for(self, base_sha256: str | None) -> str | None:
+        """The reference patch of a build from the image with ``base_sha256``."""
+        if base_sha256 is not None and base_sha256 in self.reference_patches:
+            return self.reference_patches[base_sha256]
+        return self.reference_patch_sha256
 
     def operations(self) -> list[str]:
         names = {
@@ -84,7 +93,7 @@ class LocalizationTarget:
         return [name for name, operation in names.items() if operation is not None]
 
     def describe(self) -> dict[str, object]:
-        return {
+        described: dict[str, object] = {
             "id": self.id,
             "game_id": self.game_id,
             "title": self.title,
@@ -98,6 +107,9 @@ class LocalizationTarget:
             "previews": list(self.previews),
             "reference_patch_sha256": self.reference_patch_sha256,
         }
+        if self.reference_patches:
+            described["reference_patches"] = dict(self.reference_patches)
+        return described
 
 
 class TargetRegistry:

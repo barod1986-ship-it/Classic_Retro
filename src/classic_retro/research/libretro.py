@@ -2,12 +2,13 @@
 
 libretro cores exist for most consoles: mGBA, Snes9x, Genesis Plus GX, Mesen,
 Beetle PSX and others. This frontend loads a core's shared library, gives it the
-game and drives it frame by frame. Keys are pressed on RetroPad port 1, frames
-come from the core's software video output, and savestates use the core's
-serializer. Memory is read by bus address through the memory map the core
-publishes, or as an offset into a region the core names (``system_ram``,
-``save_ram``, ``video_ram``, ``rtc``). libretro has no debugger; breakpoints and
-watchpoints need the mgba backend.
+game and drives it frame by frame. Keys are pressed on RetroPad port 1, a touch
+is a pointer pressed on the frame (a core with a touch screen reads it, such as
+DeSmuME with its pointer set to ``touch``), frames come from the core's software
+video output, and savestates use the core's serializer. Memory is read by bus
+address through the memory map the core publishes, or as an offset into a
+region the core names (``system_ram``, ``save_ram``, ``video_ram``, ``rtc``).
+libretro has no debugger; breakpoints and watchpoints need the mgba backend.
 
 A core runs one game at a time, and each core library loads once per process.
 The core gets an empty system directory unless one is given (BIOS files go
@@ -81,7 +82,13 @@ _RAW_MODES = {
 }
 
 _DEVICE_JOYPAD = 1
+_DEVICE_POINTER = 6
 _DEVICE_MASK = 0xFF
+# A pointer's X and Y run from -0x7FFF (left, top) to 0x7FFF across the frame.
+_POINTER_X = 0
+_POINTER_Y = 1
+_POINTER_PRESSED = 2
+_POINTER_SPAN = 0x10000
 _JOYPAD_MASK = 256
 _BUTTONS = {
     "B": 0,
@@ -267,6 +274,7 @@ class LibretroEmulator(Emulator):
     backend = "libretro"
     keys = frozenset(RETROPAD_KEYS)
     regions = frozenset(REGIONS)
+    pointer = True
 
     def __init__(
         self,
@@ -309,6 +317,8 @@ class LibretroEmulator(Emulator):
         self._pixel_format = _PIXEL_0RGB1555
         self._frame: tuple[bytes, int, int, int, int] | None = None
         self._pressed = 0
+        self._touch: tuple[int, int] | None = None
+        self._geometry = (0, 0)
         self._maps: tuple[_Mapping, ...] = ()
         self._callback_error: BaseException | None = None
         self._loaded = False
@@ -352,7 +362,9 @@ class LibretroEmulator(Emulator):
             )
         self._loaded = True
         # Frontends ask for the timing after loading; some cores finish setting up there.
-        self._core.retro_get_system_av_info(ctypes.byref(_SystemAvInfo()))
+        av_info = _SystemAvInfo()
+        self._core.retro_get_system_av_info(ctypes.byref(av_info))
+        self._geometry = (av_info.geometry.base_width, av_info.geometry.base_height)
         self._check_callbacks()
         self._core.retro_set_controller_port_device(0, _DEVICE_JOYPAD)
 
@@ -418,11 +430,28 @@ class LibretroEmulator(Emulator):
             self._callback_error = self._callback_error or exc
 
     def _input(self, port: int, device: int, index: int, button: int) -> int:
+        if port == 0 and device & _DEVICE_MASK == _DEVICE_POINTER and index == 0:
+            return self._pointer(button)
         if port != 0 or device & _DEVICE_MASK != _DEVICE_JOYPAD:
             return 0
         if button == _JOYPAD_MASK:
             return self._pressed
         return (self._pressed >> button) & 1 if button < 16 else 0
+
+    def _pointer(self, axis: int) -> int:
+        """The pointer as libretro gives it: the touched pixel scaled across the frame."""
+        if self._touch is None:
+            return 0
+        if axis == _POINTER_PRESSED:
+            return 1
+        if axis not in (_POINTER_X, _POINTER_Y):
+            return 0
+        size = self._frame[1 + axis] if self._frame is not None else self._geometry[axis]
+        if not size:
+            return 0
+        # The centre of the pixel, so the core's scaling back lands on the pixel itself.
+        position = (2 * self._touch[axis] + 1) * _POINTER_SPAN // (2 * size) - _POINTER_SPAN // 2
+        return max(-0x7FFF, min(0x7FFF, position))
 
     def _check_callbacks(self) -> None:
         if self._callback_error is not None:
@@ -439,6 +468,9 @@ class LibretroEmulator(Emulator):
             self._core.retro_run()
         self._check_callbacks()
         return []
+
+    def touch(self, point: tuple[int, int] | None) -> None:
+        self._touch = point
 
     def screen(self) -> Screen:
         if self._frame is None:

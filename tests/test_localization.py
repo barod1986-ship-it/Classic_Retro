@@ -93,7 +93,7 @@ class _EntryPoint:
         return self._loaded
 
 
-def test_the_thirteen_reference_targets_keep_their_order_and_strategies():
+def test_the_fourteen_reference_targets_keep_their_order_and_strategies():
     registry = build_target_registry(load_external=False)
     described = {target.id: target for target in registry}
     assert list(described) == [
@@ -110,6 +110,7 @@ def test_the_thirteen_reference_targets_keep_their_order_and_strategies():
         "metroid-fusion",
         "tactics-ogre",
         "nsmb",
+        "platinum",
     ]
     assert registry.using("line-cells") == ["mmbn", "fomt"]
     assert registry.using("text-images") == ["fire-emblem"]
@@ -125,11 +126,22 @@ def test_the_thirteen_reference_targets_keep_their_order_and_strategies():
         assert target.previews and all(name.endswith(".png") for name in target.previews)
         reference = target.reference_patch_sha256
         assert reference is None if target_id == "ff6a" else len(reference) == 64
+        assert target.reference_patches == {}
     # The first DS target draws its Arabic through the game's own routines: no hooks.
     nsmb = described["nsmb"]
     assert nsmb.kind == "rom-overlay" and nsmb.platform_id == "nds"
     assert nsmb.operations() == ["check-translations", "build", "extract"]
     assert nsmb.strategies == ("glyph-font",) and len(nsmb.reference_patch_sha256 or "") == 64
+    # The second hooks the game's printer. Two dumps are accepted, each with its
+    # reference patch; the first is the pinned one.
+    platinum = described["platinum"]
+    assert (platinum.kind, platinum.platform_id) == ("rom-overlay", "nds")
+    assert platinum.operations() == ["check-hooks", "check-translations", "build", "extract"]
+    assert len(platinum.reference_patches) == 2
+    assert list(platinum.reference_patches.values())[0] == platinum.reference_patch_sha256
+    for base, patch in platinum.reference_patches.items():
+        assert platinum.reference_for(base) == patch
+    assert platinum.reference_for("0" * 64) == platinum.reference_patch_sha256
     adapters = build_registry(load_external=False)
     for target in registry:
         assert (REPO / target.guide).is_file(), target.guide
@@ -460,6 +472,7 @@ def test_the_cli_keeps_every_command_group_and_adds_targets(capsys):
         "metroid-fusion",
         "tactics-ogre",
         "nsmb",
+        "platinum",
         "targets",
     ):
         with pytest.raises(SystemExit) as exit_:
@@ -470,6 +483,6 @@ def test_the_cli_keeps_every_command_group_and_adds_targets(capsys):
 
     assert main(["targets", "list"]) == 0
     listed = json.loads(capsys.readouterr().out)
-    assert [target["id"] for target in listed][-1] == "nsmb"
+    assert [target["id"] for target in listed][-1] == "platinum"
     assert main(["targets", "check-hooks", "not-a-target"]) == 2
     assert capsys.readouterr().err.startswith("INVALID_REFERENCE: Unknown localization target")

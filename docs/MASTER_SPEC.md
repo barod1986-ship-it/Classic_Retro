@@ -1,6 +1,6 @@
 # Classic Retro — Master Specification
 
-Version: 0.3 (Localization platform: thirteen reference targets)
+Version: 0.3 (Localization platform: fourteen reference targets)
 
 ## 1. Purpose
 
@@ -168,7 +168,9 @@ Kinds:
 runs any target by id, and CI builds its target jobs from `targets list`. Each target
 also keeps its own command group for commands specific to it. A rom-overlay target
 records `reference_patch_sha256`, the hash of the patch built from its pinned image
-with the reference font. `targets build` reports whether a build matches it.
+with the reference font. A target that accepts several images (dumps that differ only
+in bytes the game never reads) records one patch for each in `reference_patches`, by the
+image's SHA-256. `targets build` reports whether a build matches the patch for its image.
 
 Targets are registered in `classic_retro.localization.builtin`. External packages add
 theirs through the `classic_retro.targets.v1` entry point group. The registry refuses
@@ -179,7 +181,7 @@ duplicate ids, unknown kinds and strategies that are not registered.
 
 A rendering strategy (`classic_retro.localization.strategies`) is a way of drawing
 Arabic through a game's renderer. It records what it needs from the engine, which
-core modules it builds on, and what it costs. The thirteen targets proved three:
+core modules it builds on, and what it costs. The fourteen targets proved three:
 
 - `glyph-font`: a right-to-left glyph font in the game's own format;
 - `line-cells`: lines shaped with HarfBuzz and cut into the engine's fixed cells;
@@ -237,7 +239,7 @@ script, and the strategy-specific drawing.
 | Engine | `engines` |
 | Game | `games` |
 | Localization | `localization` (targets, strategies, the `targets` commands), `rom` (binary overlays), `source` (source overlays) |
-| Shared overlay machinery | `patching` (and `patching.nitro` for DS images: header, NitroFS, NARC) |
+| Shared overlay machinery | `patching` (and `patching.nitro` for DS images: header, NitroFS, NARC, the ARM9's autoload blocks and overlay table) |
 | Research | `research` (the scripted emulator, its backends, the scanners) |
 
 Adapter discovery (`classic_retro.{platforms,engines,games}.v1`), target discovery

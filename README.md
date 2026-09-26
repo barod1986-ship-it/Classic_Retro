@@ -98,6 +98,7 @@ runs the same way for every target.
 | `metroid-fusion` | Metroid Fusion (USA) | ROM overlay | `glyph-font` |
 | `tactics-ogre` | Tactics Ogre: The Knight of Lodis (USA) | ROM overlay | `glyph-font` |
 | `nsmb` | New Super Mario Bros. (USA), Nintendo DS | ROM overlay | `glyph-font` |
+| `platinum` | Pokémon Platinum Version (USA, Rev 0), Nintendo DS | ROM overlay | `glyph-font` |
 
 ```text
 classic-retro targets list                          # every target, its documents and operations
@@ -131,7 +132,7 @@ classic-retro targets strip fomt.workspace.json --out fomt.json
 Every check and build holds a translations file against the originals pinned in the
 target's code. See [the translator's guide](docs/TRANSLATING_AR.md) (in Arabic).
 
-The three rendering strategies are what the thirteen targets proved, not the only ones
+The three rendering strategies are what the fourteen targets proved, not the only ones
 possible. Games on other platforms will need other methods, and the strategy and
 target registries accept them from this repository or from other packages through
 entry points. See [the rendering strategies](docs/ARABIC_STRATEGIES.md) and
@@ -154,14 +155,14 @@ classic-retro research relative-search game.gba WORD
 classic-retro research disasm game.gba 0x08012345
 ```
 
-A script holds commands such as `run 300`, `tap START`, `shot menu.png`,
+A script holds commands such as `run 300`, `tap START`, `touch 128 272`, `shot menu.png`,
 `save menu.state`, `watch write 0x03001234` and `break 0x08012345 5 r0 16`. See
 [the research tools](docs/RESEARCH_TOOLS.md).
 
 ## Repository status
 
-**Localization platform with thirteen reference targets: twelve on the Game Boy Advance and the
-first on the Nintendo DS.**
+**Localization platform with fourteen reference targets: twelve on the Game Boy Advance and two
+on the Nintendo DS.**
 
 The first end-to-end example translates the 13 Professor OAK speech strings in
 the new-game intro. This is a renderer/font test, not a complete game translation.
@@ -307,5 +308,20 @@ the new font and texts and not the game's code. The file select, the world map's
 menu, the save and quit prompts and the Star Coin gates are in Arabic (42 messages). See
 [the New Super Mario Bros. testing guide](docs/NSMB_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/NSMB_ARABIC_RENDERER.md).
+
+The fourteenth reference target, and the second on the Nintendo DS, is **Pokémon Platinum
+Version (USA, Rev 0)**, which the pret/pokeplatinum decompilation builds byte for byte. Professor
+Rowan's new-game intro is in Arabic, from his first words to his comment on the television before
+the game starts (38 strings): the dialogue typed from the right, the info pages, the menus with
+their cursor on the right, and the questions answered on the touch screen. The game's printer
+still lays every line out from the left; five hooks, which the overlay adds to the ARM9's
+instruction TCM by growing its autoload block, draw a line that holds Arabic at its mirror, a name
+or a Latin word inside it left to right as a block, and turn menus, their cursor and the
+touch-screen icon around. The Arabic glyphs follow the 509 of the game's two fonts, and the files
+and the ARM9 go back into the image through the DS module New Super Mario Bros. brought
+(`patching.nitro`), which now also reads the ARM9's autoload blocks and moves its overlay table.
+Research scripts can touch the screen (`touch X Y`) on a libretro core that reads a pointer, such
+as DeSmuME's. See [the Pokémon Platinum testing guide](docs/PLATINUM_ARABIC_TEST_AR.md) and
+[the renderer notes](docs/PLATINUM_ARABIC_RENDERER.md).
 
 See [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md).

@@ -186,7 +186,8 @@ def _build(registry: TargetRegistry, args: argparse.Namespace) -> int:
     )
     if translations is not None:
         report = {**report, "translations": str(args.translations)}
-    reference = target.reference_patch_sha256
+    base = report.get("base_sha256")
+    reference = target.reference_for(base if isinstance(base, str) else None)
     return print_json(
         {
             **report,

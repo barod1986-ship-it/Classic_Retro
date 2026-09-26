@@ -9,6 +9,9 @@ Relative paths are taken from the run's directory.
     keys KEYS                  hold KEYS (``A``, ``A+UP``) from now on; ``keys none``
     run FRAMES                 run FRAMES frames
     tap KEYS [HOLD [GAP]]      press KEYS for HOLD frames (2), then let go for GAP (8)
+    touch X Y [HOLD [GAP]]     press the frame's pixel (X, Y) for HOLD frames (2), then
+                               let go for GAP (8): a touch screen, on a libretro core
+                               that reads a pointer
     shot FILE.png              save the last frame drawn
     peek ADDRESS LENGTH        report LENGTH bytes of memory (at most 4096)
     dump ADDRESS LENGTH FILE   write LENGTH bytes of memory to FILE
@@ -85,6 +88,14 @@ class TapKeys:
 
 
 @dataclass(frozen=True, slots=True)
+class Touch:
+    x: int
+    y: int
+    hold: int
+    gap: int
+
+
+@dataclass(frozen=True, slots=True)
 class Shot:
     path: str
 
@@ -143,6 +154,7 @@ Command = (
     | HoldKeys
     | RunFrames
     | TapKeys
+    | Touch
     | Shot
     | Peek
     | Dump
@@ -259,6 +271,11 @@ def _command(name: str, arguments: list[str]) -> Command:
         hold = _number(arguments[1], "the hold") if len(arguments) > 1 else DEFAULT_TAP_HOLD
         gap = _number(arguments[2], "the gap") if len(arguments) > 2 else DEFAULT_TAP_GAP
         return TapKeys(_keys(arguments[0]), hold, gap)
+    if name == "touch":
+        _arity(name, arguments, "X Y [HOLD [GAP]]", 2, 3, 4)
+        hold = _number(arguments[2], "the hold") if len(arguments) > 2 else DEFAULT_TAP_HOLD
+        gap = _number(arguments[3], "the gap") if len(arguments) > 3 else DEFAULT_TAP_GAP
+        return Touch(_number(arguments[0], "x"), _number(arguments[1], "y"), hold, gap)
     if name == "peek":
         _arity(name, arguments, "ADDRESS LENGTH", 2)
         return Peek(_address(arguments[0]), _length(arguments[1], PEEK_LIMIT))
@@ -348,6 +365,11 @@ def check_script(steps: Sequence[Step], emulator: Emulator) -> list[str]:
                     f"line {step.line}: the {emulator.backend} backend has no region "
                     f"{address.region} (regions: {regions})"
                 )
+        if isinstance(command, Touch) and not emulator.pointer:
+            problems.append(
+                f"line {step.line}: the {emulator.backend} backend cannot touch the screen "
+                "(touch needs a libretro core that reads a pointer)"
+            )
         if isinstance(command, Break | Watch | ClearPoints) and not emulator.debugger:
             problems.append(f"line {step.line}: {emulator.no_debugger()}")
         if (
@@ -460,6 +482,13 @@ class _Session:
                 self.advance(frames, self.held)
             case TapKeys(keys, hold, gap):
                 self.advance(hold, self.held | keys)
+                self.advance(gap, self.held)
+            case Touch(x, y, hold, gap):
+                emulator.touch((x, y))
+                try:
+                    self.advance(hold, self.held)
+                finally:
+                    emulator.touch(None)
                 self.advance(gap, self.held)
             case Shot(path):
                 emulator.screen().save_png(self.output(step.line, "shot", path))

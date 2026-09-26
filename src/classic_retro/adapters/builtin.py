@@ -12,6 +12,7 @@ from classic_retro.engines.mmbn import MmbnEngineAdapter
 from classic_retro.engines.nsmb import NsmbEngineAdapter
 from classic_retro.engines.pmd import PmdEngineAdapter
 from classic_retro.engines.pokemon_gen3 import PokemonGen3EngineAdapter
+from classic_retro.engines.pokemon_gen4 import PokemonGen4EngineAdapter
 from classic_retro.engines.tactics_ogre import TacticsOgreEngineAdapter
 from classic_retro.engines.tmc import TmcEngineAdapter
 from classic_retro.games.advance_wars import AdvanceWarsUsaGameAdapter
@@ -25,6 +26,7 @@ from classic_retro.games.metroid_fusion import MetroidFusionUsaGameAdapter
 from classic_retro.games.new_super_mario_bros import NewSuperMarioBrosUsaGameAdapter
 from classic_retro.games.pokemon_firered import PokemonFireRedRev1GameAdapter
 from classic_retro.games.pokemon_mystery_dungeon_red import PokemonMysteryDungeonRedUsaGameAdapter
+from classic_retro.games.pokemon_platinum import PokemonPlatinumUsaGameAdapter
 from classic_retro.games.tactics_ogre import TacticsOgreUsaGameAdapter
 from classic_retro.games.zelda_minish_cap import ZeldaMinishCapUsaGameAdapter
 from classic_retro.platforms.gameboy import GameBoyColorPlatformAdapter, GameBoyPlatformAdapter
@@ -64,6 +66,7 @@ def register_builtin_adapters(registry: AdapterRegistry) -> None:
     registry.register_engine(MetroidFusionEngineAdapter())
     registry.register_engine(TacticsOgreEngineAdapter())
     registry.register_engine(NsmbEngineAdapter())
+    registry.register_engine(PokemonGen4EngineAdapter())
     registry.register_game(PokemonFireRedRev1GameAdapter())
     registry.register_game(ZeldaMinishCapUsaGameAdapter())
     registry.register_game(FinalFantasyVIAdvanceUsaGameAdapter())
@@ -77,3 +80,4 @@ def register_builtin_adapters(registry: AdapterRegistry) -> None:
     registry.register_game(MetroidFusionUsaGameAdapter())
     registry.register_game(TacticsOgreUsaGameAdapter())
     registry.register_game(NewSuperMarioBrosUsaGameAdapter())
+    registry.register_game(PokemonPlatinumUsaGameAdapter())

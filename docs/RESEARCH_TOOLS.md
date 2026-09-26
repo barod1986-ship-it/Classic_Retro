@@ -48,6 +48,7 @@ classic-retro research run IMAGE SCRIPT --core CORE [--option KEY=VALUE ...] [--
 | `keys KEYS` | Hold `KEYS` from now on (`A`, `A+UP`); `keys none` lets go |
 | `run FRAMES` | Run that many frames |
 | `tap KEYS [HOLD [GAP]]` | Press `KEYS` for `HOLD` frames (2), then let go for `GAP` frames (8) |
+| `touch X Y [HOLD [GAP]]` | Press the frame's pixel (`X`, `Y`) for `HOLD` frames (2), then let go for `GAP` frames (8): a touch screen, on a libretro core that reads a pointer |
 | `shot FILE.png` | Save the last frame drawn |
 | `peek ADDRESS LENGTH` | Report up to 4096 bytes of memory |
 | `dump ADDRESS LENGTH FILE` | Write memory to a file |
@@ -113,6 +114,7 @@ A hit reports these fields:
 |---|---|---|
 | Consoles | Game Boy Advance, Game Boy, Game Boy Color | Whatever the core runs: SNES, Mega Drive, NES, PlayStation, Nintendo DS... |
 | Breakpoints and watchpoints | Yes | No: libretro has no debugger |
+| Touch (`touch`) | No | Yes, on a core that reads a pointer (DeSmuME) |
 | Memory | Any bus address | Bus addresses through the core's memory map, or a named region (`save_ram:0x10`) |
 | Needs | A C compiler and libmgba's development files | The core's shared library |
 | Colour | 8 bits a channel | As the core draws it, often 16-bit |
@@ -146,8 +148,17 @@ A hit reports these fields:
     `video_ram` and `rtc`.
 - A process runs one game per core at a time.
 - For the Nintendo DS, `libretro-desmume` (DeSmuME) boots an image without BIOS files. A
-  shot holds both screens, the top one above the bottom one (256x384). The RetroPad has
-  no touch screen, so a script reaches what the D-pad and buttons reach.
+  shot holds both screens, the top one above the bottom one (256x384).
+  - `touch X Y` presses a pixel of that frame, so the touch screen is its lower half
+    (`touch 128 272` is the point 128, 80 of the touch screen). The backend hands the
+    pixel to the core as libretro's pointer; DeSmuME reads it as the touch screen with
+    `--option desmume_pointer_mouse=enable --option desmume_pointer_type=touch`.
+  - `--option desmume_cpu_mode=interpreter` keeps the core off its JIT, which drew
+    black frames in some environments.
+  - DeSmuME's clock is the host's, so two runs of a script can drift apart by a few
+    frames; wait generously before a shot.
+  - DeSmuME writes its log to standard output too, ahead of the report: the report is the
+    JSON object that ends the output.
 
 A savestate belongs to the backend and core that wrote it.
 
