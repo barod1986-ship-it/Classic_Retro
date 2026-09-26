@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "target": "sotn",
+  "language": "ar",
+  "notation": "Logical Arabic in the engine notation (engines.sotn). Keep every command of the original, in order: {wait N} pauses the typewriter N frames, {speed N} makes it type a glyph every N frames, {flag N} starts one of the animations the text is timed with and {wait-flag N} waits for one to end. Line ends (\\n) are the translation's own: a line holds at most 152 pixels (19 English letters), the box shows three lines and a fourth scrolls it. A message holds Arabic, spaces and punctuation (. ! : ، ؛ ؟) only. The speakers' names (name.*) are one line of text. No vowel marks: the font has none.",
+  "glossary": [
+    {
+      "term": "Richter",
+      "text": "ريختر"
+    },
+    {
+      "term": "Dracula",
+      "text": "دراكولا"
+    },
+    {
+      "term": "Tribute",
+      "text": "القرابين"
+    }
+  ],
+  "entries": [
+    {
+      "id": "die_monster",
+      "context": "Richter, facing Dracula on his throne; ST0 cutscene message 0",
+      "text": "{speed 4}مت أيها الوحش.\n{wait 28}{speed 2}لا مكان لك\n{wait 8}في هذا العالم!{wait 48}"
+    },
+    {
+      "id": "given_flesh",
+      "context": "Dracula; message 1",
+      "text": "{speed 3}لم تكن يدي هي التي\n{wait 4}أعادتني إلى الجسد\n{wait 4}مرة أخرى.\n{wait 48}لقد استدعاني إلى هنا\n{wait 4}{wait 16}{speed 5}بشر {wait 16}{speed 3}يريدون أن\n{wait 4}يقدموا لي\n{wait 24}القرابين.{wait 48}"
+    },
+    {
+      "id": "tribute",
+      "context": "Richter; message 2",
+      "text": "{flag 10}{speed 4}قرابين؟!\n{wait 32}{flag 11}{speed 4}أنت تسرق أرواح\n{wait 4}البشر {wait 12}{flag 12}{speed 2}وتجعلهم\n{wait 4}{flag 13}عبيدا لك!{wait 48}"
+    },
+    {
+      "id": "all_religions",
+      "context": "Dracula; message 3",
+      "text": "{speed 2}ربما يقال الشيء نفسه\n{wait 4}عن{wait 4}{speed 3} كل الأديان...{wait 48}"
+    },
+    {
+      "id": "empty_words",
+      "context": "Richter; message 4",
+      "text": "{speed 3}{flag 14}كلماتك جوفاء\n{wait 4}{flag 15}كروحك تماما!\n{wait 40}{flag 16}البشرية في غنى\n{wait 4}{flag 4}{flag 17}{speed 4}عن مخلص مثلك!{wait 48}{flag 18}"
+    },
+    {
+      "id": "pile_of_secrets",
+      "context": "Dracula; message 5, before the battle",
+      "text": "{speed 3}ما الإنسان؟\n{wait 16}{flag 5}{wait 32}{speed 3}مجرد كومة صغيرة\n{wait 4}بائسة من الأسرار.\n{wait 40}{speed 2}{wait-flag 8}لكن كفى {flag 6}كلاما...\n{wait 24}دافع عن نفسك!{wait 48}"
+    },
+    {
+      "id": "name.richter",
+      "context": "Richter's name over his portrait",
+      "text": "ريختر"
+    },
+    {
+      "id": "name.dracula",
+      "context": "Dracula's name over his portrait",
+      "text": "دراكولا"
+    }
+  ]
+}

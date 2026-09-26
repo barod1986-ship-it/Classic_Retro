@@ -2,10 +2,10 @@
 
 Version: 1
 
-The fifteen reference targets put Arabic on screen with three rendering strategies.
+The sixteen reference targets put Arabic on screen with four rendering strategies.
 They are a starting set, not a closed list. Engines on other platforms will need
 other methods, and the registry (`classic_retro.localization.strategies`) accepts
-them the same way it holds these three:
+them the same way it holds these four:
 
 ```text
 classic-retro targets strategies    # every registered strategy and the targets that use it
@@ -73,13 +73,34 @@ HarfBuzz and redrawn in the game's own image format and palette.
   table.
 - Every image must fit the original's budget: its size, colours and VRAM.
 
+### `composed-lines`: lines composed at run time (proven)
+
+Used by: `sotn`.
+
+The engine draws fixed cells of its own font, too small for Arabic letters: Symphony
+of the Night copies 8x8 cells of its font in VRAM into an image of each line, a cell a
+glyph. A hook takes that copy for the codes of a right-to-left glyph font of its own
+(every contextual form drawn from the reference font, up to 16 pixels wide) and
+composes each glyph into an image of the line in RAM at a pen that starts at the
+line's right edge, then sends the line to video memory. Text is stored as the font's
+glyphs in right-to-left paint order, as with `glyph-font`.
+
+- The engine needs one place that draws a glyph of the line being typed, where that
+  line's image is, spare codes, and RAM for the font, the text and a line image.
+- It is as small as `glyph-font`: one glyph per form, and text stays text. The game's
+  typewriter, waits and scrolling keep working, and the glyphs may be wider than the
+  game's cells.
+- It is the run-time composition the candidates below describe for tile engines, on
+  the PlayStation: into an image of the line rather than into tiles.
+- No ligatures and no kerning, as with `glyph-font`.
+
 ## Turning the renderer right to left
 
 | Way | How | Targets |
 |-----|-----|---------|
 | Mirrored draw | The game's pen keeps advancing left to right. Only where a glyph (or cell) is drawn moves to the mirror of the pen inside the line: `draw_x = left + right - pen - width`, or column `27 - x` for 28-column cells | `minish-cap`, `ff6a`, `golden-sun`, `fire-emblem`, `pmd-red`, `mlss`, `mmbn`, `fomt`, `metroid-fusion`, `tactics-ogre`, `platinum`, `phantom-hourglass` |
 | Mirrored tilemap | The game draws the line left to right into its tiles as usual; each tile column goes into the tilemap at its mirror inside the text area, with the hardware's horizontal flip, and the glyphs are stored flipped | `advance-wars` |
-| Reversed pen | The pen starts at the line's right edge and subtracts each advance before drawing. Newline, page clear and scroll restore the right edge | `firered` |
+| Reversed pen | The pen starts at the line's right edge and subtracts each advance before drawing. Newline, page clear and scroll restore the right edge | `firered`, `sotn` (a pen of the hook's own) |
 | Visual order | No change to the renderer: every line is stored reversed, its glyphs from the leftmost to the rightmost, and the game draws it left to right as it is | `nsmb` |
 
 Mirrored draw became the default. It changes one point of the renderer, and the
@@ -100,7 +121,10 @@ as wide as its advance and the letter spacing, so the glyphs the printer lays ou
 apart meet once mirrored, and a translated line holds right-to-left glyphs only, its
 spaces and punctuation included.
 Reversed pen needs control over every place that moves or resets the pen. FireRed
-had that through its decompilation. Mirrored tilemap suits a printer that draws a whole
+had that through its decompilation. Symphony of the Night's hook keeps a pen of its own
+next to the game's, which still moves a cell a glyph: a line starts when the game's pen
+is at the line's start, so the game's line ends and scrolling need no change. Mirrored
+tilemap suits a printer that draws a whole
 line into a strip of tiles, where no single point places a glyph (Advance Wars): the
 tilemap write is that point, and the flip keeps the glyphs' pixels untouched. All three
 are valid. A renderer that allows neither
@@ -135,7 +159,7 @@ left edge.
 |--------|---------|
 | Direction control codes the source overlay adds (`FC 19 xx` / `FC 1A`, `04 16` / `04 17`) | `firered`, `minish-cap` |
 | The first code of a message (`0x5FF`, `0x0B`, `0x1E`) | `ff6a`, `golden-sun`, `fire-emblem` |
-| The glyph itself: a charmap flag, or a glyph of the right-to-left font | `pmd-red`, `mlss`, `metroid-fusion` (where a glyph is drawn), `platinum` (a line that holds one; a menu whose first entry does), `phantom-hourglass` (each glyph of its range) |
+| The glyph itself: a charmap flag, or a glyph of the right-to-left font | `pmd-red`, `mlss`, `metroid-fusion` (where a glyph is drawn), `platinum` (a line that holds one; a menu whose first entry does), `phantom-hourglass` (each glyph of its range), `sotn` (a code from `80`) |
 | The text's own codes or address: cell codes, a bank table sorted by text address, or the address range of the Arabic bank | `fomt`, `mmbn`, `advance-wars`, `metroid-fusion` (its cursors, arrow and fade), `tactics-ogre` |
 | None: the renderer does not change, and a translated line is stored in visual order | `nsmb` |
 
@@ -170,6 +194,9 @@ messages in English outside the bank.
   uses, and the game's own measuring and drawing take them as they are) and Phantom
   Hourglass (the 170 kana of its message font, whose range its hook reads as right to
   left; no text of the game uses them, in any of its three languages).
+- Codes the English script never uses, whose cells lie outside the game's font:
+  Symphony of the Night (`80..FF`; the routine would copy them from VRAM below its
+  font, and the hook draws them from its own).
 - Codes past the end of the game's fonts: Pokémon Platinum (its fonts hold 509 glyphs,
   codes `0001..01FD`; the forms the script uses are appended to both fonts from `01FE`,
   which the English game never uses, up to `0400`, where the Korean codes start. The
@@ -189,8 +216,8 @@ right-to-left line.
 - Reverse the variable buffers once when a dialogue changes direction: Minish Cap.
 - Static Latin words as islands in the game's glyphs: Mega Man Battle Network.
 - Refused for now, with the reason in each target's notes: FF6 Advance, Fire Emblem,
-  Pokémon Mystery Dungeon, Mario & Luigi, Phantom Hourglass (its prologue names no one
-  at run time).
+  Pokémon Mystery Dungeon, Mario & Luigi, Phantom Hourglass and Symphony of the Night
+  (their prologues name no one at run time).
 
 Or draw the game's own glyphs left to right where they are: Pokémon Platinum keeps the
 name commands in the translation, and its glyph hook draws any run of the game's glyphs
@@ -202,6 +229,9 @@ A fixed name the game inserts from a list of its own (a character's name, not th
 player's) can be Arabic instead: Tactics Ogre keeps the command (`87xx`) in the
 translation and writes the script's Arabic name out in its place at build time, so the
 name is shaped with the line and the list stays English for the rest of the game.
+Symphony of the Night draws the speaker's name over the portrait from a table of its
+own: a hook takes that call and draws the speaker's Arabic name from slots the overlay
+adds, right-aligned with the lines.
 
 ## Fitting the reference font to the game
 
@@ -211,9 +241,10 @@ The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
   - 10 px for FF6 Advance, Golden Sun, Mario & Luigi, Harvest Moon and Advance Wars
   - 9 px for Pokémon Mystery Dungeon
   - 11 px for Mega Man Battle Network, Metroid Fusion, Tactics Ogre, Pokémon
-    Platinum (glyphs of 16x16 pixels, on its letters' baseline, row 12) and Phantom
+    Platinum (glyphs of 16x16 pixels, on its letters' baseline, row 12), Phantom
     Hourglass (glyphs of 14x16 pixels on row 11; its sizes stop at 11, the size of the
-    game's letters)
+    game's letters) and Symphony of the Night (glyphs of 16x16 pixels on row 12, the
+    top row left empty to keep its lines apart)
   - 12 px for New Super Mario Bros., on a baseline two rows above its Latin
     letters' so that the Arabic descenders fit its 15-row cells
 - Draw marks that vanish at that size by hand:
@@ -223,8 +254,9 @@ The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
 - Or keep a dot that stays just under the ink level: its strongest pixel becomes ink
   (`draw_form(..., mark_level=...)`; Metroid Fusion's medial beh).
 - Adjust a form that does not fit: raise final yeh (Pokémon Platinum raises final and
-  isolated meem and yeh, a row at a time up to two), or split a 13-pixel seen into
-  two glyphs (Advance Wars splits every form wider than its 8-pixel glyphs; New Super
+  isolated meem and yeh, a row at a time up to two; Symphony of the Night raises final
+  and isolated yeh a row), or split a 13-pixel seen into two glyphs (Advance Wars
+  splits every form wider than its 8-pixel glyphs; New Super
   Mario Bros. splits the forms wider than its 11-pixel cells into halves; Phantom
   Hourglass splits seen and sheen, alone and at a word's end, the right half painted
   first).
@@ -247,6 +279,9 @@ The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
   painted first. Phantom Hourglass's letters have no shadow but smoothed edges in three
   ink levels: its Arabic glyphs take the full level for the ink and the lightest for the
   pixels from a second coverage threshold, none of them beyond the glyph's width.
+  Symphony of the Night's letters are one grey with no shadow: its Arabic glyphs take
+  that grey for the ink and a darker grey of the same palette for the smoothing, none
+  of it beyond the glyph's width.
 
 ## The shared core
 
@@ -257,9 +292,9 @@ commands.
 | Module | What it gives | Used by |
 |--------|---------------|---------|
 | `arabic/logical.py` | The checks on logical text: no direction controls, no presentation forms, no vowel marks where the renderer has none. Also the missing-glyph errors | Every target and the translation files |
-| `arabic/glyph_codes.py` | `GlyphCodes`: the codes each form takes, in order. A form drawn as two glyphs takes two | `glyph-font` |
-| `arabic/paint.py` | Right-to-left paint order. It refuses combining marks, mirrored brackets and raw newlines | `glyph-font` |
-| `font/glyph_raster.py` | The largest size that fits the cell. A form drawn at a coverage threshold from its first ink column, with the joining advance. Hand-drawn marks, hamza or madda over alef, a form raised by a row, shadows inside the advance, 2-bit pixel rows | `glyph-font`, and `fomt` for its shadow |
+| `arabic/glyph_codes.py` | `GlyphCodes`: the codes each form takes, in order. A form drawn as two glyphs takes two | `glyph-font`, `composed-lines` |
+| `arabic/paint.py` | Right-to-left paint order. It refuses combining marks, mirrored brackets and raw newlines | `glyph-font`, `composed-lines` |
+| `font/glyph_raster.py` | The largest size that fits the cell. A form drawn at a coverage threshold from its first ink column, with the joining advance. Hand-drawn marks, hamza or madda over alef, a form raised by a row, shadows inside the advance, 2-bit pixel rows | `glyph-font`, `composed-lines`, and `fomt` for its shadow |
 | `font/tiles.py` | 4bpp tiles, stored row by row or column by column | `minish-cap`, `mmbn`, `fomt`, the Fire Emblem legend |
 | `font/shaped_text.py` | Whole lines shaped with HarfBuzz and drawn with the reference font | `line-cells`, `text-images` |
 | `font/previews.py` | The glyph atlas, a message's boxes side by side, and preview sheets | The review images of every target but `firered` |
@@ -290,12 +325,13 @@ commands.
 ## Candidates for other platforms (not implemented)
 
 None of these has been built or tested. They are research notes for engines the
-fifteen targets did not cover, and each becomes an `experimental` strategy together
+sixteen targets did not cover, and each becomes an `experimental` strategy together
 with its first target.
 
 - **Tile-composed variable-width text.** Many NES, Game Boy and SNES engines put
   one 8x8 tile per character. A hook would compose glyphs into a row of tiles at run
-  time. It works like `line-cells`, but because composition happens at run time it
+  time, as `composed-lines` composes Symphony of the Night's lines into an image. It
+  works like `line-cells`, but because composition happens at run time it
   can also handle names and numbers. It needs RAM for the line and free tiles in
   video memory.
 - **Runtime shaping.** For text assembled at run time (names the player types,
@@ -304,6 +340,7 @@ with its first target.
 - **Texture or sprite fonts.** PlayStation and Nintendo 64 games often draw text
   from texture pages or sprites. The glyph set would go into the texture with the
   game's own format and palette limits. It would be `glyph-font` with another font
-  format, or `text-images` for fixed screens.
+  format, or `text-images` for fixed screens. Symphony of the Night's 8x8 cells were
+  too small for Arabic letters, so it composes its lines instead (`composed-lines`).
 - **Per-screen tile streaming.** For engines with tiny tile memory (NES CHR banks),
   `line-cells` would load only one screen's cells at a time.

@@ -3,13 +3,13 @@
 Version: 1
 
 A **localization target** is one supported game revision together with the way it
-is put into Arabic. Fifteen targets are registered today:
+is put into Arabic. Sixteen targets are registered today:
 
 ```text
 classic-retro targets list
 ```
 
-This guide collects what those fifteen taught, in the order the work happens. It is a
+This guide collects what those sixteen taught, in the order the work happens. It is a
 checklist, not a template: every game gets its own research, and a game that fits
 none of the existing methods gets a new one (see
 [ARABIC_STRATEGIES.md](ARABIC_STRATEGIES.md)).
@@ -62,6 +62,7 @@ and watchpoints, and scanners for free space, pointers and text.
 | Proportional glyphs, spare codes or a free font slot, one draw point | `glyph-font` |
 | Fixed-width cells too small for letter-by-letter Arabic, codes to spare | `line-cells` |
 | Text shown as images | `text-images` |
+| Fixed cells copied into an image of each line, one draw call, RAM for a line | `composed-lines` |
 | Something else | a new strategy, registered as `experimental` |
 
 Then choose how the renderer turns right to left, how right-to-left text is marked,
@@ -128,13 +129,21 @@ and the script belong to the game.
   (`branch_targets`), so a build can check that a stored hook calls exactly the routines it
   names (Phantom Hourglass).
 
+  The PlayStation's R3000A runs MIPS I: `cpu.mips` writes the `jal` that reaches a hook
+  anywhere in the same 256 MiB segment, the constants and shifts an overlay rewrites in
+  place (`li`, `addiu`, `slti`, `sll`) and a `lui`/`addiu` address pair, and lists the
+  jumps of a piece of code (`jump_targets`). The instruction after a jump runs before
+  the jump: hooks are written with `.set noreorder`, so each delay slot holds what the
+  source says (Symphony of the Night).
+
   Another CPU gets a module of its own under `cpu/`.
 - `patching.hooks.HookProgram`: the hook source (`rom/<game>_arabic_hooks.s`), its
   assembled bytes and symbol offsets stored in Python.
   - A build therefore needs no toolchain.
   - `check()` re-assembles the source and proves the stored bytes match.
-  - The assembler is chosen per CPU: GNU binutils for the ARM7TDMI (the GBA) and the
-    ARM946E-S (the DS's ARM9, `cpu="arm946e-s"`).
+  - The assembler is chosen per CPU: GNU binutils for the ARM7TDMI (the GBA), the
+    ARM946E-S (the DS's ARM9, `cpu="arm946e-s"`) and the R3000A (the PlayStation,
+    `cpu="r3000"`, `mipsel-linux-gnu-*`; GNU as rounds its `.text` up to 16 bytes).
     `patching.hooks.register_assembler` adds another CPU.
 - Verify the original bytes of every site before writing it, and read back
   everything written.
@@ -181,6 +190,32 @@ An image with a file system (a Nintendo DS cartridge) changes files, not address
   fits up to the next one; the others keep their offsets.
 - Some screens wait for the touch screen: `research run` touches the frame's pixels
   (`touch X Y`) on a core that reads a pointer (DeSmuME).
+
+A disc image (a PlayStation CD) changes sectors, and a game may find its files by
+sector rather than by name:
+
+- `patching.cdrom.RawTrack` holds a data track of raw 2352-byte sectors: it reads the
+  data of Mode 2 Form 1 sectors, checks their EDC and ECC, and writes sectors whole
+  (sync, header, subheader, data, EDC and ECC; a Mode 2 sector's codes leave its header
+  out). `iso_file` finds a file's ISO 9660 directory record and `set_file_extent`
+  points it at other sectors.
+- A file that grows past its sectors moves. The empty sectors after the last file's
+  extent, at the end of the data track, may hold it when they are a header and zeros, no
+  record claims them and the volume spans them (`empty`, `claimed`, `volume_space`). The
+  original stays where it was.
+- Repoint every reference to the file, and search the whole track for others: Symphony
+  of the Night loads a stage by the sector and length in DRA.BIN's table of stages,
+  which its overlay rewrites; a stale copy of the table in the title's program is read
+  by nothing.
+- Pin the track (SHA-256), each file read (SHA-256, and every sector's codes) and the
+  references. The CUE sheet and the other tracks do not change, so the patch is of the
+  data track.
+- `create_bps(..., copy_from=...)` indexes only the source ranges moved data comes
+  from: an index of a whole disc would not fit in memory, and the patch copies the
+  moved file from the user's own disc (about 10 KB for Symphony of the Night).
+- Data added after a program's end must lie in memory the game leaves to that program:
+  Symphony of the Night loads every stage at the same address, and larger stages
+  cover the room its prologue's stage grows into.
 
 ## 5. Register the target
 

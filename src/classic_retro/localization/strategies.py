@@ -1,6 +1,6 @@
 """Ways to put right-to-left Arabic into a game's text renderer.
 
-The fifteen reference targets proved three strategies; they are a starting set,
+The sixteen reference targets proved four strategies; they are a starting set,
 not a closed list. Engines on other platforms will call for other ways (a
 variable-width font streamed into tiles, a texture font, a system text
 service...). A strategy is registered by id with what it needs from the
@@ -9,14 +9,15 @@ new ones come in through ``StrategyRegistry.register`` or, from another
 package, the ``classic_retro.strategies.v1`` entry point group. A strategy
 starts ``experimental`` and becomes ``proven`` once a target ships with it.
 
-Thirteen of the fifteen targets turn the text right to left at one point of the
+Thirteen of the sixteen targets turn the text right to left at one point of the
 game's renderer: they keep the game's pen advancing left to right and mirror only
 where each glyph, cell or tile column is drawn, so measuring, wrapping, the
 typewriter and scrolling keep working. FireRed, changed from its source, starts the
-pen at the line's right edge and moves it leftwards instead. New Super Mario Bros.
+pen at the line's right edge and moves it leftwards instead, and so does Symphony of
+the Night's hook, with a pen of its own next to the game's. New Super Mario Bros.
 changes no routine: it draws every line at once and centres it, so its lines are
-stored in visual order. docs/ARABIC_STRATEGIES.md describes all three and the
-techniques that come with them.
+stored in visual order. docs/ARABIC_STRATEGIES.md describes all four strategies and
+the techniques that come with them.
 """
 
 from __future__ import annotations
@@ -138,8 +139,42 @@ TEXT_IMAGES = RenderingStrategy(
 )
 
 
+COMPOSED_LINES = RenderingStrategy(
+    id="composed-lines",
+    title="Lines composed at run time",
+    summary=(
+        "The game draws fixed cells of its own font, a copy each; a hook takes the glyph "
+        "call of right-to-left text and composes every contextual form of a right-to-left "
+        "glyph font, drawn from the reference font, into an image of the line in RAM, at a "
+        "pen that starts at the line's right edge, then sends the line to video memory. The "
+        "text is stored as the font's glyphs in right-to-left paint order."
+    ),
+    engine_needs=(
+        "one place that draws a glyph of the line being typed, and where that line's image is",
+        "spare character codes",
+        "RAM for the font, the text and one line image",
+    ),
+    core=(
+        "classic_retro.arabic.repertoire",
+        "classic_retro.arabic.paint",
+        "classic_retro.arabic.glyph_codes",
+        "classic_retro.arabic.logical",
+        "classic_retro.font.arabic_outline",
+        "classic_retro.font.glyph_raster",
+        "classic_retro.font.previews",
+        "classic_retro.text.commands",
+    ),
+    tradeoffs=(
+        "proportional glyphs in an engine of fixed cells, typed from the right",
+        "no ligatures and no kerning, as with glyph-font",
+        "small: one glyph per form, text stays text; the hook composes each line",
+    ),
+    status="proven",
+)
+
+
 def builtin_strategies() -> tuple[RenderingStrategy, ...]:
-    return (GLYPH_FONT, LINE_CELLS, TEXT_IMAGES)
+    return (GLYPH_FONT, LINE_CELLS, TEXT_IMAGES, COMPOSED_LINES)
 
 
 class StrategyRegistry:

@@ -39,6 +39,22 @@ def test_edits_moves_runs_and_growth_round_trip():
     assert patch.source_size == len(source) and patch.target_size == len(target)
 
 
+def test_moved_data_is_found_only_in_the_ranges_given():
+    # A file moved to the end of the image, as a disc overlay moves one.
+    source = _random(100_000, 8) + bytes(20_000)
+    moved = source[30_000:40_000]
+    target = source[:100_000] + moved + bytes(10_000)
+    near = create_bps(source, target, copy_from=((30_000, 40_000),))
+    elsewhere = create_bps(source, target, copy_from=((0, 16),))
+    for patch in (near, elsewhere, create_bps(source, target)):
+        assert apply_bps(patch.data, source) == target
+    # Only the ranges are indexed: the move is a copy from them, a literal otherwise.
+    assert len(near.data) < 100 < len(moved) < len(elsewhere.data)
+    # A range may start inside a block and end past the source.
+    unaligned = create_bps(source, target, copy_from=((29_990, 1_000_000),))
+    assert len(unaligned.data) < 100
+
+
 def test_shrinking_target_round_trips():
     source = _random(5000, 4)
     target = source[100:3000]

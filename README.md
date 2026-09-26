@@ -89,6 +89,7 @@ runs the same way for every target.
 | `nsmb` | New Super Mario Bros. (USA), Nintendo DS | ROM overlay | `glyph-font` |
 | `platinum` | Pokémon Platinum Version (USA, Rev 0), Nintendo DS | ROM overlay | `glyph-font` |
 | `phantom-hourglass` | The Legend of Zelda: Phantom Hourglass (USA), Nintendo DS | ROM overlay | `glyph-font` |
+| `sotn` | Castlevania: Symphony of the Night (USA), PlayStation | ROM overlay | `composed-lines` |
 
 ```text
 classic-retro targets list                          # every target, its documents and operations
@@ -125,7 +126,7 @@ classic-retro targets strip fomt.workspace.json --out fomt.json
 Every check and build holds a translations file against the originals pinned in the
 target's code. See [the translator's guide](docs/TRANSLATING_AR.md) (in Arabic).
 
-The three rendering strategies are what the fifteen targets proved, not the only ones
+The four rendering strategies are what the sixteen targets proved, not the only ones
 possible. Games on other platforms will need other methods, and the strategy and
 target registries accept them from this repository or from other packages through
 entry points. See [the rendering strategies](docs/ARABIC_STRATEGIES.md) and
@@ -140,6 +141,7 @@ an emulator from a script, and scan its image:
 classic-retro research run game.gba reach-the-scene.txt --out-dir shots   # mGBA, with breakpoints
 classic-retro research run game.sfc script.txt --core snes9x_libretro.so  # any libretro core
 classic-retro research run game.nds script.txt --core desmume_libretro.so # a DS game
+classic-retro research run game.cue script.txt --core mednafen_psx_libretro.so --system-dir bios
 classic-retro research free-space game.gba
 classic-retro research pointers game.gba --to 0x08123456
 classic-retro research pointer-tables game.gba
@@ -154,13 +156,12 @@ A script holds commands such as `run 300`, `tap START`, `touch 128 272`, `shot m
 
 ## Repository status
 
-**Localization platform with fifteen reference targets: twelve on the Game Boy Advance and three
-on the Nintendo DS.**
+**Localization platform with sixteen reference targets: twelve on the Game Boy Advance, three on
+the Nintendo DS and one on the PlayStation.**
 
 The first end-to-end example translates the 13 Professor OAK speech strings in
 the new-game intro. This is a renderer/font test, not a complete game translation.
-The other platforms have detection only (with the CUE/BIN and ISO 9660 readers for
-PlayStation discs); none has an Arabic target yet.
+The other platforms have detection only; none has an Arabic target yet.
 
 Install with `python -m pip install -e ".[dev]"`, run `pytest`, and identify your
 own input with `classic-retro detect "path/to/game.gba"`.
@@ -330,5 +331,21 @@ what this needed: libretro cores get a log callback, so a DeSmuME core built fro
 source runs, and that core's `system_ram` region lets a script read and patch the DS's memory.
 See [the Phantom Hourglass testing guide](docs/PHANTOM_HOURGLASS_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/PHANTOM_HOURGLASS_ARABIC_RENDERER.md).
+
+The sixteenth reference target, and the first on the PlayStation, is **Castlevania: Symphony of
+the Night (USA)**, whose addresses come from the sotn-decomp decompilation. The prologue's
+dialogue is in Arabic: Richter and Dracula in the throne room of 1792, up to the last battle (6
+messages), with both names. The game types a line by copying fixed 8x8 cells of its font into an
+image of the line in video memory, too small for Arabic letters, so the Arabic takes a fourth
+rendering strategy, `composed-lines`: two MIPS hooks take the glyph and name calls, compose each
+Arabic glyph (up to 16 pixels wide) into an image of the line in RAM at a pen that starts at the
+line's right edge, and send the line to video memory; the lines are 16 rows apart, three to the
+box, as in the game's PSP version. The prologue's stage file grows past its sectors, so the overlay
+writes a new one to the empty sectors at the end of the data track, every sector with its EDC and
+ECC (`patching.cdrom`), and points the game's table of stages and the ISO 9660 record at it; the
+CUE sheet and the audio track stay as they are, and the data track's patch is about 10 KB. The
+research tools run the game in Beetle PSX from its CUE sheet. See
+[the Symphony of the Night testing guide](docs/SOTN_ARABIC_TEST_AR.md) and
+[the renderer notes](docs/SOTN_ARABIC_RENDERER.md).
 
 See [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md).

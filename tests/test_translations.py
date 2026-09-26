@@ -23,6 +23,8 @@ from classic_retro.engines.pokemon_gen3_arabic import (
     pokemon_gen3_notation,
 )
 from classic_retro.engines.pokemon_gen4 import Gen4Command
+from classic_retro.engines.sotn import SotnCommand
+from classic_retro.engines.sotn import notation_skeleton as sotn_skeleton
 from classic_retro.engines.tmc import parse_tmc_string, render_tmc_string
 from classic_retro.localization.translations import (
     GlossaryTerm,
@@ -48,6 +50,7 @@ from classic_retro.rom.nsmb_arabic_script import nsmb_arabic_messages
 from classic_retro.rom.phantom_hourglass_arabic_script import ph_arabic_messages
 from classic_retro.rom.platinum_arabic_script import platinum_arabic_strings
 from classic_retro.rom.pmd_arabic_script import pmd_arabic_strings
+from classic_retro.rom.sotn_arabic_script import sotn_arabic_messages, sotn_arabic_names
 from classic_retro.rom.tactics_ogre_arabic_script import (
     tactics_ogre_arabic_messages,
     tactics_ogre_arabic_names,
@@ -73,6 +76,7 @@ TARGETS = (
     "nsmb",
     "platinum",
     "phantom-hourglass",
+    "sotn",
 )
 RLE = chr(0x202B)
 
@@ -105,6 +109,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "nsmb": len(nsmb_arabic_messages()),
         "platinum": len(platinum_arabic_strings()),
         "phantom-hourglass": len(ph_arabic_messages()),
+        "sotn": len(sotn_arabic_messages()) + len(sotn_arabic_names()),
     }
     assert counts == {
         "firered": 13,
@@ -122,6 +127,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "nsmb": 42,
         "platinum": 38,
         "phantom-hourglass": 7,
+        "sotn": 8,
     }
     for target in TARGETS:
         translations = builtin_translation_set(target)
@@ -328,3 +334,17 @@ def test_phantom_hourglass_notation_rebuilds_every_shipped_message():
         # The translation keeps the original's escapes and line ends, in order.
         assert notation_skeleton(pieces) == message.source_skeleton, message.key
         assert any(isinstance(piece, str) and piece.strip() for piece in pieces), message.key
+
+
+def test_sotn_notation_rebuilds_every_shipped_message():
+    for message in sotn_arabic_messages():
+        pieces = message.pieces
+        rebuilt = "".join(
+            piece.notation if isinstance(piece, SotnCommand) else piece for piece in pieces
+        )
+        assert rebuilt == message.notation, message.key
+        # The translation keeps the original's commands, in order; its line ends are its own.
+        assert sotn_skeleton(pieces) == message.source_skeleton, message.key
+        assert any(isinstance(piece, str) and piece.strip() for piece in pieces), message.key
+    assert [name.speaker for name in sotn_arabic_names()] == [0, 1]
+    assert all(name.text and "\n" not in name.text for name in sotn_arabic_names())

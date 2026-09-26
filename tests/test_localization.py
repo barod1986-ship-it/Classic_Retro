@@ -94,7 +94,7 @@ class _EntryPoint:
         return self._loaded
 
 
-def test_the_fifteen_reference_targets_keep_their_order_and_strategies():
+def test_the_sixteen_reference_targets_keep_their_order_and_strategies():
     registry = build_target_registry(load_external=False)
     described = {target.id: target for target in registry}
     assert list(described) == [
@@ -113,6 +113,7 @@ def test_the_fifteen_reference_targets_keep_their_order_and_strategies():
         "nsmb",
         "platinum",
         "phantom-hourglass",
+        "sotn",
     ]
     assert registry.using("line-cells") == ["mmbn", "fomt"]
     assert registry.using("text-images") == ["fire-emblem"]
@@ -150,6 +151,13 @@ def test_the_fifteen_reference_targets_keep_their_order_and_strategies():
     assert phantom.operations() == ["check-hooks", "check-translations", "build", "extract"]
     assert phantom.strategies == ("glyph-font",) and phantom.reference_patches == {}
     assert len(phantom.reference_patch_sha256 or "") == 64
+    # The first PlayStation target composes each Arabic line from the glyph call.
+    sotn = described["sotn"]
+    assert (sotn.kind, sotn.platform_id) == ("rom-overlay", "ps1")
+    assert sotn.operations() == ["check-hooks", "check-translations", "build", "extract"]
+    assert sotn.strategies == ("composed-lines",) and sotn.reference_patches == {}
+    assert len(sotn.reference_patch_sha256 or "") == 64
+    assert registry.using("composed-lines") == ["sotn"]
     adapters = build_registry(load_external=False)
     for target in registry:
         assert (REPO / target.guide).is_file(), target.guide
@@ -160,7 +168,12 @@ def test_the_fifteen_reference_targets_keep_their_order_and_strategies():
 
 def test_the_proven_strategies_are_a_starting_set():
     registry = build_strategy_registry(load_external=False)
-    assert [strategy.id for strategy in registry] == ["glyph-font", "line-cells", "text-images"]
+    assert [strategy.id for strategy in registry] == [
+        "glyph-font",
+        "line-cells",
+        "text-images",
+        "composed-lines",
+    ]
     assert all(strategy.status == "proven" for strategy in registry)
 
     registry.register(_strategy())
@@ -347,6 +360,7 @@ def test_targets_commands_run_any_target_by_id(tmp_path, capsys):
         "glyph-font": ["demo", "sloppy"],
         "line-cells": ["bare"],
         "text-images": [],
+        "composed-lines": [],
     }
 
     assert _run(registry, ["targets", "check-hooks"]) == 0
@@ -503,7 +517,7 @@ def test_game_groups_hold_only_their_engine_tools(capsys):
 
     assert main(["targets", "list"]) == 0
     listed = json.loads(capsys.readouterr().out)
-    assert [target["id"] for target in listed][-1] == "phantom-hourglass"
+    assert [target["id"] for target in listed][-1] == "sotn"
     assert main(["targets", "check-hooks", "not-a-target"]) == 2
     assert capsys.readouterr().err.startswith("INVALID_REFERENCE: Unknown localization target")
 
@@ -531,4 +545,4 @@ def test_every_rom_overlay_builds_from_a_revision_detect_knows():
         assert images.items() <= revisions.items(), target.id
         assert set(target.reference_patches) <= set(images), target.id
         checked.append(target.id)
-    assert len(checked) == 13
+    assert len(checked) == 14

@@ -7,7 +7,7 @@ import struct
 import pytest
 
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
-from classic_retro.cpu import arm, thumb
+from classic_retro.cpu import arm, mips, thumb
 from classic_retro.patching import hooks
 from classic_retro.patching.hooks import HookProgram, assembler_for, register_assembler
 from classic_retro.patching.image import GBA_ROM_BASE, ImageSpec
@@ -84,6 +84,67 @@ def test_arm_branch_targets_find_every_b_and_bl():
     }
 
 
+def test_mips_jal_round_trips_within_its_segment():
+    # SOTN's glyph call: jal MoveImage (0x80012BEC) from ST0's cutscene.
+    assert mips.jal_instruction(0x801A9C58, 0x80012BEC) == bytes.fromhex("fb4a000c")
+    assert mips.j_instruction(0x801C2618, 0x80012BEC) == bytes.fromhex("fb4a0008")
+    for address, target in ((0x801A9718, 0x801C26B4), (0x80010000, 0x8001FFFC)):
+        assert mips.jal_target(address, mips.jal_instruction(address, target)) == target
+    for address, target in ((0x80000000, 0x90000000), (0x80000002, 0x80001000), (0x0, 0x2)):
+        with pytest.raises(ClassicRetroError) as error:
+            mips.jal_instruction(address, target)
+        assert error.value.code is ErrorCode.WRITE_OUT_OF_BOUNDS
+    with pytest.raises(ClassicRetroError) as error:
+        mips.jal_target(0x80010000, mips.NOP)
+    assert error.value.code is ErrorCode.SOURCE_BASELINE_MISMATCH
+
+
+def test_mips_immediates_and_shifts_encode_as_the_compiler_writes_them():
+    words = {
+        mips.addiu("a3", "a3", -5): 0x24E7FFFB,
+        mips.slti("v0", "a3", 5): 0x28E20005,
+        mips.li("v0", 12): 0x3402000C,
+        mips.lui("t0", 0x801C): 0x3C08801C,
+        mips.sll("v0", "a0", 1): 0x00041040,
+        mips.sll("a2", "v1", 4): 0x00033100,
+    }
+    for code, word in words.items():
+        assert code == struct.pack("<I", word)
+    for bad in (lambda: mips.addiu("v0", "v0", 0x8000), lambda: mips.ori("v0", "v0", -1)):
+        with pytest.raises(ValueError):
+            bad()
+    with pytest.raises(ValueError):
+        mips.sll("v0", "v0", 32)
+    with pytest.raises(ValueError):
+        mips.li("r9", 1)
+
+
+def test_mips_address_pairs_carry_a_negative_low_half():
+    for address in (0x801829D8, 0x801C2B00, 0x801C8000, 0x80180000):
+        pair = mips.address_pair("a0", address)
+        assert mips.pair_address(pair) == address
+    # lui a0, 0x801D; addiu a0, a0, -0x8000
+    assert mips.address_pair("a0", 0x801C8000) == bytes.fromhex("1d80043c00808424")
+    with pytest.raises(ClassicRetroError) as error:
+        mips.pair_address(mips.lui("a0", 0x8018) + mips.addiu("a1", "a1", 4))
+    assert error.value.code is ErrorCode.SOURCE_BASELINE_MISMATCH
+
+
+def test_mips_jump_targets_find_every_j_and_jal():
+    code = b"".join(
+        (
+            mips.jal_instruction(0x80100000, 0x80012BEC),
+            mips.NOP,
+            mips.j_instruction(0x80100008, 0x80100000),
+            bytes.fromhex("0800e003"),  # jr ra: not a jump the helper follows
+        )
+    )
+    assert mips.jump_targets(0x80100000, code) == {
+        0x80100000: 0x80012BEC,
+        0x80100008: 0x80100000,
+    }
+
+
 def test_image_spec_verifies_and_reads():
     rom = bytearray(0x100)
     struct.pack_into("<I", rom, 0x10, 0x08000040)
@@ -137,11 +198,28 @@ def test_assemblers_are_registered_per_cpu(tmp_path, monkeypatch):
     program = HookProgram("fake hooks", tmp_path / "x.s", 0x8000, b"\xea", {"start": 1}, "fake-cpu")
     assert program.check()["match"] is True
     assert assembler_for("arm7tdmi") is hooks.assemble_gnu_arm
+    assert assembler_for("arm946e-s") is hooks.assemble_gnu_arm9
+    assert assembler_for("r3000") is hooks.assemble_gnu_r3000
     with pytest.raises(ClassicRetroError) as error:
         register_assembler("fake-cpu", fake)
     assert error.value.code is ErrorCode.ADAPTER_ID_CONFLICT
     with pytest.raises(ClassicRetroError):
         assembler_for("z80")
+
+
+@pytest.mark.skipif(shutil.which("mipsel-linux-gnu-as") is None, reason="needs GNU MIPS binutils")
+def test_mips_hook_programs_assemble_with_their_delay_slots(tmp_path):
+    source = tmp_path / "hooks.s"
+    source.write_text(
+        ".set noreorder\n.text\n.globl entry\nentry:\n"
+        "    jr $ra\n    addiu $v0, $zero, 1\n"
+        ".globl after\nafter:\n    nop\n"
+    )
+    # jr ra, its delay slot, the nop; GNU as rounds a MIPS .text up to 16 bytes.
+    code = bytes.fromhex("0800e003010002240000000000000000")
+    program = HookProgram("test hooks", source, 0x801C2600, code, {"entry": 0, "after": 8}, "r3000")
+    assert program.check()["match"] is True
+    assert program.symbol_address("after") == 0x801C2608
 
 
 def test_outputs_report_and_files(tmp_path):
