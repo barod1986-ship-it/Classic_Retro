@@ -15,10 +15,15 @@ naming its kind and the bytes of its argument. ``Bmg.build`` writes the texts
 one after the other in the order of their messages, which is how the files
 this toolkit targets are laid out, so an unchanged file is rebuilt byte for
 byte.
+
+A message is written in a notation: its text, ``\\n`` for a line end and each
+escape as ``{KK:argument}``, its kind and argument in hex
+(``parse_notation``, ``text_notation``).
 """
 
 from __future__ import annotations
 
+import re
 import struct
 from collections.abc import Sequence
 from dataclasses import dataclass
@@ -29,6 +34,9 @@ MAGIC = b"MESGbmg1"
 UTF16 = 2
 ESCAPE = 0x1A
 SECTION_ALIGNMENT = 32
+NEWLINE = "\n"
+
+_NOTATION_ESCAPE = re.compile(r"\{([0-9A-F]{2}):([0-9A-F]*)\}")
 
 
 @dataclass(frozen=True, slots=True)
@@ -97,6 +105,64 @@ def decode_text(data: bytes, start: int) -> tuple[tuple[Piece, ...], int]:
     if run:
         pieces.append("".join(run))
     return tuple(pieces), position + 2
+
+
+def parse_notation(text: str) -> tuple[Piece, ...]:
+    """A message from its notation; braces only ever open an escape."""
+    pieces: list[Piece] = []
+    position = 0
+    for match in _NOTATION_ESCAPE.finditer(text):
+        _plain(text[position : match.start()], pieces)
+        argument = match.group(2)
+        if len(argument) % 2:
+            raise ClassicRetroError(
+                ErrorCode.UNSUPPORTED_CONTROL_CODE, f"Odd escape argument in {match.group(0)}"
+            )
+        pieces.append(BmgEscape(int(match.group(1), 16), bytes.fromhex(argument)))
+        position = match.end()
+    _plain(text[position:], pieces)
+    return tuple(pieces)
+
+
+def _plain(text: str, pieces: list[Piece]) -> None:
+    if "{" in text or "}" in text:
+        raise ClassicRetroError(
+            ErrorCode.UNSUPPORTED_CONTROL_CODE,
+            f"Braces open escapes ({{KK:argument}}), not text: {text!r}",
+        )
+    if text:
+        pieces.append(text)
+
+
+def text_notation(pieces: Sequence[Piece]) -> str:
+    return "".join(piece if isinstance(piece, str) else piece.notation for piece in pieces)
+
+
+def notation_skeleton(pieces: Sequence[Piece]) -> tuple[str, ...]:
+    """The escapes and line ends of a message, in order."""
+    skeleton: list[str] = []
+    for piece in pieces:
+        if isinstance(piece, BmgEscape):
+            skeleton.append(piece.notation)
+        else:
+            skeleton.extend(NEWLINE * piece.count(NEWLINE))
+    return tuple(skeleton)
+
+
+def split_lines(pieces: Sequence[Piece]) -> list[list[Piece]]:
+    """A message's lines; an escape stays on the line where it stands."""
+    lines: list[list[Piece]] = [[]]
+    for piece in pieces:
+        if isinstance(piece, BmgEscape):
+            lines[-1].append(piece)
+            continue
+        parts = piece.split(NEWLINE)
+        for number, part in enumerate(parts):
+            if number:
+                lines.append([])
+            if part:
+                lines[-1].append(part)
+    return lines
 
 
 def _padded(section: bytes) -> bytes:

@@ -45,6 +45,7 @@ from classic_retro.rom.metroid_fusion_arabic_script import metroid_fusion_arabic
 from classic_retro.rom.mlss_arabic_script import mlss_arabic_messages
 from classic_retro.rom.mmbn_arabic_script import mmbn_arabic_sections
 from classic_retro.rom.nsmb_arabic_script import nsmb_arabic_messages
+from classic_retro.rom.phantom_hourglass_arabic_script import ph_arabic_messages
 from classic_retro.rom.platinum_arabic_script import platinum_arabic_strings
 from classic_retro.rom.pmd_arabic_script import pmd_arabic_strings
 from classic_retro.rom.tactics_ogre_arabic_script import (
@@ -53,6 +54,7 @@ from classic_retro.rom.tactics_ogre_arabic_script import (
 )
 from classic_retro.source.pokefirered_arabic import OAK_SPEECH_LABELS, _oak_speech_streams
 from classic_retro.source.tmc_arabic import tmc_arabic_messages
+from classic_retro.text.bmg import notation_skeleton, text_notation
 from classic_retro.text.tokens import InlineToken, TextToken
 
 TARGETS = (
@@ -70,6 +72,7 @@ TARGETS = (
     "tactics-ogre",
     "nsmb",
     "platinum",
+    "phantom-hourglass",
 )
 RLE = chr(0x202B)
 
@@ -101,6 +104,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "tactics-ogre": len(tactics_ogre_arabic_messages()) + len(tactics_ogre_arabic_names()),
         "nsmb": len(nsmb_arabic_messages()),
         "platinum": len(platinum_arabic_strings()),
+        "phantom-hourglass": len(ph_arabic_messages()),
     }
     assert counts == {
         "firered": 13,
@@ -117,6 +121,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "tactics-ogre": 16,
         "nsmb": 42,
         "platinum": 38,
+        "phantom-hourglass": 7,
     }
     for target in TARGETS:
         translations = builtin_translation_set(target)
@@ -314,3 +319,12 @@ def test_platinum_notation_rebuilds_every_shipped_string():
         assert rebuilt == string.notation, string.key
         # Every string holds text of its own, if only the icon's Arabic space.
         assert any(isinstance(piece, str) and piece for piece in pieces), string.key
+
+
+def test_phantom_hourglass_notation_rebuilds_every_shipped_message():
+    for message in ph_arabic_messages():
+        pieces = message.pieces
+        assert text_notation(pieces) == message.notation, message.key
+        # The translation keeps the original's escapes and line ends, in order.
+        assert notation_skeleton(pieces) == message.source_skeleton, message.key
+        assert any(isinstance(piece, str) and piece.strip() for piece in pieces), message.key

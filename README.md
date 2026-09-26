@@ -99,6 +99,7 @@ runs the same way for every target.
 | `tactics-ogre` | Tactics Ogre: The Knight of Lodis (USA) | ROM overlay | `glyph-font` |
 | `nsmb` | New Super Mario Bros. (USA), Nintendo DS | ROM overlay | `glyph-font` |
 | `platinum` | Pokémon Platinum Version (USA, Rev 0), Nintendo DS | ROM overlay | `glyph-font` |
+| `phantom-hourglass` | The Legend of Zelda: Phantom Hourglass (USA), Nintendo DS | ROM overlay | `glyph-font` |
 
 ```text
 classic-retro targets list                          # every target, its documents and operations
@@ -132,7 +133,7 @@ classic-retro targets strip fomt.workspace.json --out fomt.json
 Every check and build holds a translations file against the originals pinned in the
 target's code. See [the translator's guide](docs/TRANSLATING_AR.md) (in Arabic).
 
-The three rendering strategies are what the fourteen targets proved, not the only ones
+The three rendering strategies are what the fifteen targets proved, not the only ones
 possible. Games on other platforms will need other methods, and the strategy and
 target registries accept them from this repository or from other packages through
 entry points. See [the rendering strategies](docs/ARABIC_STRATEGIES.md) and
@@ -161,7 +162,7 @@ A script holds commands such as `run 300`, `tap START`, `touch 128 272`, `shot m
 
 ## Repository status
 
-**Localization platform with fourteen reference targets: twelve on the Game Boy Advance and two
+**Localization platform with fifteen reference targets: twelve on the Game Boy Advance and three
 on the Nintendo DS.**
 
 The first end-to-end example translates the 13 Professor OAK speech strings in
@@ -323,5 +324,19 @@ and the ARM9 go back into the image through the DS module New Super Mario Bros. 
 Research scripts can touch the screen (`touch X Y`) on a libretro core that reads a pointer, such
 as DeSmuME's. See [the Pokémon Platinum testing guide](docs/PLATINUM_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/PLATINUM_ARABIC_RENDERER.md).
+
+The fifteenth reference target, and the third on the Nintendo DS, is **The Legend of Zelda:
+Phantom Hourglass (USA)**, the image the zeldaret/ph decompilation targets. Its prologue is in
+Arabic: the story told with paper cutouts before the game starts, from the sea to the pirates
+setting sail (7 messages, 21 pages), typed from the right with the names in blue. The Arabic
+forms take the place of the kana in the game's message font, and one hook, 112 bytes of ARM code
+written over a routine of the C++ runtime that nothing calls, takes the printer's glyph call: a
+glyph of the Arabic range is drawn at the mirror of its place on the canvas, from the call's own
+arguments, so the hook keeps no state and every English text of the game is drawn as before. The
+ARM9 is packed again like the original, and the patch is about 7 KB. The research tools gained
+what this needed: libretro cores get a log callback, so a DeSmuME core built from its current
+source runs, and that core's `system_ram` region lets a script read and patch the DS's memory.
+See [the Phantom Hourglass testing guide](docs/PHANTOM_HOURGLASS_ARABIC_TEST_AR.md) and
+[the renderer notes](docs/PHANTOM_HOURGLASS_ARABIC_RENDERER.md).
 
 See [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md).

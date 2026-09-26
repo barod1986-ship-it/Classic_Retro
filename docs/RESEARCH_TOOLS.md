@@ -147,12 +147,25 @@ A hit reports these fields:
   - A core without a map is read through its regions: `save_ram`, `system_ram`,
     `video_ram` and `rtc`.
 - A process runs one game per core at a time.
+- The frontend gives a core a log callback, which drops what the core logs: current
+  DeSmuME builds call it without checking that they were given one.
 - For the Nintendo DS, `libretro-desmume` (DeSmuME) boots an image without BIOS files. A
   shot holds both screens, the top one above the bottom one (256x384).
   - `touch X Y` presses a pixel of that frame, so the touch screen is its lower half
     (`touch 128 272` is the point 128, 80 of the touch screen). The backend hands the
     pixel to the core as libretro's pointer; DeSmuME reads it as the touch screen with
-    `--option desmume_pointer_mouse=enable --option desmume_pointer_type=touch`.
+    `--option desmume_pointer_mouse=enable --option desmume_pointer_type=touch`. Current
+    builds spell the first value `enabled`; an option value the core does not know leaves
+    the pointer off, and the touches do nothing.
+  - The packaged core (0.9.11, Debian and Ubuntu) gives its memory regions no size, so
+    `peek`, `dump` and `poke` fail.
+    A core built from libretro/desmume's current source names the DS's main memory
+    `system_ram` (`system_ram:0x33564` is `0x02033564`): `make -C
+    desmume/src/frontend/libretro` builds it (with libpcap's and OpenGL's development
+    files), and `--core` loads it. A `poke` over code right after a `load` then patches
+    the game for that run, under the JIT or the interpreter: a `BL` turned into a jump
+    to a few instructions that record what a call receives, or into a `NOP` that shows
+    what the call draws (Phantom Hourglass).
   - `--option desmume_cpu_mode=interpreter` keeps the core off its JIT, which drew
     black frames in some environments.
   - DeSmuME's clock is the host's, so two runs of a script can drift apart by a few

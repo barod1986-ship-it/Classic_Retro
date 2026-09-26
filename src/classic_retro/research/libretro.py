@@ -45,6 +45,7 @@ _GET_SYSTEM_DIRECTORY = 9
 _SET_PIXEL_FORMAT = 10
 _GET_VARIABLE = 15
 _GET_VARIABLE_UPDATE = 17
+_GET_LOG_INTERFACE = 27
 _GET_CONTENT_DIRECTORY = 30
 _GET_SAVE_DIRECTORY = 31
 _SET_MEMORY_MAPS = 36 | _EXPERIMENTAL
@@ -180,6 +181,11 @@ _VIDEO_REFRESH = ctypes.CFUNCTYPE(
 _AUDIO_SAMPLE = ctypes.CFUNCTYPE(None, ctypes.c_int16, ctypes.c_int16)
 _AUDIO_SAMPLE_BATCH = ctypes.CFUNCTYPE(ctypes.c_size_t, ctypes.c_void_p, ctypes.c_size_t)
 _INPUT_POLL = ctypes.CFUNCTYPE(None)
+# retro_log_printf_t takes a format and its arguments; the frontend reads the
+# level and the format only, which every C calling convention passes the same
+# way to a variadic function, and drops them: some cores (DeSmuME) log without
+# checking that the frontend gave them a callback.
+_LOG = ctypes.CFUNCTYPE(None, ctypes.c_int, ctypes.c_char_p)
 _INPUT_STATE = ctypes.CFUNCTYPE(
     ctypes.c_int16, ctypes.c_uint, ctypes.c_uint, ctypes.c_uint, ctypes.c_uint
 )
@@ -330,6 +336,7 @@ class LibretroEmulator(Emulator):
             _INPUT_POLL(lambda: None),
             _INPUT_STATE(self._input),
         )
+        self._log = _LOG(lambda level, text: None)
         environment, video, sample, batch, poll, state = self._callbacks
         self._core.retro_set_environment(environment)
         self._core.retro_set_video_refresh(video)
@@ -401,6 +408,9 @@ class LibretroEmulator(Emulator):
             return value is not None
         if command == _GET_VARIABLE_UPDATE:
             ctypes.c_bool.from_address(data).value = False
+            return True
+        if command == _GET_LOG_INTERFACE:
+            ctypes.c_void_p.from_address(data).value = ctypes.cast(self._log, ctypes.c_void_p).value
             return True
         if command == _SET_MEMORY_MAPS:
             memory_map = _MemoryMap.from_address(data)

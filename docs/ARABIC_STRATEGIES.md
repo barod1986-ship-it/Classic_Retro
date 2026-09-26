@@ -2,7 +2,7 @@
 
 Version: 1
 
-The fourteen reference targets put Arabic on screen with three rendering strategies.
+The fifteen reference targets put Arabic on screen with three rendering strategies.
 They are a starting set, not a closed list. Engines on other platforms will need
 other methods, and the registry (`classic_retro.localization.strategies`) accepts
 them the same way it holds these three:
@@ -22,7 +22,8 @@ already worked.
 ### `glyph-font`: right-to-left glyph font (proven)
 
 Used by: `firered`, `minish-cap`, `ff6a`, `golden-sun`, `fire-emblem` (dialogue),
-`pmd-red`, `mlss`, `advance-wars`, `metroid-fusion`, `tactics-ogre`, `nsmb`, `platinum`.
+`pmd-red`, `mlss`, `advance-wars`, `metroid-fusion`, `tactics-ogre`, `nsmb`, `platinum`,
+`phantom-hourglass`.
 
 Every contextual form of the letters (the 133 presentation forms of
 `arabic/repertoire.py`) is drawn from the reference font into the game's own font
@@ -76,7 +77,7 @@ HarfBuzz and redrawn in the game's own image format and palette.
 
 | Way | How | Targets |
 |-----|-----|---------|
-| Mirrored draw | The game's pen keeps advancing left to right. Only where a glyph (or cell) is drawn moves to the mirror of the pen inside the line: `draw_x = left + right - pen - width`, or column `27 - x` for 28-column cells | `minish-cap`, `ff6a`, `golden-sun`, `fire-emblem`, `pmd-red`, `mlss`, `mmbn`, `fomt`, `metroid-fusion`, `tactics-ogre`, `platinum` |
+| Mirrored draw | The game's pen keeps advancing left to right. Only where a glyph (or cell) is drawn moves to the mirror of the pen inside the line: `draw_x = left + right - pen - width`, or column `27 - x` for 28-column cells | `minish-cap`, `ff6a`, `golden-sun`, `fire-emblem`, `pmd-red`, `mlss`, `mmbn`, `fomt`, `metroid-fusion`, `tactics-ogre`, `platinum`, `phantom-hourglass` |
 | Mirrored tilemap | The game draws the line left to right into its tiles as usual; each tile column goes into the tilemap at its mirror inside the text area, with the hardware's horizontal flip, and the glyphs are stored flipped | `advance-wars` |
 | Reversed pen | The pen starts at the line's right edge and subtracts each advance before drawing. Newline, page clear and scroll restore the right edge | `firered` |
 | Visual order | No change to the renderer: every line is stored reversed, its glyphs from the leftmost to the rightmost, and the game draws it left to right as it is | `nsmb` |
@@ -92,7 +93,12 @@ Pokémon Platinum decides the direction line by line: at a line's first glyph it
 looks ahead to the line's end for a glyph of the right-to-left font, so every English
 line of the game keeps the original path, and inside an Arabic line a run of the game's
 own glyphs (a name, a Latin word) is drawn left to right as a block at the mirror of the
-run.
+run. Phantom Hourglass needs no state at all: its hook, on the printer's call of
+NitroSystem's `NNS_G2dCharCanvasDrawChar`, reads only that call's arguments and draws a
+glyph of the right-to-left range at `canvas width - x - glyph width`. Each Arabic glyph is
+as wide as its advance and the letter spacing, so the glyphs the printer lays out a pixel
+apart meet once mirrored, and a translated line holds right-to-left glyphs only, its
+spaces and punctuation included.
 Reversed pen needs control over every place that moves or resets the pen. FireRed
 had that through its decompilation. Mirrored tilemap suits a printer that draws a whole
 line into a strip of tiles, where no single point places a glyph (Advance Wars): the
@@ -129,7 +135,7 @@ left edge.
 |--------|---------|
 | Direction control codes the source overlay adds (`FC 19 xx` / `FC 1A`, `04 16` / `04 17`) | `firered`, `minish-cap` |
 | The first code of a message (`0x5FF`, `0x0B`, `0x1E`) | `ff6a`, `golden-sun`, `fire-emblem` |
-| The glyph itself: a charmap flag, or a glyph of the right-to-left font | `pmd-red`, `mlss`, `metroid-fusion` (where a glyph is drawn), `platinum` (a line that holds one; a menu whose first entry does) |
+| The glyph itself: a charmap flag, or a glyph of the right-to-left font | `pmd-red`, `mlss`, `metroid-fusion` (where a glyph is drawn), `platinum` (a line that holds one; a menu whose first entry does), `phantom-hourglass` (each glyph of its range) |
 | The text's own codes or address: cell codes, a bank table sorted by text address, or the address range of the Arabic bank | `fomt`, `mmbn`, `advance-wars`, `metroid-fusion` (its cursors, arrow and fade), `tactics-ogre` |
 | None: the renderer does not change, and a translated line is stored in visual order | `nsmb` |
 
@@ -161,7 +167,9 @@ messages in English outside the bank.
   forms the script uses, measured and drawn by the hooks from tables of their own).
 - Glyphs the English game never shows: New Super Mario Bros. (the 166 kana of its
   font; their code points, `U+3041..U+30FC`, become the codes of the forms the script
-  uses, and the game's own measuring and drawing take them as they are).
+  uses, and the game's own measuring and drawing take them as they are) and Phantom
+  Hourglass (the 170 kana of its message font, whose range its hook reads as right to
+  left; no text of the game uses them, in any of its three languages).
 - Codes past the end of the game's fonts: Pokémon Platinum (its fonts hold 509 glyphs,
   codes `0001..01FD`; the forms the script uses are appended to both fonts from `01FE`,
   which the English game never uses, up to `0400`, where the Korean codes start. The
@@ -181,7 +189,8 @@ right-to-left line.
 - Reverse the variable buffers once when a dialogue changes direction: Minish Cap.
 - Static Latin words as islands in the game's glyphs: Mega Man Battle Network.
 - Refused for now, with the reason in each target's notes: FF6 Advance, Fire Emblem,
-  Pokémon Mystery Dungeon, Mario & Luigi.
+  Pokémon Mystery Dungeon, Mario & Luigi, Phantom Hourglass (its prologue names no one
+  at run time).
 
 Or draw the game's own glyphs left to right where they are: Pokémon Platinum keeps the
 name commands in the translation, and its glyph hook draws any run of the game's glyphs
@@ -201,8 +210,10 @@ The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
 - Use the largest size whose forms fit the game's rows around its baseline:
   - 10 px for FF6 Advance, Golden Sun, Mario & Luigi, Harvest Moon and Advance Wars
   - 9 px for Pokémon Mystery Dungeon
-  - 11 px for Mega Man Battle Network, Metroid Fusion, Tactics Ogre and Pokémon
-    Platinum (glyphs of 16x16 pixels, on its letters' baseline, row 12)
+  - 11 px for Mega Man Battle Network, Metroid Fusion, Tactics Ogre, Pokémon
+    Platinum (glyphs of 16x16 pixels, on its letters' baseline, row 12) and Phantom
+    Hourglass (glyphs of 14x16 pixels on row 11; its sizes stop at 11, the size of the
+    game's letters)
   - 12 px for New Super Mario Bros., on a baseline two rows above its Latin
     letters' so that the Arabic descenders fit its 15-row cells
 - Draw marks that vanish at that size by hand:
@@ -214,7 +225,9 @@ The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
 - Adjust a form that does not fit: raise final yeh (Pokémon Platinum raises final and
   isolated meem and yeh, a row at a time up to two), or split a 13-pixel seen into
   two glyphs (Advance Wars splits every form wider than its 8-pixel glyphs; New Super
-  Mario Bros. splits the forms wider than its 11-pixel cells into halves).
+  Mario Bros. splits the forms wider than its 11-pixel cells into halves; Phantom
+  Hourglass splits seen and sheen, alone and at a word's end, the right half painted
+  first).
 - When only the forms a script uses get codes (Tactics Ogre), choose the size over the
   whole repertoire anyway, so a new word never changes the size of the others.
 - Medial and final forms end at their last ink column, so joins touch the glyph
@@ -231,7 +244,9 @@ The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
   adds the shadow itself (right, below and on the diagonal), so its glyphs hold ink
   only, like its letters. Pokémon Platinum's glyphs carry the game's shadow value in the
   same three places, inside the glyph's advance, since the neighbour on the right is
-  painted first.
+  painted first. Phantom Hourglass's letters have no shadow but smoothed edges in three
+  ink levels: its Arabic glyphs take the full level for the ink and the lightest for the
+  pixels from a second coverage threshold, none of them beyond the glyph's width.
 
 ## The shared core
 
@@ -275,7 +290,7 @@ commands.
 ## Candidates for other platforms (not implemented)
 
 None of these has been built or tested. They are research notes for engines the
-fourteen targets did not cover, and each becomes an `experimental` strategy together
+fifteen targets did not cover, and each becomes an `experimental` strategy together
 with its first target.
 
 - **Tile-composed variable-width text.** Many NES, Game Boy and SNES engines put

@@ -45,12 +45,9 @@ from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.nsmb import (
     CELL_HEIGHT,
     CELL_WIDTH,
-    NEWLINE,
     NUMBER,
     colour_escape,
     escape_colour,
-    notation_skeleton,
-    split_lines,
 )
 from classic_retro.font.arabic_outline import contextual_font_data
 from classic_retro.font.glyph_raster import (
@@ -66,7 +63,7 @@ from classic_retro.font.glyph_raster import (
 )
 from classic_retro.font.nftr import GlyphWidth
 from classic_retro.font.previews import glyph_atlas, preview_sheet
-from classic_retro.text.bmg import BmgEscape, Piece
+from classic_retro.text.bmg import NEWLINE, BmgEscape, Piece, notation_skeleton, split_lines
 from classic_retro.text.commands import require_same_commands
 from classic_retro.text.tokens import (
     InlineToken,

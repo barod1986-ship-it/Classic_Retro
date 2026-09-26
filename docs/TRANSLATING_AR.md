@@ -22,6 +22,7 @@
 | `tactics-ogre.json` | Tactics Ogre: The Knight of Lodis |
 | `nsmb.json` | New Super Mario Bros. (Nintendo DS) |
 | `platinum.json` | Pokémon Platinum (Nintendo DS) |
+| `phantom-hourglass.json` | The Legend of Zelda: Phantom Hourglass (Nintendo DS) |
 
 في كل ملف:
 
@@ -64,6 +65,10 @@ classic-retro targets extract fomt "path/to/game.gba"
   بحروفهما اللاتينية من اليسار إلى اليمين داخل السطر العربي. `\r` يبدأ صفحة جديدة و`\f` يمرر الصندوق سطرًا، ولا
   يأتي `\f` إلا في آخر السطر الثاني. صفحتا الأزرار في معلومات التحكم تحفظان أسطر الأصل، الفارغ منها أيضًا، لأن
   كل سطر بجانب صورة زر.
+- في The Legend of Zelda: Phantom Hourglass تبقى أسطر كل صفحة كما في الأصل: الصندوق يعرض ثلاثة أسطر، وكل ثالث
+  نهاية سطر تبدأ صفحة جديدة، ويمكن نقل الكلمات بين أسطر الصفحة الواحدة. أوامر التوقف (`{01:0A00nnnn}`
+  و`{01:0E00nnnn}`) والسرعة (`{01:1400nnnn}`) تبقى بترتيبها، وتوضع التوقفات بين الكلمات حيث تحسن الوقفة، والاسم
+  الملون بين `{FF:00000300}` و`{FF:00000000}`. ولا يحمل السطر حروفًا ولا أرقامًا لاتينية.
 - اكتب أسماء المسرد كما هي فيه.
 - الحقلان `context` و`notes` للبشر، وتعديلهما لا يغيّر شيئًا في اللعبة.
 

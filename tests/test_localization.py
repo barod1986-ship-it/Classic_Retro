@@ -93,7 +93,7 @@ class _EntryPoint:
         return self._loaded
 
 
-def test_the_fourteen_reference_targets_keep_their_order_and_strategies():
+def test_the_fifteen_reference_targets_keep_their_order_and_strategies():
     registry = build_target_registry(load_external=False)
     described = {target.id: target for target in registry}
     assert list(described) == [
@@ -111,6 +111,7 @@ def test_the_fourteen_reference_targets_keep_their_order_and_strategies():
         "tactics-ogre",
         "nsmb",
         "platinum",
+        "phantom-hourglass",
     ]
     assert registry.using("line-cells") == ["mmbn", "fomt"]
     assert registry.using("text-images") == ["fire-emblem"]
@@ -142,6 +143,12 @@ def test_the_fourteen_reference_targets_keep_their_order_and_strategies():
     for base, patch in platinum.reference_patches.items():
         assert platinum.reference_for(base) == patch
     assert platinum.reference_for("0" * 64) == platinum.reference_patch_sha256
+    # The third hooks the game's glyph call, in ARM code.
+    phantom = described["phantom-hourglass"]
+    assert (phantom.kind, phantom.platform_id) == ("rom-overlay", "nds")
+    assert phantom.operations() == ["check-hooks", "check-translations", "build", "extract"]
+    assert phantom.strategies == ("glyph-font",) and phantom.reference_patches == {}
+    assert len(phantom.reference_patch_sha256 or "") == 64
     adapters = build_registry(load_external=False)
     for target in registry:
         assert (REPO / target.guide).is_file(), target.guide
@@ -473,6 +480,7 @@ def test_the_cli_keeps_every_command_group_and_adds_targets(capsys):
         "tactics-ogre",
         "nsmb",
         "platinum",
+        "phantom-hourglass",
         "targets",
     ):
         with pytest.raises(SystemExit) as exit_:
@@ -483,6 +491,6 @@ def test_the_cli_keeps_every_command_group_and_adds_targets(capsys):
 
     assert main(["targets", "list"]) == 0
     listed = json.loads(capsys.readouterr().out)
-    assert [target["id"] for target in listed][-1] == "platinum"
+    assert [target["id"] for target in listed][-1] == "phantom-hourglass"
     assert main(["targets", "check-hooks", "not-a-target"]) == 2
     assert capsys.readouterr().err.startswith("INVALID_REFERENCE: Unknown localization target")
