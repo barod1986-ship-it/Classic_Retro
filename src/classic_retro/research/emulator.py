@@ -124,6 +124,8 @@ class Emulator(ABC):
     # Memory regions a ``RegionAddress`` may name.
     regions: frozenset[str] = frozenset()
     debugger: bool = False
+    # Whether ``touch`` can press a point of the frame (a touch screen, through a pointer).
+    pointer: bool = False
     # Hex digits a register value is reported with.
     register_digits: int = 8
 
@@ -152,6 +154,18 @@ class Emulator(ABC):
 
     @abstractmethod
     def close(self) -> None: ...
+
+    def touch(self, point: tuple[int, int] | None) -> None:
+        """Press the frame's pixel ``point`` (x, y as ``screen`` draws it) while frames run.
+
+        None lets go. The pixel is on the whole frame: a console with two
+        screens draws both into it, the touch screen included.
+        """
+        raise ClassicRetroError(
+            ErrorCode.EMULATOR_UNAVAILABLE,
+            f"The {self.backend} backend cannot touch the screen: touch needs a libretro core "
+            "that reads a pointer",
+        )
 
     def add_breakpoint(self, address: int, count: int | None, probe: MemoryProbe | None) -> int:
         """Report the registers when ``address`` executes, ``count`` times (None: every time)."""

@@ -22,6 +22,7 @@ from classic_retro.engines.pokemon_gen3_arabic import (
     parse_pokemon_gen3_notation,
     pokemon_gen3_notation,
 )
+from classic_retro.engines.pokemon_gen4 import Gen4Command
 from classic_retro.engines.tmc import parse_tmc_string, render_tmc_string
 from classic_retro.localization.translations import (
     GlossaryTerm,
@@ -44,6 +45,7 @@ from classic_retro.rom.metroid_fusion_arabic_script import metroid_fusion_arabic
 from classic_retro.rom.mlss_arabic_script import mlss_arabic_messages
 from classic_retro.rom.mmbn_arabic_script import mmbn_arabic_sections
 from classic_retro.rom.nsmb_arabic_script import nsmb_arabic_messages
+from classic_retro.rom.platinum_arabic_script import platinum_arabic_strings
 from classic_retro.rom.pmd_arabic_script import pmd_arabic_strings
 from classic_retro.rom.tactics_ogre_arabic_script import (
     tactics_ogre_arabic_messages,
@@ -67,6 +69,7 @@ TARGETS = (
     "metroid-fusion",
     "tactics-ogre",
     "nsmb",
+    "platinum",
 )
 RLE = chr(0x202B)
 
@@ -97,6 +100,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "metroid-fusion": len(metroid_fusion_arabic_messages()),
         "tactics-ogre": len(tactics_ogre_arabic_messages()) + len(tactics_ogre_arabic_names()),
         "nsmb": len(nsmb_arabic_messages()),
+        "platinum": len(platinum_arabic_strings()),
     }
     assert counts == {
         "firered": 13,
@@ -112,6 +116,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "metroid-fusion": 18,
         "tactics-ogre": 16,
         "nsmb": 42,
+        "platinum": 38,
     }
     for target in TARGETS:
         translations = builtin_translation_set(target)
@@ -298,3 +303,14 @@ def test_minish_cap_notation_reads_arabic_translations():
         None,
         "PLAYER",
     ]
+
+
+def test_platinum_notation_rebuilds_every_shipped_string():
+    for string in platinum_arabic_strings():
+        pieces = string.pieces
+        rebuilt = "".join(
+            piece if not isinstance(piece, Gen4Command) else piece.notation for piece in pieces
+        )
+        assert rebuilt == string.notation, string.key
+        # Every string holds text of its own, if only the icon's Arabic space.
+        assert any(isinstance(piece, str) and piece for piece in pieces), string.key

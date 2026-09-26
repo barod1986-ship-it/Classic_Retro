@@ -3,13 +3,13 @@
 Version: 1
 
 A **localization target** is one supported game revision together with the way it
-is put into Arabic. Thirteen targets are registered today:
+is put into Arabic. Fourteen targets are registered today:
 
 ```text
 classic-retro targets list
 ```
 
-This guide collects what those thirteen taught, in the order the work happens. It is a
+This guide collects what those fourteen taught, in the order the work happens. It is a
 checklist, not a template: every game gets its own research, and a game that fits
 none of the existing methods gets a new one (see
 [ARABIC_STRATEGIES.md](ARABIC_STRATEGIES.md)).
@@ -128,7 +128,8 @@ and the script belong to the game.
   assembled bytes and symbol offsets stored in Python.
   - A build therefore needs no toolchain.
   - `check()` re-assembles the source and proves the stored bytes match.
-  - The assembler is chosen per CPU: GNU binutils for the ARM7TDMI.
+  - The assembler is chosen per CPU: GNU binutils for the ARM7TDMI (the GBA) and the
+    ARM946E-S (the DS's ARM9, `cpu="arm946e-s"`).
     `patching.hooks.register_assembler` adds another CPU.
 - Verify the original bytes of every site before writing it, and read back
   everything written.
@@ -157,6 +158,17 @@ An image with a file system (a Nintendo DS cartridge) changes files, not address
   and unpacked, and read it back decompressed in place, as its start-up code does.
 - `font.nftr.NftrFont` and `text.bmg.Bmg` read and write the SDK's fonts and message
   files; an unchanged file is rebuilt byte for byte.
+- Hooks for the ARM9 can live in its instruction TCM, which nothing the game loads
+  overwrites: `Arm9Binary` (an uncompressed binary) reads the module parameters and
+  autoload blocks, and `with_block_grown` adds code at the end of the ITCM block with
+  the later blocks and the table moved. The binary then grows: `move_arm9_overlay_table`
+  puts the overlay table past the used area and `replace_arm9` writes the binary into
+  the room, up to the next part of the image. Check that no overlay loads where the
+  hooks go (Pokémon Platinum).
+- `Narc.rebuilt` rebuilds a NARC file with members replaced, each in place when it
+  fits up to the next one; the others keep their offsets.
+- Some screens wait for the touch screen: `research run` touches the frame's pixels
+  (`touch X Y`) on a core that reads a pointer (DeSmuME).
 
 ## 5. Register the target
 
@@ -203,7 +215,10 @@ classic-retro targets extract my-game "path/to/game.gba"
 ```
 
 `targets build` reports `matches_reference`, which is true when the patch equals the
-recorded `reference_patch_sha256`.
+recorded `reference_patch_sha256`. A target that accepts more than one image (dumps that
+differ only in bytes the game never reads) records the patch from each in
+`reference_patches`, by the image's SHA-256, and `targets build` compares with the one for
+the image it was given (Pokémon Platinum).
 
 ## 6. Tests, CI and documents
 

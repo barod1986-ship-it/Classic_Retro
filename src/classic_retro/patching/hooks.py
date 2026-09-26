@@ -3,8 +3,9 @@
 An overlay stores its assembled hook code and symbol offsets in Python, so a
 build needs no toolchain. ``HookProgram.check`` re-assembles the source and
 proves the stored bytes match (run in CI). The assembler is chosen by CPU from
-an open registry: GNU binutils for the ARM7TDMI today; other CPUs register
-their own (``register_assembler``).
+an open registry: GNU binutils for the ARM7TDMI (Game Boy Advance) and the
+ARM946E-S (the Nintendo DS's ARM9) today; other CPUs register their own
+(``register_assembler``).
 """
 
 from __future__ import annotations
@@ -27,6 +28,19 @@ def assemble_gnu_arm(
     source: Path, address: int, symbols: frozenset[str], label: str
 ) -> tuple[bytes, dict[str, int]]:
     """``arm-none-eabi-as -mcpu=arm7tdmi``, ``ld -Ttext``, ``objcopy -O binary``, ``nm``."""
+    return _assemble_gnu(source, address, symbols, label, "arm7tdmi")
+
+
+def assemble_gnu_arm9(
+    source: Path, address: int, symbols: frozenset[str], label: str
+) -> tuple[bytes, dict[str, int]]:
+    """The same with ``-mcpu=arm946e-s``: ARMv5TE, whose Thumb code has ``blx``."""
+    return _assemble_gnu(source, address, symbols, label, "arm946e-s")
+
+
+def _assemble_gnu(
+    source: Path, address: int, symbols: frozenset[str], label: str, cpu: str
+) -> tuple[bytes, dict[str, int]]:
     tools = {name: shutil.which(f"arm-none-eabi-{name}") for name in ("as", "ld", "objcopy", "nm")}
     missing = sorted(name for name, path in tools.items() if path is None)
     if missing:
@@ -37,7 +51,7 @@ def assemble_gnu_arm(
     with tempfile.TemporaryDirectory() as work:
         folder = Path(work)
         steps = (
-            [tools["as"], "-mcpu=arm7tdmi", "-o", folder / "hooks.o", source],
+            [tools["as"], f"-mcpu={cpu}", "-o", folder / "hooks.o", source],
             [tools["ld"], "-e", "0", "-Ttext", f"{address:#x}"]
             + ["-o", folder / "hooks.elf", folder / "hooks.o"],
             [tools["objcopy"], "-O", "binary", folder / "hooks.elf", folder / "hooks.bin"],
@@ -62,7 +76,7 @@ def assemble_gnu_arm(
     return code, found
 
 
-_ASSEMBLERS: dict[str, Assembler] = {"arm7tdmi": assemble_gnu_arm}
+_ASSEMBLERS: dict[str, Assembler] = {"arm7tdmi": assemble_gnu_arm, "arm946e-s": assemble_gnu_arm9}
 
 
 def register_assembler(cpu: str, assembler: Assembler) -> None:

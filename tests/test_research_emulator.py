@@ -252,6 +252,17 @@ def test_libretro_regions_and_limits(image: Path, core: Path, tmp_path: Path):
             emulator.write(0x08000000, b"\x00")
         with pytest.raises(ClassicRetroError, match="outside"):
             emulator.read(RegionAddress("save_ram", 0x20000), 1)
+        # A touch is libretro's pointer (device 6: X, Y, pressed), a pixel's centre
+        # scaled across the 240x160 frame, so a core scaling it back lands on the pixel.
+        assert emulator.pointer
+        for x, y in ((0, 0), (239, 159), (120, 3)):
+            emulator.touch((x, y))
+            px, py, pressed = (emulator._input(0, 6, 0, axis) for axis in range(3))
+            assert pressed == 1 and -0x7FFF <= min(px, py) <= max(px, py) <= 0x7FFF
+            assert ((px + 0x8000) * 240 >> 16, (py + 0x8000) * 160 >> 16) == (x, y)
+            assert emulator._input(1, 6, 0, 2) == 0
+        emulator.touch(None)
+        assert emulator._input(0, 6, 0, 2) == emulator._input(0, 6, 0, 0) == 0
         with pytest.raises(ClassicRetroError) as error:
             run_script(emulator, parse_script("break 0x08000000"), tmp_path)
         assert error.value.code is ErrorCode.INVALID_EMULATOR_SCRIPT

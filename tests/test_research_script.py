@@ -23,6 +23,7 @@ from classic_retro.research.script import (
     Poke,
     Shot,
     TapKeys,
+    Touch,
     Watch,
     parse_script,
     run_script,
@@ -122,6 +123,8 @@ def test_parse_reads_every_command():
         reset
         echo title  reached
         save "states/title.state"
+        touch 128 300
+        touch 0x10 20 5 0
         """
     )
     assert [step.line for step in steps][:3] == [3, 4, 5]
@@ -137,6 +140,8 @@ def test_parse_reads_every_command():
     assert commands[12] == Watch("write", 0x02000004, 100)
     assert commands[13] == Watch("change", 0x02000004, None)
     assert commands[16] == Echo("title reached")
+    assert commands[18] == Touch(128, 300, 2, 8)
+    assert commands[19] == Touch(16, 20, 5, 0)
 
 
 @pytest.mark.parametrize(
@@ -148,6 +153,9 @@ def test_parse_reads_every_command():
         ("run -1", "cannot be negative"),
         ("keys A+Z", "unknown keys Z"),
         ("tap A 1 2 3", "usage: tap KEYS [HOLD [GAP]]"),
+        ("touch 5", "usage: touch X Y [HOLD [GAP]]"),
+        ("touch 5 top", "y must be a number"),
+        ("touch -1 5", "x cannot be negative"),
         ("shot title.bmp", "name it FILE.png"),
         ("peek 0x02000000 0", "at least 1"),
         ("peek 0x02000000 5000", "at most 4096"),
@@ -251,6 +259,10 @@ def test_run_script_checks_the_backend_before_running(tmp_path: Path):
         assert f"line {line}: The fake backend has no debugger" in message
     assert emulator.frames == 0
 
+    with pytest.raises(ClassicRetroError) as error:
+        run_script(FakeEmulator(), parse_script("run 1\ntouch 10 200\n"), tmp_path)
+    assert "line 2: the fake backend cannot touch the screen" in str(error.value)
+
     with pytest.raises(ClassicRetroError, match="register memory probes need an ARM console"):
         run_script(
             type("GameBoy", (FakeEmulator,), {"platform": "gb"})(),
@@ -264,3 +276,31 @@ def test_run_script_names_the_failing_line(tmp_path: Path):
         run_script(FakeEmulator(), parse_script("run 1\nload missing.state\n"), tmp_path)
     assert error.value.code is ErrorCode.EMULATOR_FAILED
     assert str(error.value).startswith("line 2: ")
+
+
+def test_touch_presses_a_pixel_for_its_frames_then_lets_go(tmp_path: Path):
+    class TouchScreen(FakeEmulator):
+        pointer = True
+
+        def __init__(self) -> None:
+            super().__init__()
+            self.point: tuple[int, int] | None = None
+            self.touched: list[tuple[int, int] | None] = []
+
+        def touch(self, point: tuple[int, int] | None) -> None:
+            self.point = point
+
+        def run(self, frames: int, keys: frozenset[str]) -> list[Hit]:
+            self.touched += [self.point] * frames
+            return super().run(frames, keys)
+
+    emulator = TouchScreen()
+    report = run_script(emulator, parse_script("keys A\ntouch 128 300 3 2\nrun 1\n"), tmp_path)
+    assert report["frames"] == 6
+    assert emulator.touched == [(128, 300)] * 3 + [None] * 3
+    # The keys held stay held while the screen is touched.
+    assert emulator.pressed == [frozenset({"A"})] * 6
+    # A backend that cannot touch says so when asked directly.
+    with pytest.raises(ClassicRetroError) as error:
+        FakeEmulator().touch((1, 1))
+    assert error.value.code is ErrorCode.EMULATOR_UNAVAILABLE

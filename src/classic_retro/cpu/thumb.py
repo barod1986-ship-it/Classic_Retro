@@ -1,4 +1,5 @@
-"""ARM7TDMI Thumb encoders for hook sites (Game Boy Advance).
+"""Thumb encoders for hook sites: the ARM7TDMI's (Game Boy Advance) and the
+ARM946E-S's (the Nintendo DS's ARM9), which encode them the same way.
 
 A hook site is game code replaced by a jump to overlay code. Thumb gives three
 ways to get there:
