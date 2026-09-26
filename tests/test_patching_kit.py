@@ -7,7 +7,7 @@ import struct
 import pytest
 
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
-from classic_retro.cpu import thumb
+from classic_retro.cpu import arm, thumb
 from classic_retro.patching import hooks
 from classic_retro.patching.hooks import HookProgram, assembler_for, register_assembler
 from classic_retro.patching.image import GBA_ROM_BASE, ImageSpec
@@ -51,6 +51,37 @@ def test_veneers():
     assert thumb.arm_veneer(0x08F00000) == struct.pack(
         "<HHIII", 0x4778, 0x46C0, 0xE59FC000, 0xE12FFF1C, 0x08F00001
     )
+
+
+def test_arm_bl_round_trips_and_checks_its_range():
+    # The same call as Phantom Hourglass's glyph site, and one backwards.
+    assert arm.bl_instruction(0x02033564, 0x020296E0) == bytes.fromhex("5dd8ffeb")
+    for address, target in ((0x02033564, 0x0204F314), (0x02100000, 0x02000000)):
+        assert arm.bl_target(address, arm.bl_instruction(address, target)) == target
+    for address, target in ((0x02000000, 0x04000008), (0x02000002, 0x02001000)):
+        with pytest.raises(ClassicRetroError) as error:
+            arm.bl_instruction(address, target)
+        assert error.value.code is ErrorCode.WRITE_OUT_OF_BOUNDS
+    with pytest.raises(ClassicRetroError) as error:
+        arm.bl_target(0x02000000, bytes.fromhex("0000a0e1"))
+    assert error.value.code is ErrorCode.SOURCE_BASELINE_MISMATCH
+
+
+def test_arm_branch_targets_find_every_b_and_bl():
+    code = b"".join(
+        (
+            arm.bl_instruction(0x02000000, 0x02000100),
+            bytes.fromhex("0000a0e1"),  # mov r0, r0
+            bytes.fromhex("0100002a"),  # bhs +12
+            bytes.fromhex("feffffea"),  # b .
+            bytes.fromhex("000000fa"),  # blx: not a branch the helper follows
+        )
+    )
+    assert arm.branch_targets(0x02000000, code) == {
+        0x02000000: 0x02000100,
+        0x02000008: 0x02000014,
+        0x0200000C: 0x0200000C,
+    }
 
 
 def test_image_spec_verifies_and_reads():

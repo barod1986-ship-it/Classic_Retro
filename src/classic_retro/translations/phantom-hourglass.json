@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0",
+  "target": "phantom-hourglass",
+  "language": "ar",
+  "notation": "Logical Arabic in the BMG notation (text.bmg, engines.phantom_hourglass). Keep every escape and line end of the original, in order: {01:0A00nnnn} and {01:0E00nnnn} make the typewriter wait nnnn frames, {01:1400nnnn} sets its pace, {FF:00000300} colours a name blue and {FF:00000000} ends it. The box shows three lines, and every third line end starts a new page, so each line stays where it is; words may move between the lines of a page. A line holds at most 206 pixels. A line holds Arabic, spaces and punctuation (. ! : ، ؛ ؟) only: no Latin letters, since every glyph of a line is drawn right to left. No vowel marks: the font has none.",
+  "glossary": [
+    {
+      "term": "Tetra",
+      "text": "تيترا"
+    },
+    {
+      "term": "Princess Zelda",
+      "text": "الأميرة زيلدا"
+    },
+    {
+      "term": "Kingdom of Hyrule",
+      "text": "مملكة هايرول"
+    },
+    {
+      "term": "pirates",
+      "text": "القراصنة"
+    }
+  ],
+  "entries": [
+    {
+      "id": "story_begins",
+      "context": "The prologue's first page, over the sea; demo.bmg message 0",
+      "text": "{01:14000600}تبدأ حكايتنا{01:0A001400} منذ زمن\nليس ببعيد.{01:0A000800}.{01:0A000800}.\n{01:0E00BE00}"
+    },
+    {
+      "id": "tetra",
+      "context": "Tetra and her pirates, three pages; message 1",
+      "text": "{01:14000200}كانت هناك فتاة صغيرة،{01:0A001900}{01:14000400}\nخبيرة بشؤون البحار، تتزعم\nعصابة من القراصنة.{01:0E00DC00}\n{01:0A000500}{01:14000400}أما اسمها {01:0A000F00}فكان {FF:00000300}تيترا{FF:00000000}.{01:0A000F00} كانت\nفتاة جميلة وجريئة\nوشجاعة.{01:0E00E600}\n{01:14000400}{01:0A000A00}{01:0A000600}انطلقت تيترا وقراصنتها\nالوسيمون {01:0A000A00}لاستكشاف\nالبحار الشاسعة المجهولة.{01:0E00E100}"
+    },
+    {
+      "id": "boy_in_green",
+      "context": "Tetra meets the boy in green; message 2",
+      "text": "{01:0A001900}{01:14000300}وذات يوم، وهي تتوقف عند\nإحدى الجزر، {01:0A001900}التقت تيترا بفتى\nصغير يرتدي ثيابا خضراء.{01:0E000E01}\n{01:14000400}{01:0A000A00}وبعد سلسلة من الأحداث\nالغريبة، بدأ الاثنان\nيسافران معا{01:0A000500}.{01:0A000A00}.{01:0A000F00}.{01:0E000B01}"
+    },
+    {
+      "id": "princess_zelda",
+      "context": "The ruins: Tetra becomes Princess Zelda, four pages; message 3",
+      "text": "{01:14000300}عثرا على أطلال قديمة،\nفغمر النور تيترا.\n{01:0E007D00}\n{01:14000300}وفي الحال، تحولت\nإلى أميرة جميلة.\n{01:0E007D00}\n{01:14000200}كان نسبها يعود إلى\nمملكة قديمة بائدة.\n{01:0E006E00}\n{01:14000300}لقد كانت {FF:00000300}الأميرة زيلدا{FF:00000000}،\nأميرة مملكة هايرول.\n{01:0E008C00}"
+    },
+    {
+      "id": "evil_king",
+      "context": "The evil king takes Zelda and the boy follows, five pages; message 4",
+      "text": "{01:14000300}{01:0A002400}وفي تلك اللحظة، ظهر ملك\nضخم مشؤوم!\n{01:0E001801}\n{01:14000300}واختطف الأميرة\nزيلدا{01:0A000800}.{01:0A000C00}.{01:0A001000}.\n{01:0E00B900}\n{01:14000300}كان الملك الشرير يسعى وراء\nالقوة المقدسة التي توارثتها\nأميرات هايرول.{01:0E00B400}\n{01:14000300}وخطط للاستيلاء على\nتلك القوة واستخدامها لنفسه.\n{01:0E00C300}\n{01:14000400}فلحق به الفتى،\nعازما على إنقاذ\nالأميرة{01:0A000800}.{01:0A000C00}.{01:0A001000}.{01:0E00C800}"
+    },
+    {
+      "id": "hero",
+      "context": "The boy's journey and Zelda's rescue, four pages; message 5",
+      "text": "{01:14000400}عبر الفتى البحار\nوتسلق الجبال.{01:0E00B400}\nوكانت رحلته محفوفة بالمخاطر.\n{01:14000400}قضى على الوحوش الشريرة\nواستخدم قوتها ليصبح\nبطلا حقيقيا.{01:0E000401}\n{01:14000400}وبعد مغامرة طويلة\nوشاقة، هزم\nالملك الشرير.{01:0E000401}\n{01:14000400}وأخيرا، نجت الأميرة\nالجميلة زيلدا.\n{01:0E000401}"
+    },
+    {
+      "id": "set_sail",
+      "context": "The two sail with the pirates, the prologue's last two pages; message 6",
+      "text": "{01:0A000500}{01:14000100}بعد ذلك،{01:0A001400}{01:14000400} انطلق الاثنان\nمع طاقم القراصنة الشجعان\nبحثا عن أراض جديدة...{01:0E00C800}{FF:00000300}\n{FF:00000000}{01:14000400}نعم، أبحرا معا!{01:0A006400}\n{01:14000100}نهاية سعيدة للقراصنة!\n{01:0A001400}{01:14000100}{01:0E00E600}"
+    }
+  ]
+}

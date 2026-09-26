@@ -4,17 +4,14 @@ import pytest
 
 from classic_retro.adapters.registry import build_registry
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
-from classic_retro.engines.nsmb import (
-    COLOUR,
-    NUMBER,
-    colour_escape,
-    escape_colour,
+from classic_retro.engines.nsmb import COLOUR, NUMBER, colour_escape, escape_colour
+from classic_retro.text.bmg import (
+    BmgEscape,
     notation_skeleton,
     parse_notation,
     split_lines,
     text_notation,
 )
-from classic_retro.text.bmg import BmgEscape
 
 # An invented prompt in the engine's notation.
 PROMPT = "Pay {FF:00000100}{01:0100}{FF:00000000} shells\nto cross?"

@@ -24,9 +24,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from classic_retro.engines.nsmb import notation_skeleton, parse_notation
 from classic_retro.localization.translations import TranslationSet, builtin_translation_set
-from classic_retro.text.bmg import Piece
+from classic_retro.text.bmg import Piece, notation_skeleton, parse_notation
 
 COURSE = "script/course.bmg"
 DATA = "script/data.bmg"

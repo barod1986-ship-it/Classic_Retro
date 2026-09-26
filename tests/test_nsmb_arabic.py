@@ -9,7 +9,7 @@ from fontTools.pens.ttGlyphPen import TTGlyphPen
 
 from classic_retro.arabic.glyph_codes import GlyphCodes
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
-from classic_retro.engines.nsmb import CELL_HEIGHT, CELL_WIDTH, colour_escape, parse_notation
+from classic_retro.engines.nsmb import CELL_HEIGHT, CELL_WIDTH, colour_escape
 from classic_retro.engines.nsmb_arabic import (
     ARABIC_CODES,
     BASELINE,
@@ -32,7 +32,7 @@ from classic_retro.engines.nsmb_arabic import (
     visual_lines,
 )
 from classic_retro.font.glyph_raster import FormDoesNotFit
-from classic_retro.text.bmg import BmgEscape
+from classic_retro.text.bmg import BmgEscape, parse_notation
 
 BEH = {form: unicodedata.lookup(f"ARABIC LETTER BEH {form} FORM") for form in
        ("ISOLATED", "FINAL", "INITIAL", "MEDIAL")}  # fmt: skip

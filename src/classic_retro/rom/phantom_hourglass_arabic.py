@@ -1,28 +1,30 @@
-"""Arabic ROM overlay for *New Super Mario Bros.* (USA): its menus and prompts.
+"""Arabic ROM overlay for *The Legend of Zelda: Phantom Hourglass* (USA): its prologue.
 
-The NSMB-Decomp/nsmb decompilation cannot build a ROM yet, so the overlay
-patches the user's image (``A2DE``, SHA-256 below) and ships as a BPS patch.
-It changes no code: the game draws every line as stored, centred, and the
-Arabic is stored in visual order (``engines.nsmb_arabic``).
+zeldaret/ph rebuilds the game from the user's own copy and is not finished, so
+the overlay patches the user's image (``AZEE``, SHA-256 below) and ships as a
+BPS patch. The addresses and names are zeldaret/ph's.
 
 1. The input hash and every structure the overlay relies on are verified: the
-   header, the ARM9 binary (its SHA-256 packed and unpacked), the NARC inside
-   it that holds the font, the font (its SHA-256, its cell and the kana it
-   gives up), the three message files and every translated message's original
-   (its pinned hash, escapes and line ends).
-2. The Arabic glyphs replace the font's kana, and the font is packed again
-   into its place in the NARC (``compress_lz77_optimal``: the original was
-   packed tighter than a greedy compressor can), whose file table gets the
-   font's new end.
-3. The ARM9 binary is packed again into its place like the original
-   (``repack_blz``): the original's items stay wherever the binary did not
-   change, so the patch carries the font and not the game's code. It
-   shrinks: the footer that follows it moves up, the header and the module
-   parameters get the new size, and the secure area's CRC follows the
-   module parameters (``secure_area_crc``).
-4. The three message files are rebuilt with the Arabic texts; a file that
-   grows moves past the used area (``replace_files``). The header CRC comes
-   last.
+   header, the ARM9 binary (its SHA-256 packed and unpacked, its module
+   parameters and footer, the padding before the overlay table), the glyph
+   call the hook takes over and the code around it, the first bytes of every
+   routine the hook calls, the routine the hook replaces, the font (its
+   SHA-256, its cell and the kana it gives up), the prologue's message file
+   and every translated message's original (its pinned hash, escapes and line
+   ends).
+2. The Arabic glyphs replace the font's kana, in place: the font keeps its
+   size.
+3. The hook (``phantom_hourglass_arabic_hooks.s``) is written over
+   ``func_0204f358``, a routine of the C++ runtime that nothing calls, and
+   the message printer's glyph call (``0x02033564``) calls it. The ARM9 is
+   packed again into its place like the original (``repack_blz``): the
+   original's items stay wherever the binary did not change, so the patch
+   carries the hook and not the game's code. Its end moves by a few bytes,
+   inside the padding before the overlay table; the header and the module
+   parameters get the new size, and the secure area's CRC follows the module
+   parameters (``secure_area_crc``).
+4. The message file is rebuilt with the Arabic texts; a file that grows moves
+   past the used area (``replace_files``). The header CRC comes last.
 """
 
 from __future__ import annotations
@@ -32,37 +34,38 @@ import struct
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from types import MappingProxyType
 
 from classic_retro.arabic.glyph_codes import GlyphCodes
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
-from classic_retro.engines.nsmb import (
+from classic_retro.cpu.arm import bl_instruction, bl_target, branch_targets
+from classic_retro.engines.phantom_hourglass import (
     CELL_HEIGHT,
     CELL_WIDTH,
+    DEMO_MESSAGES,
     FONT_FILE,
-    MESSAGE_FILES,
-    PACKED_MAGIC,
 )
-from classic_retro.engines.nsmb_arabic import (
+from classic_retro.engines.phantom_hourglass_arabic import (
     ARABIC_CODES,
     BASELINE,
-    NsmbArabicEncoder,
-    NsmbArabicFont,
-    build_nsmb_arabic_font,
+    LINE_WIDTH,
+    PhArabicEncoder,
+    PhArabicFont,
+    build_ph_arabic_font,
     font_preview,
     message_preview,
     messages_sheet,
-    nsmb_glyph_codes,
     painted_characters,
+    ph_glyph_codes,
     validate_command_skeleton,
 )
 from classic_retro.font.nftr import GlyphWidth, NftrFont
 from classic_retro.localization.translations import TranslationSet
+from classic_retro.patching.hooks import HookProgram
 from classic_retro.patching.image import ImageSpec
 from classic_retro.patching.nitro import (
+    ARM9_OVERLAY_TABLE,
     ARM9_SIZE,
     SECURE_AREA_CRC,
-    Narc,
     NdsHeader,
     NitroImage,
     header_crc_valid,
@@ -73,8 +76,7 @@ from classic_retro.patching.nitro import (
 from classic_retro.patching.outputs import base_report, write_image, write_patch
 from classic_retro.rebuild.blz import decompress_blz, decompress_blz_in_place, repack_blz
 from classic_retro.rebuild.bps import BpsPatch, create_bps
-from classic_retro.rebuild.lz77 import compress_lz77_optimal, decompress_lz77
-from classic_retro.rom.nsmb_arabic_script import NsmbArabicMessage, nsmb_arabic_messages
+from classic_retro.rom.phantom_hourglass_arabic_script import PhArabicMessage, ph_arabic_messages
 from classic_retro.text.bmg import (
     Bmg,
     Piece,
@@ -84,26 +86,56 @@ from classic_retro.text.bmg import (
     text_notation,
 )
 
-USA_SHA256 = "9f67fef1b4c73e966767f6153431ada3751dc1b0da2c70f386c14a5e3017f354"
-USA_SIZE = 0x2000000
-IMAGE = ImageSpec("New Super Mario Bros. (USA)", USA_SHA256, USA_SIZE, 0)
-PATCH_NAME = "new-super-mario-bros-usa-arabic-menus.bps"
+USA_SHA256 = "2dd43288c1b7b428cbd09d9a74464b9a46fe0239eaed82849369f261678011f7"
+USA_SIZE = 0x4000000
+TITLE = "The Legend of Zelda: Phantom Hourglass (USA)"
+IMAGE = ImageSpec(TITLE, USA_SHA256, USA_SIZE, 0)
+PATCH_NAME = "zelda-phantom-hourglass-usa-arabic-prologue.bps"
 
 # The ARM9 binary: where the image keeps it and where it runs. Its module
 # parameters hold, 0x14 bytes in, where its packed data ends in RAM, and 0x1C
-# bytes in the SDK's two magic words.
+# bytes in the SDK's magic words.
 ARM9_OFFSET = 0x4000
 ARM9_RAM = 0x02000000
-MODULE_PARAMS = 0xB48
+MODULE_PARAMS = 0xB64
 PACKED_END = MODULE_PARAMS + 0x14
 NITROCODE = struct.pack("<II", 0xDEC00621, 0x2106C0DE)
-# The header's field for the ARM9 overlay table, which follows the ARM9 and
-# the 12 bytes after it: the ARM9 may shrink, never grow.
-ARM9_OVERLAY_TABLE = 0x50
+
+# The message printer's glyph call, in func_020334b4:
+# DrawChar(canvas, font, x, y, colour, code), NitroSystem's
+# NNS_G2dCharCanvasDrawChar (func_020296e0).
+GLYPH_SITE = 0x02033564
+DRAW_CHAR = 0x020296E0
+GET_GLYPH_INDEX = 0x02023EA4
+GET_CHAR_WIDTHS = 0x02023EEC
+# func_0204f358: a routine of the C++ runtime no branch of the ARM9 or of any
+# overlay reaches and no word of them points to. The hook takes its place.
+HOOK_CODE_ADDRESS = 0x0204F314
+HOOK_ROOM = 0xEC
+HOOK_SOURCE = Path(__file__).with_name("phantom_hourglass_arabic_hooks.s")
+
+# arm-none-eabi-as -mcpu=arm946e-s phantom_hourglass_arabic_hooks.s;
+# ld -Ttext 0x0204F314; objcopy -O binary
+HOOK_CODE = bytes.fromhex(
+    "1f402de91c409de558309fe5033044e0bc0053e31100002a0100a0e10410a0e1"
+    "da52ffeb40109fe5010050e104009d0500009005b200d0010010a0e104009de5"
+    "e452ffeb0100d0e500109de5041091e508209de5812162e0002042e008208de5"
+    "1f40bde8d868ffea41300000ffff0000"
+)
+HOOK_SYMBOLS = {"hook_glyph": 0x0}
+HOOKS = HookProgram(
+    "Phantom Hourglass hook",
+    HOOK_SOURCE,
+    HOOK_CODE_ADDRESS,
+    HOOK_CODE,
+    HOOK_SYMBOLS,
+    cpu="arm946e-s",
+    singular=True,
+)
 
 
 @dataclass(frozen=True, slots=True)
-class NsmbLayout:
+class PhLayout:
     """What the overlay relies on in the image, and the SHA-256 it pins it by."""
 
     arm9_size: int
@@ -112,27 +144,36 @@ class NsmbLayout:
     # The 12 bytes after the ARM9: the SDK's magic, the module parameters'
     # offset and a word of its own.
     arm9_footer: bytes
-    # Where the NARC with the font starts in the unpacked ARM9.
-    font_archive: int
+    # Where the ARM9 overlay table starts: the ARM9 may grow up to it.
+    overlay_table: int
     font_sha256: str
-    files: Mapping[str, str] = field(default_factory=dict)
+    messages_sha256: str
+    # Bytes the hook relies on without replacing them, by address.
+    anchors: Mapping[int, bytes] = field(default_factory=dict)
+    # The SHA-256 of the routine the hook replaces.
+    hook_room_sha256: str = ""
 
-    def __post_init__(self) -> None:
-        object.__setattr__(self, "files", MappingProxyType(dict(self.files)))
 
-
-USA_LAYOUT = NsmbLayout(
-    arm9_size=0x5EFA4,
-    arm9_stored_sha256="72a43c39fa4ab0e233519d5ecbcd90813117fdd2c330cbebd864331817ff695a",
-    arm9_sha256="50917f1a6b56adcc8746d2ad360a01adbe4d5ce04f2e1440035987c25a118269",
-    arm9_footer=bytes.fromhex("2106c0de480b00003c290400"),
-    font_archive=0x3267C,
-    font_sha256="ea3f857971ba5270cc52ff56f837ab0149d1c63e31117a9521dbddb70422c537",
-    files={
-        "script/course.bmg": "5514c2079e3356415a0cb938e01be83b9c8061bde2da58ba4722b843ae9c2586",
-        "script/data.bmg": "a4420f89e1ba38af899baba9bf450e705d9e02e30998d5168a89933c2b53b713",
-        "script/game.bmg": "b7b50d973dfdf4632ed97a62456b11fe75191331b81d93b3b1e52bcc74f7fd1b",
+USA_LAYOUT = PhLayout(
+    arm9_size=0x41A18,
+    arm9_stored_sha256="0b00700fd8a437e0e29dec3ee1816ef9484c3e86eb3d94ba826f9a6a9b932f20",
+    arm9_sha256="951476f52f74a4e316774d19065fc074cdac4ec8cc381cad757857fd61eb72e7",
+    arm9_footer=bytes.fromhex("2106c0de640b000000000000"),
+    overlay_table=0x45C00,
+    font_sha256="edb1ddcc77d3f453564a66265f73a9029ca50916a15f4d9b81804d3060e7800e",
+    messages_sha256="190c63d10f883a9ef02ce7d833d1e40ab2fb694d88e72919de650692dad11389",
+    anchors={
+        # func_020334b4 before the call: the colour and the code on the stack,
+        # the canvas (this + 0x10), the font (+0x2C) and the pen's x and y.
+        0x02033540: bytes.fromhex(
+            "fe10d7e128309de5100089e202018de8f820d7e1fa60d7e12c1099e5052082e0033086e0"
+        ),
+        # The first bytes of the routines the hook calls.
+        DRAW_CHAR: bytes.fromhex("f0412de910d04de20170a0e1bc12dde1"),
+        GET_GLYPH_INDEX: bytes.fromhex("08402de9000090e5100090e5000050e3"),
+        GET_CHAR_WIDTHS: bytes.fromhex("00c090e50c309ce5000053e30c00000a"),
     },
+    hook_room_sha256="65b98d8428ea6ebfca33a3ae8192269754f4e7e8b65cad529f8b3c147df2ad09",
 )
 
 
@@ -143,17 +184,16 @@ class ImageParts:
     nitro: NitroImage
     stored_arm9: bytes
     arm9: bytes
-    archive: Narc
     font: NftrFont
     kana_glyphs: tuple[int, ...]
-    messages: Mapping[str, Bmg]
+    messages: Bmg
 
 
 @dataclass(frozen=True, slots=True)
-class NsmbArabicBuild:
+class PhArabicBuild:
     rom: bytes
     patch: BpsPatch
-    font: NsmbArabicFont
+    font: PhArabicFont
     report: dict[str, object] = field(default_factory=dict)
 
 
@@ -171,19 +211,24 @@ def verify_usa_image(rom: bytes) -> None:
     IMAGE.verify(rom)
 
 
-def read_parts(rom: bytes, layout: NsmbLayout = USA_LAYOUT) -> ImageParts:
+def _arm9_read(arm9: bytes, address: int, length: int) -> bytes:
+    return arm9[address - ARM9_RAM : address - ARM9_RAM + length]
+
+
+def read_parts(rom: bytes, layout: PhLayout = USA_LAYOUT) -> ImageParts:
     """Every part the overlay relies on, checked against ``layout`` before any change."""
     if not header_crc_valid(rom):
         raise _mismatch("The header CRC")
     header = NdsHeader.read(rom)
     footer_at = ARM9_OFFSET + layout.arm9_size
+    padding = rom[footer_at + len(layout.arm9_footer) : layout.overlay_table]
     if (
         header.arm9_offset != ARM9_OFFSET
         or header.arm9_ram != ARM9_RAM
         or header.arm9_size != layout.arm9_size
         or rom[footer_at : footer_at + len(layout.arm9_footer)] != layout.arm9_footer
-        or struct.unpack_from("<I", rom, ARM9_OVERLAY_TABLE)[0]
-        != footer_at + len(layout.arm9_footer)
+        or struct.unpack_from("<I", rom, ARM9_OVERLAY_TABLE)[0] != layout.overlay_table
+        or padding.strip(b"\xff")
     ):
         raise _mismatch("The ARM9's place")
     stored = bytes(rom[ARM9_OFFSET:footer_at])
@@ -196,11 +241,16 @@ def read_parts(rom: bytes, layout: NsmbLayout = USA_LAYOUT) -> ImageParts:
         struct.unpack_from("<I", arm9, PACKED_END)[0] != ARM9_RAM + layout.arm9_size
     ):
         raise _mismatch("The ARM9's module parameters")
-    archive = Narc.read(arm9, layout.font_archive)
-    start, end = archive.file_range(FONT_FILE)
-    if arm9[start : start + len(PACKED_MAGIC)] != PACKED_MAGIC:
-        raise _mismatch("The packed font")
-    font_data = decompress_lz77(arm9[start + len(PACKED_MAGIC) : end])
+    site = _arm9_read(arm9, GLYPH_SITE, 4)
+    if len(site) != 4 or bl_target(GLYPH_SITE, site) != DRAW_CHAR:
+        raise _mismatch("The glyph call")
+    for address, expected in layout.anchors.items():
+        if _arm9_read(arm9, address, len(expected)) != expected:
+            raise _mismatch(f"The code at {address:#x}")
+    if _sha256(_arm9_read(arm9, HOOK_CODE_ADDRESS, HOOK_ROOM)) != layout.hook_room_sha256:
+        raise _mismatch("The routine the hook replaces")
+    nitro = NitroImage(rom)
+    font_data = nitro.read(FONT_FILE)
     if _sha256(font_data) != layout.font_sha256:
         raise _mismatch("The font")
     font = NftrFont(font_data)
@@ -210,14 +260,10 @@ def read_parts(rom: bytes, layout: NsmbLayout = USA_LAYOUT) -> ImageParts:
     others = {glyph for code, glyph in font.codes.items() if code not in ARABIC_CODES}
     if -1 in kana or len(set(kana)) != len(kana) or others & set(kana):
         raise _mismatch("The font's kana")
-    nitro = NitroImage(rom)
-    messages: dict[str, Bmg] = {}
-    for path in MESSAGE_FILES:
-        data = nitro.read(path)
-        if _sha256(data) != layout.files.get(path):
-            raise _mismatch(path)
-        messages[path] = Bmg.parse(data)
-    return ImageParts(nitro, stored, arm9, archive, font, kana, messages)
+    data = nitro.read(DEMO_MESSAGES)
+    if _sha256(data) != layout.messages_sha256:
+        raise _mismatch(DEMO_MESSAGES)
+    return ImageParts(nitro, stored, arm9, font, kana, Bmg.parse(data))
 
 
 def source_digest(pieces: Sequence[Piece]) -> str:
@@ -225,8 +271,8 @@ def source_digest(pieces: Sequence[Piece]) -> str:
     return _sha256(encode_text(pieces))
 
 
-def _verify_source(parts: ImageParts, message: NsmbArabicMessage) -> tuple[Piece, ...]:
-    texts = parts.messages[message.file].texts
+def _verify_source(parts: ImageParts, message: PhArabicMessage) -> tuple[Piece, ...]:
+    texts = parts.messages.texts
     if not 0 <= message.index < len(texts):
         raise ClassicRetroError(
             ErrorCode.INVALID_REFERENCE, f"{message.key}: no message {message.index}"
@@ -235,7 +281,7 @@ def _verify_source(parts: ImageParts, message: NsmbArabicMessage) -> tuple[Piece
     if source_digest(original) != message.source_sha256:
         raise ClassicRetroError(
             ErrorCode.SOURCE_BASELINE_MISMATCH,
-            f"{message.key}: message {message.index} of {message.file} differs from the "
+            f"{message.key}: message {message.index} of {DEMO_MESSAGES} differs from the "
             "pinned USA script",
         )
     if notation_skeleton(original) != message.source_skeleton:
@@ -246,43 +292,42 @@ def _verify_source(parts: ImageParts, message: NsmbArabicMessage) -> tuple[Piece
     return original
 
 
-def script_glyph_codes(messages: Sequence[NsmbArabicMessage]) -> GlyphCodes:
+def script_glyph_codes(messages: Sequence[PhArabicMessage]) -> GlyphCodes:
     """The codes of every character the translated messages draw."""
     characters: set[str] = set()
     for message in messages:
         characters |= painted_characters(message.pieces)
-    return nsmb_glyph_codes(characters)
+    return ph_glyph_codes(characters)
 
 
 @dataclass(frozen=True, slots=True)
-class NsmbEncodedMessage:
+class PhEncodedMessage:
     pieces: tuple[Piece, ...]
     line_widths: tuple[int, ...]
 
 
 def encode_messages(
-    encoder: NsmbArabicEncoder, messages: Sequence[NsmbArabicMessage]
-) -> dict[str, NsmbEncodedMessage]:
+    encoder: PhArabicEncoder, messages: Sequence[PhArabicMessage]
+) -> dict[str, PhEncodedMessage]:
     """Validate every translation against its original's escapes and encode it."""
-    encoded: dict[str, NsmbEncodedMessage] = {}
-    places: set[tuple[str, int]] = set()
+    encoded: dict[str, PhEncodedMessage] = {}
+    places: set[int] = set()
     for message in messages:
         if message.key in encoded:
             raise ClassicRetroError(ErrorCode.DUPLICATE_ENTRY_ID, f"Message {message.key} twice")
-        if (message.file, message.index) in places:
+        if message.index in places:
             raise ClassicRetroError(
-                ErrorCode.DUPLICATE_ENTRY_ID,
-                f"{message.key} shares message {message.index} of {message.file}",
+                ErrorCode.DUPLICATE_ENTRY_ID, f"{message.key} shares message {message.index}"
             )
-        places.add((message.file, message.index))
+        places.add(message.index)
         pieces = message.pieces
         validate_command_skeleton(message.source_skeleton, pieces)
-        result = encoder.encode(pieces, message.line_width)
-        encoded[message.key] = NsmbEncodedMessage(result.pieces, result.line_widths or ())
+        result = encoder.encode(pieces)
+        encoded[message.key] = PhEncodedMessage(result.pieces, result.line_widths or ())
     return encoded
 
 
-def arabic_game_font(original: NftrFont, kana_glyphs: Sequence[int], font: NsmbArabicFont) -> bytes:
+def arabic_game_font(original: NftrFont, kana_glyphs: Sequence[int], font: PhArabicFont) -> bytes:
     """The game's font with the Arabic glyphs in place of its kana; unused kana are blank."""
     game_font = NftrFont(original.to_bytes())
     blank = tuple((0,) * CELL_WIDTH for _ in range(CELL_HEIGHT))
@@ -295,35 +340,56 @@ def arabic_game_font(original: NftrFont, kana_glyphs: Sequence[int], font: NsmbA
     return game_font.to_bytes()
 
 
-def packed_arm9(parts: ImageParts, font_data: bytes) -> tuple[bytes, bytes, int]:
-    """The unpacked ARM9 with the font in place, the packed one, and the packed font's size."""
-    arm9 = bytearray(parts.arm9)
-    start, _ = parts.archive.file_range(FONT_FILE)
-    room = parts.archive.room(FONT_FILE)
-    packed_font = PACKED_MAGIC + compress_lz77_optimal(font_data)
-    if len(packed_font) > room:
+def hooked_arm9(arm9: bytes) -> bytes:
+    """The unpacked ARM9 with the hook over the unused routine and the glyph call to it."""
+    if len(HOOK_CODE) > HOOK_ROOM:
         raise ClassicRetroError(
             ErrorCode.RELOCATION_OVERFLOW,
-            f"The packed font needs {len(packed_font)} bytes; its place holds {room}",
+            f"The hook needs {len(HOOK_CODE)} bytes; the routine it replaces has {HOOK_ROOM}",
         )
-    arm9[start : start + room] = packed_font + b"\xff" * (room - len(packed_font))
-    parts.archive.set_end(arm9, FONT_FILE, start + len(packed_font))
+    calls = {
+        target
+        for target in branch_targets(HOOK_CODE_ADDRESS, HOOK_CODE).values()
+        if not HOOK_CODE_ADDRESS <= target < HOOK_CODE_ADDRESS + len(HOOK_CODE)
+    }
+    if calls != {DRAW_CHAR, GET_GLYPH_INDEX, GET_CHAR_WIDTHS}:
+        raise ClassicRetroError(
+            ErrorCode.BUILD_VALIDATION_FAILED,
+            "The hook calls " + ", ".join(f"{call:#x}" for call in sorted(calls)),
+        )
+    data = bytearray(arm9)
+    start = HOOK_CODE_ADDRESS - ARM9_RAM
+    data[start : start + len(HOOK_CODE)] = HOOK_CODE
+    site = GLYPH_SITE - ARM9_RAM
+    data[site : site + 4] = bl_instruction(GLYPH_SITE, HOOKS.symbol_address("hook_glyph"))
+    return bytes(data)
+
+
+def packed_arm9(parts: ImageParts, layout: PhLayout) -> tuple[bytes, bytes]:
+    """The unpacked ARM9 with the hook, and the packed one, with its packed end."""
+    arm9 = bytearray(hooked_arm9(parts.arm9))
     stored = bytearray(repack_blz(parts.stored_arm9, bytes(arm9)))
+    room = layout.overlay_table - ARM9_OFFSET - len(layout.arm9_footer)
+    if len(stored) > room:
+        raise ClassicRetroError(
+            ErrorCode.RELOCATION_OVERFLOW,
+            f"The ARM9 packs to {len(stored):#x} bytes; its place holds {room:#x}",
+        )
     # The end of the packed data lies in the part stored as it is.
     struct.pack_into("<I", stored, PACKED_END, ARM9_RAM + len(stored))
     struct.pack_into("<I", arm9, PACKED_END, ARM9_RAM + len(stored))
-    return bytes(arm9), bytes(stored), len(packed_font)
+    return bytes(arm9), bytes(stored)
 
 
-def build_nsmb_arabic_rom(
+def build_ph_arabic_rom(
     rom: bytes,
     font_path: Path,
     *,
-    messages: tuple[NsmbArabicMessage, ...] | None = None,
+    messages: tuple[PhArabicMessage, ...] | None = None,
     translations: TranslationSet | None = None,
-    layout: NsmbLayout = USA_LAYOUT,
+    layout: PhLayout = USA_LAYOUT,
     verify_identity: bool = True,
-) -> NsmbArabicBuild:
+) -> PhArabicBuild:
     """Build the Arabic image and its BPS patch from the original USA image.
 
     ``messages``, ``layout`` and ``verify_identity`` exist for synthetic tests;
@@ -332,32 +398,29 @@ def build_nsmb_arabic_rom(
     if verify_identity:
         verify_usa_image(rom)
     parts = read_parts(rom, layout)
-    messages = messages or nsmb_arabic_messages(translations)
+    messages = messages or ph_arabic_messages(translations)
     for message in messages:
         _verify_source(parts, message)
     glyph_map = script_glyph_codes(messages)
-    font = build_nsmb_arabic_font(font_path, glyph_map)
-    encoded = encode_messages(NsmbArabicEncoder(glyph_map, font), messages)
+    font = build_ph_arabic_font(font_path, glyph_map)
+    encoded = encode_messages(PhArabicEncoder(glyph_map, font), messages)
 
     font_data = arabic_game_font(parts.font, parts.kana_glyphs, font)
-    arm9, stored, packed_font = packed_arm9(parts, font_data)
-    if len(stored) > layout.arm9_size:
-        raise ClassicRetroError(
-            ErrorCode.RELOCATION_OVERFLOW,
-            f"The ARM9 packs to {len(stored):#x} bytes; its place holds {layout.arm9_size:#x}",
-        )
+    arm9, stored = packed_arm9(parts, layout)
     target = bytearray(rom)
-    end = ARM9_OFFSET + layout.arm9_size + len(layout.arm9_footer)
+    end = layout.overlay_table
     target[ARM9_OFFSET:end] = (
         stored
         + layout.arm9_footer
         + b"\xff" * (end - ARM9_OFFSET - len(stored) - len(layout.arm9_footer))
     )
     struct.pack_into("<I", target, ARM9_SIZE, len(stored))
-    texts = _message_texts(parts, messages, encoded)
+    texts = list(parts.messages.texts)
+    for message in messages:
+        texts[message.index] = encoded[message.key].pieces
     files = {
-        parts.nitro.file_id(path): parts.messages[path].with_texts(texts[path]).build()
-        for path in MESSAGE_FILES
+        parts.nitro.file_id(FONT_FILE): font_data,
+        parts.nitro.file_id(DEMO_MESSAGES): parts.messages.with_texts(texts).build(),
     }
     placed = replace_files(target, files)
     stored_crc = NdsHeader.read(rom).secure_area_crc
@@ -365,52 +428,38 @@ def build_nsmb_arabic_rom(
     set_header_crc(target)
 
     output = bytes(target)
-    _verify_output(output, rom, layout, parts, arm9, font_data, files, placed)
+    _verify_output(output, rom, layout, parts, arm9, files, placed)
     patch = create_bps(rom, output)
     report: dict[str, object] = {
         **base_report(IMAGE.title, rom, output, patch),
         "messages": len(messages),
         "message_lines": {key: list(entry.line_widths) for key, entry in encoded.items()},
-        "line_widths": {message.key: message.line_width for message in messages},
+        "line_width": LINE_WIDTH,
         "arabic_glyphs": len(font.glyphs),
         "arabic_codes": f"U+{min(font.glyphs):04X}..U+{max(font.glyphs):04X}",
         "font_size": font.font_size,
         "font_baseline": BASELINE,
         "font_sha256": hashlib.sha256(font_path.read_bytes()).hexdigest(),
-        "packed_font_bytes": packed_font,
-        "packed_font_room": parts.archive.room(FONT_FILE),
+        "hook_code_address": f"{HOOK_CODE_ADDRESS:#x}",
+        "hook_bytes": len(HOOK_CODE),
+        "hook_room": HOOK_ROOM,
         "arm9_bytes": len(stored),
-        "arm9_room": layout.arm9_size,
-        "message_files": {
-            path: f"{placed[parts.nitro.file_id(path)][0]:#x}" for path in MESSAGE_FILES
-        },
+        "arm9_room": layout.overlay_table - ARM9_OFFSET - len(layout.arm9_footer),
+        "message_file": f"{placed[parts.nitro.file_id(DEMO_MESSAGES)][0]:#x}",
     }
-    return NsmbArabicBuild(rom=output, patch=patch, font=font, report=report)
-
-
-def _message_texts(
-    parts: ImageParts,
-    messages: Sequence[NsmbArabicMessage],
-    encoded: Mapping[str, NsmbEncodedMessage],
-) -> dict[str, list[tuple[Piece, ...]]]:
-    """Every file's texts, the translated ones replaced."""
-    texts = {path: list(parts.messages[path].texts) for path in MESSAGE_FILES}
-    for message in messages:
-        texts[message.file][message.index] = encoded[message.key].pieces
-    return texts
+    return PhArabicBuild(rom=output, patch=patch, font=font, report=report)
 
 
 def _verify_output(
     output: bytes,
     rom: bytes,
-    layout: NsmbLayout,
+    layout: PhLayout,
     parts: ImageParts,
     arm9: bytes,
-    font_data: bytes,
     files: Mapping[int, bytes],
     placed: Mapping[int, tuple[int, int]],
 ) -> None:
-    """Read the new image back: its header, ARM9, font, files and untouched bytes."""
+    """Read the new image back: its header, ARM9, hook, files and untouched bytes."""
     if not header_crc_valid(output):
         raise ClassicRetroError(ErrorCode.BUILD_VALIDATION_FAILED, "The header CRC is wrong")
     header = NdsHeader.read(output)
@@ -423,10 +472,25 @@ def _verify_output(
         ARM9_RAM + header.arm9_size
     ):
         raise ClassicRetroError(ErrorCode.BUILD_VALIDATION_FAILED, "The ARM9's ends disagree")
-    archive = Narc.read(unpacked, layout.font_archive)
-    start, end = archive.file_range(FONT_FILE)
-    if decompress_lz77(unpacked[start + len(PACKED_MAGIC) : end]) != font_data:
-        raise ClassicRetroError(ErrorCode.BUILD_VALIDATION_FAILED, "The font does not unpack")
+    hook = HOOKS.symbol_address("hook_glyph")
+    if _arm9_read(unpacked, HOOK_CODE_ADDRESS, len(HOOK_CODE)) != HOOK_CODE or (
+        bl_target(GLYPH_SITE, _arm9_read(unpacked, GLYPH_SITE, 4)) != hook
+    ):
+        raise ClassicRetroError(ErrorCode.BUILD_VALIDATION_FAILED, "The hook does not read back")
+    changed = [
+        index
+        for index, (old, new) in enumerate(zip(parts.arm9, unpacked, strict=True))
+        if old != new
+    ]
+    allowed = (
+        range(PACKED_END, PACKED_END + 4),
+        range(GLYPH_SITE - ARM9_RAM, GLYPH_SITE - ARM9_RAM + 4),
+        range(HOOK_CODE_ADDRESS - ARM9_RAM, HOOK_CODE_ADDRESS - ARM9_RAM + len(HOOK_CODE)),
+    )
+    if any(not any(index in span for span in allowed) for index in changed):
+        raise ClassicRetroError(
+            ErrorCode.BUILD_VALIDATION_FAILED, "The ARM9 changed outside the hook and its call"
+        )
     nitro = NitroImage(output)
     for file_id, data in files.items():
         if nitro.file_range(file_id) != placed[file_id]:
@@ -441,7 +505,7 @@ def _verify_output(
     fat = parts.nitro.header.fat_offset
     written = [
         (0, 0x200),
-        (ARM9_OFFSET, ARM9_OFFSET + layout.arm9_size + len(layout.arm9_footer)),
+        (ARM9_OFFSET, layout.overlay_table),
         *((fat + 8 * file_id, fat + 8 * file_id + 8) for file_id in files),
         *(parts.nitro.file_range(file_id) for file_id in files),
         *placed.values(),
@@ -461,7 +525,7 @@ def _verify_output(
         )
 
 
-def check_nsmb_translations(
+def check_ph_translations(
     font_path: Path | None = None,
     preview_path: Path | None = None,
     text_preview_path: Path | None = None,
@@ -471,19 +535,16 @@ def check_nsmb_translations(
     """Validate the translations without the ROM; with a font, measure and draw every message."""
     if font_path is None and (preview_path is not None or text_preview_path is not None):
         raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, "A preview needs --font")
-    messages = nsmb_arabic_messages(translations)
+    messages = ph_arabic_messages(translations)
     glyph_map = script_glyph_codes(messages)
-    font = build_nsmb_arabic_font(font_path, glyph_map) if font_path is not None else None
+    font = build_ph_arabic_font(font_path, glyph_map) if font_path is not None else None
     if font is not None and preview_path is not None:
         font_preview(font).save(preview_path)
-    encoded = encode_messages(NsmbArabicEncoder(glyph_map, font), messages)
+    encoded = encode_messages(PhArabicEncoder(glyph_map, font), messages)
     if font is not None and text_preview_path is not None:
         messages_sheet(
             [
-                (
-                    message.key,
-                    message_preview(font, encoded[message.key].pieces, message.line_width),
-                )
+                (message.key, message_preview(font, encoded[message.key].pieces))
                 for message in messages
             ]
         ).save(text_preview_path)
@@ -498,28 +559,27 @@ def check_nsmb_translations(
         report["font_size"] = font.font_size
         report["font_baseline"] = BASELINE
         report["widest_line"] = max(max(entry.line_widths) for entry in encoded.values())
+        report["line_width"] = LINE_WIDTH
     return report
 
 
-def encode_nsmb_arabic_message(
-    text: str, font_path: Path | None = None, *, line_width: int = 200
-) -> dict[str, object]:
-    """Encode one message in notation (its UTF-16 bytes, in visual order); with a font, the
+def encode_ph_arabic_message(text: str, font_path: Path | None = None) -> dict[str, object]:
+    """Encode one message in notation (its UTF-16 bytes, in paint order); with a font, the
     width of each line. Its codes are those of its own characters."""
     pieces = parse_notation(text)
-    glyph_map = nsmb_glyph_codes(painted_characters(pieces))
-    font = build_nsmb_arabic_font(font_path, glyph_map) if font_path is not None else None
-    result = NsmbArabicEncoder(glyph_map, font).encode(pieces, line_width)
+    glyph_map = ph_glyph_codes(painted_characters(pieces))
+    font = build_ph_arabic_font(font_path, glyph_map) if font_path is not None else None
+    result = PhArabicEncoder(glyph_map, font).encode(pieces)
     stored = encode_text(result.pieces)
     payload: dict[str, object] = {"bytes": stored.hex(" ").upper(), "units": len(stored) // 2}
     if result.line_widths is not None:
         payload["widths"] = list(result.line_widths)
-        payload["line_width"] = line_width
+        payload["line_width"] = LINE_WIDTH
     return payload
 
 
 def write_build_outputs(
-    build: NsmbArabicBuild, out_dir: Path, *, rom_name: str | None
+    build: PhArabicBuild, out_dir: Path, *, rom_name: str | None
 ) -> dict[str, str]:
     patch_path = write_patch(out_dir, PATCH_NAME, build.patch)
     font_preview(build.font).save(out_dir / "arabic_font_preview.png")
@@ -531,16 +591,25 @@ def extract_originals(
     rom: bytes,
     translations: TranslationSet | None = None,
     *,
-    messages: tuple[NsmbArabicMessage, ...] | None = None,
-    layout: NsmbLayout = USA_LAYOUT,
+    messages: tuple[PhArabicMessage, ...] | None = None,
+    layout: PhLayout = USA_LAYOUT,
     verify_identity: bool = True,
 ) -> dict[str, str]:
-    """Every pinned original, verified, in the engine's notation, by entry id.
+    """Every pinned original, verified, in the BMG notation, by entry id.
 
     The keyword arguments exist for synthetic tests, as in the build.
     """
     if verify_identity:
         verify_usa_image(rom)
     parts = read_parts(rom, layout)
-    messages = messages or nsmb_arabic_messages(translations)
+    messages = messages or ph_arabic_messages(translations)
     return {message.key: text_notation(_verify_source(parts, message)) for message in messages}
+
+
+def assemble_hooks(source: Path = HOOK_SOURCE) -> tuple[bytes, dict[str, int]]:
+    """Re-assemble the hook source with arm-none-eabi binutils; bytes and symbol offsets."""
+    return HOOKS.assemble(source)
+
+
+def check_hook_code(source: Path = HOOK_SOURCE) -> dict[str, object]:
+    return HOOKS.check(source)

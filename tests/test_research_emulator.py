@@ -9,6 +9,7 @@ is set, as in CI, where a missing backend fails instead.
 
 from __future__ import annotations
 
+import ctypes
 import io
 import json
 import os
@@ -263,6 +264,10 @@ def test_libretro_regions_and_limits(image: Path, core: Path, tmp_path: Path):
             assert emulator._input(1, 6, 0, 2) == 0
         emulator.touch(None)
         assert emulator._input(0, 6, 0, 2) == emulator._input(0, 6, 0, 0) == 0
+        # The core may log through the frontend: the callback takes and drops it.
+        log = ctypes.c_void_p()
+        assert emulator._environment(27, ctypes.addressof(log))
+        ctypes.CFUNCTYPE(None, ctypes.c_int, ctypes.c_char_p)(log.value)(1, b"%d frames\n")
         with pytest.raises(ClassicRetroError) as error:
             run_script(emulator, parse_script("break 0x08000000"), tmp_path)
         assert error.value.code is ErrorCode.INVALID_EMULATOR_SCRIPT

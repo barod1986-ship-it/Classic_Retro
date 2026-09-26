@@ -3,13 +3,13 @@
 Version: 1
 
 A **localization target** is one supported game revision together with the way it
-is put into Arabic. Fourteen targets are registered today:
+is put into Arabic. Fifteen targets are registered today:
 
 ```text
 classic-retro targets list
 ```
 
-This guide collects what those fourteen taught, in the order the work happens. It is a
+This guide collects what those fifteen taught, in the order the work happens. It is a
 checklist, not a template: every game gets its own research, and a game that fits
 none of the existing methods gets a new one (see
 [ARABIC_STRATEGIES.md](ARABIC_STRATEGIES.md)).
@@ -123,6 +123,11 @@ and the script belong to the game.
   16-bit offsets), copy the block: the translated messages go to the bank, the others
   stay in English next to the copied table, outside the bank.
 
+  Most of a DS game's code is ARM, not Thumb: `cpu.arm` writes and reads the ARM `BL` of a
+  site (`bl_instruction`, `bl_target`) and lists the branches of a piece of code
+  (`branch_targets`), so a build can check that a stored hook calls exactly the routines it
+  names (Phantom Hourglass).
+
   Another CPU gets a module of its own under `cpu/`.
 - `patching.hooks.HookProgram`: the hook source (`rom/<game>_arabic_hooks.s`), its
   assembled bytes and symbol offsets stored in Python.
@@ -165,6 +170,13 @@ An image with a file system (a Nintendo DS cartridge) changes files, not address
   puts the overlay table past the used area and `replace_arm9` writes the binary into
   the room, up to the next part of the image. Check that no overlay loads where the
   hooks go (Pokémon Platinum).
+- When the ITCM is full and the ARM9 cannot grow (its BSS runs up to the first overlay), a
+  hook takes the place of a routine nothing calls. A decompilation's relocations suggest
+  candidates, but check the unpacked ARM9 and every overlay yourself for a branch to the
+  routine and a word pointing to it: zeldaret/ph's relocations miss the table that reaches
+  SHA-1's block function, which a Download Play boot runs. Phantom Hourglass's hook went
+  over a routine of the C++ runtime, and needs no memory: it reads only the arguments of
+  the call it takes over.
 - `Narc.rebuilt` rebuilds a NARC file with members replaced, each in place when it
   fits up to the next one; the others keep their offsets.
 - Some screens wait for the touch screen: `research run` touches the frame's pixels

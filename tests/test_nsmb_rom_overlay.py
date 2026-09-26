@@ -10,7 +10,7 @@ import pytest
 from classic_retro.arabic.glyph_codes import GlyphCodes
 from classic_retro.cli import main
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
-from classic_retro.engines.nsmb import FONT_FILE, notation_skeleton, parse_notation
+from classic_retro.engines.nsmb import FONT_FILE
 from classic_retro.engines.nsmb_arabic import (
     ARABIC_CODES,
     BASELINE,
@@ -34,7 +34,7 @@ from classic_retro.rebuild.bps import apply_bps
 from classic_retro.rebuild.lz77 import compress_lz77, decompress_lz77
 from classic_retro.rom import nsmb_arabic as overlay
 from classic_retro.rom.nsmb_arabic_script import NsmbArabicMessage
-from classic_retro.text.bmg import Bmg, encode_text
+from classic_retro.text.bmg import Bmg, encode_text, notation_skeleton, parse_notation
 
 # Invented English messages of the three files, and the translated ones.
 FILES = {
