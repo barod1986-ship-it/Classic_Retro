@@ -1,8 +1,12 @@
 from __future__ import annotations
 
+import pytest
+
 from classic_retro.adapters.base import ProbeSource
 from classic_retro.adapters.discovery import detect_platform
 from classic_retro.adapters.registry import build_registry
+from classic_retro.core.errors import ClassicRetroError, ErrorCode
+from classic_retro.patching.nitro import crc16
 
 _GB_LOGO = bytes.fromhex(
     "CE ED 66 66 CC 0D 00 0B 03 73 00 83 00 0C 00 0D "
@@ -40,6 +44,18 @@ def _gba_rom() -> bytes:
     return bytes(data)
 
 
+def _nds_rom(*, header_crc_ok: bool = True) -> bytes:
+    data = bytearray(0x4400)
+    data[0:12] = b"CLASSICRETRO"
+    data[12:16] = b"CRTE"
+    data[16:18] = b"01"
+    data[0x20:0x30] = (0x4000).to_bytes(4, "little") + bytes(8) + (0x400).to_bytes(4, "little")
+    data[0x15C:0x15E] = (0xCF56).to_bytes(2, "little")
+    crc = crc16(data[:0x15E]) ^ (0 if header_crc_ok else 1)
+    data[0x15E:0x160] = crc.to_bytes(2, "little")
+    return bytes(data)
+
+
 def _snes_rom() -> bytes:
     data = bytearray(0x8000)
     header = 0x7FC0
@@ -64,6 +80,15 @@ def test_detect_gba_from_header(tmp_path):
     result = _detect(tmp_path, _gba_rom())
     assert result.id == "gba"
     assert result.metadata["game_code"] == "CRTE"
+
+
+def test_detect_nds_from_header(tmp_path):
+    result = _detect(tmp_path, _nds_rom())
+    assert result.id == "nds"
+    assert result.metadata == {"title": "CLASSICRETRO", "game_code": "CRTE"}
+    with pytest.raises(ClassicRetroError) as caught:
+        _detect(tmp_path, _nds_rom(header_crc_ok=False))
+    assert caught.value.code is ErrorCode.PLATFORM_NOT_DETECTED
 
 
 def test_detect_megadrive_from_system_field(tmp_path):

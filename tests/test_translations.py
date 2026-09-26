@@ -43,6 +43,7 @@ from classic_retro.rom.golden_sun_arabic_script import golden_sun_arabic_message
 from classic_retro.rom.metroid_fusion_arabic_script import metroid_fusion_arabic_messages
 from classic_retro.rom.mlss_arabic_script import mlss_arabic_messages
 from classic_retro.rom.mmbn_arabic_script import mmbn_arabic_sections
+from classic_retro.rom.nsmb_arabic_script import nsmb_arabic_messages
 from classic_retro.rom.pmd_arabic_script import pmd_arabic_strings
 from classic_retro.rom.tactics_ogre_arabic_script import (
     tactics_ogre_arabic_messages,
@@ -65,6 +66,7 @@ TARGETS = (
     "advance-wars",
     "metroid-fusion",
     "tactics-ogre",
+    "nsmb",
 )
 RLE = chr(0x202B)
 
@@ -94,6 +96,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "advance-wars": len(advance_wars_arabic_messages()),
         "metroid-fusion": len(metroid_fusion_arabic_messages()),
         "tactics-ogre": len(tactics_ogre_arabic_messages()) + len(tactics_ogre_arabic_names()),
+        "nsmb": len(nsmb_arabic_messages()),
     }
     assert counts == {
         "firered": 13,
@@ -108,6 +111,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "advance-wars": 14,
         "metroid-fusion": 18,
         "tactics-ogre": 16,
+        "nsmb": 42,
     }
     for target in TARGETS:
         translations = builtin_translation_set(target)

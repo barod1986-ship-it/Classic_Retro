@@ -97,6 +97,7 @@ runs the same way for every target.
 | `advance-wars` | Advance Wars (USA, Rev 1) | ROM overlay | `glyph-font` |
 | `metroid-fusion` | Metroid Fusion (USA) | ROM overlay | `glyph-font` |
 | `tactics-ogre` | Tactics Ogre: The Knight of Lodis (USA) | ROM overlay | `glyph-font` |
+| `nsmb` | New Super Mario Bros. (USA), Nintendo DS | ROM overlay | `glyph-font` |
 
 ```text
 classic-retro targets list                          # every target, its documents and operations
@@ -130,7 +131,7 @@ classic-retro targets strip fomt.workspace.json --out fomt.json
 Every check and build holds a translations file against the originals pinned in the
 target's code. See [the translator's guide](docs/TRANSLATING_AR.md) (in Arabic).
 
-The three rendering strategies are what the twelve targets proved, not the only ones
+The three rendering strategies are what the thirteen targets proved, not the only ones
 possible. Games on other platforms will need other methods, and the strategy and
 target registries accept them from this repository or from other packages through
 entry points. See [the rendering strategies](docs/ARABIC_STRATEGIES.md) and
@@ -144,6 +145,7 @@ an emulator from a script, and scan its image:
 ```text
 classic-retro research run game.gba reach-the-scene.txt --out-dir shots   # mGBA, with breakpoints
 classic-retro research run game.sfc script.txt --core snes9x_libretro.so  # any libretro core
+classic-retro research run game.nds script.txt --core desmume_libretro.so # a DS game
 classic-retro research free-space game.gba
 classic-retro research pointers game.gba --to 0x08123456
 classic-retro research pointer-tables game.gba
@@ -158,7 +160,8 @@ A script holds commands such as `run 300`, `tap START`, `shot menu.png`,
 
 ## Repository status
 
-**Localization platform with twelve reference targets, all on the Game Boy Advance so far.**
+**Localization platform with thirteen reference targets: twelve on the Game Boy Advance and the
+first on the Nintendo DS.**
 
 The first end-to-end example translates the 13 Professor OAK speech strings in
 the new-game intro. This is a renderer/font test, not a complete game translation.
@@ -291,5 +294,18 @@ character's name from the game's list is written out in Arabic at build time. Th
 in the harbour town is in Arabic, up to the name screen (15 messages). See
 [the Tactics Ogre testing guide](docs/TACTICS_OGRE_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/TACTICS_OGRE_ARABIC_RENDERER.md).
+
+The thirteenth reference target, and the first on the Nintendo DS, is **New Super Mario Bros.
+(USA)**. The DS platform comes with it: detection from the header's checksums, the NitroFS file
+system and NARC archives, BMG message files, NFTR fonts, and the backward LZ that packs the ARM9
+binary. The game centres every line of its menus and prompts on its own and draws it at once, so
+the Arabic needs no hook at all: each line is stored in visual order, its glyphs from the leftmost
+to the rightmost, and the game draws it as it is. The Arabic forms take the place of the kana in
+the game's font, which sits in a NARC inside the ARM9; the ARM9 is packed again like the original,
+keeping its compressed bytes wherever the code did not change, so the patch (about 8 KB) carries
+the new font and texts and not the game's code. The file select, the world map's menu, the pause
+menu, the save and quit prompts and the Star Coin gates are in Arabic (42 messages). See
+[the New Super Mario Bros. testing guide](docs/NSMB_ARABIC_TEST_AR.md) and
+[the renderer notes](docs/NSMB_ARABIC_RENDERER.md).
 
 See [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md).

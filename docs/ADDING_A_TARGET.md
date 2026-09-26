@@ -3,13 +3,13 @@
 Version: 1
 
 A **localization target** is one supported game revision together with the way it
-is put into Arabic. Twelve targets are registered today:
+is put into Arabic. Thirteen targets are registered today:
 
 ```text
 classic-retro targets list
 ```
 
-This guide collects what those twelve taught, in the order the work happens. It is a
+This guide collects what those thirteen taught, in the order the work happens. It is a
 checklist, not a template: every game gets its own research, and a game that fits
 none of the existing methods gets a new one (see
 [ARABIC_STRATEGIES.md](ARABIC_STRATEGIES.md)).
@@ -47,7 +47,8 @@ and watchpoints, and scanners for free space, pointers and text.
    free codes or free font slots.
 5. **Renderer.** The one place that decides where a glyph is drawn, and how lines
    are measured, wrapped and centred. Also the typewriter, scrolling, choices,
-   cursors and key arrows.
+   cursors and key arrows. A renderer that draws each line at once and centres it
+   may need no change at all (see visual order in the next section).
 6. **Free space.** Padding in the image (`0xFF` or `0x00` runs) for hooks, fonts
    and text, and whether the image may grow (`research free-space`).
 7. **Reaching the scene.** The inputs that take a new game to the translated text in
@@ -66,7 +67,9 @@ and watchpoints, and scanners for free space, pointers and text.
 Then choose how the renderer turns right to left, how right-to-left text is marked,
 where glyph codes come from, and how runtime names behave. The tables in
 [ARABIC_STRATEGIES.md](ARABIC_STRATEGIES.md) list what each target did. Prefer
-**mirrored draw**: it keeps the game's measuring, wrapping and typewriter.
+**mirrored draw**: it keeps the game's measuring, wrapping and typewriter. When the
+game draws every line at once and centres it (New Super Mario Bros.'s menus), store
+the lines in **visual order** instead: nothing in the game changes.
 
 Write the engine's Arabic module (`engines/<engine>_arabic.py`) on
 [the shared core](ARABIC_STRATEGIES.md#the-shared-core). It already has:
@@ -140,6 +143,20 @@ and the script belong to the game.
 - `extract_originals(rom, translations)` verifies the image and every original and
   returns each entry's original in the engine's notation, for a translator's
   workspace.
+
+An image with a file system (a Nintendo DS cartridge) changes files, not addresses:
+
+- `patching.nitro`: `NitroImage` reads the header and finds a file by its path;
+  `replace_files` writes files back, in place when they fit, past the used area when
+  they grew. `Narc` does the same inside a NARC archive. The header CRC is computed
+  again, and `secure_area_crc` updates the secure area's CRC from the bytes that
+  changed, without the cartridge's encryption.
+- A compressed binary is packed again like the original: `rebuild.blz.repack_blz`
+  keeps the ARM9's compressed items wherever the code did not change, so the patch
+  carries the change (a font, a table) and not the game's code. Pin the binary packed
+  and unpacked, and read it back decompressed in place, as its start-up code does.
+- `font.nftr.NftrFont` and `text.bmg.Bmg` read and write the SDK's fonts and message
+  files; an unchanged file is rebuilt byte for byte.
 
 ## 5. Register the target
 

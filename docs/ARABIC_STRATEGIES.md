@@ -2,7 +2,7 @@
 
 Version: 1
 
-The twelve reference targets put Arabic on screen with three rendering strategies.
+The thirteen reference targets put Arabic on screen with three rendering strategies.
 They are a starting set, not a closed list. Engines on other platforms will need
 other methods, and the registry (`classic_retro.localization.strategies`) accepts
 them the same way it holds these three:
@@ -22,13 +22,15 @@ already worked.
 ### `glyph-font`: right-to-left glyph font (proven)
 
 Used by: `firered`, `minish-cap`, `ff6a`, `golden-sun`, `fire-emblem` (dialogue),
-`pmd-red`, `mlss`, `advance-wars`, `metroid-fusion`, `tactics-ogre`.
+`pmd-red`, `mlss`, `advance-wars`, `metroid-fusion`, `tactics-ogre`, `nsmb`.
 
 Every contextual form of the letters (the 133 presentation forms of
 `arabic/repertoire.py`) is drawn from the reference font into the game's own font
 format. Translated text is shaped, run through bidi, and stored as those glyphs in
 right-to-left paint order (`arabic/paint.py`): the first glyph of a line is its
 rightmost one. The renderer then places the glyphs from the right edge of the line.
+Where the game draws every line at once and centres it, the glyphs can instead be
+stored in visual order and drawn by the game unchanged (`nsmb`, below).
 
 - The engine needs glyphs of their own width (a proportional font, or cells the
   forms fit), spare character codes or a way to add a font next to the game's, and
@@ -77,6 +79,7 @@ HarfBuzz and redrawn in the game's own image format and palette.
 | Mirrored draw | The game's pen keeps advancing left to right. Only where a glyph (or cell) is drawn moves to the mirror of the pen inside the line: `draw_x = left + right - pen - width`, or column `27 - x` for 28-column cells | `minish-cap`, `ff6a`, `golden-sun`, `fire-emblem`, `pmd-red`, `mlss`, `mmbn`, `fomt`, `metroid-fusion`, `tactics-ogre` |
 | Mirrored tilemap | The game draws the line left to right into its tiles as usual; each tile column goes into the tilemap at its mirror inside the text area, with the hardware's horizontal flip, and the glyphs are stored flipped | `advance-wars` |
 | Reversed pen | The pen starts at the line's right edge and subtracts each advance before drawing. Newline, page clear and scroll restore the right edge | `firered` |
+| Visual order | No change to the renderer: every line is stored reversed, its glyphs from the leftmost to the rightmost, and the game draws it left to right as it is | `nsmb` |
 
 Mirrored draw became the default. It changes one point of the renderer, and the
 game's measuring, wrapping, centring, choices, typewriter and scrolling keep their
@@ -91,6 +94,17 @@ line into a strip of tiles, where no single point places a glyph (Advance Wars):
 tilemap write is that point, and the flip keeps the glyphs' pixels untouched. All three
 are valid. A renderer that allows neither
 may need a third way, and that should be recorded here when it appears.
+
+Visual order needs no hook at all, but only fits a renderer that never reveals, wraps
+or aligns a line from its left: New Super Mario Bros. draws each line of its menus and
+prompts at once and centres it on its own, so a reversed line looks exactly as a
+right-to-left one would. The bidi work happens at build time instead
+(`engines/nsmb_arabic.py`). A line must then hold nothing with a direction of its own,
+such as Latin words or digits, which the bidi algorithm would keep left to right inside
+the reversed line. The colours of the game's escapes go with their glyphs and are laid
+out again for the reversed line; a number the game writes in stays one unit, its digits
+left to right as in Arabic. A typewriter, a wrapped paragraph or a left-aligned window
+would show the reversal, so every other target changes the renderer.
 
 Things that sit outside the text also need mirroring. Examples are a menu cursor
 (`pmd-red` moves it to the window's right edge, flipped), a key or page arrow
@@ -108,6 +122,7 @@ cursor at each Arabic option and swaps the left and right keys).
 | The first code of a message (`0x5FF`, `0x0B`, `0x1E`) | `ff6a`, `golden-sun`, `fire-emblem` |
 | The glyph itself: a charmap flag, or a glyph of the right-to-left font | `pmd-red`, `mlss`, `metroid-fusion` (where a glyph is drawn) |
 | The text's own codes or address: cell codes, a bank table sorted by text address, or the address range of the Arabic bank | `fomt`, `mmbn`, `advance-wars`, `metroid-fusion` (its cursors, arrow and fade), `tactics-ogre` |
+| None: the renderer does not change, and a translated line is stored in visual order | `nsmb` |
 
 English text never carries the marker, so untranslated messages keep the original
 path. When a whole block of messages must move to reach the bank (Tactics Ogre finds a
@@ -135,6 +150,9 @@ messages in English outside the bank.
 - The game's whole glyph range, read as a second font in text of the Arabic bank:
   Tactics Ogre (its routines read only `00..7F` as glyphs; codes 2 to 127 go to the
   forms the script uses, measured and drawn by the hooks from tables of their own).
+- Glyphs the English game never shows: New Super Mario Bros. (the 166 kana of its
+  font; their code points, `U+3041..U+30FC`, become the codes of the forms the script
+  uses, and the game's own measuring and drawing take them as they are).
 
 ## Runtime names inside Arabic lines
 
@@ -164,13 +182,17 @@ The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
   - 10 px for FF6 Advance, Golden Sun, Mario & Luigi, Harvest Moon and Advance Wars
   - 9 px for Pokémon Mystery Dungeon
   - 11 px for Mega Man Battle Network, Metroid Fusion and Tactics Ogre
+  - 12 px for New Super Mario Bros., on a baseline two rows above its Latin
+    letters' so that the Arabic descenders fit its 15-row cells
 - Draw marks that vanish at that size by hand:
-  - hamza or madda over alef (Mario & Luigi, Pokémon Mystery Dungeon, Metroid Fusion)
+  - hamza or madda over alef (Mario & Luigi, Pokémon Mystery Dungeon, Metroid Fusion,
+    New Super Mario Bros.)
   - hamza on a carrier (Harvest Moon)
 - Or keep a dot that stays just under the ink level: its strongest pixel becomes ink
   (`draw_form(..., mark_level=...)`; Metroid Fusion's medial beh).
 - Adjust a form that does not fit: raise final yeh, or split a 13-pixel seen into
-  two glyphs (Advance Wars splits every form wider than its 8-pixel glyphs).
+  two glyphs (Advance Wars splits every form wider than its 8-pixel glyphs; New Super
+  Mario Bros. splits the forms wider than its 11-pixel cells into halves).
 - When only the forms a script uses get codes (Tactics Ogre), choose the size over the
   whole repertoire anyway, so a new word never changes the size of the others.
 - Medial and final forms end at their last ink column, so joins touch the glyph
@@ -183,7 +205,9 @@ The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
   leaves the outline out on a joining side, where the neighbour's ink goes on.
   Advance Wars, Mario & Luigi and Tactics Ogre draw the grey around the strokes as a
   second ink value, like their letters; Tactics Ogre leaves out the grey beyond a
-  glyph's advance, since its hook ORs neighbours together.
+  glyph's advance, since its hook ORs neighbours together. New Super Mario Bros.
+  adds the shadow itself (right, below and on the diagonal), so its glyphs hold ink
+  only, like its letters.
 
 ## The shared core
 
@@ -227,7 +251,7 @@ commands.
 ## Candidates for other platforms (not implemented)
 
 None of these has been built or tested. They are research notes for engines the
-twelve targets did not cover, and each becomes an `experimental` strategy together
+thirteen targets did not cover, and each becomes an `experimental` strategy together
 with its first target.
 
 - **Tile-composed variable-width text.** Many NES, Game Boy and SNES engines put

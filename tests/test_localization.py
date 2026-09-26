@@ -93,7 +93,7 @@ class _EntryPoint:
         return self._loaded
 
 
-def test_the_twelve_reference_targets_keep_their_order_and_strategies():
+def test_the_thirteen_reference_targets_keep_their_order_and_strategies():
     registry = build_target_registry(load_external=False)
     described = {target.id: target for target in registry}
     assert list(described) == [
@@ -109,6 +109,7 @@ def test_the_twelve_reference_targets_keep_their_order_and_strategies():
         "advance-wars",
         "metroid-fusion",
         "tactics-ogre",
+        "nsmb",
     ]
     assert registry.using("line-cells") == ["mmbn", "fomt"]
     assert registry.using("text-images") == ["fire-emblem"]
@@ -124,6 +125,11 @@ def test_the_twelve_reference_targets_keep_their_order_and_strategies():
         assert target.previews and all(name.endswith(".png") for name in target.previews)
         reference = target.reference_patch_sha256
         assert reference is None if target_id == "ff6a" else len(reference) == 64
+    # The first DS target draws its Arabic through the game's own routines: no hooks.
+    nsmb = described["nsmb"]
+    assert nsmb.kind == "rom-overlay" and nsmb.platform_id == "nds"
+    assert nsmb.operations() == ["check-translations", "build", "extract"]
+    assert nsmb.strategies == ("glyph-font",) and len(nsmb.reference_patch_sha256 or "") == 64
     adapters = build_registry(load_external=False)
     for target in registry:
         assert (REPO / target.guide).is_file(), target.guide
@@ -453,6 +459,7 @@ def test_the_cli_keeps_every_command_group_and_adds_targets(capsys):
         "advance-wars",
         "metroid-fusion",
         "tactics-ogre",
+        "nsmb",
         "targets",
     ):
         with pytest.raises(SystemExit) as exit_:
@@ -463,6 +470,6 @@ def test_the_cli_keeps_every_command_group_and_adds_targets(capsys):
 
     assert main(["targets", "list"]) == 0
     listed = json.loads(capsys.readouterr().out)
-    assert [target["id"] for target in listed][-1] == "tactics-ogre"
+    assert [target["id"] for target in listed][-1] == "nsmb"
     assert main(["targets", "check-hooks", "not-a-target"]) == 2
     assert capsys.readouterr().err.startswith("INVALID_REFERENCE: Unknown localization target")
