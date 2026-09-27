@@ -371,6 +371,44 @@ def raised_marks(form: DrawnForm, lowest: int) -> DrawnForm:
     return DrawnForm(ink, frozenset(soft - ink), form.advance)
 
 
+def emboldened(ink: Collection[Pixel], *, smallest: int = 3) -> frozenset[Pixel]:
+    """The ink's strokes two pixels wide at least, as a bold pixel face draws them.
+
+    Each pixel alone in its row's run gains the pixel on its right, or else the one on
+    its left, inside the ink's columns (the glyph keeps its box and advance) and only
+    where the new pixel closes no one-pixel gap in the row and touches, by a side or a
+    corner, no other group of ink, pixels added before included: counters stay open and
+    dots stay apart from each other and from their letter. Groups of fewer than
+    ``smallest`` pixels (the dots) stay as they are.
+    """
+    pixels = set(ink)
+    if not pixels:
+        return frozenset()
+    left = min(x for x, _ in pixels)
+    right = max(x for x, _ in pixels)
+    group_of: dict[Pixel, int] = {}
+    for number, group in enumerate(_groups(pixels, _AROUND)):
+        for pixel in group:
+            group_of[pixel] = number if len(group) >= smallest else -1 - number
+    added: set[Pixel] = set()
+    for x, y in sorted(pixels, key=lambda pixel: (pixel[1], pixel[0])):
+        own = group_of[x, y]
+        if own < 0 or (x - 1, y) in pixels or (x + 1, y) in pixels:
+            continue
+        for side in (1, -1):
+            new = (x + side, y)
+            if not left <= new[0] <= right or new in added:
+                continue
+            if (x + 2 * side, y) in pixels | added:
+                continue
+            if any(group_of.get((new[0] + dx, new[1] + dy), own) != own for dx, dy in _AROUND):
+                continue
+            added.add(new)
+            group_of[new] = own
+            break
+    return frozenset(pixels | added)
+
+
 def drop_shadow(
     ink: Collection[Pixel], offsets: Iterable[Pixel], width: int, height: int
 ) -> set[Pixel]:

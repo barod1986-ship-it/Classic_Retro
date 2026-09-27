@@ -176,8 +176,8 @@ A hit reports these fields:
   a disc from its CUE sheet. It needs the console's BIOS: give `--system-dir` a folder
   holding `scph5501.bin` for a US disc (`scph5500.bin` Japanese, `scph5502.bin`
   European). A shot is the picture the core draws (280x240 for Symphony of the Night,
-  350x240 for Gran Turismo's menus). RetroPad `B` is the Cross button and `A` the
-  Circle.
+  350x240 for Gran Turismo's menus and Ridge Racer). RetroPad `B` is the Cross button
+  and `A` the Circle.
   - A program the game unpacks at run time (Gran Turismo's PSLZ) can only be read in
     memory: save the RAM at the scene and disassemble it there. A routine's stack frame
     outlives its return, so the words below the stack pointer name the routines that
@@ -186,6 +186,9 @@ A hit reports these fields:
     `peek` there shows a hook's `jal` in place, or what a hook keeps in memory.
   - The core (0.9.44.1) gives no `video_ram`. VRAM is in a savestate: the chunk after
     `GPURAM[0][0]` holds its 1 MiB, 1024 halfwords a row.
+  - Free memory is found the same way: `poke` a mark over zeros of the program and
+    `dump` it after the menus and a race; compare a corner of VRAM across savestates
+    of several scenes (Ridge Racer's hook data and glyph atlas).
 
 A savestate belongs to the backend and core that wrote it.
 

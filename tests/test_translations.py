@@ -51,6 +51,7 @@ from classic_retro.rom.nsmb_arabic_script import nsmb_arabic_messages
 from classic_retro.rom.phantom_hourglass_arabic_script import ph_arabic_messages
 from classic_retro.rom.platinum_arabic_script import platinum_arabic_strings
 from classic_retro.rom.pmd_arabic_script import pmd_arabic_strings
+from classic_retro.rom.ridge_racer_arabic_script import ridge_racer_arabic_strings
 from classic_retro.rom.sotn_arabic_script import sotn_arabic_messages, sotn_arabic_names
 from classic_retro.rom.tactics_ogre_arabic_script import (
     tactics_ogre_arabic_messages,
@@ -79,6 +80,7 @@ TARGETS = (
     "phantom-hourglass",
     "sotn",
     "gran-turismo",
+    "ridge-racer",
 )
 RLE = chr(0x202B)
 
@@ -113,6 +115,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "phantom-hourglass": len(ph_arabic_messages()),
         "sotn": len(sotn_arabic_messages()) + len(sotn_arabic_names()),
         "gran-turismo": len(gran_turismo_arabic_briefings()),
+        "ridge-racer": len(ridge_racer_arabic_strings()),
     }
     assert counts == {
         "firered": 13,
@@ -132,6 +135,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "phantom-hourglass": 7,
         "sotn": 8,
         "gran-turismo": 3,
+        "ridge-racer": 3,
     }
     for target in TARGETS:
         translations = builtin_translation_set(target)
@@ -362,3 +366,13 @@ def test_gran_turismo_notation_holds_a_title_and_paragraphs_for_every_briefing()
         assert briefing.title and len(briefing.paragraphs) == 3, briefing.key
         lines = (briefing.title, *(" ".join(words) for words in briefing.paragraphs))
         assert "\n".join(lines) == briefing.notation, briefing.key
+
+
+def test_ridge_racer_strings_are_one_line_with_buttons_only_in_the_small_font():
+    strings = ridge_racer_arabic_strings()
+    assert [entry.key for entry in strings] == ["title.start", "menu.exit_pad", "card.load_title"]
+    buttons = set("△□○Ⅱ")
+    for entry in strings:
+        assert entry.notation and "\n" not in entry.notation, entry.key
+        assert entry.font == "small" or not buttons & set(entry.notation), entry.key
+    assert {"△", "□"} <= set(strings[1].notation)

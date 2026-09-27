@@ -2,7 +2,7 @@
 
 Version: 1
 
-The seventeen reference targets put Arabic on screen with four rendering strategies.
+The eighteen reference targets put Arabic on screen with four rendering strategies.
 They are a starting set, not a closed list. Engines on other platforms will need
 other methods, and the registry (`classic_retro.localization.strategies`) accepts
 them the same way it holds these four:
@@ -23,7 +23,7 @@ already worked.
 
 Used by: `firered`, `minish-cap`, `ff6a`, `golden-sun`, `fire-emblem` (dialogue),
 `pmd-red`, `mlss`, `advance-wars`, `metroid-fusion`, `tactics-ogre`, `nsmb`, `platinum`,
-`phantom-hourglass`, `gran-turismo`.
+`phantom-hourglass`, `gran-turismo`, `ridge-racer`.
 
 Every contextual form of the letters (the 133 presentation forms of
 `arabic/repertoire.py`) is drawn from the reference font into the game's own font
@@ -103,6 +103,7 @@ glyphs in right-to-left paint order, as with `glyph-font`.
 | Reversed pen | The pen starts at the line's right edge and subtracts each advance before drawing. Newline, page clear and scroll restore the right edge | `firered`, `sotn` (a pen of the hook's own) |
 | Visual order | No change to the renderer: every line is stored reversed, its glyphs from the leftmost to the rightmost, and the game draws it left to right as it is | `nsmb` |
 | Mirrored words | The game lays words out and justifies them from the left; each Arabic word is drawn at the mirror of its place, its glyphs stored in visual order | `gran-turismo` |
+| Placed strings | The hook draws a whole Arabic string from glyphs of its own: centred on the English it replaces, or ending at the mirror of the English's left edge; the glyphs are stored in visual order | `ridge-racer` |
 
 Mirrored draw became the default. It changes one point of the renderer, and the
 game's measuring, wrapping, centring, choices, typewriter and scrolling keep their
@@ -167,7 +168,7 @@ left edge.
 | Marker | Targets |
 |--------|---------|
 | Direction control codes the source overlay adds (`FC 19 xx` / `FC 1A`, `04 16` / `04 17`) | `firered`, `minish-cap` |
-| The first code of a message (`0x5FF`, `0x0B`, `0x1E`) | `ff6a`, `golden-sun`, `fire-emblem` |
+| The first code of a message (`0x5FF`, `0x0B`, `0x1E`) | `ff6a`, `golden-sun`, `fire-emblem`, `ridge-racer` (`01` centred, `02` mirrored: no English string starts below the space) |
 | The glyph itself: a charmap flag, or a glyph of the right-to-left font | `pmd-red`, `mlss`, `metroid-fusion` (where a glyph is drawn), `platinum` (a line that holds one; a menu whose first entry does), `phantom-hourglass` (each glyph of its range), `sotn` (a code from `80`), `gran-turismo` (a word whose first glyph is `86` or above) |
 | The text's own codes or address: cell codes, a bank table sorted by text address, or the address range of the Arabic bank | `fomt`, `mmbn`, `advance-wars`, `metroid-fusion` (its cursors, arrow and fade), `tactics-ogre` |
 | None: the renderer does not change, and a translated line is stored in visual order | `nsmb` |
@@ -206,6 +207,9 @@ messages in English outside the bank.
   (the Latin-1 letters and signs of the two fonts its briefings use, `86..FF` but the
   no-break space `A0`: the glyph tables take the Arabic glyphs, drawn over the Latin-1
   ones in the fonts' shared page, and the kerning tables the space's empty row).
+- Tables of the overlay's own, for glyphs it draws itself: Ridge Racer (`20..9F`, one table
+  a font, the glyphs in an atlas the hook uploads to free VRAM; the game's fonts are fixed
+  cells of capitals in full pages).
 - Codes the English script never uses, whose cells lie outside the game's font:
   Symphony of the Night (`80..FF`; the routine would copy them from VRAM below its
   font, and the hook draws them from its own).
@@ -229,7 +233,8 @@ right-to-left line.
 - Static Latin words as islands in the game's glyphs: Mega Man Battle Network.
 - Refused for now, with the reason in each target's notes: FF6 Advance, Fire Emblem,
   Pokémon Mystery Dungeon, Mario & Luigi, Phantom Hourglass, Symphony of the Night
-  (their prologues name no one at run time) and Gran Turismo (a briefing names no one).
+  (their prologues name no one at run time), Gran Turismo (a briefing names no one) and
+  Ridge Racer (its three strings name no one).
 
 Or draw the game's own glyphs left to right where they are: Pokémon Platinum keeps the
 name commands in the translation, and its glyph hook draws any run of the game's glyphs
@@ -257,11 +262,13 @@ The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
     Platinum (glyphs of 16x16 pixels, on its letters' baseline, row 12), Phantom
     Hourglass (glyphs of 14x16 pixels on row 11; its sizes stop at 11, the size of the
     game's letters) and Symphony of the Night (glyphs of 16x16 pixels on row 12, the
-    top row left empty to keep its lines apart)
+    top row left empty to keep its lines apart) and Ridge Racer's small font (a cell of 15
+    rows, on the row under its capitals)
   - 12 px for New Super Mario Bros., on a baseline two rows above its Latin
     letters' so that the Arabic descenders fit its 15-row cells
   - 18 px for Gran Turismo's titles (a cell of 26 rows on row 19; the hook draws the
-    Arabic paragraphs lower to make room)
+    Arabic paragraphs lower to make room) and Ridge Racer's large font (26 rows, on its
+    letters' baseline)
 - Draw marks that vanish at that size by hand:
   - hamza or madda over alef (Mario & Luigi, Pokémon Mystery Dungeon, Metroid Fusion,
     New Super Mario Bros.)
@@ -273,6 +280,10 @@ The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
   redraws them as single pixels a pixel apart, a free row from the letter
   (`separated_dots`). Its title's final and isolated yeh keep their shape and their
   dots move up into the cell (`raised_marks`).
+- Make the strokes as wide as the game's: Ridge Racer's capitals are two pixels wide, so
+  every stroke one pixel wide gains a second pixel inside the glyph's box, never closing
+  a gap in its row or touching another group of ink; dots keep their size
+  (`emboldened`).
 - Adjust a form that does not fit: raise final yeh (Pokémon Platinum raises final and
   isolated meem and yeh, a row at a time up to two; Symphony of the Night raises final
   and isolated yeh a row), or split a 13-pixel seen into two glyphs (Advance Wars
@@ -303,7 +314,11 @@ The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
   that grey for the ink and a darker grey of the same palette for the smoothing, none
   of it beyond the glyph's width. Gran Turismo's letters are white with a black
   outline: its Arabic glyphs are outlined like Metroid Fusion's, and each is stored
-  cropped to its rows, the glyph table's row offset keeping it on the line.
+  cropped to its rows, the glyph table's row offset keeping it on the line. Ridge
+  Racer's small letters are one colour with no shadow (the game draws a line twice where
+  it wants one), and its Arabic glyphs are that colour alone; its large letters are
+  chrome, and its Arabic glyphs take the fill by the row, lighter top and left edges and
+  a black outline all round but on the joining sides.
 
 ## The shared core
 
@@ -347,7 +362,7 @@ commands.
 ## Candidates for other platforms (not implemented)
 
 None of these has been built or tested. They are research notes for engines the
-seventeen targets did not cover, and each becomes an `experimental` strategy together
+eighteen targets did not cover, and each becomes an `experimental` strategy together
 with its first target.
 
 - **Tile-composed variable-width text.** Many NES, Game Boy and SNES engines put
