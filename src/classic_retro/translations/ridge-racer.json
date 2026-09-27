@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "target": "ridge-racer",
+  "language": "ar",
+  "notation": "Logical Arabic in the engine notation (engines.ridge_racer): one line, the pad's buttons written as the symbols they draw (△ □ ○, and Ⅱ for the NeGcon's), in the small font only. A string holds Arabic letters, spaces, Western or Arabic-Indic digits and the punctuation . : ! - ، ؛ ؟ (the large font: . : ! -) only. It keeps to its original's room: 20 bytes, two for the hook's header and one for the zero, so 17 glyphs, a glyph being a letter's form, a space, a digit or a sign. The hook centres the text on the English, or ends it where the English's mirror ends; it must stay on the 320-pixel screen. No vowel marks: the fonts have none.",
+  "glossary": [
+    {
+      "term": "Memory card",
+      "text": "البطاقة"
+    },
+    {
+      "term": "Start button",
+      "text": "زر البدء"
+    }
+  ],
+  "entries": [
+    {
+      "id": "title.start",
+      "context": "The title screen's blinking prompt to press the Start button (small font, centred)",
+      "text": "اضغط زر البدء"
+    },
+    {
+      "id": "menu.exit_pad",
+      "context": "The main menu's help line with the pad: the triangle or the square button goes back (small font, centred; the game draws it again a pixel lower right as a shadow)",
+      "text": "△ أو □ للخروج"
+    },
+    {
+      "id": "card.load_title",
+      "context": "The title of the memory card screen that loads the fastest laps (large chrome font, ending on the right)",
+      "text": "تحميل من البطاقة"
+    }
+  ]
+}

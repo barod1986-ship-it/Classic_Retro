@@ -91,6 +91,7 @@ runs the same way for every target.
 | `phantom-hourglass` | The Legend of Zelda: Phantom Hourglass (USA), Nintendo DS | ROM overlay | `glyph-font` |
 | `sotn` | Castlevania: Symphony of the Night (USA), PlayStation | ROM overlay | `composed-lines` |
 | `gran-turismo` | Gran Turismo (USA) (Rev 1), PlayStation | ROM overlay | `glyph-font` |
+| `ridge-racer` | Ridge Racer (USA), PlayStation | ROM overlay | `glyph-font` |
 
 ```text
 classic-retro targets list                          # every target, its documents and operations
@@ -127,7 +128,7 @@ classic-retro targets strip fomt.workspace.json --out fomt.json
 Every check and build holds a translations file against the originals pinned in the
 target's code. See [the translator's guide](docs/TRANSLATING_AR.md) (in Arabic).
 
-The four rendering strategies are what the seventeen targets proved, not the only ones
+The four rendering strategies are what the eighteen targets proved, not the only ones
 possible. Games on other platforms will need other methods, and the strategy and
 target registries accept them from this repository or from other packages through
 entry points. See [the rendering strategies](docs/ARABIC_STRATEGIES.md) and
@@ -157,8 +158,8 @@ A script holds commands such as `run 300`, `tap START`, `touch 128 272`, `shot m
 
 ## Repository status
 
-**Localization platform with seventeen reference targets: twelve on the Game Boy Advance, three
-on the Nintendo DS and two on the PlayStation.**
+**Localization platform with eighteen reference targets: twelve on the Game Boy Advance, three
+on the Nintendo DS and three on the PlayStation.**
 
 The first end-to-end example translates the 13 Professor OAK speech strings in
 the new-game intro. This is a renderer/font test, not a complete game translation.
@@ -365,5 +366,21 @@ its original's place, keeping the original's bytes wherever nothing changed, so 
 its sectors and the patch is about 45 KB. See
 [the Gran Turismo testing guide](docs/GRAN_TURISMO_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/GRAN_TURISMO_ARABIC_RENDERER.md).
+
+The eighteenth reference target, and the third on the PlayStation, is **Ridge Racer (USA)**,
+which no decompilation covers either. Three strings of its program are in Arabic, chosen to be
+unlike: the title screen's prompt, the main menu's help line with the pad's buttons and the
+shadow the game draws under it, and the memory card screen's title in the large chrome font;
+every other string stays in English. The game draws a string a character at a time, a fixed
+cell apart, from fonts of capitals whose pages are full, so the Arabic takes the `glyph-font`
+strategy with fonts of its own. One MIPS hook takes both text routines: a string whose first
+byte is a placement (centred on the English, or ending at its mirror) is drawn from glyphs of
+any width, and any other string goes to the game as before. The glyphs, 11 pixels in the
+text's colour with every stroke two pixels wide like the game's capitals, and 18 pixels in the
+large font's chrome with a black outline, go to a corner of VRAM the game leaves free, uploaded
+once. The hook and the glyphs live in zeros of the program's data that nothing uses, so the
+program keeps its size and its sectors and the patch is under 4 KB. See
+[the Ridge Racer testing guide](docs/RIDGE_RACER_ARABIC_TEST_AR.md) and
+[the renderer notes](docs/RIDGE_RACER_ARABIC_RENDERER.md).
 
 See [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md).

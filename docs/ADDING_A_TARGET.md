@@ -3,13 +3,13 @@
 Version: 1
 
 A **localization target** is one supported game revision together with the way it
-is put into Arabic. Seventeen targets are registered today:
+is put into Arabic. Eighteen targets are registered today:
 
 ```text
 classic-retro targets list
 ```
 
-This guide collects what those seventeen taught, in the order the work happens. It is a
+This guide collects what those eighteen taught, in the order the work happens. It is a
 checklist, not a template: every game gets its own research, and a game that fits
 none of the existing methods gets a new one (see
 [ARABIC_STRATEGIES.md](ARABIC_STRATEGIES.md)).
@@ -238,6 +238,16 @@ sector rather than by name:
   it was. Gran Turismo's tells an Arabic word by its first glyph's code: an English
   word is placed and spaced as before, so the 21 untranslated briefings keep their
   layout, which the Arabic spacing would not hold.
+- The room for what the overlay adds may lie inside the program. Ridge Racer's has 9472
+  bytes of zeros in its data that no code or data word points into (scan for `lui`
+  pairs, words and `gp` offsets) and that stay zeros while the game runs (a mark
+  written there in RAM survives the boot, the menus and a race): the hook and its data
+  go there, and the program keeps its size and its sectors.
+- When the game's fonts are fixed cells of capitals and their pages are full, draw from
+  glyphs of your own. Ridge Racer's hook draws a string marked Arabic as sprites of any
+  width from an atlas it uploads once (`LoadImage`) to a corner of VRAM no texture
+  takes; compare that corner in savestates from the title, the menus and after a race
+  to be sure the game never writes there.
 
 ## 5. Register the target
 

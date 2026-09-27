@@ -15,6 +15,7 @@ from classic_retro.engines.phantom_hourglass import PhantomHourglassEngineAdapte
 from classic_retro.engines.pmd import PmdEngineAdapter
 from classic_retro.engines.pokemon_gen3 import PokemonGen3EngineAdapter
 from classic_retro.engines.pokemon_gen4 import PokemonGen4EngineAdapter
+from classic_retro.engines.ridge_racer import RidgeRacerEngineAdapter
 from classic_retro.engines.sotn import SotnEngineAdapter
 from classic_retro.engines.tactics_ogre import TacticsOgreEngineAdapter
 from classic_retro.engines.tmc import TmcEngineAdapter
@@ -32,6 +33,7 @@ from classic_retro.games.new_super_mario_bros import NewSuperMarioBrosUsaGameAda
 from classic_retro.games.pokemon_firered import PokemonFireRedRev1GameAdapter
 from classic_retro.games.pokemon_mystery_dungeon_red import PokemonMysteryDungeonRedUsaGameAdapter
 from classic_retro.games.pokemon_platinum import PokemonPlatinumUsaGameAdapter
+from classic_retro.games.ridge_racer import RidgeRacerUsaGameAdapter
 from classic_retro.games.tactics_ogre import TacticsOgreUsaGameAdapter
 from classic_retro.games.zelda_minish_cap import ZeldaMinishCapUsaGameAdapter
 from classic_retro.games.zelda_phantom_hourglass import ZeldaPhantomHourglassUsaGameAdapter
@@ -76,6 +78,7 @@ def register_builtin_adapters(registry: AdapterRegistry) -> None:
     registry.register_engine(PhantomHourglassEngineAdapter())
     registry.register_engine(SotnEngineAdapter())
     registry.register_engine(GranTurismoEngineAdapter())
+    registry.register_engine(RidgeRacerEngineAdapter())
     registry.register_game(PokemonFireRedRev1GameAdapter())
     registry.register_game(ZeldaMinishCapUsaGameAdapter())
     registry.register_game(FinalFantasyVIAdvanceUsaGameAdapter())
@@ -93,3 +96,4 @@ def register_builtin_adapters(registry: AdapterRegistry) -> None:
     registry.register_game(ZeldaPhantomHourglassUsaGameAdapter())
     registry.register_game(CastlevaniaSotnUsaGameAdapter())
     registry.register_game(GranTurismoUsaGameAdapter())
+    registry.register_game(RidgeRacerUsaGameAdapter())

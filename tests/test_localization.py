@@ -94,7 +94,7 @@ class _EntryPoint:
         return self._loaded
 
 
-def test_the_seventeen_reference_targets_keep_their_order_and_strategies():
+def test_the_eighteen_reference_targets_keep_their_order_and_strategies():
     registry = build_target_registry(load_external=False)
     described = {target.id: target for target in registry}
     assert list(described) == [
@@ -115,6 +115,7 @@ def test_the_seventeen_reference_targets_keep_their_order_and_strategies():
         "phantom-hourglass",
         "sotn",
         "gran-turismo",
+        "ridge-racer",
     ]
     assert registry.using("line-cells") == ["mmbn", "fomt"]
     assert registry.using("text-images") == ["fire-emblem"]
@@ -165,6 +166,12 @@ def test_the_seventeen_reference_targets_keep_their_order_and_strategies():
     assert gran_turismo.operations() == ["check-hooks", "check-translations", "build", "extract"]
     assert gran_turismo.strategies == ("glyph-font",) and gran_turismo.reference_patches == {}
     assert len(gran_turismo.reference_patch_sha256 or "") == 64
+    # The third draws Arabic strings from glyphs of its own, uploaded to free VRAM.
+    ridge_racer = described["ridge-racer"]
+    assert (ridge_racer.kind, ridge_racer.platform_id) == ("rom-overlay", "ps1")
+    assert ridge_racer.operations() == ["check-hooks", "check-translations", "build", "extract"]
+    assert ridge_racer.strategies == ("glyph-font",) and ridge_racer.reference_patches == {}
+    assert len(ridge_racer.reference_patch_sha256 or "") == 64
     adapters = build_registry(load_external=False)
     for target in registry:
         assert (REPO / target.guide).is_file(), target.guide
@@ -514,6 +521,7 @@ def test_game_groups_hold_only_their_engine_tools(capsys):
         "phantom-hourglass",
         "sotn",
         "gran-turismo",
+        "ridge-racer",
     ):
         tools = ["encode-arabic", "source-check"] if group in sources else ["encode-arabic"]
         assert sorted(_subcommands(groups[group])) == tools, group
@@ -526,7 +534,7 @@ def test_game_groups_hold_only_their_engine_tools(capsys):
 
     assert main(["targets", "list"]) == 0
     listed = json.loads(capsys.readouterr().out)
-    assert [target["id"] for target in listed][-1] == "gran-turismo"
+    assert [target["id"] for target in listed][-1] == "ridge-racer"
     assert main(["targets", "check-hooks", "not-a-target"]) == 2
     assert capsys.readouterr().err.startswith("INVALID_REFERENCE: Unknown localization target")
 
@@ -554,4 +562,4 @@ def test_every_rom_overlay_builds_from_a_revision_detect_knows():
         assert images.items() <= revisions.items(), target.id
         assert set(target.reference_patches) <= set(images), target.id
         checked.append(target.id)
-    assert len(checked) == 15
+    assert len(checked) == 16

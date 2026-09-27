@@ -108,7 +108,7 @@ and every P and Q codeword's syndromes; every sector of the files the overlay re
 checked on the user's disc. A file that grows moves to the empty sectors at the end of
 the data track and its ISO 9660 record is repointed (Castlevania: Symphony of the
 Night); a file that keeps its size is written back to its own sectors, each with its own
-subheader (Gran Turismo). The track keeps its size, and the CUE sheet and the other
+subheader (Gran Turismo, Ridge Racer). The track keeps its size, and the CUE sheet and the other
 tracks do not change.
 
 ## Deliberate limitations
