@@ -90,6 +90,7 @@ runs the same way for every target.
 | `platinum` | Pokémon Platinum Version (USA, Rev 0), Nintendo DS | ROM overlay | `glyph-font` |
 | `phantom-hourglass` | The Legend of Zelda: Phantom Hourglass (USA), Nintendo DS | ROM overlay | `glyph-font` |
 | `sotn` | Castlevania: Symphony of the Night (USA), PlayStation | ROM overlay | `composed-lines` |
+| `gran-turismo` | Gran Turismo (USA) (Rev 1), PlayStation | ROM overlay | `glyph-font` |
 
 ```text
 classic-retro targets list                          # every target, its documents and operations
@@ -126,7 +127,7 @@ classic-retro targets strip fomt.workspace.json --out fomt.json
 Every check and build holds a translations file against the originals pinned in the
 target's code. See [the translator's guide](docs/TRANSLATING_AR.md) (in Arabic).
 
-The four rendering strategies are what the sixteen targets proved, not the only ones
+The four rendering strategies are what the seventeen targets proved, not the only ones
 possible. Games on other platforms will need other methods, and the strategy and
 target registries accept them from this repository or from other packages through
 entry points. See [the rendering strategies](docs/ARABIC_STRATEGIES.md) and
@@ -156,8 +157,8 @@ A script holds commands such as `run 300`, `tap START`, `touch 128 272`, `shot m
 
 ## Repository status
 
-**Localization platform with sixteen reference targets: twelve on the Game Boy Advance, three on
-the Nintendo DS and one on the PlayStation.**
+**Localization platform with seventeen reference targets: twelve on the Game Boy Advance, three
+on the Nintendo DS and two on the PlayStation.**
 
 The first end-to-end example translates the 13 Professor OAK speech strings in
 the new-game intro. This is a renderer/font test, not a complete game translation.
@@ -347,5 +348,22 @@ CUE sheet and the audio track stay as they are, and the data track's patch is ab
 research tools run the game in Beetle PSX from its CUE sheet. See
 [the Symphony of the Night testing guide](docs/SOTN_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/SOTN_ARABIC_RENDERER.md).
+
+The seventeenth reference target, and the second on the PlayStation, is **Gran Turismo (USA)
+(Rev 1)**, which no decompilation covers: its formats and addresses were read from the disc and
+from the race program's code in memory. Three license test briefings are in Arabic, chosen to be
+unlike (B-1, B-3 and B-8: a number with a thousands comma, the longest body, the widest title);
+the other 21 stay in English. The game draws a briefing with its own proportional fonts, so the
+Arabic takes the `glyph-font` strategy: its glyphs take the Latin-1 codes of the two fonts the
+briefings use, drawn into the fonts' shared page over the Latin-1 letters the US game never
+draws, white with a black outline, 10 pixels for the paragraphs and 18 for the title; at 10
+pixels merged dots are drawn apart. One MIPS hook, written over the layout's word loop, draws a
+word whose first glyph is Arabic at the mirror of the place the game gives it, so the game still
+breaks, indents and justifies the lines and English text is drawn as before. The race program
+is packed with PSLZ and the font page with GT-ZIP (both in `rebuild`); each is packed again in
+its original's place, keeping the original's bytes wherever nothing changed, so every file keeps
+its sectors and the patch is about 45 KB. See
+[the Gran Turismo testing guide](docs/GRAN_TURISMO_ARABIC_TEST_AR.md) and
+[the renderer notes](docs/GRAN_TURISMO_ARABIC_RENDERER.md).
 
 See [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md).

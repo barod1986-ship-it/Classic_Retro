@@ -20,6 +20,7 @@ The advance rule:
 from __future__ import annotations
 
 import math
+import unicodedata
 from collections.abc import Callable, Collection, Iterable, Sequence
 from dataclasses import dataclass
 from io import BytesIO
@@ -263,6 +264,111 @@ def raised_form(character: str, form: DrawnForm, *, height: int, baseline: int) 
         ink.add(join)
         soft.discard(join)
     return DrawnForm(frozenset(ink), frozenset(soft), form.advance)
+
+
+# Letters with two or three dots: how many, and whether above the letter.
+_DOTS = {
+    "ت": (2, True),  # teh
+    "ث": (3, True),  # theh
+    "ة": (2, True),  # teh marbuta
+    "ش": (3, True),  # sheen
+    "ق": (2, True),  # qaf
+    "ي": (2, False),  # yeh
+}
+
+
+def _groups(pixels: Iterable[Pixel], neighbours: Sequence[Pixel]) -> list[set[Pixel]]:
+    """The groups of pixels that touch through ``neighbours``, largest first."""
+    left = set(pixels)
+    groups = []
+    while left:
+        stack = [left.pop()]
+        group = set(stack)
+        while stack:
+            x, y = stack.pop()
+            for dx, dy in neighbours:
+                neighbour = (x + dx, y + dy)
+                if neighbour in left:
+                    left.remove(neighbour)
+                    group.add(neighbour)
+                    stack.append(neighbour)
+        groups.append(group)
+    return sorted(groups, key=lambda group: (-len(group), min(group)))
+
+
+_SIDES = ((1, 0), (-1, 0), (0, 1), (0, -1))
+_AROUND = tuple((dx, dy) for dx in (-1, 0, 1) for dy in (-1, 0, 1) if dx or dy)
+
+
+def separated_dots(character: str, form: DrawnForm) -> DrawnForm:
+    """A two- or three-dot letter with its dots redrawn when they merged or one was lost.
+
+    At a small size the dots of teh, theh, teh marbuta, sheen, qaf and yeh can
+    run into one bar or lose one. When the dots on the letter's side (the
+    groups of ink, touching by a side, apart from the body) are not as many as
+    the letter has, and fewer than two pixels a dot, they become single pixels
+    a pixel apart, two side by side or three in a triangle, centred where the
+    font drew them and a free row away from the body. Other forms, and dots
+    drawn large enough to tell apart, come back as they are.
+    """
+    parts = unicodedata.decomposition(character).split()
+    base = chr(int(parts[-1], 16)) if parts else character
+    rule = _DOTS.get(base)
+    if rule is None:
+        return form
+    count, above = rule
+    body = _groups(form.ink, _AROUND)[0]
+    top = min(y for _, y in body)
+    bottom = max(y for _, y in body)
+    dots = {(x, y) for x, y in form.ink - body if (y < top if above else y > bottom)}
+    if not dots or len(_groups(dots, _SIDES)) == count or len(dots) >= 2 * count:
+        return form
+    near = {
+        (x, y) for x, y in form.soft if any(abs(x - a) <= 1 and abs(y - b) <= 1 for a, b in dots)
+    }
+    columns = [x for x, _ in dots | near]
+    centre = (min(columns) + max(columns) + 1) // 2
+    pattern = [(centre - 1, 0), (centre + 1, 0)]
+    if count == 3:
+        pattern.append((centre, -1 if above else 1))
+    row = max(y for _, y in dots) if above else min(y for _, y in dots)
+
+    def touches(at: int) -> bool:
+        return any(abs(x - a) <= 1 and abs(at + y - b) <= 1 for x, y in pattern for a, b in body)
+
+    while touches(row):
+        row += -1 if above else 1
+    ink = (form.ink - dots) | {(x, row + y) for x, y in pattern}
+    shift = max(0, -min(x for x, _ in ink))
+    ink = frozenset((x + shift, y) for x, y in ink)
+    soft = frozenset((x + shift, y) for x, y in form.soft - near) - ink
+    return DrawnForm(ink, soft, max(form.advance + shift, max(x for x, _ in ink) + 1))
+
+
+def raised_marks(form: DrawnForm, lowest: int) -> DrawnForm:
+    """A form whose marks below the letter end on row ``lowest`` at the latest.
+
+    A font's deep marks (the dots under yeh at a title's size) can reach below
+    a game's cell where the letter itself fits. They move up until their last
+    row is ``lowest``, and lose the rows that would then touch the letter, so a
+    free row stays between the two. Forms whose ink ends by ``lowest``, or
+    whose letter does not, come back as they are.
+    """
+    if max(y for _, y in form.ink) <= lowest:
+        return form
+    body = _groups(form.ink, _AROUND)[0]
+    bottom = max(y for _, y in body)
+    marks = {(x, y) for x, y in form.ink if y > bottom}
+    if bottom > lowest or not marks:
+        return form
+    shift = max(y for _, y in marks) - lowest
+    moved = {(x, y - shift) for x, y in marks if y - shift > bottom + 1}
+    if not moved:
+        return form
+    below = {(x, y) for x, y in form.soft if y > bottom}
+    soft = (form.soft - below) | {(x, y - shift) for x, y in below if y - shift > bottom + 1}
+    ink = frozenset((form.ink - marks) | moved)
+    return DrawnForm(ink, frozenset(soft - ink), form.advance)
 
 
 def drop_shadow(

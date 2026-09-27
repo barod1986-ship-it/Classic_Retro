@@ -3,13 +3,13 @@
 Version: 1
 
 A **localization target** is one supported game revision together with the way it
-is put into Arabic. Sixteen targets are registered today:
+is put into Arabic. Seventeen targets are registered today:
 
 ```text
 classic-retro targets list
 ```
 
-This guide collects what those sixteen taught, in the order the work happens. It is a
+This guide collects what those seventeen taught, in the order the work happens. It is a
 checklist, not a template: every game gets its own research, and a game that fits
 none of the existing methods gets a new one (see
 [ARABIC_STRATEGIES.md](ARABIC_STRATEGIES.md)).
@@ -38,6 +38,9 @@ and watchpoints, and scanners for free space, pointers and text.
      (FireRed, Minish Cap).
    - Otherwise: a `rom-overlay` patches the user's image and ships a BPS patch.
      The sources still give addresses and names.
+   - None (Gran Turismo): read the code where it runs. A packed program is unpacked in
+     memory: dump the RAM at the scene (`research run`) and disassemble it there; the
+     stale frames on the stack name the routines that led to the screen.
 2. **Storage.** Where the strings live and how they are compressed (Huffman, LZ77,
    script archives), and every reference that points to them.
 3. **Encoding.** The byte form of characters and commands (one byte, lead bytes,
@@ -216,6 +219,25 @@ sector rather than by name:
 - Data added after a program's end must lie in memory the game leaves to that program:
   Symphony of the Night loads every stage at the same address, and larger stages
   cover the room its prologue's stage grows into.
+- A file that keeps its size keeps its sectors: `RawTrack.write` writes it back with each
+  sector's own subheader, and no directory record changes (Gran Turismo).
+- A packed program or file is packed again in its original's place:
+  `rebuild.pslz.repack_pslz` and `rebuild.gtzip.repack_gtzip` keep the stream's length
+  and its bytes but around the changes, and read back the program as its stub unpacks
+  it, in one buffer (`unpack_in_place`). Re-parsing only saves room where the game's
+  packer was not the cheapest, so place the new data where it replaces data of the same
+  kind: Gran Turismo's font page had blank rows that packed to almost nothing, and
+  glyphs drawn there made the page too big for its stream; drawn over the Latin-1
+  glyphs the Arabic codes replace, it packs as before. A packed file keeps its sectors,
+  and the patch carries the changed sectors (about 45 KB for three files).
+- Fonts may share a page's pixels, a plane of bits each, every palette reading only its
+  own: write only your plane, and leave alone every glyph a font still uses, the
+  palettes and what the game draws over the page while it runs (compare the page in a
+  savestate's VRAM with the file).
+- When only part of a text engine's text is translated, the hook must leave the rest as
+  it was. Gran Turismo's tells an Arabic word by its first glyph's code: an English
+  word is placed and spaced as before, so the 21 untranslated briefings keep their
+  layout, which the Arabic spacing would not hold.
 
 ## 5. Register the target
 

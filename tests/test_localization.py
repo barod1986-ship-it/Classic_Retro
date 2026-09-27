@@ -94,7 +94,7 @@ class _EntryPoint:
         return self._loaded
 
 
-def test_the_sixteen_reference_targets_keep_their_order_and_strategies():
+def test_the_seventeen_reference_targets_keep_their_order_and_strategies():
     registry = build_target_registry(load_external=False)
     described = {target.id: target for target in registry}
     assert list(described) == [
@@ -114,6 +114,7 @@ def test_the_sixteen_reference_targets_keep_their_order_and_strategies():
         "platinum",
         "phantom-hourglass",
         "sotn",
+        "gran-turismo",
     ]
     assert registry.using("line-cells") == ["mmbn", "fomt"]
     assert registry.using("text-images") == ["fire-emblem"]
@@ -158,6 +159,12 @@ def test_the_sixteen_reference_targets_keep_their_order_and_strategies():
     assert sotn.strategies == ("composed-lines",) and sotn.reference_patches == {}
     assert len(sotn.reference_patch_sha256 or "") == 64
     assert registry.using("composed-lines") == ["sotn"]
+    # The second puts glyphs in the game's own fonts and mirrors the words it lays out.
+    gran_turismo = described["gran-turismo"]
+    assert (gran_turismo.kind, gran_turismo.platform_id) == ("rom-overlay", "ps1")
+    assert gran_turismo.operations() == ["check-hooks", "check-translations", "build", "extract"]
+    assert gran_turismo.strategies == ("glyph-font",) and gran_turismo.reference_patches == {}
+    assert len(gran_turismo.reference_patch_sha256 or "") == 64
     adapters = build_registry(load_external=False)
     for target in registry:
         assert (REPO / target.guide).is_file(), target.guide
@@ -505,6 +512,8 @@ def test_game_groups_hold_only_their_engine_tools(capsys):
         "nsmb",
         "platinum",
         "phantom-hourglass",
+        "sotn",
+        "gran-turismo",
     ):
         tools = ["encode-arabic", "source-check"] if group in sources else ["encode-arabic"]
         assert sorted(_subcommands(groups[group])) == tools, group
@@ -517,7 +526,7 @@ def test_game_groups_hold_only_their_engine_tools(capsys):
 
     assert main(["targets", "list"]) == 0
     listed = json.loads(capsys.readouterr().out)
-    assert [target["id"] for target in listed][-1] == "sotn"
+    assert [target["id"] for target in listed][-1] == "gran-turismo"
     assert main(["targets", "check-hooks", "not-a-target"]) == 2
     assert capsys.readouterr().err.startswith("INVALID_REFERENCE: Unknown localization target")
 
@@ -545,4 +554,4 @@ def test_every_rom_overlay_builds_from_a_revision_detect_knows():
         assert images.items() <= revisions.items(), target.id
         assert set(target.reference_patches) <= set(images), target.id
         checked.append(target.id)
-    assert len(checked) == 14
+    assert len(checked) == 15

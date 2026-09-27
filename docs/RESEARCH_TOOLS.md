@@ -175,8 +175,13 @@ A hit reports these fields:
 - For the PlayStation, `libretro-beetle-psx` (Beetle PSX, `mednafen_psx_libretro`) runs
   a disc from its CUE sheet. It needs the console's BIOS: give `--system-dir` a folder
   holding `scph5501.bin` for a US disc (`scph5500.bin` Japanese, `scph5502.bin`
-  European). A shot is the picture the core draws (280x240 for Symphony of the Night).
-  RetroPad `B` is the Cross button and `A` the Circle.
+  European). A shot is the picture the core draws (280x240 for Symphony of the Night,
+  350x240 for Gran Turismo's menus). RetroPad `B` is the Cross button and `A` the
+  Circle.
+  - A program the game unpacks at run time (Gran Turismo's PSLZ) can only be read in
+    memory: save the RAM at the scene and disassemble it there. A routine's stack frame
+    outlives its return, so the words below the stack pointer name the routines that
+    led to the screen.
   - `system_ram` is the 2 MiB of main RAM: `system_ram:0x1C24CC` is `0x801C24CC`. A
     `peek` there shows a hook's `jal` in place, or what a hook keeps in memory.
   - The core (0.9.44.1) gives no `video_ram`. VRAM is in a savestate: the chunk after
