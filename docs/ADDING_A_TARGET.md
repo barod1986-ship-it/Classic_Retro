@@ -3,13 +3,13 @@
 Version: 1
 
 A **localization target** is one supported game revision together with the way it
-is put into Arabic. Eighteen targets are registered today:
+is put into Arabic. Nineteen targets are registered today:
 
 ```text
 classic-retro targets list
 ```
 
-This guide collects what those eighteen taught, in the order the work happens. It is a
+This guide collects what those nineteen taught, in the order the work happens. It is a
 checklist, not a template: every game gets its own research, and a game that fits
 none of the existing methods gets a new one (see
 [ARABIC_STRATEGIES.md](ARABIC_STRATEGIES.md)).
@@ -248,6 +248,17 @@ sector rather than by name:
   width from an atlas it uploads once (`LoadImage`) to a corner of VRAM no texture
   takes; compare that corner in savestates from the title, the menus and after a race
   to be sure the game never writes there.
+- A translated message need not fit its English's place. Chrono Trigger's hook reads a
+  message whose address is in the overlay's list from its Arabic text in a free bank
+  instead, so the English stays where it was, as it was, and strings that share bytes
+  (its opening's first string runs on through the next five) keep working.
+- A hook in another bank than the code it hooks enters with a long call or jump and
+  leaves the same way: to the engine's code, or to one of the engine's own `RTS` where
+  the engine called the routine the hook replaces (Chrono Trigger, whose text engine's
+  bank has no room).
+- A hook needs no memory of its own when it can tell its state from the engine's: Chrono
+  Trigger's knows an Arabic message by its text pointer's bank, and draws a name the
+  engine expands whole, then tells the engine the name's last character is done.
 
 ## 5. Register the target
 

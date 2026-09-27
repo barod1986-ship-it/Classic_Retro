@@ -5,8 +5,8 @@ build needs no toolchain. ``HookProgram.check`` re-assembles the source and
 proves the stored bytes match (run in CI). The assembler is chosen by CPU from
 an open registry: GNU binutils for the ARM7TDMI (Game Boy Advance), the
 ARM946E-S (the Nintendo DS's ARM9) and the R3000A (the PlayStation, MIPS I,
-``mipsel-linux-gnu-*``) today; other CPUs register their own
-(``register_assembler``).
+``mipsel-linux-gnu-*``), and cc65 (``ca65``, ``ld65``) for the 65C816 (the
+Super NES) today; other CPUs register their own (``register_assembler``).
 """
 
 from __future__ import annotations
@@ -104,10 +104,56 @@ def _assemble_gnu(
     return code, found
 
 
+def assemble_ca65_65816(
+    source: Path, address: int, symbols: frozenset[str], label: str
+) -> tuple[bytes, dict[str, int]]:
+    """``ca65 --cpu 65816`` and ``ld65`` (cc65): the code linked at ``address`` (a 24-bit
+    address), and the exported symbols from the linker's label file.
+
+    The source sizes its registers itself (``.a8``/``.a16``, ``.i8``/``.i16``).
+    """
+    tools = {name: shutil.which(name) for name in ("ca65", "ld65")}
+    missing = sorted(name for name, path in tools.items() if path is None)
+    if missing:
+        raise ClassicRetroError(
+            ErrorCode.BUILD_VALIDATION_FAILED, "Missing cc65 tools: " + ", ".join(missing)
+        )
+    with tempfile.TemporaryDirectory() as work:
+        folder = Path(work)
+        config = folder / "hooks.cfg"
+        config.write_text(
+            f"MEMORY {{ HOOKS: start = ${address:06X}, size = $10000, file = %O; }}\n"
+            "SEGMENTS { CODE: load = HOOKS, type = ro; }\n",
+            encoding="ascii",
+        )
+        steps = (
+            [tools["ca65"], "--cpu", "65816", "-o", folder / "hooks.o", source],
+            [tools["ld65"], "-C", config, "-o", folder / "hooks.bin"]
+            + ["-Ln", folder / "hooks.lbl", folder / "hooks.o"],
+        )
+        try:
+            for step in steps:
+                subprocess.run(step, check=True, capture_output=True, text=True)
+        except subprocess.CalledProcessError as exc:
+            raise ClassicRetroError(
+                ErrorCode.BUILD_VALIDATION_FAILED,
+                f"Assembling the {label} failed: {(exc.stderr or exc.stdout).strip()}",
+            ) from exc
+        code = (folder / "hooks.bin").read_bytes()
+        listing = (folder / "hooks.lbl").read_text(encoding="ascii")
+    found = {}
+    for line in listing.splitlines():
+        parts = line.split()
+        if len(parts) == 3 and parts[0] == "al" and parts[2].lstrip(".") in symbols:
+            found[parts[2].lstrip(".")] = int(parts[1], 16)
+    return code, found
+
+
 _ASSEMBLERS: dict[str, Assembler] = {
     "arm7tdmi": assemble_gnu_arm,
     "arm946e-s": assemble_gnu_arm9,
     "r3000": assemble_gnu_r3000,
+    "65816": assemble_ca65_65816,
 }
 
 

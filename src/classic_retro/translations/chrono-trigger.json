@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "target": "chrono-trigger",
+  "language": "ar",
+  "notation": "Logical Arabic in the engine notation (engines.chrono_trigger_arabic): a line for each box of the message, {line} where a line of the box must end; the encoder breaks the other lines itself, a box holding four lines. A message that starts with the speaker's name and a colon (الأم: ) has its other lines and boxes indented under the name, as the English does. {Crono}, {Marle}, {Lucca}, {Robo}, {Frog}, {Ayla} and {Magus} write that member's name as the player gave it, in Latin letters; a line counts 55 pixels for it. A message holds Arabic letters, spaces, Western or Arabic-Indic digits and the punctuation . , : ! - … ، ؛ ؟ only. No vowel marks: the font has none.",
+  "glossary": [
+    {
+      "term": "Millennial Fair",
+      "text": "مهرجان الألفية"
+    },
+    {
+      "term": "MOM",
+      "text": "الأم"
+    }
+  ],
+  "entries": [
+    {
+      "id": "opening.get_up",
+      "context": "Crono's mother, the morning of the fair: she wakes him (two lines under her name)",
+      "text": "الأم: هيا أيها الكسول!{line}انهض!"
+    },
+    {
+      "id": "opening.the_fair",
+      "context": "His mother: he slept badly for the excitement of the fair; she wants him to behave (a second box, indented)",
+      "text": "الأم: كنت متحمسا جدا لمهرجان الألفية حتى إنك لم تنم جيدا، أليس كذلك…؟\nأريدك أن تحسن التصرف اليوم!"
+    },
+    {
+      "id": "opening.lucca",
+      "context": "His mother remembers the name of his inventor friend, then reminds him of her invitation ({Lucca} is her name as the player gave it)",
+      "text": "الأم: صحيح، {Lucca}!{line}لا تنس أنها دعتك لترى اختراعها الجديد!"
+    }
+  ]
+}
