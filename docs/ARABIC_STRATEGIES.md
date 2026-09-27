@@ -2,7 +2,7 @@
 
 Version: 1
 
-The sixteen reference targets put Arabic on screen with four rendering strategies.
+The seventeen reference targets put Arabic on screen with four rendering strategies.
 They are a starting set, not a closed list. Engines on other platforms will need
 other methods, and the registry (`classic_retro.localization.strategies`) accepts
 them the same way it holds these four:
@@ -23,7 +23,7 @@ already worked.
 
 Used by: `firered`, `minish-cap`, `ff6a`, `golden-sun`, `fire-emblem` (dialogue),
 `pmd-red`, `mlss`, `advance-wars`, `metroid-fusion`, `tactics-ogre`, `nsmb`, `platinum`,
-`phantom-hourglass`.
+`phantom-hourglass`, `gran-turismo`.
 
 Every contextual form of the letters (the 133 presentation forms of
 `arabic/repertoire.py`) is drawn from the reference font into the game's own font
@@ -102,6 +102,7 @@ glyphs in right-to-left paint order, as with `glyph-font`.
 | Mirrored tilemap | The game draws the line left to right into its tiles as usual; each tile column goes into the tilemap at its mirror inside the text area, with the hardware's horizontal flip, and the glyphs are stored flipped | `advance-wars` |
 | Reversed pen | The pen starts at the line's right edge and subtracts each advance before drawing. Newline, page clear and scroll restore the right edge | `firered`, `sotn` (a pen of the hook's own) |
 | Visual order | No change to the renderer: every line is stored reversed, its glyphs from the leftmost to the rightmost, and the game draws it left to right as it is | `nsmb` |
+| Mirrored words | The game lays words out and justifies them from the left; each Arabic word is drawn at the mirror of its place, its glyphs stored in visual order | `gran-turismo` |
 
 Mirrored draw became the default. It changes one point of the renderer, and the
 game's measuring, wrapping, centring, choices, typewriter and scrolling keep their
@@ -120,6 +121,14 @@ glyph of the right-to-left range at `canvas width - x - glyph width`. Each Arabi
 as wide as its advance and the letter spacing, so the glyphs the printer lays out a pixel
 apart meet once mirrored, and a translated line holds right-to-left glyphs only, its
 spaces and punctuation included.
+Gran Turismo's briefings are laid out a word at a time: the game measures each word,
+breaks the lines, indents each paragraph and spreads the room over a line's gaps, then
+draws the word at the pen. Its hook draws an Arabic word at `320 - x - width` instead, so
+the paragraph reads from the right and every rule of the layout keeps its meaning: the
+indent falls on the right and a paragraph's last line ends on the right. The words stay
+in reading order and each word's glyphs are stored in visual order, as the game draws a
+word left to right. An English word keeps its place, so the untranslated briefings look
+as they did.
 Reversed pen needs control over every place that moves or resets the pen. FireRed
 had that through its decompilation. Symphony of the Night's hook keeps a pen of its own
 next to the game's, which still moves a cell a glyph: a line starts when the game's pen
@@ -159,7 +168,7 @@ left edge.
 |--------|---------|
 | Direction control codes the source overlay adds (`FC 19 xx` / `FC 1A`, `04 16` / `04 17`) | `firered`, `minish-cap` |
 | The first code of a message (`0x5FF`, `0x0B`, `0x1E`) | `ff6a`, `golden-sun`, `fire-emblem` |
-| The glyph itself: a charmap flag, or a glyph of the right-to-left font | `pmd-red`, `mlss`, `metroid-fusion` (where a glyph is drawn), `platinum` (a line that holds one; a menu whose first entry does), `phantom-hourglass` (each glyph of its range), `sotn` (a code from `80`) |
+| The glyph itself: a charmap flag, or a glyph of the right-to-left font | `pmd-red`, `mlss`, `metroid-fusion` (where a glyph is drawn), `platinum` (a line that holds one; a menu whose first entry does), `phantom-hourglass` (each glyph of its range), `sotn` (a code from `80`), `gran-turismo` (a word whose first glyph is `86` or above) |
 | The text's own codes or address: cell codes, a bank table sorted by text address, or the address range of the Arabic bank | `fomt`, `mmbn`, `advance-wars`, `metroid-fusion` (its cursors, arrow and fade), `tactics-ogre` |
 | None: the renderer does not change, and a translated line is stored in visual order | `nsmb` |
 
@@ -193,7 +202,10 @@ messages in English outside the bank.
   font; their code points, `U+3041..U+30FC`, become the codes of the forms the script
   uses, and the game's own measuring and drawing take them as they are) and Phantom
   Hourglass (the 170 kana of its message font, whose range its hook reads as right to
-  left; no text of the game uses them, in any of its three languages).
+  left; no text of the game uses them, in any of its three languages) and Gran Turismo
+  (the Latin-1 letters and signs of the two fonts its briefings use, `86..FF` but the
+  no-break space `A0`: the glyph tables take the Arabic glyphs, drawn over the Latin-1
+  ones in the fonts' shared page, and the kerning tables the space's empty row).
 - Codes the English script never uses, whose cells lie outside the game's font:
   Symphony of the Night (`80..FF`; the routine would copy them from VRAM below its
   font, and the hook draws them from its own).
@@ -216,8 +228,8 @@ right-to-left line.
 - Reverse the variable buffers once when a dialogue changes direction: Minish Cap.
 - Static Latin words as islands in the game's glyphs: Mega Man Battle Network.
 - Refused for now, with the reason in each target's notes: FF6 Advance, Fire Emblem,
-  Pokémon Mystery Dungeon, Mario & Luigi, Phantom Hourglass and Symphony of the Night
-  (their prologues name no one at run time).
+  Pokémon Mystery Dungeon, Mario & Luigi, Phantom Hourglass, Symphony of the Night
+  (their prologues name no one at run time) and Gran Turismo (a briefing names no one).
 
 Or draw the game's own glyphs left to right where they are: Pokémon Platinum keeps the
 name commands in the translation, and its glyph hook draws any run of the game's glyphs
@@ -238,7 +250,8 @@ adds, right-aligned with the lines.
 The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
 
 - Use the largest size whose forms fit the game's rows around its baseline:
-  - 10 px for FF6 Advance, Golden Sun, Mario & Luigi, Harvest Moon and Advance Wars
+  - 10 px for FF6 Advance, Golden Sun, Mario & Luigi, Harvest Moon, Advance Wars and
+    Gran Turismo's paragraphs (a cell of 16 rows on row 11)
   - 9 px for Pokémon Mystery Dungeon
   - 11 px for Mega Man Battle Network, Metroid Fusion, Tactics Ogre, Pokémon
     Platinum (glyphs of 16x16 pixels, on its letters' baseline, row 12), Phantom
@@ -247,12 +260,19 @@ The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
     top row left empty to keep its lines apart)
   - 12 px for New Super Mario Bros., on a baseline two rows above its Latin
     letters' so that the Arabic descenders fit its 15-row cells
+  - 18 px for Gran Turismo's titles (a cell of 26 rows on row 19; the hook draws the
+    Arabic paragraphs lower to make room)
 - Draw marks that vanish at that size by hand:
   - hamza or madda over alef (Mario & Luigi, Pokémon Mystery Dungeon, Metroid Fusion,
     New Super Mario Bros.)
   - hamza on a carrier (Harvest Moon)
 - Or keep a dot that stays just under the ink level: its strongest pixel becomes ink
   (`draw_form(..., mark_level=...)`; Metroid Fusion's medial beh).
+- Draw dots apart that merge: at 10 px the two dots of teh, qaf, teh marbuta and yeh
+  run into one bar or lose one, and so do the three of theh and sheen; Gran Turismo
+  redraws them as single pixels a pixel apart, a free row from the letter
+  (`separated_dots`). Its title's final and isolated yeh keep their shape and their
+  dots move up into the cell (`raised_marks`).
 - Adjust a form that does not fit: raise final yeh (Pokémon Platinum raises final and
   isolated meem and yeh, a row at a time up to two; Symphony of the Night raises final
   and isolated yeh a row), or split a 13-pixel seen into two glyphs (Advance Wars
@@ -281,7 +301,9 @@ The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
   pixels from a second coverage threshold, none of them beyond the glyph's width.
   Symphony of the Night's letters are one grey with no shadow: its Arabic glyphs take
   that grey for the ink and a darker grey of the same palette for the smoothing, none
-  of it beyond the glyph's width.
+  of it beyond the glyph's width. Gran Turismo's letters are white with a black
+  outline: its Arabic glyphs are outlined like Metroid Fusion's, and each is stored
+  cropped to its rows, the glyph table's row offset keeping it on the line.
 
 ## The shared core
 
@@ -325,7 +347,7 @@ commands.
 ## Candidates for other platforms (not implemented)
 
 None of these has been built or tested. They are research notes for engines the
-sixteen targets did not cover, and each becomes an `experimental` strategy together
+seventeen targets did not cover, and each becomes an `experimental` strategy together
 with its first target.
 
 - **Tile-composed variable-width text.** Many NES, Game Boy and SNES engines put

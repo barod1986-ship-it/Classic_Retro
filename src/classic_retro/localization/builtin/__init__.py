@@ -1,4 +1,4 @@
-"""The sixteen reference targets, in the order their command groups appear."""
+"""The seventeen reference targets, in the order their command groups appear."""
 
 from __future__ import annotations
 
@@ -13,6 +13,7 @@ def builtin_targets() -> tuple[LocalizationTarget, ...]:
         firered,
         fomt,
         golden_sun,
+        gran_turismo,
         metroid_fusion,
         minish_cap,
         mlss,
@@ -42,4 +43,5 @@ def builtin_targets() -> tuple[LocalizationTarget, ...]:
         platinum.TARGET,
         phantom_hourglass.TARGET,
         sotn.TARGET,
+        gran_turismo.TARGET,
     )

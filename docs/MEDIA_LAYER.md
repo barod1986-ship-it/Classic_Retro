@@ -106,8 +106,10 @@ with the polynomial `0x8001801B`, reflected) and the ECMA-130 P and Q parity, co
 with the header counted as zero. The tests check the EDC against the CRC's check value
 and every P and Q codeword's syndromes; every sector of the files the overlay reads is
 checked on the user's disc. A file that grows moves to the empty sectors at the end of
-the data track and its ISO 9660 record is repointed; the track keeps its size, and the
-CUE sheet and the other tracks do not change.
+the data track and its ISO 9660 record is repointed (Castlevania: Symphony of the
+Night); a file that keeps its size is written back to its own sectors, each with its own
+subheader (Gran Turismo). The track keeps its size, and the CUE sheet and the other
+tracks do not change.
 
 ## Deliberate limitations
 

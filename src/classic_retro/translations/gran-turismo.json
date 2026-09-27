@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "target": "gran-turismo",
+  "language": "ar",
+  "notation": "Logical Arabic in the engine notation (engines.gran_turismo): the briefing's title on the first line, then a line for each paragraph (what to do, the car, the time limit). The game lays each paragraph's words out itself, from the right: a line holds 288 pixels and the box seven lines under the title. A briefing holds Arabic letters, spaces, Western or Arabic-Indic digits and the punctuation . , : ! - ، ؛ ؟ only: write names in Arabic letters. A number stays one word (1,000), and two words without Arabic letters may not follow each other. No vowel marks: the font has none.",
+  "glossary": [
+    {
+      "term": "B-Class License",
+      "text": "رخصة الفئة ب"
+    },
+    {
+      "term": "Test car",
+      "text": "سيارة الاختبار"
+    },
+    {
+      "term": "Time limit",
+      "text": "الوقت المحدد"
+    },
+    {
+      "term": "High Speed Ring",
+      "text": "هاي سبيد رينغ"
+    }
+  ],
+  "entries": [
+    {
+      "id": "license.b1",
+      "context": "License B, test 1: starting and stopping 1 (a Mazda Demio)",
+      "text": "الانطلاق والتوقف 1\nانطلق من نقطة البداية وتوقف تماما داخل منطقة الهدف التي تبعد 1,000 متر. ستفشل في الاختبار إذا تجاوزت منطقة الهدف أو الوقت المحدد.\nسيارة الاختبار هي مازدا ديميو.\nالوقت المحدد 36 ثانية."
+    },
+    {
+      "id": "license.b3",
+      "context": "License B, test 3: basics of cornering 1 (a Honda del Sol)",
+      "text": "أساسيات المنعطفات 1\nانطلق من نقطة البداية على الخط المستقيم، وانعطف في المنعطف الأول ثم اعبر بوابة النهاية أعلى التل. حاول أن تحافظ على خط سباق سلس. ستفشل فورا إذا خرجت من الحلبة.\nسيارة الاختبار هي هوندا ديل سول.\nالوقت المحدد 30 ثانية."
+    },
+    {
+      "id": "license.b8",
+      "context": "License B, test 8: the final test, a lap of High Speed Ring (a Mazda Eunos Roadster)",
+      "text": "الاختبار النهائي لرخصة الفئة ب\nهذا سباق ضد الوقت على المسار الكامل لحلبة هاي سبيد رينغ. انطلق من خط البداية والنهاية وأكمل لفة واحدة على الحلبة.\nسيارة الاختبار هي مازدا يونوس رودستر.\nالوقت المحدد دقيقة واحدة و22 ثانية."
+    }
+  ]
+}

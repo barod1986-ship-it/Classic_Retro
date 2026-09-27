@@ -43,6 +43,7 @@ from classic_retro.rom.fire_emblem_arabic_script import (
 )
 from classic_retro.rom.fomt_arabic_script import fomt_arabic_names, fomt_arabic_strings
 from classic_retro.rom.golden_sun_arabic_script import golden_sun_arabic_messages
+from classic_retro.rom.gran_turismo_arabic_script import gran_turismo_arabic_briefings
 from classic_retro.rom.metroid_fusion_arabic_script import metroid_fusion_arabic_messages
 from classic_retro.rom.mlss_arabic_script import mlss_arabic_messages
 from classic_retro.rom.mmbn_arabic_script import mmbn_arabic_sections
@@ -77,6 +78,7 @@ TARGETS = (
     "platinum",
     "phantom-hourglass",
     "sotn",
+    "gran-turismo",
 )
 RLE = chr(0x202B)
 
@@ -110,6 +112,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "platinum": len(platinum_arabic_strings()),
         "phantom-hourglass": len(ph_arabic_messages()),
         "sotn": len(sotn_arabic_messages()) + len(sotn_arabic_names()),
+        "gran-turismo": len(gran_turismo_arabic_briefings()),
     }
     assert counts == {
         "firered": 13,
@@ -128,6 +131,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "platinum": 38,
         "phantom-hourglass": 7,
         "sotn": 8,
+        "gran-turismo": 3,
     }
     for target in TARGETS:
         translations = builtin_translation_set(target)
@@ -348,3 +352,13 @@ def test_sotn_notation_rebuilds_every_shipped_message():
         assert any(isinstance(piece, str) and piece.strip() for piece in pieces), message.key
     assert [name.speaker for name in sotn_arabic_names()] == [0, 1]
     assert all(name.text and "\n" not in name.text for name in sotn_arabic_names())
+
+
+def test_gran_turismo_notation_holds_a_title_and_paragraphs_for_every_briefing():
+    briefings = gran_turismo_arabic_briefings()
+    assert [briefing.test for briefing in briefings] == ["B-1", "B-3", "B-8"]
+    for briefing in briefings:
+        # A title line, then what to do, the car and the time limit.
+        assert briefing.title and len(briefing.paragraphs) == 3, briefing.key
+        lines = (briefing.title, *(" ".join(words) for words in briefing.paragraphs))
+        assert "\n".join(lines) == briefing.notation, briefing.key
