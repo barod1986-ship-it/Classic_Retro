@@ -1,6 +1,6 @@
 # Classic Retro — Master Specification
 
-Version: 0.4 (Eighteen reference targets on one pipeline)
+Version: 0.4 (Nineteen reference targets on one pipeline)
 
 ## 1. Purpose
 
@@ -185,7 +185,7 @@ duplicate ids, unknown kinds and strategies that are not registered.
 
 A rendering strategy (`classic_retro.localization.strategies`) is a way of drawing
 Arabic through a game's renderer. It records what it needs from the engine, which
-core modules it builds on, and what it costs. The eighteen targets proved four:
+core modules it builds on, and what it costs. The nineteen targets proved four:
 
 - `glyph-font`: a right-to-left glyph font in the game's own format;
 - `line-cells`: lines shaped with HarfBuzz and cut into the engine's fixed cells;

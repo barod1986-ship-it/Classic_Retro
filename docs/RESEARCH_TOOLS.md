@@ -189,6 +189,17 @@ A hit reports these fields:
   - Free memory is found the same way: `poke` a mark over zeros of the program and
     `dump` it after the menus and a race; compare a corner of VRAM across savestates
     of several scenes (Ridge Racer's hook data and glyph atlas).
+- For the Super NES, `libretro-snes9x` (`snes9x_libretro`) runs a ROM without BIOS
+  files. A shot is 256x224. `system_ram` is the 128 KiB of WRAM from `$7E:0000`
+  (`system_ram:0xF000` is `$7E:F000`), `video_ram` the 64 KiB of VRAM, `save_ram` the
+  cartridge's. The RetroPad's buttons are the Super NES's own (`A`, `B`, `X`, `Y`).
+  - The research tools disassemble ARM only; read 65C816 code with `da65` (cc65) or a
+    short script, and check it against the game's disassembly when there is one (Chrono
+    Trigger's `dscotton/ct_disassembly` names its text engine). Follow the register
+    sizes (`REP` and `SEP` set them, and an immediate's length depends on them), and map
+    HiROM banks `$C0-$FF` to the file.
+  - A pattern `poke`d into a text buffer ahead of the pen shows whether the game sends
+    the whole line to VRAM (Chrono Trigger does), before a hook draws glyphs there.
 
 A savestate belongs to the backend and core that wrote it.
 

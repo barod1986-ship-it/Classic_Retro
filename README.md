@@ -92,6 +92,7 @@ runs the same way for every target.
 | `sotn` | Castlevania: Symphony of the Night (USA), PlayStation | ROM overlay | `composed-lines` |
 | `gran-turismo` | Gran Turismo (USA) (Rev 1), PlayStation | ROM overlay | `glyph-font` |
 | `ridge-racer` | Ridge Racer (USA), PlayStation | ROM overlay | `glyph-font` |
+| `chrono-trigger` | Chrono Trigger (USA), Super NES | ROM overlay | `glyph-font` |
 
 ```text
 classic-retro targets list                          # every target, its documents and operations
@@ -128,7 +129,7 @@ classic-retro targets strip fomt.workspace.json --out fomt.json
 Every check and build holds a translations file against the originals pinned in the
 target's code. See [the translator's guide](docs/TRANSLATING_AR.md) (in Arabic).
 
-The four rendering strategies are what the eighteen targets proved, not the only ones
+The four rendering strategies are what the nineteen targets proved, not the only ones
 possible. Games on other platforms will need other methods, and the strategy and
 target registries accept them from this repository or from other packages through
 entry points. See [the rendering strategies](docs/ARABIC_STRATEGIES.md) and
@@ -158,8 +159,8 @@ A script holds commands such as `run 300`, `tap START`, `touch 128 272`, `shot m
 
 ## Repository status
 
-**Localization platform with eighteen reference targets: twelve on the Game Boy Advance, three
-on the Nintendo DS and three on the PlayStation.**
+**Localization platform with nineteen reference targets: twelve on the Game Boy Advance, three
+on the Nintendo DS, three on the PlayStation and one on the Super NES.**
 
 The first end-to-end example translates the 13 Professor OAK speech strings in
 the new-game intro. This is a renderer/font test, not a complete game translation.
@@ -382,5 +383,20 @@ once. The hook and the glyphs live in zeros of the program's data that nothing u
 program keeps its size and its sectors and the patch is under 4 KB. See
 [the Ridge Racer testing guide](docs/RIDGE_RACER_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/RIDGE_RACER_ARABIC_RENDERER.md).
+
+The nineteenth reference target, and the first on the Super NES, is **Chrono Trigger (USA)**.
+Its text engine was read from the ROM, its 65C816 code and the game running, then checked
+against the [dscotton/ct_disassembly](https://github.com/dscotton/ct_disassembly) disassembly,
+which names the same routines and tables. Three messages of the opening are in Arabic, chosen
+to be unlike: two lines under the speaker's name, a long line wrapped over two lines and a
+second box, and a line that writes a name the player gives. The game draws its dialogue with a
+variable-width font of 12x12 pixels into a buffer of tiles, so the Arabic takes the
+`glyph-font` strategy with a font of its own, white with the game's shadow, 9 pixels. Three
+65C816 hooks, assembled with cc65, send a translated message to its Arabic text in a free bank,
+draw each Arabic glyph at the mirror of the pen and a name the game writes as a block left to
+right; the English messages stay as they were, and the patch is about 2 KB. The research tools
+run the game in snes9x. See
+[the Chrono Trigger testing guide](docs/CHRONO_TRIGGER_ARABIC_TEST_AR.md) and
+[the renderer notes](docs/CHRONO_TRIGGER_ARABIC_RENDERER.md).
 
 See [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md).

@@ -36,6 +36,7 @@ from classic_retro.localization.translations import (
     translation_set_from_dict,
 )
 from classic_retro.rom.advance_wars_arabic_script import advance_wars_arabic_messages
+from classic_retro.rom.chrono_trigger_arabic_script import chrono_trigger_arabic_messages
 from classic_retro.rom.ff6a_arabic_script import ff6a_arabic_messages
 from classic_retro.rom.fire_emblem_arabic_script import (
     fire_emblem_arabic_legend,
@@ -81,6 +82,7 @@ TARGETS = (
     "sotn",
     "gran-turismo",
     "ridge-racer",
+    "chrono-trigger",
 )
 RLE = chr(0x202B)
 
@@ -116,6 +118,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "sotn": len(sotn_arabic_messages()) + len(sotn_arabic_names()),
         "gran-turismo": len(gran_turismo_arabic_briefings()),
         "ridge-racer": len(ridge_racer_arabic_strings()),
+        "chrono-trigger": len(chrono_trigger_arabic_messages()),
     }
     assert counts == {
         "firered": 13,
@@ -136,6 +139,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "sotn": 8,
         "gran-turismo": 3,
         "ridge-racer": 3,
+        "chrono-trigger": 3,
     }
     for target in TARGETS:
         translations = builtin_translation_set(target)
@@ -376,3 +380,14 @@ def test_ridge_racer_strings_are_one_line_with_buttons_only_in_the_small_font():
         assert entry.notation and "\n" not in entry.notation, entry.key
         assert entry.font == "small" or not buttons & set(entry.notation), entry.key
     assert {"△", "□"} <= set(strings[1].notation)
+
+
+def test_chrono_trigger_messages_are_boxes_of_arabic_with_their_names():
+    messages = chrono_trigger_arabic_messages()
+    assert [message.index for message in messages] == [6, 8, 11]
+    for message in messages:
+        # The mother speaks: her name, a colon, then the message; a line a box.
+        assert message.notation.startswith("الأم: "), message.key
+        assert all(box.strip() for box in message.notation.split("\n")), message.key
+    assert "{Lucca}" in messages[2].notation
+    assert messages[1].notation.count("\n") == 1
