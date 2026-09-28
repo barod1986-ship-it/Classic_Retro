@@ -70,6 +70,24 @@
     },
     "report": "2957f267b5022abacf5264cd3f66e13c081b001094af389eb78cd6dc2b41798f"
   },
+  "final-fantasy-iii": {
+    "generated_with": {
+      "arabic_reshaper": "3.0.1",
+      "fonttools": "4.66.0",
+      "freetype": "2.14.3",
+      "harfbuzz": "0.56.2",
+      "jsonschema": "4.26.0",
+      "pillow": "12.3.0",
+      "pycdlib": "1.21.0",
+      "python": "3.11.15",
+      "python_bidi": "0.6.11"
+    },
+    "previews": {
+      "arabic_font_preview.png": "95e720eedd9ece8171511f0509844b67e4149320d78d169f8903be5a692421a1",
+      "arabic_messages_preview.png": "e1455b958342bdb9d9939f91846052884c82c82e00582eda33c60a5c75f9e533"
+    },
+    "report": "8cc2f5894413033f33d2f4df026c8aaee59d2a92bac6721b658632a258a978a5"
+  },
   "fire-emblem": {
     "generated_with": {
       "arabic_reshaper": "3.0.1",

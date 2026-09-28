@@ -36,6 +36,10 @@
 ; - page_hook (JSL from $C0:8554, the start of NewPage): the same, the line
 ;   pointer to the top; at the message's end ($00) the message is over, so
 ;   what the engine draws next (the map's name) is English;
+; - choice_hook (JSL from $C0:836D, where a choice's mark takes the cell the
+;   pen is on for its cursor): in an Arabic message the cursor's cell is the
+;   line's last shown (CHOICE_CELL), at the right of the choice's text, which
+;   the line leaves CHOICE_WIDTH pixels for;
 ; - transfer_hook (JSL from $C0:8603, the start of TfrDlgTextGfx): in the
 ;   vertical blank, a line laid out (LINE_READY) is sent from LINE_BUFFER to
 ;   its tiles (LINE_CELLS cells of 64 bytes from $3800 + LINE_VRAM), then the
@@ -50,6 +54,7 @@
     .smart -
 
     .export redirect_hook, width_hook, dte_hook, draw_hook, line_hook, page_hook, transfer_hook
+    .export choice_hook
 
 ; The engine (bank $C0).
 DTE_PAIR        = $C08466           ; UpdateDlgText: a pair's letters (AND #$7F; ASL; TAY)
@@ -70,10 +75,11 @@ REGION          = $CC               ; 9: the text shown whole, then the regions 
 LETTER          = $CD               ; 2 bytes: the letter to draw
 MESSAGE         = $D0               ; 2 bytes: the message's number
 KEY_STATE       = $D3               ; 2: waiting for the button to be let go
+CHOICES         = $0570             ; a word a choice: the cell of its cursor
 DIALOG_FLAGS    = $0568
-ARABIC          = $7E9D00           ; 1: the message is Arabic
+ARABIC          = $7E9D00           ; 1: the message is Arabic (any other value, as at power-on, English)
 LINE_LAID       = $7E9D01           ; 1: the line the engine is on is in LINE_BUFFER
-LINE_READY      = $7E9D02           ; 1: LINE_BUFFER waits to be sent
+LINE_READY      = $7E9D02           ; 1: LINE_BUFFER waits to be sent (any other value: nothing)
 LINE_VRAM       = $7E9D04           ; 2 bytes: the line's tiles, as VRAM_LINE
 LINE_PEN        = $7E9D06           ; 2 bytes: the glyph's left pixel, from the right edge down
 CODE_SCRATCH    = $7E9D08           ; 2 bytes: the glyph's code from FIRST_CODE
@@ -112,9 +118,24 @@ ROW_BYTES       = 3
 VARIANT_BYTES   = GLYPH_ROWS * ROW_BYTES
 COLUMN_BYTES    = 32                ; a tile column: 16 rows of two planes
 LINE_CELLS      = 14                ; the cells the box shows
+CHOICE_CELL     = 13                ; the cell of a choice's cursor: the line's last shown
+CHOICE_WIDTH    = 16                ; the pixels a choice's mark takes
+CELL_WORDS      = $20               ; a cell's tiles: 4 tiles of 8 words
+SPACES          = $14               ; the command with a byte: that many pixels in an Arabic line
+CHOICE          = $15
 LINE_BYTES      = LINE_CELLS * 2 * COLUMN_BYTES
 BUFFER_BYTES    = 32 * COLUMN_BYTES
 VRAM_TEXT       = $3800             ; the text's tiles: four lines of $200 words
+
+; The engine keeps the accumulator's high byte 0 in its 8-bit code (its
+; ``shorta0`` is TDC then SEP #$20) and moves the whole accumulator into a
+; 16-bit index with TAX; a hook that used 16 bits clears the high byte before
+; going back.
+.macro clear_b
+    xba
+    lda #0
+    xba
+.endmacro
 
     .a8
     .i16
@@ -127,6 +148,7 @@ redirect_hook:
     lda #0
     sta f:ARABIC
     sta f:LINE_LAID
+    sta f:LINE_READY
     rep #$20
     .a16
     ldx #0
@@ -155,6 +177,7 @@ redirect_hook:
     sep #$20
     .a8
 @on:
+    clear_b
     lda #1
     sta DIALOG_FLAGS
     rtl
@@ -165,10 +188,12 @@ redirect_hook:
 
 width_hook:
     lda f:ARABIC
-    beq @english
+    cmp #1
+    bne @english
     lda f:LINE_LAID
     bne @laid
     jsr lay_out_line
+    clear_b
 @laid:
     lda PEN
     clc
@@ -202,7 +227,8 @@ dte_hook:
 
 draw_hook:
     lda f:ARABIC
-    beq @english
+    cmp #1
+    bne @english
     pla
     pla
     pla
@@ -218,7 +244,8 @@ draw_hook:
 
 line_hook:
     lda f:ARABIC
-    beq @english
+    cmp #1
+    bne @english
     pla
     pla
     pla
@@ -237,6 +264,7 @@ line_hook:
     sta VRAM_LINE
     sep #$20
     .a8
+    clear_b
     ldx VRAM_LINE
     bne @on
     lda #9
@@ -257,7 +285,8 @@ line_hook:
 
 page_hook:
     lda f:ARABIC
-    beq @english
+    cmp #1
+    bne @english
     pla
     pla
     pla
@@ -284,12 +313,34 @@ page_hook:
     rtl
 
 ; ---------------------------------------------------------------------------
+; A choice's mark: LDA VRAM_LINE; STA CHOICES,y with the accumulator 16 bits, or
+; the line's last shown cell in an Arabic message.
+
+choice_hook:
+    .a16
+    lda f:ARABIC
+    and #$00FF
+    cmp #1
+    bne @english
+    lda VRAM_LINE
+    clc
+    adc #CHOICE_CELL * CELL_WORDS
+    sta CHOICES,y
+    rtl
+@english:
+    lda VRAM_LINE
+    sta CHOICES,y
+    rtl
+    .a8
+
+; ---------------------------------------------------------------------------
 ; TfrDlgTextGfx: LDA NEED_CELL; BEQ its RTS; STZ NEED_CELL, with a line laid
 ; out sent first.
 
 transfer_hook:
     lda f:LINE_READY
-    beq @engine
+    cmp #1
+    bne @engine
     lda #0
     sta f:LINE_READY
     stz MDMAEN
@@ -303,6 +354,7 @@ transfer_hook:
     sta VMADDL
     sep #$20
     .a8
+    clear_b
     lda #$01                        ; two registers: VMDATAL, VMDATAH
     sta DMAP0
     lda #$18
@@ -329,8 +381,9 @@ transfer_hook:
 ; ---------------------------------------------------------------------------
 ; The line from TEXT_POINTER laid out into LINE_BUFFER: each glyph at the pen
 ; from the right edge, a name's glyphs from NAMES, to the line's end (END,
-; LINE or PAGE); the pauses and the button waits skipped. Runs with the data
-; bank at GLYPHS' for draw_glyph.
+; LINE or PAGE); the pen moves left by a SPACES command's byte and by
+; CHOICE_WIDTH for a choice's mark; the pauses and the button waits are
+; skipped. Runs with the data bank at GLYPHS' for draw_glyph.
 
 lay_out_line:
     phb
@@ -354,20 +407,26 @@ lay_out_line:
     ldy #0
 @code:
     lda [TEXT_POINTER],y
-    beq @end                        ; END
+    beq @to_end                     ; END
     cmp #LINE
-    beq @end
+    beq @to_end
     cmp #PAGE
-    beq @end
+    beq @to_end
+    bra @kind
+@to_end:
+    jmp @end
+@kind:
     cmp #FIRST_CODE
     bcs @glyph
     cmp #NAME_FIRST
     bcc @one
     cmp #NAME_LAST+1
     bcc @name
-    cmp #$11                        ; the commands with a byte: $11, $14, $16, $1C-$1F
-    beq @two
-    cmp #$14
+    cmp #SPACES
+    beq @spaces
+    cmp #CHOICE
+    beq @choice
+    cmp #$11                        ; the commands with a byte: $11, $16, $1C-$1F
     beq @two
     cmp #$16
     beq @two
@@ -375,17 +434,43 @@ lay_out_line:
     bcs @two
 @one:
     iny
-    bra @code
+    jmp @code
 @two:
     iny
     iny
-    bra @code
+    jmp @code
+@spaces:
+    iny
+    lda [TEXT_POINTER],y            ; the byte: pixels
+    rep #$20
+    .a16
+    and #$00FF
+    sta f:WIDTH_SCRATCH
+    lda f:LINE_PEN
+    sec
+    sbc f:WIDTH_SCRATCH
+    sta f:LINE_PEN
+    sep #$20
+    .a8
+    iny
+    jmp @code
+@choice:
+    rep #$20
+    .a16
+    lda f:LINE_PEN
+    sec
+    sbc #CHOICE_WIDTH
+    sta f:LINE_PEN
+    sep #$20
+    .a8
+    iny
+    jmp @code
 @glyph:
     phy
     jsr draw_glyph
     ply
     iny
-    bra @code
+    jmp @code
 @name:
     sec
     sbc #NAME_FIRST
@@ -413,7 +498,7 @@ lay_out_line:
 @named:
     ply
     iny
-    bra @code
+    jmp @code
 @end:
     rep #$20
     .a16

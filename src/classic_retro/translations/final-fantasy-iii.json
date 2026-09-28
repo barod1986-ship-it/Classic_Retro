@@ -2,28 +2,419 @@
  "schema_version": "1.0",
  "target": "final-fantasy-iii",
  "language": "ar",
- "notation": "Logical Arabic in the engine notation (engines.ff6_arabic): a line for each page of the message (the box shows four lines of 220 pixels; the game waits for the button between pages), {line} where a line must end; the encoder breaks the other lines itself, a word at a time, by the glyphs' widths. {Terra}, {Locke}, {Cyan}, {Shadow}, {Edgar}, {Sabin}, {Celes}, {Strago}, {Relm}, {Setzer}, {Mog}, {Gau}, {Gogo} and {Umaro} write a character's name: the entries name.terra to name.umaro give the fourteen names in Arabic, which the hook draws in place of the name the player gave. {Wait}, {Pause 04}, {Key} and {KeyAfter 04} pass to the game as the English has them. A message holds Arabic letters, spaces, Western or Arabic-Indic digits and the signs . , : ! - … ، ؛ ؟ only. No vowel marks: the font has none.",
+ "notation": "Logical Arabic in the engine notation (engines.ff6_arabic): a line for each page of the message (the box shows four lines of 220 pixels; the game waits for the button between pages), {line} where a line must end; the encoder breaks the other lines itself, a word at a time, by the glyphs' widths. {Terra}, {Locke}, {Cyan}, {Shadow}, {Edgar}, {Sabin}, {Celes}, {Strago}, {Relm}, {Setzer}, {Mog}, {Gau}, {Gogo} and {Umaro} write a character's name: the entries name.terra to name.umaro give the fourteen names in Arabic, which the hook draws in place of the name the player gave. {center} at a page's start centres its lines (the narration). {Choice} starts a line of a choice and leaves the game's cursor its place at the line's right; {Wait}, {Pause 04}, {Key} and {KeyAfter 04} pass to the game as the English has them, and a translation keeps its original's commands. A message holds Arabic letters, spaces, Western or Arabic-Indic digits and the signs . , : ! - … ، ؛ ؟ only. No vowel marks: the font has none.",
  "glossary": [
-  {"term": "Narshe", "text": "نارشي"},
-  {"term": "Esper", "text": "إسبر"},
-  {"term": "Magitek", "text": "ماجيتك"},
-  {"term": "Empire", "text": "الإمبراطورية"},
-  {"term": "Returners", "text": "العائدون"}
+  {
+   "term": "Narshe",
+   "text": "نارشي"
+  },
+  {
+   "term": "Esper",
+   "text": "إسبر"
+  },
+  {
+   "term": "Magitek",
+   "text": "ماجيتك"
+  },
+  {
+   "term": "Empire",
+   "text": "الإمبراطورية"
+  },
+  {
+   "term": "Returners",
+   "text": "العائدون"
+  }
  ],
  "entries": [
-  {"id": "name.terra", "context": "The name of Terra, a character, as the game writes it in a message (64 pixels at most)", "text": "تيرا"},
-  {"id": "name.locke", "context": "The name of Locke, a character, as the game writes it in a message (64 pixels at most)", "text": "لوك"},
-  {"id": "name.cyan", "context": "The name of Cyan, a character, as the game writes it in a message (64 pixels at most)", "text": "سيان"},
-  {"id": "name.shadow", "context": "The name of Shadow, a character, as the game writes it in a message (64 pixels at most)", "text": "شادو"},
-  {"id": "name.edgar", "context": "The name of Edgar, a character, as the game writes it in a message (64 pixels at most)", "text": "إدغار"},
-  {"id": "name.sabin", "context": "The name of Sabin, a character, as the game writes it in a message (64 pixels at most)", "text": "سابين"},
-  {"id": "name.celes", "context": "The name of Celes, a character, as the game writes it in a message (64 pixels at most)", "text": "سيليس"},
-  {"id": "name.strago", "context": "The name of Strago, a character, as the game writes it in a message (64 pixels at most)", "text": "ستراغو"},
-  {"id": "name.relm", "context": "The name of Relm, a character, as the game writes it in a message (64 pixels at most)", "text": "ريلم"},
-  {"id": "name.setzer", "context": "The name of Setzer, a character, as the game writes it in a message (64 pixels at most)", "text": "سيتزر"},
-  {"id": "name.mog", "context": "The name of Mog, a character, as the game writes it in a message (64 pixels at most)", "text": "موغ"},
-  {"id": "name.gau", "context": "The name of Gau, a character, as the game writes it in a message (64 pixels at most)", "text": "غاو"},
-  {"id": "name.gogo", "context": "The name of Gogo, a character, as the game writes it in a message (64 pixels at most)", "text": "غوغو"},
-  {"id": "name.umaro", "context": "The name of Umaro, a character, as the game writes it in a message (64 pixels at most)", "text": "أومارو"}
+  {
+   "id": "name.terra",
+   "context": "The name of Terra, a character, as the game writes it in a message (64 pixels at most)",
+   "text": "تيرا"
+  },
+  {
+   "id": "name.locke",
+   "context": "The name of Locke, a character, as the game writes it in a message (64 pixels at most)",
+   "text": "لوك"
+  },
+  {
+   "id": "name.cyan",
+   "context": "The name of Cyan, a character, as the game writes it in a message (64 pixels at most)",
+   "text": "سيان"
+  },
+  {
+   "id": "name.shadow",
+   "context": "The name of Shadow, a character, as the game writes it in a message (64 pixels at most)",
+   "text": "شادو"
+  },
+  {
+   "id": "name.edgar",
+   "context": "The name of Edgar, a character, as the game writes it in a message (64 pixels at most)",
+   "text": "إدغار"
+  },
+  {
+   "id": "name.sabin",
+   "context": "The name of Sabin, a character, as the game writes it in a message (64 pixels at most)",
+   "text": "سابين"
+  },
+  {
+   "id": "name.celes",
+   "context": "The name of Celes, a character, as the game writes it in a message (64 pixels at most)",
+   "text": "سيليس"
+  },
+  {
+   "id": "name.strago",
+   "context": "The name of Strago, a character, as the game writes it in a message (64 pixels at most)",
+   "text": "ستراغو"
+  },
+  {
+   "id": "name.relm",
+   "context": "The name of Relm, a character, as the game writes it in a message (64 pixels at most)",
+   "text": "ريلم"
+  },
+  {
+   "id": "name.setzer",
+   "context": "The name of Setzer, a character, as the game writes it in a message (64 pixels at most)",
+   "text": "سيتزر"
+  },
+  {
+   "id": "name.mog",
+   "context": "The name of Mog, a character, as the game writes it in a message (64 pixels at most)",
+   "text": "موغ"
+  },
+  {
+   "id": "name.gau",
+   "context": "The name of Gau, a character, as the game writes it in a message (64 pixels at most)",
+   "text": "غاو"
+  },
+  {
+   "id": "name.gogo",
+   "context": "The name of Gogo, a character, as the game writes it in a message (64 pixels at most)",
+   "text": "غوغو"
+  },
+  {
+   "id": "name.umaro",
+   "context": "The name of Umaro, a character, as the game writes it in a message (64 pixels at most)",
+   "text": "أومارو"
+  },
+  {
+   "id": "narshe.000",
+   "context": "Message 0 of the dialogue: VICKS: There's the town…{KeyAfter 18}{Key}{page}WEDGE: Hard to believe an Esper's been found intact there, 1000 years after the War of the Magi…{KeyAfter 18}{Key}",
+   "text": "فيكس: ها هي البلدة…{KeyAfter 18}{Key}\nويدج: يصعب تصديق أن يوجد إسبر سليم هناك بعد 1000 عام من حرب السحرة…{KeyAfter 18}{Key}"
+  },
+  {
+   "id": "narshe.001",
+   "context": "Message 1 of the dialogue: VICKS: There's the town…{KeyAfter 18}{Key}{page}WEDGE: Hard to believe an Esper's been found intact there, 1000 years after the War of the Magi…{KeyAfter 18}{Key}",
+   "text": "فيكس: ها هي البلدة…{KeyAfter 18}{Key}\nويدج: يصعب تصديق أن يوجد إسبر سليم هناك بعد 1000 عام من حرب السحرة…{KeyAfter 18}{Key}"
+  },
+  {
+   "id": "narshe.002",
+   "context": "Message 2 of the dialogue: VICKS: Think it's still alive?{line}WEDGE: Probably…{line}…judging from the urgency of our orders. {KeyAfter 18}{Key}",
+   "text": "فيكس: أتظنه ما زال على قيد الحياة؟{line}ويدج: على الأرجح…{line}…بحكم إلحاح أوامرنا. {KeyAfter 18}{Key}"
+  },
+  {
+   "id": "narshe.003",
+   "context": "Message 3 of the dialogue: VICKS: And this woman, this…sorcerer. Why's she here?{KeyAfter 18}{Key}{page}I heard she fried 50 of our Magitek Armored soldiers in under 3 minutes.{KeyAfter 18}{Key}",
+   "text": "فيكس: وهذه المرأة، هذه… الساحرة. لماذا هي هنا؟{KeyAfter 18}{Key}\nسمعت أنها أحرقت 50 من جنودنا في دروع الماجيتك في أقل من 3 دقائق.{KeyAfter 18}{Key}"
+  },
+  {
+   "id": "narshe.004",
+   "context": "Message 4 of the dialogue: WEDGE: Not to worry. The Slave Crown on her head robs her of all conscious thought. She'll follow orders.{KeyAfter 18}{Key}",
+   "text": "ويدج: لا تقلق. تاج العبودية على رأسها يسلبها كل وعي. ستنفذ الأوامر.{KeyAfter 18}{Key}"
+  },
+  {
+   "id": "narshe.005",
+   "context": "Message 5 of the dialogue: WEDGE: We'll approach from the east.{line}Move out!{KeyAfter 0C}{Key}",
+   "text": "ويدج: سنقترب من الشرق.{line}تحركوا!{KeyAfter 0C}{Key}"
+  },
+  {
+   "id": "narshe.006",
+   "context": "Message 6 of the dialogue:  Long ago, the War of the Magi{line}     reduced the world to a{line}scorched wasteland, and magic{line}{Spaces 05}simply ceased to exist. {Pause FF}{Key}",
+   "text": "{center}منذ زمن بعيد، أحالت حرب السحرة{line}العالم إلى قفر محروق،{line}وزال السحر ببساطة{line}من الوجود. {Pause FF}{Key}"
+  },
+  {
+   "id": "narshe.007",
+   "context": "Message 7 of the dialogue: 1000 years have passed… Iron,{line}gunpowder, and steam engines{line}  have been rediscovered, and{line}{Spaces 05}high technology reigns… {Pause FF}{Key}",
+   "text": "{center}مرت 1000 عام… وأعيد اكتشاف{line}الحديد والبارود{line}والمحركات البخارية،{line}وسادت التقنية العالية… {Pause FF}{Key}"
+  },
+  {
+   "id": "narshe.008",
+   "context": "Message 8 of the dialogue:     But there are some who{line}  would enslave the world by{line}reviving the dread destructive{line}    force known as “magic.” {Pause FF}{Key}",
+   "text": "{center}لكن هناك من يسعى{line}لاستعباد العالم بإحياء{line}تلك القوة المدمرة الرهيبة{line}المعروفة بالسحر. {Pause FF}{Key}"
+  },
+  {
+   "id": "narshe.009",
+   "context": "Message 9 of the dialogue: {Spaces 08}Can it be that those{line}  in power are on the verge of{line}{Spaces 07}repeating a senseless{line}{Spaces 08}and deadly mistake? {Pause 2A}{Key}",
+   "text": "{center}فهل يكون أصحاب السلطة{line}على وشك أن يكرروا{line}خطأ أحمق{line}وقاتلا؟ {Pause 2A}{Key}"
+  },
+  {
+   "id": "narshe.010",
+   "context": "Message 10 of the dialogue: An eerie glow surrounds you.{page}Want info about Save Points?{line} {Choice} Yes{line} {Choice} No",
+   "text": "يحيط بك وهج غريب.\nأتريد معلومات عن نقاط الحفظ؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "narshe.011",
+   "context": "Message 11 of the dialogue: WEDGE: Let's put her on point.{line}No sense taking any risks.{line}Forward!",
+   "text": "ويدج: لنضعها في المقدمة.{line}لا داعي للمجازفة.{line}إلى الأمام!"
+  },
+  {
+   "id": "narshe.012",
+   "context": "Message 12 of the dialogue: WEDGE: The Esper's gotta be in here.{line}Move out!",
+   "text": "ويدج: لا بد أن الإسبر هنا في الداخل.{line}تحركوا!"
+  },
+  {
+   "id": "narshe.013",
+   "context": "Message 13 of the dialogue: GUARD: Imperial Magitek Armor?{line}Not even Narshe's safe anymore!",
+   "text": "الحارس: دروع ماجيتك إمبراطورية؟{line}حتى نارشي لم تعد آمنة!"
+  },
+  {
+   "id": "narshe.014",
+   "context": "Message 14 of the dialogue: GUARD: Machine-riding,{line}self-important swine!{line}Take this!",
+   "text": "الحارس: أيها الخنازير المتغطرسون{line}راكبو الآلات!{line}خذوا هذه!"
+  },
+  {
+   "id": "narshe.015",
+   "context": "Message 15 of the dialogue: GUARD: Narshe's freedom depends on us!",
+   "text": "الحارس: حرية نارشي تعتمد علينا!"
+  },
+  {
+   "id": "narshe.016",
+   "context": "Message 16 of the dialogue: WEDGE: According to our source, the frozen Esper was found in a new mine shaft.{line}…Maybe this one…",
+   "text": "ويدج: بحسب مصدرنا، عثروا على الإسبر المتجمد في نفق منجم جديد.{line}…ربما هذا هو…"
+  },
+  {
+   "id": "narshe.017",
+   "context": "Message 17 of the dialogue: VICKS: I'll handle this.{line}Stand back!",
+   "text": "فيكس: سأتولى هذا.{line}تراجع!"
+  },
+  {
+   "id": "narshe.018",
+   "context": "Message 18 of the dialogue: GUARD: We've got 'em trapped, now!",
+   "text": "الحارس: حاصرناهم الآن!"
+  },
+  {
+   "id": "narshe.019",
+   "context": "Message 19 of the dialogue: GUARD: We must defend the mines!",
+   "text": "الحارس: علينا الدفاع عن المناجم!"
+  },
+  {
+   "id": "narshe.020",
+   "context": "Message 20 of the dialogue: Locked.",
+   "text": "مقفل."
+  },
+  {
+   "id": "narshe.021",
+   "context": "Message 21 of the dialogue: GIRL: Where am I…?",
+   "text": "الفتاة: أين أنا…؟"
+  },
+  {
+   "id": "narshe.022",
+   "context": "Message 22 of the dialogue: OLD MAN: Whoa!{line}And I only just removed the crown!{line}{page}GIRL: …head…hurts…",
+   "text": "العجوز: مهلا!{line}لم أنزع التاج إلا للتو!\nالفتاة: …رأسي…يؤلمني…"
+  },
+  {
+   "id": "narshe.023",
+   "context": "Message 23 of the dialogue: OLD MAN: Easy! This is a Slave Crown. The others had complete control over you while you were wearing it.",
+   "text": "العجوز: على رسلك! هذا تاج العبودية. كان الآخرون يتحكمون بك تماما ما دمت ترتدينه."
+  },
+  {
+   "id": "narshe.024",
+   "context": "Message 24 of the dialogue: GIRL: I can't remember a thing…{line}OLD MAN: Don't worry.{line}It'll all come back to you…in time, that is.{page}………",
+   "text": "الفتاة: لا أذكر شيئا…{line}العجوز: لا تقلقي.{line}سيعود كل شيء إليك…مع الوقت.\n………"
+  },
+  {
+   "id": "narshe.025",
+   "context": "Message 25 of the dialogue: My name…{line}…is…{Terra}…{page}OLD MAN: Impressive!{line}I've never heard of anyone recovering this fast…!",
+   "text": "اسمي…{line}…هو…{Terra}…\nالعجوز: مذهل!{line}لم أسمع قط بأحد يتعافى بهذه السرعة…!"
+  },
+  {
+   "id": "narshe.026",
+   "context": "Message 26 of the dialogue: SOLDIER: Open up!{line}Give us back the girl and the Empire's Magitek Armor!!",
+   "text": "الجندي: افتح!{line}أعد إلينا الفتاة ودرع الماجيتك الإمبراطوري!!"
+  },
+  {
+   "id": "narshe.027",
+   "context": "Message 27 of the dialogue: SOLDIER: Open this door!{line}We want that girl!{line}She's an officer of the Empire!",
+   "text": "الجندي: افتح هذا الباب!{line}نريد تلك الفتاة!{line}إنها ضابطة في الإمبراطورية!"
+  },
+  {
+   "id": "narshe.028",
+   "context": "Message 28 of the dialogue: {Terra}: Empire…?{line}Magitek Armor…?",
+   "text": "{Terra}: الإمبراطورية…؟{line}درع الماجيتك…؟"
+  },
+  {
+   "id": "narshe.029",
+   "context": "Message 29 of the dialogue: OLD MAN: Look,{line}I have to get you out of here!{line}I don't have time to explain!",
+   "text": "العجوز: اسمعي،{line}علي أن أخرجك من هنا!{line}لا وقت لدي للشرح!"
+  },
+  {
+   "id": "narshe.030",
+   "context": "Message 30 of the dialogue: OLD MAN: Over here!",
+   "text": "العجوز: من هنا!"
+  },
+  {
+   "id": "narshe.031",
+   "context": "Message 31 of the dialogue: A mysterious young woman, controlled by the Empire, and born with the gift of magic……",
+   "text": "شابة غامضة، تتحكم بها الإمبراطورية، وولدت بموهبة السحر……"
+  },
+  {
+   "id": "narshe.032",
+   "context": "Message 32 of the dialogue: {line}Please enter a name.",
+   "text": "{line}رجاء أدخل اسما."
+  },
+  {
+   "id": "narshe.033",
+   "context": "Message 33 of the dialogue: OLD MAN: Make your way out through the mines! I'll keep these brutes occupied!",
+   "text": "العجوز: اخرجي عبر المناجم! سأشغل هؤلاء الأوغاد!"
+  },
+  {
+   "id": "narshe.034",
+   "context": "Message 34 of the dialogue: Got her!",
+   "text": "أمسكنا بها!"
+  },
+  {
+   "id": "narshe.035",
+   "context": "Message 35 of the dialogue: She's up there!",
+   "text": "إنها في الأعلى!"
+  },
+  {
+   "id": "narshe.036",
+   "context": "Message 36 of the dialogue: KEFKA: My sweet little magic {line}user…! Uweee, he, he! With this Slave Crown I'll practically OWN you!!",
+   "text": "كيفكا: يا ساحرتي الصغيرة{line}الحلوة…! أوييي، هي، هي! بهذا التاج سأمتلكك عمليا!!"
+  },
+  {
+   "id": "narshe.037",
+   "context": "Message 37 of the dialogue: {Terra}: No! Get away from me!",
+   "text": "{Terra}: لا! ابتعد عني!"
+  },
+  {
+   "id": "narshe.038",
+   "context": "Message 38 of the dialogue: GESTAHL: We stand on the brink of a major breakthrough! In the days to come, we'll witness a total revival of magic!{page}GESTAHL: It is our destiny, and ours alone, to take this mystic force and claim what is rightfully ours!",
+   "text": "غشتال: نقف على أعتاب إنجاز عظيم! في الأيام القادمة سنشهد إحياء كاملا للسحر!\nغشتال: قدرنا، وقدرنا وحدنا، أن نأخذ هذه القوة الخفية ونطالب بما هو حق لنا!"
+  },
+  {
+   "id": "narshe.039",
+   "context": "Message 39 of the dialogue: CID: This is my finest work.{line}These Magitek converters combine the power of magic with machines…",
+   "text": "سيد: هذا أفضل أعمالي.{line}محولات الماجيتك هذه تجمع قوة السحر بالآلات…"
+  },
+  {
+   "id": "narshe.040",
+   "context": "Message 40 of the dialogue: GESTAHL: With our new-found power, nothing can stand in our way!{page}Hurrah!!!{line}Long live Emperor Gestahl!!!",
+   "text": "غشتال: بقوتنا الجديدة، لا شيء يقف في طريقنا!\nمرحى!!!{line}عاش الإمبراطور غشتال!!!"
+  },
+  {
+   "id": "narshe.041",
+   "context": "Message 41 of the dialogue: OLD MAN: Took you long enough!{line}How goes the robbing and plundering trade?",
+   "text": "العجوز: تأخرت كثيرا!{line}كيف حال تجارة السرقة والنهب؟"
+  },
+  {
+   "id": "narshe.042",
+   "context": "Message 42 of the dialogue: {Locke}: I PREFER the term treasure hunting!{page}OLD MAN: Ha!{line}Semantic nonsense!{line}{Locke}: There's a HUGE difference!",
+   "text": "{Locke}: أفضل مصطلح البحث عن الكنوز!\nالعجوز: ها!{line}هراء لغوي!{line}{Locke}: هناك فرق هائل!"
+  },
+  {
+   "id": "narshe.043",
+   "context": "Message 43 of the dialogue: {Locke}: Anyway, were you the one who sent for me?{page}OLD MAN: Yeah.{line}There's a girl I'd like you to meet.",
+   "text": "{Locke}: على أي حال، أأنت من أرسل في طلبي؟\nالعجوز: نعم.{line}هناك فتاة أود أن تقابلها."
+  },
+  {
+   "id": "narshe.044",
+   "context": "Message 44 of the dialogue: {Locke}: ……!?{line}This better not have anything to do with that Magitek-riding, imperial…witch!!!",
+   "text": "{Locke}: ……!؟{line}أرجو ألا يكون لهذا علاقة بتلك الساحرة الإمبراطورية راكبة الماجيتك!!!"
+  },
+  {
+   "id": "narshe.045",
+   "context": "Message 45 of the dialogue: OLD MAN: Imperial troops are pursuing her even as we speak.{page}This town is no match for the Empire.{page}Our independence can only be assured if we join forces with the Returners, an underground resistance movement.{page}That girl wasn't responsible for her actions. We must get her to understand our dilemma!",
+   "text": "العجوز: القوات الإمبراطورية تطاردها ونحن نتكلم.\nهذه البلدة ليست ندا للإمبراطورية.\nلن يكون استقلالنا مضمونا إلا إذا انضممنا إلى العائدين، حركة مقاومة سرية.\nتلك الفتاة لم تكن مسؤولة عن أفعالها. علينا أن نجعلها تفهم مأزقنا!"
+  },
+  {
+   "id": "narshe.046",
+   "context": "Message 46 of the dialogue: {Locke}: All right…{line}I think we'd better help her…",
+   "text": "{Locke}: حسنا…{line}أظن أن علينا مساعدتها…"
+  },
+  {
+   "id": "narshe.047",
+   "context": "Message 47 of the dialogue: OLD MAN: Agreed.{line}Make your way first to Figaro, and talk to the king.",
+   "text": "العجوز: موافق.{line}اذهب أولا إلى فيغارو، وتحدث إلى الملك."
+  },
+  {
+   "id": "narshe.048",
+   "context": "Message 48 of the dialogue: Treasure hunter and trail-worn traveler, searching the world over for relics of the past…",
+   "text": "صائد كنوز ورحالة أنهكته الدروب، يجوب العالم بحثا عن آثار الماضي…"
+  },
+  {
+   "id": "narshe.049",
+   "context": "Message 49 of the dialogue: GUARD: Now we gotcha!",
+   "text": "الحارس: أمسكنا بك الآن!"
+  },
+  {
+   "id": "narshe.050",
+   "context": "Message 50 of the dialogue: {Locke}: Wonderful…{line}There's a whole bunch of 'em…",
+   "text": "{Locke}: رائع…{line}هناك حشد كامل منهم…"
+  },
+  {
+   "id": "narshe.051",
+   "context": "Message 51 of the dialogue: {line}{Spaces 0F}Kupo…",
+   "text": "{center}{line}كوبو…"
+  },
+  {
+   "id": "narshe.052",
+   "context": "Message 52 of the dialogue: {Locke}: Moogles…!{line}Are you saying you want to help me?",
+   "text": "{Locke}: موغلز…!{line}أتقولون إنكم تريدون مساعدتي؟"
+  },
+  {
+   "id": "narshe.053",
+   "context": "Message 53 of the dialogue: Kupo!!!",
+   "text": "كوبو!!!"
+  },
+  {
+   "id": "narshe.054",
+   "context": "Message 54 of the dialogue: MOOGLE: Use us to save {Terra} from the guards!{page}Need more information?{line}{Choice} Yes{line}{Choice} No",
+   "text": "موغل: استخدمنا لإنقاذ {Terra} من الحراس!\nأتحتاج مزيدا من المعلومات؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "narshe.055",
+   "context": "Message 55 of the dialogue: You'll fight using 3 different groups. Press the Y Button to switch between them.{page}Your job is to defeat the commander of the guards before his men reach {Terra}. Save her, or else…",
+   "text": "ستقاتل بثلاث مجموعات مختلفة. اضغط زر واي للتبديل بينها.\nمهمتك هزيمة قائد الحراس قبل أن يصل رجاله إلى {Terra}. أنقذها، وإلا…"
+  },
+  {
+   "id": "narshe.056",
+   "context": "Message 56 of the dialogue: {Terra}: Unh…",
+   "text": "{Terra}: أه…"
+  },
+  {
+   "id": "narshe.057",
+   "context": "Message 57 of the dialogue: {Locke}: Thanks, Moogles!{line}We're in your debt!",
+   "text": "{Locke}: شكرا يا موغلز!{line}نحن مدينون لكم!"
+  },
+  {
+   "id": "narshe.058",
+   "context": "Message 58 of the dialogue: {Locke}: I think this switch'll…",
+   "text": "{Locke}: أظن أن هذا المفتاح…"
+  },
+  {
+   "id": "narshe.059",
+   "context": "Message 59 of the dialogue: {Locke}: Eh?{line}You back with us now?!",
+   "text": "{Locke}: ماذا؟{line}هل عدت إلينا الآن؟!"
+  },
+  {
+   "id": "narshe.060",
+   "context": "Message 60 of the dialogue: {Terra}: You…saved me?{line}{Locke}: Save your thanks for the Moogles!",
+   "text": "{Terra}: أنت…أنقذتني؟{line}{Locke}: وفري شكرك للموغلز!"
+  },
+  {
+   "id": "narshe.061",
+   "context": "Message 61 of the dialogue: {Terra}: Uhh…I can't remember anything…past or present…",
+   "text": "{Terra}: أه…لا أذكر شيئا…لا الماضي ولا الحاضر…"
+  },
+  {
+   "id": "narshe.062",
+   "context": "Message 62 of the dialogue: {Locke}: You have amnesia?!",
+   "text": "{Locke}: أتعانين من فقدان الذاكرة؟!"
+  },
+  {
+   "id": "narshe.063",
+   "context": "Message 63 of the dialogue: {Terra}: A man said my memory would come back…{page}{Locke}: Give it time. You're safe with me! I give you my word!{line}{Terra}: ???{page}{Locke}: I won't leave you until your memory returns!!{page}By the way, this secret entrance might be useful some day.{line}Don't forget about it!",
+   "text": "{Terra}: قال رجل إن ذاكرتي ستعود…\n{Locke}: امنحيها وقتا. أنت بأمان معي! أعدك بذلك!{line}{Terra}: ؟؟؟\n{Locke}: لن أتركك حتى تعود ذاكرتك!!\nبالمناسبة، قد يفيدك هذا المدخل السري يوما ما.{line}لا تنسيه!"
+  }
  ]
 }

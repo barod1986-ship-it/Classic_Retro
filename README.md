@@ -97,6 +97,7 @@ runs the same way for every target.
 | `link-to-the-past` | The Legend of Zelda: A Link to the Past (USA), Super NES | ROM overlay | `glyph-font` |
 | `shining-force-2` | Shining Force II (USA), Mega Drive | ROM overlay | `glyph-font` |
 | `final-fantasy-ii` | Final Fantasy II (USA, Rev 1), Super NES | ROM overlay | `glyph-font` |
+| `final-fantasy-iii` | Final Fantasy III (USA), Super NES | ROM overlay | `glyph-font` |
 
 ```text
 classic-retro targets list                          # every target, its documents and operations
@@ -136,7 +137,7 @@ classic-retro targets strip fomt.workspace.json --out fomt.json
 Every check and build holds a translations file against the originals pinned in the
 target's code. See [the translator's guide](docs/TRANSLATING_AR.md) (in Arabic).
 
-The four rendering strategies are what the twenty-two targets proved, not the only ones
+The four rendering strategies are what the twenty-three targets proved, not the only ones
 possible. Games on other platforms will need other methods, and the strategy and
 target registries accept them from this repository or from other packages through
 entry points. See [the rendering strategies](docs/ARABIC_STRATEGIES.md) and
@@ -166,8 +167,8 @@ A script holds commands such as `run 300`, `tap START`, `touch 128 272`, `shot m
 
 ## Repository status
 
-**Localization platform with twenty-two reference targets: twelve on the Game Boy Advance,
-three on the Nintendo DS, three on the PlayStation, three on the Super NES and one on the
+**Localization platform with twenty-three reference targets: twelve on the Game Boy Advance,
+three on the Nintendo DS, three on the PlayStation, four on the Super NES and one on the
 Mega Drive.**
 
 Every target translates one scene or a few strings chosen to prove its renderer, not
@@ -463,5 +464,27 @@ turned back), write a character's name from the translation's own, and swap the 
 tiles by DMA; the English messages stay as they were, and the patch is about 4 KB. See
 [the Final Fantasy II testing guide](docs/FF4_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/FF4_ARABIC_RENDERER.md).
+
+The twenty-third reference target, and the fourth on the Super NES, is **Final Fantasy III
+(USA)**, the Super NES release of Final Fantasy VI. Its text engine was read from the
+[everything8215/ff6](https://github.com/everything8215/ff6) disassembly, which rebuilds this
+ROM and names its routines, checked byte by byte against the ROM and run in snes9x. The
+sixty-four messages of the opening through the end of Narshe are in Arabic, with the
+fourteen characters' names the game writes in them: the dialogue on the cliffs, the centred
+narration over the Magitek walk, the town and the mines, Arvis's house, Kefka's and the
+Empire's scenes, Locke, the Moogles with their two-way choices and the escape. The game draws
+a letter a frame with a variable-width font into cells of 16x16 pixels sent to the text's
+tiles in the vertical blank, so the Arabic takes the `glyph-font` strategy with a font of the
+overlay's own: forms of 16x15 pixels, 12 pixels, white with a black shadow on the window's
+blue, each stored in nine pre-shifted variants so a hook draws at any pixel without shifting.
+The overlay adds a fourth MiB for the hooks, the glyphs, the names and the messages. Eight
+65C816 hooks in the added bank, assembled with cc65, read a translated message from its
+Arabic, lay each line out whole from the box's right edge into a buffer of tile columns the
+first time the engine reaches it and send it by DMA in the vertical blank, while the engine
+keeps walking the line's codes so its pauses, button waits, pages and choices work as before;
+a choice's cursor takes the line's rightmost cell, and a character's name comes from the
+translation's own table. The English messages stay as they were, and the patch is about
+38 KB. See [the Final Fantasy III testing guide](docs/FF6_ARABIC_TEST_AR.md) and
+[the renderer notes](docs/FF6_ARABIC_RENDERER.md).
 
 See [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md).

@@ -70,6 +70,7 @@ from classic_retro.engines.ff6 import (
     NAME_FIRST,
     NAME_LAST,
     PAGE,
+    SPACES,
     command_skeleton,
 )
 from classic_retro.font.arabic_outline import contextual_font_data, joins_right_neighbour
@@ -140,8 +141,16 @@ _HAMZA = ("##", "#.")
 MARKED_ALEF: dict[str, tuple[str, tuple[str, ...]]] = {"ﺃ": ("ﺍ", _HAMZA), "ﺄ": ("ﺎ", _HAMZA)}
 RAISED_FORMS = frozenset("ﻱﻲ")
 LINE_BREAK = "{line}"
-# Commands a translation may write: the names, and the pauses and button waits.
-PASSING_COMMANDS = frozenset((*NAME_CODES, "Wait", "Pause", "Key", "KeyAfter"))
+# A page that starts with this has its lines centred: each starts with a SPACES
+# command whose byte is the pixels from the right edge to the line.
+CENTER = "{center}"
+LAYOUT_TOKENS = frozenset((LINE_BREAK, CENTER))
+# A choice's mark: the cursor's cell at the line's right, which the line leaves.
+CHOICE = COMMAND_CODES["Choice"]
+CHOICE_WIDTH = 16
+# Commands a translation may write: the names, the pauses and button waits, and
+# a choice's mark.
+PASSING_COMMANDS = frozenset((*NAME_CODES, "Wait", "Pause", "Key", "KeyAfter", "Choice"))
 _TOKEN = re.compile(r"\{([^{}]*)\}")
 _SPACES_OUTSIDE_TOKENS = re.compile(r" (?![^{}]*\})")
 
@@ -404,7 +413,7 @@ def notation_skeleton(notation: str) -> tuple[str, ...]:
     return tuple(
         part
         for match in _TOKEN.finditer(notation)
-        if f"{{{match.group(1)}}}" != LINE_BREAK
+        if f"{{{match.group(1)}}}" not in LAYOUT_TOKENS
         for part in command_skeleton(command(match.group(1)).data)
     )
 
@@ -418,7 +427,7 @@ def message_characters(notation: str) -> set[str]:
     """The characters a message paints."""
     used = {" "}
     for page in notation.split("\n"):
-        for segment in page.split(LINE_BREAK):
+        for segment in _uncentred(page).split(LINE_BREAK):
             for word in _words(segment):
                 for piece in _pieces(word):
                     if isinstance(piece, str):
@@ -483,6 +492,10 @@ class Ff6ArabicEncoder:
                         ErrorCode.MISSING_GLYPH, f"No Arabic name for {COMMANDS[code][0]}"
                     )
                 width += self.name_widths[code]
+            elif code == CHOICE:
+                width += CHOICE_WIDTH
+            elif code == SPACES:
+                width += codes[at + 1]
             elif code >= FIRST_CODE:
                 width += self.font.width(code)
             at += COMMANDS[code][1] if code in COMMANDS else 1
@@ -524,7 +537,21 @@ class Ff6ArabicEncoder:
 
     def page(self, page: str) -> list[LaidLine]:
         """A page's lines, a word at a time: a line breaks where the next word would
-        pass ``LINE_WIDTH``, and at each ``{line}``."""
+        pass ``LINE_WIDTH``, and at each ``{line}``. A page that starts with
+        ``{center}`` has each line centred with a spaces command, when there is a
+        font to measure by."""
+        centred = page.startswith(CENTER)
+        lines = self._lines(_uncentred(page))
+        if not centred or self.font is None:
+            return lines
+        centred_lines = []
+        for line in lines:
+            indent = (LINE_WIDTH - line.width) // 2
+            data = bytes((SPACES, indent)) + line.data if indent else line.data
+            centred_lines.append(LaidLine(data, line.width + indent))
+        return centred_lines
+
+    def _lines(self, page: str) -> list[LaidLine]:
         space = self.codes(" ")
         space_width = self.font.width(space[0]) if self.font is not None else SPACE_WIDTH
         lines: list[LaidLine] = []
@@ -548,6 +575,17 @@ class Ff6ArabicEncoder:
                     )
             lines.append(LaidLine(bytes(line), width))
         return lines
+
+
+def _uncentred(page: str) -> str:
+    """The page without its ``{center}`` mark, which may only start it."""
+    if page.startswith(CENTER):
+        page = page[len(CENTER) :]
+    if CENTER in page:
+        raise ClassicRetroError(
+            ErrorCode.UNSUPPORTED_CONTROL_CODE, "{center} starts a page: it goes first"
+        )
+    return page
 
 
 def encode_name(encoder: Ff6ArabicEncoder, key: str, text: str) -> tuple[bytes, int]:
@@ -594,6 +632,10 @@ def laid_out_line(
         if NAME_FIRST <= code <= NAME_LAST:
             for glyph_code in names[code]:
                 draw(glyph_code)
+        elif code == CHOICE:
+            pen -= CHOICE_WIDTH
+        elif code == SPACES:
+            pen -= data[at + 1]
         elif code >= FIRST_CODE:
             draw(code)
         at += COMMANDS[code][1] if code in COMMANDS else 1

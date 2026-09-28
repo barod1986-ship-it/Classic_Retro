@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import dataclasses
 import hashlib
+import json
 import re
 import shutil
 import struct
@@ -9,6 +10,7 @@ from functools import cache
 
 import pytest
 
+from classic_retro.cli import main
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines import ff6 as engine
 from classic_retro.engines import ff6_arabic as arabic
@@ -307,7 +309,7 @@ def test_the_sites_and_anchors_lie_apart_and_the_parts_are_in_order():
     spans = _map_all()
     for (start, size, _), (next_start, _, _) in zip(spans, spans[1:], strict=False):
         assert start + size <= next_start
-    assert all(0xC07000 <= start < 0xC09000 for start, _, _ in spans)
+    assert all(0xC07000 <= start < 0xC09000 for start, _, _ in spans) and len(overlay.SITES) == 8
     assert overlay.HOOK_ADDRESS + len(overlay.HOOK_CODE) <= overlay.WIDTHS
     assert overlay.WIDTHS + 224 <= overlay.OFFSETS
     assert overlay.OFFSETS + 448 <= overlay.NAMES
@@ -345,7 +347,9 @@ def test_the_hook_source_uses_the_overlay_addresses_and_the_engine_geometry():
     assert equates["RIGHT_EDGE"] == arabic.RIGHT_EDGE and equates["LEFT_EDGE"] == arabic.LEFT_EDGE
     assert equates["GLYPH_ROWS"] == GLYPH_ROWS and equates["ROW_BYTES"] == arabic.ROW_BYTES
     assert equates["LINE"] == engine.LINE and equates["PAGE"] == engine.PAGE
-    assert equates["LINE_CELLS"] == 14
+    assert equates["LINE_CELLS"] == 14 and equates["CHOICE_WIDTH"] == arabic.CHOICE_WIDTH
+    assert equates["SPACES"] == engine.SPACES and equates["CHOICE"] == arabic.CHOICE
+    assert equates["CHOICE_CELL"] == 13
     header = overlay.HOOK_SOURCE.read_text(encoding="utf-8")
     for site in overlay.SITES:
         assert f"${site.address >> 16:02X}:{site.address & 0xFFFF:04X}" in header
@@ -357,9 +361,18 @@ def test_the_stored_hook_matches_its_source():
     assert report["match"] and report["hook_bytes"] == len(overlay.HOOK_CODE)
 
 
+def test_the_command_group_checks_and_encodes(capsys):
+    assert main(["final-fantasy-iii", "encode-arabic", "{Terra}: هيا"]) == 0
+    encoded = json.loads(capsys.readouterr().out)
+    assert encoded["count"] == 7 and encoded["bytes"].startswith("02 ")
+    assert main(["targets", "check-hooks", "final-fantasy-iii"]) == 0
+    assert str(len(overlay.HOOK_CODE)) in capsys.readouterr().out
+
+
 def test_the_translations_are_checked_and_encoded_without_the_rom():
     report = overlay.check_ff6_translations()
-    assert report["messages"] == 0 and set(report["names"]) == set(NAME_KEYS)
+    assert report["messages"] == 64 and set(report["names"]) == set(NAME_KEYS)
+    assert report["keys"][:2] == ["narshe.000", "narshe.001"] and report["keys"][-1] == "narshe.063"
     encoded = overlay.encode_ff6_arabic_message("{Terra}: هيا")
     assert encoded["count"] == 7 and encoded["bytes"].startswith("02 ")
 

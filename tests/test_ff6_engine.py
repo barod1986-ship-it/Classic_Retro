@@ -200,6 +200,7 @@ def test_a_translations_skeleton_is_its_tokens_but_the_layout():
     with pytest.raises(ClassicRetroError) as caught:
         validate_command_skeleton(("{Terra}", "{Key}"), notation)
     assert caught.value.code is ErrorCode.TOKEN_ORDER_VIOLATION
+    assert notation_skeleton("{center}{Choice} نعم") == ("{Choice}",)
     for bad in ("{Gil}", "{Spaces 02}", "{Pause}", "{Key 01}", "{Nobody}"):
         with pytest.raises(ClassicRetroError) as caught:
             notation_skeleton(bad)
@@ -448,3 +449,23 @@ def test_the_font_is_drawn_at_the_largest_size_its_rows_hold(beh_font):
     with pytest.raises(ClassicRetroError) as caught:
         build_ff6_font(beh_font, glyph_map, {"x"})
     assert caught.value.code is ErrorCode.UNENCODABLE_TEXT
+
+
+def test_a_choice_leaves_its_cursor_room_and_a_centred_page_indents_its_lines():
+    font, encoder = _font(message_characters("{Choice} بب") | message_characters("ب"))
+    line = encoder.encode("{Choice} بب").pages[0][0]
+    assert line.data[0] == COMMAND_CODES["Choice"] and line.width == 16 + 4 + 12
+    placed = laid_out_line(line.data, font, {})
+    # The cursor's cell (208-223) stays free: the space and the letters follow it.
+    assert [x for x, _ in placed] == [204, 198, 192]
+    centred = encoder.encode("{center}بب{line}ب").pages[0]
+    assert centred[0].data[:2] == bytes((COMMAND_CODES["Spaces"], (220 - 12) // 2))
+    assert centred[0].width == 12 + 104 and centred[1].width == 6 + 107
+    assert [x for x, _ in laid_out_line(centred[1].data, font, {})] == [224 - 107 - 6]
+    assert notation_skeleton("{center}بب{line}ب") == ()
+    with pytest.raises(ClassicRetroError) as caught:
+        encoder.encode("ب{center}ب")
+    assert caught.value.code is ErrorCode.UNSUPPORTED_CONTROL_CODE
+    # Without a font a centred page is laid out by nobody: no spaces command.
+    bare = Ff6ArabicEncoder(encoder.glyph_map)
+    assert bare.encode("{center}بب").data[0] != COMMAND_CODES["Spaces"]
