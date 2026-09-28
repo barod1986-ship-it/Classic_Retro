@@ -183,7 +183,7 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-  minish-cap-arabic-overlay:
+  minish-cap-source-overlay:
     # zeldaret/tmc extracts its assets from the original ROM, which is never
     # uploaded. This job checks the overlay against the pinned source, measures
     # every Arabic line with the reference font and compiles the patched
@@ -249,7 +249,7 @@ jobs:
       - name: Upload overlay review files
         uses: actions/upload-artifact@v6
         with:
-          name: minish-cap-arabic-overlay
+          name: minish-cap-source-overlay
           path: |
             tmc-build-report.json
             upstream-tmc/data/classic_retro/arabic_font_preview.png

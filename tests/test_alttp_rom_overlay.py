@@ -249,7 +249,6 @@ def test_a_different_rom_is_refused(font_path):
         ((0x0ECAD5, b"\xea"),),  # a site
         ((0x0ECADF, b"\x09"),),  # a width the name is measured with
         ((0x0ED36E, b"\x01"),),  # the flag's first value
-        ((overlay.HOOK_ROOM_END - 1, b"\x00"),),  # the hooks' room is not free
         ((0x00FFD7, b"\x0b"),),  # the header says 2 MiB
     ],
 )
@@ -257,6 +256,17 @@ def test_engine_code_that_differs_where_the_overlay_works_is_refused(change):
     with pytest.raises(ClassicRetroError) as caught:
         overlay.verify_rom(_rom(change))
     assert caught.value.code is ErrorCode.SOURCE_BASELINE_MISMATCH
+
+
+def test_a_room_of_the_hooks_that_is_not_free_is_refused():
+    rom = _rom(((overlay.HOOK_ROOM_END - 1, b"\x00"),))
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.verify_rom(rom)
+    assert caught.value.code is ErrorCode.SAFE_REGION_CONTENT_MISMATCH
+    assert str(caught.value) == (
+        f"The room of the hooks holds data at {lorom_offset(overlay.HOOK_ROOM_END - 1):#x}, "
+        "where 0xff was expected"
+    )
 
 
 def test_the_arabic_keeps_to_the_added_banks(font_path, monkeypatch):
@@ -378,7 +388,10 @@ def test_the_output_is_read_back_before_it_is_accepted(built):
         (overlay.ARABIC_WIDTHS + a_glyph, "width table"),
         (overlay.ARABIC_FONT + 64 * a_glyph + 1, "font table"),
         (overlay.MESSAGES + 1, "Arabic text"),
-        (lorom_address(MESSAGE_DATA + 2), "outside its places"),
+        (
+            lorom_address(MESSAGE_DATA + 2),
+            f"at {MESSAGE_DATA + 2:#x}, outside the overlay's places",
+        ),
     ):
         tampered = bytearray(result.rom)
         tampered[lorom_offset(address)] ^= 0x01

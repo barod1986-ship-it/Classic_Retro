@@ -71,7 +71,7 @@ def legend_font_size(font_path: Path) -> int:
 
 
 def validate_legend_lines(lines: tuple[str, ...]) -> None:
-    """Arabic letters, spaces and punctuation only: no marks, no bidi runs to reorder."""
+    """Arabic letters and digits, spaces and punctuation only: no marks, no Latin to reorder."""
     if not 1 <= len(lines) <= 5:
         raise ClassicRetroError(ErrorCode.TEXT_BOX_OVERFLOW, "A legend image holds 1 to 5 lines")
     for line in lines:

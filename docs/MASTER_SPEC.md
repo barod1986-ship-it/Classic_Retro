@@ -689,7 +689,8 @@ Perfect byte identity may not be possible for every format or disc build, but se
 
 Tests live in `tests/`, a module per concern: the shared layers (`test_arabic_core.py`,
 `test_localization.py`, `test_translations.py`, `test_docs.py`, `test_digests.py`,
-`test_cpu_encoders.py`, `test_patching_kit.py`...) and, for each target, its engine
+`test_overlay_pins.py`, `test_cpu_encoders.py`, `test_patching_kit.py`...) and, for each
+target, its engine
 (`test_<game>_engine.py`), its Arabic module (`test_<game>_arabic.py`) and its overlay
 (`test_<game>_rom_overlay.py`, `test_<game>_source_overlay.py`). The
 name is the game's or its engine's (FireRed's are `test_pokemon_gen3*.py`, Pokémon
@@ -703,6 +704,16 @@ the reference font reads its path from `CLASSIC_RETRO_REFERENCE_FONT` and skips 
 it is unset.
 
 Small synthetic fixtures are preferred for unit tests.
+
+A rom overlay's tests fabricate their image from the overlay's own constants, so a
+refactor that moves a pinned address or edits an original byte string passes them
+unnoticed: the fabricated image moves with it. `test_overlay_pins.py` therefore
+serializes every module-level constant in capitals of each overlay module and its
+`_script` sibling canonically, digests it, and holds the SHA-256 to
+`tests/data/overlay_pins.json`, one entry per rom overlay target and none else. A pin
+changes only on purpose, and the record is regenerated in the same commit
+(`CLASSIC_RETRO_UPDATE_PINS=1 python -m pytest tests/test_overlay_pins.py`), so the
+review sees the digest move next to the constant that moved.
 
 Tests involving user-supplied game images run locally or in an explicitly configured environment.
 

@@ -171,9 +171,13 @@ and the script module (`rom/<game>_arabic_script.py`, below).
   the game: `verify_bytes` (the pinned originals are in the image before any change),
   `verify_empty` (a region about to be filled holds nothing yet) and `verify_untouched`
   (the output differs from the original only inside the overlay's places; it compares
-  blocks first, so a 128 MiB image stays linear). Final Fantasy VI Advance's and
-  Pokémon Platinum's overlays use them; the others make the same checks in their own
-  module.
+  blocks first, so a 128 MiB image stays linear). The overlays touched since the helpers
+  exist call them: A Link to the Past, Chrono Trigger and Shining Force II all three,
+  Final Fantasy VI Advance `verify_untouched` (against the original expanded with
+  `0xFF`), Pokémon Platinum `verify_bytes` and `verify_untouched` (with the ranges
+  derived from what `patching.nitro` wrote). The older overlays keep their own loops
+  for the same checks until they are next touched, and a new overlay starts with the
+  helpers.
 - `rebuild.bps.create_bps` builds the patch. `patching.outputs` supplies the common
   report fields and writes the patch file, plus the patched image only when asked
   (local use).
@@ -406,6 +410,14 @@ the image it was given (Pokémon Platinum).
   (without its volatile and path keys) and of each preview's decoded pixels, with the
   library versions it was made with. It changes only with the target's own translation
   or renderer, in the same commit (§7).
+- A rom overlay's tests fabricate their image from the overlay's own constants, so a
+  moved pin (an address, an original byte string, a hook's bytes) passes them: the
+  fabricated image moves with it. `tests/test_overlay_pins.py` therefore digests every
+  module-level constant in capitals of each overlay module and its `_script` sibling,
+  and holds the SHA-256 to `tests/data/overlay_pins.json`, one entry per rom overlay
+  target and none else. A new rom overlay needs its entry, and a pin changed on purpose
+  is recorded in the same commit:
+  `CLASSIC_RETRO_UPDATE_PINS=1 python -m pytest tests/test_overlay_pins.py`.
 - Documents:
   - `docs/<GAME>_ARABIC_TEST_AR.md`: the Arabic guide for applying the patch and
     reaching the scene
@@ -430,7 +442,11 @@ output. Before merging such a change:
 
 A target's own results change only when that target's translation or renderer is
 changed on purpose. Its `reference_patch_sha256` and its digests (`--update-digests`)
-are updated in the same commit.
+are updated in the same commit. A rom overlay's pins change the same way: an address,
+an original byte string or a hook's bytes moves on purpose, and the record in
+`tests/data/overlay_pins.json` is regenerated in the same commit
+(`CLASSIC_RETRO_UPDATE_PINS=1`, §6), so the review sees the digest move next to the
+constant that moved.
 
 The results depend on the raster stack as much as on the code: every glyph is
 rasterized by the FreeType bundled in the installed Pillow wheel and shaped by the

@@ -117,7 +117,12 @@ compares the result with the bytes stored in `fomt_arabic.py` (run in CI).
 
 - Reference font: Noto Kufi Arabic SemiBold (SIL OFL 1.1), SHA-256
   `aa30cd2663f1eb1c940c9cd6a898877f307c2572e72a8a352896fe23f512018e`, shaped with
-  HarfBuzz (lam-alef and the other ligatures, contextual forms, kerning).
+  HarfBuzz (lam-alef and the other ligatures, contextual forms, kerning). A line is
+  shaped in directional runs (UAX #9 W2, W4 and N1; "Numbers in shaped lines" in
+  [ARABIC_PIPELINE.md](ARABIC_PIPELINE.md)): a number inside it, of the digits `0-9` a
+  translation may use, is one left-to-right run and reads as written, the rest right to
+  left. No shipped line holds a number, so nothing built changed: a line without digits
+  is one run, shaped in one buffer as before.
 - Size 10 on a baseline at row 11 of the 16-row cell: the forms span rows 1 to 14 and
   their shadow row 15. Coverage from 128 of 255 is ink.
 - The shadow is the game's: colour 2 one pixel right and one down-right of the ink,

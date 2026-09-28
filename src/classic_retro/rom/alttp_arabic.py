@@ -74,6 +74,7 @@ from classic_retro.localization.translations import TranslationSet
 from classic_retro.patching.hooks import HookProgram
 from classic_retro.patching.image import ImageSpec
 from classic_retro.patching.outputs import base_report, write_image, write_patch
+from classic_retro.patching.overlay import verify_bytes, verify_empty, verify_untouched
 from classic_retro.rebuild.bps import BpsPatch, create_bps
 from classic_retro.rom.alttp_arabic_script import AlttpMessage, alttp_arabic_messages
 
@@ -244,16 +245,11 @@ def verify_rom(rom: bytes) -> None:
             f"The ROM is {len(rom)} bytes, not the {ROM_SIZE} of its header",
         )
     expected = {**{site.address: site.original for site in SITES}, **ANCHORS}
-    for address, original in expected.items():
-        if _read(rom, address, len(original)) != original:
-            raise ClassicRetroError(
-                ErrorCode.SOURCE_BASELINE_MISMATCH, f"Unexpected bytes at ${address:06X}"
-            )
-    room = _read(rom, HOOK_ROOM_START, HOOK_ROOM_END - HOOK_ROOM_START)
-    if room != bytes((0xFF,)) * len(room):
-        raise ClassicRetroError(
-            ErrorCode.SOURCE_BASELINE_MISMATCH, "The room of the hooks is not free"
-        )
+    verify_bytes(rom, expected, offset=lorom_offset, what="the ROM")
+    room = lorom_offset(HOOK_ROOM_START)
+    verify_empty(
+        rom, room, room + HOOK_ROOM_END - HOOK_ROOM_START, 0xFF, what="The room of the hooks"
+    )
 
 
 def _verify_source(rom: bytes, message: AlttpMessage) -> bytes:
@@ -515,27 +511,16 @@ def _verify_output(
                 ErrorCode.BUILD_VALIDATION_FAILED,
                 f"{message.key}: the Arabic message read back has other commands",
             )
-    allowed = [(lorom_offset(site.address), len(site.patched)) for site in SITES]
-    allowed += [
-        (lorom_offset(address), len(data))
+    # The original's extent is compared; the added banks were read back above.
+    places = [(site.address, len(site.patched)) for site in SITES]
+    places += [
+        (address, len(data))
         for address, data in writes.items()
         if lorom_offset(address) < len(original)
     ]
-    allowed += [(ROM_SIZE_BYTE, 1), (CHECKSUM, 4)]
-    changed = [
-        at
-        for at in range(0, len(original), 0x1000)
-        if output[at : at + 0x1000] != original[at : at + 0x1000]
-    ]
-    for block in changed:
-        for at in range(block, block + 0x1000):
-            if output[at] != original[at] and not any(
-                start <= at < start + size for start, size in allowed
-            ):
-                raise ClassicRetroError(
-                    ErrorCode.BUILD_VALIDATION_FAILED,
-                    f"The overlay changed the ROM at {at:#x}, outside its places",
-                )
+    allowed = [(at := lorom_offset(address), at + size) for address, size in places]
+    allowed += [(ROM_SIZE_BYTE, ROM_SIZE_BYTE + 1), (CHECKSUM, CHECKSUM + 4)]
+    verify_untouched(original, output, allowed, what="The ROM")
     (checksum,) = struct.unpack_from("<H", output, CHECKSUM + 2)
     if sum(output) & 0xFFFF != checksum:
         raise ClassicRetroError(ErrorCode.BUILD_VALIDATION_FAILED, "The header's checksum is wrong")

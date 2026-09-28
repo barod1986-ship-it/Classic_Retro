@@ -219,13 +219,23 @@ def test_a_different_rom_is_refused(font_path):
         ((0xC258BE, b"\xea"),),  # where the reader goes back
         ((0xC257F7, b"\xea"),),  # a site
         ((0xC25FE8, b"\x11"),),  # a tile column
-        ((overlay.ROOM_END - 1, b"\x01"),),  # the room is not empty
     ],
 )
 def test_engine_code_that_differs_where_the_overlay_works_is_refused(change):
     with pytest.raises(ClassicRetroError) as caught:
         overlay.verify_rom(_rom(change))
     assert caught.value.code is ErrorCode.SOURCE_BASELINE_MISMATCH
+
+
+def test_a_room_that_is_not_empty_is_refused():
+    rom = _rom(((overlay.ROOM_END - 1, b"\x01"),))
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.verify_rom(rom)
+    assert caught.value.code is ErrorCode.SAFE_REGION_CONTENT_MISMATCH
+    assert str(caught.value) == (
+        "The room of the hooks and their data holds data at "
+        f"{overlay.rom_offset(overlay.ROOM_END - 1):#x}, where 0x00 was expected"
+    )
 
 
 def test_the_arabic_keeps_to_the_room(font_path, monkeypatch):
@@ -331,7 +341,7 @@ def test_the_output_is_read_back_before_it_is_accepted(built):
         (overlay.ARABIC_WIDTHS + a_glyph, "width table"),
         (overlay.ARABIC_FONT + 48 * a_glyph + 1, "font table"),
         (overlay.MESSAGES + 1, "Arabic text"),
-        (0xC00000 + TABLE + 30, "outside its places"),
+        (0xC00000 + TABLE + 30, f"at {TABLE + 30:#x}, outside the overlay's places"),
     ):
         tampered = bytearray(result.rom)
         tampered[overlay.rom_offset(address)] ^= 0x01

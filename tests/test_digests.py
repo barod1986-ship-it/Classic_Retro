@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import argparse
 import hashlib
 import json
 import platform
@@ -13,7 +12,6 @@ from PIL import Image, PngImagePlugin
 from classic_retro.core.environment import library_versions
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.localization import digests as digests_module
-from classic_retro.localization.commands import register_cli
 from classic_retro.localization.digests import (
     PATH_KEYS,
     VOLATILE_KEYS,
@@ -26,7 +24,6 @@ from classic_retro.localization.digests import (
 )
 from classic_retro.localization.strategies import build_strategy_registry
 from classic_retro.localization.targets import (
-    LocalizationTarget,
     TargetRegistry,
     build_target_registry,
     preview_paths,
@@ -225,27 +222,7 @@ def test_the_shipped_digests_name_checked_targets_and_their_previews():
     assert text == json.dumps(shipped, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
 
 
-def _no_cli(_: argparse._SubParsersAction) -> None:
-    return None
-
-
-def _target(target_id: str = "demo", **changes) -> LocalizationTarget:
-    fields = {
-        "id": target_id,
-        "game_id": f"{target_id}-game",
-        "title": "Demo Game",
-        "platform_id": "gba",
-        "kind": "rom-overlay",
-        "strategies": ("glyph-font",),
-        "scope": "a demo",
-        "guide": "docs/DEMO.md",
-        "notes": "docs/DEMO_NOTES.md",
-        "register_cli": _no_cli,
-    }
-    return LocalizationTarget(**{**fields, **changes})
-
-
-def _demo_registry() -> tuple[TargetRegistry, dict]:
+def _demo_registry(demo_targets) -> tuple[TargetRegistry, dict]:
     """A target whose report and preview the test can change between runs."""
     state = {"strings": 2, "pixels": [*PIXELS]}
 
@@ -260,47 +237,42 @@ def _demo_registry() -> tuple[TargetRegistry, dict]:
 
     registry = TargetRegistry(build_strategy_registry(load_external=False))
     registry.register(
-        _target(check_translations=check_translations, previews=("demo_preview.png",))
+        demo_targets.target(check_translations=check_translations, previews=("demo_preview.png",))
     )
     registry.register(
-        _target("bare", kind="source-overlay", strategies=("line-cells",), prepare=prepare)
+        demo_targets.target(
+            "bare", kind="source-overlay", strategies=("line-cells",), prepare=prepare
+        )
     )
     return registry, state
-
-
-def _run(registry: TargetRegistry, argv: list[str]) -> int:
-    parser = argparse.ArgumentParser()
-    register_cli(parser.add_subparsers(dest="command", required=True), registry)
-    args = parser.parse_args(argv)
-    return args.handler(args)
 
 
 def _without(report: dict, *keys: str) -> dict:
     return {key: value for key, value in report.items() if key not in keys}
 
 
-def test_check_translations_records_and_checks_digests(tmp_path, capsys, monkeypatch):
+def test_check_translations_records_and_checks_digests(tmp_path, capsys, monkeypatch, demo_targets):
     monkeypatch.setattr(digests_module, "DIGESTS_PATH", tmp_path / "digests.json")
     save_expected({})
-    registry, state = _demo_registry()
+    registry, state = _demo_registry(demo_targets)
     previews = tmp_path / "previews"
     argv = ["targets", "check-translations", "demo", "--font", "f.ttf", "--preview-dir"]
     argv.append(str(previews))
 
-    assert _run(registry, argv) == 0
+    assert demo_targets.run(registry, argv) == 0
     plain = json.loads(capsys.readouterr().out)
     assert plain["raster"] == library_versions() and "digests" not in plain
     assert _without(plain, "raster") == {"strings": 2, "lines_measured": True}
 
     with pytest.raises(ClassicRetroError) as error:
-        _run(registry, [*argv, "--check-digests"])
+        demo_targets.run(registry, [*argv, "--check-digests"])
     assert error.value.code is ErrorCode.BUILD_VALIDATION_FAILED
     assert str(error.value) == (
         "Target demo differs from its recorded digests: "
         "demo: no digest recorded (record it with --update-digests)"
     )
 
-    assert _run(registry, [*argv, "--update-digests"]) == 0
+    assert demo_targets.run(registry, [*argv, "--update-digests"]) == 0
     recorded = json.loads(capsys.readouterr().out)
     preview = preview_digest(previews / "demo_preview.png")
     assert recorded["digests"] == {
@@ -318,14 +290,14 @@ def test_check_translations_records_and_checks_digests(tmp_path, capsys, monkeyp
     }
     assert (tmp_path / "digests.json").read_text(encoding="utf-8").endswith("\n")
 
-    assert _run(registry, [*argv, "--check-digests"]) == 0
+    assert demo_targets.run(registry, [*argv, "--check-digests"]) == 0
     checked = json.loads(capsys.readouterr().out)
     assert checked["digests"] == {**recorded["digests"], "outcome": "match"}
     assert _without(checked, "digests") == plain
 
     state["pixels"][0] = (1, 2, 3)
     with pytest.raises(ClassicRetroError) as error:
-        _run(registry, [*argv, "--check-digests"])
+        demo_targets.run(registry, [*argv, "--check-digests"])
     assert error.value.code is ErrorCode.BUILD_VALIDATION_FAILED
     assert str(error.value).startswith(
         f"Target demo differs from its recorded digests: preview demo_preview.png: recorded {preview}, now "
@@ -333,7 +305,7 @@ def test_check_translations_records_and_checks_digests(tmp_path, capsys, monkeyp
     state["pixels"][0] = PIXELS[0]
     state["strings"] = 3
     with pytest.raises(ClassicRetroError) as error:
-        _run(registry, [*argv, "--check-digests"])
+        demo_targets.run(registry, [*argv, "--check-digests"])
     assert str(error.value).startswith(
         f"Target demo differs from its recorded digests: report: recorded {report_digest(plain)}, now "
     )
@@ -341,22 +313,24 @@ def test_check_translations_records_and_checks_digests(tmp_path, capsys, monkeyp
     expected = load_expected()
     expected["other"] = {"report": "0" * 64, "previews": {}, "generated_with": {}}
     save_expected(expected)
-    assert _run(registry, [*argv, "--update-digests"]) == 0
+    assert demo_targets.run(registry, [*argv, "--update-digests"]) == 0
     capsys.readouterr()
     assert set(load_expected()) == {"demo", "other"}
     assert load_expected()["demo"]["report"] == report_digest({**plain, "strings": 3})
-    assert _run(registry, [*argv, "--check-digests"]) == 0
+    assert demo_targets.run(registry, [*argv, "--check-digests"]) == 0
 
 
-def test_digest_flags_need_a_font_a_preview_folder_and_the_shipped_translations(tmp_path):
-    registry, _ = _demo_registry()
+def test_digest_flags_need_a_font_a_preview_folder_and_the_shipped_translations(
+    tmp_path, demo_targets
+):
+    registry, _ = _demo_registry(demo_targets)
     for extra in (
         ["--check-digests"],
         ["--update-digests"],
         ["--font", "f.ttf", "--check-digests"],
     ):
         with pytest.raises(ClassicRetroError) as error:
-            _run(registry, ["targets", "check-translations", "demo", *extra])
+            demo_targets.run(registry, ["targets", "check-translations", "demo", *extra])
         assert error.value.code is ErrorCode.FONT_BUILD_FAILED
         assert (
             str(error.value) == "--check-digests and --update-digests need --font and --preview-dir"
@@ -370,15 +344,20 @@ def test_digest_flags_need_a_font_a_preview_folder_and_the_shipped_translations(
     argv += [str(tmp_path / "previews"), "--translations", str(translations)]
     for flag in ("--check-digests", "--update-digests"):
         with pytest.raises(ClassicRetroError) as error:
-            _run(registry, [*argv, flag])
+            demo_targets.run(registry, [*argv, flag])
         assert error.value.code is ErrorCode.INVALID_REFERENCE
         assert "do not take --translations" in str(error.value)
     with pytest.raises(SystemExit):
-        _run(registry, [*argv[:-2], "--check-digests", "--update-digests"])
+        demo_targets.run(registry, [*argv[:-2], "--check-digests", "--update-digests"])
     assert not (tmp_path / "previews").exists()
 
 
-def test_prepare_reports_carry_the_library_versions(tmp_path, capsys):
-    registry, _ = _demo_registry()
-    assert _run(registry, ["targets", "prepare", "bare", str(tmp_path / "src"), "--font", "f"]) == 0
+def test_prepare_reports_carry_the_library_versions(tmp_path, capsys, demo_targets):
+    registry, _ = _demo_registry(demo_targets)
+    assert (
+        demo_targets.run(
+            registry, ["targets", "prepare", "bare", str(tmp_path / "src"), "--font", "f"]
+        )
+        == 0
+    )
     assert json.loads(capsys.readouterr().out) == {"prepared": "src", "raster": library_versions()}
