@@ -7570,6 +7570,1951 @@
    "id": "maduin.1497",
    "context": "Message 1497 of the dialogue: {Terra}: Come on!",
    "text": "{Terra}: هيا!"
+  },
+  {
+   "id": "ruin.1498",
+   "context": "Message 1498 of the dialogue: {Spaces 07}7 dragons left.",
+   "text": "{center}بقي 7 تنانين."
+  },
+  {
+   "id": "ruin.1499",
+   "context": "Message 1499 of the dialogue: {Spaces 07}6 dragons left.",
+   "text": "{center}بقي 6 تنانين."
+  },
+  {
+   "id": "ruin.1500",
+   "context": "Message 1500 of the dialogue: {Spaces 07}5 dragons left.",
+   "text": "{center}بقي 5 تنانين."
+  },
+  {
+   "id": "ruin.1501",
+   "context": "Message 1501 of the dialogue: {Spaces 07}4 dragons left.",
+   "text": "{center}بقي 4 تنانين."
+  },
+  {
+   "id": "ruin.1502",
+   "context": "Message 1502 of the dialogue: {Spaces 07}3 dragons left.",
+   "text": "{center}بقي 3 تنانين."
+  },
+  {
+   "id": "ruin.1503",
+   "context": "Message 1503 of the dialogue: {Spaces 07}2 dragons left.",
+   "text": "{center}بقي تنينان."
+  },
+  {
+   "id": "ruin.1504",
+   "context": "Message 1504 of the dialogue: {Spaces 07}1 dragon left.",
+   "text": "{center}بقي تنين واحد."
+  },
+  {
+   "id": "ruin.1505",
+   "context": "Message 1505 of the dialogue:   Defeated all 8 dragons…{page}    Dragon Seal broken!!",
+   "text": "{center}هزمت التنانين الثمانية…\n{center}كسر ختم التنانين!!"
+  },
+  {
+   "id": "ruin.1506",
+   "context": "Message 1506 of the dialogue: {line}{Spaces 05}Received the Magicite{line}{Spaces 0E}“Crusader”!!",
+   "text": "{center}{line}حصلت على الماجيسايت{line}«كروسيدر»!!"
+  },
+  {
+   "id": "ruin.1507",
+   "context": "Message 1507 of the dialogue: DUNCAN: Look out! Move!{line}Cough…wheeze…{line}Darn this old body…{line}Hey…you deaf?",
+   "text": "دنكان: احذر! تحرك!{line}كح… أح…{line}تبا لهذا الجسد العجوز…{line}هيه… أأنت أصم؟"
+  },
+  {
+   "id": "ruin.1508",
+   "context": "Message 1508 of the dialogue: {Sabin}: Duncan!!",
+   "text": "{Sabin}: دنكان!!"
+  },
+  {
+   "id": "ruin.1509",
+   "context": "Message 1509 of the dialogue: DUNCAN: Wa, ha, ha…{line}Why the surprised face?{line}Did you think I'd…gone?",
+   "text": "دنكان: وا، ها، ها…{line}لم هذا الوجه المندهش؟{line}أظننت أنني… رحلت؟"
+  },
+  {
+   "id": "ruin.1510",
+   "context": "Message 1510 of the dialogue: {Sabin}: Duncan…{line}I'm so glad you're safe!!!",
+   "text": "{Sabin}: دنكان…{line}كم أنا سعيد أنك بخير!!!"
+  },
+  {
+   "id": "ruin.1511",
+   "context": "Message 1511 of the dialogue: DUNCAN: Whoa?!{line}{Sabin}, this can't be…{line}Tears??",
+   "text": "دنكان: أوه؟!{line}{Sabin}، لا يمكن أن يكون هذا…{line}دموع؟؟"
+  },
+  {
+   "id": "ruin.1512",
+   "context": "Message 1512 of the dialogue: DUNCAN: Wa, ha, ha… Nothing happened to me! The earth yawned right open to take me but I scrambled to safety!",
+   "text": "دنكان: وا، ها، ها… لم يصبني شيء! انشقت الأرض لتبتلعني لكنني تسلقت إلى بر الأمان!"
+  },
+  {
+   "id": "ruin.1513",
+   "context": "Message 1513 of the dialogue: DUNCAN: {Sabin}!!{line}It is now time to complete your training. Use these new skills to smash Kefka!",
+   "text": "دنكان: {Sabin}!!{line}حان وقت إتمام تدريبك. استعمل هذه المهارات الجديدة لسحق كيفكا!"
+  },
+  {
+   "id": "ruin.1514",
+   "context": "Message 1514 of the dialogue: Put 'em up!",
+   "text": "ارفع قبضتيك!"
+  },
+  {
+   "id": "ruin.1515",
+   "context": "Message 1515 of the dialogue: I call this the “Bum Rush”!!",
+   "text": "أسمي هذه «الهجمة الكاسحة»!!"
+  },
+  {
+   "id": "ruin.1516",
+   "context": "Message 1516 of the dialogue: DUNCAN: Go!{line}Give Kefka the boot!",
+   "text": "دنكان: اذهب!{line}اركل كيفكا!"
+  },
+  {
+   "id": "ruin.1517",
+   "context": "Message 1517 of the dialogue: I've been waiting for you! {Wait}{line}I wanted to give you this.",
+   "text": "كنت أنتظرك! {Wait}{line}أردت أن أعطيك هذا."
+  },
+  {
+   "id": "ruin.1518",
+   "context": "Message 1518 of the dialogue: DUNCAN: Cough…wheeze… {Wait}{line}Don't worry about me! Go!{line}Destroy Kefka!",
+   "text": "دنكان: كح… أح… {Wait}{line}لا تقلق علي! اذهب!{line}دمر كيفكا!"
+  },
+  {
+   "id": "ruin.1519",
+   "context": "Message 1519 of the dialogue: I ran a Weapon Shop for 70 years!{line}This stone gives off an eerie aura!{page}If I melted it, and forged a sword, it'd be powerful!{page}Well?{line}Make this stone into a sword?{line}{Choice} Leave it the stone “Ragnarok”{line}{Choice} Make it the sword “Ragnarok”",
+   "text": "أدرت متجر أسلحة 70 عاما!{line}هذا الحجر يشع هالة غريبة!\nلو أذبته وطرقت منه سيفا، لكان قويا!\nحسنا؟{line}أصنع من هذا الحجر سيفا؟{line}{Choice} نتركه حجر «راغناروك»{line}{Choice} نجعله سيف «راغناروك»"
+  },
+  {
+   "id": "ruin.1520",
+   "context": "Message 1520 of the dialogue: Right.",
+   "text": "حسنا."
+  },
+  {
+   "id": "ruin.1521",
+   "context": "Message 1521 of the dialogue: I'll stay here.{line}This is my home.",
+   "text": "سأبقى هنا.{line}هذا بيتي."
+  },
+  {
+   "id": "ruin.1522",
+   "context": "Message 1522 of the dialogue: Cough…{line}Take…this…",
+   "text": "كح…{line}خذ… هذا…"
+  },
+  {
+   "id": "ruin.1523",
+   "context": "Message 1523 of the dialogue: “Cursed Shld”…{line}If we could break its curse…{line}Imagine its defensive power!",
+   "text": "«الدرع الملعون»…{line}لو استطعنا كسر لعنته…{line}تخيل قوته الدفاعية!"
+  },
+  {
+   "id": "ruin.1524",
+   "context": "Message 1524 of the dialogue: What's with this carving?{line}Looks like bone…{page}Something…in that eye…{line}… {Wait}Magicite?!",
+   "text": "ما هذا النقش؟{line}يبدو كالعظم…\nشيء ما… في تلك العين…{line}… {Wait}ماجيسايت؟!"
+  },
+  {
+   "id": "ruin.1525",
+   "context": "Message 1525 of the dialogue: Remove the Magicite from the eye of the carving?{line}{Choice} Yes{line}{Choice} No",
+   "text": "تنزع الماجيسايت من عين النقش؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "ruin.1526",
+   "context": "Message 1526 of the dialogue: {line}{Spaces 05}Received the Magicite{line}{Spaces 0E}“Terrato”",
+   "text": "{center}{line}حصلت على الماجيسايت{line}«تيراتو»"
+  },
+  {
+   "id": "ruin.1527",
+   "context": "Message 1527 of the dialogue: Ooh…",
+   "text": "أوه…"
+  },
+  {
+   "id": "ruin.1528",
+   "context": "Message 1528 of the dialogue: {Mog}: I'm your boss, kupo!{line}You're gonna join us, kupo!!!",
+   "text": "{Mog}: أنا زعيمك، كوبو!{line}ستنضم إلينا، كوبو!!!"
+  },
+  {
+   "id": "ruin.1529",
+   "context": "Message 1529 of the dialogue: Admirer of bone-carvings, {line}as strong as a gigas, {line}a sasquatch pal with muscle!",
+   "text": "معجب بنقوش العظام،{line}قوي كالعملاق،{line}ساسكواتش صديق مفتول العضلات!"
+  },
+  {
+   "id": "ruin.1530",
+   "context": "Message 1530 of the dialogue: Ooh…me {Umaro}…{line}Yes, boss…{line}Me join you!{page}{Mog}: {Umaro}!{line}No slouching, now!",
+   "text": "أوه… أنا {Umaro}…{line}نعم، زعيم…{line}أنا أنضم إليك!\n{Mog}: {Umaro}!{line}لا تتراخ الآن!"
+  },
+  {
+   "id": "ruin.1531",
+   "context": "Message 1531 of the dialogue: Ooo…me wait for you in big airship!",
+   "text": "أووو… أنا أنتظرك في السفينة الكبيرة!"
+  },
+  {
+   "id": "ruin.1532",
+   "context": "Message 1532 of the dialogue: This Magicite can be yours for 10000 GP.{line}{Choice} (Buy it.){line}{Choice} (Don't want it.)",
+   "text": "هذا الماجيسايت يمكن أن يكون لك مقابل 10000 غيل.{line}{Choice} (نشتريه.){line}{Choice} (لا نريده.)"
+  },
+  {
+   "id": "ruin.1533",
+   "context": "Message 1533 of the dialogue: This Magicite can be yours for 50000 GP.{line}{Choice} (Buy it.){line}{Choice} (Don't want it.)",
+   "text": "هذا الماجيسايت يمكن أن يكون لك مقابل 50000 غيل.{line}{Choice} (نشتريه.){line}{Choice} (لا نريده.)"
+  },
+  {
+   "id": "ruin.1534",
+   "context": "Message 1534 of the dialogue: {line}{Spaces 05}Received the Magicite{line}{Spaces 0E}“Palidor.”",
+   "text": "{center}{line}حصلت على الماجيسايت{line}«باليدور»."
+  },
+  {
+   "id": "ruin.1535",
+   "context": "Message 1535 of the dialogue: {line}{Spaces 05}Received the Magicite{line}{Spaces 0E}“Terrato.”",
+   "text": "{center}{line}حصلت على الماجيسايت{line}«تيراتو»."
+  },
+  {
+   "id": "maranda.1537",
+   "context": "Message 1537 of the dialogue: Say, you wanna get hitched?",
+   "text": "قل، أتريدين أن نتزوج؟"
+  },
+  {
+   "id": "maranda.1538",
+   "context": "Message 1538 of the dialogue: Aishya, no!!",
+   "text": "أيشا، لا!!"
+  },
+  {
+   "id": "maranda.1539",
+   "context": "Message 1539 of the dialogue: You should hear the gossip floating around here!",
+   "text": "عليك أن تسمع الشائعات التي تدور هنا!"
+  },
+  {
+   "id": "maranda.1540",
+   "context": "Message 1540 of the dialogue: Phew!",
+   "text": "أوف!"
+  },
+  {
+   "id": "maranda.1541",
+   "context": "Message 1541 of the dialogue: My dog's the fiercest!",
+   "text": "كلبي هو الأشرس!"
+  },
+  {
+   "id": "maranda.1542",
+   "context": "Message 1542 of the dialogue: Place all bets here!",
+   "text": "ضعوا كل الرهانات هنا!"
+  },
+  {
+   "id": "maranda.1543",
+   "context": "Message 1543 of the dialogue: Scram!!",
+   "text": "اغرب!!"
+  },
+  {
+   "id": "maranda.1544",
+   "context": "Message 1544 of the dialogue: This is our only means of recreation.",
+   "text": "هذه وسيلة الترفيه الوحيدة عندنا."
+  },
+  {
+   "id": "maranda.1545",
+   "context": "Message 1545 of the dialogue: Maranda used to be this continent's most beautiful town! Look what the Empire's done to it!",
+   "text": "كانت ماراندا أجمل بلدة في هذه القارة! انظر ماذا فعلت بها الإمبراطورية!"
+  },
+  {
+   "id": "maranda.1546",
+   "context": "Message 1546 of the dialogue: My son's being forced to serve in the Empire's army.",
+   "text": "ابني مجبر على الخدمة في جيش الإمبراطورية."
+  },
+  {
+   "id": "maranda.1547",
+   "context": "Message 1547 of the dialogue: These troopers are crazy!{line}How long can things keep going on like this?",
+   "text": "هؤلاء الجنود مجانين!{line}إلى متى يمكن أن يستمر هذا؟"
+  },
+  {
+   "id": "maranda.1548",
+   "context": "Message 1548 of the dialogue: Tzen and Albrook, too, fell to the Empire.",
+   "text": "تزن وألبروك أيضا سقطتا في يد الإمبراطورية."
+  },
+  {
+   "id": "maranda.1549",
+   "context": "Message 1549 of the dialogue: 200 GP per night!{line}Need a rest?{line}{Choice} Sure{line}{Choice} Nope",
+   "text": "200 غيل لليلة!{line}تحتاج إلى راحة؟{line}{Choice} طبعا{line}{Choice} لا"
+  },
+  {
+   "id": "tzen.1550",
+   "context": "Message 1550 of the dialogue: Hee, hee…{line}This town is ours to play with!",
+   "text": "هي، هي…{line}هذه البلدة لعبتنا!"
+  },
+  {
+   "id": "tzen.1551",
+   "context": "Message 1551 of the dialogue: We must begin to rebuild!",
+   "text": "علينا أن نبدأ إعادة البناء!"
+  },
+  {
+   "id": "tzen.1552",
+   "context": "Message 1552 of the dialogue: That boy made to serve as a soldier has returned!",
+   "text": "الفتى الذي أجبر على الخدمة جنديا قد عاد!"
+  },
+  {
+   "id": "tzen.1553",
+   "context": "Message 1553 of the dialogue: When peace was reached, the soldiers left our town.",
+   "text": "حين حل السلام، غادر الجنود بلدتنا."
+  },
+  {
+   "id": "tzen.1554",
+   "context": "Message 1554 of the dialogue: The Imperial troopers are gone! Let's dance! Let's sing!",
+   "text": "رحل جنود الإمبراطورية! لنرقص! لنغن!"
+  },
+  {
+   "id": "tzen.1555",
+   "context": "Message 1555 of the dialogue: I was forced into the Empire's army. They made me do some awful things…",
+   "text": "أجبرت على الانضمام إلى جيش الإمبراطورية. جعلوني أفعل أشياء فظيعة…"
+  },
+  {
+   "id": "tzen.1556",
+   "context": "Message 1556 of the dialogue: I feel a little down…",
+   "text": "أشعر بشيء من الكآبة…"
+  },
+  {
+   "id": "tzen.1557",
+   "context": "Message 1557 of the dialogue: Most of the town's youths were led off to serve as Imperial troopers.",
+   "text": "معظم شباب البلدة سيقوا للخدمة جنودا في جيش الإمبراطورية."
+  },
+  {
+   "id": "tzen.1558",
+   "context": "Message 1558 of the dialogue: Our poor kids'll be back soon, won't they?",
+   "text": "أولادنا المساكين سيعودون قريبا، أليس كذلك؟"
+  },
+  {
+   "id": "tzen.1559",
+   "context": "Message 1559 of the dialogue: I heard there's a huge gate deep inside a cave to the east.",
+   "text": "سمعت أن هناك بوابة ضخمة في أعماق كهف إلى الشرق."
+  },
+  {
+   "id": "tzen.1560",
+   "context": "Message 1560 of the dialogue: Time to put Tzen back together!",
+   "text": "حان وقت إعادة بناء تزن!"
+  },
+  {
+   "id": "tzen.1561",
+   "context": "Message 1561 of the dialogue: Our royal family was slaughtered by the Empire.",
+   "text": "ذبحت الإمبراطورية عائلتنا الملكية."
+  },
+  {
+   "id": "tzen.1562",
+   "context": "Message 1562 of the dialogue: Thanks to you people peace has been achieved!",
+   "text": "بفضلكم تحقق السلام!"
+  },
+  {
+   "id": "tzen.1563",
+   "context": "Message 1563 of the dialogue: Some friendly advice! There's a weapon called the Guardian.{line}It can't move, but it's very powerful. Run, if you meet it!",
+   "text": "نصيحة ودية! هناك سلاح يدعى «الغارديان».{line}لا يتحرك، لكنه قوي جدا. اهرب إن صادفته!"
+  },
+  {
+   "id": "tzen.1564",
+   "context": "Message 1564 of the dialogue: The world seems to be getting back to normal…",
+   "text": "يبدو أن العالم يعود إلى طبيعته…"
+  },
+  {
+   "id": "tzen.1565",
+   "context": "Message 1565 of the dialogue: I said it's dangerous outside,{line}so you can't go out!",
+   "text": "قلت إن الخارج خطر،{line}فلا يمكنك الخروج!"
+  },
+  {
+   "id": "tzen.1566",
+   "context": "Message 1566 of the dialogue: Waaah! I wanna play outside!",
+   "text": "وااه! أريد أن ألعب في الخارج!"
+  },
+  {
+   "id": "tzen.1567",
+   "context": "Message 1567 of the dialogue: Our kid's still not home.{line}Even though we said it was dangerous outside!",
+   "text": "ولدنا لم يعد إلى البيت بعد.{line}رغم أننا قلنا إن الخارج خطر!"
+  },
+  {
+   "id": "tzen.1568",
+   "context": "Message 1568 of the dialogue: The Imperial troopers are gone. Now we can live in peace.",
+   "text": "رحل جنود الإمبراطورية. الآن نستطيع العيش بسلام."
+  },
+  {
+   "id": "tzen.1569",
+   "context": "Message 1569 of the dialogue: Oh, NO! {Wait}{line}Whew…don't SCARE people like that! I thought you were a trooper!{page}A while ago someone broke into the Magitek Research Facility, and raised a ruckus! I took the opportunity to grab this.{page}For 3000 GP this glowing stone's yours.{line}{Choice} Yes{line}{Choice} No",
+   "text": "أوه، لا! {Wait}{line}أوف… لا تخف الناس هكذا! ظننتك جنديا!\nقبل فترة اقتحم أحدهم منشأة أبحاث الماجيتك وأثار جلبة! فانتهزت الفرصة وأخذت هذا.\nمقابل 3000 غيل هذا الحجر المتوهج لك.{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "tzen.1570",
+   "context": "Message 1570 of the dialogue: The world's going to heck in a hand basket…just look at this weird stone!{page}If you want it, just give me 10 GP.{line}{Choice} Yes{line}{Choice} No",
+   "text": "العالم يسير نحو الهاوية… انظر فقط إلى هذا الحجر الغريب!\nإن أردته، فأعطني 10 غيل فقط.{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "tzen.1571",
+   "context": "Message 1571 of the dialogue: Got any juicy gossip?!",
+   "text": "عندك شائعات مثيرة؟!"
+  },
+  {
+   "id": "tzen.1572",
+   "context": "Message 1572 of the dialogue: {line}{Spaces 05}Received the Magicite{line}{Spaces 0E}“Sraphim.”",
+   "text": "{center}{line}حصلت على الماجيسايت{line}«سيرافيم»."
+  },
+  {
+   "id": "albrook.1573",
+   "context": "Message 1573 of the dialogue: The Empire strings up anyone who opposes it.",
+   "text": "الإمبراطورية تشنق كل من يعارضها."
+  },
+  {
+   "id": "albrook.1574",
+   "context": "Message 1574 of the dialogue: 3 cheers for the Empire!",
+   "text": "ثلاث هتافات للإمبراطورية!"
+  },
+  {
+   "id": "albrook.1575",
+   "context": "Message 1575 of the dialogue: You're in the way! Git!",
+   "text": "أنت في الطريق! اغرب!"
+  },
+  {
+   "id": "albrook.1576",
+   "context": "Message 1576 of the dialogue: Everything belongs to the Empire!",
+   "text": "كل شيء ملك للإمبراطورية!"
+  },
+  {
+   "id": "albrook.1577",
+   "context": "Message 1577 of the dialogue: Mess with the Empire and…!",
+   "text": "من يعبث مع الإمبراطورية…!"
+  },
+  {
+   "id": "albrook.1578",
+   "context": "Message 1578 of the dialogue: 350 GP per night!{line}Rest a while?{line}{Choice} Yes{line}{Choice} No",
+   "text": "350 غيل لليلة!{line}ترتاح قليلا؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "albrook.1579",
+   "context": "Message 1579 of the dialogue: This is Albrook, the occupied city…",
+   "text": "هذه ألبروك، المدينة المحتلة…"
+  },
+  {
+   "id": "albrook.1580",
+   "context": "Message 1580 of the dialogue: Business is picking up in the port! Maybe economy will make a recovery!",
+   "text": "العمل ينتعش في الميناء! ربما يتعافى الاقتصاد!"
+  },
+  {
+   "id": "albrook.1581",
+   "context": "Message 1581 of the dialogue: How could an island float in the sky?!",
+   "text": "كيف يمكن لجزيرة أن تطفو في السماء؟!"
+  },
+  {
+   "id": "albrook.1582",
+   "context": "Message 1582 of the dialogue: They say there's something valuable to the east…{line}The Empire built a base there, and no one may enter.",
+   "text": "يقولون إن هناك شيئا ثمينا إلى الشرق…{line}بنت الإمبراطورية قاعدة هناك، ولا يجوز لأحد الدخول."
+  },
+  {
+   "id": "albrook.1583",
+   "context": "Message 1583 of the dialogue: I heard some Espers flew outta the mountains near the base and thrashed the troopers there!",
+   "text": "سمعت أن بعض الإسبرات خرجوا من الجبال قرب القاعدة وسحقوا الجنود هناك!"
+  },
+  {
+   "id": "albrook.1584",
+   "context": "Message 1584 of the dialogue: Yeah, thanks to that flying island, this town was shrouded in darkness!",
+   "text": "نعم، بفضل تلك الجزيرة الطائرة، غرقت هذه البلدة في الظلام!"
+  },
+  {
+   "id": "albrook.1585",
+   "context": "Message 1585 of the dialogue: We have to bribe the troopers to do business here…",
+   "text": "علينا أن نرشو الجنود لنتاجر هنا…"
+  },
+  {
+   "id": "albrook.1586",
+   "context": "Message 1586 of the dialogue: And they're such TIGHTWADS!{line}They're raking in the cash!",
+   "text": "وهم بخلاء جدا!{line}يجمعون المال بالمجارف!"
+  },
+  {
+   "id": "albrook.1587",
+   "context": "Message 1587 of the dialogue: Wouldn't want to be in their shoes, though!",
+   "text": "لكنني لا أود أن أكون مكانهم!"
+  },
+  {
+   "id": "albrook.1588",
+   "context": "Message 1588 of the dialogue: People're disappearing,{line}islands are flying…{line}I have a bad feeling about this…",
+   "text": "الناس يختفون،{line}والجزر تطير…{line}عندي شعور سيئ حيال هذا…"
+  },
+  {
+   "id": "albrook.1589",
+   "context": "Message 1589 of the dialogue: Vector, capital of the Empire, is at the center of this continent.",
+   "text": "فيكتور، عاصمة الإمبراطورية، في وسط هذه القارة."
+  },
+  {
+   "id": "albrook.1590",
+   "context": "Message 1590 of the dialogue: You'll find some good weapons and items in Tzen and Maranda.",
+   "text": "ستجد أسلحة وأدوات جيدة في تزن وماراندا."
+  },
+  {
+   "id": "albrook.1591",
+   "context": "Message 1591 of the dialogue: Some strange guy's tryin' to sell glowing stones…{line}When I wouldn't take one, he said he was going to Tzen.",
+   "text": "رجل غريب يحاول بيع أحجار متوهجة…{line}حين رفضت أن آخذ واحدا، قال إنه ذاهب إلى تزن."
+  },
+  {
+   "id": "albrook.1592",
+   "context": "Message 1592 of the dialogue: I'm a scholar of magic. Monsters on this continent have only weak magical power.",
+   "text": "أنا باحث في السحر. وحوش هذه القارة ليس لها إلا قوة سحرية ضعيفة."
+  },
+  {
+   "id": "albrook.1593",
+   "context": "Message 1593 of the dialogue: I found this in a 1000 year-old text:{line}8 dragons seal away this awesome beast.{page}Its name is Crusader…{line}Defeat these dragons, and its power can be released…",
+   "text": "وجدت هذا في نص عمره 1000 عام:{line}8 تنانين تحبس وحشا رهيبا.\nاسمه كروسيدر…{line}اهزم هذه التنانين، وتتحرر قوته…"
+  },
+  {
+   "id": "albrook.1594",
+   "context": "Message 1594 of the dialogue: I'm a scholar of weapons. 1000 years ago, during the War of the Magi, 2 so-called Atma Weapons existed.{page}One changed a person's power into a sword, the other was an monster, bred for mass destruction.",
+   "text": "أنا باحث في الأسلحة. قبل 1000 عام، في حرب السحرة، وجد ما يسمى سلاحي أتما.\nأحدهما يحول قوة الشخص إلى سيف، والآخر وحش ربي للدمار الشامل."
+  },
+  {
+   "id": "albrook.1595",
+   "context": "Message 1595 of the dialogue: No entry into the port!",
+   "text": "ممنوع دخول الميناء!"
+  },
+  {
+   "id": "albrook.1596",
+   "context": "Message 1596 of the dialogue: Ah…welcome!",
+   "text": "آه… أهلا!"
+  },
+  {
+   "id": "albrook.1597",
+   "context": "Message 1597 of the dialogue: Hey…you're not of the Empire!{line}Get outta here!",
+   "text": "هيه… أنتم لستم من الإمبراطورية!{line}اغربوا من هنا!"
+  },
+  {
+   "id": "albrook.1598",
+   "context": "Message 1598 of the dialogue: In any case, you're probably broke!",
+   "text": "على أي حال، أنتم مفلسون على الأرجح!"
+  },
+  {
+   "id": "albrook.1599",
+   "context": "Message 1599 of the dialogue: Ahaaa!!{line}Whooopie!",
+   "text": "آهاا!!{line}مرحى!"
+  },
+  {
+   "id": "albrook.1600",
+   "context": "Message 1600 of the dialogue: Look out if you're caught working with the Returners.",
+   "text": "احذر إن ضبطت تعمل مع العائدين."
+  },
+  {
+   "id": "albrook.1601",
+   "context": "Message 1601 of the dialogue: Now maybe we can get on with our lives.",
+   "text": "ربما نستطيع الآن أن نمضي في حياتنا."
+  },
+  {
+   "id": "albrook.1602",
+   "context": "Message 1602 of the dialogue: I heard that Espers attacked the Empire…",
+   "text": "سمعت أن الإسبرات هاجموا الإمبراطورية…"
+  },
+  {
+   "id": "albrook.1603",
+   "context": "Message 1603 of the dialogue: All's well!",
+   "text": "كل شيء بخير!"
+  },
+  {
+   "id": "albrook.1604",
+   "context": "Message 1604 of the dialogue: Is the war really over…?",
+   "text": "هل انتهت الحرب حقا…؟"
+  },
+  {
+   "id": "albrook.1605",
+   "context": "Message 1605 of the dialogue: Nuts!{line}These soldiers are absolutely insane!",
+   "text": "تبا!{line}هؤلاء الجنود مجانين تماما!"
+  },
+  {
+   "id": "albrook.1606",
+   "context": "Message 1606 of the dialogue: This cafe is like an Imperial soldiers' dormitory!",
+   "text": "هذا المقهى أشبه بمهجع لجنود الإمبراطورية!"
+  },
+  {
+   "id": "albrook.1607",
+   "context": "Message 1607 of the dialogue: Since the soldiers are leaving, business is bound to pick up. Oops…better keep my mouth shut.",
+   "text": "بما أن الجنود يرحلون، فسينتعش العمل حتما. أوه… من الأفضل أن أصمت."
+  },
+  {
+   "id": "albrook.1608",
+   "context": "Message 1608 of the dialogue: Sure! No problem!",
+   "text": "طبعا! لا مشكلة!"
+  },
+  {
+   "id": "albrook.1609",
+   "context": "Message 1609 of the dialogue: 300 GP if you wanna stay.{line}How 'bout it?{line}{Choice} Yes{line}{Choice} No",
+   "text": "300 غيل إن أردت المبيت.{line}ما رأيك؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "albrook.1610",
+   "context": "Message 1610 of the dialogue: General Leo told us about you. By all means…",
+   "text": "الجنرال ليو أخبرنا عنكم. تفضلوا…"
+  },
+  {
+   "id": "albrook.1611",
+   "context": "Message 1611 of the dialogue: You look tired!{line}100 GP for a snooze.{line}{Choice} Yes{line}{Choice} No",
+   "text": "تبدو متعبا!{line}100 غيل لغفوة.{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "albrook.1612",
+   "context": "Message 1612 of the dialogue: We've been waiting for you.{line}This way, please…",
+   "text": "كنا في انتظاركم.{line}من هنا، تفضلوا…"
+  },
+  {
+   "id": "narshe-plan.1613",
+   "context": "Message 1613 of the dialogue: BANON: Oh, you're here!{line}The people of Narshe have finally decided to battle the Empire.{page}How did it go at Vector…?",
+   "text": "بانون: أوه، جئتم!{line}أهل نارشي قرروا أخيرا قتال الإمبراطورية.\nكيف جرى الأمر في فيكتور…؟"
+  },
+  {
+   "id": "narshe-plan.1614",
+   "context": "Message 1614 of the dialogue: ARVIS: I see… Your plan would combine Narshe's money with Figaro's machinery to storm the Empire…{page}not enough manpower, though…",
+   "text": "أرفيس: فهمت… خطتك تجمع مال نارشي بآلات فيغارو لاقتحام الإمبراطورية…\nلكن الرجال لا يكفون…"
+  },
+  {
+   "id": "narshe-plan.1615",
+   "context": "Message 1615 of the dialogue: BANON: We have to open the sealed gate…",
+   "text": "بانون: علينا أن نفتح البوابة المختومة…"
+  },
+  {
+   "id": "narshe-plan.1616",
+   "context": "Message 1616 of the dialogue: {Terra}: To the Esper World…?",
+   "text": "{Terra}: إلى عالم الإسبرات…؟"
+  },
+  {
+   "id": "narshe-plan.1617",
+   "context": "Message 1617 of the dialogue: ARVIS: We'll never beat the Empire without them.",
+   "text": "أرفيس: لن نهزم الإمبراطورية أبدا من دونهم."
+  },
+  {
+   "id": "narshe-plan.1618",
+   "context": "Message 1618 of the dialogue: BANON: When the gate has been opened, the Espers can attack from the east.{page}We'll storm in at the same time, from the north.",
+   "text": "بانون: حين تفتح البوابة، يستطيع الإسبرات الهجوم من الشرق.\nونقتحم نحن في الوقت نفسه من الشمال."
+  },
+  {
+   "id": "narshe-plan.1619",
+   "context": "Message 1619 of the dialogue: BANON: We MUST get the Espers to understand.{page}We have to establish a bond of trust between humans and Espers. Only one person can do this…",
+   "text": "بانون: يجب أن نجعل الإسبرات يفهمون.\nعلينا إقامة رابطة ثقة بين البشر والإسبرات. وشخص واحد فقط يستطيع ذلك…"
+  },
+  {
+   "id": "narshe-plan.1620",
+   "context": "Message 1620 of the dialogue: Half human, half Esper…{line}My existence is proof{line}that such a bond CAN exist…",
+   "text": "نصف بشرية، نصف إسبر…{line}وجودي دليل{line}على أن هذه الرابطة ممكنة…"
+  },
+  {
+   "id": "narshe-plan.1621",
+   "context": "Message 1621 of the dialogue: {Terra}…",
+   "text": "{Terra}…"
+  },
+  {
+   "id": "narshe-plan.1622",
+   "context": "Message 1622 of the dialogue: {Terra}: I'll do it.{line}I'm the only one who can!",
+   "text": "{Terra}: سأفعلها.{line}أنا الوحيدة القادرة!"
+  },
+  {
+   "id": "narshe-plan.1623",
+   "context": "Message 1623 of the dialogue: {Terra}!?",
+   "text": "{Terra}!؟"
+  },
+  {
+   "id": "narshe-plan.1624",
+   "context": "Message 1624 of the dialogue: No way around it.",
+   "text": "لا مفر من ذلك."
+  },
+  {
+   "id": "narshe-plan.1625",
+   "context": "Message 1625 of the dialogue: NARSHE'S ELDER: Our battle lies before us. We must make ourselves ready.",
+   "text": "شيخ البلدة: معركتنا أمامنا. علينا أن نستعد."
+  },
+  {
+   "id": "narshe-plan.1626",
+   "context": "Message 1626 of the dialogue: BANON: Get the Espers to understand, and we can bring this war to a screeching halt.{page}{Terra}…{line}I know you can do this…",
+   "text": "بانون: اجعلي الإسبرات يفهمون، ونستطيع إيقاف هذه الحرب فورا.\n{Terra}…{line}أعرف أنك تستطيعين…"
+  },
+  {
+   "id": "narshe-plan.1627",
+   "context": "Message 1627 of the dialogue: ARVIS: The sealed gate stands at the eastern edge of the Empire.{page}There's a base there, but somehow we'll have to slip through…",
+   "text": "أرفيس: البوابة المختومة عند الطرف الشرقي للإمبراطورية.\nهناك قاعدة، لكن علينا أن نتسلل بطريقة ما…"
+  },
+  {
+   "id": "narshe-plan.1628",
+   "context": "Message 1628 of the dialogue: {Locke}: The sealed gate…{line}Can you sense anything, {Terra}?",
+   "text": "{Locke}: البوابة المختومة…{line}أتشعرين بشيء يا {Terra}؟"
+  },
+  {
+   "id": "narshe-plan.1629",
+   "context": "Message 1629 of the dialogue: {Terra}: ……",
+   "text": "{Terra}: ……"
+  },
+  {
+   "id": "narshe-plan.1630",
+   "context": "Message 1630 of the dialogue: {Locke}: {Terra}…",
+   "text": "{Locke}: {Terra}…"
+  },
+  {
+   "id": "narshe-plan.1631",
+   "context": "Message 1631 of the dialogue: The Espers wouldn't give us the time of day without…{line}{Terra}…",
+   "text": "الإسبرات لن يلتفتوا إلينا أبدا من دون…{line}{Terra}…"
+  },
+  {
+   "id": "narshe-plan.1632",
+   "context": "Message 1632 of the dialogue: {Terra}: I can do it…{line}But why do I feel so wretched?",
+   "text": "{Terra}: أستطيع فعلها…{line}لكن لماذا أشعر بهذا البؤس؟"
+  },
+  {
+   "id": "narshe-plan.1633",
+   "context": "Message 1633 of the dialogue: That's odd…{page}No Imperial soldiers…",
+   "text": "غريب…\nلا جنود إمبراطوريين…"
+  },
+  {
+   "id": "narshe-plan.1634",
+   "context": "Message 1634 of the dialogue: {line}{Spaces 06}Chucked out…!",
+   "text": "{center}{line}قذف بنا إلى الخارج…!"
+  },
+  {
+   "id": "narshe-plan.1635",
+   "context": "Message 1635 of the dialogue: {Terra}: Let's get this over with.",
+   "text": "{Terra}: لننته من هذا."
+  },
+  {
+   "id": "narshe-plan.1636",
+   "context": "Message 1636 of the dialogue: {Terra}: ……",
+   "text": "{Terra}: ……"
+  },
+  {
+   "id": "narshe-plan.1637",
+   "context": "Message 1637 of the dialogue: This is the sealed gate…",
+   "text": "هذه هي البوابة المختومة…"
+  },
+  {
+   "id": "gate.1638",
+   "context": "Message 1638 of the dialogue: {Locke}: Beyond is the Esper World…",
+   "text": "{Locke}: وراءها عالم الإسبرات…"
+  },
+  {
+   "id": "gate.1639",
+   "context": "Message 1639 of the dialogue: {Cyan}: What an eerie place…",
+   "text": "{Cyan}: يا له من مكان موحش…"
+  },
+  {
+   "id": "gate.1640",
+   "context": "Message 1640 of the dialogue: {Edgar}: From here on, it's all up to {Terra}…",
+   "text": "{Edgar}: من هنا فصاعدا، كل شيء بيد {Terra}…"
+  },
+  {
+   "id": "gate.1641",
+   "context": "Message 1641 of the dialogue: {Sabin}: We're counting on you, {Terra}…",
+   "text": "{Sabin}: نعتمد عليك يا {Terra}…"
+  },
+  {
+   "id": "gate.1642",
+   "context": "Message 1642 of the dialogue: {Setzer}: Why'd you bring me to such an awful place!?",
+   "text": "{Setzer}: لماذا جئتم بي إلى مكان فظيع كهذا!؟"
+  },
+  {
+   "id": "gate.1643",
+   "context": "Message 1643 of the dialogue: {Terra}: Espers…{line}Please heed my call…",
+   "text": "{Terra}: أيها الإسبرات…{line}أرجوكم أجيبوا ندائي…"
+  },
+  {
+   "id": "gate.1644",
+   "context": "Message 1644 of the dialogue: Uwa ha!{line}So, it's true!",
+   "text": "أووا ها!{line}إذن، هذا صحيح!"
+  },
+  {
+   "id": "gate.1645",
+   "context": "Message 1645 of the dialogue: KEFKA: Emperor Gestahl was right!",
+   "text": "كيفكا: كان الإمبراطور غشتال محقا!"
+  },
+  {
+   "id": "gate.1646",
+   "context": "Message 1646 of the dialogue: {Terra}! {Wait}{line}…the gate…quickly!",
+   "text": "{Terra}! {Wait}{line}…البوابة… بسرعة!"
+  },
+  {
+   "id": "gate.1647",
+   "context": "Message 1647 of the dialogue: What the!!!",
+   "text": "ما هذا!!!"
+  },
+  {
+   "id": "gate.1648",
+   "context": "Message 1648 of the dialogue: Espers?",
+   "text": "إسبرات؟"
+  },
+  {
+   "id": "gate.1649",
+   "context": "Message 1649 of the dialogue: Hey! The gate!!!",
+   "text": "هيه! البوابة!!!"
+  },
+  {
+   "id": "gate.1650",
+   "context": "Message 1650 of the dialogue: What about those Espers…?",
+   "text": "وماذا عن أولئك الإسبرات…؟"
+  },
+  {
+   "id": "gate.1651",
+   "context": "Message 1651 of the dialogue: {Terra}: Look,{line}let's return to the airship.",
+   "text": "{Terra}: اسمعوا،{line}لنعد إلى السفينة الطائرة."
+  },
+  {
+   "id": "gate.1652",
+   "context": "Message 1652 of the dialogue: KEFKA: D…{line}Drat it all!!{line}I won't forget this!",
+   "text": "كيفكا: ت…{line}تبا لكل شيء!!{line}لن أنسى هذا!"
+  },
+  {
+   "id": "gate.1653",
+   "context": "Message 1653 of the dialogue: “Something happened…”{page}“I'm not sure…”",
+   "text": "«حدث شيء ما…»\n«لست متأكدة…»"
+  },
+  {
+   "id": "gate.1654",
+   "context": "Message 1654 of the dialogue: Anyway,{line}let's return to the airship.",
+   "text": "على أي حال،{line}لنعد إلى السفينة الطائرة."
+  },
+  {
+   "id": "gate.1655",
+   "context": "Message 1655 of the dialogue: {Terra}: I'm all right.{line}I'm sure peace is within our grasp!",
+   "text": "{Terra}: أنا بخير.{line}أنا واثقة أن السلام في متناول أيدينا!"
+  },
+  {
+   "id": "gate.1656",
+   "context": "Message 1656 of the dialogue: {Terra}: I'm all right.{line}I'm sure peace is within our grasp!",
+   "text": "{Terra}: أنا بخير.{line}أنا واثقة أن السلام في متناول أيدينا!"
+  },
+  {
+   "id": "gate.1657",
+   "context": "Message 1657 of the dialogue: {Locke}: I can't believe we played a major role in it all!",
+   "text": "{Locke}: لا أصدق أننا لعبنا دورا كبيرا في كل هذا!"
+  },
+  {
+   "id": "gate.1658",
+   "context": "Message 1658 of the dialogue: {Locke}: I'm sure the Espers were headed for Vector…",
+   "text": "{Locke}: أنا واثق أن الإسبرات كانوا متجهين إلى فيكتور…"
+  },
+  {
+   "id": "gate.1659",
+   "context": "Message 1659 of the dialogue: {Cyan}: The Empire deserves the worst!",
+   "text": "{Cyan}: الإمبراطورية تستحق الأسوأ!"
+  },
+  {
+   "id": "gate.1660",
+   "context": "Message 1660 of the dialogue: {Cyan}: I could feel the warrior spirits of those Espers!",
+   "text": "{Cyan}: شعرت بأرواح المحاربين في أولئك الإسبرات!"
+  },
+  {
+   "id": "gate.1661",
+   "context": "Message 1661 of the dialogue: {Shadow}: ……{line}Why am I here…? {Wait}{line}For the money, I guess.",
+   "text": "{Shadow}: ……{line}لماذا أنا هنا…؟ {Wait}{line}من أجل المال، على ما أظن."
+  },
+  {
+   "id": "gate.1662",
+   "context": "Message 1662 of the dialogue: {Shadow}: I think Kefka's out for General Leo's hide!",
+   "text": "{Shadow}: أظن أن كيفكا يسعى وراء رأس الجنرال ليو!"
+  },
+  {
+   "id": "gate.1663",
+   "context": "Message 1663 of the dialogue: {Edgar}: We can't be smug. We must be thinking of our strategy.",
+   "text": "{Edgar}: لا يمكننا أن نغتر. علينا التفكير في خطتنا."
+  },
+  {
+   "id": "gate.1664",
+   "context": "Message 1664 of the dialogue: {Edgar}: Somehow we need to tap in to the power of those Espers…",
+   "text": "{Edgar}: علينا بطريقة ما أن نستفيد من قوة أولئك الإسبرات…"
+  },
+  {
+   "id": "gate.1665",
+   "context": "Message 1665 of the dialogue: {Sabin}: Let me at the Empire!",
+   "text": "{Sabin}: دعوني أنقض على الإمبراطورية!"
+  },
+  {
+   "id": "gate.1666",
+   "context": "Message 1666 of the dialogue: {Sabin}: Let's see what's become of the Empire! Hurry!",
+   "text": "{Sabin}: لنر ما حل بالإمبراطورية! بسرعة!"
+  },
+  {
+   "id": "gate.1667",
+   "context": "Message 1667 of the dialogue: {Celes}: I was one of the Empire's generals, but I still know evil when I see it.",
+   "text": "{Celes}: كنت إحدى جنرالات الإمبراطورية، لكنني ما زلت أعرف الشر حين أراه."
+  },
+  {
+   "id": "gate.1668",
+   "context": "Message 1668 of the dialogue: {Celes}: Kefka's sure to come up with another demented plan. We need to do something FAST!",
+   "text": "{Celes}: كيفكا سيأتي حتما بخطة مجنونة أخرى. علينا أن نفعل شيئا بسرعة!"
+  },
+  {
+   "id": "gate.1669",
+   "context": "Message 1669 of the dialogue: {Strago}: In all my travels, and in all my years…",
+   "text": "{Strago}: في كل أسفاري، وفي كل سنوات عمري…"
+  },
+  {
+   "id": "gate.1670",
+   "context": "Message 1670 of the dialogue: {Strago}: …I've never seen anyone so sleazy as Kefka.",
+   "text": "{Strago}: …لم أر قط أحدا بحقارة كيفكا."
+  },
+  {
+   "id": "gate.1671",
+   "context": "Message 1671 of the dialogue: {Relm}: I know.{line}Let me draw their portraits!",
+   "text": "{Relm}: أعرف.{line}دعوني أرسم صورهم!"
+  },
+  {
+   "id": "gate.1672",
+   "context": "Message 1672 of the dialogue: {Relm}: I'm sure those Espers are all very kind!",
+   "text": "{Relm}: أنا واثقة أن أولئك الإسبرات طيبون جدا!"
+  },
+  {
+   "id": "gate.1673",
+   "context": "Message 1673 of the dialogue: {Setzer}: What's the most important thing in life?{line}Being free of obligations!{page}Otherwise, you lose the ability to gamble…",
+   "text": "{Setzer}: ما أهم شيء في الحياة؟{line}أن تكون حرا من الالتزامات!\nوإلا فقدت القدرة على المقامرة…"
+  },
+  {
+   "id": "gate.1674",
+   "context": "Message 1674 of the dialogue: {Setzer}: Urghh!{line}For the time being, I don't own the skies…",
+   "text": "{Setzer}: أرغغ!{line}في الوقت الحالي، لست سيد السماء…"
+  },
+  {
+   "id": "gate.1675",
+   "context": "Message 1675 of the dialogue: {Mog}: Kupoppo!!",
+   "text": "{Mog}: كوبوبو!!"
+  },
+  {
+   "id": "gate.1676",
+   "context": "Message 1676 of the dialogue: {Mog}: …puuh…",
+   "text": "{Mog}: …بووه…"
+  },
+  {
+   "id": "gate.1677",
+   "context": "Message 1677 of the dialogue: {Gau}: {Gau} become stronger on the Veldt.",
+   "text": "{Gau}: {Gau} يصير أقوى في الفيلدت."
+  },
+  {
+   "id": "gate.1678",
+   "context": "Message 1678 of the dialogue: {Gau}: …ooh…{line}{Gau}…high place…{line}Not good…don't like…",
+   "text": "{Gau}: …أوه…{line}{Gau}… مكان عال…{line}ليس جيدا… لا يحب…"
+  },
+  {
+   "id": "gate.1679",
+   "context": "Message 1679 of the dialogue: {Gogo}: ……",
+   "text": "{Gogo}: ……"
+  },
+  {
+   "id": "gate.1680",
+   "context": "Message 1680 of the dialogue: {Umaro}: Uhhhh…",
+   "text": "{Umaro}: أهههه…"
+  },
+  {
+   "id": "gate.1681",
+   "context": "Message 1681 of the dialogue: {Terra}: …the Espers…{line}Something happened…",
+   "text": "{Terra}: …الإسبرات…{line}حدث شيء ما…"
+  },
+  {
+   "id": "gate.1682",
+   "context": "Message 1682 of the dialogue: What happened?",
+   "text": "ماذا حدث؟"
+  },
+  {
+   "id": "gate.1683",
+   "context": "Message 1683 of the dialogue: The Espers flew off together…",
+   "text": "الإسبرات طاروا معا…"
+  },
+  {
+   "id": "gate.1684",
+   "context": "Message 1684 of the dialogue: Then, the Empire's citizens ran off, as though they were terrified.",
+   "text": "ثم فر مواطنو الإمبراطورية، كأنهم مذعورون."
+  },
+  {
+   "id": "gate.1685",
+   "context": "Message 1685 of the dialogue: Which way did the Espers go?",
+   "text": "في أي اتجاه ذهب الإسبرات؟"
+  },
+  {
+   "id": "gate.1686",
+   "context": "Message 1686 of the dialogue: Toward the capital…",
+   "text": "نحو العاصمة…"
+  },
+  {
+   "id": "gate.1687",
+   "context": "Message 1687 of the dialogue: {line}There's something under the ground…",
+   "text": "{line}هناك شيء تحت الأرض…"
+  },
+  {
+   "id": "gate.1688",
+   "context": "Message 1688 of the dialogue: Vector…",
+   "text": "فيكتور…"
+  },
+  {
+   "id": "gate.1689",
+   "context": "Message 1689 of the dialogue: {Setzer}: We're almost at Vector.",
+   "text": "{Setzer}: كدنا نصل إلى فيكتور."
+  },
+  {
+   "id": "gate.1690",
+   "context": "Message 1690 of the dialogue: There! What's that?",
+   "text": "هناك! ما ذاك؟"
+  },
+  {
+   "id": "vector.1691",
+   "context": "Message 1691 of the dialogue: There's a switch inside.{line}What will you do?{line}{Choice} (Flick the switch.){line}{Choice} (Leave it alone.)",
+   "text": "في الداخل مفتاح.{line}ماذا ستفعل؟{line}{Choice} (نضغط المفتاح.){line}{Choice} (نتركه.)"
+  },
+  {
+   "id": "vector.1692",
+   "context": "Message 1692 of the dialogue: {line}    Heard a distant sound…",
+   "text": "{center}{line}سمعت صوتا بعيدا…"
+  },
+  {
+   "id": "vector.1693",
+   "context": "Message 1693 of the dialogue: N…nuts!!! I thought I had the monopoly on the stuff buried in the plaza beneath the grand stairway…",
+   "text": "ت… تبا!!! ظننت أنني أحتكر الأشياء المدفونة في الساحة تحت الدرج الكبير…"
+  },
+  {
+   "id": "vector.1694",
+   "context": "Message 1694 of the dialogue: {line}{Spaces 08}Got “Inviz Edge.”",
+   "text": "{center}{line}حصلت على «نصل الخفاء»."
+  },
+  {
+   "id": "vector.1695",
+   "context": "Message 1695 of the dialogue: {line}{Spaces 08}Got “Super Ball.”",
+   "text": "{center}{line}حصلت على «الكرة الخارقة»."
+  },
+  {
+   "id": "vector.1696",
+   "context": "Message 1696 of the dialogue: {line}{Spaces 06}Something's buried…",
+   "text": "{center}{line}شيء ما مدفون…"
+  },
+  {
+   "id": "vector.1697",
+   "context": "Message 1697 of the dialogue: {line}{Spaces 08}Got “Bolt Edge.”",
+   "text": "{center}{line}حصلت على «نصل البرق»."
+  },
+  {
+   "id": "vector.1698",
+   "context": "Message 1698 of the dialogue: Got “?????.”",
+   "text": "حصلت على «؟؟؟؟؟»."
+  },
+  {
+   "id": "vector.1699",
+   "context": "Message 1699 of the dialogue: {line}{Spaces 08}Got “Fire Skean.”",
+   "text": "{center}{line}حصلت على «خنجر النار»."
+  },
+  {
+   "id": "vector.1700",
+   "context": "Message 1700 of the dialogue: {line}{Spaces 08}Got “Water Skean.”",
+   "text": "{center}{line}حصلت على «خنجر الماء»."
+  },
+  {
+   "id": "vector.1701",
+   "context": "Message 1701 of the dialogue: {line}{Spaces 08}Got “Shadow Edge.”",
+   "text": "{center}{line}حصلت على «نصل الظل»."
+  },
+  {
+   "id": "vector.1702",
+   "context": "Message 1702 of the dialogue: The Emperor's expecting you.{line}This way…",
+   "text": "الإمبراطور في انتظاركم.{line}من هنا…"
+  },
+  {
+   "id": "vector.1703",
+   "context": "Message 1703 of the dialogue: Emperor Gestahl waits inside.",
+   "text": "الإمبراطور غشتال ينتظر في الداخل."
+  },
+  {
+   "id": "vector.1704",
+   "context": "Message 1704 of the dialogue: The Espers that emerged from the gate are terrifying the Empire!",
+   "text": "الإسبرات الذين خرجوا من البوابة يرعبون الإمبراطورية!"
+  },
+  {
+   "id": "vector.1705",
+   "context": "Message 1705 of the dialogue: We've lost our will to fight.",
+   "text": "فقدنا رغبتنا في القتال."
+  },
+  {
+   "id": "vector.1706",
+   "context": "Message 1706 of the dialogue: Kefka's been imprisoned for unspeakable war crimes.{line}He's on his last legs…",
+   "text": "سجن كيفكا بتهمة جرائم حرب لا توصف.{line}إنه في آخر أيامه…"
+  },
+  {
+   "id": "vector.1707",
+   "context": "Message 1707 of the dialogue: The war's over…",
+   "text": "انتهت الحرب…"
+  },
+  {
+   "id": "vector.1708",
+   "context": "Message 1708 of the dialogue: The power of the Espers…{line}Phenomenal…",
+   "text": "قوة الإسبرات…{line}مذهلة…"
+  },
+  {
+   "id": "vector.1709",
+   "context": "Message 1709 of the dialogue: The Espers surely came to free their friends…",
+   "text": "الإسبرات جاؤوا حتما لتحرير أصدقائهم…"
+  },
+  {
+   "id": "vector.1710",
+   "context": "Message 1710 of the dialogue: Peace at last…",
+   "text": "السلام أخيرا…"
+  },
+  {
+   "id": "vector.1711",
+   "context": "Message 1711 of the dialogue: The Magitek Research Facility's been dismantled.",
+   "text": "فككت منشأة أبحاث الماجيتك."
+  },
+  {
+   "id": "vector.1712",
+   "context": "Message 1712 of the dialogue: You!?{line}How'd you get in here?",
+   "text": "أنت!؟{line}كيف دخلت إلى هنا؟"
+  },
+  {
+   "id": "vector.1713",
+   "context": "Message 1713 of the dialogue: The Empire's talking peace now!",
+   "text": "الإمبراطورية تتكلم عن السلام الآن!"
+  },
+  {
+   "id": "vector.1714",
+   "context": "Message 1714 of the dialogue: When the Emperor learned that Kefka used poison in battle, he imprisoned the fiend!",
+   "text": "حين علم الإمبراطور أن كيفكا استعمل السم في المعركة، سجن ذلك الشرير!"
+  },
+  {
+   "id": "vector.1715",
+   "context": "Message 1715 of the dialogue: Kefka! Using poison…{line}how low can you get?!{line}I've always hated you!",
+   "text": "كيفكا! يستعمل السم…{line}إلى أي حد يمكن أن تنحط؟!{line}لطالما كرهتك!"
+  },
+  {
+   "id": "vector.1716",
+   "context": "Message 1716 of the dialogue: KEFKA: Grrr!{line}How DARE they put me in a place like this!",
+   "text": "كيفكا: غرر!{line}كيف يجرؤون على وضعي في مكان كهذا!"
+  },
+  {
+   "id": "vector.1717",
+   "context": "Message 1717 of the dialogue: KEFKA: I don't believe this!",
+   "text": "كيفكا: لا أصدق هذا!"
+  },
+  {
+   "id": "vector.1718",
+   "context": "Message 1718 of the dialogue: KEFKA: What a bore.",
+   "text": "كيفكا: يا للملل."
+  },
+  {
+   "id": "vector.1719",
+   "context": "Message 1719 of the dialogue: Kefka's scum…{line}It serves him right!",
+   "text": "كيفكا حثالة…{line}يستحق ما حل به!"
+  },
+  {
+   "id": "vector.1720",
+   "context": "Message 1720 of the dialogue: My whole family was lost in the war…",
+   "text": "فقدت عائلتي كلها في الحرب…"
+  },
+  {
+   "id": "vector.1721",
+   "context": "Message 1721 of the dialogue: The war ended before we could use this machine…",
+   "text": "انتهت الحرب قبل أن نستعمل هذه الآلة…"
+  },
+  {
+   "id": "vector.1722",
+   "context": "Message 1722 of the dialogue: Kefka's in jail!",
+   "text": "كيفكا في السجن!"
+  },
+  {
+   "id": "vector.1723",
+   "context": "Message 1723 of the dialogue: GESTAHL: I've lost my will to fight…",
+   "text": "غشتال: فقدت رغبتي في القتال…"
+  },
+  {
+   "id": "vector.1724",
+   "context": "Message 1724 of the dialogue: CID: The Emperor's had a change of heart…",
+   "text": "سيد: الإمبراطور غير رأيه…"
+  },
+  {
+   "id": "vector.1725",
+   "context": "Message 1725 of the dialogue: Cid!!",
+   "text": "سيد!!"
+  },
+  {
+   "id": "vector.1726",
+   "context": "Message 1726 of the dialogue: CID: The Espers came to save their friends. When they learned the others had perished, they went berserk,{page}and trashed the town…{line}Never will I forget their shrieks of rage…",
+   "text": "سيد: جاء الإسبرات لإنقاذ أصدقائهم. وحين علموا أن الآخرين هلكوا، جن جنونهم،\nودمروا المدينة…{line}لن أنسى أبدا صرخات غضبهم…"
+  },
+  {
+   "id": "vector.1727",
+   "context": "Message 1727 of the dialogue: SENTRY: We're hanging up our weapons and armor for good.",
+   "text": "الحارس: سنعلق أسلحتنا ودروعنا إلى الأبد."
+  },
+  {
+   "id": "vector.1728",
+   "context": "Message 1728 of the dialogue: GESTAHL: The power of those Espers…{line}I had no idea…{page}They'll shred the world…!{line}We must get them to understand that we are no longer at war.",
+   "text": "غشتال: قوة أولئك الإسبرات…{line}لم أكن أتصور…\nسيمزقون العالم…!{line}علينا أن نجعلهم يفهمون أننا لم نعد في حالة حرب."
+  },
+  {
+   "id": "vector.1729",
+   "context": "Message 1729 of the dialogue: CID: No human's going to make them sit down and listen…",
+   "text": "سيد: لا بشري سيجعلهم يجلسون ويصغون…"
+  },
+  {
+   "id": "vector.1730",
+   "context": "Message 1730 of the dialogue: GESTAHL: But for now my friends…{line}Let us feast and rejoice!",
+   "text": "غشتال: لكن الآن يا أصدقائي…{line}لنحتفل ونأكل!"
+  },
+  {
+   "id": "vector.1731",
+   "context": "Message 1731 of the dialogue: CID: There're some people here who'd prefer to keep fighting.{page}Please, before we dine, talk to as many soldiers as you can! Make them understand!",
+   "text": "سيد: هنا بعض من يفضلون مواصلة القتال.\nأرجوكم، قبل أن نتعشى، كلموا أكبر عدد ممكن من الجنود! اجعلوهم يفهمون!"
+  },
+  {
+   "id": "vector.1732",
+   "context": "Message 1732 of the dialogue: Dinner preparations underway.{line}One moment, please.",
+   "text": "التحضيرات للعشاء جارية.{line}لحظة من فضلك."
+  },
+  {
+   "id": "vector.1733",
+   "context": "Message 1733 of the dialogue: TROOPER: Please talk to as many soldiers as you can. You have 4 minutes until dinner.",
+   "text": "الجندي: أرجوكم كلموا أكبر عدد ممكن من الجنود. أمامكم 4 دقائق حتى العشاء."
+  },
+  {
+   "id": "narshe-wolf.1734",
+   "context": "Message 1734 of the dialogue: Only the chest in the back is locked. Can it be opened…?",
+   "text": "الصندوق الذي في الخلف وحده مقفل. أيمكن فتحه…؟"
+  },
+  {
+   "id": "narshe-wolf.1735",
+   "context": "Message 1735 of the dialogue: G'whoa! I've been made!",
+   "text": "غووا! انكشف أمري!"
+  },
+  {
+   "id": "narshe-wolf.1736",
+   "context": "Message 1736 of the dialogue: I am Lone Wolf, the pickpocket! I wanted that treasure!",
+   "text": "أنا الذئب الوحيد، النشال! أردت ذلك الكنز!"
+  },
+  {
+   "id": "narshe-wolf.1737",
+   "context": "Message 1737 of the dialogue: G'heh!",
+   "text": "غهيه!"
+  },
+  {
+   "id": "narshe-wolf.1738",
+   "context": "Message 1738 of the dialogue: Persistent, aren't you!",
+   "text": "ملحاح، ألست كذلك!"
+  },
+  {
+   "id": "narshe-wolf.1739",
+   "context": "Message 1739 of the dialogue: Halt!{line}Don't move or this one's dust…!",
+   "text": "قف!{line}لا تتحرك وإلا صار هذا غبارا…!"
+  },
+  {
+   "id": "narshe-wolf.1740",
+   "context": "Message 1740 of the dialogue: Kupo!!",
+   "text": "كوبو!!"
+  },
+  {
+   "id": "narshe-wolf.1741",
+   "context": "Message 1741 of the dialogue: G'heh!{line}Got a wild one, here…!{line}Uwaaa!",
+   "text": "غهيه!{line}أمسكت بواحد جامح…!{line}أوااا!"
+  },
+  {
+   "id": "narshe-wolf.1742",
+   "context": "Message 1742 of the dialogue: Took the treasure from Lone Wolf, the pickpocket!{page}{line}{Spaces 06}Got “Gold Hairpin”!",
+   "text": "أخذت الكنز من الذئب الوحيد، النشال!\n{center}{line}حصلت على «دبوس الشعر الذهبي»!"
+  },
+  {
+   "id": "narshe-wolf.1743",
+   "context": "Message 1743 of the dialogue: {line}{line}{line}Kupo…",
+   "text": "{line}{line}{line}كوبو…"
+  },
+  {
+   "id": "narshe-wolf.1744",
+   "context": "Message 1744 of the dialogue: {Locke}: Couldn't hold out…?!{line}Uh oh…",
+   "text": "{Locke}: لم يصمدوا…؟!{line}أوه أوه…"
+  },
+  {
+   "id": "narshe-wolf.1745",
+   "context": "Message 1745 of the dialogue: BANON: Couldn't hold out!?{line}I have a bad feeling about this…",
+   "text": "بانون: لم يصمدوا!؟{line}عندي شعور سيئ حيال هذا…"
+  },
+  {
+   "id": "narshe-wolf.1746",
+   "context": "Message 1746 of the dialogue: Relics give your party members a variety of abilities.{line}For example…{page}“Sprint Shoes” double your speed.{line}“True Knight” lets you shield others during battle.{page}“Dragoon Boots” add the “Jump” command to your battle list.{page}“Gauntlet” allows you to hold a sword with both hands.{line}Use the Main Menu to equip up to 2 relics per person.",
+   "text": "التمائم تمنح أعضاء فريقك قدرات متنوعة.{line}مثلا…\n«حذاء الركض» يضاعف سرعتك.{line}«الفارس الحق» يتيح لك حماية الآخرين في المعركة.\n«جزمة الدراغون» تضيف أمر «قفز» إلى قائمة معركتك.\n«القفاز الحديدي» يتيح لك إمساك السيف بكلتا يديك.{line}استعمل القائمة الرئيسية لتجهيز تميمتين لكل شخص على الأكثر."
+  },
+  {
+   "id": "narshe-wolf.1747",
+   "context": "Message 1747 of the dialogue: {Shadow}: I've worn out my welcome…",
+   "text": "{Shadow}: لم أعد مرحبا بي هنا…"
+  },
+  {
+   "id": "narshe-wolf.1748",
+   "context": "Message 1748 of the dialogue: At Save Points you can use a “Sleeping Bag” or “Tent”, and also save a game.{page}If you should perish, you'll automatically be able to play from your last save.{page}Though any GP, treasures, etc. you found will have to be found again, your Level and Exp. data will be retained.{page}You can save a game anywhere on the world map.",
+   "text": "عند نقاط الحفظ يمكنك استعمال «كيس النوم» أو «الخيمة»، وحفظ اللعبة أيضا.\nإن هلكت، فستستطيع تلقائيا اللعب من آخر حفظ.\nورغم أن الغيل والكنوز وغيرها مما وجدته يجب أن تجده من جديد، فإن مستواك ونقاط خبرتك تبقى.\nيمكنك حفظ اللعبة في أي مكان على خريطة العالم."
+  },
+  {
+   "id": "narshe-wolf.1749",
+   "context": "Message 1749 of the dialogue: {KeyAfter 60}{Key}",
+   "text": "{KeyAfter 60}{Key}"
+  },
+  {
+   "id": "narshe-wolf.1750",
+   "context": "Message 1750 of the dialogue: Emperor Gestahl himself asked me to do his portrait…{line}What if he doesn't like it…?",
+   "text": "الإمبراطور غشتال بنفسه طلب مني أن أرسم صورته…{line}ماذا لو لم تعجبه…؟"
+  },
+  {
+   "id": "narshe-wolf.1751",
+   "context": "Message 1751 of the dialogue: I finished the Emperor's portrait. It was a true representation of the Emperor… but he hated it.{page}I ended selling it to Owzer, a rich man who lives in Jidoor.",
+   "text": "أنهيت صورة الإمبراطور. كانت تمثيلا صادقا للإمبراطور… لكنه كرهها.\nفانتهى بي الأمر ببيعها لأوزر، رجل ثري يعيش في جيدور."
+  },
+  {
+   "id": "narshe-wolf.1752",
+   "context": "Message 1752 of the dialogue: The Chocobo is the noblest of creatures!",
+   "text": "التشوكوبو أنبل المخلوقات!"
+  },
+  {
+   "id": "narshe-wolf.1753",
+   "context": "Message 1753 of the dialogue: WOLF: Hmmm…if this is how it's gonna be then…take this!",
+   "text": "الذئب: همم… إن كان الأمر هكذا… فخذوا هذا!"
+  },
+  {
+   "id": "narshe-wolf.1754",
+   "context": "Message 1754 of the dialogue: Look out!{line}Get outta the way!",
+   "text": "احذر!{line}ابتعد عن الطريق!"
+  },
+  {
+   "id": "narshe-wolf.1755",
+   "context": "Message 1755 of the dialogue: Defeat the Statues, and magical power will not disappear…{page}Kefka drained the Statues' power, the source of magic…?",
+   "text": "اهزم التماثيل، ولن تختفي قوة السحر…\nكيفكا استنزف قوة التماثيل، مصدر السحر…؟"
+  },
+  {
+   "id": "narshe-wolf.1756",
+   "context": "Message 1756 of the dialogue: Unequip some party members?{line}{Choice} Those not now in your party.{line}{Choice} All members.{line}{Choice} Don't do a thing!",
+   "text": "تنزع تجهيزات بعض الأعضاء؟{line}{Choice} من ليسوا في الفريق الآن.{line}{Choice} كل الأعضاء.{line}{Choice} لا تفعل شيئا!"
+  },
+  {
+   "id": "narshe-wolf.1757",
+   "context": "Message 1757 of the dialogue: {line}{Spaces 06}Got “Pearl Lance”!",
+   "text": "{center}{line}حصلت على «رمح اللؤلؤ»!"
+  },
+  {
+   "id": "narshe-wolf.1758",
+   "context": "Message 1758 of the dialogue: Thankupo!",
+   "text": "شكرا كوبو!"
+  },
+  {
+   "id": "narshe-wolf.1759",
+   "context": "Message 1759 of the dialogue: Can you talk?!",
+   "text": "أتستطيع الكلام؟!"
+  },
+  {
+   "id": "narshe-wolf.1760",
+   "context": "Message 1760 of the dialogue: Human-loving, fast-talking,{line}street-smart, SLAM-dancing…{line}Moogle…",
+   "text": "محب للبشر، سريع اللسان،{line}خبير بالشوارع، راقص صاخب…{line}موغل…"
+  },
+  {
+   "id": "narshe-wolf.1761",
+   "context": "Message 1761 of the dialogue: That old psycho, Ramuh, came to me in a dream and told me to be expectin' you!{page}And now… {Wait} I'm… {Wait}{line}gonna join your party!",
+   "text": "ذلك العجوز المجنون، رامو، جاءني في حلم وقال لي أن أتوقعكم!\nوالآن… {Wait} أنا… {Wait}{line}سأنضم إلى فريقكم!"
+  },
+  {
+   "id": "narshe-wolf.1762",
+   "context": "Message 1762 of the dialogue: I'll wait in the airship, kupo!",
+   "text": "سأنتظر في السفينة الطائرة، كوبو!"
+  },
+  {
+   "id": "narshe-wolf.1763",
+   "context": "Message 1763 of the dialogue: Kupo!",
+   "text": "كوبو!"
+  },
+  {
+   "id": "narshe-wolf.1764",
+   "context": "Message 1764 of the dialogue: Locked…",
+   "text": "مقفل…"
+  },
+  {
+   "id": "narshe-wolf.1765",
+   "context": "Message 1765 of the dialogue: {line}{Spaces 05}Grrrr…{line}{Spaces 05}You'll never get this{line}{Spaces 05}“Gold Hairpin”!",
+   "text": "{center}{line}غرررر…{line}لن تحصلوا أبدا على{line}«دبوس الشعر الذهبي»!"
+  },
+  {
+   "id": "narshe-wolf.1766",
+   "context": "Message 1766 of the dialogue: Kupo… {Wait} … {Wait} po!",
+   "text": "كوبو… {Wait} … {Wait} بو!"
+  },
+  {
+   "id": "banquet.1767",
+   "context": "Message 1767 of the dialogue: {line}That evening, the banquet{line}with the Emperor took place…",
+   "text": "{line}في ذلك المساء، أقيمت{line}المأدبة مع الإمبراطور…"
+  },
+  {
+   "id": "banquet.1768",
+   "context": "Message 1768 of the dialogue: TROOPER: This way, please.",
+   "text": "الجندي: من هنا، تفضلوا."
+  },
+  {
+   "id": "banquet.1769",
+   "context": "Message 1769 of the dialogue: CID: You can count me in as a Returner!",
+   "text": "سيد: اعتبروني واحدا من العائدين!"
+  },
+  {
+   "id": "banquet.1770",
+   "context": "Message 1770 of the dialogue: GESTAHL: Imagine!{line}All of us here together, sharing a meal! First we must have a toast!",
+   "text": "غشتال: تخيلوا!{line}كلنا هنا معا، نتشارك الطعام! أولا علينا أن نشرب نخبا!"
+  },
+  {
+   "id": "banquet.1771",
+   "context": "Message 1771 of the dialogue: {Choice} To the Empire…{line}{Choice} To the Returners…{line}{Choice} To our hometowns…",
+   "text": "{Choice} نخب الإمبراطورية…{line}{Choice} نخب العائدين…{line}{Choice} نخب بلداتنا…"
+  },
+  {
+   "id": "banquet.1772",
+   "context": "Message 1772 of the dialogue: GESTAHL: Well then…{line}To our hometowns!",
+   "text": "غشتال: حسنا إذن…{line}نخب بلداتنا!"
+  },
+  {
+   "id": "banquet.1773",
+   "context": "Message 1773 of the dialogue: GESTAHL: Well then…{line}To the Empire!",
+   "text": "غشتال: حسنا إذن…{line}نخب الإمبراطورية!"
+  },
+  {
+   "id": "banquet.1774",
+   "context": "Message 1774 of the dialogue: GESTAHL: Well then…{line}To the Returners!",
+   "text": "غشتال: حسنا إذن…{line}نخب العائدين!"
+  },
+  {
+   "id": "banquet.1775",
+   "context": "Message 1775 of the dialogue: GESTAHL: As you know, Kefka's in jail for war crimes.{line}What shall we do with him?",
+   "text": "غشتال: كما تعلمون، كيفكا في السجن بتهمة جرائم حرب.{line}ماذا نفعل به؟"
+  },
+  {
+   "id": "banquet.1776",
+   "context": "Message 1776 of the dialogue: {Choice} Leave him in jail…{line}{Choice} Pardon him…{line}{Choice} Execute him…",
+   "text": "{Choice} نتركه في السجن…{line}{Choice} نعفو عنه…{line}{Choice} نعدمه…"
+  },
+  {
+   "id": "banquet.1777",
+   "context": "Message 1777 of the dialogue: {Edgar}: Albrook's a port to the south of the Empire.{line}A Magitek Armor hauling ship plies the waters between……{page}……there and Crescent Island…{line}We'll penetrate the Imperial base. You deal with the Espers!",
+   "text": "{Edgar}: ألبروك ميناء جنوب الإمبراطورية.{line}سفينة نقل دروع ماجيتك تمخر المياه بين……\n……هناك وجزيرة الهلال…{line}سنتوغل في القاعدة الإمبراطورية. وأنتم تولوا أمر الإسبرات!"
+  },
+  {
+   "id": "banquet.1778",
+   "context": "Message 1778 of the dialogue: {Sabin}: Can we really trust the Empire?! I have an awful feeling about this…",
+   "text": "{Sabin}: أيمكننا حقا أن نثق بالإمبراطورية؟! عندي شعور فظيع حيال هذا…"
+  },
+  {
+   "id": "banquet.1779",
+   "context": "Message 1779 of the dialogue: {Cyan}: Never will I be able to forgive Kefka…",
+   "text": "{Cyan}: لن أستطيع أبدا أن أغفر لكيفكا…"
+  },
+  {
+   "id": "banquet.1780",
+   "context": "Message 1780 of the dialogue: {Gau}: Smells like parents' house here…why so familiar?",
+   "text": "{Gau}: رائحة المكان هنا مثل بيت الوالدين… لماذا مألوفة هكذا؟"
+  },
+  {
+   "id": "banquet.1781",
+   "context": "Message 1781 of the dialogue: {Mog}: Kupo!",
+   "text": "{Mog}: كوبو!"
+  },
+  {
+   "id": "banquet.1782",
+   "context": "Message 1782 of the dialogue: MAJESTY: General Leo's waiting in Albrook. Please head for Crescent Island and look for the Espers…",
+   "text": "الإمبراطور: الجنرال ليو ينتظر في ألبروك. توجهوا إلى جزيرة الهلال وابحثوا عن الإسبرات…"
+  },
+  {
+   "id": "banquet.1783",
+   "context": "Message 1783 of the dialogue: GESTAHL: Hmm…{line}Well, let's let him stew in his cell for a while. Then we'll decide what to do.",
+   "text": "غشتال: همم…{line}حسنا، لنتركه يتعفن في زنزانته فترة. ثم نقرر ما نفعل."
+  },
+  {
+   "id": "banquet.1784",
+   "context": "Message 1784 of the dialogue: {Choice} Why'd you start the war?{line}{Choice} Why do you want peace now?{line}{Choice} Why'd we have to talk to {line}{Spaces 06}your men?",
+   "text": "{Choice} لماذا بدأت الحرب؟{line}{Choice} لماذا تريد السلام الآن؟{line}{Choice} لماذا كان علينا أن نكلم رجالك؟"
+  },
+  {
+   "id": "banquet.1785",
+   "context": "Message 1785 of the dialogue: GESTAHL: My desire for power got the best of me.{line}Now I've come to my senses.",
+   "text": "غشتال: رغبتي في القوة تغلبت علي.{line}والآن عدت إلى رشدي."
+  },
+  {
+   "id": "banquet.1786",
+   "context": "Message 1786 of the dialogue: GESTAHL: I feel we need each other's help at this time…",
+   "text": "غشتال: أشعر أننا نحتاج إلى مساعدة بعضنا في هذا الوقت…"
+  },
+  {
+   "id": "banquet.1787",
+   "context": "Message 1787 of the dialogue: GESTAHL: Some of my men refuse to embrace peace. I felt they'd understand if they actually met you face to face.",
+   "text": "غشتال: بعض رجالي يرفضون تقبل السلام. شعرت أنهم سيفهمون إن قابلوكم وجها لوجه."
+  },
+  {
+   "id": "banquet.1788",
+   "context": "Message 1788 of the dialogue: GESTAHL: With your permission, I'd like to talk about the Espers…",
+   "text": "غشتال: بإذنكم، أود أن أتكلم عن الإسبرات…"
+  },
+  {
+   "id": "banquet.1789",
+   "context": "Message 1789 of the dialogue: {Choice} One more question please!{line}{Choice} Okay.",
+   "text": "{Choice} سؤال آخر من فضلك!{line}{Choice} حسنا."
+  },
+  {
+   "id": "banquet.1790",
+   "context": "Message 1790 of the dialogue: {Choice} One more question please!{line}{Choice} Let's talk about Espers…",
+   "text": "{Choice} سؤال آخر من فضلك!{line}{Choice} لنتكلم عن الإسبرات…"
+  },
+  {
+   "id": "banquet.1791",
+   "context": "Message 1791 of the dialogue: GESTAHL: I assure you, I have answered your questions truthfully.",
+   "text": "غشتال: أؤكد لكم أنني أجبت عن أسئلتكم بصدق."
+  },
+  {
+   "id": "banquet.1792",
+   "context": "Message 1792 of the dialogue: GESTAHL: My Empire's been decimated by the Espers that emerged from the sealed gate.{page}They're acting spiteful. Unless they're stopped, they'll rip the world asunder!",
+   "text": "غشتال: إمبراطوريتي دمرها الإسبرات الذين خرجوا من البوابة المختومة.\nإنهم يتصرفون بحقد. وما لم يوقفوا، فسيمزقون العالم!"
+  },
+  {
+   "id": "banquet.1793",
+   "context": "Message 1793 of the dialogue: {Choice} Yes, the Espers have gone{line}{Spaces 05}too far.{line}{Choice} But you unleashed their{line}{Spaces 05}power!!",
+   "text": "{Choice} نعم، الإسبرات تمادوا كثيرا.{line}{Choice} لكنك أنت من أطلق قوتهم!!"
+  },
+  {
+   "id": "banquet.1794",
+   "context": "Message 1794 of the dialogue: GESTAHL: After the Espers went on their rampage, I knew I couldn't go on with my war.{page}I asked myself why I had started it in the first place.{line}By the way…{page}About those questions you asked me…{line}which did you ask first?",
+   "text": "غشتال: بعد أن هاج الإسبرات، أدركت أنني لا أستطيع مواصلة حربي.\nسألت نفسي لماذا بدأتها أصلا.{line}بالمناسبة…\nبخصوص الأسئلة التي سألتموني…{line}أيها سألتم أولا؟"
+  },
+  {
+   "id": "banquet.1795",
+   "context": "Message 1795 of the dialogue: GESTAHL: Right. Anyway, more than anything I want peace. That's my true dream. I want you to understand that!",
+   "text": "غشتال: صحيح. على أي حال، أكثر من أي شيء أريد السلام. ذلك حلمي الحقيقي. أريدكم أن تفهموا ذلك!"
+  },
+  {
+   "id": "banquet.1796",
+   "context": "Message 1796 of the dialogue: CID: You seem a bit tired.{line}Care for a rest break?",
+   "text": "سيد: تبدون متعبين قليلا.{line}تريدون استراحة؟"
+  },
+  {
+   "id": "banquet.1797",
+   "context": "Message 1797 of the dialogue: {Choice} Yes, let's take a break.{line}{Choice} Let's keep talking.",
+   "text": "{Choice} نعم، لنأخذ استراحة.{line}{Choice} لنواصل الحديث."
+  },
+  {
+   "id": "banquet.1798",
+   "context": "Message 1798 of the dialogue: Shall we begin again?{line}{Choice} Yes{line}{Choice} No",
+   "text": "نبدأ من جديد؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "banquet.1799",
+   "context": "Message 1799 of the dialogue: GESTAHL: Is there anything you wish to hear me say?",
+   "text": "غشتال: هل هناك شيء تودون سماعه مني؟"
+  },
+  {
+   "id": "banquet.1800",
+   "context": "Message 1800 of the dialogue: {Choice} That all you really want{line}{Spaces 05}is peace.{line}{Choice} That your war's truly over.{line}{Choice} That you're sorry…",
+   "text": "{Choice} أن كل ما تريده حقا هو السلام.{line}{Choice} أن حربك انتهت حقا.{line}{Choice} أنك آسف…"
+  },
+  {
+   "id": "banquet.1801",
+   "context": "Message 1801 of the dialogue: GESTAHL: ……",
+   "text": "غشتال: ……"
+  },
+  {
+   "id": "banquet.1802",
+   "context": "Message 1802 of the dialogue: CID: All will be put right if we can achieve peace…!",
+   "text": "سيد: كل شيء سيصلح إن حققنا السلام…!"
+  },
+  {
+   "id": "banquet.1803",
+   "context": "Message 1803 of the dialogue: TROOPERS: We want to test your strength!{page}Won't you fight with us for a couple of minutes?{line}{Choice} Sure{line}{Choice} Sorry",
+   "text": "الجنود: نريد أن نختبر قوتكم!\nأتقاتلون معنا دقيقتين؟{line}{Choice} طبعا{line}{Choice} آسف"
+  },
+  {
+   "id": "banquet.1804",
+   "context": "Message 1804 of the dialogue: TROOPER: Just as we thought…",
+   "text": "الجندي: كما توقعنا تماما…"
+  },
+  {
+   "id": "banquet.1805",
+   "context": "Message 1805 of the dialogue: GESTAHL: I understand.{line}My only dream in life is…peace! Now I must ask for a favor…",
+   "text": "غشتال: فهمت.{line}حلمي الوحيد في الحياة هو… السلام! والآن علي أن أطلب معروفا…"
+  },
+  {
+   "id": "banquet.1806",
+   "context": "Message 1806 of the dialogue: GESTAHL: I understand.{line}I've ordered this war to be over! Now I must ask for a favor…",
+   "text": "غشتال: فهمت.{line}لقد أمرت بإنهاء هذه الحرب! والآن علي أن أطلب معروفا…"
+  },
+  {
+   "id": "banquet.1807",
+   "context": "Message 1807 of the dialogue: GESTAHL: I understand.{line}I'm truly sorry for what I've done! Now I must ask for a favor…",
+   "text": "غشتال: فهمت.{line}أنا آسف حقا على ما فعلت! والآن علي أن أطلب معروفا…"
+  },
+  {
+   "id": "banquet.1808",
+   "context": "Message 1808 of the dialogue: GESTAHL: After they devastated my Empire, the Espers headed northward, toward Crescent Island.{page}They must be found…!{line}We must tell them we're no longer their enemy.{page}After all that I have put them through, it is up to me to set things right.{page}That is why… {Wait}{line}I need to borrow {Terra}'s power.",
+   "text": "غشتال: بعد أن دمروا إمبراطوريتي، اتجه الإسبرات شمالا، نحو جزيرة الهلال.\nيجب العثور عليهم…!{line}علينا أن نخبرهم أننا لم نعد أعداءهم.\nبعد كل ما أذقتهم إياه، علي أنا أن أصلح الأمور.\nلهذا… {Wait}{line}أحتاج إلى استعارة قوة {Terra}."
+  },
+  {
+   "id": "banquet.1809",
+   "context": "Message 1809 of the dialogue: Only {Terra} can bridge the gap between Esper and human.",
+   "text": "{Terra} وحدها تستطيع ردم الهوة بين الإسبرات والبشر."
+  },
+  {
+   "id": "banquet.1810",
+   "context": "Message 1810 of the dialogue: GESTAHL: We must make for Crescent Island aboard the freighter from Albrook.{page}Will you accompany me?{line}{Choice} Yes{line}{Choice} No",
+   "text": "غشتال: علينا التوجه إلى جزيرة الهلال على متن سفينة الشحن من ألبروك.\nأترافقونني؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "banquet.1811",
+   "context": "Message 1811 of the dialogue: GESTAHL: We cannot simply ignore the Espers!!{page}Please…come with me!{line}{Choice} Yes{line}{Choice} No",
+   "text": "غشتال: لا يمكننا تجاهل الإسبرات ببساطة!!\nأرجوكم… تعالوا معي!{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "banquet.1812",
+   "context": "Message 1812 of the dialogue: GESTAHL: I'll have my finest warrior accompany us!{line}General Leo!",
+   "text": "غشتال: سأجعل أفضل محاربي يرافقنا!{line}الجنرال ليو!"
+  },
+  {
+   "id": "banquet.1813",
+   "context": "Message 1813 of the dialogue: LEO: I'm General Leo{line}Nice to meet you.",
+   "text": "ليو: أنا الجنرال ليو{line}سررت بلقائكم."
+  },
+  {
+   "id": "banquet.1814",
+   "context": "Message 1814 of the dialogue: {Sabin}: Didn't I see you at Doma?{line}…I'm SURE I did…{line}So that was General Leo…",
+   "text": "{Sabin}: ألم أرك في دوما؟{line}…أنا واثق من ذلك…{line}إذن ذاك كان الجنرال ليو…"
+  },
+  {
+   "id": "banquet.1815",
+   "context": "Message 1815 of the dialogue: LEO: You! You're {Cyan}, liege to the king of Doma!{line}Please forgive me for not being there to stop Kefka…{page}{Cyan}: ……{line}That wasn't your fault.",
+   "text": "ليو: أنت! أنت {Cyan}، تابع ملك دوما!{line}أرجوك سامحني لأنني لم أكن هناك لأوقف كيفكا…\n{Cyan}: ……{line}لم يكن ذلك ذنبك."
+  },
+  {
+   "id": "banquet.1816",
+   "context": "Message 1816 of the dialogue: LEO: I'll be waiting for you in Albrook.",
+   "text": "ليو: سأنتظركم في ألبروك."
+  },
+  {
+   "id": "banquet.1817",
+   "context": "Message 1817 of the dialogue: GESTAHL: We must find the Espers and come to terms with them! You are our last hope!",
+   "text": "غشتال: علينا أن نجد الإسبرات ونتفاهم معهم! أنتم أملنا الأخير!"
+  },
+  {
+   "id": "banquet.1818",
+   "context": "Message 1818 of the dialogue: {Locke}: If {Terra} goes, I'll go.",
+   "text": "{Locke}: إن ذهبت {Terra}، فسأذهب."
+  },
+  {
+   "id": "banquet.1819",
+   "context": "Message 1819 of the dialogue: {Terra}: {Locke}…{line}Thank you…",
+   "text": "{Terra}: {Locke}…{line}شكرا لك…"
+  },
+  {
+   "id": "banquet.1820",
+   "context": "Message 1820 of the dialogue: {Locke}: The rest of you wait here. I smell a rat…",
+   "text": "{Locke}: البقية ينتظرون هنا. أشم رائحة خيانة…"
+  },
+  {
+   "id": "banquet.1821",
+   "context": "Message 1821 of the dialogue: {Edgar}: Agreed…{line}It's hard to trust the Emperor just like that…",
+   "text": "{Edgar}: موافق…{line}من الصعب أن نثق بالإمبراطور هكذا ببساطة…"
+  },
+  {
+   "id": "banquet.1822",
+   "context": "Message 1822 of the dialogue: {Cyan}: We'll stay here and investigate.",
+   "text": "{Cyan}: سنبقى هنا ونتحرى."
+  },
+  {
+   "id": "banquet.1823",
+   "context": "Message 1823 of the dialogue: {Locke}: Please do.{line}Leave no stone unturned!",
+   "text": "{Locke}: افعلوا رجاء.{line}لا تتركوا شيئا دون تمحيص!"
+  },
+  {
+   "id": "banquet.1824",
+   "context": "Message 1824 of the dialogue: {Edgar}: Right.{line}And you be careful!",
+   "text": "{Edgar}: حسنا.{line}وأنت، احذر!"
+  },
+  {
+   "id": "banquet.1825",
+   "context": "Message 1825 of the dialogue: GESTAHL: I truly apologize about the poisoning of Doma.{line}No one dreamed Kefka would use poison.",
+   "text": "غشتال: أعتذر بصدق عن تسميم دوما.{line}لم يخطر ببال أحد أن كيفكا سيستعمل السم."
+  },
+  {
+   "id": "banquet.1826",
+   "context": "Message 1826 of the dialogue: {Choice} What's done is done…{line}{Choice} That was inexcusable.{line}{Choice} Apologize again!!",
+   "text": "{Choice} ما حدث قد حدث…{line}{Choice} كان ذلك لا يغتفر.{line}{Choice} اعتذر مجددا!!"
+  },
+  {
+   "id": "banquet.1827",
+   "context": "Message 1827 of the dialogue: GESTAHL: I'm so terribly sorry! Kefka's being severely punished, and we're cleaning up the poison.",
+   "text": "غشتال: أنا آسف جدا! كيفكا يعاقب بشدة، ونحن ننظف السم."
+  },
+  {
+   "id": "banquet.1828",
+   "context": "Message 1828 of the dialogue: GESTAHL: By the way…{line}With regard to General {Celes}…",
+   "text": "غشتال: بالمناسبة…{line}بخصوص الجنرال {Celes}…"
+  },
+  {
+   "id": "banquet.1829",
+   "context": "Message 1829 of the dialogue: {Choice} Was she an Imperial spy?{line}{Choice} {Celes} is one of us!{line}{Choice} We trust {Celes}!",
+   "text": "{Choice} أكانت جاسوسة إمبراطورية؟{line}{Choice} {Celes} واحدة منا!{line}{Choice} نحن نثق في {Celes}!"
+  },
+  {
+   "id": "banquet.1830",
+   "context": "Message 1830 of the dialogue: GESTAHL: Kefka was lying.{line}General {Celes} realized the war was stupid before anyone else.{page}That's why she joined the returners. Any other questions for me?",
+   "text": "غشتال: كيفكا كان يكذب.{line}الجنرال {Celes} أدركت غباء الحرب قبل أي أحد آخر.\nلهذا انضمت إلى العائدين. أي أسئلة أخرى لي؟"
+  },
+  {
+   "id": "banquet.1831",
+   "context": "Message 1831 of the dialogue: {Spaces 09}1 person",
+   "text": "{center}شخص واحد"
+  },
+  {
+   "id": "banquet.1832",
+   "context": "Message 1832 of the dialogue: {Spaces 09}2 people",
+   "text": "{center}شخصان"
+  },
+  {
+   "id": "banquet.1833",
+   "context": "Message 1833 of the dialogue: {Spaces 09}3 people",
+   "text": "{center}3 أشخاص"
+  },
+  {
+   "id": "banquet.1834",
+   "context": "Message 1834 of the dialogue: {Spaces 09}4 people",
+   "text": "{center}4 أشخاص"
+  },
+  {
+   "id": "banquet.1835",
+   "context": "Message 1835 of the dialogue: {Spaces 09}5 people",
+   "text": "{center}5 أشخاص"
+  },
+  {
+   "id": "banquet.1836",
+   "context": "Message 1836 of the dialogue: {Spaces 09}6 people",
+   "text": "{center}6 أشخاص"
+  },
+  {
+   "id": "banquet.1837",
+   "context": "Message 1837 of the dialogue: {Spaces 09}7 people",
+   "text": "{center}7 أشخاص"
+  },
+  {
+   "id": "banquet.1838",
+   "context": "Message 1838 of the dialogue: {Spaces 09}8 people",
+   "text": "{center}8 أشخاص"
+  },
+  {
+   "id": "banquet.1839",
+   "context": "Message 1839 of the dialogue: {Spaces 09}9 people",
+   "text": "{center}9 أشخاص"
+  },
+  {
+   "id": "banquet.1840",
+   "context": "Message 1840 of the dialogue: {Spaces 09}10 people",
+   "text": "{center}10 أشخاص"
+  },
+  {
+   "id": "banquet.1841",
+   "context": "Message 1841 of the dialogue: {Spaces 09}11 people",
+   "text": "{center}11 شخصا"
+  },
+  {
+   "id": "banquet.1842",
+   "context": "Message 1842 of the dialogue: {Spaces 09}12 people",
+   "text": "{center}12 شخصا"
+  },
+  {
+   "id": "banquet.1843",
+   "context": "Message 1843 of the dialogue: {Spaces 09}13 people",
+   "text": "{center}13 شخصا"
+  },
+  {
+   "id": "banquet.1844",
+   "context": "Message 1844 of the dialogue: {Spaces 09}14 people",
+   "text": "{center}14 شخصا"
+  },
+  {
+   "id": "banquet.1845",
+   "context": "Message 1845 of the dialogue: {Spaces 09}15 people",
+   "text": "{center}15 شخصا"
+  },
+  {
+   "id": "banquet.1846",
+   "context": "Message 1846 of the dialogue: {Spaces 09}16 people",
+   "text": "{center}16 شخصا"
+  },
+  {
+   "id": "banquet.1847",
+   "context": "Message 1847 of the dialogue: {Spaces 09}17 people",
+   "text": "{center}17 شخصا"
+  },
+  {
+   "id": "banquet.1848",
+   "context": "Message 1848 of the dialogue: {Spaces 09}18 people",
+   "text": "{center}18 شخصا"
+  },
+  {
+   "id": "banquet.1849",
+   "context": "Message 1849 of the dialogue: {Spaces 09}19 people",
+   "text": "{center}19 شخصا"
+  },
+  {
+   "id": "banquet.1850",
+   "context": "Message 1850 of the dialogue: {Spaces 09}20 people",
+   "text": "{center}20 شخصا"
+  },
+  {
+   "id": "banquet.1851",
+   "context": "Message 1851 of the dialogue: {Spaces 09}21 people",
+   "text": "{center}21 شخصا"
+  },
+  {
+   "id": "banquet.1852",
+   "context": "Message 1852 of the dialogue: {Spaces 09}22 people",
+   "text": "{center}22 شخصا"
+  },
+  {
+   "id": "banquet.1853",
+   "context": "Message 1853 of the dialogue: {Spaces 09}23 people",
+   "text": "{center}23 شخصا"
+  },
+  {
+   "id": "banquet.1854",
+   "context": "Message 1854 of the dialogue: {Spaces 09}24 people",
+   "text": "{center}24 شخصا"
+  },
+  {
+   "id": "banquet.1855",
+   "context": "Message 1855 of the dialogue: I've slain too many people.{line}I'll never live a normal life.",
+   "text": "قتلت أناسا كثيرين.{line}لن أعيش حياة طبيعية أبدا."
+  },
+  {
+   "id": "banquet.1856",
+   "context": "Message 1856 of the dialogue: You're not wanted!",
+   "text": "أنتم غير مرغوب فيكم!"
+  },
+  {
+   "id": "banquet.1857",
+   "context": "Message 1857 of the dialogue: I oppose peace!",
+   "text": "أنا أعارض السلام!"
+  },
+  {
+   "id": "banquet.1858",
+   "context": "Message 1858 of the dialogue: Some people fight harder after they're cast down!",
+   "text": "بعض الناس يقاتلون بشراسة أكبر بعد أن يسقطوا!"
+  },
+  {
+   "id": "banquet.1859",
+   "context": "Message 1859 of the dialogue: The Empire'll never die!",
+   "text": "الإمبراطورية لن تموت أبدا!"
+  },
+  {
+   "id": "banquet.1860",
+   "context": "Message 1860 of the dialogue: You deserve a thrashing!",
+   "text": "تستحق علقة!"
+  },
+  {
+   "id": "banquet.1861",
+   "context": "Message 1861 of the dialogue: You're strong…{line}Maybe you really CAN defeat the Espers…",
+   "text": "أنتم أقوياء…{line}ربما تستطيعون حقا هزيمة الإسبرات…"
+  },
+  {
+   "id": "banquet.1862",
+   "context": "Message 1862 of the dialogue: Espers…{line}Who'd have dreamed they were that powerful…",
+   "text": "الإسبرات…{line}من كان يحلم أنهم بهذه القوة…"
+  },
+  {
+   "id": "banquet.1863",
+   "context": "Message 1863 of the dialogue: We'll never knuckle under…",
+   "text": "لن نستسلم أبدا…"
+  },
+  {
+   "id": "banquet.1864",
+   "context": "Message 1864 of the dialogue: I heard you're the strongest of the Returners…so just how strong are you…?",
+   "text": "سمعت أنكم أقوى العائدين… فما مدى قوتكم…؟"
+  },
+  {
+   "id": "banquet.1865",
+   "context": "Message 1865 of the dialogue: Not bad…pretty strong!",
+   "text": "لا بأس… أقوياء جدا!"
+  },
+  {
+   "id": "banquet.1866",
+   "context": "Message 1866 of the dialogue: Someone outta thrash ya!",
+   "text": "أحدهم ينبغي أن يلقنكم درسا!"
+  },
+  {
+   "id": "banquet.1867",
+   "context": "Message 1867 of the dialogue: Phepppp. Returner scum!",
+   "text": "بف. حثالة العائدين!"
+  },
+  {
+   "id": "banquet.1868",
+   "context": "Message 1868 of the dialogue: Hm.{line}Not bad!",
+   "text": "هم.{line}لا بأس!"
+  },
+  {
+   "id": "banquet.1869",
+   "context": "Message 1869 of the dialogue: Everything'll be settled after the banquet…",
+   "text": "كل شيء سيحسم بعد المأدبة…"
+  },
+  {
+   "id": "banquet.1870",
+   "context": "Message 1870 of the dialogue: A message from the Emperor…{line}Because you were able to talk to so many soldiers, you are to be rewarded as follows.",
+   "text": "رسالة من الإمبراطور…{line}لأنكم استطعتم أن تكلموا هذا العدد من الجنود، ستكافؤون كما يلي."
+  },
+  {
+   "id": "banquet.1871",
+   "context": "Message 1871 of the dialogue: Imperial troops have withdrawn from South Figaro.",
+   "text": "انسحبت القوات الإمبراطورية من ساوث فيغارو."
+  },
+  {
+   "id": "banquet.1872",
+   "context": "Message 1872 of the dialogue: In addition, our troops have also pulled out of Doma.",
+   "text": "إضافة إلى ذلك، انسحبت قواتنا أيضا من دوما."
+  },
+  {
+   "id": "banquet.1873",
+   "context": "Message 1873 of the dialogue: We hereby give you the right to take any weapons you desire from the Imperial base to the east, near the sealed gate.",
+   "text": "نمنحكم بهذا حق أخذ ما تشاؤون من الأسلحة من القاعدة الإمبراطورية إلى الشرق، قرب البوابة المختومة."
+  },
+  {
+   "id": "banquet.1874",
+   "context": "Message 1874 of the dialogue: And this is from the Emperor himself…{page}{line}{Spaces 05}Received “Tintinabar.”",
+   "text": "وهذا من الإمبراطور نفسه…\n{center}{line}حصلت على «تينتينابار»."
+  },
+  {
+   "id": "setzer.1875",
+   "context": "Message 1875 of the dialogue: CID: Wow, what a ship!{line}{Setzer}: That landing really messed up the engine. It'll take a while to fix…",
+   "text": "سيد: واو، يا لها من سفينة!{line}{Setzer}: ذلك الهبوط أفسد المحرك حقا. الإصلاح سيستغرق وقتا…"
+  },
+  {
+   "id": "setzer.1876",
+   "context": "Message 1876 of the dialogue: Your behavior at the banquet was impeccable. Please take this as well!{page}{line}{Spaces 05}Received “Charm Bangle.”",
+   "text": "سلوككم في المأدبة كان مثاليا. خذوا هذا أيضا!\n{center}{line}حصلت على «سوار التعويذة»."
+  },
+  {
+   "id": "setzer.1877",
+   "context": "Message 1877 of the dialogue: CID: I'll help.{line}No machine can stump me!",
+   "text": "سيد: سأساعد.{line}لا آلة تعجزني!"
+  },
+  {
+   "id": "setzer.1878",
+   "context": "Message 1878 of the dialogue: Well…",
+   "text": "حسنا…"
+  },
+  {
+   "id": "setzer.1879",
+   "context": "Message 1879 of the dialogue: {Setzer}: Don't touch anything!",
+   "text": "{Setzer}: لا تلمس شيئا!"
+  },
+  {
+   "id": "setzer.1880",
+   "context": "Message 1880 of the dialogue: CID: Go kill time in the casino! I can speed this crate up!",
+   "text": "سيد: اذهب واقض الوقت في الكازينو! أستطيع أن أجعل هذه العلبة أسرع!"
+  },
+  {
+   "id": "setzer.1881",
+   "context": "Message 1881 of the dialogue: {Setzer}: ……{line}You little…!!{line}Get outta my sight!",
+   "text": "{Setzer}: ……{line}أيها…!!{line}اغرب عن وجهي!"
+  },
+  {
+   "id": "setzer.1882",
+   "context": "Message 1882 of the dialogue: CID: But I could really make this thing hum…!",
+   "text": "سيد: لكنني أستطيع حقا أن أجعل هذا الشيء يطن…!"
+  },
+  {
+   "id": "setzer.1883",
+   "context": "Message 1883 of the dialogue: {Terra}: You love this ship, more than anything, huh?{page}{Setzer}: Actually, when I was young there was something I was mad about…",
+   "text": "{Terra}: تحب هذه السفينة أكثر من أي شيء، ها؟\n{Setzer}: في الحقيقة، حين كنت صغيرا كان هناك شيء أهيم به…"
+  },
+  {
+   "id": "setzer.1884",
+   "context": "Message 1884 of the dialogue: {Terra}: …huh?",
+   "text": "{Terra}: …ماذا؟"
+  },
+  {
+   "id": "setzer.1885",
+   "context": "Message 1885 of the dialogue: {Setzer}: In my youth I dreamed of having the world's fastest airship.",
+   "text": "{Setzer}: في شبابي حلمت بامتلاك أسرع سفينة طائرة في العالم."
+  },
+  {
+   "id": "setzer.1886",
+   "context": "Message 1886 of the dialogue: {Terra}: You mean……{page}{Setzer}: At that time there was a young girl who piloted the Falcon, the fastest vessel ever made.{page}Sometimes we were the worst of rivals…but other times we were the best of friends.{page}We always egged each other on to go faster and higher. When she disappeared along with her ship…{page}I felt like I lost my spirit.",
+   "text": "{Terra}: تقصد……\n{Setzer}: في ذلك الوقت كانت هناك فتاة شابة تقود الفالكون، أسرع مركبة صنعت على الإطلاق.\nأحيانا كنا ألد الخصوم… وأحيانا أخرى أعز الأصدقاء.\nكنا دائما نحث بعضنا على الطيران أسرع وأعلى. وحين اختفت مع سفينتها…\nشعرت كأنني فقدت روحي."
+  },
+  {
+   "id": "setzer.1887",
+   "context": "Message 1887 of the dialogue: {Setzer}: …{line}Poor Daryl…",
+   "text": "{Setzer}: …{line}مسكينة داريل…"
   }
  ]
 }
