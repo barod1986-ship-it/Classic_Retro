@@ -124,7 +124,12 @@ a window frame, which has a window's height.
 
 ## Runtime verification
 
-With mGBA 0.10.2 (headless, scripted input) on the patched reference build:
+No reference patch hash is recorded for this target yet: `targets build ff6a` reports
+`matches_reference: null`, and the hash is recorded the first time a maintainer builds
+from the pinned image with the reference font (the guide says the same, in Arabic).
+What follows was seen on a patched image built from the pinned ROM at the time of
+writing, and is to be checked again when that hash is recorded. With mGBA 0.10.2
+(headless, scripted input) on that image:
 
 - new game through the narration (6–9) and the whole cliff scene (1–5),
   including the inserted page of message 3;

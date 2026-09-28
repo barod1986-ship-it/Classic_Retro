@@ -1,6 +1,6 @@
 """Ways to put right-to-left Arabic into a game's text renderer.
 
-The seventeen reference targets proved four strategies; they are a starting set,
+The twenty-one reference targets proved four strategies; they are a starting set,
 not a closed list. Engines on other platforms will call for other ways (a
 variable-width font streamed into tiles, a texture font, a system text
 service...). A strategy is registered by id with what it needs from the
@@ -9,10 +9,10 @@ new ones come in through ``StrategyRegistry.register`` or, from another
 package, the ``classic_retro.strategies.v1`` entry point group. A strategy
 starts ``experimental`` and becomes ``proven`` once a target ships with it.
 
-Fourteen of the seventeen targets turn the text right to left at one point of the
+Eighteen of the twenty-one targets turn the text right to left at one point of the
 game's renderer: they keep the game's pen advancing left to right and mirror only
-where each glyph, word, cell or tile column is drawn, so measuring, wrapping, the
-typewriter and scrolling keep working. FireRed, changed from its source, starts the
+where each glyph, word, string, cell or tile column is drawn, so measuring, wrapping,
+the typewriter and scrolling keep working. FireRed, changed from its source, starts the
 pen at the line's right edge and moves it leftwards instead, and so does Symphony of
 the Night's hook, with a pen of its own next to the game's. New Super Mario Bros.
 changes no routine: it draws every line at once and centres it, so its lines are

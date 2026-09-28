@@ -57,6 +57,10 @@ cell *n* of a line in the mirrored column.
   cells, and one place that decides a character's column.
 - You get full HarfBuzz shaping: ligatures, kerning, and letters joined across
   cells.
+- A number inside a line reads left to right: HarfBuzz runs no bidi, so the renderer
+  cuts the line into directional runs (UAX #9), shapes each number left to right and
+  the rest right to left, and joins them in visual order
+  ([ARABIC_PIPELINE.md](ARABIC_PIPELINE.md)).
 - The text is fixed at build time. A runtime name is an island drawn with the game's
   own glyphs.
 - Each distinct cell costs ROM space and a code. Mega Man Battle Network gives
@@ -73,6 +77,8 @@ HarfBuzz and redrawn in the game's own image format and palette.
 - No hook is needed: the new images replace the originals through the game's image
   table.
 - Every image must fit the original's budget: its size, colours and VRAM.
+- A number inside a line reads left to right, as with `line-cells`: the same renderer
+  shapes it as a run of its own.
 
 ### `composed-lines`: lines composed at run time (proven)
 
@@ -99,7 +105,7 @@ glyphs in right-to-left paint order, as with `glyph-font`.
 
 | Way | How | Targets |
 |-----|-----|---------|
-| Mirrored draw | The game's pen keeps advancing left to right. Only where a glyph (or cell) is drawn moves to the mirror of the pen inside the line: `draw_x = left + right - pen - width`, or column `27 - x` for 28-column cells | `minish-cap`, `ff6a`, `golden-sun`, `fire-emblem`, `pmd-red`, `mlss`, `mmbn`, `fomt`, `metroid-fusion`, `tactics-ogre`, `platinum`, `phantom-hourglass`, `chrono-trigger` |
+| Mirrored draw | The game's pen keeps advancing left to right. Only where a glyph (or cell) is drawn moves to the mirror of the pen inside the line: `draw_x = left + right - pen - width`, or column `27 - x` for 28-column cells | `minish-cap`, `ff6a`, `golden-sun`, `fire-emblem`, `pmd-red`, `mlss`, `mmbn`, `fomt`, `metroid-fusion`, `tactics-ogre`, `platinum`, `phantom-hourglass`, `chrono-trigger`, `link-to-the-past`, `shining-force-2` |
 | Mirrored tilemap | The game draws the line left to right into its tiles as usual; each tile column goes into the tilemap at its mirror inside the text area, with the hardware's horizontal flip, and the glyphs are stored flipped | `advance-wars` |
 | Reversed pen | The pen starts at the line's right edge and subtracts each advance before drawing. Newline, page clear and scroll restore the right edge | `firered`, `sotn` (a pen of the hook's own) |
 | Visual order | No change to the renderer: every line is stored reversed, its glyphs from the leftmost to the rightmost, and the game draws it left to right as it is | `nsmb` |
@@ -369,7 +375,7 @@ commands.
 | `arabic/paint.py` | Right-to-left paint order. It refuses combining marks, mirrored brackets and raw newlines | `glyph-font`, `composed-lines` |
 | `font/glyph_raster.py` | The largest size that fits the cell. A form drawn at a coverage threshold from its first ink column, with the joining advance. Hand-drawn marks, hamza or madda over alef, a form raised by a row, shadows inside the advance, 2-bit pixel rows | `glyph-font`, `composed-lines`, and `fomt` for its shadow |
 | `font/tiles.py` | 4bpp tiles, stored row by row or column by column | `minish-cap`, `mmbn`, `fomt`, the Fire Emblem legend |
-| `font/shaped_text.py` | Whole lines shaped with HarfBuzz and drawn with the reference font | `line-cells`, `text-images` |
+| `font/shaped_text.py` | Whole lines shaped with HarfBuzz and drawn with the reference font; a line's numbers as directional runs, left to right | `line-cells`, `text-images` |
 | `font/previews.py` | The glyph atlas, a message's boxes side by side, and preview sheets | The review images of every target but `firered` |
 | `text/commands.py` | Command tokens that carry their codes, and the check that a translation keeps the original's commands | Every rom overlay |
 

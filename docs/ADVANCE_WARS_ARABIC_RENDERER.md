@@ -1,10 +1,17 @@
 # Advance Wars Arabic Renderer v1
 
-Target: *Advance Wars* (USA, Rev 1). No decompilation of this game is known: every
-fact below comes from the image's own code, found with the
-[research tools](RESEARCH_TOOLS.md) (text and pointer scans, `disasm`, and mGBA runs with
-breakpoints and watchpoints on the text being drawn). This is a binary ROM overlay built
-from the user's image.
+Target: *Advance Wars* (USA, Rev 1). Every fact below comes from the image's own code,
+found with the [research tools](RESEARCH_TOOLS.md) (text and pointer scans, `disasm`,
+and mGBA runs with breakpoints and watchpoints on the text being drawn); no
+decompilation was used. One exists: [ketsuban/advancewars](https://github.com/ketsuban/advancewars)
+(archived in October 2020) is a matching decompilation of *Advance Wars* (USA), of the
+image whose SHA-1 is `D0A0A4CFE9B95AC7118F7EF476F014CA0242EB65`. This target pins USA
+Rev 1 by SHA-256 (below), and whether the decompilation builds the same image has not
+been verified: the SHA-1 recorded below for the pinned image is not that one, so the
+decompilation most likely builds the other USA revision and its addresses may differ. To
+check, compare your image's SHA-1 (`sha1sum`) with both; if a revision of the
+decompilation matches, its names for the routines below should be cross-checked against
+the pinned addresses. This is a binary ROM overlay built from the user's image.
 
 | Item | Value |
 |------|-------|

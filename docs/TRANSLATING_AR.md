@@ -117,6 +117,7 @@ classic-retro targets check-translations fomt --translations fomt.workspace.json
 - يتحقق من الأوامر في كل ترجمة.
 - مع `--font`، يرسم كل نص بالخط المرجعي، ويقيسه على صندوق اللعبة، ويكتب صور المعاينة في `previews`.
 - الخط المرجعي هو Noto Kufi Arabic SemiBold، وبصمته في دليل كل لعبة.
+- ثبّت الأداة بالإصدارات المثبتة في `constraints.txt`: `python -m pip install -e ".[dev]" -c constraints.txt`. الحروف تُرسم بمكتبة FreeType المرفقة مع Pillow، وإصدار آخر منها يغيّر بكسلات الحروف، فتختلف صور المعاينة والتقرير عمّا يراه الـ CI. يذكر كل تقرير الإصدارات التي رُسم بها في الحقل `raster`.
 - مع مساحة عمل يضيف التقرير قائمة `glossary`، وفيها كل مدخل ذكر أصله اسمًا من المسرد ولم تستعمل ترجمته كتابته. هذا تذكير لا خطأ، فقد تقول الترجمة «هو» بدل تكرار الاسم.
 
 ## ٤. البناء والتجربة
@@ -129,7 +130,7 @@ classic-retro targets build fomt "path/to/game.gba" --font reference-font.ttf \
 ```
 
 - يبني الأمر باتش BPS من نسختك.
-- القيمة `matches_reference` في التقرير تصبح `false` لأن الترجمة تغيّرت، وهذا متوقع.
+- القيمة `matches_reference` في التقرير تصبح `false` لأن الترجمة تغيّرت، وهذا متوقع. وتصبح `false` أيضًا إن اختلفت إصدارات المكتبات عن `constraints.txt`.
 - جرّب الباتش في المحاكي كما يشرح دليل اللعبة.
 
 FireRed وMinish Cap:

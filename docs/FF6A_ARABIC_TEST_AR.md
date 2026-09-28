@@ -52,6 +52,12 @@ classic-retro targets build ff6a "Final Fantasy VI Advance (USA).gba" --font Not
 
 أضف `--write-rom ff6a-arabic-test.gba` إذا أردت الناتج مباشرة دون تطبيق الرقعة.
 
+لم تُسجَّل بعد بصمة رقعة مرجعية لهذا الهدف (`reference_patch_sha256` غير محدد في
+`localization/builtin/ff6a.py`)، لذلك يذكر تقرير `targets build ff6a` القيمة
+`"matches_reference": null` بدل `true` أو `false`: الأمر لا يقارن رقعتك بشيء، ولا يعني ذلك
+خطأ في البناء. تُسجَّل البصمة أول مرة يبني فيها أحد المشرفين الرقعة من النسخة المثبّتة أعلاه
+بالخط المرجعي، وعندها تُحذف هذه الفقرة ويصبح `matches_reference` هو الحكم.
+
 ## تطبيق الرقعة
 
 1. افتح [Flips](https://github.com/bates64/flips) واختر Apply Patch.

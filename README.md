@@ -10,6 +10,7 @@ The architecture is designed for classic systems including, but not limited to:
 
 - Game Boy / Game Boy Color
 - Game Boy Advance
+- Nintendo DS
 - NES / Famicom
 - SNES / Super Famicom
 - Mega Drive / Genesis
@@ -100,7 +101,7 @@ runs the same way for every target.
 classic-retro targets list                          # every target, its documents and operations
 classic-retro targets strategies                    # the ways of drawing Arabic, and who uses them
 classic-retro targets check-hooks [TARGET ...]      # re-assemble hook code, compare with stored bytes
-classic-retro targets check-translations TARGET --font FONT [--preview-dir DIR]
+classic-retro targets check-translations TARGET [--font FONT] [--preview-dir DIR] [--check-digests | --update-digests]
 classic-retro targets build TARGET ROM --font FONT --out-dir DIR [--write-rom NAME]
 classic-retro targets prepare TARGET SOURCE --font FONT      # source overlays: patch a checkout
 classic-retro targets extract TARGET INPUT [--out FILE]      # a translator's workspace
@@ -108,7 +109,10 @@ classic-retro targets strip WORKSPACE [--out FILE]           # the workspace, re
 ```
 
 `targets build` also reports whether the patch matches the target's recorded
-reference patch. A game's own command group holds only its engine's tools:
+reference patch. Every target has `check-translations`, the source overlays too;
+with `--check-digests` it holds the report and the previews to the digests recorded
+in `src/classic_retro/localization/digests.json`, as CI does for each target. A
+game's own command group holds only its engine's tools:
 `encode-arabic` (a line in the game's encoding, for example
 `classic-retro fomt encode-arabic TEXT --font FONT`) and `source-check` for the source
 overlays.
@@ -165,15 +169,18 @@ A script holds commands such as `run 300`, `tap START`, `touch 128 272`, `shot m
 three on the Nintendo DS, three on the PlayStation, two on the Super NES and one on the Mega
 Drive.**
 
-The first end-to-end example translates the 13 Professor OAK speech strings in
-the new-game intro. This is a renderer/font test, not a complete game translation.
-The other platforms have detection only; none has an Arabic target yet.
+Every target translates one scene or a few strings chosen to prove its renderer, not
+a whole game; the paragraphs below say what each covers. The Game Boy and Game Boy
+Color, the NES and the Nintendo 64 are detected but have no target yet.
 
-Install with `python -m pip install -e ".[dev]"`, run `pytest`, and identify your
-own input with `classic-retro detect "path/to/game.gba"`.
+Install with `python -m pip install -e ".[dev]" -c constraints.txt` (the pinned
+raster stack: the reference patch hashes are reproducible only with it), run `pytest`,
+and identify your own input with `classic-retro detect "path/to/game.gba"`.
 
-See [the Arabic FireRed testing guide](docs/FIRERED_ARABIC_TEST_AR.md) for applying
-the reference BPS patch, the exact supported ROM, and the current limits.
+The first reference target is **Pokémon FireRed Version (USA, Europe) (Rev 1)**, through
+the pret/pokefirered decompilation: the 13 Professor Oak speech strings of the new-game
+intro, a renderer and font test. See [the Arabic FireRed testing guide](docs/FIRERED_ARABIC_TEST_AR.md)
+for applying the reference BPS patch, the exact supported ROM, and the current limits.
 
 The second reference target is **The Legend of Zelda: The Minish Cap (USA)** through the
 zeldaret/tmc decompilation: a right-to-left renderer, a 16px Arabic font page, and the
@@ -243,8 +250,9 @@ Arabic: the castle subtitles, the Toad's run to the Mario Bros.' house and his s
 Bowser's taunt (12 messages). See [the Mario & Luigi testing guide](docs/MLSS_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/MLSS_ARABIC_RENDERER.md).
 
-The ninth reference target is **Harvest Moon: Friends of Mineral Town (USA)**, which has no
-decompilation: a binary overlay patches your own ROM inside its padding (it stays 8 MiB). The game
+The ninth reference target is **Harvest Moon: Friends of Mineral Town (USA)**. Its decompilation
+(StanHash/fomt) takes its data from the original, so a binary overlay patches your own ROM inside
+its padding (it stays 8 MiB). The game
 draws fixed 8x16 cells, so every translated line is shaped with HarfBuzz and drawn ahead of time,
 its cells joining one bank under two-byte codes the game treats like Shift-JIS; Thumb hooks copy a
 cell where the game would unpack a glyph and draw it at the mirrored column, so lines fill from the
@@ -255,7 +263,8 @@ the summer at the old man's farm and the first morning (33 strings and 5 name ta
 [the Harvest Moon testing guide](docs/FOMT_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/FOMT_ARABIC_RENDERER.md).
 
-The tenth reference target is **Advance Wars (USA, Rev 1)**, which has no decompilation: a
+The tenth reference target is **Advance Wars (USA, Rev 1)**, read from the image's own code (the
+ketsuban/advancewars decompilation covers a USA image not yet checked against this one): a
 binary overlay patches your own ROM inside its padding (it stays 4 MiB). The game's printer draws
 a whole line left to right into a strip of 8x16 tile columns, so the overlay leaves the pen alone
 and mirrors the result: thirteen small Thumb hooks put each tile column into the tilemap at its

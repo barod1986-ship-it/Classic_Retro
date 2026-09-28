@@ -1,9 +1,11 @@
 # Ridge Racer Arabic Renderer v1
 
 Target: *Ridge Racer* (USA, SCUS-94300), the third PlayStation target. No decompilation
-exists; the facts below come from the disc and from the program's code, read in memory, in
-VRAM and on screen in Beetle PSX with the [research tools](RESEARCH_TOOLS.md). The overlay
-patches the user's disc image and ships as a BPS patch of its data track.
+covers this disc ([kazuyette/rr-decomp](https://github.com/kazuyette/rr-decomp) covers the
+Japanese release, SLPS-00001, only); the facts below come from the disc and from the
+program's code, read in memory, in VRAM and on screen in Beetle PSX with the
+[research tools](RESEARCH_TOOLS.md). The overlay patches the user's disc image and ships
+as a BPS patch of its data track.
 
 | Item | Value |
 |------|-------|
