@@ -129,7 +129,7 @@ variants, shifted right by 0 to 8 pixels into three bytes a row (45 bytes a vari
 glyph), and the shadow of a glyph at pixel `s` of its tile is the variant `s + 1`. The
 glyphs take codes `20` to `FF` in the font's order (the space, the punctuation, the digits,
 then the repertoire by code point), 224 at most, and their variants take two banks, no glyph
-across one (161 a bank); the first two chapters use 130. The quotes `«` `»` and the brackets
+across one (161 a bank); the first three chapters use 132. The quotes `«` `»` and the brackets
 `(` `)` are drawn by hand as their mirror images, since a right-to-left run shows them
 mirrored and the painter does not mirror.
 
@@ -195,7 +195,7 @@ address to its end within its bank.
 
 ## Translations
 
-`rom/ff6_arabic_script.py` pins the 367 messages of the first two chapters by their
+`rom/ff6_arabic_script.py` pins the 930 messages of the first three chapters by their
 numbers, with the SHA-256 of each and its command skeleton. The Narshe chapter (`narshe`,
 0 to 63; 0 shares 1's text and pointer): the cliffs above Narshe (1-5, their
 `{KeyAfter 18}{Key}` pacing kept), the narration (6-9, centred with `{center}`,
@@ -208,12 +208,22 @@ Sabin (`kolts`, 237-266), the Returners' hideout, Banon's choice, the strategy m
 the raft down the Lete River to the scenario choice (`returners`, 267-368; 364 and 365 are
 empty messages and stay as they are). The raft's prompts (362, 363, 366) put two choices on
 a line; the chests and the relics (286-289, 311, 318) centre their item line with
-`{center}`. The Arabic is in `translations/final-fantasy-iii.json`, a line a page, `{line}`
-where a line must end. The names are `name.terra` to `name.umaro`, the fourteen characters
+`{center}`. The third chapter, 369-932 but the empty 484: Locke and Celes in South Figaro
+(`locke`, 369-416), Banon's party at Narshe's checkpoint (`banon`, 417-428), Gau's father's
+house and the merchants (`veldt`, 429-451), the Imperial camp and Shadow's dream (`sabin`,
+452-479), Doma, Leo, Kefka's poison, Cyan and the escape in Magitek armour (`doma`,
+480-598), Narshe's beginner's classroom (`classroom`, 599-637, its status names in
+guillemets and the buttons written out), a few lines of the ship and the dining car that
+sit among them (`ship`, 638-660), the Phantom Train (`train`, 661-735), Baren Falls, the
+Veldt, Gau, Mobliz and the Serpent Trench (`veldt`, 736-802), Nikeah and the return
+(`nikeah`, 803-836), and the Elder, the battle for Narshe, Terra's flight and the town
+(`narshe-battle`, 837-932). The ghosts' lines (686, 691) and the lesson's title (628) are
+centred with `{center}`. The Arabic is in `translations/final-fantasy-iii.json`, a line a
+page, `{line}` where a line must end. The names are `name.terra` to `name.umaro`, the fourteen characters
 the name commands write, in the game's order, one word each, 64 pixels at most. A
 translation keeps its original's commands but the layout (`{line}`, `{page}`, the spaces):
 its skeleton must equal the original's, which the build takes from the ROM and the script
-pins too. The messages and the names use 130 distinct forms, digits and signs.
+pins too. The messages and the names use 132 distinct forms, digits and signs.
 
 ## Verification
 
@@ -227,15 +237,17 @@ at their right, moves with Down and confirms with A. The second chapter's messag
 shown the same way with the first message's entry pointed at each (the table makes that a
 three-byte change): the raft's three-way prompt with its cursor moving from the first
 choice to the two on one line and back, with Down, Up, Left and Right; the password's three
-choices in guillemets; the clock key's bracketed choices; a centred item line. The messages
-that follow the scope show the game's English as before. The RetroPad's A is the Super
-NES's A.
+choices in guillemets; the clock key's bracketed choices; a centred item line. The third
+chapter the same way: the chest's three choices, the ghosts' centred lines drawn one at a
+time with their pauses, Lola's letter over its pages and the Esper lesson. The messages that
+follow the scope show the game's English as before. The RetroPad's A is the Super NES's A.
 
 ## Limits
 
-- The first two chapters' 367 messages and the characters' names are in Arabic; every
+- The first three chapters' 930 messages and the characters' names are in Arabic; every
   other message stays English, and the menus and the battles are other text engines,
-  untouched.
+  untouched, so the classroom's lessons name menu entries and statuses in Arabic that the
+  menus still show in English.
 - A message holds no Latin letters; `{Gil}`, `{Item}` and `{Spell}` are refused: the game
   writes them in its own letters, which the Arabic draw leaves out.
 - A line is laid out whole when the engine reaches it, so a `{Key}` in the middle of a line

@@ -1930,6 +1930,2821 @@
    "id": "returners.368",
    "context": "Message 368 of the dialogue: {line}(Please choose a scenario.){page}{Choice} Banon and Co.{line}{Choice} {Sabin}{line}{Choice} {Locke}",
    "text": "{line}(رجاء اختر سيناريو.)\n{Choice} بانون ورفاقه{line}{Choice} {Sabin}{line}{Choice} {Locke}"
+  },
+  {
+   "id": "locke.369",
+   "context": "Message 369 of the dialogue: {Sabin}!!!",
+   "text": "{Sabin}!!!"
+  },
+  {
+   "id": "locke.370",
+   "context": "Message 370 of the dialogue: {Locke}: Nuts!{line}Gotta get to Narshe on the fly…",
+   "text": "{Locke}: اللعنة!{line}علي أن أصل إلى نارشي بسرعة…"
+  },
+  {
+   "id": "locke.371",
+   "context": "Message 371 of the dialogue: {Locke} has worked hard to stymie the efforts of the Imperial troops. But now he desperately needs to escape…",
+   "text": "بذل {Locke} جهده لعرقلة القوات الإمبراطورية. لكنه الآن بحاجة ماسة إلى الهرب…"
+  },
+  {
+   "id": "locke.372",
+   "context": "Message 372 of the dialogue: Halt!",
+   "text": "قف!"
+  },
+  {
+   "id": "locke.373",
+   "context": "Message 373 of the dialogue: {Locke}: Ouch!!{line}I gotta steal me some new clothes, fast!!",
+   "text": "{Locke}: آخ!!{line}علي أن أسرق ثيابا جديدة، بسرعة!!"
+  },
+  {
+   "id": "locke.374",
+   "context": "Message 374 of the dialogue: Back inside!",
+   "text": "عد إلى الداخل!"
+  },
+  {
+   "id": "locke.375",
+   "context": "Message 375 of the dialogue: Gotta get moving!{line}The attack on Narshe is imminent. Who knows what's going to happen next?",
+   "text": "علي أن أتحرك!{line}الهجوم على نارشي وشيك. من يدري ماذا سيحدث بعد ذلك؟"
+  },
+  {
+   "id": "locke.376",
+   "context": "Message 376 of the dialogue: Imperial soldiers are pigs!{line}Green Suits live to brawl…",
+   "text": "الجنود الإمبراطوريون خنازير!{line}وأصحاب البدلات الخضراء لا يعيشون إلا للشجار…"
+  },
+  {
+   "id": "locke.377",
+   "context": "Message 377 of the dialogue: {Locke}: I've seen her before…{line}Of course! She's one of the Empire's generals!",
+   "text": "{Locke}: رأيتها من قبل…{line}طبعا! إنها إحدى جنرالات الإمبراطورية!"
+  },
+  {
+   "id": "locke.378",
+   "context": "Message 378 of the dialogue: Product of genetic engineering,{line}battle-hardened Magitek Knight, with a spirit as pure as snow…",
+   "text": "نتاج هندسة وراثية،{line}فارسة ماجيتك صقلتها المعارك، بروح نقية كالثلج…"
+  },
+  {
+   "id": "locke.379",
+   "context": "Message 379 of the dialogue: GUARD: This's what happens to traitors!",
+   "text": "الحارس: هذا ما يحدث للخونة!"
+  },
+  {
+   "id": "locke.380",
+   "context": "Message 380 of the dialogue: GUARD: So, the mighty {Celes} has fallen!",
+   "text": "الحارس: إذن، سقطت {Celes} العظيمة!"
+  },
+  {
+   "id": "locke.381",
+   "context": "Message 381 of the dialogue: {Celes}: How can you serve those cowards…{line}GUARD: Hold your tongue!",
+   "text": "{Celes}: كيف تخدمون أولئك الجبناء…{line}الحارس: أمسكي لسانك!"
+  },
+  {
+   "id": "locke.382",
+   "context": "Message 382 of the dialogue: {Celes}: Isn't it true Kefka's going to poison the people of Doma, to the east?{line}GUARD: Shuddap!",
+   "text": "{Celes}: أليس صحيحا أن كيفكا سيسمم أهل دوما في الشرق؟{line}الحارس: اخرسي!"
+  },
+  {
+   "id": "locke.383",
+   "context": "Message 383 of the dialogue: GUARD: I'd hate to be in your shoes tomorrow!",
+   "text": "الحارس: لن أحسدك على حالك غدا!"
+  },
+  {
+   "id": "locke.384",
+   "context": "Message 384 of the dialogue: Keep a close eye on her!",
+   "text": "راقبها عن كثب!"
+  },
+  {
+   "id": "locke.385",
+   "context": "Message 385 of the dialogue: Yes, Sir!{line}I can go for days without sleep!",
+   "text": "أمرك يا سيدي!{line}أستطيع البقاء أياما دون نوم!"
+  },
+  {
+   "id": "locke.386",
+   "context": "Message 386 of the dialogue: {Choice} (Remove her chains?){line}{Choice} (Wait a few minutes.)",
+   "text": "{Choice} (تفك قيودها؟){line}{Choice} (تنتظر بضع دقائق.)"
+  },
+  {
+   "id": "locke.387",
+   "context": "Message 387 of the dialogue: {Celes}: You're awfully short for a soldier.{line}{Locke}: Oh, I forgot I was wearing a uniform!",
+   "text": "{Celes}: أنت قصير جدا بالنسبة إلى جندي.{line}{Locke}: أوه، نسيت أنني أرتدي زيا عسكريا!"
+  },
+  {
+   "id": "locke.388",
+   "context": "Message 388 of the dialogue: {Celes}: What do you hope to peddle down here?{line}{Locke}: Oops! Forgot I was wearing these clothes.",
+   "text": "{Celes}: وماذا تأمل أن تبيع هنا في الأسفل؟{line}{Locke}: عفوا! نسيت أنني أرتدي هذه الثياب."
+  },
+  {
+   "id": "locke.389",
+   "context": "Message 389 of the dialogue: {Celes}: And you are…",
+   "text": "{Celes}: وأنت…"
+  },
+  {
+   "id": "locke.390",
+   "context": "Message 390 of the dialogue: {Locke}: I'm with the Returners. Name's {Locke}.{page}{Celes}: Returners!!! I used to be General {Celes}…{line}Now I'm just a common traitor…",
+   "text": "{Locke}: أنا من العائدين. اسمي {Locke}.\n{Celes}: العائدون!!! كنت الجنرال {Celes}…{line}والآن مجرد خائنة عادية…"
+  },
+  {
+   "id": "locke.391",
+   "context": "Message 391 of the dialogue: {Locke}: Let's go!{line}{Celes}: !? You'd take me along?",
+   "text": "{Locke}: هيا بنا!{line}{Celes}: !؟ أستأخذني معك؟"
+  },
+  {
+   "id": "locke.392",
+   "context": "Message 392 of the dialogue: {Celes}: Thanks, but no thanks. I can barely walk…",
+   "text": "{Celes}: شكرا، لكن لا. بالكاد أستطيع المشي…"
+  },
+  {
+   "id": "locke.393",
+   "context": "Message 393 of the dialogue: {Celes}: I'm grateful, but…{line}Even if you got me out, you'd never be able to protect me. No, I think I'm better off here.",
+   "text": "{Celes}: أنا ممتنة، لكن…{line}حتى لو أخرجتني، فلن تستطيع حمايتي. لا، أظن أن بقائي هنا أفضل."
+  },
+  {
+   "id": "locke.394",
+   "context": "Message 394 of the dialogue: {Locke}: I'll protect you!",
+   "text": "{Locke}: سأحميك!"
+  },
+  {
+   "id": "locke.395",
+   "context": "Message 395 of the dialogue: {Locke}: Trust me! You'll be fine!",
+   "text": "{Locke}: ثقي بي! ستكونين بخير!"
+  },
+  {
+   "id": "locke.396",
+   "context": "Message 396 of the dialogue: {Locke}: Let's go!",
+   "text": "{Locke}: هيا بنا!"
+  },
+  {
+   "id": "locke.397",
+   "context": "Message 397 of the dialogue: SOLDIER: …more soup…'n…",
+   "text": "الجندي: …مزيدا من الحساء… و…"
+  },
+  {
+   "id": "locke.398",
+   "context": "Message 398 of the dialogue: SOLDIER: …'n some bread, too…{line}{Wait}Mumble {Wait} Mumble…",
+   "text": "الجندي: …وبعض الخبز أيضا…{line}{Wait}غمغم {Wait} غمغم…"
+  },
+  {
+   "id": "locke.399",
+   "context": "Message 399 of the dialogue: {Celes}: Wait.",
+   "text": "{Celes}: انتظر."
+  },
+  {
+   "id": "locke.400",
+   "context": "Message 400 of the dialogue: {Celes}: This soldier has something important on him…",
+   "text": "{Celes}: هذا الجندي يحمل شيئا مهما…"
+  },
+  {
+   "id": "locke.401",
+   "context": "Message 401 of the dialogue: {Celes}: Why are you helping me?{line}{Locke}: You remind me of someone…",
+   "text": "{Celes}: لماذا تساعدني؟{line}{Locke}: تذكرينني بشخص ما…"
+  },
+  {
+   "id": "locke.402",
+   "context": "Message 402 of the dialogue: {Locke}: But what's it matter, anyway?{line}I just want to, okay?!",
+   "text": "{Locke}: وما أهمية ذلك أصلا؟{line}أريد ذلك فحسب، حسنا؟!"
+  },
+  {
+   "id": "locke.403",
+   "context": "Message 403 of the dialogue: {Celes}: This passage leads out.",
+   "text": "{Celes}: هذا الممر يؤدي إلى الخارج."
+  },
+  {
+   "id": "locke.404",
+   "context": "Message 404 of the dialogue: {Locke}: Huh?{line}{Celes}: Something's coming outta the wall!!",
+   "text": "{Locke}: هاه؟{line}{Celes}: شيء ما يخرج من الجدار!!"
+  },
+  {
+   "id": "locke.405",
+   "context": "Message 405 of the dialogue: {Locke}: Whew!!!{line}Looks like we're in the clear!",
+   "text": "{Locke}: أوف!!!{line}يبدو أننا نجونا!"
+  },
+  {
+   "id": "locke.406",
+   "context": "Message 406 of the dialogue: {Locke}: What IS that noise?",
+   "text": "{Locke}: ما هذه الضجة؟"
+  },
+  {
+   "id": "locke.407",
+   "context": "Message 407 of the dialogue: I heard they grabbed a famous general who turned traitor!{page}She's locked up somewhere in this town.",
+   "text": "سمعت أنهم قبضوا على جنرال مشهورة انقلبت خائنة!\nإنها محبوسة في مكان ما في هذه البلدة."
+  },
+  {
+   "id": "locke.408",
+   "context": "Message 408 of the dialogue: Never a dull moment…{line}Time to guard the passage under the big mansion…{page}Oh, well.{line}Life is tough…",
+   "text": "لا لحظة ملل…{line}حان وقت حراسة الممر تحت القصر الكبير…\nحسنا.{line}الحياة قاسية…"
+  },
+  {
+   "id": "locke.409",
+   "context": "Message 409 of the dialogue: I heard there are 2 secret tunnels under the rich man's house.{page}One leads out of town, the other to one of these houses…",
+   "text": "سمعت أن تحت بيت الرجل الغني نفقين سريين.\nأحدهما يؤدي إلى خارج البلدة، والآخر إلى أحد هذه البيوت…"
+  },
+  {
+   "id": "locke.410",
+   "context": "Message 410 of the dialogue: Thanks to our informer, this town fell instantly!",
+   "text": "بفضل مخبرنا، سقطت هذه البلدة في لحظة!"
+  },
+  {
+   "id": "locke.411",
+   "context": "Message 411 of the dialogue: Rascals!{line}Knock it off!",
+   "text": "أيها الأوغاد!{line}كفوا عن هذا!"
+  },
+  {
+   "id": "locke.412",
+   "context": "Message 412 of the dialogue: {Choice}(Change clothes?){line}{Choice}(These are fine.)",
+   "text": "{Choice} (تبدل الثياب؟){line}{Choice} (هذه جيدة.)"
+  },
+  {
+   "id": "locke.413",
+   "context": "Message 413 of the dialogue: Lower ranking soldiers like to brawl. Try humiliating them by stealing their clothes!",
+   "text": "الجنود الأدنى رتبة يحبون الشجار. جرب إذلالهم بسرقة ثيابهم!"
+  },
+  {
+   "id": "locke.414",
+   "context": "Message 414 of the dialogue: Uh huh!",
+   "text": "أها!"
+  },
+  {
+   "id": "locke.415",
+   "context": "Message 415 of the dialogue: Avoid the armored soldiers! They have no sense of humor!",
+   "text": "تجنب الجنود المدرعين! لا حس فكاهة لديهم!"
+  },
+  {
+   "id": "locke.416",
+   "context": "Message 416 of the dialogue: Hey, lady…didn't you just bust in here wearing Magitek armor?",
+   "text": "هيه يا سيدة… ألم تقتحمي المكان للتو بدرع ماجيتك؟"
+  },
+  {
+   "id": "banon.417",
+   "context": "Message 417 of the dialogue: BANON: Wait a sec!",
+   "text": "بانون: لحظة!"
+  },
+  {
+   "id": "banon.418",
+   "context": "Message 418 of the dialogue: Get out of here!{line}If you don't…",
+   "text": "اخرجوا من هنا!{line}وإلا…"
+  },
+  {
+   "id": "banon.419",
+   "context": "Message 419 of the dialogue: {Edgar}: Hold on.{line}I'm King {Edgar} of Figaro…{line}GUARD: Liar!!!",
+   "text": "{Edgar}: مهلا.{line}أنا الملك {Edgar} ملك فيغارو…{line}الحارس: كاذب!!!"
+  },
+  {
+   "id": "banon.420",
+   "context": "Message 420 of the dialogue: BANON: Aye yai yai…{line}{Edgar}: That kind of attitude is deadly!{line}He won't even listen!{page}{Terra}: It's all my fault…",
+   "text": "بانون: يا ويلي…{line}{Edgar}: موقف كهذا قاتل!{line}إنه لا يصغي حتى!\n{Terra}: كل هذا بسببي…"
+  },
+  {
+   "id": "banon.421",
+   "context": "Message 421 of the dialogue: ARVIS: Banon! King {Edgar}!{line}…and {Terra}!!!",
+   "text": "أرفيس: بانون! الملك {Edgar}!{line}…و{Terra}!!!"
+  },
+  {
+   "id": "banon.422",
+   "context": "Message 422 of the dialogue: BANON: Arvis!{line}What's happening here in Narshe?{page}ARVIS: The town's neutral.{line}I've tried to get the people to side with the Returners, but…{page}Anyway, why on earth have you come here?",
+   "text": "بانون: أرفيس!{line}ماذا يحدث هنا في نارشي؟\nأرفيس: البلدة محايدة.{line}حاولت أن أقنع الناس بالانحياز إلى العائدين، لكن…\nعلى أي حال، لماذا جئتم إلى هنا؟"
+  },
+  {
+   "id": "banon.423",
+   "context": "Message 423 of the dialogue: {Edgar}: First, how are your people doing?{page}ARVIS: They all went…slightly berserk when the Esper was discovered.",
+   "text": "{Edgar}: أولا، كيف حال أهل البلدة؟\nأرفيس: جن جنونهم… قليلا حين اكتشف الإسبر."
+  },
+  {
+   "id": "banon.424",
+   "context": "Message 424 of the dialogue: BANON: We believe this young woman is our only hope of reaching out to that Esper.{page}ARVIS: My people are dying to know what the Esper looks like.{page}Maybe {Terra} can help restore some order to our town…?",
+   "text": "بانون: نعتقد أن هذه الشابة أملنا الوحيد في التواصل مع ذلك الإسبر.\nأرفيس: أهل بلدتي يتوقون لمعرفة شكل الإسبر.\nربما تساعد {Terra} في إعادة شيء من النظام إلى بلدتنا…؟"
+  },
+  {
+   "id": "banon.425",
+   "context": "Message 425 of the dialogue: {Edgar}: That Esper is either going to save us…or dig us an early grave…",
+   "text": "{Edgar}: ذلك الإسبر إما أن ينقذنا… أو يحفر لنا قبرا مبكرا…"
+  },
+  {
+   "id": "banon.426",
+   "context": "Message 426 of the dialogue: {Terra}: When {Locke} first helped me, he fiddled with somethihg right around here.",
+   "text": "{Terra}: حين ساعدني {Locke} أول مرة، عبث بشيء ما هنا تماما."
+  },
+  {
+   "id": "banon.427",
+   "context": "Message 427 of the dialogue: {Edgar}: Knowing him there's probably some secret switch in this rock wall…",
+   "text": "{Edgar}: كما أعرفه، لا بد أن هناك مفتاحا سريا في هذا الجدار الصخري…"
+  },
+  {
+   "id": "banon.428",
+   "context": "Message 428 of the dialogue: {Edgar}: Goodness…{line}{Terra}: What's that…?{page}{Edgar}: I think this's a security check point. If we follow the light exactly, we'll probably be okay.{page}If we make a mistake, the light'll surround us.{line}To proceed safely we must “tag” the glimmering light.",
+   "text": "{Edgar}: يا إلهي…{line}{Terra}: ما هذا…؟\n{Edgar}: أظنها نقطة تفتيش أمنية. إن تتبعنا الضوء بدقة، فسنكون بخير على الأرجح.\nوإن أخطأنا، سيحاصرنا الضوء.{line}لنمر بأمان علينا أن «نلمس» الضوء المتلألئ."
+  },
+  {
+   "id": "veldt.429",
+   "context": "Message 429 of the dialogue: AGED MAN: You the clock maker? I been waitin' for ages!",
+   "text": "الشيخ: أأنت صانع الساعات؟ أنتظر منذ دهر!"
+  },
+  {
+   "id": "veldt.430",
+   "context": "Message 430 of the dialogue: Uh…no.{line}I'm not the clock maker.",
+   "text": "آه… لا.{line}لست صانع الساعات."
+  },
+  {
+   "id": "veldt.431",
+   "context": "Message 431 of the dialogue: AGED MAN: There it is, on the wall. Ain't been tickin' for 1, 5, shucks, maybe even 10 years!",
+   "text": "الشيخ: ها هي على الجدار. لم تدق منذ سنة، بل خمس، بل ربما عشر سنوات!"
+  },
+  {
+   "id": "veldt.432",
+   "context": "Message 432 of the dialogue: AGED MAN: Hey!!?",
+   "text": "الشيخ: هيه!!؟"
+  },
+  {
+   "id": "veldt.433",
+   "context": "Message 433 of the dialogue: What dire fate has befallen {Sabin}, who fell from the raft after the fight with Ultros?…",
+   "text": "أي مصير قاتم لقي {Sabin}، الذي سقط من الطوف بعد قتال أولتروس؟…"
+  },
+  {
+   "id": "veldt.434",
+   "context": "Message 434 of the dialogue: Come to think of it… {Wait}{line}I saw some total geek when I last went south, to the Veldt.{page}Watch yourselves in those parts!",
+   "text": "بالتفكير في الأمر… {Wait}{line}رأيت شخصا غريب الأطوار حين ذهبت آخر مرة جنوبا إلى الفيلدت.\nاحذروا في تلك الأنحاء!"
+  },
+  {
+   "id": "veldt.435",
+   "context": "Message 435 of the dialogue: AGED MAN: Lawnmower repairman, eh? Couldn't provide worse service! Grass's 25 feet high out back!",
+   "text": "الشيخ: مصلح جزازة العشب، ها؟ ما أسوأ خدمتك! العشب في الخلف ارتفاعه 25 قدما!"
+  },
+  {
+   "id": "veldt.436",
+   "context": "Message 436 of the dialogue: AGED MAN: Got it!",
+   "text": "الشيخ: فهمت!"
+  },
+  {
+   "id": "veldt.437",
+   "context": "Message 437 of the dialogue: AGED MAN: You're here to fix my bed! It's squeakin' like all git-out!",
+   "text": "الشيخ: جئت لتصلح سريري! إنه يصر صريرا فظيعا!"
+  },
+  {
+   "id": "veldt.438",
+   "context": "Message 438 of the dialogue: AGED MAN: No more lip, repairman! Fix that stove, on the double!!!",
+   "text": "الشيخ: كفى كلاما أيها المصلح! أصلح ذلك الموقد، حالا!!!"
+  },
+  {
+   "id": "veldt.439",
+   "context": "Message 439 of the dialogue: AGED MAN: Goodness! {Wait}{line}Then you must be…",
+   "text": "الشيخ: يا إلهي! {Wait}{line}إذن لا بد أنك…"
+  },
+  {
+   "id": "veldt.440",
+   "context": "Message 440 of the dialogue: AGED MAN: You've come to fix the door!?",
+   "text": "الشيخ: جئت لتصلح الباب!؟"
+  },
+  {
+   "id": "veldt.441",
+   "context": "Message 441 of the dialogue: Phew!{line}No child could be this mischievious!",
+   "text": "أوف!{line}ما من طفل بهذا الشقاء!"
+  },
+  {
+   "id": "veldt.442",
+   "context": "Message 442 of the dialogue: Yaaaouch!!!!",
+   "text": "آآآخ!!!!"
+  },
+  {
+   "id": "veldt.443",
+   "context": "Message 443 of the dialogue: Take a nap?{line}{Choice} (Snooze){line}{Choice} (No thanks)",
+   "text": "تأخذ قيلولة؟{line}{Choice} (أغفو){line}{Choice} (لا شكرا)"
+  },
+  {
+   "id": "veldt.444",
+   "context": "Message 444 of the dialogue: AGED MAN: Child…?{line}Ain't no child 'round here!{line}Bolderdash!{page}I'm ready for you to leave!{line}Go on, git! I'm tossin' ya out onta the Veldt!{page}???{line}I'd rather take a stick in the eye than deal with that guy again…",
+   "text": "الشيخ: طفل…؟{line}لا طفل هنا!{line}هراء!\nحان وقت رحيلكم!{line}هيا، اغربوا! سأرميكم إلى الفيلدت!\n؟؟؟{line}أفضل عودا في عيني على التعامل مع ذلك الرجل مجددا…"
+  },
+  {
+   "id": "veldt.445",
+   "context": "Message 445 of the dialogue: MERCHANT: Welcome!{line}Need anything?{line}{Choice} What have you?{line}{Choice} No thanks.",
+   "text": "التاجر: مرحبا!{line}أتحتاج شيئا؟{line}{Choice} ماذا لديك؟{line}{Choice} لا شكرا."
+  },
+  {
+   "id": "veldt.446",
+   "context": "Message 446 of the dialogue: MERCHANT: See you around.",
+   "text": "التاجر: إلى اللقاء."
+  },
+  {
+   "id": "veldt.447",
+   "context": "Message 447 of the dialogue: Who're you?",
+   "text": "من أنت؟"
+  },
+  {
+   "id": "veldt.448",
+   "context": "Message 448 of the dialogue: MERCHANT: Howdy. I own the dry goods business out here!",
+   "text": "التاجر: أهلا. أنا صاحب تجارة البضائع هنا!"
+  },
+  {
+   "id": "veldt.449",
+   "context": "Message 449 of the dialogue: MERCHANT: You're…not from these parts, huh?",
+   "text": "التاجر: أنت… لست من هذه الأنحاء، ها؟"
+  },
+  {
+   "id": "veldt.450",
+   "context": "Message 450 of the dialogue: MERCHANT: We'll, no matter!{line}{Choice} See the goods{line}{Choice} Not interested",
+   "text": "التاجر: حسنا، لا يهم!{line}{Choice} أرى البضائع{line}{Choice} لست مهتما"
+  },
+  {
+   "id": "veldt.451",
+   "context": "Message 451 of the dialogue: MERCHANT: Good day.{line}Need anything?{line}{Choice} See the goods{line}{Choice} Not interested",
+   "text": "التاجر: طاب يومك.{line}أتحتاج شيئا؟{line}{Choice} أرى البضائع{line}{Choice} لست مهتما"
+  },
+  {
+   "id": "sabin.452",
+   "context": "Message 452 of the dialogue: {Sabin}: You…on a journey?{line}I got separated from my friends. Say, can you tell me how to get to Narshe?",
+   "text": "{Sabin}: أنت… في رحلة؟{line}انفصلت عن أصدقائي. قل لي، أتعرف طريق نارشي؟"
+  },
+  {
+   "id": "sabin.453",
+   "context": "Message 453 of the dialogue: MAN: The Empire has set up a base somewhere beyond the forest, and to the east.{line}{Sabin}: …Empire!?{page}MAN: They seem to have their sights set on Doma Castle.{page}{Sabin}: Doma, huh?{line}I have to reach Narshe immediately!{page}MAN: Your only chance is through Doma.{line}I'll show you the way.{page}Just know that I may take off at any time, if I feel like it.",
+   "text": "الرجل: أقامت الإمبراطورية قاعدة في مكان ما وراء الغابة، إلى الشرق.{line}{Sabin}: …الإمبراطورية!؟\nالرجل: يبدو أنهم يستهدفون قلعة دوما.\n{Sabin}: دوما، ها؟{line}علي أن أصل إلى نارشي فورا!\nالرجل: فرصتك الوحيدة عبر دوما.{line}سأدلك على الطريق.\nلكن اعلم أنني قد أرحل في أي وقت، إن شئت."
+  },
+  {
+   "id": "sabin.454",
+   "context": "Message 454 of the dialogue: {Shadow}: Imperial soldiers have built a base somewhere beyond the forest.{page}{Sabin}: …Already!?{line}{Shadow}: They seem to have their sights set on Doma Castle.{page}{Sabin}: So Doma's next, huh?{line}I have to reach Narshe immediately!{page}{Shadow}: Your only hope is through Doma.{line}I'll show you the way.{page}Just know that I may take off at any time, if I feel like it.",
+   "text": "{Shadow}: بنى الجنود الإمبراطوريون قاعدة في مكان ما وراء الغابة.\n{Sabin}: …بهذه السرعة!؟{line}{Shadow}: يبدو أنهم يستهدفون قلعة دوما.\n{Sabin}: إذن دوما التالية، ها؟{line}علي أن أصل إلى نارشي فورا!\n{Shadow}: أملك الوحيد عبر دوما.{line}سأدلك على الطريق.\nلكن اعلم أنني قد أرحل في أي وقت، إن شئت."
+  },
+  {
+   "id": "sabin.455",
+   "context": "Message 455 of the dialogue: Whoa…{line}The dog just can't stand strangers.",
+   "text": "مهلا…{line}الكلب لا يطيق الغرباء."
+  },
+  {
+   "id": "sabin.456",
+   "context": "Message 456 of the dialogue: {Sabin}: The going is bound to be…pretty rough…",
+   "text": "{Sabin}: الطريق سيكون… وعرا جدا…"
+  },
+  {
+   "id": "sabin.457",
+   "context": "Message 457 of the dialogue: {Shadow}: The Reaper is always just a step behind me…",
+   "text": "{Shadow}: حاصد الأرواح دائما على بعد خطوة مني…"
+  },
+  {
+   "id": "sabin.458",
+   "context": "Message 458 of the dialogue: Welcome a partner?{line}{Choice} Yes{line}{Choice} No",
+   "text": "ترحب برفيق؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "sabin.459",
+   "context": "Message 459 of the dialogue: BARAM: Clyde…I'm…{line}done for…{line}F…find me here…{line}Please, Clyde… {Pause 18}{Key}",
+   "text": "بارام: كلايد… لقد…{line}انتهيت…{line}ا… ابحث عني هنا…{line}أرجوك يا كلايد… {Pause 18}{Key}"
+  },
+  {
+   "id": "sabin.460",
+   "context": "Message 460 of the dialogue: BARAM: Yahoooo!{line}We did it, Clyde!{page}CLYDE: A million GP!{line}What a blast! I love this!",
+   "text": "بارام: ياهووو!{line}نجحنا يا كلايد!\nكلايد: مليون غيل!{line}يا للروعة! أعشق هذا!"
+  },
+  {
+   "id": "sabin.461",
+   "context": "Message 461 of the dialogue: BARAM: Guess it's time to change our name.{page}CLYDE: Our name?{line}BARAM: We need something more…appropriate.{line}BARAM: Such as…?{page}BARAM: … {Shadow}!{line}Not bad, huh?",
+   "text": "بارام: أظن أن وقت تغيير اسمنا قد حان.\nكلايد: اسمنا؟{line}بارام: نحتاج إلى شيء… أنسب.{line}بارام: مثل…؟\nبارام: … {Shadow}!{line}ليس سيئا، ها؟"
+  },
+  {
+   "id": "sabin.462",
+   "context": "Message 462 of the dialogue: CLYDE: Great train robbers of the century…{line}{Shadow}…?",
+   "text": "كلايد: أعظم لصوص القطارات في القرن…{line}{Shadow}…؟"
+  },
+  {
+   "id": "sabin.463",
+   "context": "Message 463 of the dialogue: CLYDE: Open your eyes!{line}BARAM: I'm scared…hack, cough…{line}Is…is this MY blood…?{line}CLYDE: You're gonna be okay!",
+   "text": "كلايد: افتح عينيك!{line}بارام: أنا خائف… كح، كح…{line}أ… أهذا دمي…؟{line}كلايد: ستكون بخير!"
+  },
+  {
+   "id": "sabin.464",
+   "context": "Message 464 of the dialogue: BARAM: I've let you down…{line}I'm sorry…{line}CLYDE: Save your strength.{line}We're almost to a town.{page}BARAM: You don't have to pretend. I know. I've lost…too much blood.",
+   "text": "بارام: خذلتك…{line}أنا آسف…{line}كلايد: وفر قوتك.{line}كدنا نصل إلى بلدة.\nبارام: لا داعي للتظاهر. أعرف. فقدت… دما كثيرا."
+  },
+  {
+   "id": "sabin.465",
+   "context": "Message 465 of the dialogue: BARAM: Get going!{line}I'm gonna slow you down.{line}CLYDE: But…!{line}BARAM: You wanna get caught?",
+   "text": "بارام: انطلق!{line}سأبطئك.{line}كلايد: لكن…!{line}بارام: أتريد أن يقبض عليك؟"
+  },
+  {
+   "id": "sabin.466",
+   "context": "Message 466 of the dialogue: BARAM: Before you go…{line}You have to use your knife…",
+   "text": "بارام: قبل أن تذهب…{line}عليك أن تستعمل سكينك…"
+  },
+  {
+   "id": "sabin.467",
+   "context": "Message 467 of the dialogue: CLYDE: WHAT!!!!{line}BARAM: Think what they'll do to me if I get caught.{page}I don't want to go through that. Do me this favor.",
+   "text": "كلايد: ماذا!!!!{line}بارام: فكر فيما سيفعلونه بي إن قبضوا علي.\nلا أريد أن أمر بذلك. اصنع لي هذا المعروف."
+  },
+  {
+   "id": "sabin.468",
+   "context": "Message 468 of the dialogue: BARAM: Are you…shaking?{line}I can't believe it!{line}You're acting like a coward!{page}Come on, you weakling!{line}Grab a knife and…{line}CLYDE: I CAN'T!",
+   "text": "بارام: أأنت… ترتجف؟{line}لا أصدق!{line}تتصرف كجبان!\nهيا أيها الضعيف!{line}أمسك سكينا و…{line}كلايد: لا أستطيع!"
+  },
+  {
+   "id": "sabin.469",
+   "context": "Message 469 of the dialogue: BARAM: Clyde!!!",
+   "text": "بارام: كلايد!!!"
+  },
+  {
+   "id": "sabin.470",
+   "context": "Message 470 of the dialogue: CLYDE: I'm sorry…",
+   "text": "كلايد: أنا آسف…"
+  },
+  {
+   "id": "sabin.471",
+   "context": "Message 471 of the dialogue: BARAM: Clyde!{line}How dare you!?",
+   "text": "بارام: كلايد!{line}كيف تجرؤ!؟"
+  },
+  {
+   "id": "sabin.472",
+   "context": "Message 472 of the dialogue: Hey…HEY!{line}Stay with me now!",
+   "text": "هيه… هيه!{line}ابق معي الآن!"
+  },
+  {
+   "id": "sabin.473",
+   "context": "Message 473 of the dialogue: CLYDE: Where…am…?{page}A small village called Thama…{line}Hang in there!",
+   "text": "كلايد: أين… أنا…؟\nقرية صغيرة تدعى ثاما…{line}اصمد!"
+  },
+  {
+   "id": "sabin.474",
+   "context": "Message 474 of the dialogue: Shriek!!!{line}Help…HELP!!!{line}Talk to the Impresario!",
+   "text": "صرخة!!!{line}النجدة… النجدة!!!{line}كلموا مدير المسرح!"
+  },
+  {
+   "id": "sabin.475",
+   "context": "Message 475 of the dialogue: Thank goodness!",
+   "text": "الحمد لله!"
+  },
+  {
+   "id": "sabin.476",
+   "context": "Message 476 of the dialogue: A dragon is sitting smack in the middle of the stage!",
+   "text": "تنين يجثم في وسط المسرح تماما!"
+  },
+  {
+   "id": "sabin.477",
+   "context": "Message 477 of the dialogue: {line}{Spaces 0E}Surprise!",
+   "text": "{center}{line}مفاجأة!"
+  },
+  {
+   "id": "sabin.478",
+   "context": "Message 478 of the dialogue: Looks like we're gonna have to save the day once again!",
+   "text": "يبدو أن علينا أن ننقذ الموقف مرة أخرى!"
+  },
+  {
+   "id": "sabin.479",
+   "context": "Message 479 of the dialogue: There's something odd about this stratum…{page}It's as if we've bumped into something…{line}{Choice} (Continue journey){line}{Choice} (Stop and explore)",
+   "text": "ثمة شيء غريب في هذه الطبقة…\nكأننا اصطدمنا بشيء ما…{line}{Choice} (نواصل الرحلة){line}{Choice} (نتوقف ونستكشف)"
+  },
+  {
+   "id": "doma.480",
+   "context": "Message 480 of the dialogue: SOLDIER: Who in blazes're YOU?",
+   "text": "الجندي: من أنت بحق الجحيم؟"
+  },
+  {
+   "id": "doma.481",
+   "context": "Message 481 of the dialogue: SOLDIER A: Shhhh!{line}Do I always have to tell you to keep it down?!{line}You're hopeless…!{page}SOLDIER A: I hate that weirdo, Kefka. I don't even think he's human, not like General Leo…{page}SOLDIER B: Agreed.",
+   "text": "الجندي أ: صه!{line}أعلي دائما أن أقول لك اخفض صوتك؟!{line}لا أمل فيك…!\nالجندي أ: أكره ذلك الغريب كيفكا. لا أظنه بشرا حتى، ليس كالجنرال ليو…\nالجندي ب: موافق."
+  },
+  {
+   "id": "doma.482",
+   "context": "Message 482 of the dialogue: {Sabin}: What the…?{line}Where'd these soldiers come from?",
+   "text": "{Sabin}: ما هذا…؟{line}من أين جاء هؤلاء الجنود؟"
+  },
+  {
+   "id": "doma.483",
+   "context": "Message 483 of the dialogue: COMMANDER: You two! We're about to storm Doma Castle…{page}You will join the assault team!",
+   "text": "القائد: أنتما! نوشك على اقتحام قلعة دوما…\nستنضمان إلى فريق الهجوم!"
+  },
+  {
+   "id": "doma.485",
+   "context": "Message 485 of the dialogue: SOLDIER: Rogue!!!",
+   "text": "الجندي: خائن!!!"
+  },
+  {
+   "id": "doma.486",
+   "context": "Message 486 of the dialogue: This's an Imperial base.{line}Too many soldiers…",
+   "text": "هذه قاعدة إمبراطورية.{line}جنود كثيرون جدا…"
+  },
+  {
+   "id": "doma.487",
+   "context": "Message 487 of the dialogue: SOLDIER A: Hey, have you heard?{line}SOLDIER B: Oh, you mean…{page}SOLDIER A: Shhh! Quiet down.{line}If Kefka catches us, we're toast.",
+   "text": "الجندي أ: هيه، أسمعت؟{line}الجندي ب: أوه، تقصد…\nالجندي أ: صه! اخفض صوتك.{line}إن ضبطنا كيفكا فنحن هالكون."
+  },
+  {
+   "id": "doma.488",
+   "context": "Message 488 of the dialogue: SOLDIER A: If he drives General Leo out of our battalion,{line}he'll probably become the next general!{page}SOLDIER B: Don't make me laugh!{line}If someone like him becomes a general, I'll go home!",
+   "text": "الجندي أ: إن طرد الجنرال ليو من كتيبتنا،{line}فسيصبح على الأرجح الجنرال التالي!\nالجندي ب: لا تضحكني!{line}إن صار مثله جنرالا، فسأعود إلى بيتي!"
+  },
+  {
+   "id": "doma.489",
+   "context": "Message 489 of the dialogue: SOLDIER A: Shhhhh!{line}What if he hears you?{line}You'll be jailed!{page}SOLDIER B: Alright, alright!",
+   "text": "الجندي أ: صه!{line}ماذا لو سمعك؟{line}ستسجن!\nالجندي ب: حسنا، حسنا!"
+  },
+  {
+   "id": "doma.490",
+   "context": "Message 490 of the dialogue: SOLDIER B: Uh, oh…{line}Here he comes…{line}Back to the waiting zone!",
+   "text": "الجندي ب: أوه، لا…{line}ها هو قادم…{line}عودة إلى منطقة الانتظار!"
+  },
+  {
+   "id": "doma.491",
+   "context": "Message 491 of the dialogue: KEFKA: Hey, you!{line}You keeping a sharp lookout?{page}SOLDIER A: Yes, Sir.{line}You're Kefka, correct?{line}How are you, Sir?{page}KEFKA: Please!{line}Save your petty small talk!{line}Just do your job!",
+   "text": "كيفكا: هيه، أنت!{line}أتراقب جيدا؟\nالجندي أ: نعم يا سيدي.{line}أنت كيفكا، صحيح؟{line}كيف حالك يا سيدي؟\nكيفكا: أرجوك!{line}وفر ثرثرتك التافهة!{line}قم بعملك فحسب!"
+  },
+  {
+   "id": "doma.492",
+   "context": "Message 492 of the dialogue: SOLDIER B: Phew…!{line}Someone's gotta put that guy away!{page}SOLDIER B: I'd like to tell him to his face he's no General Leo!",
+   "text": "الجندي ب: أوف…!{line}على أحدهم أن يتخلص من ذلك الرجل!\nالجندي ب: أود أن أقول له في وجهه إنه ليس الجنرال ليو!"
+  },
+  {
+   "id": "doma.493",
+   "context": "Message 493 of the dialogue: SOLDIER: General Leo.{line}The citizens of Doma seem to be playing a waiting game…{page}LEO: So, that's their strategy.",
+   "text": "الجندي: الجنرال ليو.{line}يبدو أن أهل دوما يلعبون لعبة الانتظار…\nليو: إذن، هذه استراتيجيتهم."
+  },
+  {
+   "id": "doma.494",
+   "context": "Message 494 of the dialogue: SOLDIER: General.{line}We're ready to take the castle. Just give the order…{page}LEO: Patience!{line}If we attack now, we'll have to sacrifice too many lives.",
+   "text": "الجندي: جنرال.{line}نحن مستعدون لأخذ القلعة. أعط الأمر فحسب…\nليو: صبرا!{line}إن هاجمنا الآن، فسنضحي بأرواح كثيرة جدا."
+  },
+  {
+   "id": "doma.495",
+   "context": "Message 495 of the dialogue: SOLDIER: But, General!{line}I'm ready to lay my life down at any time for the Empire!",
+   "text": "الجندي: لكن يا جنرال!{line}أنا مستعد للتضحية بحياتي في أي وقت من أجل الإمبراطورية!"
+  },
+  {
+   "id": "doma.496",
+   "context": "Message 496 of the dialogue: LEO: You're from Maranda, right?{page}SOLDIER: Y…yes Sir. Why?",
+   "text": "ليو: أنت من ماراندا، صحيح؟\nالجندي: ن… نعم يا سيدي. لماذا؟"
+  },
+  {
+   "id": "doma.497",
+   "context": "Message 497 of the dialogue: LEO: And your family lives there? Fall in battle, and I'll have to deliver the bad news…{line}What shall I say to them?{page}You have a life to go back to someday. Don't throw it all away for nothing. Emperor Gestahl wouldn't want that.",
+   "text": "ليو: وعائلتك تعيش هناك؟ إن سقطت في المعركة، فعلي أن أنقل إليهم الخبر السيئ…{line}ماذا أقول لهم؟\nلديك حياة تعود إليها يوما ما. لا ترمها كلها هباء. الإمبراطور غشتال لا يريد ذلك."
+  },
+  {
+   "id": "doma.498",
+   "context": "Message 498 of the dialogue: SOLDIER: Yes, Sir!",
+   "text": "الجندي: أمرك يا سيدي!"
+  },
+  {
+   "id": "doma.499",
+   "context": "Message 499 of the dialogue: SOLDIER: General Leo!",
+   "text": "الجندي: الجنرال ليو!"
+  },
+  {
+   "id": "doma.500",
+   "context": "Message 500 of the dialogue: SOLDIER: Hey!{line}What are you doing?",
+   "text": "الجندي: هيه!{line}ماذا تفعل؟"
+  },
+  {
+   "id": "doma.501",
+   "context": "Message 501 of the dialogue: SOLDIER: A carrier pigeon from Emperor Gestahl.",
+   "text": "الجندي: حمامة زاجلة من الإمبراطور غشتال."
+  },
+  {
+   "id": "doma.502",
+   "context": "Message 502 of the dialogue: LEO: What…?",
+   "text": "ليو: ماذا…؟"
+  },
+  {
+   "id": "doma.503",
+   "context": "Message 503 of the dialogue: LEO: The Emperor summons me.{line}I must return immediately.",
+   "text": "ليو: الإمبراطور يستدعيني.{line}علي أن أعود فورا."
+  },
+  {
+   "id": "doma.504",
+   "context": "Message 504 of the dialogue: SOLDIER: I understand, Sir.",
+   "text": "الجندي: فهمت يا سيدي."
+  },
+  {
+   "id": "doma.505",
+   "context": "Message 505 of the dialogue: LEO: Right.{line}I'll leave Doma in your hands.{line}SOLDIER: Yes, Sir.{page}LEO: Okay…{line}Just don't jump the gun.{line}Please…",
+   "text": "ليو: حسنا.{line}سأترك دوما بين أيديكم.{line}الجندي: أمرك يا سيدي.\nليو: حسنا…{line}فقط لا تتسرعوا.{line}أرجوكم…"
+  },
+  {
+   "id": "doma.506",
+   "context": "Message 506 of the dialogue: SOLDIER: Sir!{line}Leave it to us, Sir!",
+   "text": "الجندي: سيدي!{line}اترك الأمر لنا يا سيدي!"
+  },
+  {
+   "id": "doma.507",
+   "context": "Message 507 of the dialogue: LEO: Right.",
+   "text": "ليو: حسنا."
+  },
+  {
+   "id": "doma.508",
+   "context": "Message 508 of the dialogue: So that's General Leo…{line}He could be my friend, if he weren't my enemy…",
+   "text": "إذن هذا هو الجنرال ليو…{line}كان يمكن أن يكون صديقي، لو لم يكن عدوي…"
+  },
+  {
+   "id": "doma.509",
+   "context": "Message 509 of the dialogue: That was too close…!",
+   "text": "كان ذلك وشيكا جدا…!"
+  },
+  {
+   "id": "doma.510",
+   "context": "Message 510 of the dialogue: Urrgh! The top won't open.{page}Right…{line}{Choice} (Kick it){line}{Choice} (Hit it){line}{Choice} (Leave it)",
+   "text": "أرغ! الغطاء لا يفتح.\nحسنا…{line}{Choice} (أركله){line}{Choice} (أضربه){line}{Choice} (أتركه)"
+  },
+  {
+   "id": "doma.511",
+   "context": "Message 511 of the dialogue: Yeeeouch!",
+   "text": "آآآخ!"
+  },
+  {
+   "id": "doma.512",
+   "context": "Message 512 of the dialogue: No! A sentry!",
+   "text": "لا! حارس!"
+  },
+  {
+   "id": "doma.513",
+   "context": "Message 513 of the dialogue: SOLDIER: Who goes there?",
+   "text": "الجندي: من هناك؟"
+  },
+  {
+   "id": "doma.514",
+   "context": "Message 514 of the dialogue: SOLDIER: …???{line}I knew I heard something…{page}Meoooow{page}SOLDIER: Just a lousy cat…",
+   "text": "الجندي: …؟؟؟{line}كنت واثقا أنني سمعت شيئا…\nمياااو\nالجندي: مجرد قطة لعينة…"
+  },
+  {
+   "id": "doma.515",
+   "context": "Message 515 of the dialogue: KEFKA: Now that Leo's gone, I'll turn this water into a flowing river of poison!",
+   "text": "كيفكا: والآن بعد رحيل ليو، سأحول هذا الماء إلى نهر من السم الجاري!"
+  },
+  {
+   "id": "doma.516",
+   "context": "Message 516 of the dialogue: LEO: The Emperor has ordered  me to return home. I don't want any trouble here!{page}KEFKA: You loser!{line}I'll take care of this situation in no time!",
+   "text": "ليو: أمرني الإمبراطور بالعودة. لا أريد أي متاعب هنا!\nكيفكا: أيها الفاشل!{line}سأتولى هذا الوضع في لمح البصر!"
+  },
+  {
+   "id": "doma.517",
+   "context": "Message 517 of the dialogue: LEO: Don't be pompous!{line}And DON'T forget that they are PEOPLE, just like you and me.{page}KEFKA: We need not spare those lands that gave rise to the Returners!",
+   "text": "ليو: لا تتعجرف!{line}ولا تنس أنهم بشر، مثلي ومثلك.\nكيفكا: لا داعي لأن نرحم الأراضي التي أنبتت العائدين!"
+  },
+  {
+   "id": "doma.518",
+   "context": "Message 518 of the dialogue: KEFKA: You just go and be a good little boy…!",
+   "text": "كيفكا: اذهب أنت وكن ولدا صغيرا مطيعا…!"
+  },
+  {
+   "id": "doma.519",
+   "context": "Message 519 of the dialogue: KEFKA: Is the poison ready?{line}SOLDIER: But, General Leo said…{page}KEFKA: He's no longer here!{line}I'm in charge now. Pour it!{page}SOLDIER: Some of our people are prisoners inside the castle!{line}If we poison the river…{page}KEFKA: Do it!{line}Take 'em all out!",
+   "text": "كيفكا: هل السم جاهز؟{line}الجندي: لكن الجنرال ليو قال…\nكيفكا: لم يعد هنا!{line}أنا المسؤول الآن. اسكبوه!\nالجندي: بعض رجالنا أسرى داخل القلعة!{line}إن سممنا النهر…\nكيفكا: افعلوها!{line}اقضوا عليهم جميعا!"
+  },
+  {
+   "id": "doma.520",
+   "context": "Message 520 of the dialogue: That's inhuman!",
+   "text": "هذا لا إنساني!"
+  },
+  {
+   "id": "doma.521",
+   "context": "Message 521 of the dialogue: KEFKA: Unh? Silence!{line}You're history, bub…",
+   "text": "كيفكا: أنه؟ اصمت!{line}أنت في عداد الأموات يا هذا…"
+  },
+  {
+   "id": "doma.522",
+   "context": "Message 522 of the dialogue: KEFKA: What an oaf!{line}When I get my hands on him…",
+   "text": "كيفكا: يا له من أخرق!{line}حين أضع يدي عليه…"
+  },
+  {
+   "id": "doma.523",
+   "context": "Message 523 of the dialogue: KEFKA: Ha, ha, ha!{line}…What a toad!",
+   "text": "كيفكا: ها، ها، ها!{line}…يا له من ضفدع!"
+  },
+  {
+   "id": "doma.524",
+   "context": "Message 524 of the dialogue: KEFKA: Huh!?{line}How long do you expect me to put up with you? Next time, you're a goner.",
+   "text": "كيفكا: هاه!؟{line}إلى متى تتوقع أن أحتملك؟ في المرة القادمة، ستهلك."
+  },
+  {
+   "id": "doma.525",
+   "context": "Message 525 of the dialogue: Wait!!!",
+   "text": "انتظر!!!"
+  },
+  {
+   "id": "doma.526",
+   "context": "Message 526 of the dialogue: KEFKA: Oh, gripe!{line}Hey! If you know what's good for you…",
+   "text": "كيفكا: أوه، يا للإزعاج!{line}هيه! إن كنت تعرف مصلحتك…"
+  },
+  {
+   "id": "doma.527",
+   "context": "Message 527 of the dialogue: NO!!{line}Unless we act now, Kefka'll use the poison to…",
+   "text": "لا!!{line}إن لم نتحرك الآن، فسيستعمل كيفكا السم كي…"
+  },
+  {
+   "id": "doma.528",
+   "context": "Message 528 of the dialogue: KEFKA: Hee, hee!{line}Nothing can beat the music of hundreds of voices screaming in unison!{page}Uwa, ha, ha!",
+   "text": "كيفكا: هي، هي!{line}لا شيء يضاهي موسيقى مئات الأصوات وهي تصرخ معا!\nأوا، ها، ها!"
+  },
+  {
+   "id": "doma.529",
+   "context": "Message 529 of the dialogue: COMMANDER: Attack!",
+   "text": "القائد: هجوم!"
+  },
+  {
+   "id": "doma.530",
+   "context": "Message 530 of the dialogue: DOMA SENTRY: It's hopeless.{line}We can't keep them out.",
+   "text": "حارس دوما: لا أمل.{line}لا نستطيع صدهم."
+  },
+  {
+   "id": "doma.531",
+   "context": "Message 531 of the dialogue: DOMA SENTRY: So, it's finally happening…",
+   "text": "حارس دوما: إذن، ها هو يحدث أخيرا…"
+  },
+  {
+   "id": "doma.532",
+   "context": "Message 532 of the dialogue: A moment, Sir!",
+   "text": "لحظة يا سيدي!"
+  },
+  {
+   "id": "doma.533",
+   "context": "Message 533 of the dialogue: Allow me the honor!",
+   "text": "امنحني هذا الشرف!"
+  },
+  {
+   "id": "doma.534",
+   "context": "Message 534 of the dialogue: {Cyan}: If we can fell their commander, they'll surely give up.",
+   "text": "{Cyan}: إن أسقطنا قائدهم، فسيستسلمون حتما."
+  },
+  {
+   "id": "doma.535",
+   "context": "Message 535 of the dialogue: {Cyan}: Let us give it a try.",
+   "text": "{Cyan}: فلنجرب."
+  },
+  {
+   "id": "doma.536",
+   "context": "Message 536 of the dialogue: {Cyan}: Thou musn't give up the fight!",
+   "text": "{Cyan}: لا يجوز لك أن تتخلى عن القتال!"
+  },
+  {
+   "id": "doma.537",
+   "context": "Message 537 of the dialogue: DOMA SENTRY: Sir {Cyan}!{line}Let their commander have it!",
+   "text": "حارس دوما: السيد {Cyan}!{line}أرهم قائدهم ما يستحق!"
+  },
+  {
+   "id": "doma.538",
+   "context": "Message 538 of the dialogue: DOMA SENTRY: Sir {Cyan}!",
+   "text": "حارس دوما: السيد {Cyan}!"
+  },
+  {
+   "id": "doma.539",
+   "context": "Message 539 of the dialogue: {Cyan}: I am {Cyan},{line}retainer to the King of Doma.{line}I am your worst nightmare…",
+   "text": "{Cyan}: أنا {Cyan}،{line}تابع ملك دوما.{line}وأنا أسوأ كوابيسكم…"
+  },
+  {
+   "id": "doma.540",
+   "context": "Message 540 of the dialogue: {Cyan}: Huh?{line}The water looks odd…",
+   "text": "{Cyan}: هاه؟{line}الماء يبدو غريبا…"
+  },
+  {
+   "id": "doma.541",
+   "context": "Message 541 of the dialogue: TROOPER: The general's been defeated! Run!!!",
+   "text": "الجندي: هزم القائد! اهربوا!!!"
+  },
+  {
+   "id": "doma.542",
+   "context": "Message 542 of the dialogue: {Cyan}: This is… {Wait}POISON!",
+   "text": "{Cyan}: هذا… {Wait}سم!"
+  },
+  {
+   "id": "doma.543",
+   "context": "Message 543 of the dialogue: {Cyan}: Your Highness!{line}Fear not!{line}KING DOMA: Who's there?",
+   "text": "{Cyan}: جلالتك!{line}لا تخف!{line}ملك دوما: من هناك؟"
+  },
+  {
+   "id": "doma.544",
+   "context": "Message 544 of the dialogue: {Cyan}: {Cyan}, Excellency.{page}KING DOMA: Indeed!{line}My sight is going fast…{line}Can't see a thing…{page}{Cyan}: Excellency!{line}Hang on!{line}KING DOMA: {Cyan}…{page}You have defended the realm since my father's days…hack, cough…{line}Thank you…{page}It's over…{line}Our kingdom is through.",
+   "text": "{Cyan}: {Cyan}، يا صاحب الجلالة.\nملك دوما: حقا!{line}بصري يذهب بسرعة…{line}لا أرى شيئا…\n{Cyan}: جلالتك!{line}اصمد!{line}ملك دوما: {Cyan}…\nلقد دافعت عن المملكة منذ أيام أبي… كح، كح…{line}شكرا لك…\nانتهى الأمر…{line}مملكتنا قد انتهت."
+  },
+  {
+   "id": "doma.545",
+   "context": "Message 545 of the dialogue: {Cyan}: Not yet, Highness!{line}KING DOMA: I fear for your family. {Wait}Uhh…chest is on f…fire…{page}{Cyan}: Save your strength!{line}Don't talk!{line}KING DOMA: Go…run to your family…hack… {Wait}gasp… {Wait}……{page}{Cyan}: Highness!!",
+   "text": "{Cyan}: ليس بعد يا جلالتك!{line}ملك دوما: أخشى على عائلتك. {Wait}آه… صدري يح… يحترق…\n{Cyan}: وفر قوتك!{line}لا تتكلم!{line}ملك دوما: اذهب… اركض إلى عائلتك… كح… {Wait}شهقة… {Wait}……\n{Cyan}: جلالتك!!"
+  },
+  {
+   "id": "doma.546",
+   "context": "Message 546 of the dialogue: {Cyan}: Elayne!{line}{Wait}Elayne! Wake up!",
+   "text": "{Cyan}: إيلين!{line}{Wait}إيلين! استيقظي!"
+  },
+  {
+   "id": "doma.547",
+   "context": "Message 547 of the dialogue: {Cyan}: This…{line}This…can't be happening!",
+   "text": "{Cyan}: هذا…{line}هذا… لا يمكن أن يحدث!"
+  },
+  {
+   "id": "doma.548",
+   "context": "Message 548 of the dialogue: {Cyan}: ! {Wait}Owain…{line}NOT YOU TOO!{line}Son…you can't BOTH leave me!",
+   "text": "{Cyan}: ! {Wait}أوين…{line}ليس أنت أيضا!{line}بني… لا يمكن أن تتركاني كلاكما!"
+  },
+  {
+   "id": "doma.549",
+   "context": "Message 549 of the dialogue: Faithful retainer to his family's liege, with the courage and strength of a hundred men…",
+   "text": "تابع مخلص لسيد أسرته، بشجاعة مئة رجل وقوتهم…"
+  },
+  {
+   "id": "doma.550",
+   "context": "Message 550 of the dialogue: The Empire's base is bustling with activity. Something must be up!",
+   "text": "قاعدة الإمبراطورية تعج بالحركة. لا بد أن شيئا ما يجري!"
+  },
+  {
+   "id": "doma.551",
+   "context": "Message 551 of the dialogue: DOMA SENTRY: What lowdown, contemptible…!",
+   "text": "حارس دوما: يا لهم من أخساء حقيرين…!"
+  },
+  {
+   "id": "doma.552",
+   "context": "Message 552 of the dialogue: {Cyan}: Guard our liege!",
+   "text": "{Cyan}: احرسوا مولانا!"
+  },
+  {
+   "id": "doma.553",
+   "context": "Message 553 of the dialogue: {Cyan}: Walled up in there, we can wait out our enemy!",
+   "text": "{Cyan}: متحصنين هناك، يمكننا أن ننتظر حتى يمل عدونا!"
+  },
+  {
+   "id": "doma.554",
+   "context": "Message 554 of the dialogue: {Cyan}: D… {Wait}Dear me…",
+   "text": "{Cyan}: يا… {Wait}يا إلهي…"
+  },
+  {
+   "id": "doma.555",
+   "context": "Message 555 of the dialogue: DOMA SENTRY: We're through.",
+   "text": "حارس دوما: انتهى أمرنا."
+  },
+  {
+   "id": "doma.556",
+   "context": "Message 556 of the dialogue: DOMA SENTRY: To the King, on the double!",
+   "text": "حارس دوما: إلى الملك، بسرعة!"
+  },
+  {
+   "id": "doma.557",
+   "context": "Message 557 of the dialogue: {Cyan}: Right!{line}The King's room is near!",
+   "text": "{Cyan}: حسنا!{line}غرفة الملك قريبة!"
+  },
+  {
+   "id": "doma.558",
+   "context": "Message 558 of the dialogue: {Cyan}: Highness…",
+   "text": "{Cyan}: جلالتك…"
+  },
+  {
+   "id": "doma.559",
+   "context": "Message 559 of the dialogue: {Cyan}: There have to be some survivors in the castle!{line}DOMA SENTRY: Let's split up…",
+   "text": "{Cyan}: لا بد أن في القلعة ناجين!{line}حارس دوما: لنتفرق…"
+  },
+  {
+   "id": "doma.560",
+   "context": "Message 560 of the dialogue: {Cyan}: Here, too…",
+   "text": "{Cyan}: هنا أيضا…"
+  },
+  {
+   "id": "doma.561",
+   "context": "Message 561 of the dialogue: {Cyan}: I…impossible!{line}{Wait}Idiotic!!!",
+   "text": "{Cyan}: م… مستحيل!{line}{Wait}يا للحماقة!!!"
+  },
+  {
+   "id": "doma.562",
+   "context": "Message 562 of the dialogue: We can't forgive this! {Wait}{line}The Empire must pay!",
+   "text": "لا يمكن أن نغفر هذا! {Wait}{line}على الإمبراطورية أن تدفع الثمن!"
+  },
+  {
+   "id": "doma.563",
+   "context": "Message 563 of the dialogue: TROOPER: This is off limits.",
+   "text": "الجندي: هذه منطقة محظورة."
+  },
+  {
+   "id": "doma.564",
+   "context": "Message 564 of the dialogue: WARRIOR: I am {Cyan},{line}retainer to King Doma!",
+   "text": "المحارب: أنا {Cyan}،{line}تابع ملك دوما!"
+  },
+  {
+   "id": "doma.565",
+   "context": "Message 565 of the dialogue: {Cyan}: Ohhh!{line}This is too much! {Pause 03}{Key}",
+   "text": "{Cyan}: آه!{line}هذا فوق الاحتمال! {Pause 03}{Key}"
+  },
+  {
+   "id": "doma.566",
+   "context": "Message 566 of the dialogue: {Cyan}: Urgh!!!{line}Who released this poison?{line} {Pause 03}{Key}",
+   "text": "{Cyan}: أرغ!!!{line}من أطلق هذا السم؟{line}{Pause 03}{Key}"
+  },
+  {
+   "id": "doma.567",
+   "context": "Message 567 of the dialogue: SOLDIER: The enemy!{line}Get ready, everyone!",
+   "text": "الجندي: العدو!{line}استعدوا جميعا!"
+  },
+  {
+   "id": "doma.568",
+   "context": "Message 568 of the dialogue: {Sabin}: That guy's a sitting duck! Gotta help him, fast!",
+   "text": "{Sabin}: ذلك الرجل هدف سهل! علي مساعدته، بسرعة!"
+  },
+  {
+   "id": "doma.569",
+   "context": "Message 569 of the dialogue: {Sabin}: Uwaaa!{page}It's that poison!{line}This isn't gonna be easy…",
+   "text": "{Sabin}: أوااا!\nإنه ذلك السم!{line}لن يكون هذا سهلا…"
+  },
+  {
+   "id": "doma.570",
+   "context": "Message 570 of the dialogue: {Sabin}: May I give you a hand?!",
+   "text": "{Sabin}: أتسمح لي بمساعدتك؟!"
+  },
+  {
+   "id": "doma.571",
+   "context": "Message 571 of the dialogue: {Cyan}: Thank you…{line}whomever you are.",
+   "text": "{Cyan}: شكرا لك…{line}أيا كنت."
+  },
+  {
+   "id": "doma.572",
+   "context": "Message 572 of the dialogue: {Sabin}: Let me have at it!",
+   "text": "{Sabin}: دعني أتولى الأمر!"
+  },
+  {
+   "id": "doma.573",
+   "context": "Message 573 of the dialogue: {Cyan}: What a mess!!{line}Be careful, Sir!!",
+   "text": "{Cyan}: يا لها من فوضى!!{line}احترس يا سيدي!!"
+  },
+  {
+   "id": "doma.574",
+   "context": "Message 574 of the dialogue: Look…we're gonna have to do this together!",
+   "text": "اسمع… علينا أن نفعل هذا معا!"
+  },
+  {
+   "id": "doma.575",
+   "context": "Message 575 of the dialogue: {Cyan}: The thought had occurred to me as well!",
+   "text": "{Cyan}: خطرت لي الفكرة نفسها!"
+  },
+  {
+   "id": "doma.576",
+   "context": "Message 576 of the dialogue: {Sabin}: I'm {Sabin}, from Figaro. I'll explain more later. First, let's finish this!",
+   "text": "{Sabin}: أنا {Sabin}، من فيغارو. سأشرح أكثر لاحقا. أولا، لننه هذا!"
+  },
+  {
+   "id": "doma.577",
+   "context": "Message 577 of the dialogue: {Cyan}: Thank you, kind sir!",
+   "text": "{Cyan}: شكرا لك أيها السيد الكريم!"
+  },
+  {
+   "id": "doma.578",
+   "context": "Message 578 of the dialogue: {Cyan}: Eeoooa!{line}Be you friend or enemy?!",
+   "text": "{Cyan}: إييووا!{line}أصديق أنت أم عدو؟!"
+  },
+  {
+   "id": "doma.579",
+   "context": "Message 579 of the dialogue: {Sabin}: Ouuuch!{line}…didn't MEAN to step in there…",
+   "text": "{Sabin}: آآخ!{line}…لم أقصد أن أطأ هناك…"
+  },
+  {
+   "id": "doma.580",
+   "context": "Message 580 of the dialogue: {Sabin}: ! {Pause 03}{Key}",
+   "text": "{Sabin}: ! {Pause 03}{Key}"
+  },
+  {
+   "id": "doma.581",
+   "context": "Message 581 of the dialogue: {Sabin}: Allow me to thank you! I am {Sabin}, from Figaro.{line}Now, let's scram!",
+   "text": "{Sabin}: اسمح لي أن أشكرك! أنا {Sabin}، من فيغارو.{line}والآن لنهرب!"
+  },
+  {
+   "id": "doma.582",
+   "context": "Message 582 of the dialogue: {Cyan}: But what of my home, my family…my friends?{page}{Sabin}: Look…{line}If we stick around any longer we'll have a regiment of troops down our throats.",
+   "text": "{Cyan}: لكن ماذا عن بيتي وعائلتي… وأصدقائي؟\n{Sabin}: اسمع…{line}إن بقينا هنا أكثر فسيكون فوج كامل من الجنود على رقابنا."
+  },
+  {
+   "id": "doma.583",
+   "context": "Message 583 of the dialogue: {Cyan}: Sir {Sabin}!!{line}It is I who is in your debt!",
+   "text": "{Cyan}: السيد {Sabin}!!{line}أنا من يدين لك!"
+  },
+  {
+   "id": "doma.584",
+   "context": "Message 584 of the dialogue: {Sabin}: Forget it.{line}Now, come on!",
+   "text": "{Sabin}: انس الأمر.{line}والآن هيا!"
+  },
+  {
+   "id": "doma.585",
+   "context": "Message 585 of the dialogue: {Cyan}: Aaahhh!{line}We can't stop now!{line} {Pause 04}{Key}",
+   "text": "{Cyan}: آآه!{line}لا يمكننا التوقف الآن!{line}{Pause 04}{Key}"
+  },
+  {
+   "id": "doma.586",
+   "context": "Message 586 of the dialogue: {Sabin}: Then let's just bust through!",
+   "text": "{Sabin}: إذن لنخترقهم!"
+  },
+  {
+   "id": "doma.587",
+   "context": "Message 587 of the dialogue: End of the line!",
+   "text": "نهاية الطريق!"
+  },
+  {
+   "id": "doma.588",
+   "context": "Message 588 of the dialogue: There's nowhere to run!",
+   "text": "لا مكان للهرب!"
+  },
+  {
+   "id": "doma.589",
+   "context": "Message 589 of the dialogue: Who said anything about running?!",
+   "text": "ومن قال شيئا عن الهرب؟!"
+  },
+  {
+   "id": "doma.590",
+   "context": "Message 590 of the dialogue: {Sabin}: Can't believe we've made it this far…{line}Say, how do we get to Narshe from here?{page}{Cyan}: Narshe, eh?{page}Only one route, through the forest to the south.",
+   "text": "{Sabin}: لا أصدق أننا وصلنا إلى هنا…{line}قل لي، كيف نصل إلى نارشي من هنا؟\n{Cyan}: نارشي، ها؟\nطريق واحد فقط، عبر الغابة جنوبا."
+  },
+  {
+   "id": "doma.591",
+   "context": "Message 591 of the dialogue: {Sabin}: All right!{line}It's decided.{line}Let's get going!",
+   "text": "{Sabin}: حسنا!{line}تقرر الأمر.{line}لننطلق!"
+  },
+  {
+   "id": "doma.592",
+   "context": "Message 592 of the dialogue: {Sabin}: Nothing but poison this way!",
+   "text": "{Sabin}: لا شيء سوى السم في هذا الاتجاه!"
+  },
+  {
+   "id": "doma.593",
+   "context": "Message 593 of the dialogue: SOLDIER: Got 'em!{line}Over here!",
+   "text": "الجندي: وجدناهم!{line}هنا!"
+  },
+  {
+   "id": "doma.594",
+   "context": "Message 594 of the dialogue: {Sabin}: Hoo, boy…{page}{Sabin}: I have a great idea…{line}Come over here.",
+   "text": "{Sabin}: يا إلهي…\n{Sabin}: لدي فكرة رائعة…{line}تعال إلى هنا."
+  },
+  {
+   "id": "doma.595",
+   "context": "Message 595 of the dialogue: {Cyan}: Sir {Sabin}!{line}What on earth are these?",
+   "text": "{Cyan}: السيد {Sabin}!{line}ما هذه بحق السماء؟"
+  },
+  {
+   "id": "doma.596",
+   "context": "Message 596 of the dialogue: {Sabin}: I'll explain later!{line}Relax. Just climb in!",
+   "text": "{Sabin}: سأشرح لاحقا!{line}اهدأ. اصعد فحسب!"
+  },
+  {
+   "id": "doma.597",
+   "context": "Message 597 of the dialogue: {Cyan}: Sir {Sabin}!{line}How might these abominations be manipulated?",
+   "text": "{Cyan}: السيد {Sabin}!{line}كيف يمكن التحكم بهذه المخلوقات البغيضة؟"
+  },
+  {
+   "id": "doma.598",
+   "context": "Message 598 of the dialogue: {Sabin}: I'm getting sick of this! Thou art such a pain in the…! {Wait}Confound it all! I'm starting to talk like you!{page}{Sabin}: Now listen!{line}Just use those levers located by your hands.",
+   "text": "{Sabin}: سئمت هذا! إنك لألم في ال…! {Wait}تبا! بدأت أتكلم مثلك!\n{Sabin}: والآن اسمع!{line}استعمل تلك الأذرع التي عند يديك فحسب."
+  },
+  {
+   "id": "classroom.599",
+   "context": "Message 599 of the dialogue: This is a classroom for the beginner. Here we answer your questions about the world.{line}Think of us as your advisors…",
+   "text": "هذا صف للمبتدئين. هنا نجيب عن أسئلتك عن العالم.{line}اعتبرنا مستشاريك…"
+  },
+  {
+   "id": "classroom.600",
+   "context": "Message 600 of the dialogue: Welcome to this classroom.{line}We'll be here for you even if the world should crumble.",
+   "text": "مرحبا بك في هذا الصف.{line}سنبقى هنا من أجلك حتى لو انهار العالم."
+  },
+  {
+   "id": "classroom.601",
+   "context": "Message 601 of the dialogue: This is water from a recovery spring. It'll restore your HP and MP. Such springs are located throughout the world.",
+   "text": "هذا ماء من نبع الشفاء. يستعيد نقاط الحياة ونقاط السحر. توجد هذه الينابيع في أنحاء العالم."
+  },
+  {
+   "id": "classroom.602",
+   "context": "Message 602 of the dialogue: This is a Save Point.",
+   "text": "هذه نقطة حفظ."
+  },
+  {
+   "id": "classroom.603",
+   "context": "Message 603 of the dialogue: Valuables are often hidden in pots such as this one.",
+   "text": "كثيرا ما تخبأ الأشياء الثمينة في جرار كهذه."
+  },
+  {
+   "id": "classroom.604",
+   "context": "Message 604 of the dialogue: Use curative items to restore your HP. Staying at an Inn will revive your party in full.",
+   "text": "استعمل أدوات العلاج لاستعادة نقاط الحياة. والمبيت في نزل يعيد الفريق كله إلى كامل قوته."
+  },
+  {
+   "id": "classroom.605",
+   "context": "Message 605 of the dialogue: Ha!{line}Sometimes monsters lurk inside of treasure chests!",
+   "text": "ها!{line}أحيانا تتربص الوحوش داخل صناديق الكنوز!"
+  },
+  {
+   "id": "classroom.606",
+   "context": "Message 606 of the dialogue: Heard about Relics?",
+   "text": "أسمعت عن التمائم؟"
+  },
+  {
+   "id": "classroom.607",
+   "context": "Message 607 of the dialogue: Choose with the A Button. Cancel a choice with the B Button. View the Main Menu with the X Button.",
+   "text": "اختر بزر إيه. ألغ الاختيار بزر بي. اعرض القائمة الرئيسية بزر إكس."
+  },
+  {
+   "id": "classroom.608",
+   "context": "Message 608 of the dialogue: When buying armor and weapons you'll see some symbols next to your characters:{page}Triangles pointing up indicate increasing battle power.{page}Triangles pointing down indicate decreasing battle power.{page}“=” indicates no change in battle power.{page}“E” means the item is already equipped on that character.{page}A symbol under a character means that person is now in your party.",
+   "text": "عند شراء الدروع والأسلحة سترى بعض الرموز بجانب شخصياتك:\nالمثلثات المتجهة إلى الأعلى تعني زيادة في القوة القتالية.\nوالمثلثات المتجهة إلى الأسفل تعني نقصانا في القوة القتالية.\nوعلامة «يساوي» تعني أن القوة القتالية لا تتغير.\nوالحرف الذي يعني «مجهز» يدل على أن العنصر مجهز أصلا على تلك الشخصية.\nورمز تحت الشخصية يعني أنها الآن في فريقك."
+  },
+  {
+   "id": "classroom.609",
+   "context": "Message 609 of the dialogue: If you select the “Wait” Battle Mode from the Config Menu…{page}You can take all the time you need to select spells or items without being attacked.",
+   "text": "إن اخترت نمط المعركة «انتظار» من قائمة الإعدادات…\nفيمكنك أخذ كل الوقت الذي تحتاجه لاختيار التعاويذ أو الأدوات دون أن تهاجم."
+  },
+  {
+   "id": "classroom.610",
+   "context": "Message 610 of the dialogue: Run from some battles by pressing (and holding) both the L and R Buttons.",
+   "text": "اهرب من بعض المعارك بالضغط (مع الاستمرار) على زري إل وآر معا."
+  },
+  {
+   "id": "classroom.611",
+   "context": "Message 611 of the dialogue: A full meter in the lower right means that character will be next to accept battle commands.{page}Press the X or Y button to pass that character's battle opportunity to the next character.",
+   "text": "امتلاء المؤشر في أسفل اليمين يعني أن تلك الشخصية هي التالية لتلقي أوامر المعركة.\nاضغط زر إكس أو واي لتمرير دور تلك الشخصية إلى الشخصية التالية."
+  },
+  {
+   "id": "classroom.612",
+   "context": "Message 612 of the dialogue: When selecting a spell, press the L or R Button to select multiple targets.",
+   "text": "عند اختيار تعويذة، اضغط زر إل أو آر لاختيار أهداف متعددة."
+  },
+  {
+   "id": "classroom.613",
+   "context": "Message 613 of the dialogue: During a battle, press left or right on the control pad to select “Row” or “Defense.”{page}“Defense” cuts received damage in half, and works until your next command input.",
+   "text": "أثناء المعركة، اضغط يسارا أو يمينا على لوحة التحكم لاختيار «الصف» أو «الدفاع».\n«الدفاع» يخفض الضرر الذي تتلقاه إلى النصف، ويستمر حتى أمرك التالي."
+  },
+  {
+   "id": "classroom.614",
+   "context": "Message 614 of the dialogue: Damage is more severe when caught in a pincer attack!{line}Use care when running!",
+   "text": "الضرر أشد حين تحاصر في هجوم كماشة!{line}احترس عند الهرب!"
+  },
+  {
+   "id": "classroom.615",
+   "context": "Message 615 of the dialogue: White numerals appearing during battle are damage points. Green numerals are recovery points.",
+   "text": "الأرقام البيضاء التي تظهر في المعركة هي نقاط الضرر. والأرقام الخضراء نقاط الشفاء."
+  },
+  {
+   "id": "classroom.616",
+   "context": "Message 616 of the dialogue: In the back row, damage and attack power are halved.{page}Change rows using the Main Menu: press left on the Control Pad, then press the A Button.",
+   "text": "في الصف الخلفي، ينخفض الضرر وقوة الهجوم إلى النصف.\nغير الصف من القائمة الرئيسية: اضغط يسارا على لوحة التحكم، ثم اضغط زر إيه."
+  },
+  {
+   "id": "classroom.617",
+   "context": "Message 617 of the dialogue: Need status info?{line}{Choice} Yes{line}{Choice} No",
+   "text": "تحتاج معلومات عن الحالات؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "classroom.618",
+   "context": "Message 618 of the dialogue: “Clear”{line}Enemy can't strike you, but you're an easy target for spells.{page}You'll revert to normal if a spell hits you.{page}“Imp”{line}Lose use of spells and commands.{page}“Zombie”{line}HP drops to 0, and you attack party members. Use “Revivify” to reverse.{page}For “Muddled” and “Psyche”{line}You'll revert to normal when struck by a weapon.",
+   "text": "«شفاف»{line}لا يستطيع العدو ضربك، لكنك هدف سهل للتعاويذ.\nتعود إلى طبيعتك إن أصابتك تعويذة.\n«عفريت»{line}تفقد استعمال التعاويذ والأوامر.\n«زومبي»{line}تهبط نقاط حياتك إلى 0، وتهاجم أعضاء فريقك. استعمل «الإحياء» للعكس.\nأما «التشوش» و«النفسي»{line}فتعود إلى طبيعتك حين يضربك سلاح."
+  },
+  {
+   "id": "classroom.619",
+   "context": "Message 619 of the dialogue: Use a curative spell or item on an undead creature for maximum damage.",
+   "text": "استعمل تعويذة أو أداة علاج على مخلوق غير ميت لإلحاق أقصى ضرر."
+  },
+  {
+   "id": "classroom.620",
+   "context": "Message 620 of the dialogue: “Life 3”{line}Automatically brought back even if status is affected.{page}“Regen”{line}HP gradually come back.",
+   "text": "«حياة 3»{line}تعود تلقائيا حتى لو تأثرت حالتك.\n«تجدد»{line}تعود نقاط الحياة تدريجيا."
+  },
+  {
+   "id": "classroom.621",
+   "context": "Message 621 of the dialogue: 3-way attack indicates a fire, ice and lightning attack.",
+   "text": "الهجوم الثلاثي يعني هجوما بالنار والجليد والبرق."
+  },
+  {
+   "id": "classroom.622",
+   "context": "Message 622 of the dialogue: “Rflect” spells will fade over time, and can't block certain magic attacks.",
+   "text": "تعاويذ «الانعكاس» تتلاشى مع الوقت، ولا تصد بعض الهجمات السحرية."
+  },
+  {
+   "id": "classroom.623",
+   "context": "Message 623 of the dialogue: “Runic”{line}Turns many magic attacks into MP! Can be used repeatedly.{page}“Morph”{line}Increases Attack and Magic power. Duration increases with battles fought.{page}“Dance” and “Rage”{line}Once selected, will continue until the battle is over.",
+   "text": "«رونية»{line}تحول كثيرا من الهجمات السحرية إلى نقاط سحر! يمكن استعمالها مرارا.\n«تحول»{line}يزيد قوة الهجوم والسحر. تزداد مدته بعدد المعارك التي تخوضها.\n«رقص» و«هياج»{line}بمجرد اختيارهما يستمران حتى نهاية المعركة."
+  },
+  {
+   "id": "classroom.624",
+   "context": "Message 624 of the dialogue: When multiple images of your characters flash on the screen, weapons won't touch you.",
+   "text": "حين تومض صور متعددة لشخصياتك على الشاشة، لا تمسك الأسلحة."
+  },
+  {
+   "id": "classroom.625",
+   "context": "Message 625 of the dialogue: Might want to go out and get some experience in the world before coming in here!",
+   "text": "قد يجدر بك أن تخرج وتكسب بعض الخبرة في العالم قبل أن تأتي إلى هنا!"
+  },
+  {
+   "id": "classroom.626",
+   "context": "Message 626 of the dialogue: Near-fatal status can result in special hidden skills. See what happens if you select command “Fight”…",
+   "text": "حالة قرب الموت قد تطلق مهارات خفية خاصة. انظر ماذا يحدث إن اخترت الأمر «قتال»…"
+  },
+  {
+   "id": "classroom.627",
+   "context": "Message 627 of the dialogue: Seems you have a piece of Magicite.{page}Want to learn more about Espers?{line}{Choice} Yes{line}{Choice} No",
+   "text": "يبدو أن لديك قطعة ماجيسايت.\nأتريد معرفة المزيد عن الإسبرات؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "classroom.628",
+   "context": "Message 628 of the dialogue: To use an Esper it must be equipped. Choose “Skills” from the menu, then select “Espers.”{page}During battle, select Magic, and press up on the Control Pad. Press the A Button to use the Esper.{page}Remember, an Esper can only be used once per battle.{page}{line}{Spaces 09}Learning Magic{page}Learn new spells by equipping Espers. Switch Espers to learn different sets of spells.{page}The higher the “Learning Speed” the faster a spell is learned.{page}When equipped, some Espers will raise qualities (Strength, HP, MP etc.) to their maximum limits at the next “level up.”",
+   "text": "لاستعمال إسبر يجب تجهيزه. اختر «المهارات» من القائمة، ثم اختر «الإسبرات».\nأثناء المعركة، اختر السحر، واضغط إلى الأعلى على لوحة التحكم. اضغط زر إيه لاستعمال الإسبر.\nتذكر، لا يمكن استعمال الإسبر إلا مرة واحدة في كل معركة.\n{center}{line}تعلم السحر\nتعلم تعاويذ جديدة بتجهيز الإسبرات. بدل الإسبرات لتتعلم مجموعات مختلفة من التعاويذ.\nكلما ارتفعت «سرعة التعلم» تعلمت التعويذة أسرع.\nبعض الإسبرات، حين تجهز، ترفع الصفات (القوة ونقاط الحياة ونقاط السحر وغيرها) إلى حدها الأقصى عند «ارتفاع المستوى» التالي."
+  },
+  {
+   "id": "classroom.629",
+   "context": "Message 629 of the dialogue: Each SwdTech sword has its own unique name.{page}You'll gain more SwdTech skills over time.",
+   "text": "لكل تقنية من تقنيات السيف اسمها الخاص.\nستكتسب مزيدا من تقنيات السيف مع الوقت."
+  },
+  {
+   "id": "classroom.630",
+   "context": "Message 630 of the dialogue: “About Rflect”{line}“Rflect” doesn't block spells that have been “Rflected” off others.{page}Enemy protected by Rflect?{line}Try bouncing an attack off a Rflect-protected individual in your party!",
+   "text": "«عن الانعكاس»{line}«الانعكاس» لا يصد التعاويذ التي «انعكست» عن آخرين.\nالعدو محمي بالانعكاس؟{line}جرب أن ترتد الهجمة عن عضو في فريقك محمي بالانعكاس!"
+  },
+  {
+   "id": "classroom.631",
+   "context": "Message 631 of the dialogue: Color changes indicate changes in status.",
+   "text": "تغير اللون يدل على تغير في الحالة."
+  },
+  {
+   "id": "classroom.632",
+   "context": "Message 632 of the dialogue: Blue = Rflect{line}{line}Spells are reflected. {Pause 08}{Key}",
+   "text": "أزرق: انعكاس{line}{line}تنعكس التعاويذ. {Pause 08}{Key}"
+  },
+  {
+   "id": "classroom.633",
+   "context": "Message 633 of the dialogue: Yellow = “Safe”{line}{line}Defense up! {Pause 08}{Key}",
+   "text": "أصفر: «أمان»{line}{line}ارتفع الدفاع! {Pause 08}{Key}"
+  },
+  {
+   "id": "classroom.634",
+   "context": "Message 634 of the dialogue: Green = “Shell”{line}{line}Magic defense up! {Pause 08}{Key}",
+   "text": "أخضر: «درع»{line}{line}ارتفع الدفاع السحري! {Pause 08}{Key}"
+  },
+  {
+   "id": "classroom.635",
+   "context": "Message 635 of the dialogue: Red = “Haste”{line}{line}Speed up! {Pause 08}{Key}",
+   "text": "أحمر: «تسريع»{line}{line}ارتفعت السرعة! {Pause 08}{Key}"
+  },
+  {
+   "id": "classroom.636",
+   "context": "Message 636 of the dialogue: White = “Slow”{line}{line}Speed way down! {Pause 08}{Key}",
+   "text": "أبيض: «إبطاء»{line}{line}انخفضت السرعة كثيرا! {Pause 08}{Key}"
+  },
+  {
+   "id": "classroom.637",
+   "context": "Message 637 of the dialogue: Pink = “Stop”{line}{line}Time stops! {Pause 08}{Key}",
+   "text": "وردي: «توقف»{line}{line}يتوقف الزمن! {Pause 08}{Key}"
+  },
+  {
+   "id": "ship.638",
+   "context": "Message 638 of the dialogue: {Locke}: I think I'm gonna…",
+   "text": "{Locke}: أظن أنني سوف…"
+  },
+  {
+   "id": "ship.639",
+   "context": "Message 639 of the dialogue: {Locke}: Ooh… {Wait}Ohhhhhhh…",
+   "text": "{Locke}: أوه… {Wait}أوووه…"
+  },
+  {
+   "id": "ship.640",
+   "context": "Message 640 of the dialogue: Stay clear of the engine room. It's dangerous.",
+   "text": "ابتعد عن غرفة المحرك. إنها خطرة."
+  },
+  {
+   "id": "ship.641",
+   "context": "Message 641 of the dialogue: We're almost to Crescent Island.",
+   "text": "كدنا نصل إلى جزيرة الهلال."
+  },
+  {
+   "id": "ship.642",
+   "context": "Message 642 of the dialogue: The Magitek Armor's being refurbished.",
+   "text": "يجري تجديد دروع الماجيتك."
+  },
+  {
+   "id": "ship.643",
+   "context": "Message 643 of the dialogue: {Celes}: Hey…{Locke}…",
+   "text": "{Celes}: هيه… {Locke}…"
+  },
+  {
+   "id": "ship.644",
+   "context": "Message 644 of the dialogue: Rumor has it that the power of magic still exists on Crescent Island.",
+   "text": "تقول الشائعات إن قوة السحر ما زالت موجودة في جزيرة الهلال."
+  },
+  {
+   "id": "ship.645",
+   "context": "Message 645 of the dialogue: Once we find an Esper, we'll be able to restore peace!",
+   "text": "حين نجد إسبرا، سنتمكن من إعادة السلام!"
+  },
+  {
+   "id": "ship.646",
+   "context": "Message 646 of the dialogue: {Terra}: …{line}Where's {Gau}…? {Wait}{line}{Locke}: He hates ships.{line}{Wait}We must…leave him behind!",
+   "text": "{Terra}: …{line}أين {Gau}…؟ {Wait}{line}{Locke}: إنه يكره السفن.{line}{Wait}علينا… أن نتركه!"
+  },
+  {
+   "id": "ship.647",
+   "context": "Message 647 of the dialogue: SOLDIER: All systems A-O-K.",
+   "text": "الجندي: كل الأنظمة على ما يرام."
+  },
+  {
+   "id": "ship.648",
+   "context": "Message 648 of the dialogue: {Locke}: Urgh… {Wait}Uooh… {Wait}Argh…",
+   "text": "{Locke}: أرغ… {Wait}أووه… {Wait}آرغ…"
+  },
+  {
+   "id": "ship.649",
+   "context": "Message 649 of the dialogue: WAITER: Please order at the table…",
+   "text": "النادل: اطلب عند الطاولة من فضلك…"
+  },
+  {
+   "id": "ship.650",
+   "context": "Message 650 of the dialogue: {Sabin}: Food! Chop!{line}Let's go slop the hogs!",
+   "text": "{Sabin}: طعام! هيا!{line}لنملأ بطوننا!"
+  },
+  {
+   "id": "ship.651",
+   "context": "Message 651 of the dialogue: Can't leave the train now!",
+   "text": "لا يمكن مغادرة القطار الآن!"
+  },
+  {
+   "id": "ship.652",
+   "context": "Message 652 of the dialogue: WAITER: Care for something?{line}{Choice}(Yes, please!){line}{Choice}(No, thanks)",
+   "text": "النادل: أترغب في شيء؟{line}{Choice} (نعم، من فضلك!){line}{Choice} (لا، شكرا)"
+  },
+  {
+   "id": "ship.653",
+   "context": "Message 653 of the dialogue: {Sabin}: Food! Food!{line}Bring me everything ya got!",
+   "text": "{Sabin}: طعام! طعام!{line}أحضر لي كل ما عندك!"
+  },
+  {
+   "id": "ship.654",
+   "context": "Message 654 of the dialogue: {Sabin}: Worried?{line}{Wait}Can't wage war on an empty stomach!",
+   "text": "{Sabin}: قلق؟{line}{Wait}لا يمكن خوض الحرب ببطن خاوية!"
+  },
+  {
+   "id": "ship.655",
+   "context": "Message 655 of the dialogue: {Cyan}: Hummm…{line}Sir! I won't hear any more of this kind of talk!",
+   "text": "{Cyan}: همم…{line}سيدي! لن أسمع مزيدا من هذا الكلام!"
+  },
+  {
+   "id": "ship.656",
+   "context": "Message 656 of the dialogue: {Sabin}: Well!{line}{Wait}I've stuffed down all I can…{line}Let's go!",
+   "text": "{Sabin}: حسنا!{line}{Wait}حشوت بطني بكل ما أستطيع…{line}هيا بنا!"
+  },
+  {
+   "id": "ship.657",
+   "context": "Message 657 of the dialogue: WAITER: One moment, please.",
+   "text": "النادل: لحظة من فضلك."
+  },
+  {
+   "id": "ship.658",
+   "context": "Message 658 of the dialogue: {Cyan}: A…are you going to be okay if you eat THIS?",
+   "text": "{Cyan}: أ… أستكون بخير إن أكلت هذا؟"
+  },
+  {
+   "id": "ship.659",
+   "context": "Message 659 of the dialogue: {Shadow}: ……{line}{Wait}Interceptor…are you hungry?",
+   "text": "{Shadow}: ……{line}{Wait}إنترسبتور… أأنت جائع؟"
+  },
+  {
+   "id": "ship.660",
+   "context": "Message 660 of the dialogue: Gobble… {Wait}snarf… {Wait}snap…",
+   "text": "قضم… {Wait}لهف… {Wait}قرش…"
+  },
+  {
+   "id": "train.661",
+   "context": "Message 661 of the dialogue: IMPRESARIO: Wanna stop the train? Just use the controls in the engineer's compartment!",
+   "text": "المدير: تريد إيقاف القطار؟ استعمل أدوات التحكم في مقصورة السائق!"
+  },
+  {
+   "id": "train.662",
+   "context": "Message 662 of the dialogue: IMPRESARIO: I manage this train! What business have you here?{page}Hmmm…{line}{Choice}(Tell us about the train.){line}{Choice}(How do we stop it?){line}{Choice}(Leave us in peace.)",
+   "text": "المدير: أنا أدير هذا القطار! ما شأنكم هنا؟\nهمم…{line}{Choice} (أخبرنا عن القطار.){line}{Choice} (كيف نوقفه؟){line}{Choice} (دعنا وشأننا.)"
+  },
+  {
+   "id": "train.663",
+   "context": "Message 663 of the dialogue: IMPRESARIO: This train ferries{line}the dear departed to the{line}“other side.” There they can take their eternal rest.",
+   "text": "المدير: هذا القطار ينقل{line}الراحلين الأعزاء إلى{line}«الجانب الآخر». هناك ينالون راحتهم الأبدية."
+  },
+  {
+   "id": "train.664",
+   "context": "Message 664 of the dialogue: Can't follow us now.",
+   "text": "لا يمكنه أن يتبعنا الآن."
+  },
+  {
+   "id": "train.665",
+   "context": "Message 665 of the dialogue: {Cyan}: Be these time schedules?{line}{Sabin}: Hmmm…{line}They're all blank!",
+   "text": "{Cyan}: أهذه جداول المواعيد؟{line}{Sabin}: همم…{line}كلها فارغة!"
+  },
+  {
+   "id": "train.666",
+   "context": "Message 666 of the dialogue: IMPRESARIO: The Phantom Train{line}guides “the departed ones” to{line}the spirit world. They have no need of schedules!",
+   "text": "المدير: قطار الأشباح{line}يرشد «الراحلين» إلى{line}عالم الأرواح. لا حاجة لهم بجداول!"
+  },
+  {
+   "id": "train.667",
+   "context": "Message 667 of the dialogue: {Sabin}: What's this?{line}Let me just give it a…",
+   "text": "{Sabin}: ما هذا؟{line}دعني أجرب فحسب…"
+  },
+  {
+   "id": "train.668",
+   "context": "Message 668 of the dialogue: {Cyan}: Sir {Sabin}!{line}Maybe we shouldn't fumble with that!",
+   "text": "{Cyan}: السيد {Sabin}!{line}ربما لا ينبغي أن نعبث بذلك!"
+  },
+  {
+   "id": "train.669",
+   "context": "Message 669 of the dialogue: {Sabin}: {Cyan}…{line}You're not…scared, are you!?",
+   "text": "{Sabin}: {Cyan}…{line}لست… خائفا، أليس كذلك!؟"
+  },
+  {
+   "id": "train.670",
+   "context": "Message 670 of the dialogue: {Sabin}: Gave it my best shot.",
+   "text": "{Sabin}: بذلت قصارى جهدي."
+  },
+  {
+   "id": "train.671",
+   "context": "Message 671 of the dialogue: {Cyan}: How could you…",
+   "text": "{Cyan}: كيف أمكنك…"
+  },
+  {
+   "id": "train.672",
+   "context": "Message 672 of the dialogue: {Cyan}: How can you…!?",
+   "text": "{Cyan}: كيف يمكنك…!؟"
+  },
+  {
+   "id": "train.673",
+   "context": "Message 673 of the dialogue: {Cyan}: How dare you?!{page}Just because I respect other beings' property doesn't mean I'm not mechanically minded!",
+   "text": "{Cyan}: كيف تجرؤ؟!\nاحترامي لممتلكات الآخرين لا يعني أنني لا أفقه في الآلات!"
+  },
+  {
+   "id": "train.674",
+   "context": "Message 674 of the dialogue: {Sabin}: {Cyan}…{line}You're a total klutz when it comes to machines.",
+   "text": "{Sabin}: {Cyan}…{line}أنت أخرق تماما في ما يخص الآلات."
+  },
+  {
+   "id": "train.675",
+   "context": "Message 675 of the dialogue: {Cyan}: SILENCE…!{line}H…how could you tell?",
+   "text": "{Cyan}: اصمت…!{line}ك… كيف عرفت؟"
+  },
+  {
+   "id": "train.676",
+   "context": "Message 676 of the dialogue: {Cyan}: A train's there!?{line}{Wait}But I thought Doma's railway had been destroyed…?{page}{Sabin}: May be survivors inside. Let's take a look.",
+   "text": "{Cyan}: قطار هناك!؟{line}{Wait}لكنني ظننت أن سكة دوما الحديدية قد دمرت…؟\n{Sabin}: قد يكون بداخله ناجون. لنلق نظرة."
+  },
+  {
+   "id": "train.677",
+   "context": "Message 677 of the dialogue: {Cyan}: Sir {Sabin}!",
+   "text": "{Cyan}: السيد {Sabin}!"
+  },
+  {
+   "id": "train.678",
+   "context": "Message 678 of the dialogue: {Sabin}: We can't just wander around out here!{line}We have to go on board!",
+   "text": "{Sabin}: لا يمكننا التسكع هنا!{line}علينا أن نصعد!"
+  },
+  {
+   "id": "train.679",
+   "context": "Message 679 of the dialogue: {Sabin}: What on earth…?",
+   "text": "{Sabin}: ما هذا بحق السماء…؟"
+  },
+  {
+   "id": "train.680",
+   "context": "Message 680 of the dialogue: {Cyan}: Let me off!{line}This train's haunted!",
+   "text": "{Cyan}: أنزلوني!{line}هذا القطار مسكون!"
+  },
+  {
+   "id": "train.681",
+   "context": "Message 681 of the dialogue: {Cyan}: Gulp…where are we?",
+   "text": "{Cyan}: غلب… أين نحن؟"
+  },
+  {
+   "id": "train.682",
+   "context": "Message 682 of the dialogue: {Sabin}: Hoo, boy!{line}Finally got off…",
+   "text": "{Sabin}: يا إلهي!{line}نزلنا أخيرا…"
+  },
+  {
+   "id": "train.683",
+   "context": "Message 683 of the dialogue: {Sabin}: Hey!{line}{Wait}We can get in right here!",
+   "text": "{Sabin}: هيه!{line}{Wait}يمكننا الدخول من هنا!"
+  },
+  {
+   "id": "train.684",
+   "context": "Message 684 of the dialogue: Ha, ha ha…{line}What ever did you think you were doing?",
+   "text": "ها، ها ها…{line}ماذا ظننت نفسك فاعلا؟"
+  },
+  {
+   "id": "train.685",
+   "context": "Message 685 of the dialogue: Huh!?",
+   "text": "هاه!؟"
+  },
+  {
+   "id": "train.686",
+   "context": "Message 686 of the dialogue: {line}{Spaces 07}N.o…e.s.c.a.p.e…!",
+   "text": "{center}{line}لا… م.ف.ر…!"
+  },
+  {
+   "id": "train.687",
+   "context": "Message 687 of the dialogue: Who's there!?",
+   "text": "من هناك!؟"
+  },
+  {
+   "id": "train.688",
+   "context": "Message 688 of the dialogue: It came from this direction.",
+   "text": "جاء من هذا الاتجاه."
+  },
+  {
+   "id": "train.689",
+   "context": "Message 689 of the dialogue: Whoa! They're coming…!",
+   "text": "مهلا! إنهم قادمون…!"
+  },
+  {
+   "id": "train.690",
+   "context": "Message 690 of the dialogue: This way too!",
+   "text": "من هنا أيضا!"
+  },
+  {
+   "id": "train.691",
+   "context": "Message 691 of the dialogue:    You can't escape… {Pause 03}{Key}{line}{Spaces 05}Nowhere to run… {Pause 03}{Key}{line}{Spaces 07}Nowhere to hide…",
+   "text": "{center}لا مفر لكم… {Pause 03}{Key}{line}لا مكان للهرب… {Pause 03}{Key}{line}لا مكان للاختباء…"
+  },
+  {
+   "id": "train.692",
+   "context": "Message 692 of the dialogue: Bloody persistent…!",
+   "text": "يا لهم من ملحاحين…!"
+  },
+  {
+   "id": "train.693",
+   "context": "Message 693 of the dialogue: {Cyan}: I believe we're stuck!",
+   "text": "{Cyan}: أظننا عالقين!"
+  },
+  {
+   "id": "train.694",
+   "context": "Message 694 of the dialogue: {Sabin}: I know!{line}{Cyan}: You have an idea?",
+   "text": "{Sabin}: وجدتها!{line}{Cyan}: لديك فكرة؟"
+  },
+  {
+   "id": "train.695",
+   "context": "Message 695 of the dialogue: {Sabin}: Okay…{line}{Wait}The time has come to see if all my training has paid off. Come, {Cyan}!",
+   "text": "{Sabin}: حسنا…{line}{Wait}حان وقت معرفة إن كان تدريبي كله قد آتى ثماره. تعال يا {Cyan}!"
+  },
+  {
+   "id": "train.696",
+   "context": "Message 696 of the dialogue: {Sabin}: Yahoooo!!",
+   "text": "{Sabin}: ياهووو!!"
+  },
+  {
+   "id": "train.697",
+   "context": "Message 697 of the dialogue: Hey… {Wait}{line}Uh, oh…?",
+   "text": "هيه… {Wait}{line}أوه، لا…؟"
+  },
+  {
+   "id": "train.698",
+   "context": "Message 698 of the dialogue: VOICE: Stop where you are!",
+   "text": "صوت: قفوا مكانكم!"
+  },
+  {
+   "id": "train.699",
+   "context": "Message 699 of the dialogue: MAN: I am Ziegfried, the world's greatest swordsman! That treasure chest is mine.{page}If I were you, Ox, I'd grab grandpa, here, and run!",
+   "text": "الرجل: أنا زيغفريد، أعظم سياف في العالم! صندوق الكنز ذاك لي.\nلو كنت مكانك أيها الثور، لأمسكت بالجد هنا وهربت!"
+  },
+  {
+   "id": "train.700",
+   "context": "Message 700 of the dialogue: {Sabin}: You look more like a manicurist. Now SCRAM!!!{page}ZIEGFRIED: Aha!{line}The ox bellows!{line}Allow me to introduce my blade!",
+   "text": "{Sabin}: تبدو أشبه بمزين أظافر. والآن اغرب!!!\nزيغفريد: آها!{line}الثور يخور!{line}اسمح لي أن أعرفك بنصلي!"
+  },
+  {
+   "id": "train.701",
+   "context": "Message 701 of the dialogue: “What a bag of wind…”",
+   "text": "«يا له من منفوخ…»"
+  },
+  {
+   "id": "train.702",
+   "context": "Message 702 of the dialogue: SIGFRIED: Impossible!{line}{Wait}I…I'm the greatest…{line}But I'll still laugh last!",
+   "text": "زيغفريد: مستحيل!{line}{Wait}أ… أنا الأعظم…{line}لكن الضحكة الأخيرة ستبقى لي!"
+  },
+  {
+   "id": "train.703",
+   "context": "Message 703 of the dialogue: SIGFRIED: Uwa, ha, ha!{line}This treasure is mine!{line}{Wait}Ta ta, cretins!",
+   "text": "زيغفريد: أوا، ها، ها!{line}هذا الكنز لي!{line}{Wait}وداعا أيها الأغبياء!"
+  },
+  {
+   "id": "train.704",
+   "context": "Message 704 of the dialogue: We have to detach the rear train cars!",
+   "text": "علينا أن نفصل عربات القطار الخلفية!"
+  },
+  {
+   "id": "train.705",
+   "context": "Message 705 of the dialogue: This is the engineer's room.{line}Gotta stop this thing…!",
+   "text": "هذه غرفة السائق.{line}علينا أن نوقف هذا الشيء…!"
+  },
+  {
+   "id": "train.706",
+   "context": "Message 706 of the dialogue: Something's written here!{page}What? What? {Wait}{page}To stop the train, shut the first and third pressure valves, and operate the switch outside, near the smoke stack.",
+   "text": "ثمة شيء مكتوب هنا!\nماذا؟ ماذا؟ {Wait}\nلإيقاف القطار، أغلق صمامي الضغط الأول والثالث، وشغل المفتاح في الخارج قرب المدخنة."
+  },
+  {
+   "id": "train.707",
+   "context": "Message 707 of the dialogue: Press this switch and the train'll stop.",
+   "text": "اضغط هذا المفتاح فيتوقف القطار."
+  },
+  {
+   "id": "train.708",
+   "context": "Message 708 of the dialogue: Just throw this switch, and…{line}{Wait}Huh? Nothing's happening!",
+   "text": "اقلب هذا المفتاح فحسب، و…{line}{Wait}هاه؟ لا شيء يحدث!"
+  },
+  {
+   "id": "train.709",
+   "context": "Message 709 of the dialogue: {Sabin}: Won't open!",
+   "text": "{Sabin}: لا يفتح!"
+  },
+  {
+   "id": "train.710",
+   "context": "Message 710 of the dialogue: {Cyan}: We're too late.",
+   "text": "{Cyan}: تأخرنا كثيرا."
+  },
+  {
+   "id": "train.711",
+   "context": "Message 711 of the dialogue: {Sabin}: What's with this train?",
+   "text": "{Sabin}: ما خطب هذا القطار؟"
+  },
+  {
+   "id": "train.712",
+   "context": "Message 712 of the dialogue: {Cyan}: This is the Phantom Train…{line}It carries the departed to…the other side.",
+   "text": "{Cyan}: هذا قطار الأشباح…{line}ينقل الراحلين إلى… الجانب الآخر."
+  },
+  {
+   "id": "train.713",
+   "context": "Message 713 of the dialogue: {Sabin}: Wait a sec…{line}I don't want to go THERE!{page}{Cyan}: We all have to go sometime…",
+   "text": "{Sabin}: لحظة…{line}لا أريد الذهاب إلى هناك!\n{Cyan}: كلنا سنذهب يوما ما…"
+  },
+  {
+   "id": "train.714",
+   "context": "Message 714 of the dialogue: {Sabin}: I have things to do HERE.{line}We have to stop this thing. Let's make for the engine.",
+   "text": "{Sabin}: لدي أمور أفعلها هنا.{line}علينا أن نوقف هذا الشيء. لنتجه إلى القاطرة."
+  },
+  {
+   "id": "train.715",
+   "context": "Message 715 of the dialogue: Look out!",
+   "text": "احترس!"
+  },
+  {
+   "id": "train.716",
+   "context": "Message 716 of the dialogue: {Sabin}: What is it?{line}{Cyan}: Seems to want to come with us.{page}Bring it along?{line}{Choice}(Sure){line}{Choice}(No way)",
+   "text": "{Sabin}: ما هذا؟{line}{Cyan}: يبدو أنه يريد أن يأتي معنا.\nنأخذه معنا؟{line}{Choice} (طبعا){line}{Choice} (مستحيل)"
+  },
+  {
+   "id": "train.717",
+   "context": "Message 717 of the dialogue: {Sabin}: But…{line}The greater our number,{line}the slower we can move.{line}{Wait}Forget it!",
+   "text": "{Sabin}: لكن…{line}كلما زاد عددنا،{line}صارت حركتنا أبطأ.{line}{Wait}انس الأمر!"
+  },
+  {
+   "id": "train.718",
+   "context": "Message 718 of the dialogue: Shall we be off?",
+   "text": "هل ننطلق؟"
+  },
+  {
+   "id": "train.719",
+   "context": "Message 719 of the dialogue: Guess we're on our own now…",
+   "text": "يبدو أننا وحدنا الآن…"
+  },
+  {
+   "id": "train.720",
+   "context": "Message 720 of the dialogue: Howdy, folks. I have some{line}great, value-priced items!{line}{Choice}(Shop){line}{Choice}(Don't shop)",
+   "text": "أهلا يا قوم. لدي بضائع{line}رائعة بأسعار مناسبة!{line}{Choice} (أتسوق){line}{Choice} (لا أتسوق)"
+  },
+  {
+   "id": "train.721",
+   "context": "Message 721 of the dialogue: {Sabin}: I…it's moving!{line}{Cyan}: If we don't get off now…",
+   "text": "{Sabin}: إ… إنه يتحرك!{line}{Cyan}: إن لم ننزل الآن…"
+  },
+  {
+   "id": "train.722",
+   "context": "Message 722 of the dialogue: {Sabin}: Don't worry!",
+   "text": "{Sabin}: لا تقلق!"
+  },
+  {
+   "id": "train.723",
+   "context": "Message 723 of the dialogue: PHANTOM TRAIN: So! You've been slowing my progress!",
+   "text": "قطار الأشباح: إذن! أنتم من كان يعطل مسيري!"
+  },
+  {
+   "id": "train.724",
+   "context": "Message 724 of the dialogue: PHANTOM TRAIN: I will let you go…{line}{Wait}…but first there is something I must do…",
+   "text": "قطار الأشباح: سأدعكم تذهبون…{line}{Wait}…لكن أولا هناك ما يجب أن أفعله…"
+  },
+  {
+   "id": "train.725",
+   "context": "Message 725 of the dialogue: {Cyan}: Elayne! {Pause 02}{Key}",
+   "text": "{Cyan}: إيلين! {Pause 02}{Key}"
+  },
+  {
+   "id": "train.726",
+   "context": "Message 726 of the dialogue: Departing?!",
+   "text": "مغادرون؟!"
+  },
+  {
+   "id": "train.727",
+   "context": "Message 727 of the dialogue: {Sabin}: {Cyan}!{line}Is that your wife and child?",
+   "text": "{Sabin}: {Cyan}!{line}أهذان زوجتك وابنك؟"
+  },
+  {
+   "id": "train.728",
+   "context": "Message 728 of the dialogue: {Cyan}: No!!!{line}{Wait}Elayne! {Wait}Owain!!",
+   "text": "{Cyan}: لا!!!{line}{Wait}إيلين! {Wait}أوين!!"
+  },
+  {
+   "id": "train.729",
+   "context": "Message 729 of the dialogue: {Cyan}: Please, wait! {Pause 02}{Key}",
+   "text": "{Cyan}: أرجوكما، انتظرا! {Pause 02}{Key}"
+  },
+  {
+   "id": "train.730",
+   "context": "Message 730 of the dialogue: {Sabin}: We shouldn't be here. Let's go NOW!",
+   "text": "{Sabin}: لا ينبغي أن نكون هنا. لنذهب الآن!"
+  },
+  {
+   "id": "train.731",
+   "context": "Message 731 of the dialogue: {Cyan}: Owain… {Pause 02}{Key}",
+   "text": "{Cyan}: أوين… {Pause 02}{Key}"
+  },
+  {
+   "id": "train.732",
+   "context": "Message 732 of the dialogue: My love…{line}You made me so happy.{line}Don't forget me… {Pause 08}{Key}",
+   "text": "حبيبي…{line}لقد أسعدتني كثيرا.{line}لا تنسني… {Pause 08}{Key}"
+  },
+  {
+   "id": "train.733",
+   "context": "Message 733 of the dialogue: Dad!{line}I'll make sure Mom's all right! {Pause 08}{Key}",
+   "text": "أبي!{line}سأحرص على أن تكون أمي بخير! {Pause 08}{Key}"
+  },
+  {
+   "id": "train.734",
+   "context": "Message 734 of the dialogue: {Shadow}: Leave 'em alone.",
+   "text": "{Shadow}: دعهم وشأنهم."
+  },
+  {
+   "id": "train.735",
+   "context": "Message 735 of the dialogue: {Cyan}: ……",
+   "text": "{Cyan}: ……"
+  },
+  {
+   "id": "veldt.736",
+   "context": "Message 736 of the dialogue: {Sabin}: This must be Baren Falls.",
+   "text": "{Sabin}: لا بد أن هذه شلالات بارين."
+  },
+  {
+   "id": "veldt.737",
+   "context": "Message 737 of the dialogue: {Cyan}: To the south is the Veldt. Dangerous creatures there.{page}{Sabin}: And the Empire's right on our tails.{page}{Cyan}: If we can slip through the Veldt, we can reach the town of Mobliz, to the east…",
+   "text": "{Cyan}: إلى الجنوب الفيلدت. فيه مخلوقات خطرة.\n{Sabin}: والإمبراطورية تلاحقنا عن كثب.\n{Cyan}: إن تسللنا عبر الفيلدت، فسنصل إلى بلدة موبليز، إلى الشرق…"
+  },
+  {
+   "id": "veldt.738",
+   "context": "Message 738 of the dialogue: {Sabin}: {Shadow}!",
+   "text": "{Sabin}: {Shadow}!"
+  },
+  {
+   "id": "veldt.739",
+   "context": "Message 739 of the dialogue: {Sabin}: Thanks for your help!{line}Let's join ranks again some time!",
+   "text": "{Sabin}: شكرا على مساعدتك!{line}لنجتمع مجددا يوما ما!"
+  },
+  {
+   "id": "veldt.740",
+   "context": "Message 740 of the dialogue: {Shadow}: I have served my purpose…",
+   "text": "{Shadow}: أديت ما علي…"
+  },
+  {
+   "id": "veldt.741",
+   "context": "Message 741 of the dialogue: Jump?{line}{Choice}(Why not?){line}{Choice}(You crazy?)",
+   "text": "نقفز؟{line}{Choice} (ولم لا؟){line}{Choice} (أجننت؟)"
+  },
+  {
+   "id": "veldt.742",
+   "context": "Message 742 of the dialogue: Draped in monster hides, eyes shining with intelligence. A youth surviving against all odds…",
+   "text": "مكسو بجلود الوحوش، بعينين تلمعان ذكاء. فتى ينجو رغم كل الصعاب…"
+  },
+  {
+   "id": "veldt.743",
+   "context": "Message 743 of the dialogue: And you are?",
+   "text": "ومن أنت؟"
+  },
+  {
+   "id": "veldt.744",
+   "context": "Message 744 of the dialogue: You came via Baren Falls?{line}Unbelievable! It's flowing like there's no tomorrow…!",
+   "text": "جئتم عبر شلالات بارين؟{line}لا يصدق! إنها تتدفق بلا رحمة…!"
+  },
+  {
+   "id": "veldt.745",
+   "context": "Message 745 of the dialogue: Only carrier pigeons link our village to the outside.",
+   "text": "الحمام الزاجل وحده يصل قريتنا بالعالم الخارجي."
+  },
+  {
+   "id": "veldt.746",
+   "context": "Message 746 of the dialogue: Letters tell us that war has broken out!",
+   "text": "تخبرنا الرسائل أن الحرب قد اندلعت!"
+  },
+  {
+   "id": "veldt.747",
+   "context": "Message 747 of the dialogue: Duane and Katrin are both 16 and in love!",
+   "text": "دوان وكاترين كلاهما في السادسة عشرة وواقعان في الحب!"
+  },
+  {
+   "id": "veldt.748",
+   "context": "Message 748 of the dialogue: KATARIN: ……",
+   "text": "كاترين: ……"
+  },
+  {
+   "id": "veldt.749",
+   "context": "Message 749 of the dialogue: DUANE: ……",
+   "text": "دوان: ……"
+  },
+  {
+   "id": "veldt.750",
+   "context": "Message 750 of the dialogue: You stop by the house up in the far north? The guy there's a tad psycho.{page}Threw his own kid out, thinking it was a monster!",
+   "text": "أمررت بالبيت في أقصى الشمال؟ الرجل هناك مختل بعض الشيء.\nطرد ابنه ظنا منه أنه وحش!"
+  },
+  {
+   "id": "veldt.751",
+   "context": "Message 751 of the dialogue: This region's called the Veldt. Monsters from all over the world migrate here.",
+   "text": "تدعى هذه المنطقة الفيلدت. تهاجر إليها الوحوش من أنحاء العالم كلها."
+  },
+  {
+   "id": "veldt.752",
+   "context": "Message 752 of the dialogue: Out hunting, I noticed a kid running with a herd of beasts!{line}His parents know where he is?",
+   "text": "أثناء الصيد، لمحت فتى يركض مع قطيع من الوحوش!{line}هل يعرف والداه أين هو؟"
+  },
+  {
+   "id": "veldt.753",
+   "context": "Message 753 of the dialogue: Strong currents run through the Serpent Trench.{page}Heard about it?{line}{Choice} Yes{line}{Choice} No",
+   "text": "تيارات قوية تجري في خندق الأفعى.\nأسمعت عنه؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "veldt.754",
+   "context": "Message 754 of the dialogue: If you had a helmet you could make it to Nikeah.",
+   "text": "لو كان لديك خوذة لأمكنك الوصول إلى نيكيا."
+  },
+  {
+   "id": "veldt.755",
+   "context": "Message 755 of the dialogue: Hop into the current, and you'll be swept to Nikeah!{line}Too bad our under water breathing device was stolen!",
+   "text": "اقفز في التيار، فيجرفك إلى نيكيا!{line}للأسف سرق جهاز التنفس تحت الماء الذي كان عندنا!"
+  },
+  {
+   "id": "veldt.756",
+   "context": "Message 756 of the dialogue: Some soldier wandered here. Busted up pretty bad, too.{line}It doesn't look good…{page}Only the letters coming from the town of Maranda are keeping him going…",
+   "text": "جندي ما وصل إلى هنا. مصاب بشدة أيضا.{line}حاله لا تبشر بخير…\nالرسائل القادمة من بلدة ماراندا وحدها تبقيه على قيد الحياة…"
+  },
+  {
+   "id": "veldt.757",
+   "context": "Message 757 of the dialogue: The soldier in here is hurt pretty bad.",
+   "text": "الجندي هنا مصاب إصابة بالغة."
+  },
+  {
+   "id": "veldt.758",
+   "context": "Message 758 of the dialogue: Keep your voices down!",
+   "text": "اخفضوا أصواتكم!"
+  },
+  {
+   "id": "veldt.759",
+   "context": "Message 759 of the dialogue: I threw some “Dried Meat” into a herd of hungry animals, and some kid emerged and grabbed it!",
+   "text": "رميت بعض «اللحم المجفف» لقطيع من الحيوانات الجائعة، فخرج فتى وخطفه!"
+  },
+  {
+   "id": "veldt.760",
+   "context": "Message 760 of the dialogue: I am at your service.{line}I send things all over the world.",
+   "text": "أنا في خدمتك.{line}أرسل الأشياء إلى أنحاء العالم كلها."
+  },
+  {
+   "id": "veldt.761",
+   "context": "Message 761 of the dialogue: The entrance to the Serpent Trench is south of Crescent Mountain.",
+   "text": "مدخل خندق الأفعى جنوب جبل الهلال."
+  },
+  {
+   "id": "veldt.762",
+   "context": "Message 762 of the dialogue: INJURED LAD: I'm from Maranda. The Empire invaded, and made me join their army.{page}I fled when I heard we were making for Doma.{line}They caught me…and did this…{page}Now I can't even move. {Wait}{line}I'll never see Lola again…{page}On the desk is a letter.{line}Will you please read it?",
+   "text": "الفتى الجريح: أنا من ماراندا. غزت الإمبراطورية بلدتي وأرغمتني على الانضمام إلى جيشها.\nهربت حين سمعت أننا متجهون إلى دوما.{line}قبضوا علي… وفعلوا بي هذا…\nالآن لا أستطيع الحركة حتى. {Wait}{line}لن أرى لولا مجددا…\nعلى المكتب رسالة.{line}أتقرؤها لي من فضلك؟"
+  },
+  {
+   "id": "veldt.763",
+   "context": "Message 763 of the dialogue: I can't get used to Imperial troopers walking the streets of Maranda, but otherwise things are okay.{page}Flowers are blooming in the garden, telling me spring is here.{page}How are you doing?{line}I'm so worried. I wish I could fly to your side!{page}Rest, and know that I think about you constantly.{line}Come back to me.{line}{Spaces 16}Lola",
+   "text": "لا أستطيع أن أعتاد على الجنود الإمبراطوريين وهم يجوبون شوارع ماراندا، لكن ما عدا ذلك فالأمور بخير.\nالزهور تتفتح في الحديقة، لتخبرني أن الربيع قد حل.\nكيف حالك؟{line}أنا قلقة جدا. ليتني أستطيع الطيران إليك!\nاسترح، واعلم أنني أفكر فيك دائما.{line}عد إلي.{line}لولا"
+  },
+  {
+   "id": "veldt.764",
+   "context": "Message 764 of the dialogue: I'd like to write her back, but I can't even pick up a pen.",
+   "text": "أود أن أرد عليها، لكنني لا أستطيع حتى حمل قلم."
+  },
+  {
+   "id": "veldt.765",
+   "context": "Message 765 of the dialogue: Postage to Maranda is 500 GP.{page}Gonna send a letter for that soldier, right?{line}{Choice} (Send it){line}{Choice} (Forget it)",
+   "text": "أجرة البريد إلى ماراندا 500 غيل.\nستبعث رسالة عن ذلك الجندي، صحيح؟{line}{Choice} (أبعثها){line}{Choice} (أنسى الأمر)"
+  },
+  {
+   "id": "veldt.766",
+   "context": "Message 766 of the dialogue: I want to get better!{line}I want to see Lola…",
+   "text": "أريد أن أشفى!{line}أريد أن أرى لولا…"
+  },
+  {
+   "id": "veldt.767",
+   "context": "Message 767 of the dialogue: Another letter has arrived. Could you read it?",
+   "text": "وصلت رسالة أخرى. أتقرؤها؟"
+  },
+  {
+   "id": "veldt.768",
+   "context": "Message 768 of the dialogue: I can't find your favorite record…{line}I thought I'd play it and you'd be with me, but…",
+   "text": "لا أجد أسطوانتك المفضلة…{line}ظننت أنني إن شغلتها فستكون معي، لكن…"
+  },
+  {
+   "id": "veldt.769",
+   "context": "Message 769 of the dialogue: For 500 GP you can send a record.{line}{Choice} (Send it){line}{Choice} (Forget it)",
+   "text": "مقابل 500 غيل يمكنك إرسال أسطوانة.{line}{Choice} (أرسلها){line}{Choice} (أنسى الأمر)"
+  },
+  {
+   "id": "veldt.770",
+   "context": "Message 770 of the dialogue: Mother's taken ill. We can't afford medicine.{line}If only we had some Tonic…",
+   "text": "أمي مريضة. لا نستطيع شراء الدواء.{line}ليت لدينا بعض الجرعات المقوية…"
+  },
+  {
+   "id": "veldt.771",
+   "context": "Message 771 of the dialogue: For 500 GP you can send Tonic.{line}{Choice} (Send it){line}{Choice} (Forget it)",
+   "text": "مقابل 500 غيل يمكنك إرسال جرعة مقوية.{line}{Choice} (أرسلها){line}{Choice} (أنسى الأمر)"
+  },
+  {
+   "id": "veldt.772",
+   "context": "Message 772 of the dialogue: I haven't heard from you.{line}I'm so worried…",
+   "text": "لم يصلني منك خبر.{line}أنا قلقة جدا…"
+  },
+  {
+   "id": "veldt.773",
+   "context": "Message 773 of the dialogue: For 500 GP you can send a letter.{line}{Choice} (Send it){line}{Choice} (Forget it)",
+   "text": "مقابل 500 غيل يمكنك إرسال رسالة.{line}{Choice} (أرسلها){line}{Choice} (أنسى الأمر)"
+  },
+  {
+   "id": "veldt.774",
+   "context": "Message 774 of the dialogue: You said you were reading a book. If only I could read it, too…",
+   "text": "قلت إنك تقرأ كتابا. ليتني أستطيع قراءته أنا أيضا…"
+  },
+  {
+   "id": "veldt.775",
+   "context": "Message 775 of the dialogue: For 500 GP you can send a book.{line}{Choice} (Send it){line}{Choice} (Forget it)",
+   "text": "مقابل 500 غيل يمكنك إرسال كتاب.{line}{Choice} (أرسله){line}{Choice} (أنسى الأمر)"
+  },
+  {
+   "id": "veldt.776",
+   "context": "Message 776 of the dialogue: A letter came from him!{line}He's all right!",
+   "text": "وصلت رسالة منه!{line}إنه بخير!"
+  },
+  {
+   "id": "veldt.777",
+   "context": "Message 777 of the dialogue: He sent me a record!{line}I'm so happy!",
+   "text": "أرسل لي أسطوانة!{line}أنا سعيدة جدا!"
+  },
+  {
+   "id": "veldt.778",
+   "context": "Message 778 of the dialogue: He sent some Tonic for Mom!{line}He's so kind!",
+   "text": "أرسل جرعة مقوية لأمي!{line}كم هو طيب!"
+  },
+  {
+   "id": "veldt.779",
+   "context": "Message 779 of the dialogue: He sent that book!{line}I'll read it every evening, before bed!",
+   "text": "أرسل ذلك الكتاب!{line}سأقرؤه كل مساء قبل النوم!"
+  },
+  {
+   "id": "veldt.780",
+   "context": "Message 780 of the dialogue: My love hasn't sent me back any letters since he's been gone. I'm sick with worry…",
+   "text": "حبيبي لم يرد على رسائلي منذ رحل. القلق يقتلني…"
+  },
+  {
+   "id": "veldt.781",
+   "context": "Message 781 of the dialogue: I'd give Lola everything…{line}If only I could move…",
+   "text": "لأعطيت لولا كل شيء…{line}لو كنت أستطيع الحركة…"
+  },
+  {
+   "id": "veldt.782",
+   "context": "Message 782 of the dialogue: I heard…{line}In my name you send Lola many things…{page}I wish to thank you.{line}Please accept this as a token of my appreciation.{page}{line}{Spaces 05}Received “Tintinabar.”",
+   "text": "سمعت…{line}أنك ترسل باسمي إلى لولا أشياء كثيرة…\nأود أن أشكرك.{line}أرجو أن تقبل هذا عربون امتناني.\n{center}{line}حصلت على «تينتينابار»."
+  },
+  {
+   "id": "veldt.783",
+   "context": "Message 783 of the dialogue: {Gau}: Treasure…yesss…{line}{Cyan}: Looks like glass…{line}{Sabin}: Looks like it just might fit…",
+   "text": "{Gau}: كنز… نعععم…{line}{Cyan}: يبدو كالزجاج…{line}{Sabin}: يبدو أنه قد يناسب تماما…"
+  },
+  {
+   "id": "veldt.784",
+   "context": "Message 784 of the dialogue: {Sabin}: Hummm…{line}Is this of any use?",
+   "text": "{Sabin}: همم…{line}أيفيد هذا في شيء؟"
+  },
+  {
+   "id": "veldt.785",
+   "context": "Message 785 of the dialogue: {Sabin}: Will this really let us breathe underwater?",
+   "text": "{Sabin}: أحقا سيدعنا هذا نتنفس تحت الماء؟"
+  },
+  {
+   "id": "veldt.786",
+   "context": "Message 786 of the dialogue: {Sabin}: {Cyan}!{line}The shiny thing {Gau} spoke of is in here.",
+   "text": "{Sabin}: {Cyan}!{line}الشيء اللامع الذي تحدث عنه {Gau} هنا."
+  },
+  {
+   "id": "veldt.787",
+   "context": "Message 787 of the dialogue: {Cyan}: Uh, Sir {Gau},{line}where exactly is it?",
+   "text": "{Cyan}: آه، السيد {Gau}،{line}أين هو بالضبط؟"
+  },
+  {
+   "id": "veldt.788",
+   "context": "Message 788 of the dialogue: {Gau}: {Gau}…forget!!",
+   "text": "{Gau}: {Gau}… نسي!!"
+  },
+  {
+   "id": "veldt.789",
+   "context": "Message 789 of the dialogue: {Sabin}: Shall we look around?{line}{Cyan}: Indeed!",
+   "text": "{Sabin}: هل نبحث في الأرجاء؟{line}{Cyan}: بالتأكيد!"
+  },
+  {
+   "id": "veldt.790",
+   "context": "Message 790 of the dialogue: {Sabin}: Not over here…",
+   "text": "{Sabin}: ليس هنا…"
+  },
+  {
+   "id": "veldt.791",
+   "context": "Message 791 of the dialogue: {Sabin}: Tonic…",
+   "text": "{Sabin}: جرعة مقوية…"
+  },
+  {
+   "id": "veldt.792",
+   "context": "Message 792 of the dialogue: {Cyan}: T…this is Sir {Gau}'s treasure?!",
+   "text": "{Cyan}: أ… أهذا كنز السيد {Gau}؟!"
+  },
+  {
+   "id": "veldt.793",
+   "context": "Message 793 of the dialogue: {Sabin}: Hey, {Gau}.{line}What's wrong?",
+   "text": "{Sabin}: هيه يا {Gau}.{line}ما الخطب؟"
+  },
+  {
+   "id": "veldt.794",
+   "context": "Message 794 of the dialogue: {Gau}: GAU!!",
+   "text": "{Gau}: غاو!!"
+  },
+  {
+   "id": "veldt.795",
+   "context": "Message 795 of the dialogue: {Sabin}: G'uh! My pouch! There was 500 GP in it…!",
+   "text": "{Sabin}: آه! كيسي! كان فيه 500 غيل…!"
+  },
+  {
+   "id": "veldt.796",
+   "context": "Message 796 of the dialogue: {Cyan}: Current's…fast.{line}{Sabin}: No kidding.{page}{Sabin}: But unless we hop in, we won't see our friends again…",
+   "text": "{Cyan}: التيار… سريع.{line}{Sabin}: بلا شك.\n{Sabin}: لكن إن لم نقفز، فلن نرى أصدقاءنا مجددا…"
+  },
+  {
+   "id": "veldt.797",
+   "context": "Message 797 of the dialogue: {Sabin}: {Gau}…YOU!",
+   "text": "{Sabin}: {Gau}… أنت!"
+  },
+  {
+   "id": "veldt.798",
+   "context": "Message 798 of the dialogue: {Cyan}: Oh, dear.{line}Sir {Sabin}, let me handle this.",
+   "text": "{Cyan}: يا إلهي.{line}السيد {Sabin}، دعني أتولى هذا."
+  },
+  {
+   "id": "veldt.799",
+   "context": "Message 799 of the dialogue: {Cyan}: Sir {Sabin}…{line}Recall that you had me hold onto your pouch. {Wait}Here.",
+   "text": "{Cyan}: السيد {Sabin}…{line}تذكر أنك أعطيتني كيسك لأحفظه. {Wait}تفضل."
+  },
+  {
+   "id": "veldt.800",
+   "context": "Message 800 of the dialogue: {Sabin}: Urggggh!",
+   "text": "{Sabin}: أرغغغ!"
+  },
+  {
+   "id": "veldt.801",
+   "context": "Message 801 of the dialogue: {Cyan}: Is this it?{line}{Wait}{Gau}'s “treasure”?",
+   "text": "{Cyan}: أهذا هو؟{line}{Wait}«كنز» {Gau}؟"
+  },
+  {
+   "id": "veldt.802",
+   "context": "Message 802 of the dialogue: {Sabin}: Let's go!",
+   "text": "{Sabin}: هيا بنا!"
+  },
+  {
+   "id": "nikeah.803",
+   "context": "Message 803 of the dialogue: This is Nikeah, one of the world's few port towns.",
+   "text": "هذه نيكيا، إحدى بلدات الموانئ القليلة في العالم."
+  },
+  {
+   "id": "nikeah.804",
+   "context": "Message 804 of the dialogue: We used to be a trading town, but the Empire shut us down.",
+   "text": "كنا بلدة تجارية، لكن الإمبراطورية أوقفت تجارتنا."
+  },
+  {
+   "id": "nikeah.805",
+   "context": "Message 805 of the dialogue: The land to the east, Doma, fell to the Empire.",
+   "text": "الأرض التي إلى الشرق، دوما، سقطت في يد الإمبراطورية."
+  },
+  {
+   "id": "nikeah.806",
+   "context": "Message 806 of the dialogue: Move along, now.{line}You're in the way!",
+   "text": "تحرك الآن.{line}أنت تسد الطريق!"
+  },
+  {
+   "id": "nikeah.807",
+   "context": "Message 807 of the dialogue: No one can reach Nikeah unless they have a ship!",
+   "text": "لا يصل أحد إلى نيكيا ما لم يكن لديه سفينة!"
+  },
+  {
+   "id": "nikeah.808",
+   "context": "Message 808 of the dialogue: A rock slide has blocked the path leading north.",
+   "text": "انهيار صخري سد الطريق المؤدي إلى الشمال."
+  },
+  {
+   "id": "nikeah.809",
+   "context": "Message 809 of the dialogue: The path leading north is now clear.",
+   "text": "الطريق المؤدي إلى الشمال مفتوح الآن."
+  },
+  {
+   "id": "nikeah.810",
+   "context": "Message 810 of the dialogue: South Figaro-bound ferry.{line}{Choice} (Still need to shop.){line}{Choice} (Hop aboard?)",
+   "text": "عبارة متجهة إلى ساوث فيغارو.{line}{Choice} (ما زلت أريد التسوق.){line}{Choice} (أصعد؟)"
+  },
+  {
+   "id": "nikeah.811",
+   "context": "Message 811 of the dialogue: The Empire has overrun our destination.",
+   "text": "الإمبراطورية اجتاحت وجهتنا."
+  },
+  {
+   "id": "nikeah.812",
+   "context": "Message 812 of the dialogue: Nikeah-bound ferry.{line}{Choice} (Still need to shop.){line}{Choice} (Hop aboard?)",
+   "text": "عبارة متجهة إلى نيكيا.{line}{Choice} (ما زلت أريد التسوق.){line}{Choice} (أصعد؟)"
+  },
+  {
+   "id": "nikeah.813",
+   "context": "Message 813 of the dialogue: There used to be ships sailing to the southern continent.{line}Tzen, Albrook, Maranda…{line}They've all been smashed.",
+   "text": "كانت هناك سفن تبحر إلى القارة الجنوبية.{line}تزن، ألبروك، ماراندا…{line}كلها دمرت."
+  },
+  {
+   "id": "nikeah.814",
+   "context": "Message 814 of the dialogue: Ya met that odd man, lives near the Lete River? His wife bore 'im a son 13 years ago.{page}It was a problem birth, and the woman passed away. The man totally lost it.{page}He thought the newborn was a monster. Wonder what happened to the poor little baby?",
+   "text": "أقابلت ذلك الرجل الغريب الذي يسكن قرب نهر ليتي؟ ولدت له زوجته ابنا قبل 13 عاما.\nكانت ولادة متعسرة، وماتت المرأة. ففقد الرجل عقله تماما.\nظن أن المولود وحش. ترى ماذا حل بالطفل المسكين؟"
+  },
+  {
+   "id": "nikeah.815",
+   "context": "Message 815 of the dialogue: DANCER: Yoo hoo!{line}You handsome thing.{line}How 'bout joining me?{line}Tee hee!",
+   "text": "الراقصة: يوهو!{line}أيها الوسيم.{line}ما رأيك أن تنضم إلي؟{line}هي هي!"
+  },
+  {
+   "id": "nikeah.816",
+   "context": "Message 816 of the dialogue: {Cyan}: H…how dare you…{line}you licentious howler!",
+   "text": "{Cyan}: ك… كيف تجرئين…{line}أيتها الماجنة الصاخبة!"
+  },
+  {
+   "id": "nikeah.817",
+   "context": "Message 817 of the dialogue: DANCER: Geez,{line}don't blow an artery, baby!",
+   "text": "الراقصة: يا إلهي،{line}لا تنفجر غضبا يا عزيزي!"
+  },
+  {
+   "id": "nikeah.818",
+   "context": "Message 818 of the dialogue: {Cyan}: B…baby?!",
+   "text": "{Cyan}: ع… عزيزي؟!"
+  },
+  {
+   "id": "nikeah.819",
+   "context": "Message 819 of the dialogue: {Sabin}: {Cyan}…{line}Don't let it get to you.{page}{Cyan}: I'm not like that!",
+   "text": "{Sabin}: {Cyan}…{line}لا تدع ذلك يؤثر فيك.\n{Cyan}: لست من هذا النوع!"
+  },
+  {
+   "id": "nikeah.820",
+   "context": "Message 820 of the dialogue: {Sabin}: No one thinks you are. Just let it go.",
+   "text": "{Sabin}: لا أحد يظن ذلك. دع الأمر فحسب."
+  },
+  {
+   "id": "nikeah.821",
+   "context": "Message 821 of the dialogue: DANCER: Stop whispering!{line}My ears are burnin', baby!",
+   "text": "الراقصة: كفاكما همسا!{line}أذناي تحترقان يا عزيزي!"
+  },
+  {
+   "id": "nikeah.822",
+   "context": "Message 822 of the dialogue: {Cyan}: Enough!{line}Have you no shame?{line}I'll have you know…etc…etc.",
+   "text": "{Cyan}: كفى!{line}ألا تستحين؟{line}اعلمي أنني… إلخ… إلخ."
+  },
+  {
+   "id": "nikeah.823",
+   "context": "Message 823 of the dialogue: Goodness!",
+   "text": "يا إلهي!"
+  },
+  {
+   "id": "nikeah.824",
+   "context": "Message 824 of the dialogue: You took one look at me and thought I was a loser, right?{page}You're obligated to buy from me, now!",
+   "text": "نظرت إلي نظرة واحدة وظننتني فاشلا، صحيح؟\nأنت ملزم بالشراء مني الآن!"
+  },
+  {
+   "id": "nikeah.825",
+   "context": "Message 825 of the dialogue: Looks like junk, but…",
+   "text": "يبدو كالخردة، لكن…"
+  },
+  {
+   "id": "nikeah.826",
+   "context": "Message 826 of the dialogue: Have any imported goods?",
+   "text": "ألديك بضائع مستوردة؟"
+  },
+  {
+   "id": "nikeah.827",
+   "context": "Message 827 of the dialogue: {Cyan}: Narshe is just a stone's throw away!",
+   "text": "{Cyan}: نارشي على مرمى حجر!"
+  },
+  {
+   "id": "nikeah.828",
+   "context": "Message 828 of the dialogue: {Sabin}: I hope the others arrived safely!",
+   "text": "{Sabin}: أرجو أن يكون الآخرون قد وصلوا بسلام!"
+  },
+  {
+   "id": "nikeah.829",
+   "context": "Message 829 of the dialogue: {Cyan}: I'm sure they did.",
+   "text": "{Cyan}: أنا واثق من ذلك."
+  },
+  {
+   "id": "nikeah.830",
+   "context": "Message 830 of the dialogue: {Gau}: Me hope so, too…",
+   "text": "{Gau}: أنا أرجو أيضا…"
+  },
+  {
+   "id": "nikeah.831",
+   "context": "Message 831 of the dialogue: AGED MAN: Go, unless you're a repair person!",
+   "text": "الشيخ: اذهبوا، ما لم تكونوا مصلحين!"
+  },
+  {
+   "id": "nikeah.832",
+   "context": "Message 832 of the dialogue: {Gau}: W…what…?",
+   "text": "{Gau}: م… ماذا…؟"
+  },
+  {
+   "id": "nikeah.833",
+   "context": "Message 833 of the dialogue: AGED MAN: Haven't seen any skilled repair people in ages…",
+   "text": "الشيخ: لم أر مصلحين مهرة منذ دهر…"
+  },
+  {
+   "id": "nikeah.834",
+   "context": "Message 834 of the dialogue: AGED MAN: Oh, hello again!{line}Yep, you were tops!{line}{Sabin}: That's why we…{page}AGED MAN: Quick!{line}Fix that chair!{line}Then you can use it to reach the roof.",
+   "text": "الشيخ: أوه، مرحبا مجددا!{line}نعم، كنتم الأفضل!{line}{Sabin}: لهذا نحن…\nالشيخ: بسرعة!{line}أصلحوا ذلك الكرسي!{line}ثم يمكنكم استعماله للوصول إلى السطح."
+  },
+  {
+   "id": "nikeah.835",
+   "context": "Message 835 of the dialogue: {Sabin}: You don't suppose…{line}Can this be {Gau}'s father?",
+   "text": "{Sabin}: لا تظن…{line}أيمكن أن يكون هذا والد {Gau}؟"
+  },
+  {
+   "id": "nikeah.836",
+   "context": "Message 836 of the dialogue: {Gau}: …fffatherr…?",
+   "text": "{Gau}: …أأأبي…؟"
+  },
+  {
+   "id": "narshe-battle.837",
+   "context": "Message 837 of the dialogue: ELDER: I understand all of it… Except…{line}How can WE be encouraging bloodshed?{page}ARVIS: I never said…that!{line}ELDER: Something like it.",
+   "text": "شيخ البلدة: أفهم كل هذا… إلا…{line}كيف نشجع نحن على إراقة الدماء؟\nأرفيس: لم أقل… ذلك!{line}شيخ البلدة: شيئا من هذا القبيل."
+  },
+  {
+   "id": "narshe-battle.838",
+   "context": "Message 838 of the dialogue: BANON: Ha! He's right you know!",
+   "text": "بانون: ها! إنه محق كما تعلم!"
+  },
+  {
+   "id": "narshe-battle.839",
+   "context": "Message 839 of the dialogue: ARVIS: Banon!{line}BANON: Our blood will spill because of you.",
+   "text": "أرفيس: بانون!{line}بانون: دماؤنا ستسيل بسببكم."
+  },
+  {
+   "id": "narshe-battle.840",
+   "context": "Message 840 of the dialogue: BANON: Emperor Gestahl's racing to acquire Magitek power. He's set his sights on the Esper that was found here!{page}The increased use of magitek power'll surely lead to global destruction…",
+   "text": "بانون: الإمبراطور غشتال يتسابق لامتلاك قوة الماجيتك. وقد وضع نصب عينيه الإسبر الذي وجد هنا!\nوتزايد استعمال قوة الماجيتك سيقود حتما إلى دمار العالم…"
+  },
+  {
+   "id": "narshe-battle.841",
+   "context": "Message 841 of the dialogue: ELDER: The War of the Magi…",
+   "text": "شيخ البلدة: حرب السحرة…"
+  },
+  {
+   "id": "narshe-battle.842",
+   "context": "Message 842 of the dialogue: The mythical battle that set mankind back a thousand years…{line}Can this really be happening?{page}ELDER: People will never learn…",
+   "text": "المعركة الأسطورية التي أعادت البشرية ألف عام إلى الوراء…{line}أيمكن أن يحدث هذا حقا؟\nشيخ البلدة: الناس لا يتعلمون أبدا…"
+  },
+  {
+   "id": "narshe-battle.843",
+   "context": "Message 843 of the dialogue: {Cyan}: I'm {Cyan},{line}retainer to the lord of Doma!",
+   "text": "{Cyan}: أنا {Cyan}،{line}تابع سيد دوما!"
+  },
+  {
+   "id": "narshe-battle.844",
+   "context": "Message 844 of the dialogue: {Gau}: {Gau}…GAU!",
+   "text": "{Gau}: {Gau}… غاو!"
+  },
+  {
+   "id": "narshe-battle.845",
+   "context": "Message 845 of the dialogue: {Sabin}: The people of Doma were wiped out by the Empire…",
+   "text": "{Sabin}: أبادت الإمبراطورية أهل دوما…"
+  },
+  {
+   "id": "narshe-battle.846",
+   "context": "Message 846 of the dialogue: {Cyan}: Kefka poisoned…everyone…",
+   "text": "{Cyan}: كيفكا سمم… الجميع…"
+  },
+  {
+   "id": "narshe-battle.847",
+   "context": "Message 847 of the dialogue: ELDER: Barbaric!",
+   "text": "شيخ البلدة: همجية!"
+  },
+  {
+   "id": "narshe-battle.848",
+   "context": "Message 848 of the dialogue: BANON: Elder!{page}ELDER: But…that was only because Doma was collaborating with the Returners!{line}If we make that mistake…",
+   "text": "بانون: أيها الشيخ!\nشيخ البلدة: لكن… لم يحدث ذلك إلا لأن دوما كانت تتعاون مع العائدين!{line}إن ارتكبنا الخطأ نفسه…"
+  },
+  {
+   "id": "narshe-battle.849",
+   "context": "Message 849 of the dialogue: {Locke}: That's nonsense!!",
+   "text": "{Locke}: هذا هراء!!"
+  },
+  {
+   "id": "narshe-battle.850",
+   "context": "Message 850 of the dialogue: {Terra}: {Locke}!{line}{Locke}: The Empire's poised to attack Narshe right now!{line}{Edgar}: What?!",
+   "text": "{Terra}: {Locke}!{line}{Locke}: الإمبراطورية تتأهب لمهاجمة نارشي الآن!{line}{Edgar}: ماذا؟!"
+  },
+  {
+   "id": "narshe-battle.851",
+   "context": "Message 851 of the dialogue: BANON: {Locke}.{line}Where'd you hear that?{page}{Locke}: {Celes}, here, was one of the Empire's generals…",
+   "text": "بانون: {Locke}.{line}من أين سمعت ذلك؟\n{Locke}: {Celes}، هذه، كانت إحدى جنرالات الإمبراطورية…"
+  },
+  {
+   "id": "narshe-battle.852",
+   "context": "Message 852 of the dialogue: {Cyan}: Grrr!{line}I knew she seemed familiar.{line}Sir {Gau}, out of my way!",
+   "text": "{Cyan}: غرر!{line}عرفت أنها تبدو مألوفة.{line}السيد {Gau}، ابتعد عن طريقي!"
+  },
+  {
+   "id": "narshe-battle.853",
+   "context": "Message 853 of the dialogue: {Cyan}: This's General {Celes}! She torched Maranda! She's an Imperial spy! Now, stand aside!",
+   "text": "{Cyan}: هذه الجنرال {Celes}! هي من أحرقت ماراندا! إنها جاسوسة إمبراطورية! والآن تنحوا!"
+  },
+  {
+   "id": "narshe-battle.854",
+   "context": "Message 854 of the dialogue: {Locke}: WAIT!{line}{Celes} has joined the Returners! She's fighting with us, now!{page}{Cyan}: But…!{line}{Locke}: I promised I'd protect her. I WILL NOT back out on my word.",
+   "text": "{Locke}: انتظر!{line}{Celes} انضمت إلى العائدين! إنها تقاتل معنا الآن!\n{Cyan}: لكن…!{line}{Locke}: وعدت بحمايتها. ولن أتراجع عن كلمتي."
+  },
+  {
+   "id": "narshe-battle.855",
+   "context": "Message 855 of the dialogue: {Edgar}: {Locke}…{line}Are you still thinking about…{line}that?",
+   "text": "{Edgar}: {Locke}…{line}أما زلت تفكر في…{line}ذلك؟"
+  },
+  {
+   "id": "narshe-battle.856",
+   "context": "Message 856 of the dialogue: {Terra}: I was also an Imperial soldier.{line}{Cyan}: WHAT!!",
+   "text": "{Terra}: كنت أنا أيضا جندية إمبراطورية.{line}{Cyan}: ماذا!!"
+  },
+  {
+   "id": "narshe-battle.857",
+   "context": "Message 857 of the dialogue: {Edgar}: The Empire's evil.{line}But not ALL of its citizens are!",
+   "text": "{Edgar}: الإمبراطورية شريرة.{line}لكن ليس كل مواطنيها كذلك!"
+  },
+  {
+   "id": "narshe-battle.858",
+   "context": "Message 858 of the dialogue: Emergency!!{line}The Empire cometh!!",
+   "text": "حالة طارئة!!{line}الإمبراطورية قادمة!!"
+  },
+  {
+   "id": "narshe-battle.859",
+   "context": "Message 859 of the dialogue: KEFKA: I don't care what you do here, JUST GET ME THAT ESPER!!",
+   "text": "كيفكا: لا يهمني ما تفعلونه هنا، فقط أحضروا لي ذلك الإسبر!!"
+  },
+  {
+   "id": "narshe-battle.860",
+   "context": "Message 860 of the dialogue: SOLDIER: Lord Kefka!{line}There're civilians here…!{line}KEFKA: Exterminate everyone!{page}SOLDIER: But Narshe is neutral…{line}KEFKA: Idiot!!",
+   "text": "الجندي: اللورد كيفكا!{line}هناك مدنيون هنا…!{line}كيفكا: أبيدوا الجميع!\nالجندي: لكن نارشي محايدة…{line}كيفكا: أحمق!!"
+  },
+  {
+   "id": "narshe-battle.861",
+   "context": "Message 861 of the dialogue: KEFKA: Read my lips!!{line}Dispose of any who oppose us!{line}March!",
+   "text": "كيفكا: اسمع جيدا!!{line}تخلصوا من كل من يعارضنا!{line}تقدموا!"
+  },
+  {
+   "id": "narshe-battle.862",
+   "context": "Message 862 of the dialogue: ELDER: We really have no choice.{line}Let's make ready for war!",
+   "text": "شيخ البلدة: لا خيار لنا حقا.{line}لنستعد للحرب!"
+  },
+  {
+   "id": "narshe-battle.863",
+   "context": "Message 863 of the dialogue: BANON: They're after the Esper.{line}ELDER: We moved it into the hills.",
+   "text": "بانون: إنهم يسعون وراء الإسبر.{line}شيخ البلدة: نقلناه إلى التلال."
+  },
+  {
+   "id": "narshe-battle.864",
+   "context": "Message 864 of the dialogue: {Edgar}: Then we're going up after it!",
+   "text": "{Edgar}: إذن سنصعد وراءه!"
+  },
+  {
+   "id": "narshe-battle.865",
+   "context": "Message 865 of the dialogue: {Edgar}: {Locke} has a complicated past. I wouldn't go thinking he's fallen for you or something! {Pause 0B}{Key}",
+   "text": "{Edgar}: {Locke} له ماض معقد. لا تظني أنه وقع في حبك أو ما شابه! {Pause 0B}{Key}"
+  },
+  {
+   "id": "narshe-battle.866",
+   "context": "Message 866 of the dialogue: {Celes}: I'm a soldier, not some love-starved twit!{line}{Edgar}: Cold as ice…… {Pause 0B}{Key}",
+   "text": "{Celes}: أنا جندية، لا حمقاء متعطشة للحب!{line}{Edgar}: باردة كالجليد…… {Pause 0B}{Key}"
+  },
+  {
+   "id": "narshe-battle.867",
+   "context": "Message 867 of the dialogue: {Celes}: So, you were born with the power of magic!?{line}Isn't it a lovely gift…{page}{Terra}: You…can use magic, too?{line}{page}{Celes}: When I was a baby I was artificially infused with magic, and raised as a Magitek Knight.{page}{Terra}: Have you…loved anyone?{line}{Celes}: ???{line}What's that supposed to mean?!",
+   "text": "{Celes}: إذن، ولدت بقوة السحر!؟{line}أليست هبة جميلة…\n{Terra}: أنت… تستطيعين استعمال السحر أيضا؟\n{Celes}: حين كنت رضيعة حقنت بالسحر اصطناعيا، وربيت فارسة ماجيتك.\n{Terra}: هل… أحببت أحدا يوما؟{line}{Celes}: ؟؟؟{line}ماذا يفترض أن يعني هذا؟!"
+  },
+  {
+   "id": "narshe-battle.868",
+   "context": "Message 868 of the dialogue: {Cyan}: Don't think for a moment I trust you!{line}{Celes}: Fine. Use your own eyes, then decide.",
+   "text": "{Cyan}: لا تظني للحظة أنني أثق بك!{line}{Celes}: حسنا. استعمل عينيك، ثم قرر."
+  },
+  {
+   "id": "narshe-battle.869",
+   "context": "Message 869 of the dialogue: {Sabin}: Brother!",
+   "text": "{Sabin}: أخي!"
+  },
+  {
+   "id": "narshe-battle.870",
+   "context": "Message 870 of the dialogue: {Edgar}: {Sabin}!{line}You're all right!",
+   "text": "{Edgar}: {Sabin}!{line}أنت بخير!"
+  },
+  {
+   "id": "narshe-battle.871",
+   "context": "Message 871 of the dialogue: {Edgar}: Who's with you?",
+   "text": "{Edgar}: من معك؟"
+  },
+  {
+   "id": "narshe-battle.872",
+   "context": "Message 872 of the dialogue: {Sabin}: Oh, this is…",
+   "text": "{Sabin}: أوه، هذا…"
+  },
+  {
+   "id": "narshe-battle.873",
+   "context": "Message 873 of the dialogue: BANON: They're coming!",
+   "text": "بانون: إنهم قادمون!"
+  },
+  {
+   "id": "narshe-battle.874",
+   "context": "Message 874 of the dialogue: BANON: Prepared?{line}{Choice} Yes{line}{Choice} No",
+   "text": "بانون: مستعدون؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "narshe-battle.875",
+   "context": "Message 875 of the dialogue: KEFKA: Oho!!{line}It's General {Celes}, the traitor!{page}How delightful! This'll be fun!",
+   "text": "كيفكا: أوهو!!{line}إنها الجنرال {Celes}، الخائنة!\nيا للمتعة! سيكون هذا ممتعا!"
+  },
+  {
+   "id": "narshe-battle.876",
+   "context": "Message 876 of the dialogue: KEFKA: Go!!{line}Get those vile insects!",
+   "text": "كيفكا: هيا!!{line}أمسكوا تلك الحشرات الحقيرة!"
+  },
+  {
+   "id": "narshe-battle.877",
+   "context": "Message 877 of the dialogue: Save the Esper from Kefka!{line}Need some info?{line}{Choice} Yes{line}{Choice} No",
+   "text": "أنقذوا الإسبر من كيفكا!{line}تحتاج معلومات؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "narshe-battle.878",
+   "context": "Message 878 of the dialogue: You'll fight in 3 groups.{line}Use the Y Button to switch between them.{page}Defeat Kefka before his men reach Banon. Otherwise, you lose!",
+   "text": "ستقاتل بثلاث مجموعات.{line}استعمل زر واي للتبديل بينها.\nاهزم كيفكا قبل أن يصل رجاله إلى بانون. وإلا خسرت!"
+  },
+  {
+   "id": "narshe-battle.879",
+   "context": "Message 879 of the dialogue: {Terra}: Kefka…{line}He stuck that crown on me?",
+   "text": "{Terra}: كيفكا…{line}أهو من وضع ذلك التاج علي؟"
+  },
+  {
+   "id": "narshe-battle.880",
+   "context": "Message 880 of the dialogue: {Locke}: Bloody Empire!!{line}We are your worst enemy!",
+   "text": "{Locke}: الإمبراطورية اللعينة!!{line}نحن أسوأ أعدائكم!"
+  },
+  {
+   "id": "narshe-battle.881",
+   "context": "Message 881 of the dialogue: {Celes}: I'm free…{line}The Empire can't control me!",
+   "text": "{Celes}: أنا حرة…{line}الإمبراطورية لا تستطيع التحكم بي!"
+  },
+  {
+   "id": "narshe-battle.882",
+   "context": "Message 882 of the dialogue: {Edgar}: Kefka…grr…{line}What's he up to…?",
+   "text": "{Edgar}: كيفكا… غرر…{line}ما الذي يخطط له…؟"
+  },
+  {
+   "id": "narshe-battle.883",
+   "context": "Message 883 of the dialogue: {Sabin}: Master Duncan's techniques mustn't fail me.",
+   "text": "{Sabin}: يجب ألا تخذلني تقنيات المعلم دنكان."
+  },
+  {
+   "id": "narshe-battle.884",
+   "context": "Message 884 of the dialogue: {Cyan}: I will avenge the people of Doma!!",
+   "text": "{Cyan}: سأثأر لأهل دوما!!"
+  },
+  {
+   "id": "narshe-battle.885",
+   "context": "Message 885 of the dialogue: {Gau}: {Gau} hit hard!!!",
+   "text": "{Gau}: {Gau} يضرب بقوة!!!"
+  },
+  {
+   "id": "narshe-battle.886",
+   "context": "Message 886 of the dialogue: BANON: We're history if they reach me!{line}Good luck!",
+   "text": "بانون: انتهى أمرنا إن وصلوا إلي!{line}حظا سعيدا!"
+  },
+  {
+   "id": "narshe-battle.887",
+   "context": "Message 887 of the dialogue: KEFKA: Aack!!{line}I won't forget this!",
+   "text": "كيفكا: آك!!{line}لن أنسى هذا!"
+  },
+  {
+   "id": "narshe-battle.888",
+   "context": "Message 888 of the dialogue: {Edgar}: Where's the Esper?{line}{Locke}: Is it okay?",
+   "text": "{Edgar}: أين الإسبر؟{line}{Locke}: أهو بخير؟"
+  },
+  {
+   "id": "narshe-battle.889",
+   "context": "Message 889 of the dialogue: {Edgar}: That was a close call!{page}{Cyan}: Can it still be alive?{line}{Sabin}: Impossible…right?!",
+   "text": "{Edgar}: كان ذلك وشيكا!\n{Cyan}: أيمكن أن يكون حيا بعد؟{line}{Sabin}: مستحيل… صحيح؟!"
+  },
+  {
+   "id": "narshe-battle.890",
+   "context": "Message 890 of the dialogue: {Locke}: {Terra}!!{line}What is it!?",
+   "text": "{Locke}: {Terra}!!{line}ما الأمر!؟"
+  },
+  {
+   "id": "narshe-battle.891",
+   "context": "Message 891 of the dialogue: {Terra}: Nooo!!",
+   "text": "{Terra}: لااا!!"
+  },
+  {
+   "id": "narshe-battle.892",
+   "context": "Message 892 of the dialogue: {Sabin}: {Terra} 'n the Esper…{line}{Edgar}: There's…some kinda reaction!",
+   "text": "{Sabin}: {Terra} والإسبر…{line}{Edgar}: هناك… تفاعل من نوع ما!"
+  },
+  {
+   "id": "narshe-battle.893",
+   "context": "Message 893 of the dialogue: {Locke}: Unhh…{line}{Celes}: You're awake?",
+   "text": "{Locke}: أنه…{line}{Celes}: أفقت؟"
+  },
+  {
+   "id": "narshe-battle.894",
+   "context": "Message 894 of the dialogue: {Locke}: …{line}Where's {Terra}?!",
+   "text": "{Locke}: …{line}أين {Terra}؟!"
+  },
+  {
+   "id": "narshe-battle.895",
+   "context": "Message 895 of the dialogue: {Celes}: She changed into a…something, and…took off.{line}She looked like…",
+   "text": "{Celes}: تحولت إلى… شيء ما، و… انطلقت.{line}بدت مثل…"
+  },
+  {
+   "id": "narshe-battle.896",
+   "context": "Message 896 of the dialogue: {Celes}: She looked like…{line}an Esper…",
+   "text": "{Celes}: بدت مثل…{line}إسبر…"
+  },
+  {
+   "id": "narshe-battle.897",
+   "context": "Message 897 of the dialogue: {Edgar}: {Locke}!{line}You okay?",
+   "text": "{Edgar}: {Locke}!{line}أأنت بخير؟"
+  },
+  {
+   "id": "narshe-battle.898",
+   "context": "Message 898 of the dialogue: {Edgar}: Something happened to {Terra}… There seems to be some connection between Espers and her…{page}Anyway, we need to find her.{line}Witnesses saw her screaming across the sky to the west.",
+   "text": "{Edgar}: أصاب {Terra} شيء ما… يبدو أن هناك صلة بينها وبين الإسبرات…\nعلى أي حال، علينا أن نجدها.{line}رآها شهود تعبر السماء صارخة نحو الغرب."
+  },
+  {
+   "id": "narshe-battle.899",
+   "context": "Message 899 of the dialogue: {Locke}: Let's go!{line}I promised her I'd…",
+   "text": "{Locke}: هيا بنا!{line}وعدتها أن…"
+  },
+  {
+   "id": "narshe-battle.900",
+   "context": "Message 900 of the dialogue: {Celes}: {Locke}…{page}{Edgar}: Think, people!{line}The Empire still wants that Esper.{page}{Sabin}: Banon needs our help, too…",
+   "text": "{Celes}: {Locke}…\n{Edgar}: فكروا يا قوم!{line}الإمبراطورية ما زالت تريد ذلك الإسبر.\n{Sabin}: وبانون يحتاج إلى مساعدتنا أيضا…"
+  },
+  {
+   "id": "narshe-battle.901",
+   "context": "Message 901 of the dialogue: {Edgar}: Let's split up.{line}Those who aren't searching for {Terra} will stay and guard Narshe.{page}Figaro Castle can shuttle us to the western province.{line}Then we'll make for Kohlingen or Jidoor.",
+   "text": "{Edgar}: لنتفرق.{line}من لا يبحث عن {Terra} يبقى لحراسة نارشي.\nقلعة فيغارو تستطيع نقلنا إلى المقاطعة الغربية.{line}ثم نتجه إلى كولينغن أو جيدور."
+  },
+  {
+   "id": "narshe-battle.902",
+   "context": "Message 902 of the dialogue: Change group members?{line}{Choice} Yes{line}{Choice} No",
+   "text": "تغير أعضاء المجموعة؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "narshe-battle.903",
+   "context": "Message 903 of the dialogue: {Cyan}: A former Imperial soldier…{page}But we've no choice.{line}We must help her!",
+   "text": "{Cyan}: جندية إمبراطورية سابقة…\nلكن لا خيار لنا.{line}علينا مساعدتها!"
+  },
+  {
+   "id": "narshe-battle.904",
+   "context": "Message 904 of the dialogue: {Locke}: I promised {Terra} I'd…keep her safe…",
+   "text": "{Locke}: وعدت {Terra} أن… أحافظ على سلامتها…"
+  },
+  {
+   "id": "narshe-battle.905",
+   "context": "Message 905 of the dialogue: {Celes}: She ripped outta here!{line}Looked just like…an Esper…",
+   "text": "{Celes}: انطلقت من هنا كالسهم!{line}بدت تماما مثل… إسبر…"
+  },
+  {
+   "id": "narshe-battle.906",
+   "context": "Message 906 of the dialogue: {Cyan}: We have to help her!",
+   "text": "{Cyan}: علينا مساعدتها!"
+  },
+  {
+   "id": "narshe-battle.907",
+   "context": "Message 907 of the dialogue: {Edgar}: Find {Terra}!",
+   "text": "{Edgar}: جدوا {Terra}!"
+  },
+  {
+   "id": "narshe-battle.908",
+   "context": "Message 908 of the dialogue: {Sabin}: I'll watch over Narshe!{line}Go quickly!",
+   "text": "{Sabin}: سأحرس نارشي!{line}اذهبوا بسرعة!"
+  },
+  {
+   "id": "narshe-battle.909",
+   "context": "Message 909 of the dialogue: {Gau}: {Gau}…{line}{Gau} do his best!",
+   "text": "{Gau}: {Gau}…{line}{Gau} يبذل جهده!"
+  },
+  {
+   "id": "narshe-battle.910",
+   "context": "Message 910 of the dialogue: {Cyan}: Can we just march right into the Empire?",
+   "text": "{Cyan}: أيمكننا أن نزحف إلى الإمبراطورية هكذا؟"
+  },
+  {
+   "id": "narshe-battle.911",
+   "context": "Message 911 of the dialogue: {Edgar}: The Empire's Magitek Research Facility…{line}Could the secret lie therein?",
+   "text": "{Edgar}: منشأة أبحاث الماجيتك الإمبراطورية…{line}أيمكن أن يكمن السر فيها؟"
+  },
+  {
+   "id": "narshe-battle.912",
+   "context": "Message 912 of the dialogue: {Sabin}: Leave Narshe to me!",
+   "text": "{Sabin}: اتركوا نارشي لي!"
+  },
+  {
+   "id": "narshe-battle.913",
+   "context": "Message 913 of the dialogue: {Gau}: {Gau}…{line}{Gau} do his best!",
+   "text": "{Gau}: {Gau}…{line}{Gau} يبذل جهده!"
+  },
+  {
+   "id": "narshe-battle.914",
+   "context": "Message 914 of the dialogue: BANON: Go find {Terra}!{line}She holds the future to our survival.",
+   "text": "بانون: اذهبوا وجدوا {Terra}!{line}فهي تحمل مستقبل بقائنا."
+  },
+  {
+   "id": "narshe-battle.915",
+   "context": "Message 915 of the dialogue: ARVIS: Heard {Terra} turned into light and streaked away toward the west.{page}Make your way to Figaro Castle.{line}Maybe they can help you, there.",
+   "text": "أرفيس: سمعت أن {Terra} تحولت إلى نور وانطلقت نحو الغرب.\nتوجهوا إلى قلعة فيغارو.{line}ربما يساعدونكم هناك."
+  },
+  {
+   "id": "narshe-battle.916",
+   "context": "Message 916 of the dialogue: ELDER: I'm troubled…{line}I want to avoid fighting…{line}But…",
+   "text": "شيخ البلدة: أنا في حيرة…{line}أريد تجنب القتال…{line}لكن…"
+  },
+  {
+   "id": "narshe-battle.917",
+   "context": "Message 917 of the dialogue: Moogles live deep within the mines!",
+   "text": "الموغلز يعيشون في أعماق المناجم!"
+  },
+  {
+   "id": "narshe-battle.918",
+   "context": "Message 918 of the dialogue: We follow our Elder's advice!",
+   "text": "نحن نتبع نصيحة شيخنا!"
+  },
+  {
+   "id": "narshe-battle.919",
+   "context": "Message 919 of the dialogue: So…magic really DOES exist!?",
+   "text": "إذن… السحر موجود حقا!؟"
+  },
+  {
+   "id": "narshe-battle.920",
+   "context": "Message 920 of the dialogue: Magic?!{line}Pshaw! What nonsense!",
+   "text": "سحر؟!{line}بف! يا للهراء!"
+  },
+  {
+   "id": "narshe-battle.921",
+   "context": "Message 921 of the dialogue: Narshe is a neutral city.{line}We want no war here.{line}But that #@%!* Empire won't{line}listen…",
+   "text": "نارشي مدينة محايدة.{line}لا نريد حربا هنا.{line}لكن تلك الإمبراطورية اللعينة{line}لا تصغي…"
+  },
+  {
+   "id": "narshe-battle.922",
+   "context": "Message 922 of the dialogue: Figaro Castle can burrow under the desert, and take you to Kohlingen!",
+   "text": "قلعة فيغارو تستطيع أن تحفر تحت الصحراء، وتأخذك إلى كولينغن!"
+  },
+  {
+   "id": "narshe-battle.923",
+   "context": "Message 923 of the dialogue: The house to the far right contains the treasures I've collected! Take them, before the Empire does!{page}Only one of them is locked. Now what do ya suppose is inside…?!",
+   "text": "البيت في أقصى اليمين فيه الكنوز التي جمعتها! خذوها قبل أن تأخذها الإمبراطورية!\nواحد منها فقط مقفل. ترى ماذا بداخله…؟!"
+  },
+  {
+   "id": "narshe-battle.924",
+   "context": "Message 924 of the dialogue: A glowing form soared off toward Figaro Castle.{line}It seemed almost…human.",
+   "text": "شكل متوهج حلق نحو قلعة فيغارو.{line}بدا أشبه… بإنسان."
+  },
+  {
+   "id": "narshe-battle.925",
+   "context": "Message 925 of the dialogue: Curse the day we dug up that Esper! That's what brought the Empire here!",
+   "text": "تبا لليوم الذي أخرجنا فيه ذلك الإسبر! هو ما جلب الإمبراطورية إلى هنا!"
+  },
+  {
+   "id": "narshe-battle.926",
+   "context": "Message 926 of the dialogue: Looks like war's a'comin'!",
+   "text": "يبدو أن الحرب قادمة!"
+  },
+  {
+   "id": "narshe-battle.927",
+   "context": "Message 927 of the dialogue: There's a sasquatch that lives inside the mine…or so I heard.",
+   "text": "هناك ساسكواتش يعيش داخل المنجم… أو هكذا سمعت."
+  },
+  {
+   "id": "narshe-battle.928",
+   "context": "Message 928 of the dialogue: Lone Wolf, the infamous thief, has been sighted here.{line}Are my treasures safe?",
+   "text": "شوهد الذئب الوحيد، اللص سيئ السمعة، هنا.{line}هل كنوزي بأمان؟"
+  },
+  {
+   "id": "narshe-battle.929",
+   "context": "Message 929 of the dialogue: Weapon and Armor shops are selling some new stuff for the coming war.",
+   "text": "متاجر الأسلحة والدروع تبيع بضائع جديدة للحرب القادمة."
+  },
+  {
+   "id": "narshe-battle.930",
+   "context": "Message 930 of the dialogue: Can we harness the Esper's power? I think not…!",
+   "text": "أيمكننا تسخير قوة الإسبر؟ لا أظن…!"
+  },
+  {
+   "id": "narshe-battle.931",
+   "context": "Message 931 of the dialogue: I saw some Moogles walkin' with a sasquatch.",
+   "text": "رأيت بعض الموغلز يمشون مع ساسكواتش."
+  },
+  {
+   "id": "narshe-battle.932",
+   "context": "Message 932 of the dialogue: Geothermal devices keep this town warm!",
+   "text": "أجهزة الطاقة الحرارية الأرضية تبقي هذه البلدة دافئة!"
   }
  ]
 }

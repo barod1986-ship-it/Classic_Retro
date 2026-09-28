@@ -75,11 +75,12 @@ TARGET = LocalizationTarget(
     kind="rom-overlay",
     strategies=("glyph-font",),
     scope=(
-        "The first two chapters, the opening to the raft on the Lete River: the 367 "
-        "messages of Narshe (the cliffs, the narration, the town, the mines, Arvis's "
-        "house, the escape with Locke and the Moogles), Figaro Castle, South Figaro, "
-        "Mt. Kolts and the Returners' hideout, and the characters' names in them; the "
-        "others stay in English"
+        "The first three chapters, the opening to the battle for Narshe: the 930 "
+        "messages of Narshe, Figaro Castle, South Figaro, Mt. Kolts, the Returners' "
+        "hideout and the raft, then the three scenarios (Locke and Celes, Banon's "
+        "party, Sabin's road through Doma, the Phantom Train, the Veldt and Nikeah), "
+        "the classroom, the battle for Narshe and Terra's flight, and the characters' "
+        "names in them; the others stay in English"
     ),
     guide="docs/FF6_ARABIC_TEST_AR.md",
     notes="docs/FF6_ARABIC_RENDERER.md",
@@ -89,5 +90,5 @@ TARGET = LocalizationTarget(
     build=build,
     extract=extract,
     previews=PREVIEWS,
-    reference_patch_sha256="7efa359cf2919964428ff47b48ad4f07a2e554c2a9ea319a3f6bed7dd389df06",
+    reference_patch_sha256="0856e0c4a108aee6692ec51844c7651c2bad2ced77601028ea1da6def29a5f1a",
 )
