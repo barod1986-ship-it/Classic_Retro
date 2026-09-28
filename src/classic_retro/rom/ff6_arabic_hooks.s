@@ -11,13 +11,15 @@
 ; tiles' line pointer (VRAM_LINE) to the next line and, after the fourth, has
 ; the box wait for the button; NewPage moves it to the top. An Arabic message
 ; keeps the engine's commands, and its bytes from FIRST_CODE are glyphs of the
-; overlay's font: WIDTHS holds a width a code, OFFSETS a glyph's rows in
-; GLYPHS, nine variants shifted right by 0 to 8 pixels, three bytes a row,
-; GLYPH_ROWS rows each. The hooks:
+; overlay's font: WIDTHS holds a width a code, GLYPH_ADDRESSES a glyph's rows
+; in GLYPHS (an address of three bytes, the glyph within its bank), nine
+; variants shifted right by 0 to 8 pixels, three bytes a row, GLYPH_ROWS rows
+; each. The hooks:
 ;
 ; - redirect_hook (JSL from $C0:7FDF, the end of GetDlgPtr): a message whose
-;   number is in the REDIRECTS list is read from its Arabic (ARABIC_TEXT)
-;   instead: TEXT_POINTER is set to it and ARABIC to 1, else to 0;
+;   entry in MESSAGES (an address of three bytes a message number) is not
+;   ENGLISH is read from its Arabic there instead: TEXT_POINTER is set to it
+;   and ARABIC to 1, else to 0;
 ; - width_hook (JSL from $C0:8250, where UpdateDlgTextOneLine adds the next
 ;   word's width to the pen): in an Arabic message the line the engine is on
 ;   is laid out whole the first time (lay_out_line: from the right edge
@@ -38,8 +40,9 @@
 ;   what the engine draws next (the map's name) is English;
 ; - choice_hook (JSL from $C0:836D, where a choice's mark takes the cell the
 ;   pen is on for its cursor): in an Arabic message the cursor's cell is the
-;   line's last shown (CHOICE_CELL), at the right of the choice's text, which
-;   the line leaves CHOICE_WIDTH pixels for;
+;   one the line's layout gave the mark (CHOICE_CELLS, in the order of the
+;   marks): the cell at the right of the choice's text, which the line leaves
+;   CHOICE_WIDTH pixels for after moving the pen to a cell's edge;
 ; - transfer_hook (JSL from $C0:8603, the start of TfrDlgTextGfx): in the
 ;   vertical blank, a line laid out (LINE_READY) is sent from LINE_BUFFER to
 ;   its tiles (LINE_CELLS cells of 64 bytes from $3800 + LINE_VRAM), then the
@@ -84,7 +87,11 @@ LINE_VRAM       = $7E9D04           ; 2 bytes: the line's tiles, as VRAM_LINE
 LINE_PEN        = $7E9D06           ; 2 bytes: the glyph's left pixel, from the right edge down
 CODE_SCRATCH    = $7E9D08           ; 2 bytes: the glyph's code from FIRST_CODE
 WIDTH_SCRATCH   = $7E9D0A           ; 2 bytes: the glyph's width
-ROW_SCRATCH     = $7E9D0C           ; 2 bytes: the variant's first byte in GLYPHS
+ROW_SCRATCH     = $7E9D0C           ; 2 bytes: the variant's first byte in its glyph
+ADDRESS_SCRATCH = $7E9D0E           ; 2 bytes: the code times three, the glyph's entry
+CHOICE_INDEX    = $7E9D10           ; 2 bytes: the marks the engine took from the line, times two
+CHOICE_COUNT    = $7E9D12           ; 2 bytes: the marks the line's layout placed, times two
+CHOICE_CELLS    = $7E9D14           ; a word a mark: its cursor's cell in the line, as tile words
 LINE_BUFFER     = $7E9800           ; 32 tile columns of 32 bytes: the line's 16 cells
 ; Hardware.
 VMAIN           = $2115
@@ -97,11 +104,11 @@ DAS0L           = $4305
 MDMAEN          = $420B
 ; This overlay's data.
 WIDTHS          = $F01000           ; a width a code from FIRST_CODE; 0 where there is no glyph
-OFFSETS         = $F01100           ; a word a code from FIRST_CODE: the glyph's first byte in GLYPHS
-NAMES           = $F01300           ; a character's name: NAME_STRIDE bytes, its codes then $FF
-REDIRECTS       = $F01500           ; entries of 2 words: the message's number, the Arabic's offset; $FFFF ends
-GLYPHS          = $F10000           ; the glyphs: GLYPH_BYTES each
-ARABIC_TEXT     = $F20000           ; the Arabic messages, an offset a message
+GLYPH_ADDRESSES = $F01100           ; 3 bytes a code from FIRST_CODE: the glyph's address, its bank last
+NAMES           = $F01400           ; a character's name: NAME_STRIDE bytes, its codes then $FF
+MESSAGES        = $F02000           ; 3 bytes a message number: its Arabic's address, or ENGLISH
+GLYPHS          = $F10000           ; the glyphs, GLYPH_BYTES each, over two banks, none across them
+ARABIC_TEXT     = $F30000           ; the Arabic messages, to the ROM's end, none across a bank
 ; Constants.
 FIRST_CODE      = $20
 NAME_FIRST      = $02
@@ -110,6 +117,7 @@ END             = $00
 LINE            = $01
 PAGE            = $13
 NAME_END        = $FF
+ENGLISH         = $FFFF             ; the low word of a message's entry that has no Arabic
 NAME_STRIDE     = 32
 RIGHT_EDGE      = 224
 LEFT_EDGE       = 4
@@ -118,8 +126,8 @@ ROW_BYTES       = 3
 VARIANT_BYTES   = GLYPH_ROWS * ROW_BYTES
 COLUMN_BYTES    = 32                ; a tile column: 16 rows of two planes
 LINE_CELLS      = 14                ; the cells the box shows
-CHOICE_CELL     = 13                ; the cell of a choice's cursor: the line's last shown
-CHOICE_WIDTH    = 16                ; the pixels a choice's mark takes
+CHOICE_WIDTH    = 16                ; the pixels a choice's mark takes: its cursor's cell
+CHOICES_MAX     = 4                 ; the marks a line's layout keeps cells for
 CELL_WORDS      = $20               ; a cell's tiles: 4 tiles of 8 words
 SPACES          = $14               ; the command with a byte: that many pixels in an Arabic line
 CHOICE          = $15
@@ -142,7 +150,8 @@ VRAM_TEXT       = $3800             ; the text's tiles: four lines of $200 words
 
 ; ---------------------------------------------------------------------------
 ; GetDlgPtr's end: LDA #1; STA DIALOG_FLAGS, the message read from its Arabic
-; when its number is in REDIRECTS.
+; when its entry in MESSAGES has one (no Arabic message starts at the last
+; byte of a bank, so ENGLISH is never a message's low word).
 
 redirect_hook:
     lda #0
@@ -151,24 +160,19 @@ redirect_hook:
     sta f:LINE_READY
     rep #$20
     .a16
-    ldx #0
-@entry:
-    lda f:REDIRECTS,x
-    cmp #$FFFF
-    beq @english                    ; the list's end
-    cmp MESSAGE
-    beq @found
-    inx
-    inx
-    inx
-    inx
-    bra @entry
-@found:
-    lda f:REDIRECTS+2,x             ; the Arabic's offset
+    lda MESSAGE
+    sta f:ADDRESS_SCRATCH
+    asl
+    clc
+    adc f:ADDRESS_SCRATCH
+    tax                             ; the number times three
+    lda f:MESSAGES,x
+    cmp #ENGLISH
+    beq @english
     sta TEXT_POINTER
     sep #$20
     .a8
-    lda #^ARABIC_TEXT
+    lda f:MESSAGES+2,x              ; the Arabic's bank
     sta TEXT_POINTER+2
     lda #1
     sta f:ARABIC
@@ -314,7 +318,8 @@ page_hook:
 
 ; ---------------------------------------------------------------------------
 ; A choice's mark: LDA VRAM_LINE; STA CHOICES,y with the accumulator 16 bits, or
-; the line's last shown cell in an Arabic message.
+; in an Arabic message the cell the line's layout gave the mark, the marks in
+; their order; a mark beyond those the layout kept takes the line's last cell.
 
 choice_hook:
     .a16
@@ -322,9 +327,25 @@ choice_hook:
     and #$00FF
     cmp #1
     bne @english
+    phx
+    lda f:CHOICE_INDEX
+    cmp f:CHOICE_COUNT
+    bcs @beyond
+    tax
+    inc a
+    inc a
+    sta f:CHOICE_INDEX
+    lda f:CHOICE_CELLS,x
+    plx
+    clc
+    adc VRAM_LINE
+    sta CHOICES,y
+    rtl
+@beyond:
+    plx
     lda VRAM_LINE
     clc
-    adc #CHOICE_CELL * CELL_WORDS
+    adc #(LINE_CELLS - 1) * CELL_WORDS
     sta CHOICES,y
     rtl
 @english:
@@ -381,18 +402,18 @@ transfer_hook:
 ; ---------------------------------------------------------------------------
 ; The line from TEXT_POINTER laid out into LINE_BUFFER: each glyph at the pen
 ; from the right edge, a name's glyphs from NAMES, to the line's end (END,
-; LINE or PAGE); the pen moves left by a SPACES command's byte and by
-; CHOICE_WIDTH for a choice's mark; the pauses and the button waits are
-; skipped. Runs with the data bank at GLYPHS' for draw_glyph.
+; LINE or PAGE); the pen moves left by a SPACES command's byte and, for a
+; choice's mark, to a cell's edge and then by CHOICE_WIDTH, the cell freed
+; kept in CHOICE_CELLS for choice_hook; the pauses and the button waits are
+; skipped. draw_glyph leaves the data bank at a glyph's; it is put back.
 
 lay_out_line:
     phb
-    lda #^GLYPHS
-    pha
-    plb
     rep #$20
     .a16
     lda #0
+    sta f:CHOICE_INDEX
+    sta f:CHOICE_COUNT
     ldx #0
 @clear:
     sta f:LINE_BUFFER,x
@@ -458,9 +479,28 @@ lay_out_line:
     rep #$20
     .a16
     lda f:LINE_PEN
+    and #$FFF0                      ; the pen to a cell's edge
     sec
     sbc #CHOICE_WIDTH
+    bcs @choice_pen
+    lda #0                          ; past the left edge: the first cell
+@choice_pen:
     sta f:LINE_PEN
+    pha                             ; the pen
+    lda f:CHOICE_COUNT
+    cmp #CHOICES_MAX * 2
+    bcs @choice_full
+    tax
+    inc a
+    inc a
+    sta f:CHOICE_COUNT
+    pla
+    asl                             ; the pixel times two: its cell times CELL_WORDS
+    sta f:CHOICE_CELLS,x
+    bra @choice_kept
+@choice_full:
+    pla
+@choice_kept:
     sep #$20
     .a8
     iny
@@ -517,7 +557,7 @@ lay_out_line:
 ; variant of the pen's pixel in its tile ORed into the first plane of three
 ; tile columns, the next variant into the second as its shadow. A glyph the
 ; font lacks, or one that would pass the left edge, draws nothing. The data
-; bank is GLYPHS'.
+; bank is set to the glyph's for its rows.
 
 draw_glyph:
     rep #$20
@@ -548,12 +588,22 @@ draw_glyph:
     lda f:SHIFT_OFFSETS,x           ; the variant: the pixel in its tile times VARIANT_BYTES
     sta f:ROW_SCRATCH
     lda f:CODE_SCRATCH
+    sta f:ADDRESS_SCRATCH
     asl
-    tax
-    lda f:OFFSETS,x
+    clc
+    adc f:ADDRESS_SCRATCH
+    tax                             ; the code times three
+    lda f:GLYPH_ADDRESSES,x
     clc
     adc f:ROW_SCRATCH
-    tay                             ; the variant's rows in GLYPHS
+    tay                             ; the variant's rows in the glyph's bank
+    sep #$20
+    .a8
+    lda f:GLYPH_ADDRESSES+2,x       ; the glyph's bank
+    pha
+    plb
+    rep #$20
+    .a16
     lda f:LINE_PEN
     and #$FFF8
     asl

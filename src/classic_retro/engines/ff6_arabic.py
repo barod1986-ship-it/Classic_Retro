@@ -55,7 +55,12 @@ from PIL import Image, ImageFont
 
 from classic_retro.arabic.glyph_codes import GlyphCodes, assign_glyph_codes
 from classic_retro.arabic.logical import check_logical_arabic, no_glyph
-from classic_retro.arabic.paint import reject_combining_marks, reject_mirrored, rtl_paint_order
+from classic_retro.arabic.paint import (
+    MIRRORED_BRACKETS,
+    reject_combining_marks,
+    reject_mirrored,
+    rtl_paint_order,
+)
 from classic_retro.arabic.repertoire import arabic_presentation_repertoire, legacy_renderer_pipeline
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.ff6 import (
@@ -133,7 +138,15 @@ PUNCTUATION: dict[str, tuple[tuple[str, ...], int]] = {
     "،": ((".##", ".##", "##.", "#.."), 2),
     "؛": ((".##", ".##", "...", ".##", ".##", "##.", "#.."), 5),
     "؟": ((".###.", "#...#", "....#", "...#.", "..#..", ".....", "..#.."), 7),
+    # The quotes and the brackets: a right-to-left run shows each mirrored, and
+    # the painter does not mirror, so each is drawn as its mirror image.
+    "«": (("#.#..", ".#.#.", "..#.#", ".#.#.", "#.#.."), 6),
+    "»": (("..#.#", ".#.#.", "#.#..", ".#.#.", "..#.#"), 6),
+    "(": (("#..", ".#.", "..#", "..#", "..#", "..#", "..#", "..#", ".#.", "#.."), 9),
+    ")": (("..#", ".#.", "#..", "#..", "#..", "#..", "#..", "#..", ".#.", "..#"), 9),
 }
+# The brackets drawn mirrored above: the painter lets them through.
+MIRRORED_SIGNS = frozenset("()«»")
 # Hamza above alef reaches above the cell at some sizes: the font's alef, cut
 # below a hamza drawn on the top rows. The tail of final and isolated yeh can
 # reach below it: those forms are raised a row, the final keeping its joining pixel.
@@ -145,9 +158,11 @@ LINE_BREAK = "{line}"
 # command whose byte is the pixels from the right edge to the line.
 CENTER = "{center}"
 LAYOUT_TOKENS = frozenset((LINE_BREAK, CENTER))
-# A choice's mark: the cursor's cell at the line's right, which the line leaves.
+# A choice's mark: the pen moves to a cell's edge, then the cursor's cell (which
+# the line leaves) is the next cell down, at the right of the choice's text.
 CHOICE = COMMAND_CODES["Choice"]
 CHOICE_WIDTH = 16
+CELL_WIDTH = 16
 # Commands a translation may write: the names, the pauses and button waits, and
 # a choice's mark.
 PASSING_COMMANDS = frozenset((*NAME_CODES, "Wait", "Pause", "Key", "KeyAfter", "Choice"))
@@ -315,28 +330,38 @@ def build_ff6_font(
     return Ff6Font(glyphs, size)
 
 
-def glyph_table(font: Ff6Font) -> tuple[bytes, bytes, bytes]:
+BANK = 0x10000
+GLYPH_FILL = 0xFF
+
+
+def glyph_table(font: Ff6Font, base: int, capacity: int) -> tuple[bytes, bytes, bytes]:
     """What the hook reads: a width a code of ``ARABIC_CODES`` (0 where the font has
-    no glyph), a 16-bit offset a code into the glyph data, and the glyph data, the
-    variants of each glyph the font has in the order of the codes."""
+    no glyph), a 24-bit address a code (``base`` + the glyph's offset, the bank its
+    third byte), and the glyph data, the variants of each glyph the font has in the
+    order of the codes; a glyph never crosses a bank, so the data is padded to the
+    next bank where one would, and it must fit ``capacity`` bytes from ``base``."""
+    if base % BANK:
+        raise ClassicRetroError(ErrorCode.INVALID_BYTE_RANGE, "The glyphs start a bank")
     widths = bytearray()
-    offsets = bytearray()
+    addresses = bytearray()
     data = bytearray()
     for code in ARABIC_CODES:
         glyph = font.glyphs.get(code)
         if glyph is None:
             widths.append(0)
-            offsets += (0).to_bytes(2, "little")
+            addresses += (0).to_bytes(3, "little")
             continue
-        if len(data) + GLYPH_BYTES > 0x10000:
+        if len(data) % BANK + GLYPH_BYTES > BANK:
+            data += bytes((GLYPH_FILL,)) * (BANK - len(data) % BANK)
+        if len(data) + GLYPH_BYTES > capacity:
             raise ClassicRetroError(
                 ErrorCode.ARABIC_GLYPH_CAPACITY_EXCEEDED,
-                f"{PROFILE} glyphs: {len(font.glyphs)} glyphs do not fit their bank",
+                f"{PROFILE} glyphs: {len(font.glyphs)} glyphs do not fit their banks",
             )
         widths.append(glyph.width)
-        offsets += len(data).to_bytes(2, "little")
+        addresses += (base + len(data)).to_bytes(3, "little")
         data += glyph.variant_data()
-    return bytes(widths), bytes(offsets), bytes(data)
+    return bytes(widths), bytes(addresses), bytes(data)
 
 
 # ---------------------------------------------------------------------------
@@ -347,7 +372,7 @@ def paint_text(text: str) -> str:
     """Logical text in the order it is painted from the right, its letters shaped."""
     check_logical_arabic(text, PROFILE)
     stream = TokenStream((TextToken(text),))
-    reject_mirrored(stream, PROFILE)
+    reject_mirrored(stream, PROFILE, MIRRORED_BRACKETS - MIRRORED_SIGNS)
     reject_combining_marks(stream, PROFILE)
     painted = rtl_paint_order(legacy_renderer_pipeline(), stream)
     return "".join(token.text for token in painted.tokens if isinstance(token, TextToken))
@@ -478,8 +503,9 @@ class Ff6ArabicEncoder:
             output.append(code)
         return bytes(output)
 
-    def width(self, codes: bytes) -> int:
-        """How wide the codes draw: the glyphs' widths, a name's from its entry."""
+    def width(self, codes: bytes, pen: int = RIGHT_EDGE) -> int:
+        """How wide the codes draw from ``pen``: the glyphs' widths, a name's from its
+        entry, a choice's mark the pixels to a cell's edge and then its cell."""
         if self.font is None:
             return 0
         width = 0
@@ -493,7 +519,7 @@ class Ff6ArabicEncoder:
                     )
                 width += self.name_widths[code]
             elif code == CHOICE:
-                width += CHOICE_WIDTH
+                width += choice_advance(pen - width)
             elif code == SPACES:
                 width += codes[at + 1]
             elif code >= FIRST_CODE:
@@ -501,15 +527,16 @@ class Ff6ArabicEncoder:
             at += COMMANDS[code][1] if code in COMMANDS else 1
         return width
 
-    def word(self, word: str) -> tuple[bytes, int]:
-        """A word's bytes, in the order they are painted from the right, and its width."""
+    def word(self, word: str, pen: int = RIGHT_EDGE) -> tuple[bytes, int]:
+        """A word's bytes, in the order they are painted from the right, and its width
+        from ``pen``."""
         data = bytearray()
         for piece in _pieces(word):
             if isinstance(piece, Command):
                 data += piece.data
             else:
                 data += self.codes(paint_text(piece))
-        return bytes(data), self.width(bytes(data))
+        return bytes(data), self.width(bytes(data), pen)
 
     def encode(self, notation: str) -> EncodedMessage:
         """The message's bytes: each page's lines, ``LINE`` between them; ``PAGE``
@@ -546,6 +573,11 @@ class Ff6ArabicEncoder:
             return lines
         centred_lines = []
         for line in lines:
+            if CHOICE in line.data:
+                raise ClassicRetroError(
+                    ErrorCode.UNSUPPORTED_CONTROL_CODE,
+                    "A choice's mark is not centred: its cell moves with the line",
+                )
             indent = (LINE_WIDTH - line.width) // 2
             data = bytes((SPACES, indent)) + line.data if indent else line.data
             centred_lines.append(LaidLine(data, line.width + indent))
@@ -559,11 +591,12 @@ class Ff6ArabicEncoder:
             line = bytearray()
             width = 0
             for word in _words(segment):
-                codes, word_width = self.word(word)
                 gap = space_width if line else 0
+                codes, word_width = self.word(word, RIGHT_EDGE - width - gap)
                 if line and self.font is not None and width + gap + word_width > LINE_WIDTH:
                     lines.append(LaidLine(bytes(line), width))
                     line, width, gap = bytearray(), 0, 0
+                    codes, word_width = self.word(word, RIGHT_EDGE)
                 if gap:
                     line += space
                 line += codes
@@ -575,6 +608,12 @@ class Ff6ArabicEncoder:
                     )
             lines.append(LaidLine(bytes(line), width))
         return lines
+
+
+def choice_advance(pen: int) -> int:
+    """The pixels a choice's mark takes at ``pen``: to the edge of the pen's cell,
+    then the cell for its cursor, as the hook moves the pen."""
+    return pen - max(pen - pen % CELL_WIDTH - CHOICE_WIDTH, 0)
 
 
 def _uncentred(page: str) -> str:
@@ -633,7 +672,7 @@ def laid_out_line(
             for glyph_code in names[code]:
                 draw(glyph_code)
         elif code == CHOICE:
-            pen -= CHOICE_WIDTH
+            pen -= choice_advance(pen)
         elif code == SPACES:
             pen -= data[at + 1]
         elif code >= FIRST_CODE:

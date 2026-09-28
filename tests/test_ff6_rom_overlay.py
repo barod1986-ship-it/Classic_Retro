@@ -182,8 +182,9 @@ def _writes(result) -> dict[int, bytes]:
             address: _read(result.rom, address, size)
             for address, size in (
                 (overlay.WIDTHS, 224),
-                (overlay.OFFSETS, 448),
+                (overlay.GLYPH_ADDRESSES, 3 * 224),
                 (overlay.NAMES, 14 * NAME_STRIDE),
+                (overlay.MESSAGES, 3 * DLG_COUNT),
             )
         },
     }
@@ -209,7 +210,7 @@ def test_the_build_adds_a_mib_and_changes_only_its_places(built):
         assert site.patched[0] == 0x22 and site.patched[3] == overlay.HOOK_ADDRESS >> 16
     added = result.rom[len(rom) :]
     used = sum(len(data) for data in _writes(result).values())
-    used += len(_read(result.rom, overlay.GLYPHS, 0x10000).rstrip(b"\xff"))
+    used += len(_read(result.rom, overlay.GLYPHS, 0x20000).rstrip(b"\xff"))
     assert added.count(0xFF) >= len(added) - used - 0x1000
     assert sum(result.rom) & 0xFFFF == struct.unpack_from("<H", result.rom, overlay.CHECKSUM + 2)[0]
     assert apply_bps(result.patch.data, rom) == result.rom
@@ -218,14 +219,18 @@ def test_the_build_adds_a_mib_and_changes_only_its_places(built):
     assert result.report["messages"]["narshe.wake"]["pages"] == [[6 * 7 + 4], [6 * 3]]
 
 
-def test_the_added_banks_hold_the_tables_the_list_the_glyphs_and_the_arabic(built):
+def test_the_added_banks_hold_the_tables_the_glyphs_and_the_arabic(built):
     rom, result = built
     assert _read(result.rom, overlay.HOOK_ADDRESS, len(overlay.HOOK_CODE)) == overlay.HOOK_CODE
-    redirects = overlay.read_redirects(result.rom)
-    assert list(redirects) == list(NUMBERS.values())
+    table = overlay.read_message_table(result.rom)
+    assert sorted(table) == sorted(NUMBERS.values())
+    # The messages follow each other from the Arabic's first bank; the rest is English.
+    assert table[0] == overlay.ARABIC_TEXT and table[1] > table[0]
+    entry = _read(result.rom, overlay.MESSAGES + 3 * 3, 3)
+    assert entry == b"\xff\xff\xff"
     font = result.font
     for key, number in NUMBERS.items():
-        data = overlay.read_arabic_message(result.rom, redirects[number])
+        data = overlay.read_arabic_message(result.rom, table[number])
         assert data[-1] == END and engine.command_skeleton(data) == arabic.notation_skeleton(
             ARABIC[key]
         )
@@ -234,24 +239,35 @@ def test_the_added_banks_hold_the_tables_the_list_the_glyphs_and_the_arabic(buil
                 assert _read(result.rom, overlay.WIDTHS + code - arabic.FIRST_CODE, 1)[0] == (
                     font.width(code)
                 )
-    widths, offsets, glyphs = arabic.glyph_table(font)
+    widths, addresses, glyphs = arabic.glyph_table(font, overlay.GLYPHS, 0x20000)
     assert _read(result.rom, overlay.GLYPHS, len(glyphs)) == glyphs
     assert len(glyphs) == len(font.glyphs) * GLYPH_BYTES
-    assert _read(result.rom, overlay.OFFSETS, 448) == offsets
+    assert _read(result.rom, overlay.GLYPH_ADDRESSES, 3 * 224) == addresses
+    assert int.from_bytes(addresses[:3], "little") == overlay.GLYPHS
     terra = _read(result.rom, overlay.NAMES, NAME_STRIDE)
     assert terra.endswith(b"\xff") and 3 <= terra.index(0xFF) <= 6
     assert all(code >= arabic.FIRST_CODE for code in terra[: terra.index(0xFF)])
     assert result.report["names"]["name.terra"] == 6 * terra.index(0xFF)
     # An Arabic message with a name: the name's code stays a byte for the hook.
-    town = overlay.read_arabic_message(result.rom, redirects[0])
+    town = overlay.read_arabic_message(result.rom, table[0])
     assert town[0] == TERRA
 
 
-def test_the_arabic_keeps_to_its_bank(font_path, monkeypatch):
+def test_the_arabic_keeps_to_its_banks(font_path, monkeypatch):
     monkeypatch.setattr(overlay, "ARABIC_TEXT_END", overlay.ARABIC_TEXT + 8)
     with pytest.raises(ClassicRetroError) as caught:
         _build(_rom(), font_path)
     assert caught.value.code is ErrorCode.RELOCATION_OVERFLOW
+    monkeypatch.undo()
+    # A message that would cross a bank, or end on its last byte, starts the next.
+    monkeypatch.setattr(overlay, "BANK", 64)
+    result = _build(_rom(), font_path)
+    table = overlay.read_message_table(result.rom)
+    for address in table.values():
+        data = overlay.read_arabic_message(result.rom, address)
+        assert (address % 64) + len(data) < 64
+    assert table[0] == overlay.ARABIC_TEXT
+    assert any(address % 64 == 0 for number, address in table.items() if number)
 
 
 def test_originals_are_extracted_and_verified():
@@ -311,12 +327,14 @@ def test_the_sites_and_anchors_lie_apart_and_the_parts_are_in_order():
         assert start + size <= next_start
     assert all(0xC07000 <= start < 0xC09000 for start, _, _ in spans) and len(overlay.SITES) == 8
     assert overlay.HOOK_ADDRESS + len(overlay.HOOK_CODE) <= overlay.WIDTHS
-    assert overlay.WIDTHS + 224 <= overlay.OFFSETS
-    assert overlay.OFFSETS + 448 <= overlay.NAMES
-    assert overlay.NAMES + 14 * NAME_STRIDE <= overlay.REDIRECTS < overlay.REDIRECTS_END
-    assert overlay.REDIRECTS_END <= overlay.GLYPHS < overlay.GLYPHS_END <= overlay.ARABIC_TEXT
-    assert overlay.ARABIC_TEXT < overlay.ARABIC_TEXT_END <= 0xC00000 + overlay.EXPANDED_SIZE
+    assert overlay.WIDTHS + 224 <= overlay.GLYPH_ADDRESSES
+    assert overlay.GLYPH_ADDRESSES + 3 * 224 <= overlay.NAMES
+    assert overlay.NAMES + 14 * NAME_STRIDE <= overlay.MESSAGES
+    assert overlay.MESSAGES_END == overlay.MESSAGES + 3 * DLG_COUNT <= overlay.GLYPHS
+    assert overlay.GLYPHS < overlay.GLYPHS_END <= overlay.ARABIC_TEXT
+    assert overlay.ARABIC_TEXT < overlay.ARABIC_TEXT_END == 0xC00000 + overlay.EXPANDED_SIZE
     assert overlay.HOOK_ADDRESS >> 16 == 0xF0 and overlay.GLYPHS & 0xFFFF == 0
+    assert overlay.ARABIC_TEXT & 0xFFFF == 0 and overlay.GLYPHS_END - overlay.GLYPHS == 0x20000
 
 
 def _equates() -> dict[str, int]:
@@ -332,9 +350,10 @@ def _equates() -> dict[str, int]:
 def test_the_hook_source_uses_the_overlay_addresses_and_the_engine_geometry():
     equates = _equates()
     assert equates["WIDTHS"] == overlay.WIDTHS
-    assert equates["OFFSETS"] == overlay.OFFSETS
+    assert equates["GLYPH_ADDRESSES"] == overlay.GLYPH_ADDRESSES
     assert equates["NAMES"] == overlay.NAMES
-    assert equates["REDIRECTS"] == overlay.REDIRECTS
+    assert equates["MESSAGES"] == overlay.MESSAGES
+    assert equates["ENGLISH"] == overlay.ENGLISH & 0xFFFF
     assert equates["GLYPHS"] == overlay.GLYPHS
     assert equates["ARABIC_TEXT"] == overlay.ARABIC_TEXT
     assert equates["FONT_WIDTHS"] == engine.FONT_WIDTHS
@@ -349,7 +368,7 @@ def test_the_hook_source_uses_the_overlay_addresses_and_the_engine_geometry():
     assert equates["LINE"] == engine.LINE and equates["PAGE"] == engine.PAGE
     assert equates["LINE_CELLS"] == 14 and equates["CHOICE_WIDTH"] == arabic.CHOICE_WIDTH
     assert equates["SPACES"] == engine.SPACES and equates["CHOICE"] == arabic.CHOICE
-    assert equates["CHOICE_CELL"] == 13
+    assert equates["CHOICES_MAX"] == 4 and equates["CELL_WORDS"] == 0x20
     header = overlay.HOOK_SOURCE.read_text(encoding="utf-8")
     for site in overlay.SITES:
         assert f"${site.address >> 16:02X}:{site.address & 0xFFFF:04X}" in header
@@ -371,21 +390,28 @@ def test_the_command_group_encodes(capsys):
 
 def test_the_translations_are_checked_and_encoded_without_the_rom():
     report = overlay.check_ff6_translations()
-    assert report["messages"] == 64 and set(report["names"]) == set(NAME_KEYS)
-    assert report["keys"][:2] == ["narshe.000", "narshe.001"] and report["keys"][-1] == "narshe.063"
+    assert report["messages"] == 367 and set(report["names"]) == set(NAME_KEYS)
+    assert (
+        report["keys"][:2] == ["narshe.000", "narshe.001"] and report["keys"][-1] == "returners.368"
+    )
+    assert report["keys"][64] == "figaro.064" and "returners.364" not in report["keys"]
     encoded = overlay.encode_ff6_arabic_message("{Terra}: هيا")
     assert encoded["count"] == 7 and encoded["bytes"].startswith("02 ")
 
 
 def test_the_output_is_read_back_before_it_is_accepted(built, monkeypatch, font_path):
     rom, result = built
-    monkeypatch.setattr(overlay, "read_redirects", lambda _rom: {})
+    monkeypatch.setattr(overlay, "read_message_table", lambda _rom: {})
     with pytest.raises(ClassicRetroError) as caught:
         _build(rom, font_path)
     assert caught.value.code is ErrorCode.BUILD_VALIDATION_FAILED
     monkeypatch.undo()
+    endless = bytes(overlay.EXPANDED_SIZE).replace(b"\x00", b"\x20")
     with pytest.raises(ClassicRetroError) as caught:
-        overlay.read_arabic_message(bytes(overlay.EXPANDED_SIZE).replace(b"\x00", b"\x20"), 0)
+        overlay.read_arabic_message(endless, overlay.ARABIC_TEXT)
+    assert caught.value.code is ErrorCode.BUILD_VALIDATION_FAILED
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.read_arabic_message(endless, overlay.GLYPHS)
     assert caught.value.code is ErrorCode.BUILD_VALIDATION_FAILED
 
 
