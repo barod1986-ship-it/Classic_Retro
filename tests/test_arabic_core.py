@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 from io import BytesIO
 from pathlib import Path
 
@@ -605,15 +604,6 @@ def shaping_font(tmp_path_factory) -> Path:
 @pytest.fixture(scope="module")
 def shaper(shaping_font) -> ShapedLineRenderer:
     return ShapedLineRenderer(shaping_font, SHAPING_SIZE)
-
-
-@pytest.fixture
-def reference_font() -> Path:
-    """The pinned reference font, from the environment; never bundled with the tests."""
-    path = os.environ.get("CLASSIC_RETRO_REFERENCE_FONT")
-    if not path:
-        pytest.skip("CLASSIC_RETRO_REFERENCE_FONT is unset")
-    return Path(path)
 
 
 def _one_rtl_buffer(font_path: Path, size: int, text: str) -> list[ShapedGlyph]:

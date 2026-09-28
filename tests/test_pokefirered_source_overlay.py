@@ -24,15 +24,6 @@ from classic_retro.source import pokefirered_arabic as overlay
 from classic_retro.text.tokens import TokenStream
 
 
-@pytest.fixture
-def reference_font() -> Path:
-    """The pinned reference font, from the environment; never bundled with the tests."""
-    path = os.environ.get("CLASSIC_RETRO_REFERENCE_FONT")
-    if not path:
-        pytest.skip("CLASSIC_RETRO_REFERENCE_FONT is unset")
-    return Path(path)
-
-
 def _oak_blocks(streams: dict[str, TokenStream]) -> str:
     """A stand-in new_game_intro.inc whose Oak speech carries the translations' commands."""
     blocks = [

@@ -46,6 +46,26 @@ flips --apply firered-rev1-arabic-oak-full.bps original.gba firered-arabic-test.
 تحتوي حزمة البناء على `arabic_normal.png` لمعاينة أشكال الخط، و`build-report.json`
 لحجم الخط وبصمته، و`font-info.txt` لاسم الخط الذي استُخدم فعليًا.
 
+## فحص الترجمة دون نسخة من المصدر
+
+لا يحتاج المترجم إلى استنساخ pokefirered ليفحص مساحة عمله:
+
+```sh
+classic-retro targets check-translations firered --translations firered.workspace.json \
+  --font /path/to/ArabicFont.ttf --preview-dir previews
+```
+
+يحلّل الأمر رسائل أوك الثلاث عشرة ويرمّزها كما يفعل `targets prepare`، فيتحقق من الرموز
+ومن خريطة الحروف، ومع `--font` يبني أطلس الخط `arabic_normal.png` نفسه الذي يكتبه التجهيز
+في المصدر ويضعه في مجلد `previews`. لا تُقاس الأسطر هنا، لأن عرض حروف الخط اللاتيني الذي
+تُكتب به الأسماء غير مثبّت. وبلا `--translations` يفحص الأمر الترجمة المرفقة مع المشروع، كما
+يفعل الـ CI لكل تعديل.
+
+يرفض `targets prepare` و`pokemon-gen3 source-check` ترجمةً تُسقط `{PLAYER}` أو `{RIVAL}`
+أو `\p` أو تغيّر ترتيبها عن الأصل: اللعبة تكتب اسم اللاعب واسم المنافس مكان الرمزين وتنتظر
+الزر عند كل `\p`، فإسقاط أحدها أو نقله يغيّر ما يراه اللاعب ويجيب عنه. أما نهايات الأسطر
+فللترجمة وحدها.
+
 ## البناء من المصدر
 
 اتبع متطلبات البناء في [pret/pokefirered](https://github.com/pret/pokefirered)،

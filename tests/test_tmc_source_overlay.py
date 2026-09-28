@@ -17,15 +17,6 @@ from classic_retro.engines.tmc_arabic import TmcArabicFontResult, build_tmc_arab
 from classic_retro.source import tmc_arabic as overlay
 
 
-@pytest.fixture
-def reference_font() -> Path:
-    """The pinned reference font, from the environment; never bundled with the tests."""
-    path = os.environ.get("CLASSIC_RETRO_REFERENCE_FONT")
-    if not path:
-        pytest.skip("CLASSIC_RETRO_REFERENCE_FONT is unset")
-    return Path(path)
-
-
 def _english_tables() -> list[list[str]]:
     """Stand-in USA.json whose strings carry the same engine commands as the originals."""
     english = [[""] * 0x40 for _ in range(0x26)]

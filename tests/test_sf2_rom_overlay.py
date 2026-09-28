@@ -261,13 +261,22 @@ def test_a_different_rom_is_refused(font_path):
         ((0x00629C, b"\x00"),),  # where an Arabic string goes on
         ((0x00697B, b"\x00"),),  # the routine that sends a line to VRAM
         ((0x02800D, b"\x03"),),  # the font's pointer
-        ((overlay.ROOM_END - 1, b"\x00"),),  # the room is not free
     ],
 )
 def test_engine_code_that_differs_where_the_overlay_works_is_refused(change):
     with pytest.raises(ClassicRetroError) as caught:
         overlay.verify_rom(_rom(change))
     assert caught.value.code is ErrorCode.SOURCE_BASELINE_MISMATCH
+
+
+def test_a_room_that_is_not_free_is_refused():
+    rom = _rom(((overlay.ROOM_END - 1, b"\x00"),))
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.verify_rom(rom)
+    assert caught.value.code is ErrorCode.SAFE_REGION_CONTENT_MISMATCH
+    assert str(caught.value) == (
+        f"The overlay's room holds data at {overlay.ROOM_END - 1:#x}, where 0xff was expected"
+    )
 
 
 def test_the_arabic_keeps_to_the_room(font_path, monkeypatch):
@@ -404,7 +413,7 @@ def test_the_output_is_read_back_before_it_is_accepted(built):
         (overlay.REDIRECTS + 2, "list of translated strings"),
         (overlay.ARABIC_FONT + GLYPH_BYTES * a_glyph + 2, "font table"),
         (texts + 1, "Arabic text"),
-        (BANKS + 0x100 + 3, "outside its places"),
+        (BANKS + 0x100 + 3, f"at {BANKS + 0x100 + 3:#x}, outside the overlay's places"),
     ):
         tampered = bytearray(result.rom)
         tampered[address] ^= 0x01

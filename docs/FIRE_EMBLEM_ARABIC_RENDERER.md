@@ -158,7 +158,11 @@ on BG1 with a dark palette, 3 pixels off, as a shadow over the stone background.
 - **Drawing.** Each line is shaped with HarfBuzz (right to left: contextual forms,
   lam-alef ligatures, kerning) and rasterized by Pillow glyph by glyph through a
   private-use cmap on an in-memory copy of the user's font, so no system shaping
-  library is needed. The size makes the font's alef as tall as the English
+  library is needed. The line is shaped in directional runs (UAX #9 W2, W4 and N1;
+  "Numbers in shaped lines" in [ARABIC_PIPELINE.md](ARABIC_PIPELINE.md)), so a number
+  inside it reads left to right; no shipped legend line holds one, so every line is
+  still one run shaped in one buffer, and nothing built changed. The size makes the
+  font's alef as tall as the English
   capitals (10 pixels: 13 px for the reference font). Coverage maps linearly onto
   the ramp (below 40 of 255 is transparent). The reference font has no Latin
   punctuation; `.`, `!` and `:` get square dots as wide as its alef stroke.
@@ -167,8 +171,9 @@ on BG1 with a dark palette, 3 pixels off, as a shadow over the stone background.
   time). The build decompresses both back from the output image and compares the
   decoded pixels with the drawing.
 - **Lines** (`fire_emblem_arabic_legend()` in the script): Arabic letters, spaces
-  and punctuation only (no bidi runs to reorder, no marks), at most five lines of
-  at most 224 pixels.
+  and punctuation only (no marks, no Latin letters or Western digits; an Arabic-Indic
+  number would be the line's one left-to-right run), at most five lines of at most
+  224 pixels.
 
 ## Runtime verification
 

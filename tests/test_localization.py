@@ -15,14 +15,12 @@ from classic_retro.core.environment import library_versions
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.localization import strategies as strategies_module
 from classic_retro.localization import targets as targets_module
-from classic_retro.localization.commands import register_cli
 from classic_retro.localization.strategies import (
     RenderingStrategy,
     StrategyRegistry,
     build_strategy_registry,
 )
 from classic_retro.localization.targets import (
-    LocalizationTarget,
     TargetRegistry,
     build_target_registry,
     preview_paths,
@@ -53,26 +51,6 @@ ROM_OVERLAYS = (
 # What the FF6A guide says while no reference patch is recorded for the target
 # (test_the_ff6a_guide_says_whether_a_reference_patch_is_recorded).
 FF6A_NO_REFERENCE_PHRASE = "لم تُسجَّل بعد بصمة رقعة مرجعية"
-
-
-def _no_cli(_: argparse._SubParsersAction) -> None:
-    return None
-
-
-def _target(target_id: str = "demo", **changes) -> LocalizationTarget:
-    fields = {
-        "id": target_id,
-        "game_id": f"{target_id}-game",
-        "title": "Demo Game",
-        "platform_id": "gba",
-        "kind": "rom-overlay",
-        "strategies": ("glyph-font",),
-        "scope": "a demo",
-        "guide": "docs/DEMO.md",
-        "notes": "docs/DEMO_NOTES.md",
-        "register_cli": _no_cli,
-    }
-    return LocalizationTarget(**{**fields, **changes})
 
 
 def _strategy(strategy_id: str = "texture-font", **changes) -> RenderingStrategy:
@@ -242,15 +220,15 @@ def test_the_ff6a_guide_says_whether_a_reference_patch_is_recorded():
     assert target.reference_patches == {}
     guide = (REPO / target.guide).read_text(encoding="utf-8")
     says_none_recorded = FF6A_NO_REFERENCE_PHRASE in guide
-    if target.reference_patch_sha256 is None and not says_none_recorded:
-        pytest.skip(
-            f"{target.guide} does not say {FF6A_NO_REFERENCE_PHRASE!r} yet: the sentence "
-            "documenting the missing reference patch is still to be written"
-        )
-    assert says_none_recorded == (target.reference_patch_sha256 is None)
+    reference = target.reference_patch_sha256
+    assert says_none_recorded == (reference is None), (
+        f"{target.guide} must say {FF6A_NO_REFERENCE_PHRASE!r} exactly while no reference "
+        f"patch is recorded: says it {says_none_recorded}, reference recorded "
+        f"{reference is not None}"
+    )
 
 
-def test_the_proven_strategies_are_a_starting_set():
+def test_the_proven_strategies_are_a_starting_set(demo_targets):
     registry = build_strategy_registry(load_external=False)
     assert [strategy.id for strategy in registry] == [
         "glyph-font",
@@ -264,7 +242,7 @@ def test_the_proven_strategies_are_a_starting_set():
     assert "texture-font" in registry
     assert registry.get("texture-font").status == "experimental"
     targets = TargetRegistry(registry)
-    targets.register(_target(strategies=("texture-font",)))
+    targets.register(demo_targets.target(strategies=("texture-font",)))
     assert targets.using("texture-font") == ["demo"]
 
 
@@ -291,20 +269,20 @@ def test_strategy_registry_checks_what_it_is_given():
     assert error.value.code is ErrorCode.INVALID_REFERENCE
 
 
-def test_target_registry_checks_what_it_is_given():
+def test_target_registry_checks_what_it_is_given(demo_targets):
     registry = TargetRegistry(build_strategy_registry(load_external=False))
-    registry.register(_target())
+    registry.register(demo_targets.target())
     cases = {
-        ErrorCode.ADAPTER_ID_CONFLICT: _target(),
-        ErrorCode.ADAPTER_TYPE_ERROR: _target("other", kind="save-editor"),
-        ErrorCode.INVALID_REFERENCE: _target("third", strategies=("unknown",)),
+        ErrorCode.ADAPTER_ID_CONFLICT: demo_targets.target(),
+        ErrorCode.ADAPTER_TYPE_ERROR: demo_targets.target("other", kind="save-editor"),
+        ErrorCode.INVALID_REFERENCE: demo_targets.target("third", strategies=("unknown",)),
     }
     for code, target in cases.items():
         with pytest.raises(ClassicRetroError) as error:
             registry.register(target)
         assert error.value.code is code
     with pytest.raises(ClassicRetroError) as error:
-        registry.register(_target("fourth", strategies=()))
+        registry.register(demo_targets.target("fourth", strategies=()))
     assert error.value.code is ErrorCode.ADAPTER_TYPE_ERROR
     with pytest.raises(ClassicRetroError) as error:
         registry.get("missing")
@@ -313,12 +291,12 @@ def test_target_registry_checks_what_it_is_given():
     assert registry.get("demo-game").id == "demo"
 
 
-def test_entry_points_add_strategies_and_targets(monkeypatch):
+def test_entry_points_add_strategies_and_targets(monkeypatch, demo_targets):
     def fake_entry_points(group):
         return {
             strategies_module.STRATEGY_ENTRY_POINT_GROUP: [_EntryPoint("texture", _strategy)],
             targets_module.TARGET_ENTRY_POINT_GROUP: [
-                _EntryPoint("demo", _target(strategies=("texture-font",)))
+                _EntryPoint("demo", demo_targets.target(strategies=("texture-font",)))
             ],
         }[group]
 
@@ -362,13 +340,6 @@ def test_preview_paths_and_build_report(tmp_path):
     assert text.endswith("\n") and json.loads(text) == report and "ع" in text
 
 
-def _run(registry: TargetRegistry, argv: list[str]) -> int:
-    parser = argparse.ArgumentParser()
-    register_cli(parser.add_subparsers(dest="command", required=True), registry)
-    args = parser.parse_args(argv)
-    return args.handler(args)
-
-
 def _report(capsys) -> dict:
     """The command's report, less the library versions every report that draws carries."""
     report = json.loads(capsys.readouterr().out)
@@ -389,7 +360,7 @@ def _demo_translations(tmp_path, target: str = "demo", text: str = "مرحبا")
     return path
 
 
-def _demo_registry(tmp_path) -> tuple[TargetRegistry, list]:
+def _demo_registry(demo_targets) -> tuple[TargetRegistry, list]:
     calls = []
 
     def check_translations(font, preview_dir, translations=None):
@@ -413,7 +384,7 @@ def _demo_registry(tmp_path) -> tuple[TargetRegistry, list]:
 
     registry = TargetRegistry(build_strategy_registry(load_external=False))
     registry.register(
-        _target(
+        demo_targets.target(
             check_hooks=lambda: {"match": True},
             check_translations=check_translations,
             build=build,
@@ -423,10 +394,12 @@ def _demo_registry(tmp_path) -> tuple[TargetRegistry, list]:
         )
     )
     registry.register(
-        _target("bare", kind="source-overlay", strategies=("line-cells",), prepare=prepare)
+        demo_targets.target(
+            "bare", kind="source-overlay", strategies=("line-cells",), prepare=prepare
+        )
     )
     registry.register(
-        _target(
+        demo_targets.target(
             "sloppy",
             check_translations=lambda font, preview_dir, translations=None: {},
             previews=("a.png",),
@@ -435,17 +408,17 @@ def _demo_registry(tmp_path) -> tuple[TargetRegistry, list]:
     return registry, calls
 
 
-def test_targets_commands_run_any_target_by_id(tmp_path, capsys):
-    registry, calls = _demo_registry(tmp_path)
+def test_targets_commands_run_any_target_by_id(tmp_path, capsys, demo_targets):
+    registry, calls = _demo_registry(demo_targets)
 
-    assert _run(registry, ["targets", "list"]) == 0
+    assert demo_targets.run(registry, ["targets", "list"]) == 0
     listed = json.loads(capsys.readouterr().out)
     assert [target["id"] for target in listed] == ["demo", "bare", "sloppy"]
     assert listed[0]["operations"] == ["check-hooks", "check-translations", "build", "extract"]
     assert listed[0]["previews"] == ["demo_preview.png"]
     assert listed[1]["operations"] == ["prepare"]
 
-    assert _run(registry, ["targets", "strategies"]) == 0
+    assert demo_targets.run(registry, ["targets", "strategies"]) == 0
     strategies = {s["id"]: s["targets"] for s in json.loads(capsys.readouterr().out)}
     assert strategies == {
         "glyph-font": ["demo", "sloppy"],
@@ -454,12 +427,12 @@ def test_targets_commands_run_any_target_by_id(tmp_path, capsys):
         "composed-lines": [],
     }
 
-    assert _run(registry, ["targets", "check-hooks"]) == 0
+    assert demo_targets.run(registry, ["targets", "check-hooks"]) == 0
     assert json.loads(capsys.readouterr().out) == {"demo": {"match": True}}
 
     font = tmp_path / "font.ttf"
     argv = ["targets", "check-translations", "demo", "--font", str(font)]
-    assert _run(registry, [*argv, "--preview-dir", str(tmp_path / "previews")]) == 0
+    assert demo_targets.run(registry, [*argv, "--preview-dir", str(tmp_path / "previews")]) == 0
     assert _report(capsys) == {"strings": 2, "preview": "demo_preview.png"}
     assert calls[-1] == (
         "check-translations",
@@ -467,29 +440,41 @@ def test_targets_commands_run_any_target_by_id(tmp_path, capsys):
         tmp_path / "previews" / "demo_preview.png",
         None,
     )
-    assert _run(registry, ["targets", "check-translations", "demo"]) == 0
+    assert demo_targets.run(registry, ["targets", "check-translations", "demo"]) == 0
     assert _report(capsys) == {"strings": 2, "preview": None}
 
     rom = tmp_path / "game.gba"
     rom.write_bytes(b"\x01\x02")
     argv = ["targets", "build", "demo-game", str(rom), "--font", str(font)]
-    assert _run(registry, [*argv, "--out-dir", str(tmp_path / "out"), "--write-rom", "x.gba"]) == 0
+    assert (
+        demo_targets.run(
+            registry, [*argv, "--out-dir", str(tmp_path / "out"), "--write-rom", "x.gba"]
+        )
+        == 0
+    )
     built = json.loads(capsys.readouterr().out)
     assert built["target"] == "demo" and built["matches_reference"] is True
     assert calls[-1] == ("build", b"\x01\x02", font, tmp_path / "out", "x.gba", None)
 
-    assert _run(registry, ["targets", "prepare", "bare", str(tmp_path / "src"), "--font", "f"]) == 0
+    assert (
+        demo_targets.run(
+            registry, ["targets", "prepare", "bare", str(tmp_path / "src"), "--font", "f"]
+        )
+        == 0
+    )
     assert _report(capsys) == {"prepared": "src"}
     assert calls[-1] == ("prepare", tmp_path / "src", Path("f"), None)
 
 
-def test_translations_files_reach_every_operation(tmp_path, capsys, monkeypatch):
-    registry, calls = _demo_registry(tmp_path)
+def test_translations_files_reach_every_operation(tmp_path, capsys, monkeypatch, demo_targets):
+    registry, calls = _demo_registry(demo_targets)
     monkeypatch.chdir(tmp_path)
     shipped = _demo_translations(tmp_path)
 
     assert (
-        _run(registry, ["targets", "extract", "demo", "game.gba", "--translations", str(shipped)])
+        demo_targets.run(
+            registry, ["targets", "extract", "demo", "game.gba", "--translations", str(shipped)]
+        )
         == 0
     )
     summary = json.loads(capsys.readouterr().out)
@@ -507,23 +492,30 @@ def test_translations_files_reach_every_operation(tmp_path, capsys, monkeypatch)
 
     argv = ["targets", "extract", "demo", "game.gba", "--translations", str(shipped)]
     with pytest.raises(ClassicRetroError) as error:
-        _run(registry, argv)
+        demo_targets.run(registry, argv)
     assert error.value.code is ErrorCode.OUTPUT_EXISTS
-    assert _run(registry, [*argv, "--force", "--out", "second.json"]) == 0
+    assert demo_targets.run(registry, [*argv, "--force", "--out", "second.json"]) == 0
     capsys.readouterr()
 
-    assert _run(registry, ["targets", "strip", "demo.workspace.json", "--out", "clean.json"]) == 0
+    assert (
+        demo_targets.run(
+            registry, ["targets", "strip", "demo.workspace.json", "--out", "clean.json"]
+        )
+        == 0
+    )
     assert json.loads(capsys.readouterr().out)["entries"] == 1
     assert (tmp_path / "clean.json").read_text(encoding="utf-8") == shipped.read_text(
         encoding="utf-8"
     )
     with pytest.raises(ClassicRetroError) as error:
-        _run(registry, ["targets", "strip", "demo.workspace.json", "--out", "clean.json"])
+        demo_targets.run(
+            registry, ["targets", "strip", "demo.workspace.json", "--out", "clean.json"]
+        )
     assert error.value.code is ErrorCode.OUTPUT_EXISTS
 
     # The workspace's original names Mila, but its Arabic does not use the glossary's spelling.
     check = ["targets", "check-translations", "demo", "--translations", "demo.workspace.json"]
-    assert _run(registry, check) == 0
+    assert demo_targets.run(registry, check) == 0
     report = json.loads(capsys.readouterr().out)
     assert report["translations"] == "demo.workspace.json"
     assert report["glossary"] == [{"id": "greeting", "term": "Mila", "expected": "ميلا"}]
@@ -532,21 +524,23 @@ def test_translations_files_reach_every_operation(tmp_path, capsys, monkeypatch)
     rom = tmp_path / "game.gba"
     rom.write_bytes(b"\x01")
     build = ["targets", "build", "demo", str(rom), "--font", "f", "--out-dir", "out"]
-    assert _run(registry, [*build, "--translations", str(shipped)]) == 0
+    assert demo_targets.run(registry, [*build, "--translations", str(shipped)]) == 0
     assert json.loads(capsys.readouterr().out)["translations"] == str(shipped)
     assert calls[-1][5].entries[0].text == "مرحبا"
 
     other = _demo_translations(tmp_path, target="bare")
     with pytest.raises(ClassicRetroError) as error:
-        _run(registry, [*build, "--translations", str(other)])
+        demo_targets.run(registry, [*build, "--translations", str(other)])
     assert error.value.code is ErrorCode.INVALID_TRANSLATION_DOCUMENT
     with pytest.raises(ClassicRetroError) as error:
-        _run(registry, ["targets", "extract", "demo", "game.gba", "--out", "third.json"])
+        demo_targets.run(
+            registry, ["targets", "extract", "demo", "game.gba", "--out", "third.json"]
+        )
     assert error.value.code is ErrorCode.INVALID_REFERENCE
 
 
-def test_targets_commands_refuse_what_a_target_cannot_do(tmp_path):
-    registry, _ = _demo_registry(tmp_path)
+def test_targets_commands_refuse_what_a_target_cannot_do(tmp_path, demo_targets):
+    registry, _ = _demo_registry(demo_targets)
     for argv in (
         ["targets", "check-hooks", "bare"],
         ["targets", "check-translations", "bare"],
@@ -555,18 +549,20 @@ def test_targets_commands_refuse_what_a_target_cannot_do(tmp_path):
         ["targets", "extract", "bare", str(tmp_path / "x"), "--out", str(tmp_path / "w.json")],
     ):
         with pytest.raises(ClassicRetroError) as error:
-            _run(registry, argv)
+            demo_targets.run(registry, argv)
         assert error.value.code is ErrorCode.UNSUPPORTED_CONTROL_CODE
     with pytest.raises(ClassicRetroError) as error:
-        _run(registry, ["targets", "check-translations", "demo", "--preview-dir", str(tmp_path)])
+        demo_targets.run(
+            registry, ["targets", "check-translations", "demo", "--preview-dir", str(tmp_path)]
+        )
     assert str(error.value) == "A preview needs --font"
     argv = ["targets", "check-translations", "sloppy", "--font", "f"]
     with pytest.raises(ClassicRetroError) as error:
-        _run(registry, [*argv, "--preview-dir", str(tmp_path / "p")])
+        demo_targets.run(registry, [*argv, "--preview-dir", str(tmp_path / "p")])
     assert error.value.code is ErrorCode.BUILD_VALIDATION_FAILED
     assert str(error.value) == "Target sloppy did not write a.png"
     with pytest.raises(ClassicRetroError) as error:
-        _run(registry, ["targets", "check-hooks", "nothing"])
+        demo_targets.run(registry, ["targets", "check-hooks", "nothing"])
     assert error.value.code is ErrorCode.INVALID_REFERENCE
 
 

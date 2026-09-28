@@ -52,6 +52,21 @@ flips --apply minish-cap-usa-arabic-opening.bps original.gba minish-cap-arabic-t
 - الطريق إلى البلدة: «من هنا!»، «أسرع! هيا بنا!»، «ها قد وصلنا إلى بلدة هايرول!».
 - بعد «هيا! لنتجول في المكان!» تتابع اللعبة، وتظهر الرسائل الإنجليزية بشكلها المعتاد.
 
+## فحص الترجمة دون نسخة من المصدر
+
+لا يحتاج المترجم إلى استنساخ zeldaret/tmc ولا إلى `baserom.gba` ليفحص مساحة عمله:
+
+```sh
+classic-retro targets check-translations minish-cap --translations minish-cap.workspace.json \
+  --font /path/to/NotoKufiArabic-SemiBold.ttf --preview-dir previews
+```
+
+يكتب الأمر كل رسالة بصيغة `tmc_strings` كما يكتبها `targets prepare`، ومع `--font` يقيس كل
+سطر على صندوقه ويضع معاينة الخط `arabic_font_preview.png` (هي نفسها التي يكتبها التجهيز في
+`data/classic_retro`) في مجلد `previews`. أما أوامر الأصل فلا تُعرف إلا بنسخة من المصدر،
+ويتحقق منها `targets prepare`. وبلا `--translations` يفحص الأمر الترجمة المرفقة مع المشروع،
+كما يفعل الـ CI لكل تعديل.
+
 ## البناء من المصدر
 
 المتطلبات كما في [INSTALL.md لمشروع tmc](https://github.com/zeldaret/tmc/blob/master/INSTALL.md):

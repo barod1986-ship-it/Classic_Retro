@@ -71,6 +71,7 @@ from classic_retro.localization.translations import TranslationSet
 from classic_retro.patching.hooks import HookProgram
 from classic_retro.patching.image import ImageSpec
 from classic_retro.patching.outputs import base_report, write_image, write_patch
+from classic_retro.patching.overlay import verify_bytes, verify_empty, verify_untouched
 from classic_retro.rebuild.bps import BpsPatch, create_bps
 from classic_retro.rom.sf2_arabic_script import Sf2String, sf2_arabic_strings
 
@@ -231,15 +232,8 @@ def verify_rom(rom: bytes) -> None:
             ErrorCode.SOURCE_BASELINE_MISMATCH, f"The ROM is {len(rom)} bytes, not {ROM_SIZE}"
         )
     expected = {**{site.address: site.original for site in SITES}, **ANCHORS}
-    for address, original in expected.items():
-        if rom[address : address + len(original)] != original:
-            raise ClassicRetroError(
-                ErrorCode.SOURCE_BASELINE_MISMATCH, f"Unexpected bytes at ${address:06X}"
-            )
-    if rom[ROOM_START:ROOM_END] != bytes((0xFF,)) * (ROOM_END - ROOM_START):
-        raise ClassicRetroError(
-            ErrorCode.SOURCE_BASELINE_MISMATCH, "The overlay's room is not free"
-        )
+    verify_bytes(rom, expected, what="the ROM")
+    verify_empty(rom, ROOM_START, ROOM_END, 0xFF, what="The overlay's room")
 
 
 def _verify_source(rom: bytes, string: Sf2String, trees: HuffmanTrees | None = None) -> bytes:
@@ -507,23 +501,10 @@ def _verify_output(
                 ErrorCode.BUILD_VALIDATION_FAILED,
                 f"{string.key}: the Arabic string read back has other commands",
             )
-    allowed = [(site.address, len(site.patched)) for site in SITES]
-    allowed += [(address, len(data)) for address, data in writes.items()]
-    allowed.append((CHECKSUM, 2))
-    changed = [
-        at
-        for at in range(0, len(original), 0x1000)
-        if output[at : at + 0x1000] != original[at : at + 0x1000]
-    ]
-    for block in changed:
-        for at in range(block, block + 0x1000):
-            if output[at] != original[at] and not any(
-                start <= at < start + size for start, size in allowed
-            ):
-                raise ClassicRetroError(
-                    ErrorCode.BUILD_VALIDATION_FAILED,
-                    f"The overlay changed the ROM at {at:#x}, outside its places",
-                )
+    allowed = [(site.address, site.address + len(site.patched)) for site in SITES]
+    allowed += [(address, address + len(data)) for address, data in writes.items()]
+    allowed.append((CHECKSUM, CHECKSUM + 2))
+    verify_untouched(original, output, allowed, what="The ROM")
     (checksum,) = struct.unpack_from(">H", output, CHECKSUM)
     words = struct.unpack_from(f">{(len(output) - CHECKSUM_FROM) // 2}H", output, CHECKSUM_FROM)
     if sum(words) & 0xFFFF != checksum:
