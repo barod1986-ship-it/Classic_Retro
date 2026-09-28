@@ -1,0 +1,29 @@
+{
+ "schema_version": "1.0",
+ "target": "final-fantasy-iii",
+ "language": "ar",
+ "notation": "Logical Arabic in the engine notation (engines.ff6_arabic): a line for each page of the message (the box shows four lines of 220 pixels; the game waits for the button between pages), {line} where a line must end; the encoder breaks the other lines itself, a word at a time, by the glyphs' widths. {Terra}, {Locke}, {Cyan}, {Shadow}, {Edgar}, {Sabin}, {Celes}, {Strago}, {Relm}, {Setzer}, {Mog}, {Gau}, {Gogo} and {Umaro} write a character's name: the entries name.terra to name.umaro give the fourteen names in Arabic, which the hook draws in place of the name the player gave. {Wait}, {Pause 04}, {Key} and {KeyAfter 04} pass to the game as the English has them. A message holds Arabic letters, spaces, Western or Arabic-Indic digits and the signs . , : ! - … ، ؛ ؟ only. No vowel marks: the font has none.",
+ "glossary": [
+  {"term": "Narshe", "text": "نارشي"},
+  {"term": "Esper", "text": "إسبر"},
+  {"term": "Magitek", "text": "ماجيتك"},
+  {"term": "Empire", "text": "الإمبراطورية"},
+  {"term": "Returners", "text": "العائدون"}
+ ],
+ "entries": [
+  {"id": "name.terra", "context": "The name of Terra, a character, as the game writes it in a message (64 pixels at most)", "text": "تيرا"},
+  {"id": "name.locke", "context": "The name of Locke, a character, as the game writes it in a message (64 pixels at most)", "text": "لوك"},
+  {"id": "name.cyan", "context": "The name of Cyan, a character, as the game writes it in a message (64 pixels at most)", "text": "سيان"},
+  {"id": "name.shadow", "context": "The name of Shadow, a character, as the game writes it in a message (64 pixels at most)", "text": "شادو"},
+  {"id": "name.edgar", "context": "The name of Edgar, a character, as the game writes it in a message (64 pixels at most)", "text": "إدغار"},
+  {"id": "name.sabin", "context": "The name of Sabin, a character, as the game writes it in a message (64 pixels at most)", "text": "سابين"},
+  {"id": "name.celes", "context": "The name of Celes, a character, as the game writes it in a message (64 pixels at most)", "text": "سيليس"},
+  {"id": "name.strago", "context": "The name of Strago, a character, as the game writes it in a message (64 pixels at most)", "text": "ستراغو"},
+  {"id": "name.relm", "context": "The name of Relm, a character, as the game writes it in a message (64 pixels at most)", "text": "ريلم"},
+  {"id": "name.setzer", "context": "The name of Setzer, a character, as the game writes it in a message (64 pixels at most)", "text": "سيتزر"},
+  {"id": "name.mog", "context": "The name of Mog, a character, as the game writes it in a message (64 pixels at most)", "text": "موغ"},
+  {"id": "name.gau", "context": "The name of Gau, a character, as the game writes it in a message (64 pixels at most)", "text": "غاو"},
+  {"id": "name.gogo", "context": "The name of Gogo, a character, as the game writes it in a message (64 pixels at most)", "text": "غوغو"},
+  {"id": "name.umaro", "context": "The name of Umaro, a character, as the game writes it in a message (64 pixels at most)", "text": "أومارو"}
+ ]
+}
