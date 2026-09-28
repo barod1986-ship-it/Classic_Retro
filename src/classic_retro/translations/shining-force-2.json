@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "target": "shining-force-2",
+  "language": "ar",
+  "notation": "Logical Arabic in the English's notation (engines.sf2_arabic): its tags pass to the game as they are ({N} a new line, {W1} and {W2} a wait for the button, {D1} to {D3} a pause, {CLEAR} the window cleared, {NAME;0} the name the player gave, {LEADER}, {NAME}, {ITEM}, {SPELL}, {CLASS} and {#} what the game writes). The encoder breaks the lines itself, 212 pixels a line, and {N} breaks one where it stands; the window shows two lines (three in the witch's scene) and scrolls on. A name counts 70 pixels, an item, a spell or a class 96, a number 40. A string holds Arabic letters, spaces, Western or Arabic-Indic digits and the punctuation . , : ! - … ، ؛ ؟ only. No vowel marks: the font has none.",
+  "glossary": [],
+  "entries": [
+    {
+      "id": "witch.greeting",
+      "context": "A new game: a witch in a forest greets the player with a cackle; the player has come at last (the window is cleared first, and waits)",
+      "text": "{CLEAR}هيه، هيه، هيه…{N}وصلت أخيرا!{W2}"
+    },
+    {
+      "id": "witch.confused",
+      "context": "The witch: the player looks confused, and does not know why they are there",
+      "text": "آه، تبدو حائرا جدا.{N}ألا تعرف لماذا أنت هنا؟{W2}"
+    },
+    {
+      "id": "witch.nice_name",
+      "context": "The witch repeats the name the player has just given ({NAME;0}), and likes it",
+      "text": "{NAME;0}…{N}اسم جميل، أليس كذلك؟{W2}"
+    }
+  ]
+}

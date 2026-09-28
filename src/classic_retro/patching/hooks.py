@@ -4,9 +4,10 @@ An overlay stores its assembled hook code and symbol offsets in Python, so a
 build needs no toolchain. ``HookProgram.check`` re-assembles the source and
 proves the stored bytes match (run in CI). The assembler is chosen by CPU from
 an open registry: GNU binutils for the ARM7TDMI (Game Boy Advance), the
-ARM946E-S (the Nintendo DS's ARM9) and the R3000A (the PlayStation, MIPS I,
-``mipsel-linux-gnu-*``), and cc65 (``ca65``, ``ld65``) for the 65C816 (the
-Super NES) today; other CPUs register their own (``register_assembler``).
+ARM946E-S (the Nintendo DS's ARM9), the R3000A (the PlayStation, MIPS I,
+``mipsel-linux-gnu-*``) and the 68000 (the Mega Drive, ``m68k-linux-gnu-*``),
+and cc65 (``ca65``, ``ld65``) for the 65C816 (the Super NES) today; other CPUs
+register their own (``register_assembler``).
 """
 
 from __future__ import annotations
@@ -54,6 +55,22 @@ def assemble_gnu_r3000(
         "mipsel-linux-gnu-",
         ["-march=r3000", "-mabi=32", "-non_shared", "-mno-pdr", "-EL"],
         ["-EL", "-N"],
+        ["-j", ".text"],
+    )
+
+
+def assemble_gnu_68000(
+    source: Path, address: int, symbols: frozenset[str], label: str
+) -> tuple[bytes, dict[str, int]]:
+    """``m68k-linux-gnu-as -m68000``, registers without ``%``, and the ``.text`` section only."""
+    return _assemble_gnu(
+        source,
+        address,
+        symbols,
+        label,
+        "m68k-linux-gnu-",
+        ["-m68000", "--register-prefix-optional"],
+        ["-N"],
         ["-j", ".text"],
     )
 
@@ -153,6 +170,7 @@ _ASSEMBLERS: dict[str, Assembler] = {
     "arm7tdmi": assemble_gnu_arm,
     "arm946e-s": assemble_gnu_arm9,
     "r3000": assemble_gnu_r3000,
+    "68000": assemble_gnu_68000,
     "65816": assemble_ca65_65816,
 }
 

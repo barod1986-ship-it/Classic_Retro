@@ -3,13 +3,13 @@
 Version: 1
 
 A **localization target** is one supported game revision together with the way it
-is put into Arabic. Twenty targets are registered today:
+is put into Arabic. Twenty-one targets are registered today:
 
 ```text
 classic-retro targets list
 ```
 
-This guide collects what those twenty taught, in the order the work happens. It is a
+This guide collects what those twenty-one taught, in the order the work happens. It is a
 checklist, not a template: every game gets its own research, and a game that fits
 none of the existing methods gets a new one (see
 [ARABIC_STRATEGIES.md](ARABIC_STRATEGIES.md)).
@@ -145,8 +145,10 @@ and the script belong to the game.
   - A build therefore needs no toolchain.
   - `check()` re-assembles the source and proves the stored bytes match.
   - The assembler is chosen per CPU: GNU binutils for the ARM7TDMI (the GBA), the
-    ARM946E-S (the DS's ARM9, `cpu="arm946e-s"`) and the R3000A (the PlayStation,
-    `cpu="r3000"`, `mipsel-linux-gnu-*`; GNU as rounds its `.text` up to 16 bytes).
+    ARM946E-S (the DS's ARM9, `cpu="arm946e-s"`), the R3000A (the PlayStation,
+    `cpu="r3000"`, `mipsel-linux-gnu-*`; GNU as rounds its `.text` up to 16 bytes) and
+    the 68000 (the Mega Drive, `cpu="68000"`, `m68k-linux-gnu-*`, its registers written
+    without `%`), and cc65 for the 65C816 (the Super NES, `cpu="65816"`).
     `patching.hooks.register_assembler` adds another CPU.
 - Verify the original bytes of every site before writing it, and read back
   everything written.
@@ -274,6 +276,20 @@ sector rather than by name:
 - Compare an English message the overlay leaves alone with the original's, pixel for
   pixel, in a research build that does not translate it: A Link to the Past's uncle, left
   in English, draws his box as the original ROM does.
+- Look for free bytes the disassembly already counts. Shining Force II's layout names the
+  6681 bytes at the end of the section that holds the text: room for the hooks, the list,
+  a font of its own and the strings, so the ROM keeps its size.
+- A hook can tell an Arabic string by the address the engine reads it from: Shining Force
+  II keeps its string's code address, which lies in the overlay's room while an Arabic
+  string is read, and the hooks clear it at the string's end.
+- Where a hook does at once what the engine does a character at a time, it does what the
+  engine does around each character too. Shining Force II's hook draws a name whole, so it
+  also applies the engine's rule for a string's first character (a new line when the pen
+  is not at a line's start) and sends the line to VRAM, as the engine does after each
+  letter.
+- Mirror what points at the end of a line: Shining Force II's arrow that waits for the
+  button blinks at the window's right, where an English line ends, and at its left in an
+  Arabic string.
 
 ## 5. Register the target
 
