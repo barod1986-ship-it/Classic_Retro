@@ -14,16 +14,17 @@ overlay patches the user's and ships as a BPS patch of it. The overlay:
    translation's commands against its original's (``command_skeleton``:
    everything but the layout the encoder writes itself), encodes the
    characters' names and each message, and writes into the added banks the
-   hooks (``ff6_arabic_hooks.s``), the glyphs' widths (``WIDTHS``) and offsets
-   (``OFFSETS``), the names (``NAMES``), the list that sends each translated
-   message to its Arabic (``REDIRECTS``), the glyphs (``GLYPHS``, bank $F1)
-   and the Arabic messages (``ARABIC_TEXT``, bank $F2);
+   hooks (``ff6_arabic_hooks.s``), the glyphs' widths (``WIDTHS``) and
+   addresses (``GLYPH_ADDRESSES``), the names (``NAMES``), the table that
+   sends each message by its number to its Arabic, or to the English
+   (``MESSAGES``), the glyphs (``GLYPHS``, banks $F1 and $F2) and the Arabic
+   messages (``ARABIC_TEXT``, banks $F3 to $FF, none across a bank);
 4. puts a long call to a hook in place of eight places of the engine
    (``SITES``);
 5. sets the header's checksum;
 6. reads everything back from the image before accepting it: the hooks, the
-   sites, the tables, the list and each Arabic message through the list as
-   the hooks find it (``read_redirects``, ``read_arabic_message``), with the
+   sites, the tables and each Arabic message through the table as the hooks
+   find it (``read_message_table``, ``read_arabic_message``), with the
    translation's commands; and proves nothing else changed.
 
 The English messages stay where they were, as they were: a translated one is
@@ -45,6 +46,7 @@ from pathlib import Path
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.cpu.m65816 import jsl_long, nop_fill
 from classic_retro.engines.ff6 import (
+    DLG_COUNT,
     END,
     NAME_FIRST,
     byte_length,
@@ -106,79 +108,83 @@ EXPANSION_FILL = 0xFF
 HOOK_ADDRESS = 0xF00000
 HOOK_SOURCE = Path(__file__).with_name("ff6_arabic_hooks.s")
 WIDTHS = 0xF01000
-OFFSETS = 0xF01100
-NAMES = 0xF01300
+GLYPH_ADDRESSES = 0xF01100  # 3 bytes a code: the glyph's address
+GLYPH_ADDRESS_ENTRY = 3
+NAMES = 0xF01400
 NAME_COUNT = 14
-REDIRECTS = 0xF01500
-REDIRECTS_END = 0xF02000
-REDIRECT_ENTRY = 4
-REDIRECT_END = 0xFFFF
-GLYPHS = 0xF10000
-GLYPHS_END = 0xF20000
-ARABIC_TEXT = 0xF20000
-ARABIC_TEXT_END = 0xF30000
+MESSAGES = 0xF02000  # 3 bytes a message number: its Arabic's address, or ENGLISH
+MESSAGE_ENTRY = 3
+MESSAGES_END = MESSAGES + DLG_COUNT * MESSAGE_ENTRY
+ENGLISH = 0xFFFFFF
+GLYPHS = 0xF10000  # two banks; a glyph never crosses one
+GLYPHS_END = 0xF30000
+ARABIC_TEXT = 0xF30000  # to the ROM's end; a message never crosses a bank
+ARABIC_TEXT_END = 0x1000000
+BANK = 0x10000
 
 # ca65 --cpu 65816 ff6_arabic_hooks.s; ld65 at $F0:0000
 HOOK_CODE = bytes.fromhex(
-    "a9008f009d7e8f019d7e8f029d7ec220a20000bf0015f0c9fffff01ec5d0f006e8e8e8e880edbf"
-    "0215f085c9e220a9f285cba9018f009d7e8002e220eba900eba9018d68056baf009d7ec901d011"
-    "af019d7ed007207d01eba900eba5bf186ba5bf1865c06baf009d7ed00da5bd1009686868a5bd5c"
-    "6684c0a5bd6baf009d7ec901d0076868685c1985c0a6cdbfc08fc46baf009d7ec901d035686868"
-    "a90485bfa9008f019d7ec220a5c185c32900061869000229ff0785c1e220eba900eba6c1d008a9"
-    "0985cca90285d35c5385c0a9ff85cd6baf009d7ec901d02a686868a90485bfa9008f019d7ea6c1"
-    "86c3a2000086c1a90985cca90285d3a5bdd0048f009d7e5c7d85c0a9ff85cd6baf009d7e29ff00"
-    "c90100d00aa5c11869a0019970056ba5c19970056baf029d7ec901d041a9008f029d7e9c0b42a9"
-    "808d1521c220af049d7e186900388d1621e220eba900eba9018d0043a9188d0143a200988e0243"
-    "a97e8d0443a280038e0543a9018d0b42a5c5d0076868685c4186c064c56b8ba9f148abc220a900"
-    "00a200009f00987ee8e8e00004d0f5a9e0008f069d7ee220a00000b7c9f00ac901f006c913f002"
-    "80034c3d02c920b058c9029018c9109059c914f019c915f034c911f00cc916f008c91cb004c84c"
-    "a101c8c84ca101c8b7c9c22029ff008f0a9d7eaf069d7e38ef0a9d7e8f069d7ee220c84ca101c2"
-    "20af069d7e38e910008f069d7ee220c84ca1015a2053027ac84ca10138e902c22029ff000a0a0a"
-    "0a0aaae2205abf0013f0c9fff008da205302fae880f07ac84ca101c220a5c18f049d7ee220a901"
-    "8f019d7e8f029d7eab60c22029ff0038e920008f089d7eaae220bf0010f0f048c22029ff008f0a"
-    "9d7eaf069d7e38ef0a9d7e9034c90400902f8f069d7e2907000aaabf9306f08f0c9d7eaf089d7e"
-    "0aaabf0011f0186f0c9d7ea8af069d7e29f8ff0a0aaae2208003e22060b900001f00987e9f0098"
-    "7eb901001f20987e9f20987eb902001f40987e9f40987eb92d001f01987e9f01987eb92e001f21"
-    "987e9f21987eb92f001f41987e9f41987eb903001f02987e9f02987eb904001f22987e9f22987e"
-    "b905001f42987e9f42987eb930001f03987e9f03987eb931001f23987e9f23987eb932001f4398"
-    "7e9f43987eb906001f04987e9f04987eb907001f24987e9f24987eb908001f44987e9f44987eb9"
-    "33001f05987e9f05987eb934001f25987e9f25987eb935001f45987e9f45987eb909001f06987e"
-    "9f06987eb90a001f26987e9f26987eb90b001f46987e9f46987eb936001f07987e9f07987eb937"
-    "001f27987e9f27987eb938001f47987e9f47987eb90c001f08987e9f08987eb90d001f28987e9f"
-    "28987eb90e001f48987e9f48987eb939001f09987e9f09987eb93a001f29987e9f29987eb93b00"
-    "1f49987e9f49987eb90f001f0a987e9f0a987eb910001f2a987e9f2a987eb911001f4a987e9f4a"
-    "987eb93c001f0b987e9f0b987eb93d001f2b987e9f2b987eb93e001f4b987e9f4b987eb912001f"
-    "0c987e9f0c987eb913001f2c987e9f2c987eb914001f4c987e9f4c987eb93f001f0d987e9f0d98"
-    "7eb940001f2d987e9f2d987eb941001f4d987e9f4d987eb915001f0e987e9f0e987eb916001f2e"
-    "987e9f2e987eb917001f4e987e9f4e987eb942001f0f987e9f0f987eb943001f2f987e9f2f987e"
-    "b944001f4f987e9f4f987eb918001f10987e9f10987eb919001f30987e9f30987eb91a001f5098"
-    "7e9f50987eb945001f11987e9f11987eb946001f31987e9f31987eb947001f51987e9f51987eb9"
-    "1b001f12987e9f12987eb91c001f32987e9f32987eb91d001f52987e9f52987eb948001f13987e"
-    "9f13987eb949001f33987e9f33987eb94a001f53987e9f53987eb91e001f14987e9f14987eb91f"
-    "001f34987e9f34987eb920001f54987e9f54987eb94b001f15987e9f15987eb94c001f35987e9f"
-    "35987eb94d001f55987e9f55987eb921001f16987e9f16987eb922001f36987e9f36987eb92300"
-    "1f56987e9f56987eb94e001f17987e9f17987eb94f001f37987e9f37987eb950001f57987e9f57"
-    "987eb924001f18987e9f18987eb925001f38987e9f38987eb926001f58987e9f58987eb951001f"
-    "19987e9f19987eb952001f39987e9f39987eb953001f59987e9f59987eb927001f1a987e9f1a98"
-    "7eb928001f3a987e9f3a987eb929001f5a987e9f5a987eb954001f1b987e9f1b987eb955001f3b"
-    "987e9f3b987eb956001f5b987e9f5b987eb92a001f1c987e9f1c987eb92b001f3c987e9f3c987e"
-    "b92c001f5c987e9f5c987eb957001f1d987e9f1d987eb958001f3d987e9f3d987eb959001f5d98"
-    "7e9f5d987e6000002d005a008700b400e1000e013b01"
+    "a9008f009d7e8f019d7e8f029d7ec220a5d08f0e9d7e0a186f0e9d7eaabf0020f0c9fffff01285"
+    "c9e220bf0220f085cba9018f009d7e8002e220eba900eba9018d68056baf009d7ec901d011af01"
+    "9d7ed007209a01eba900eba5bf186ba5bf1865c06baf009d7ed00da5bd1009686868a5bd5c6684"
+    "c0a5bd6baf009d7ec901d0076868685c1985c0a6cdbfc08fc46baf009d7ec901d035686868a904"
+    "85bfa9008f019d7ec220a5c185c32900061869000229ff0785c1e220eba900eba6c1d008a90985"
+    "cca90285d35c5385c0a9ff85cd6baf009d7ec901d02a686868a90485bfa9008f019d7ea6c186c3"
+    "a2000086c1a90985cca90285d3a5bdd0048f009d7e5c7d85c0a9ff85cd6baf009d7e29ff00c901"
+    "00d029daaf109d7ecf129d7eb013aa1a1a8f109d7ebf149d7efa1865c19970056bfaa5c11869a0"
+    "019970056ba5c19970056baf029d7ec901d041a9008f029d7e9c0b42a9808d1521c220af049d7e"
+    "186900388d1621e220eba900eba9018d0043a9188d0143a200988e0243a97e8d0443a280038e05"
+    "43a9018d0b42a5c5d0076868685c4186c064c56b8bc220a900008f109d7e8f129d7ea200009f00"
+    "987ee8e8e00004d0f5a9e0008f069d7ee220a00000b7c9f00ac901f006c913f00280034c8002c9"
+    "20b07ac9029018c910907bc914f019c915f034c911f00cc916f008c91cb004c84cc201c8c84cc2"
+    "01c8b7c9c22029ff008f0a9d7eaf069d7e38ef0a9d7e8f069d7ee220c84cc201c220af069d7e29"
+    "f0ff38e91000b003a900008f069d7e48af129d7ec90800b00faa1a1a8f129d7e680a9f149d7e80"
+    "0168e220c84cc2015a2096027ac84cc20138e902c22029ff000a0a0a0a0aaae2205abf0014f0c9"
+    "fff008da209602fae880f07ac84cc201c220a5c18f049d7ee220a9018f019d7e8f029d7eab60c2"
+    "2029ff0038e920008f089d7eaae220bf0010f0f05bc22029ff008f0a9d7eaf069d7e38ef0a9d7e"
+    "9047c9040090428f069d7e2907000aaabfe906f08f0c9d7eaf089d7e8f0e9d7e0a186f0e9d7eaa"
+    "bf0011f0186f0c9d7ea8e220bf0211f048abc220af069d7e29f8ff0a0aaae2208003e22060b900"
+    "001f00987e9f00987eb901001f20987e9f20987eb902001f40987e9f40987eb92d001f01987e9f"
+    "01987eb92e001f21987e9f21987eb92f001f41987e9f41987eb903001f02987e9f02987eb90400"
+    "1f22987e9f22987eb905001f42987e9f42987eb930001f03987e9f03987eb931001f23987e9f23"
+    "987eb932001f43987e9f43987eb906001f04987e9f04987eb907001f24987e9f24987eb908001f"
+    "44987e9f44987eb933001f05987e9f05987eb934001f25987e9f25987eb935001f45987e9f4598"
+    "7eb909001f06987e9f06987eb90a001f26987e9f26987eb90b001f46987e9f46987eb936001f07"
+    "987e9f07987eb937001f27987e9f27987eb938001f47987e9f47987eb90c001f08987e9f08987e"
+    "b90d001f28987e9f28987eb90e001f48987e9f48987eb939001f09987e9f09987eb93a001f2998"
+    "7e9f29987eb93b001f49987e9f49987eb90f001f0a987e9f0a987eb910001f2a987e9f2a987eb9"
+    "11001f4a987e9f4a987eb93c001f0b987e9f0b987eb93d001f2b987e9f2b987eb93e001f4b987e"
+    "9f4b987eb912001f0c987e9f0c987eb913001f2c987e9f2c987eb914001f4c987e9f4c987eb93f"
+    "001f0d987e9f0d987eb940001f2d987e9f2d987eb941001f4d987e9f4d987eb915001f0e987e9f"
+    "0e987eb916001f2e987e9f2e987eb917001f4e987e9f4e987eb942001f0f987e9f0f987eb94300"
+    "1f2f987e9f2f987eb944001f4f987e9f4f987eb918001f10987e9f10987eb919001f30987e9f30"
+    "987eb91a001f50987e9f50987eb945001f11987e9f11987eb946001f31987e9f31987eb947001f"
+    "51987e9f51987eb91b001f12987e9f12987eb91c001f32987e9f32987eb91d001f52987e9f5298"
+    "7eb948001f13987e9f13987eb949001f33987e9f33987eb94a001f53987e9f53987eb91e001f14"
+    "987e9f14987eb91f001f34987e9f34987eb920001f54987e9f54987eb94b001f15987e9f15987e"
+    "b94c001f35987e9f35987eb94d001f55987e9f55987eb921001f16987e9f16987eb922001f3698"
+    "7e9f36987eb923001f56987e9f56987eb94e001f17987e9f17987eb94f001f37987e9f37987eb9"
+    "50001f57987e9f57987eb924001f18987e9f18987eb925001f38987e9f38987eb926001f58987e"
+    "9f58987eb951001f19987e9f19987eb952001f39987e9f39987eb953001f59987e9f59987eb927"
+    "001f1a987e9f1a987eb928001f3a987e9f3a987eb929001f5a987e9f5a987eb954001f1b987e9f"
+    "1b987eb955001f3b987e9f3b987eb956001f5b987e9f5b987eb92a001f1c987e9f1c987eb92b00"
+    "1f3c987e9f3c987eb92c001f5c987e9f5c987eb957001f1d987e9f1d987eb958001f3d987e9f3d"
+    "987eb959001f5d987e9f5d987e6000002d005a008700b400e1000e013b01"
 )
 HOOK_SYMBOLS = {
     "redirect_hook": 0x00,
-    "width_hook": 0x46,
-    "dte_hook": 0x65,
-    "draw_hook": 0x7B,
-    "line_hook": 0x91,
-    "page_hook": 0xD3,
-    "transfer_hook": 0x126,
-    "choice_hook": 0x10A,
+    "width_hook": 0x44,
+    "dte_hook": 0x63,
+    "draw_hook": 0x79,
+    "line_hook": 0x8F,
+    "page_hook": 0xD1,
+    "transfer_hook": 0x143,
+    "choice_hook": 0x108,
 }
 HOOKS = HookProgram(
     "Final Fantasy III hooks", HOOK_SOURCE, HOOK_ADDRESS, HOOK_CODE, HOOK_SYMBOLS, cpu="65816"
 )
-PATCH_NAME = "final-fantasy-iii-usa-arabic-narshe.bps"
+PATCH_NAME = "final-fantasy-iii-usa-arabic-narshe-to-lete.bps"
 
 
 @dataclass(frozen=True, slots=True)
@@ -400,37 +406,39 @@ def data_writes(
     names: Mapping[str, tuple[bytes, int]],
     font: Ff6Font,
 ) -> dict[int, bytes]:
-    """What the overlay writes into the added banks, by address."""
-    redirects = bytearray()
+    """What the overlay writes into the added banks, by address.
+
+    The Arabic messages follow each other from ``ARABIC_TEXT``; one that would
+    cross a bank, or end on a bank's last byte (so that no message's address has
+    ``ENGLISH``'s low word), starts the next bank. The table has an entry a
+    message number: the Arabic's address, or ``ENGLISH``.
+    """
+    entries = bytearray(ENGLISH.to_bytes(MESSAGE_ENTRY, "little") * DLG_COUNT)
     text = bytearray()
     for message in translated:
         data = encoded[message.key].data
-        offset = len(text)
-        if ARABIC_TEXT + offset + len(data) > ARABIC_TEXT_END:
+        if len(text) % BANK + len(data) >= BANK:
+            text += bytes((EXPANSION_FILL,)) * (BANK - len(text) % BANK)
+        address = ARABIC_TEXT + len(text)
+        if address + len(data) > ARABIC_TEXT_END:
             raise ClassicRetroError(
-                ErrorCode.RELOCATION_OVERFLOW, "The Arabic messages do not fit their bank"
+                ErrorCode.RELOCATION_OVERFLOW, "The Arabic messages do not fit their banks"
             )
-        redirects += struct.pack("<HH", message.number, offset)
+        at = message.number * MESSAGE_ENTRY
+        entries[at : at + MESSAGE_ENTRY] = address.to_bytes(MESSAGE_ENTRY, "little")
         text += data
-    redirects += struct.pack("<H", REDIRECT_END)
-    if len(redirects) > REDIRECTS_END - REDIRECTS:
-        raise ClassicRetroError(
-            ErrorCode.RELOCATION_OVERFLOW, f"{len(translated)} messages do not fit the list"
-        )
     table = bytearray()
     for key in NAME_KEYS:
         entry, _ = names[key]
         if len(entry) >= NAME_STRIDE:
             raise ClassicRetroError(ErrorCode.TEXT_BOX_OVERFLOW, f"{key}: the name is too long")
         table += entry + bytes((NAME_END,)) * (NAME_STRIDE - len(entry))
-    widths, offsets, glyphs = glyph_table(font)
-    if GLYPHS + len(glyphs) > GLYPHS_END:
-        raise ClassicRetroError(ErrorCode.RELOCATION_OVERFLOW, "The glyphs do not fit their bank")
+    widths, addresses, glyphs = glyph_table(font, GLYPHS, GLYPHS_END - GLYPHS)
     return {
         WIDTHS: widths,
-        OFFSETS: offsets,
+        GLYPH_ADDRESSES: addresses,
         NAMES: bytes(table),
-        REDIRECTS: bytes(redirects),
+        MESSAGES: bytes(entries),
         GLYPHS: glyphs,
         ARABIC_TEXT: bytes(text),
     }
@@ -524,34 +532,35 @@ def build_ff6_arabic_rom(
     return Ff6ArabicBuild(rom=result, patch=patch, font=font, report=report)
 
 
-def read_redirects(rom: bytes) -> dict[int, int]:
-    """The list of translated messages as the hooks read it: each message's number
-    and its Arabic's offset, to the $FFFF that ends it."""
+def read_message_table(rom: bytes) -> dict[int, int]:
+    """The translated messages as the hooks find them: by number, the address of the
+    Arabic of every message whose entry is not ``ENGLISH``."""
     found: dict[int, int] = {}
-    at = hirom_offset(REDIRECTS)
-    while at + REDIRECT_ENTRY <= hirom_offset(REDIRECTS_END):
-        number, arabic = struct.unpack_from("<HH", rom, at)
-        if number == REDIRECT_END:
-            return found
-        found[number] = arabic
-        at += REDIRECT_ENTRY
-    raise ClassicRetroError(
-        ErrorCode.BUILD_VALIDATION_FAILED, "The list of translated messages has no end"
-    )
+    at = hirom_offset(MESSAGES)
+    for number in range(DLG_COUNT):
+        address = int.from_bytes(rom[at : at + MESSAGE_ENTRY], "little")
+        if address & 0xFFFF != ENGLISH & 0xFFFF:
+            found[number] = address
+        at += MESSAGE_ENTRY
+    return found
 
 
-def read_arabic_message(rom: bytes, offset: int) -> bytes:
+def read_arabic_message(rom: bytes, address: int) -> bytes:
     """An Arabic message's bytes, its end included, as the hooks read them: from its
-    offset in the Arabic's bank, a command with its own byte, to its end."""
-    start = at = hirom_offset(ARABIC_TEXT + offset)
-    end = hirom_offset(ARABIC_TEXT_END - 1) + 1
+    address, a command with its own byte, to its end within its bank."""
+    if not ARABIC_TEXT <= address < ARABIC_TEXT_END:
+        raise ClassicRetroError(
+            ErrorCode.BUILD_VALIDATION_FAILED, f"${address:06X} is not in the Arabic's banks"
+        )
+    start = at = hirom_offset(address)
+    end = hirom_offset(address | 0xFFFF) + 1
     while at < end:
         code = rom[at]
         at += byte_length(code)
         if code == END:
             return bytes(rom[start:at])
     raise ClassicRetroError(
-        ErrorCode.BUILD_VALIDATION_FAILED, f"The Arabic message at {offset:#06x} has no end"
+        ErrorCode.BUILD_VALIDATION_FAILED, f"The Arabic message at ${address:06X} has no end"
     )
 
 
@@ -579,9 +588,9 @@ def _verify_output(
     names = {
         HOOK_ADDRESS: "The hook code",
         WIDTHS: "The widths",
-        OFFSETS: "The offsets",
+        GLYPH_ADDRESSES: "The glyphs' addresses",
         NAMES: "The names",
-        REDIRECTS: "The list of translated messages",
+        MESSAGES: "The table of messages",
         GLYPHS: "The glyphs",
         ARABIC_TEXT: "The Arabic text",
     }
@@ -590,18 +599,18 @@ def _verify_output(
             raise ClassicRetroError(
                 ErrorCode.BUILD_VALIDATION_FAILED, f"{names[address]} does not read back"
             )
-    redirects = read_redirects(output)
-    if list(redirects) != [message.number for message in translated]:
+    table = read_message_table(output)
+    if sorted(table) != sorted(message.number for message in translated):
         raise ClassicRetroError(
             ErrorCode.BUILD_VALIDATION_FAILED,
-            "The list of translated messages does not read back in order",
+            "The table of messages does not read back with the translated ones",
         )
     for message in translated:
-        data = read_arabic_message(output, redirects[message.number])
+        data = read_arabic_message(output, table[message.number])
         if data != encoded[message.key].data:
             raise ClassicRetroError(
                 ErrorCode.BUILD_VALIDATION_FAILED,
-                f"{message.key}: the Arabic message does not read back through the list",
+                f"{message.key}: the Arabic message does not read back through the table",
             )
         if command_skeleton(data) != notation_skeleton(message.notation):
             raise ClassicRetroError(

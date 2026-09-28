@@ -59,16 +59,17 @@ numbered labels, checked byte by byte against the ROM and run in snes9x with the
 
 ## Right-to-left text
 
-The overlay's hooks (`rom/ff6_arabic_hooks.s`, 1699 bytes) live at `$F0:0000`, the first
+The overlay's hooks (`rom/ff6_arabic_hooks.s`, 1785 bytes) live at `$F0:0000`, the first
 bytes of the MiB the overlay adds; the engine's code is in bank `$C0`, so eight sites call
 them with `JSL` and they go back with `RTL` to the site's end, or with `JML` to the engine
 where the site's own code branched. They run with the engine's data bank `$00` and direct
 page `$0000`, the accumulator 8 bits and the index registers 16.
 
-- **Arabic messages.** At `GetDlgPtr`'s end (`redirect_hook`) a message whose number is in
-  the overlay's list is read from its Arabic text instead: `$C9`-`$CB` becomes `$F2:0000` +
-  the Arabic's offset and a flag in work RAM (`$7E:9D00`) says the message is Arabic; any
-  other message clears it. The English stays where it was, as it was.
+- **Arabic messages.** At `GetDlgPtr`'s end (`redirect_hook`) a message whose entry in the
+  overlay's table (an address of three bytes a message number, `FFFFFF` where there is no
+  Arabic) has Arabic is read from it instead: `$C9`-`$CB` becomes that address and a flag
+  in work RAM (`$7E:9D00`) says the message is Arabic; any other message clears it. The
+  English stays where it was, as it was.
 - **Glyphs.** In an Arabic message every byte from `20` is a glyph of the overlay's own font
   (`dte_hook`: a byte from `80` is a glyph, not a pair); the commands keep their meaning.
 - **A line laid out whole.** Where `UpdateDlgTextOneLine` adds the next word's width to the
@@ -77,8 +78,10 @@ page `$0000`, the accumulator 8 bits and the index registers 16.
   leftwards, each glyph's variant of its pixel is ORed into a buffer of the line's tile
   columns at `$7E:9800` (32 columns of 32 bytes: 16 rows of two planes), the next variant as
   its shadow in the second plane; a name's glyphs come from the names' table; `14` and a
-  byte moves the pen that many pixels (the narration's centring); `15` leaves 16 pixels for
-  the choice's cursor; the pauses and the button waits are skipped; the line ends at `00`,
+  byte moves the pen that many pixels (the narration's centring); `15` moves the pen to a
+  cell's edge and leaves the next cell (16 pixels) for the choice's cursor, keeping that cell
+  for `choice_hook` (four marks a line at most); the pauses and the button waits are
+  skipped; the line ends at `00`,
   `01` or `13`. The word's width is then nothing, so the engine never breaks a line itself,
   and `DrawDlgText` draws nothing (`draw_hook`): the engine still walks the line a byte a
   frame, so its pauses, button waits, pages and choices work as before.
@@ -89,11 +92,12 @@ page `$0000`, the accumulator 8 bits and the index registers 16.
   the wait for the button) without its blank cell, and mark the next line as not laid out;
   at the message's end (`00`) the message is over, so what the engine draws next (a map's
   name) is English.
-- **Choices.** `choice_hook`: a choice's cursor takes the line's last shown cell (cell 13,
-  pixels 208-223), at the right of the choice's text; the game's own cursor graphic and its
-  moves are untouched.
+- **Choices.** `choice_hook`: a choice's cursor takes the cell the line's layout kept for
+  its mark, the marks in their order (the first at the line's right, cell 13, pixels
+  208-223; the raft's prompts put two on a line), at the right of the choice's text; the
+  game's own cursor graphic and its moves are untouched.
 - **Names.** `{Terra}` to `{Umaro}` in an Arabic message write the translation's own name of
-  the character (from `$F0:1300`, 32 bytes a name, its glyph codes then `FF`), in place of
+  the character (from `$F0:1400`, 32 bytes a name, its glyph codes then `FF`), in place of
   the name the player gave.
 - **Two lessons.** The engine keeps the accumulator's high byte zero in its 8-bit code (its
   `shorta0` is `TDC` then `SEP #$20`) and moves the whole accumulator into a 16-bit index
@@ -124,8 +128,10 @@ The hook draws at any pixel without shifting: the overlay writes each glyph in n
 variants, shifted right by 0 to 8 pixels into three bytes a row (45 bytes a variant, 405 a
 glyph), and the shadow of a glyph at pixel `s` of its tile is the variant `s + 1`. The
 glyphs take codes `20` to `FF` in the font's order (the space, the punctuation, the digits,
-then the repertoire by code point), 224 at most, and their variants must fit one bank (about
-160 glyphs); the Narshe scope uses 115.
+then the repertoire by code point), 224 at most, and their variants take two banks, no glyph
+across one (161 a bank); the first two chapters use 130. The quotes `«` `»` and the brackets
+`(` `)` are drawn by hand as their mirror images, since a right-to-left run shows them
+mirrored and the painter does not mirror.
 
 ## Layout
 
@@ -136,25 +142,27 @@ a line where it stands; `{center}` at a page's start centres its lines, each wri
 four lines ends with `13` when another page follows, and a full page with `01` alone, since
 the game turns the page itself after a fourth line; the message ends with `00`. The other
 commands pass through as the English has them: `{Wait}`, `{Pause xx}`, `{Key}`,
-`{KeyAfter xx}`, and `{Choice}`, which starts a choice's line and counts 16 pixels; a name
-counts its translation's width. The glyphs of a line are stored in the order they are
+`{KeyAfter xx}`, and `{Choice}`, which moves the pen to a cell's edge and counts the cell of
+its cursor (16 pixels at a line's start, up to 31 after text), so two choices may share a
+line; a centred page holds no choice. A name counts its translation's width. The glyphs of a line are stored in the order they are
 painted from the right (a run of digits reads left to right by the shaper's own order).
 
 ## The overlay's room
 
 | Address | Content |
 |---------|---------|
-| `$F0:0000` | the hooks: `redirect_hook` at `+0`, `width_hook` at `+$46`, `dte_hook` at `+$65`, `draw_hook` at `+$7B`, `line_hook` at `+$91`, `page_hook` at `+$D3`, `choice_hook` at `+$10A`, `transfer_hook` at `+$126` |
+| `$F0:0000` | the hooks: `redirect_hook` at `+0`, `width_hook` at `+$44`, `dte_hook` at `+$63`, `draw_hook` at `+$79`, `line_hook` at `+$8F`, `page_hook` at `+$D1`, `choice_hook` at `+$108`, `transfer_hook` at `+$143` |
 | `$F0:1000` | a width a code from `20` (0 where there is no glyph), 224 bytes |
-| `$F0:1100` | a word a code from `20`: the glyph's first byte in the glyphs, 448 bytes |
-| `$F0:1300` | the fourteen names: 32 bytes each, the codes then `FF` |
-| `$F0:1500` | the list: 4 bytes a message (its number, its Arabic's offset); `FFFF` ends it |
-| `$F1:0000` | the glyphs, 405 bytes each |
-| `$F2:0000` | the Arabic messages, an offset each |
+| `$F0:1100` | 3 bytes a code from `20`: the glyph's address, its bank the third byte, 672 bytes |
+| `$F0:1400` | the fourteen names: 32 bytes each, the codes then `FF` |
+| `$F0:2000` | the table: 3 bytes a message number, 3084 entries (9252 bytes): the Arabic's address, or `FFFFFF` for an English message |
+| `$F1:0000` | the glyphs, 405 bytes each, over banks `$F1` and `$F2`; none across a bank |
+| `$F3:0000` | the Arabic messages, to the ROM's end; none across a bank, and none at a bank's last byte, so no address has `FFFF` for its low word |
 
 In work RAM the hooks use `$7E:9D00` (the Arabic flag), `$7E:9D01` (the line laid out),
-`$7E:9D02` (a line waiting to be sent), `$7E:9D04`-`$7E:9D0D` (the line's tiles, the pen and
-scratch) and `$7E:9800`-`$7E:9BFF` (the line's tile columns): the tail of the engine's own
+`$7E:9D02` (a line waiting to be sent), `$7E:9D04`-`$7E:9D0F` (the line's tiles, the pen and
+scratch), `$7E:9D10`-`$7E:9D1B` (the choices' cells: the marks taken, the marks kept, a word
+a cell) and `$7E:9800`-`$7E:9BFF` (the line's tile columns): the tail of the engine's own
 text buffer (`$7E:9183`-`$7E:9DFF`), of which it writes the first 256 bytes at most. The
 added MiB is `FF` where the overlay writes nothing.
 
@@ -181,23 +189,31 @@ and its `RTS` at `$C0:8641`; each translated message (its number, the SHA-256 of
 and, where pinned, its commands). The build then sets the header's checksum, reads
 everything back from the image (the hooks, the sites, the tables, the list, the glyphs, and
 each Arabic message through the list as the hooks find it, with the translation's commands)
-and checks that nothing but the sites, the header's checksum and the added MiB changed.
+and checks that nothing but the sites, the header's checksum and the added MiB changed. The
+table is read back whole (a message's entry, or `FFFFFF`), and each Arabic message from its
+address to its end within its bank.
 
 ## Translations
 
-`rom/ff6_arabic_script.py` pins the sixty-four messages of the opening through the end of
-Narshe by their numbers, 0 to 63 (0 shares 1's text and pointer), with the SHA-256 of each
-and its command skeleton: the cliffs above Narshe (1-5, their `{KeyAfter 18}{Key}` pacing
-kept), the narration (6-9, centred with `{center}`, `{Pause FF}{Key}`), the save point
-(10, two `{Choice}`), the town and the mines (11-20), Arvis's house (21-33, `{Terra}`), the
-guards, Kefka's and the Empire's scenes (34-40), Locke and Arvis (41-48), the Moogles (49-58,
-a `{Terra}` and two `{Choice}` in 54) and the escape (59-63). The Arabic is in
-`translations/final-fantasy-iii.json`, a line a page, `{line}` where a line must end. The
-names are `name.terra` to `name.umaro`, the fourteen characters the name commands write, in
-the game's order, one word each, 64 pixels at most. A translation keeps its original's
-commands but the layout (`{line}`, `{page}`, the spaces): its skeleton must equal the
-original's, which the build takes from the ROM and the script pins too. The messages and
-the names use 114 distinct forms, digits and signs.
+`rom/ff6_arabic_script.py` pins the 367 messages of the first two chapters by their
+numbers, with the SHA-256 of each and its command skeleton. The Narshe chapter (`narshe`,
+0 to 63; 0 shares 1's text and pointer): the cliffs above Narshe (1-5, their
+`{KeyAfter 18}{Key}` pacing kept), the narration (6-9, centred with `{center}`,
+`{Pause FF}{Key}`), the save point (10, two `{Choice}`), the town and the mines (11-20),
+Arvis's house (21-33, `{Terra}`), the guards, Kefka's and the Empire's scenes (34-40), Locke
+and Arvis (41-48), the Moogles (49-58) and the escape (59-63). The second chapter: Figaro
+Castle, Kefka's visit, the dive under the sand and the cave with the clock key (`figaro`,
+64-178), South Figaro and Duncan's cabin (`south-figaro`, 179-236), Mt. Kolts, Vargas and
+Sabin (`kolts`, 237-266), the Returners' hideout, Banon's choice, the strategy meeting and
+the raft down the Lete River to the scenario choice (`returners`, 267-368; 364 and 365 are
+empty messages and stay as they are). The raft's prompts (362, 363, 366) put two choices on
+a line; the chests and the relics (286-289, 311, 318) centre their item line with
+`{center}`. The Arabic is in `translations/final-fantasy-iii.json`, a line a page, `{line}`
+where a line must end. The names are `name.terra` to `name.umaro`, the fourteen characters
+the name commands write, in the game's order, one word each, 64 pixels at most. A
+translation keeps its original's commands but the layout (`{line}`, `{page}`, the spaces):
+its skeleton must equal the original's, which the build takes from the ROM and the script
+pins too. The messages and the names use 130 distinct forms, digits and signs.
 
 ## Verification
 
@@ -207,19 +223,30 @@ the target, and the build report's `matches_reference` says so). In snes9x
 ROM, a new game: the narration's four pages centred, the cliff dialogues right-aligned in
 the box a page at a time, the first Narshe dialogue in Arabic; a message with a name draws
 «تيرا» and «لوك» from the translation, and a two-way choice draws its lines with the cursor
-at their right, moves with Down and confirms with A. The messages that follow the scope
-show the game's English as before. The RetroPad's A is the Super NES's A.
+at their right, moves with Down and confirms with A. The second chapter's messages were
+shown the same way with the first message's entry pointed at each (the table makes that a
+three-byte change): the raft's three-way prompt with its cursor moving from the first
+choice to the two on one line and back, with Down, Up, Left and Right; the password's three
+choices in guillemets; the clock key's bracketed choices; a centred item line. The messages
+that follow the scope show the game's English as before. The RetroPad's A is the Super
+NES's A.
 
 ## Limits
 
-- Sixty-four messages and the characters' names are in Arabic; every other message stays
-  English, and the menus and the battles are other text engines, untouched.
+- The first two chapters' 367 messages and the characters' names are in Arabic; every
+  other message stays English, and the menus and the battles are other text engines,
+  untouched.
 - A message holds no Latin letters; `{Gil}`, `{Item}` and `{Spell}` are refused: the game
   writes them in its own letters, which the Arabic draw leaves out.
 - A line is laid out whole when the engine reaches it, so a `{Key}` in the middle of a line
   shows the rest of the line at once; the scope's messages wait at a line's end.
-- A choice's cursor is the game's right-pointing arrow, at the right of the choice's text.
+- A choice's cursor is the game's right-pointing arrow, at the right of the choice's text;
+  a line keeps cells for four marks at most, and a centred page holds none. The raft's
+  prompts keep the English's order of choices, so the choice the game takes as "left"
+  reads «يسار» at the line's right.
 - A name in an Arabic message is the translation's, not the one the player gave.
 - A page holds four lines of 220 pixels; the encoder refuses more, and a word wider than a
   line. The font is 12 pixels; no vowel marks, lam and alef stay two glyphs.
-- The ROM grows to 4 MiB; the added banks hold only the overlay's hooks and data.
+- The ROM grows to 4 MiB; the added banks hold only the overlay's hooks and data: two
+  banks of glyphs (224 codes at most) and thirteen of Arabic text, room for the whole
+  game's dialogue.

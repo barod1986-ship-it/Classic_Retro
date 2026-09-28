@@ -56,6 +56,7 @@ from classic_retro.engines.ff6_arabic import (
     Ff6Font,
     Ff6Glyph,
     build_ff6_font,
+    choice_advance,
     encode_name,
     ff6_glyph_codes,
     font_preview,
@@ -252,17 +253,26 @@ def test_a_forms_width_is_its_advance_or_its_stroke_to_the_edge():
         form_glyph(BEH["ISOLATED"], [(0, GLYPH_ROWS)], 3)
 
 
-def test_the_glyph_table_lists_widths_and_offsets_by_code():
+def test_the_glyph_table_lists_widths_and_addresses_by_code():
     font = Ff6Font({FIRST_CODE: _glyph(6, (0, BASELINE)), FIRST_CODE + 5: _glyph(9)}, 11)
-    widths, offsets, data = glyph_table(font)
-    assert len(widths) == 224 and len(offsets) == 448 and len(data) == 2 * GLYPH_BYTES
+    widths, addresses, data = glyph_table(font, 0xF10000, 0x20000)
+    assert len(widths) == 224 and len(addresses) == 3 * 224 and len(data) == 2 * GLYPH_BYTES
     assert widths[0] == 6 and widths[5] == 9 and widths[1] == 0
-    assert struct.unpack_from("<H", offsets, 0)[0] == 0
-    assert struct.unpack_from("<H", offsets, 10)[0] == GLYPH_BYTES
+    assert int.from_bytes(addresses[0:3], "little") == 0xF10000
+    assert int.from_bytes(addresses[15:18], "little") == 0xF10000 + GLYPH_BYTES
     assert data[:GLYPH_BYTES] == font.glyphs[FIRST_CODE].variant_data()
+    # A glyph never crosses a bank: the 162nd starts the second, after padding.
+    many = Ff6Font({code: _glyph(6) for code in range(FIRST_CODE, FIRST_CODE + 162)}, 11)
+    widths, addresses, data = glyph_table(many, 0xF10000, 0x20000)
+    assert int.from_bytes(addresses[161 * 3 : 162 * 3], "little") == 0xF20000
+    assert len(data) == 0x10000 + GLYPH_BYTES
+    assert data[161 * GLYPH_BYTES : 0x10000] == bytes((0xFF,)) * (0x10000 - 161 * GLYPH_BYTES)
     with pytest.raises(ClassicRetroError) as caught:
-        glyph_table(Ff6Font({code: _glyph(6) for code in range(FIRST_CODE, FIRST_CODE + 162)}, 11))
+        glyph_table(many, 0xF10000, 0x10000)
     assert caught.value.code is ErrorCode.ARABIC_GLYPH_CAPACITY_EXCEEDED
+    with pytest.raises(ClassicRetroError) as caught:
+        glyph_table(font, 0xF10800, 0x20000)
+    assert caught.value.code is ErrorCode.INVALID_BYTE_RANGE
 
 
 def test_hand_drawn_punctuation_sits_on_the_baseline():
@@ -469,3 +479,12 @@ def test_a_choice_leaves_its_cursor_room_and_a_centred_page_indents_its_lines():
     # Without a font a centred page is laid out by nobody: no spaces command.
     bare = Ff6ArabicEncoder(encoder.glyph_map)
     assert bare.encode("{center}بب").data[0] != COMMAND_CODES["Spaces"]
+    # A second choice on the line: the pen moves to a cell's edge (188 to 176), then
+    # its cursor takes the next cell (160-175); the text follows.
+    two = encoder.encode("{Choice} بب {Choice} بب").pages[0][0]
+    assert two.width == 16 + 4 + 12 + 4 + 28 + 4 + 12
+    assert [x for x, _ in laid_out_line(two.data, font, {})] == [204, 198, 192, 188, 156, 150, 144]
+    assert choice_advance(224) == 16 and choice_advance(188) == 28 and choice_advance(10) == 10
+    with pytest.raises(ClassicRetroError) as caught:
+        encoder.encode("{center}{Choice} بب")
+    assert caught.value.code is ErrorCode.UNSUPPORTED_CONTROL_CODE

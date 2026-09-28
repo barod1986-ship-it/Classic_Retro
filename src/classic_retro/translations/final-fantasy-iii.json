@@ -2,7 +2,7 @@
  "schema_version": "1.0",
  "target": "final-fantasy-iii",
  "language": "ar",
- "notation": "Logical Arabic in the engine notation (engines.ff6_arabic): a line for each page of the message (the box shows four lines of 220 pixels; the game waits for the button between pages), {line} where a line must end; the encoder breaks the other lines itself, a word at a time, by the glyphs' widths. {Terra}, {Locke}, {Cyan}, {Shadow}, {Edgar}, {Sabin}, {Celes}, {Strago}, {Relm}, {Setzer}, {Mog}, {Gau}, {Gogo} and {Umaro} write a character's name: the entries name.terra to name.umaro give the fourteen names in Arabic, which the hook draws in place of the name the player gave. {center} at a page's start centres its lines (the narration). {Choice} starts a line of a choice and leaves the game's cursor its place at the line's right; {Wait}, {Pause 04}, {Key} and {KeyAfter 04} pass to the game as the English has them, and a translation keeps its original's commands. A message holds Arabic letters, spaces, Western or Arabic-Indic digits and the signs . , : ! - … ، ؛ ؟ only. No vowel marks: the font has none.",
+ "notation": "Logical Arabic in the engine notation (engines.ff6_arabic): a line for each page of the message (the box shows four lines of 220 pixels; the game waits for the button between pages), {line} where a line must end; the encoder breaks the other lines itself, a word at a time, by the glyphs' widths. {Terra}, {Locke}, {Cyan}, {Shadow}, {Edgar}, {Sabin}, {Celes}, {Strago}, {Relm}, {Setzer}, {Mog}, {Gau}, {Gogo} and {Umaro} write a character's name: the entries name.terra to name.umaro give the fourteen names in Arabic, which the hook draws in place of the name the player gave. {center} at a page's start centres its lines (the narration). {Choice} starts a line of a choice and leaves the game's cursor its place at the line's right; {Wait}, {Pause 04}, {Key} and {KeyAfter 04} pass to the game as the English has them, and a translation keeps its original's commands. A message holds Arabic letters, spaces, Western or Arabic-Indic digits and the signs . , : ! - … ، ؛ ؟ « » ( ) only (the quotes and the brackets are drawn mirrored, as a right-to-left run shows them). No vowel marks: the font has none.",
  "glossary": [
   {
    "term": "Narshe",
@@ -415,6 +415,1521 @@
    "id": "narshe.063",
    "context": "Message 63 of the dialogue: {Terra}: A man said my memory would come back…{page}{Locke}: Give it time. You're safe with me! I give you my word!{line}{Terra}: ???{page}{Locke}: I won't leave you until your memory returns!!{page}By the way, this secret entrance might be useful some day.{line}Don't forget about it!",
    "text": "{Terra}: قال رجل إن ذاكرتي ستعود…\n{Locke}: امنحيها وقتا. أنت بأمان معي! أعدك بذلك!{line}{Terra}: ؟؟؟\n{Locke}: لن أتركك حتى تعود ذاكرتك!!\nبالمناسبة، قد يفيدك هذا المدخل السري يوما ما.{line}لا تنسيه!"
+  },
+  {
+   "id": "figaro.064",
+   "context": "Message 64 of the dialogue: MAN: You mean, THIS young woman…?!",
+   "text": "الرجل: أتقصد هذه الشابة…؟!"
+  },
+  {
+   "id": "figaro.065",
+   "context": "Message 65 of the dialogue: {Terra}: Who do you think you are?",
+   "text": "{Terra}: من تظن نفسك؟"
+  },
+  {
+   "id": "figaro.066",
+   "context": "Message 66 of the dialogue: MAN: Oh…sorry!",
+   "text": "الرجل: أوه… آسف!"
+  },
+  {
+   "id": "figaro.067",
+   "context": "Message 67 of the dialogue: MAN: How rude of me to turn my back to a lady!",
+   "text": "الرجل: ما أوقح أن أدير ظهري لسيدة!"
+  },
+  {
+   "id": "figaro.068",
+   "context": "Message 68 of the dialogue: The young king of Figaro Castle, ally to the Empire, and a master designer of machinery…",
+   "text": "ملك قلعة فيغارو الشاب، حليف الإمبراطورية، ومصمم آلات بارع…"
+  },
+  {
+   "id": "figaro.069",
+   "context": "Message 69 of the dialogue: {Edgar}: I am {Edgar}, King of Figaro.",
+   "text": "{Edgar}: أنا {Edgar}، ملك فيغارو."
+  },
+  {
+   "id": "figaro.070",
+   "context": "Message 70 of the dialogue: {Locke}: Surprised someone like me knows a king?",
+   "text": "{Locke}: أمتفاجئة أن شخصا مثلي يعرف ملكا؟"
+  },
+  {
+   "id": "figaro.071",
+   "context": "Message 71 of the dialogue: {Locke}: Talk to you later!",
+   "text": "{Locke}: نتحدث لاحقا!"
+  },
+  {
+   "id": "figaro.072",
+   "context": "Message 72 of the dialogue: {Edgar}: So…you're an Imperial soldier! No problem. Figaro and the Empire are allies!{page}Please, relax while you're here.{line}It's not in my blood to harm a lady.",
+   "text": "{Edgar}: إذن… أنت جندية إمبراطورية! لا بأس. فيغارو والإمبراطورية حليفتان!\nأرجوك، استريحي ما دمت هنا.{line}ليس من طبعي أن أؤذي سيدة."
+  },
+  {
+   "id": "figaro.073",
+   "context": "Message 73 of the dialogue: {Terra}: Look, why are you helping me?{line}Is it because of my…abilities?",
+   "text": "{Terra}: اسمع، لماذا تساعدني؟{line}أبسبب… قدراتي؟"
+  },
+  {
+   "id": "figaro.074",
+   "context": "Message 74 of the dialogue: {Edgar}: I'll give you 3 reasons:{line}First of all, your beauty has captivated me!{page}Second…I'm dying to know if I'm your type…",
+   "text": "{Edgar}: سأعطيك 3 أسباب:{line}أولا، جمالك قد أسرني!\nثانيا… أتوق لأعرف إن كنت من النوع الذي يعجبك…"
+  },
+  {
+   "id": "figaro.075",
+   "context": "Message 75 of the dialogue: I guess your…abilities…would be a distant 3rd.",
+   "text": "وأظن أن… قدراتك… تأتي ثالثا وبفارق بعيد."
+  },
+  {
+   "id": "figaro.076",
+   "context": "Message 76 of the dialogue: {Terra}: ……? {Wait}{line}What's with you, anyway?",
+   "text": "{Terra}: ……؟ {Wait}{line}ما خطبك أصلا؟"
+  },
+  {
+   "id": "figaro.077",
+   "context": "Message 77 of the dialogue: {Edgar}: Guess my technique's getting a bit rusty…",
+   "text": "{Edgar}: يبدو أن أسلوبي قد صدئ قليلا…"
+  },
+  {
+   "id": "figaro.078",
+   "context": "Message 78 of the dialogue: {Edgar}: Come find me when you feel rested.",
+   "text": "{Edgar}: تعالي إلي حين تستريحين."
+  },
+  {
+   "id": "figaro.079",
+   "context": "Message 79 of the dialogue: {Terra}: Hmm…I suppose a normal girl would have found him dashing. {Wait}{line}But I'm hardly…normal…",
+   "text": "{Terra}: همم… أظن أن أي فتاة عادية كانت لتراه فاتنا. {Wait}{line}لكنني بالكاد… عادية…"
+  },
+  {
+   "id": "figaro.080",
+   "context": "Message 80 of the dialogue: Feel free to wander about.",
+   "text": "تجولي كما تشائين."
+  },
+  {
+   "id": "figaro.081",
+   "context": "Message 81 of the dialogue: Go see the King!",
+   "text": "اذهبي إلى الملك!"
+  },
+  {
+   "id": "figaro.082",
+   "context": "Message 82 of the dialogue: Weapons and items manufactured here are sent to South Figaro.",
+   "text": "الأسلحة والأدوات المصنوعة هنا ترسل إلى ساوث فيغارو."
+  },
+  {
+   "id": "figaro.083",
+   "context": "Message 83 of the dialogue: Long ago, a force called “magic” existed.{page}People who used magic were called “Mage Knights.”",
+   "text": "قديما، وجدت قوة تدعى «السحر».\nومن كانوا يستعملون السحر سموا «فرسان السحر»."
+  },
+  {
+   "id": "figaro.084",
+   "context": "Message 84 of the dialogue: Scholars the world over are doing research on magic.{line}Silly people, scholars…",
+   "text": "العلماء في أنحاء العالم يبحثون في السحر.{line}يا لسخافة العلماء…"
+  },
+  {
+   "id": "figaro.085",
+   "context": "Message 85 of the dialogue: Ancient texts I'm studying speak of a “1000 year-old city beneath the sand.”{page}I wonder what this means, {page}“…when the queen stands and takes 5 steps…”",
+   "text": "النصوص القديمة التي أدرسها تتحدث عن «مدينة عمرها 1000 عام تحت الرمال».\nليت شعري ما معنى هذا:\n«…حين تقف الملكة وتخطو 5 خطوات…»"
+  },
+  {
+   "id": "figaro.086",
+   "context": "Message 86 of the dialogue: I heard the Empire is using something called “magic”…",
+   "text": "سمعت أن الإمبراطورية تستعمل شيئا يدعى «السحر»…"
+  },
+  {
+   "id": "figaro.087",
+   "context": "Message 87 of the dialogue: The Empire has smashed the 3 cities on the southern continent. Just a matter of time 'til they come up here…",
+   "text": "سحقت الإمبراطورية المدن الثلاث في القارة الجنوبية. ومسألة وقت حتى يصعدوا إلى هنا…"
+  },
+  {
+   "id": "figaro.088",
+   "context": "Message 88 of the dialogue: Gestahl has harnessed the power of magic.{line}Who can stop him now?!",
+   "text": "غشتال سخر قوة السحر.{line}من يوقفه الآن؟!"
+  },
+  {
+   "id": "figaro.089",
+   "context": "Message 89 of the dialogue: Though {Edgar} showers his attentions on women, most are too smart to pay any attention to him.",
+   "text": "مع أن {Edgar} يغدق اهتمامه على النساء، فمعظمهن أذكى من أن يعرنه أي اهتمام."
+  },
+  {
+   "id": "figaro.090",
+   "context": "Message 90 of the dialogue: His highness said he'd marry me when I get older!",
+   "text": "قال جلالته إنه سيتزوجني حين أكبر!"
+  },
+  {
+   "id": "figaro.091",
+   "context": "Message 91 of the dialogue: I wanna marry the king!",
+   "text": "أريد أن أتزوج الملك!"
+  },
+  {
+   "id": "figaro.092",
+   "context": "Message 92 of the dialogue: He recently tried to hit on the high priestess…{line}Surely, he's…talked to you?",
+   "text": "حاول مؤخرا التودد إلى الكاهنة الكبرى…{line}لا شك أنه… كلمك؟"
+  },
+  {
+   "id": "figaro.093",
+   "context": "Message 93 of the dialogue: {Terra}: ……",
+   "text": "{Terra}: ……"
+  },
+  {
+   "id": "figaro.094",
+   "context": "Message 94 of the dialogue: Ah! King {Edgar}!",
+   "text": "آه! الملك {Edgar}!"
+  },
+  {
+   "id": "figaro.095",
+   "context": "Message 95 of the dialogue: “……”",
+   "text": "«……»"
+  },
+  {
+   "id": "figaro.096",
+   "context": "Message 96 of the dialogue: Error.{line}Contact a supervisor.{line}From: Development Team.",
+   "text": "خطأ.{line}اتصل بالمشرف.{line}من: فريق التطوير."
+  },
+  {
+   "id": "figaro.097",
+   "context": "Message 97 of the dialogue: These thieves have been{line}terrorizing the vicinity.{line}Stay away from 'em!",
+   "text": "هؤلاء اللصوص كانوا{line}يرهبون المنطقة.{line}ابتعد عنهم!"
+  },
+  {
+   "id": "figaro.098",
+   "context": "Message 98 of the dialogue: I demand to see {Edgar}!{line}How dare they keep us in this stinking pit!",
+   "text": "أطالب برؤية {Edgar}!{line}كيف يجرؤون على حبسنا في هذه الحفرة النتنة!"
+  },
+  {
+   "id": "figaro.099",
+   "context": "Message 99 of the dialogue: Hey! Let us outta here!",
+   "text": "هيه! أخرجونا من هنا!"
+  },
+  {
+   "id": "figaro.100",
+   "context": "Message 100 of the dialogue: Relax, they're just blowing off steam. But I'm telling you, there's no sense keeping us here!{page}We're just small potatos compared to the real threat lurking out there! And King {Edgar} knows it!",
+   "text": "اهدأ، إنهم ينفسون عن غضبهم فحسب. لكن أقول لك، لا معنى لإبقائنا هنا!\nنحن صغار مقارنة بالخطر الحقيقي المتربص في الخارج! والملك {Edgar} يعرف ذلك!"
+  },
+  {
+   "id": "figaro.101",
+   "context": "Message 101 of the dialogue: I'm Lone Wolf, the pickpocket!",
+   "text": "أنا الذئب الوحيد، النشال!"
+  },
+  {
+   "id": "figaro.102",
+   "context": "Message 102 of the dialogue: MATRON: {Edgar}'s at it again!? He hits on anything that moves!",
+   "text": "المربية: {Edgar} يفعلها مجددا!؟ إنه يتودد إلى كل ما يتحرك!"
+  },
+  {
+   "id": "figaro.103",
+   "context": "Message 103 of the dialogue: MATRON: {Edgar} has a twin brother. He was such a nice boy…",
+   "text": "المربية: {Edgar} له أخ توأم. كان فتى لطيفا جدا…"
+  },
+  {
+   "id": "figaro.104",
+   "context": "Message 104 of the dialogue: YOUTH: Brother,{line}What's wrong with father?{line}What's all this talk of his successor?{page}{Edgar}: Are you blind?{line}Look how thin his face has become!",
+   "text": "الفتى: أخي،{line}ما خطب أبي؟{line}وما كل هذا الكلام عن خليفته؟\n{Edgar}: أأنت أعمى؟{line}انظر كم نحل وجهه!"
+  },
+  {
+   "id": "figaro.105",
+   "context": "Message 105 of the dialogue: YOUTH: ?……What is it?",
+   "text": "الفتى: ؟…… ما الأمر؟"
+  },
+  {
+   "id": "figaro.106",
+   "context": "Message 106 of the dialogue: YOUTH: Brother!",
+   "text": "الفتى: أخي!"
+  },
+  {
+   "id": "figaro.107",
+   "context": "Message 107 of the dialogue: YOUTH: Tears……?!",
+   "text": "الفتى: دموع……؟!"
+  },
+  {
+   "id": "figaro.108",
+   "context": "Message 108 of the dialogue: {Edgar}'s twin brother, who traded the throne for his own freedom…",
+   "text": "توأم {Edgar}، الذي قايض العرش بحريته…"
+  },
+  {
+   "id": "figaro.109",
+   "context": "Message 109 of the dialogue: MATRON: Yes…{line}His name is {Sabin}. Oh, he looked so like his father!{page}When he ran away, he was a sweet little child.{line}I wonder what he's like now?",
+   "text": "المربية: نعم…{line}اسمه {Sabin}. آه، كم كان يشبه أباه!\nحين هرب كان طفلا صغيرا لطيفا.{line}ترى كيف صار الآن؟"
+  },
+  {
+   "id": "figaro.110",
+   "context": "Message 110 of the dialogue: CHANCELLOR: The whole business of the succession was so repugnant to {Sabin}, the King's brother, that……{page}……he fled the castle forever. The succession was settled with a coin toss…",
+   "text": "المستشار: كانت مسألة الخلافة كلها بغيضة جدا عند {Sabin}، أخي الملك، حتى إنه……\n……هرب من القلعة إلى الأبد. وحسمت الخلافة برمية عملة…"
+  },
+  {
+   "id": "figaro.111",
+   "context": "Message 111 of the dialogue: MERCHANT: I can't take money from the King!{page}{Edgar}: Look, don't you have a family?{line}Just shut up and take it.",
+   "text": "التاجر: لا أستطيع أخذ المال من الملك!\n{Edgar}: اسمع، ألا لديك عائلة؟{line}اصمت وخذه."
+  },
+  {
+   "id": "figaro.112",
+   "context": "Message 112 of the dialogue: MERCHANT: Sir {Sabin}, I can't take your money!{page}{Sabin}: Take it!{line}Haven't you heard? My brother says I'm a notorious spendthrift!",
+   "text": "التاجر: سيدي {Sabin}، لا أستطيع أخذ مالك!\n{Sabin}: خذه!{line}ألم تسمع؟ أخي يقول إنني مبذر سيئ السمعة!"
+  },
+  {
+   "id": "figaro.113",
+   "context": "Message 113 of the dialogue: {Edgar}: You've been busy down south!{line}Looking for more cities to destroy?{page}TROOPER: That's for us to know!",
+   "text": "{Edgar}: كنتم مشغولين في الجنوب!{line}أتبحثون عن مدن أخرى لتدمروها؟\nالجندي: هذا شأننا وحدنا!"
+  },
+  {
+   "id": "figaro.114",
+   "context": "Message 114 of the dialogue: Sir Kefka!?{line}What on earth do…{page}KEFKA: Outta my way!",
+   "text": "السيد كيفكا!؟{line}ماذا بحق…\nكيفكا: ابتعدوا عن طريقي!"
+  },
+  {
+   "id": "figaro.115",
+   "context": "Message 115 of the dialogue: {Edgar}: Well?{line}How do you like my castle?",
+   "text": "{Edgar}: حسنا؟{line}ما رأيك في قلعتي؟"
+  },
+  {
+   "id": "figaro.116",
+   "context": "Message 116 of the dialogue: King {Edgar}!{line}Someone from the Empire to see you!",
+   "text": "الملك {Edgar}!{line}شخص من الإمبراطورية يريد رؤيتك!"
+  },
+  {
+   "id": "figaro.117",
+   "context": "Message 117 of the dialogue: {Edgar}: Probably Kefka!",
+   "text": "{Edgar}: كيفكا على الأرجح!"
+  },
+  {
+   "id": "figaro.118",
+   "context": "Message 118 of the dialogue: KEFKA: Phooey!{line}Emperor Gestahl's stupid orders!",
+   "text": "كيفكا: أف!{line}أوامر الإمبراطور غشتال الغبية!"
+  },
+  {
+   "id": "figaro.119",
+   "context": "Message 119 of the dialogue: KEFKA: {Edgar}, you pinhead!{line}Why do you have to live in the middle of nowhere?{page}These recon jobs are the pits!",
+   "text": "كيفكا: {Edgar}، يا أحمق!{line}لماذا تسكن في مكان مقطوع كهذا؟\nمهام الاستطلاع هذه أسوأ ما يكون!"
+  },
+  {
+   "id": "figaro.120",
+   "context": "Message 120 of the dialogue: KEFKA: Ahem…there's SAND on my boots!",
+   "text": "كيفكا: أهم… هناك رمل على حذائي!"
+  },
+  {
+   "id": "figaro.121",
+   "context": "Message 121 of the dialogue: SOLDIERS: Yes, Sir!{line}All set, Sir!",
+   "text": "الجنود: أمرك يا سيدي!{line}كل شيء جاهز يا سيدي!"
+  },
+  {
+   "id": "figaro.122",
+   "context": "Message 122 of the dialogue: KEFKA: Idiots!",
+   "text": "كيفكا: حمقى!"
+  },
+  {
+   "id": "figaro.123",
+   "context": "Message 123 of the dialogue: {Edgar}: I thought we were allies! What are you doing in my domain?",
+   "text": "{Edgar}: ظننت أننا حلفاء! ماذا تفعلون في أرضي؟"
+  },
+  {
+   "id": "figaro.124",
+   "context": "Message 124 of the dialogue: {Edgar}: What brings Kefka, humble servant of Emperor Gestahl, into our lowly presence?{page}KEFKA: A girl of no importance recently escaped from us. We heard she found refuge here…",
+   "text": "{Edgar}: ما الذي يأتي بكيفكا، خادم الإمبراطور غشتال المتواضع، إلى حضرتنا الوضيعة؟\nكيفكا: فتاة لا أهمية لها هربت منا مؤخرا. سمعنا أنها لجأت إلى هنا…"
+  },
+  {
+   "id": "figaro.125",
+   "context": "Message 125 of the dialogue: {Edgar}: Hmm…this wouldn't have anything to do with this “witch” everyone's been whispering about, would it?{page}KEFKA: Lies!{line}She…merely stole something of minor value.{line}Is she here?",
+   "text": "{Edgar}: همم… ألا علاقة لهذا بتلك «الساحرة» التي يتهامس عنها الجميع؟\nكيفكا: أكاذيب!{line}إنها… سرقت شيئا زهيد القيمة فحسب.{line}أهي هنا؟"
+  },
+  {
+   "id": "figaro.126",
+   "context": "Message 126 of the dialogue: {Edgar}: That's a tough one!",
+   "text": "{Edgar}: هذا سؤال صعب!"
+  },
+  {
+   "id": "figaro.127",
+   "context": "Message 127 of the dialogue: {Edgar}: You see, there're more girls here than grains of sand out there. I can't keep track of 'em all!{page}KEFKA: I'd hate to be you if we find out you're lying…{line}Mwa, ha!",
+   "text": "{Edgar}: أترى، الفتيات هنا أكثر من حبات الرمل في الخارج. لا أستطيع تتبعهن كلهن!\nكيفكا: لن أحسدك إن اكتشفنا أنك تكذب…{line}موا، ها!"
+  },
+  {
+   "id": "figaro.128",
+   "context": "Message 128 of the dialogue: KEFKA: I truly hope nothing happens to your precious Figaro…!",
+   "text": "كيفكا: آمل صادقا ألا يصيب فيغارو الغالية مكروه…!"
+  },
+  {
+   "id": "figaro.129",
+   "context": "Message 129 of the dialogue: {Locke}: I'd say that guy's missing a few buttons…{line}{Edgar}: …{line}Where's {Terra}?",
+   "text": "{Locke}: أقول إن ذلك الرجل ناقص عقل…{line}{Edgar}: …{line}أين {Terra}؟"
+  },
+  {
+   "id": "figaro.130",
+   "context": "Message 130 of the dialogue: {Edgar}: Take her to her room…",
+   "text": "{Edgar}: خذوها إلى غرفتها…"
+  },
+  {
+   "id": "figaro.131",
+   "context": "Message 131 of the dialogue: {Edgar}: I'd love to chat with you, but the Chancellor and I must plan our strategy.{page}Sometimes I hate being a king!{line}If you'll excuse me.",
+   "text": "{Edgar}: كنت أود الحديث معك، لكن علي أنا والمستشار أن نخطط لاستراتيجيتنا.\nأحيانا أكره كوني ملكا!{line}اعذريني."
+  },
+  {
+   "id": "figaro.132",
+   "context": "Message 132 of the dialogue: {Locke}: Follow me.",
+   "text": "{Locke}: اتبعيني."
+  },
+  {
+   "id": "figaro.133",
+   "context": "Message 133 of the dialogue: {Locke}: Don't you worry 'bout a thing! I'll…{page}{Terra}: You're {Locke}, right? {Edgar} told me about you.{line}Is it true you're a thief?",
+   "text": "{Locke}: لا تقلقي بشأن أي شيء! سوف…\n{Terra}: أنت {Locke}، صحيح؟ {Edgar} أخبرني عنك.{line}أصحيح أنك لص؟"
+  },
+  {
+   "id": "figaro.134",
+   "context": "Message 134 of the dialogue: {Locke}: That's TREASURE HUNTER!",
+   "text": "{Locke}: بل صائد كنوز!"
+  },
+  {
+   "id": "figaro.135",
+   "context": "Message 135 of the dialogue: {Locke}: On the surface, {Edgar} pretends to support the Empire.{page}The truth is, he's collaborating with the Returners, an organization opposed to the Empire.{page}I am his contact with that group…",
+   "text": "{Locke}: في الظاهر، يتظاهر {Edgar} بدعم الإمبراطورية.\nوالحقيقة أنه يتعاون مع العائدين، وهم منظمة تعارض الإمبراطورية.\nوأنا حلقة وصله بتلك الجماعة…"
+  },
+  {
+   "id": "figaro.136",
+   "context": "Message 136 of the dialogue: {Locke}: The old man you met in Narshe is one of us.{page}{Terra}: Empire…but I'm a soldier of the Empire…!",
+   "text": "{Locke}: العجوز الذي قابلته في نارشي واحد منا.\n{Terra}: الإمبراطورية… لكنني جندية في الإمبراطورية…!"
+  },
+  {
+   "id": "figaro.137",
+   "context": "Message 137 of the dialogue: {Locke}: That's not true!{line}They were using you!{line}Things are different now.",
+   "text": "{Locke}: هذا غير صحيح!{line}كانوا يستغلونك!{line}الأمور مختلفة الآن."
+  },
+  {
+   "id": "figaro.138",
+   "context": "Message 138 of the dialogue: {Terra}: I don't understand…{line}What should I do?",
+   "text": "{Terra}: لا أفهم…{line}ماذا علي أن أفعل؟"
+  },
+  {
+   "id": "figaro.139",
+   "context": "Message 139 of the dialogue: {Locke}: I can't tell you what to do.{page}You don't have to decide right now.{line}You'll soon find your way…",
+   "text": "{Locke}: لا أستطيع أن أملي عليك ما تفعلين.\nلست مضطرة للقرار الآن.{line}ستجدين طريقك قريبا…"
+  },
+  {
+   "id": "figaro.140",
+   "context": "Message 140 of the dialogue: {Terra}: But how will I know which way is right…",
+   "text": "{Terra}: لكن كيف أعرف أي طريق هو الصواب…"
+  },
+  {
+   "id": "figaro.141",
+   "context": "Message 141 of the dialogue: {Edgar}: …?{page}What the…?!",
+   "text": "{Edgar}: …؟\nما هذا…؟!"
+  },
+  {
+   "id": "figaro.142",
+   "context": "Message 142 of the dialogue: {Edgar}: What's happening?{page}SOLDIER: It's the Empire!{line}It's Kefka!",
+   "text": "{Edgar}: ماذا يحدث؟\nالجندي: إنها الإمبراطورية!{line}إنه كيفكا!"
+  },
+  {
+   "id": "figaro.143",
+   "context": "Message 143 of the dialogue: {Edgar}: What are you doing?",
+   "text": "{Edgar}: ماذا تفعل؟"
+  },
+  {
+   "id": "figaro.144",
+   "context": "Message 144 of the dialogue: KEFKA: Bring me the girl. Now!{line}{Edgar}: I don't know what you're talking about!{page}KEFKA: Then…{line}welcome to my barbecue!!{line}Uwa ha ha ha!",
+   "text": "كيفكا: أحضر لي الفتاة. الآن!{line}{Edgar}: لا أعرف عما تتكلم!\nكيفكا: إذن…{line}مرحبا بكم في حفلة الشواء!!{line}أوا ها ها ها!"
+  },
+  {
+   "id": "figaro.145",
+   "context": "Message 145 of the dialogue: FIRE!!!",
+   "text": "نار!!!"
+  },
+  {
+   "id": "figaro.146",
+   "context": "Message 146 of the dialogue: Fire! Fire! Heh, heh heh…",
+   "text": "نار! نار! هيه، هيه هيه…"
+  },
+  {
+   "id": "figaro.147",
+   "context": "Message 147 of the dialogue: {Edgar}: Get ready…!{page}SOLDIER: Yes, Sir!",
+   "text": "{Edgar}: استعدوا…!\nالجندي: أمرك يا سيدي!"
+  },
+  {
+   "id": "figaro.148",
+   "context": "Message 148 of the dialogue: KEFKA: Changed your mind…?",
+   "text": "كيفكا: أغيرت رأيك…؟"
+  },
+  {
+   "id": "figaro.149",
+   "context": "Message 149 of the dialogue: {Edgar}: I guess I have no choice…",
+   "text": "{Edgar}: يبدو أن لا خيار لدي…"
+  },
+  {
+   "id": "figaro.150",
+   "context": "Message 150 of the dialogue: {Edgar}: Or maybe I do!",
+   "text": "{Edgar}: أو ربما لدي!"
+  },
+  {
+   "id": "figaro.151",
+   "context": "Message 151 of the dialogue: KEFKA: Ackk!{line}Shameful that a king should flee, leaving his people behind!{page}How utterly delightful!",
+   "text": "كيفكا: آخ!{line}عار أن يهرب ملك تاركا شعبه خلفه!\nيا لها من متعة خالصة!"
+  },
+  {
+   "id": "figaro.152",
+   "context": "Message 152 of the dialogue: {Edgar}: Jump! {Pause 04}{Key}",
+   "text": "{Edgar}: اقفزا! {Pause 04}{Key}"
+  },
+  {
+   "id": "figaro.153",
+   "context": "Message 153 of the dialogue: {Locke}: Yahoooo!",
+   "text": "{Locke}: ياهووو!"
+  },
+  {
+   "id": "figaro.154",
+   "context": "Message 154 of the dialogue: {Edgar}: OK! Dive now!!!",
+   "text": "{Edgar}: حسنا! غوصوا الآن!!!"
+  },
+  {
+   "id": "figaro.155",
+   "context": "Message 155 of the dialogue: SOLDIER: Figaro Submerge Mode engaged! {Pause 04}{Key}",
+   "text": "الجندي: تم تشغيل وضع غوص فيغارو! {Pause 04}{Key}"
+  },
+  {
+   "id": "figaro.156",
+   "context": "Message 156 of the dialogue: CHANCELLOR: No one can touch the people of Figaro!",
+   "text": "المستشار: لا أحد يمس شعب فيغارو!"
+  },
+  {
+   "id": "figaro.157",
+   "context": "Message 157 of the dialogue: {Edgar}: Bravo, Figaro!!! {Pause 03}{Key}",
+   "text": "{Edgar}: أحسنت يا فيغارو!!! {Pause 03}{Key}"
+  },
+  {
+   "id": "figaro.158",
+   "context": "Message 158 of the dialogue: KEFKA: Go!! GET THEM!",
+   "text": "كيفكا: هيا!! أمسكوهم!"
+  },
+  {
+   "id": "figaro.159",
+   "context": "Message 159 of the dialogue: KEFKA: Son of a submariner!{line}They'll pay for this…",
+   "text": "كيفكا: يا ابن الغواصة!{line}سيدفعون ثمن هذا…"
+  },
+  {
+   "id": "figaro.160",
+   "context": "Message 160 of the dialogue: {Locke}: This is great! {Pause 06}{Key}",
+   "text": "{Locke}: هذا رائع! {Pause 06}{Key}"
+  },
+  {
+   "id": "figaro.161",
+   "context": "Message 161 of the dialogue: {Terra}: Was that a bad person? {Pause 04}{Key}{line}I… {Wait}I'm scared…",
+   "text": "{Terra}: أكان ذلك شخصا سيئا؟ {Pause 04}{Key}{line}أنا… {Wait}أنا خائفة…"
+  },
+  {
+   "id": "figaro.162",
+   "context": "Message 162 of the dialogue: {Edgar}: {Terra},{line}there's someone I'd like you to meet…!",
+   "text": "{Edgar}: {Terra}،{line}هناك من أود أن تقابليه…!"
+  },
+  {
+   "id": "figaro.163",
+   "context": "Message 163 of the dialogue: {Locke}: We're members of the Returners.{page}{Edgar}: Our mentor, Banon, would certainly like to meet you.{page}“Magic” is going to be the key to winning this war.",
+   "text": "{Locke}: نحن أعضاء في العائدين.\n{Edgar}: معلمنا بانون يود بالتأكيد أن يقابلك.\n«السحر» سيكون مفتاح الفوز في هذه الحرب."
+  },
+  {
+   "id": "figaro.164",
+   "context": "Message 164 of the dialogue: {Terra}: “Magic”…",
+   "text": "{Terra}: «السحر»…"
+  },
+  {
+   "id": "figaro.165",
+   "context": "Message 165 of the dialogue: {Edgar}: {Terra} has magical powers. That Esper seemed to…react to her. Can there be some connection?{page}{Terra}: I haven't the foggiest! It just seems natural to me that I have the use of this power…",
+   "text": "{Edgar}: {Terra} لديها قوى سحرية. وبدا أن ذلك الإسبر… تفاعل معها. أيمكن أن تكون هناك صلة؟\n{Terra}: لا أدري البتة! يبدو لي طبيعيا فحسب أن أملك هذه القوة…"
+  },
+  {
+   "id": "figaro.166",
+   "context": "Message 166 of the dialogue: {Edgar}: But no HUMAN is born with the powers you seem to have, and…",
+   "text": "{Edgar}: لكن ما من إنسان يولد بالقوى التي تبدين مالكة لها، و…"
+  },
+  {
+   "id": "figaro.167",
+   "context": "Message 167 of the dialogue: {Edgar}: I apologize.{line}{Terra}: What should I do…?{page}{Edgar}: I'm sure the Empire is going to come after you…{page}If they get their hands on you again, the world's finished…{page}{Terra}, you want to understand your own powers, right?",
+   "text": "{Edgar}: أعتذر.{line}{Terra}: ماذا علي أن أفعل…؟\n{Edgar}: أنا واثق أن الإمبراطورية ستلاحقك…\nوإن وقعت في أيديهم مجددا، فقد انتهى العالم…\n{Terra}، تريدين أن تفهمي قواك، صحيح؟"
+  },
+  {
+   "id": "figaro.168",
+   "context": "Message 168 of the dialogue: {Edgar}: Then I think we need to consult with Banon.{page}{Terra}: ……",
+   "text": "{Edgar}: إذن أظن أن علينا استشارة بانون.\n{Terra}: ……"
+  },
+  {
+   "id": "figaro.169",
+   "context": "Message 169 of the dialogue: {Locke}: Please…",
+   "text": "{Locke}: أرجوك…"
+  },
+  {
+   "id": "figaro.170",
+   "context": "Message 170 of the dialogue: {Edgar}: OK!{line}To the south there's a cave that leads to South Figaro.",
+   "text": "{Edgar}: حسنا!{line}في الجنوب كهف يؤدي إلى ساوث فيغارو."
+  },
+  {
+   "id": "figaro.171",
+   "context": "Message 171 of the dialogue: This cave leads to South Figaro. It's closed now due to construction.",
+   "text": "هذا الكهف يؤدي إلى ساوث فيغارو. وهو مغلق الآن بسبب أعمال البناء."
+  },
+  {
+   "id": "figaro.172",
+   "context": "Message 172 of the dialogue: SOLDIER: King {Edgar}!{line}Where are you headed?{page}{Edgar}: Through the cave, and eastward to South Figaro.{page}{Edgar}: Return to the castle, and tell the others we're safe.{page}SOLDIER: Yes, Sir!{line}Take care!",
+   "text": "الجندي: الملك {Edgar}!{line}إلى أين أنت متجه؟\n{Edgar}: عبر الكهف، ثم شرقا إلى ساوث فيغارو.\n{Edgar}: عد إلى القلعة، وأخبر الآخرين أننا بخير.\nالجندي: أمرك يا سيدي!{line}اعتن بنفسك!"
+  },
+  {
+   "id": "figaro.173",
+   "context": "Message 173 of the dialogue: Zzz…zzz…",
+   "text": "خرر… خرر…"
+  },
+  {
+   "id": "figaro.174",
+   "context": "Message 174 of the dialogue: There's a clock key in his pocket…{line}{Choice}(Take it.){line}{Choice}(Stealing is wrong.)",
+   "text": "في جيبه مفتاح ساعة…{line}{Choice} (خذه.){line}{Choice} (السرقة خطأ.)"
+  },
+  {
+   "id": "figaro.175",
+   "context": "Message 175 of the dialogue: {Choice}(Wind the clock?){line}{Choice}(Leave it.)",
+   "text": "{Choice} (تدير الساعة؟){line}{Choice} (تتركها.)"
+  },
+  {
+   "id": "figaro.176",
+   "context": "Message 176 of the dialogue: An old clock…{line}It's not ticking…",
+   "text": "ساعة قديمة…{line}إنها لا تدق…"
+  },
+  {
+   "id": "figaro.177",
+   "context": "Message 177 of the dialogue: An old clock…{line}It's ticking…",
+   "text": "ساعة قديمة…{line}إنها تدق…"
+  },
+  {
+   "id": "figaro.178",
+   "context": "Message 178 of the dialogue: Took the Clock Key!",
+   "text": "أخذت مفتاح الساعة!"
+  },
+  {
+   "id": "south-figaro.179",
+   "context": "Message 179 of the dialogue: Welcome to South Figaro!",
+   "text": "مرحبا بكم في ساوث فيغارو!"
+  },
+  {
+   "id": "south-figaro.180",
+   "context": "Message 180 of the dialogue: You'll find lots of excellent weapons, armor and relics in our shops.",
+   "text": "ستجد في متاجرنا الكثير من الأسلحة والدروع والتمائم الممتازة."
+  },
+  {
+   "id": "south-figaro.181",
+   "context": "Message 181 of the dialogue: Did you hear?{line}Figaro Castle sank into the sand!{page}You couldn't find it even if you knew where to look!",
+   "text": "أسمعت؟{line}قلعة فيغارو غاصت في الرمال!\nلن تجدها حتى لو عرفت أين تبحث!"
+  },
+  {
+   "id": "south-figaro.182",
+   "context": "Message 182 of the dialogue: Mt. Kolts is to the east.",
+   "text": "جبل كولتس إلى الشرق."
+  },
+  {
+   "id": "south-figaro.183",
+   "context": "Message 183 of the dialogue: Beyond Mt. Kolts you'll find the Sabil mountain range.",
+   "text": "وراء جبل كولتس ستجد سلسلة جبال سابيل."
+  },
+  {
+   "id": "south-figaro.184",
+   "context": "Message 184 of the dialogue: Equip relics to gain a variety of abilities!{page}These double my walking speed!",
+   "text": "جهز التمائم لتكسب قدرات متنوعة!\nهذه تضاعف سرعة مشيي!"
+  },
+  {
+   "id": "south-figaro.185",
+   "context": "Message 185 of the dialogue: My husband, Duncan, is a{line}world-famous martial artist!{page}He's taking his disciples to{line}Mt. Kolts for meditation and training.",
+   "text": "زوجي دنكان{line}فنان قتال مشهور عالميا!\nإنه يأخذ تلاميذه إلى{line}جبل كولتس للتأمل والتدريب."
+  },
+  {
+   "id": "south-figaro.186",
+   "context": "Message 186 of the dialogue: {Sabin}, where's Vargas?{line}Where's my husband?",
+   "text": "{Sabin}، أين فارغاس؟{line}أين زوجي؟"
+  },
+  {
+   "id": "south-figaro.187",
+   "context": "Message 187 of the dialogue: {Sabin}: Master was…{line}Vargas…",
+   "text": "{Sabin}: المعلم كان…{line}فارغاس…"
+  },
+  {
+   "id": "south-figaro.188",
+   "context": "Message 188 of the dialogue: DUNCAN'S WIFE: I'll never understand Vargas…{page}Fortunately, my husband taught his most secret techniques to you.",
+   "text": "زوجة دنكان: لن أفهم فارغاس أبدا…\nلحسن الحظ، علمك زوجي أسراره الأكثر خفاء."
+  },
+  {
+   "id": "south-figaro.189",
+   "context": "Message 189 of the dialogue: {Sabin}: For 10 years you've treated me like a son. I am eternally grateful!",
+   "text": "{Sabin}: طوال 10 سنوات عاملتماني كابن لكما. سأبقى ممتنا إلى الأبد!"
+  },
+  {
+   "id": "south-figaro.190",
+   "context": "Message 190 of the dialogue: ….",
+   "text": "…."
+  },
+  {
+   "id": "south-figaro.191",
+   "context": "Message 191 of the dialogue: {Locke}: At the very least you could give me a response…",
+   "text": "{Locke}: على الأقل يمكنك أن تجيبني…"
+  },
+  {
+   "id": "south-figaro.192",
+   "context": "Message 192 of the dialogue: {Edgar}: Stand back!{line}He seems vaguely familiar…{line}Wait a minute…!",
+   "text": "{Edgar}: تراجع!{line}يبدو مألوفا بعض الشيء…{line}لحظة…!"
+  },
+  {
+   "id": "south-figaro.193",
+   "context": "Message 193 of the dialogue: He owes allegiance to no one, {line}and will do anything for money.{line}He comes and goes like the wind…",
+   "text": "لا يدين بالولاء لأحد،{line}ويفعل أي شيء من أجل المال.{line}يأتي ويذهب كالريح…"
+  },
+  {
+   "id": "south-figaro.194",
+   "context": "Message 194 of the dialogue: {Edgar}: That's {Shadow}…!{line}He'd slit his mama's throat for a nickel!",
+   "text": "{Edgar}: هذا {Shadow}…!{line}قد يذبح أمه مقابل قرش!"
+  },
+  {
+   "id": "south-figaro.195",
+   "context": "Message 195 of the dialogue: {Locke}: Better steer clear of him, I guess.",
+   "text": "{Locke}: من الأفضل أن نبتعد عنه، على ما أظن."
+  },
+  {
+   "id": "south-figaro.196",
+   "context": "Message 196 of the dialogue: {Shadow}: Leave us.{line}The dog eats strangers…",
+   "text": "{Shadow}: دعونا.{line}الكلب يأكل الغرباء…"
+  },
+  {
+   "id": "south-figaro.197",
+   "context": "Message 197 of the dialogue: The guy at the counter…{line}He's kinda creepy…",
+   "text": "الرجل الذي عند الطاولة…{line}إنه مخيف نوعا ما…"
+  },
+  {
+   "id": "south-figaro.198",
+   "context": "Message 198 of the dialogue: That guy at the counter…HEY! Where'd he go?",
+   "text": "ذلك الرجل عند الطاولة… هيه! أين ذهب؟"
+  },
+  {
+   "id": "south-figaro.199",
+   "context": "Message 199 of the dialogue: Duncan's students have no peers!",
+   "text": "تلاميذ دنكان لا نظير لهم!"
+  },
+  {
+   "id": "south-figaro.200",
+   "context": "Message 200 of the dialogue: I'm so sorry to hear about Duncan.",
+   "text": "يؤسفني جدا ما سمعته عن دنكان."
+  },
+  {
+   "id": "south-figaro.201",
+   "context": "Message 201 of the dialogue: Duncan made his son, Vargas, practice a strict martial arts lifestyle. Vargas resented it.",
+   "text": "فرض دنكان على ابنه فارغاس حياة صارمة من فنون القتال. وكان فارغاس يمقت ذلك."
+  },
+  {
+   "id": "south-figaro.202",
+   "context": "Message 202 of the dialogue: The house in the northern part of town belongs to our wealthiest citizen.",
+   "text": "البيت في شمال البلدة يخص أغنى أهلها."
+  },
+  {
+   "id": "south-figaro.203",
+   "context": "Message 203 of the dialogue: The Empire's been invading one town after the next.{line}We're not safe here!",
+   "text": "الإمبراطورية تغزو البلدات واحدة تلو الأخرى.{line}لسنا بأمان هنا!"
+  },
+  {
+   "id": "south-figaro.204",
+   "context": "Message 204 of the dialogue: The Empire attacked Figaro Castle?!{page}Now we'll all be drawn into the battle!",
+   "text": "الإمبراطورية هاجمت قلعة فيغارو؟!\nالآن سننجر جميعا إلى المعركة!"
+  },
+  {
+   "id": "south-figaro.205",
+   "context": "Message 205 of the dialogue: I can't believe it!{line}The Empire'll smash us!",
+   "text": "لا أصدق!{line}الإمبراطورية ستسحقنا!"
+  },
+  {
+   "id": "south-figaro.206",
+   "context": "Message 206 of the dialogue: This town'll go down fighting! Even with their Magitek Armor, we'll make it tough on 'em!",
+   "text": "هذه البلدة ستسقط وهي تقاتل! حتى بدروع الماجيتك، سنجعل الأمر صعبا عليهم!"
+  },
+  {
+   "id": "south-figaro.207",
+   "context": "Message 207 of the dialogue: Attack from the east.{line}That way, {Wait}……?!{page}Hey! Whaddaya think you're doin'? Barging in here while I'm trying to write a letter! Harumph!",
+   "text": "الهجوم من الشرق.{line}وهكذا، {Wait}……؟!\nهيه! ماذا تظن نفسك فاعلا؟ تقتحم المكان وأنا أحاول كتابة رسالة! هممف!"
+  },
+  {
+   "id": "south-figaro.208",
+   "context": "Message 208 of the dialogue: Oh, uh, sorry…{line}Even a millionaire can be…{line}startled.",
+   "text": "أوه، آه، آسف…{line}حتى المليونير يمكن أن…{line}يجفل."
+  },
+  {
+   "id": "south-figaro.209",
+   "context": "Message 209 of the dialogue: Oh, what have I done?!{line}I betrayed the town, and I didn't even need the money!",
+   "text": "آه، ماذا فعلت؟!{line}خنت البلدة، ولم أكن حتى بحاجة إلى المال!"
+  },
+  {
+   "id": "south-figaro.210",
+   "context": "Message 210 of the dialogue: Chung chung…{line}Chung chung…{line}Magitek Armor!!!!",
+   "text": "تشونغ تشونغ…{line}تشونغ تشونغ…{line}دروع الماجيتك!!!!"
+  },
+  {
+   "id": "south-figaro.211",
+   "context": "Message 211 of the dialogue: My Dad's VERY important! Why, not so long ago he even dined with General Leo… {Wait}…{page}Uh, I, uh, just made that up!",
+   "text": "أبي مهم جدا! فقبل وقت قصير تعشى مع الجنرال ليو… {Wait}…\nآه، أنا، آه، اختلقت ذلك للتو!"
+  },
+  {
+   "id": "south-figaro.212",
+   "context": "Message 212 of the dialogue: Wind the clock!{line}Wind the clock!{page}Uh, that was just a jump-rope rhyme!",
+   "text": "أدر الساعة!{line}أدر الساعة!\nآه، كانت مجرد أغنية لنط الحبل!"
+  },
+  {
+   "id": "south-figaro.213",
+   "context": "Message 213 of the dialogue: Has war really begun?{line}I'd better return home…",
+   "text": "هل بدأت الحرب حقا؟{line}من الأفضل أن أعود إلى البيت…"
+  },
+  {
+   "id": "south-figaro.214",
+   "context": "Message 214 of the dialogue: The Imperial Troops have turned this house into their headquarters.",
+   "text": "القوات الإمبراطورية حولت هذا البيت إلى مقر لها."
+  },
+  {
+   "id": "south-figaro.215",
+   "context": "Message 215 of the dialogue: There's always a nasty draft in this room. Where's it coming from?",
+   "text": "في هذه الغرفة تيار هواء مزعج دائما. من أين يأتي؟"
+  },
+  {
+   "id": "south-figaro.216",
+   "context": "Message 216 of the dialogue: I don't like strangers.{line}Bring me some cider, and maybe I'll talk to you.",
+   "text": "لا أحب الغرباء.{line}أحضر لي بعض عصير التفاح، وربما أكلمك."
+  },
+  {
+   "id": "south-figaro.217",
+   "context": "Message 217 of the dialogue: What?!{line}No cider?!",
+   "text": "ماذا؟!{line}لا عصير تفاح؟!"
+  },
+  {
+   "id": "south-figaro.218",
+   "context": "Message 218 of the dialogue: Hurumph…DOG!",
+   "text": "هممف… يا كلب!"
+  },
+  {
+   "id": "south-figaro.219",
+   "context": "Message 219 of the dialogue: Ah! Cider!{line}Glug, glug, …{page}Huh? Secret passage?{line}Well, there is one that leads to the rich man's house.",
+   "text": "آه! عصير التفاح!{line}غلغ، غلغ، …\nهاه؟ ممر سري؟{line}حسنا، هناك واحد يؤدي إلى بيت الرجل الغني."
+  },
+  {
+   "id": "south-figaro.220",
+   "context": "Message 220 of the dialogue: Go downstairs and give my grandson the password. It's…uh, umm…{line}I forget!",
+   "text": "انزل وأعط حفيدي كلمة السر. إنها… آه، أمم…{line}نسيتها!"
+  },
+  {
+   "id": "south-figaro.221",
+   "context": "Message 221 of the dialogue: My grandfather was a servant for the richest man in town.",
+   "text": "كان جدي خادما عند أغنى رجل في البلدة."
+  },
+  {
+   "id": "south-figaro.222",
+   "context": "Message 222 of the dialogue: Only people dressed as merchants may pass through.",
+   "text": "لا يمر من هنا إلا من يرتدي زي التجار."
+  },
+  {
+   "id": "south-figaro.223",
+   "context": "Message 223 of the dialogue: Merchant, right?{line}You may proceed.",
+   "text": "تاجر، صحيح؟{line}يمكنك المرور."
+  },
+  {
+   "id": "south-figaro.224",
+   "context": "Message 224 of the dialogue: The password is…{line}{Choice}“Rose bud”{line}{Choice}“Courage”{line}{Choice}“Failure”",
+   "text": "كلمة السر هي…{line}{Choice} «برعم الورد»{line}{Choice} «الشجاعة»{line}{Choice} «الفشل»"
+  },
+  {
+   "id": "south-figaro.225",
+   "context": "Message 225 of the dialogue: You're an Imperial spy!{line}Can't fool me!",
+   "text": "أنت جاسوس إمبراطوري!{line}لا يمكنك خداعي!"
+  },
+  {
+   "id": "south-figaro.226",
+   "context": "Message 226 of the dialogue: Secret entrance.",
+   "text": "مدخل سري."
+  },
+  {
+   "id": "south-figaro.227",
+   "context": "Message 227 of the dialogue: Good luck!",
+   "text": "حظا سعيدا!"
+  },
+  {
+   "id": "south-figaro.228",
+   "context": "Message 228 of the dialogue: Outta the way!{line}I gotta get this cider over to the old man!{line}That's my job!{page}Now scram!",
+   "text": "ابتعد عن الطريق!{line}علي أن أوصل عصير التفاح هذا إلى العجوز!{line}هذه وظيفتي!\nوالآن اغرب!"
+  },
+  {
+   "id": "south-figaro.229",
+   "context": "Message 229 of the dialogue: I'm off work.{line}Get lost!",
+   "text": "أنا خارج العمل.{line}اغرب عن وجهي!"
+  },
+  {
+   "id": "south-figaro.230",
+   "context": "Message 230 of the dialogue: Are kids allowed in here?{line}{Wait}……What do you think?{page}Oh, all right…",
+   "text": "أيسمح للأطفال هنا؟{line}{Wait}…… ما رأيك؟\nأوه، حسنا…"
+  },
+  {
+   "id": "south-figaro.231",
+   "context": "Message 231 of the dialogue: Hey you!{line}Come to steal my cider?",
+   "text": "هيه أنت!{line}أجئت لتسرق عصير تفاحي؟"
+  },
+  {
+   "id": "south-figaro.232",
+   "context": "Message 232 of the dialogue: You thief!",
+   "text": "أيها اللص!"
+  },
+  {
+   "id": "south-figaro.233",
+   "context": "Message 233 of the dialogue: Took the old man's cider!",
+   "text": "أخذت عصير تفاح العجوز!"
+  },
+  {
+   "id": "south-figaro.234",
+   "context": "Message 234 of the dialogue: The ship isn't going anywhere.",
+   "text": "السفينة لن تذهب إلى أي مكان."
+  },
+  {
+   "id": "south-figaro.235",
+   "context": "Message 235 of the dialogue: Imperial troops are milling about.{line}Gotta jam without being seen!",
+   "text": "الجنود الإمبراطوريون يتجولون.{line}علي أن أنسل دون أن يراني أحد!"
+  },
+  {
+   "id": "south-figaro.236",
+   "context": "Message 236 of the dialogue: Use caution.",
+   "text": "توخ الحذر."
+  },
+  {
+   "id": "kolts.237",
+   "context": "Message 237 of the dialogue: {Edgar}: Hm…{line}What's that smell…?",
+   "text": "{Edgar}: هم…{line}ما هذه الرائحة…؟"
+  },
+  {
+   "id": "kolts.238",
+   "context": "Message 238 of the dialogue: {Edgar}: Flowers…{line}His favorite…",
+   "text": "{Edgar}: زهور…{line}المفضلة عنده…"
+  },
+  {
+   "id": "kolts.239",
+   "context": "Message 239 of the dialogue: {Edgar}: And this…{line}His favorite tea…",
+   "text": "{Edgar}: وهذا…{line}شايه المفضل…"
+  },
+  {
+   "id": "kolts.240",
+   "context": "Message 240 of the dialogue: {Edgar}: These dishes!{line}They were his favorite!",
+   "text": "{Edgar}: هذه الأطباق!{line}كانت المفضلة عنده!"
+  },
+  {
+   "id": "kolts.241",
+   "context": "Message 241 of the dialogue: {Edgar}: {Sabin}…he was…here?!",
+   "text": "{Edgar}: {Sabin}… كان… هنا؟!"
+  },
+  {
+   "id": "kolts.242",
+   "context": "Message 242 of the dialogue: {Edgar}: What the…",
+   "text": "{Edgar}: ما هذا…"
+  },
+  {
+   "id": "kolts.243",
+   "context": "Message 243 of the dialogue: {Edgar}: You know this guy?",
+   "text": "{Edgar}: أتعرف هذا الرجل؟"
+  },
+  {
+   "id": "kolts.244",
+   "context": "Message 244 of the dialogue: MAN: Of course. He left a couple of days ago after he heard Master Duncan was slain.{line}He headed into the mountains.{page}I heard Duncan's son, Vargas, is missing as well.{line}I have a bad feeling about this…",
+   "text": "الرجل: طبعا. رحل قبل يومين بعدما سمع بمقتل المعلم دنكان.{line}واتجه إلى الجبال.\nوسمعت أن ابن دنكان، فارغاس، مفقود أيضا.{line}لدي شعور سيئ حيال هذا…"
+  },
+  {
+   "id": "kolts.245",
+   "context": "Message 245 of the dialogue: {Edgar}: He must have gone to pay his respects to his mentor, Duncan…",
+   "text": "{Edgar}: لا بد أنه ذهب ليودع معلمه دنكان…"
+  },
+  {
+   "id": "kolts.246",
+   "context": "Message 246 of the dialogue: Scum!{line}You're Returners!",
+   "text": "حثالة!{line}أنتم من العائدين!"
+  },
+  {
+   "id": "kolts.247",
+   "context": "Message 247 of the dialogue: What about {Sabin}?",
+   "text": "وماذا عن {Sabin}؟"
+  },
+  {
+   "id": "kolts.248",
+   "context": "Message 248 of the dialogue: VARGAS: {Sabin} sent you, right?",
+   "text": "فارغاس: {Sabin} أرسلكم، صحيح؟"
+  },
+  {
+   "id": "kolts.249",
+   "context": "Message 249 of the dialogue: {Locke}: Who're YOU?",
+   "text": "{Locke}: ومن أنت؟"
+  },
+  {
+   "id": "kolts.250",
+   "context": "Message 250 of the dialogue: {Locke}: You were shadowing us earlier, right?{line}VARGAS: Brilliant!",
+   "text": "{Locke}: كنت تتعقبنا من قبل، صحيح؟{line}فارغاس: ذكي!"
+  },
+  {
+   "id": "kolts.251",
+   "context": "Message 251 of the dialogue: {Terra}: YOU! You're the coward who murdered Master Duncan!",
+   "text": "{Terra}: أنت! أنت الجبان الذي قتل المعلم دنكان!"
+  },
+  {
+   "id": "kolts.252",
+   "context": "Message 252 of the dialogue: VARGAS: And how unlucky it is that you have run into me…!",
+   "text": "فارغاس: ويا لسوء حظكم أنكم صادفتموني…!"
+  },
+  {
+   "id": "kolts.253",
+   "context": "Message 253 of the dialogue: {Edgar}: {Sabin}?{line}Is he here?",
+   "text": "{Edgar}: {Sabin}؟{line}أهو هنا؟"
+  },
+  {
+   "id": "kolts.254",
+   "context": "Message 254 of the dialogue: {Edgar}: {Sabin}!!!",
+   "text": "{Edgar}: {Sabin}!!!"
+  },
+  {
+   "id": "kolts.255",
+   "context": "Message 255 of the dialogue: {Sabin}: Big brother?",
+   "text": "{Sabin}: أخي الأكبر؟"
+  },
+  {
+   "id": "kolts.256",
+   "context": "Message 256 of the dialogue: {Locke}: The brothers are reunited!",
+   "text": "{Locke}: اجتمع شمل الأخوين!"
+  },
+  {
+   "id": "kolts.257",
+   "context": "Message 257 of the dialogue: {Terra}: Younger…{line}“brother”?{line}At first glance I thought he was some bodybuilder who had strayed from his gym…",
+   "text": "{Terra}: أخوه…{line}«الأصغر»؟{line}للوهلة الأولى ظننته لاعب كمال أجسام ضل طريقه من صالته…"
+  },
+  {
+   "id": "kolts.258",
+   "context": "Message 258 of the dialogue: {Sabin}: Bodybuilder?!",
+   "text": "{Sabin}: لاعب كمال أجسام؟!"
+  },
+  {
+   "id": "kolts.259",
+   "context": "Message 259 of the dialogue: {Sabin}: I'll…take that as a compliment…",
+   "text": "{Sabin}: سأعتبر… ذلك مجاملة…"
+  },
+  {
+   "id": "kolts.260",
+   "context": "Message 260 of the dialogue: {Sabin}: Anyway, brother, what are you doing here?{line}{Edgar}: We're on the way to the Sabil mountains.{page}{Sabin}: To the Returner hideout, no doubt?",
+   "text": "{Sabin}: على أي حال، يا أخي، ماذا تفعل هنا؟{line}{Edgar}: نحن في طريقنا إلى جبال سابيل.\n{Sabin}: إلى مخبأ العائدين، بلا شك؟"
+  },
+  {
+   "id": "kolts.261",
+   "context": "Message 261 of the dialogue: {Sabin}: I've been watching from afar, hoping that the world might regain some sanity…{page}At this rate, Figaro will be reduced to a puppet state.",
+   "text": "{Sabin}: كنت أراقب من بعيد، آملا أن يستعيد العالم شيئا من رشده…\nوعلى هذا المنوال، ستصبح فيغارو دولة دمية."
+  },
+  {
+   "id": "kolts.262",
+   "context": "Message 262 of the dialogue: {Edgar}: Our time to strike back has arrived.{page}The Empire's going to pay for what it has done…",
+   "text": "{Edgar}: حان وقت الرد.\nالإمبراطورية ستدفع ثمن ما فعلته…"
+  },
+  {
+   "id": "kolts.263",
+   "context": "Message 263 of the dialogue: {Sabin}: Think a “bear” like me could help you in your fight?",
+   "text": "{Sabin}: أتظن أن «دبا» مثلي قد يفيدكم في قتالكم؟"
+  },
+  {
+   "id": "kolts.264",
+   "context": "Message 264 of the dialogue: {Edgar}: You'd…join us?{line}{Sabin}…!!",
+   "text": "{Edgar}: أستنضم… إلينا؟{line}{Sabin}…!!"
+  },
+  {
+   "id": "kolts.265",
+   "context": "Message 265 of the dialogue: {Sabin}: I think Duncan would rest easier if he knew his disciple played a part in bringing peace to the world.",
+   "text": "{Sabin}: أظن أن دنكان سيرقد بسلام أكثر لو عرف أن تلميذه أسهم في إحلال السلام في العالم."
+  },
+  {
+   "id": "kolts.266",
+   "context": "Message 266 of the dialogue: {Locke}: Let's get going!",
+   "text": "{Locke}: لننطلق!"
+  },
+  {
+   "id": "returners.267",
+   "context": "Message 267 of the dialogue: King {Edgar}!{line}This way, please!",
+   "text": "الملك {Edgar}!{line}من هنا، رجاء!"
+  },
+  {
+   "id": "returners.268",
+   "context": "Message 268 of the dialogue: Did you speak with Banon?",
+   "text": "هل تحدثت مع بانون؟"
+  },
+  {
+   "id": "returners.269",
+   "context": "Message 269 of the dialogue: Not even the Empire'd think of looking here for us!",
+   "text": "حتى الإمبراطورية لن تفكر في البحث عنا هنا!"
+  },
+  {
+   "id": "returners.270",
+   "context": "Message 270 of the dialogue: Aha!",
+   "text": "آها!"
+  },
+  {
+   "id": "returners.271",
+   "context": "Message 271 of the dialogue: Welcome!",
+   "text": "مرحبا!"
+  },
+  {
+   "id": "returners.272",
+   "context": "Message 272 of the dialogue: Thank you!",
+   "text": "شكرا!"
+  },
+  {
+   "id": "returners.273",
+   "context": "Message 273 of the dialogue: Take a nap?{line}{Choice} Yes{line}{Choice} No",
+   "text": "تأخذ قيلولة؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "returners.274",
+   "context": "Message 274 of the dialogue: 250 GP per night.{line}Lights out?{line}{Choice} Yes{line}{Choice} No",
+   "text": "250 غيل لليلة.{line}تطفئ الأنوار؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "returners.275",
+   "context": "Message 275 of the dialogue: 250 GP for a Chocobo ride!{line}Well?{line}{Choice} Yes{line}{Choice} No",
+   "text": "250 غيل لركوب تشوكوبو!{line}ما رأيك؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "returners.276",
+   "context": "Message 276 of the dialogue: BANON: Is she the girl who can talk to Espers…?!{line}{Terra}: Espers…?{page}{Edgar}: Seemed the Empire had complete control over her.",
+   "text": "بانون: أهي الفتاة التي تستطيع مخاطبة الإسبرات…؟!{line}{Terra}: الإسبرات…؟\n{Edgar}: بدا أن الإمبراطورية كانت تتحكم بها تماما."
+  },
+  {
+   "id": "returners.277",
+   "context": "Message 277 of the dialogue: BANON: Carrier pigeons brought word that she wiped out 50 of the Empire's best soldiers in a few minutes.",
+   "text": "بانون: جاء الحمام الزاجل بخبر أنها أبادت 50 من خيرة جنود الإمبراطورية في دقائق."
+  },
+  {
+   "id": "returners.278",
+   "context": "Message 278 of the dialogue: {Terra}: That's a lie!!!",
+   "text": "{Terra}: هذا كذب!!!"
+  },
+  {
+   "id": "returners.279",
+   "context": "Message 279 of the dialogue: {Locke}: {Terra}!{line}{Edgar}: Banon! She doesn't remember ANYTHING!",
+   "text": "{Locke}: {Terra}!{line}{Edgar}: بانون! إنها لا تذكر أي شيء!"
+  },
+  {
+   "id": "returners.280",
+   "context": "Message 280 of the dialogue: BANON: Stay where you are!",
+   "text": "بانون: ابقي مكانك!"
+  },
+  {
+   "id": "returners.281",
+   "context": "Message 281 of the dialogue: {Edgar}: Banon!{line}We brought the girl with us.",
+   "text": "{Edgar}: بانون!{line}أحضرنا الفتاة معنا."
+  },
+  {
+   "id": "returners.282",
+   "context": "Message 282 of the dialogue: BANON: Perhaps you've heard this story? Once, when people were pure and innocent,{page}there was a box they were told never to open. But one man went and opened it anyway.{page}He unleashed all the evils of the world: envy… {Wait}greed… {Wait}pride… {Wait}violence… {Wait}control…{page}All that was left in the box was a single ray of light: Hope.",
+   "text": "بانون: لعلك سمعت هذه القصة؟ قديما، حين كان الناس أنقياء أبرياء،\nكان هناك صندوق قيل لهم ألا يفتحوه أبدا. لكن رجلا ذهب وفتحه رغم ذلك.\nفأطلق كل شرور العالم: الحسد… {Wait}الجشع… {Wait}الكبر… {Wait}العنف… {Wait}التسلط…\nولم يبق في الصندوق سوى شعاع نور واحد: الأمل."
+  },
+  {
+   "id": "returners.283",
+   "context": "Message 283 of the dialogue: {Terra}: ……{line}BANON: We now confront those evils…{page}And you are that last ray of light, our only hope…",
+   "text": "{Terra}: ……{line}بانون: نحن الآن نواجه تلك الشرور…\nوأنت شعاع النور الأخير ذاك، أملنا الوحيد…"
+  },
+  {
+   "id": "returners.284",
+   "context": "Message 284 of the dialogue: {Edgar}: Banon!",
+   "text": "{Edgar}: بانون!"
+  },
+  {
+   "id": "returners.285",
+   "context": "Message 285 of the dialogue: BANON: I'm so tired…{line}Let me rest a while.",
+   "text": "بانون: أنا متعب جدا…{line}دعوني أستريح قليلا."
+  },
+  {
+   "id": "returners.286",
+   "context": "Message 286 of the dialogue: {line}{Spaces 08}2000 GP inside!",
+   "text": "{center}{line}بالداخل 2000 غيل!"
+  },
+  {
+   "id": "returners.287",
+   "context": "Message 287 of the dialogue: {line}{Spaces 08}Found Potion!",
+   "text": "{center}{line}وجدت جرعة!"
+  },
+  {
+   "id": "returners.288",
+   "context": "Message 288 of the dialogue: {line}{Spaces 08}Found Ether!",
+   "text": "{center}{line}وجدت إيثر!"
+  },
+  {
+   "id": "returners.289",
+   "context": "Message 289 of the dialogue: {line}{Spaces 08}Found Remedy!",
+   "text": "{center}{line}وجدت ترياقا!"
+  },
+  {
+   "id": "returners.290",
+   "context": "Message 290 of the dialogue: We're a small organization now, but our membership is starting to soar.",
+   "text": "نحن منظمة صغيرة الآن، لكن عدد أعضائنا بدأ يرتفع بسرعة."
+  },
+  {
+   "id": "returners.291",
+   "context": "Message 291 of the dialogue: BANON: {Terra}…{line}Talk to everyone here, heed their advice.",
+   "text": "بانون: {Terra}…{line}تحدثي مع الجميع هنا، وأصغي إلى نصائحهم."
+  },
+  {
+   "id": "returners.292",
+   "context": "Message 292 of the dialogue: Banon?{line}He went outside a moment ago.",
+   "text": "بانون؟{line}خرج قبل لحظات."
+  },
+  {
+   "id": "returners.293",
+   "context": "Message 293 of the dialogue: Welcome back!{line}Glad you're okay.",
+   "text": "أهلا بعودتك!{line}سعيد أنك بخير."
+  },
+  {
+   "id": "returners.294",
+   "context": "Message 294 of the dialogue: Welcome back!",
+   "text": "أهلا بعودتك!"
+  },
+  {
+   "id": "returners.295",
+   "context": "Message 295 of the dialogue: Is Banon well?",
+   "text": "هل بانون بخير؟"
+  },
+  {
+   "id": "returners.296",
+   "context": "Message 296 of the dialogue: My wounds are healing.",
+   "text": "جراحي تلتئم."
+  },
+  {
+   "id": "returners.297",
+   "context": "Message 297 of the dialogue: The Empire is arresting Returners everywhere.{line}We have to discover some means of fighting back, or…",
+   "text": "الإمبراطورية تعتقل العائدين في كل مكان.{line}علينا أن نجد وسيلة للرد، وإلا…"
+  },
+  {
+   "id": "returners.298",
+   "context": "Message 298 of the dialogue: {Locke}: Someone important to me was jailed by the Empire. I've hated the Empire ever since…{page}I joined the Returners when I realized the Empire was rotten to the core. I wanted to make a difference.",
+   "text": "{Locke}: شخص عزيز علي سجنته الإمبراطورية. ومنذ ذلك الحين وأنا أكره الإمبراطورية…\nانضممت إلى العائدين حين أدركت أن الإمبراطورية فاسدة حتى النخاع. أردت أن أحدث فرقا."
+  },
+  {
+   "id": "returners.299",
+   "context": "Message 299 of the dialogue: Someone dropped a scrap of paper…{page}{Choice} Toss it in the trash.{line}{Choice} Leave it there.",
+   "text": "أحدهم أسقط قصاصة ورق…\n{Choice} ترميها في القمامة.{line}{Choice} تتركها مكانها."
+  },
+  {
+   "id": "returners.300",
+   "context": "Message 300 of the dialogue: BANON: Who did this?{line}Who left this piece of paper here?",
+   "text": "بانون: من فعل هذا؟{line}من ترك هذه الورقة هنا؟"
+  },
+  {
+   "id": "returners.301",
+   "context": "Message 301 of the dialogue: {Terra}: But…I have no significant “other” in my life…{page}{Locke}: That's not entirely true.{page}Besides, I'm sure there are people who feel YOU'RE important to them! They are counting on you…",
+   "text": "{Terra}: لكن… ليس في حياتي «شخص» مهم…\n{Locke}: هذا ليس صحيحا تماما.\nثم إنني واثق أن هناك من يشعرون أنك مهمة لهم! إنهم يعتمدون عليك…"
+  },
+  {
+   "id": "returners.302",
+   "context": "Message 302 of the dialogue: {Edgar}: It's gonna be tough to talk you into helping us…{page}If we push you too hard, we're no different than the Empire…{page}So we want you to make up your own mind.",
+   "text": "{Edgar}: سيكون من الصعب إقناعك بمساعدتنا…\nوإن ضغطنا عليك أكثر مما ينبغي، فلن نختلف عن الإمبراطورية…\nلذا نريدك أن تقرري بنفسك."
+  },
+  {
+   "id": "returners.303",
+   "context": "Message 303 of the dialogue: {Sabin}: The only thing I can add is that you can trust my brother implicitly.{page}He's always been fair with me. You can trust him, {Terra}…",
+   "text": "{Sabin}: كل ما أستطيع إضافته هو أن بوسعك الوثوق بأخي ثقة تامة.\nلطالما كان منصفا معي. يمكنك الوثوق به يا {Terra}…"
+  },
+  {
+   "id": "returners.304",
+   "context": "Message 304 of the dialogue: But don't you DARE tell him I said that!",
+   "text": "لكن إياك أن تخبريه أنني قلت ذلك!"
+  },
+  {
+   "id": "returners.305",
+   "context": "Message 305 of the dialogue: BANON: Have you made a decision?{page}Will you become our last ray of hope?{line}{Choice} Yes{line}{Choice} No",
+   "text": "بانون: هل اتخذت قرارك؟\nأتصبحين شعاع أملنا الأخير؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "returners.306",
+   "context": "Message 306 of the dialogue: BANON: You will? Really!!",
+   "text": "بانون: ستفعلين؟ حقا!!"
+  },
+  {
+   "id": "returners.307",
+   "context": "Message 307 of the dialogue: {Terra}: But… {Wait}{line}I'm scared…",
+   "text": "{Terra}: لكن… {Wait}{line}أنا خائفة…"
+  },
+  {
+   "id": "returners.308",
+   "context": "Message 308 of the dialogue: BANON: I see…",
+   "text": "بانون: فهمت…"
+  },
+  {
+   "id": "returners.309",
+   "context": "Message 309 of the dialogue: BANON: I thought as much…",
+   "text": "بانون: هذا ما توقعته…"
+  },
+  {
+   "id": "returners.310",
+   "context": "Message 310 of the dialogue: BANON: You're sure about this?",
+   "text": "بانون: أأنت متأكدة من هذا؟"
+  },
+  {
+   "id": "returners.311",
+   "context": "Message 311 of the dialogue: I understand your unease.{line}But even as we speak, innocent lives are being lost…{page}Please. We need your abilities.{line}This relic will keep you safe.{page}{line}{Spaces 05}Received “Genji Glove”!",
+   "text": "أتفهم قلقك.{line}لكن حتى ونحن نتكلم، تزهق أرواح بريئة…\nأرجوك. نحتاج إلى قدراتك.{line}هذه التميمة ستحميك.\n{center}{line}حصلت على «قفاز غينجي»!"
+  },
+  {
+   "id": "returners.312",
+   "context": "Message 312 of the dialogue: We truly need your help!",
+   "text": "نحن بحاجة ماسة إلى مساعدتك!"
+  },
+  {
+   "id": "returners.313",
+   "context": "Message 313 of the dialogue: Please join us in our battle!",
+   "text": "أرجوك انضمي إلينا في معركتنا!"
+  },
+  {
+   "id": "returners.314",
+   "context": "Message 314 of the dialogue: BANON: The person who possesses this relic need not fear harm.",
+   "text": "بانون: من يملك هذه التميمة لا يخشى الأذى."
+  },
+  {
+   "id": "returners.315",
+   "context": "Message 315 of the dialogue: BANON: Please, {Terra}…{line}I'd like you to take it with you.",
+   "text": "بانون: أرجوك يا {Terra}…{line}أود أن تأخذيها معك."
+  },
+  {
+   "id": "returners.316",
+   "context": "Message 316 of the dialogue: {Terra}: What is this??? {Wait}",
+   "text": "{Terra}: ما هذا؟؟؟ {Wait}"
+  },
+  {
+   "id": "returners.317",
+   "context": "Message 317 of the dialogue: BANON: If everyone works together we'll be successful.{line}Never give up hope!",
+   "text": "بانون: إن تعاون الجميع فسننجح.{line}لا تفقدي الأمل أبدا!"
+  },
+  {
+   "id": "returners.318",
+   "context": "Message 318 of the dialogue: BANON: A lucky charm. Take it!{page}{line}{Spaces 05}Received “Gauntlet”!",
+   "text": "بانون: تعويذة حظ. خذيها!\n{center}{line}حصلت على «القفاز الحديدي»!"
+  },
+  {
+   "id": "returners.319",
+   "context": "Message 319 of the dialogue: BANON: I have a plan!{line}Please get everyone together!",
+   "text": "بانون: لدي خطة!{line}رجاء اجمعوا الجميع!"
+  },
+  {
+   "id": "returners.320",
+   "context": "Message 320 of the dialogue: {Terra}: Hope…{line}How can anyone put their hope in me?",
+   "text": "{Terra}: الأمل…{line}كيف لأحد أن يعلق أمله علي؟"
+  },
+  {
+   "id": "returners.321",
+   "context": "Message 321 of the dialogue: S…South Figaro…",
+   "text": "س… ساوث فيغارو…"
+  },
+  {
+   "id": "returners.322",
+   "context": "Message 322 of the dialogue: What? WHAT IS IT?",
+   "text": "ماذا؟ ما الأمر؟"
+  },
+  {
+   "id": "returners.323",
+   "context": "Message 323 of the dialogue: BANON: What's going on?{line}What happened?",
+   "text": "بانون: ماذا يجري؟{line}ماذا حدث؟"
+  },
+  {
+   "id": "returners.324",
+   "context": "Message 324 of the dialogue: {Terra}: He's badly wounded!",
+   "text": "{Terra}: إنه مصاب بجروح بالغة!"
+  },
+  {
+   "id": "returners.325",
+   "context": "Message 325 of the dialogue: BANON: Someone did a number on him…",
+   "text": "بانون: أحدهم أشبعه ضربا…"
+  },
+  {
+   "id": "returners.326",
+   "context": "Message 326 of the dialogue: E…Empire…took Figaro…{line}Coming…this way…unnnh…",
+   "text": "الإم… الإمبراطورية… أخذت فيغارو…{line}قادمون… إلى هنا… أنننه…"
+  },
+  {
+   "id": "returners.327",
+   "context": "Message 327 of the dialogue: BANON: They've found us…{line}We haven't a moment to lose!",
+   "text": "بانون: لقد وجدونا…{line}ليس لدينا لحظة نضيعها!"
+  },
+  {
+   "id": "returners.328",
+   "context": "Message 328 of the dialogue: {Edgar}: {Locke}!{page}{Locke}: I know…{line}“Someone” has to sneak into South Figaro and slow the Empire down, right?{page}{Edgar}: This's right up your alley! Good luck!",
+   "text": "{Edgar}: {Locke}!\n{Locke}: أعرف…{line}«أحدهم» عليه أن يتسلل إلى ساوث فيغارو ويعطل الإمبراطورية، صحيح؟\n{Edgar}: هذا من اختصاصك تماما! حظا سعيدا!"
+  },
+  {
+   "id": "returners.329",
+   "context": "Message 329 of the dialogue: {Locke}: {Terra}…{line}Please wait for me…{line}And…please…{page}…don't let a lecherous young king, who shall remain nameless, near you!{line}{Edgar}: {Locke}!!!",
+   "text": "{Locke}: {Terra}…{line}أرجوك انتظريني…{line}و… أرجوك…\n…لا تدعي ملكا شابا فاسقا، لن أذكر اسمه، يقترب منك!{line}{Edgar}: {Locke}!!!"
+  },
+  {
+   "id": "returners.330",
+   "context": "Message 330 of the dialogue: {Sabin}: Big brother…{line}Aren't you EVER going to grow up?",
+   "text": "{Sabin}: أخي الأكبر…{line}ألن تنضج أبدا؟"
+  },
+  {
+   "id": "returners.331",
+   "context": "Message 331 of the dialogue: BANON: What're we going to do?{page}{Edgar}: We'll escape down the Lete River, and make our way to Narshe. I want to see that Esper for myself…{page}BANON: Right. There's a raft by the back entrance.{line}It's a gamble, but we're fresh out of options…",
+   "text": "بانون: ماذا سنفعل؟\n{Edgar}: سنهرب عبر نهر ليتي، ونشق طريقنا إلى نارشي. أريد أن أرى ذلك الإسبر بنفسي…\nبانون: صحيح. هناك طوف عند المدخل الخلفي.{line}إنها مقامرة، لكن لم يعد لدينا خيارات…"
+  },
+  {
+   "id": "returners.332",
+   "context": "Message 332 of the dialogue: {Edgar}: You're in danger here. Come with us to Narshe.{page}You'll probably even gain some understanding of your own abilities…",
+   "text": "{Edgar}: أنت في خطر هنا. تعالي معنا إلى نارشي.\nوربما تفهمين شيئا عن قدراتك أيضا…"
+  },
+  {
+   "id": "returners.333",
+   "context": "Message 333 of the dialogue: BANON: We've no time to dilly-dally. Let's make for Narshe!",
+   "text": "بانون: لا وقت لدينا للتلكؤ. لننطلق إلى نارشي!"
+  },
+  {
+   "id": "returners.334",
+   "context": "Message 334 of the dialogue: We'll handle things here…{line}Please leave for Narshe!",
+   "text": "سنتولى الأمور هنا…{line}رجاء انطلقوا إلى نارشي!"
+  },
+  {
+   "id": "returners.335",
+   "context": "Message 335 of the dialogue: Give our regards to Banon.",
+   "text": "بلغوا تحياتنا إلى بانون."
+  },
+  {
+   "id": "returners.336",
+   "context": "Message 336 of the dialogue: The Lete River runs through some underground caverns.",
+   "text": "نهر ليتي يجري عبر كهوف تحت الأرض."
+  },
+  {
+   "id": "returners.337",
+   "context": "Message 337 of the dialogue: BANON: We all know that the Empire is using Magitek power in battle. The point is, how has the Emperor created it?",
+   "text": "بانون: كلنا نعرف أن الإمبراطورية تستعمل قوة الماجيتك في المعارك. والسؤال: كيف صنعها الإمبراطور؟"
+  },
+  {
+   "id": "returners.338",
+   "context": "Message 338 of the dialogue: {Edgar}: I had {Locke} look into the rumor that the Empire is forcing the world's finest scholars to study Espers.",
+   "text": "{Edgar}: كلفت {Locke} بالتحقق من شائعة أن الإمبراطورية ترغم خيرة علماء العالم على دراسة الإسبرات."
+  },
+  {
+   "id": "returners.339",
+   "context": "Message 339 of the dialogue: {Locke}: All the trouble in Narshe is over an Esper, too…",
+   "text": "{Locke}: وكل المتاعب في نارشي سببها إسبر أيضا…"
+  },
+  {
+   "id": "returners.340",
+   "context": "Message 340 of the dialogue: BANON: Right…",
+   "text": "بانون: صحيح…"
+  },
+  {
+   "id": "returners.341",
+   "context": "Message 341 of the dialogue: {Terra}: You mean there's some connection between Espers and Magitek?{page}BANON: I can only recall one thing linking Espers with Magitek power…",
+   "text": "{Terra}: أتقصدون أن هناك صلة بين الإسبرات والماجيتك؟\nبانون: لا أذكر سوى شيء واحد يربط الإسبرات بقوة الماجيتك…"
+  },
+  {
+   "id": "returners.342",
+   "context": "Message 342 of the dialogue: {Edgar}: You don't mean…{page}BANON: Indeed!{line}The ancient War of the Magi…",
+   "text": "{Edgar}: لا تقصد…\nبانون: بلى!{line}حرب السحرة القديمة…"
+  },
+  {
+   "id": "returners.343",
+   "context": "Message 343 of the dialogue: “No!”{line}“It can't be!”",
+   "text": "«لا!»{line}«مستحيل!»"
+  },
+  {
+   "id": "returners.344",
+   "context": "Message 344 of the dialogue: {Locke}: My Grandma used to tell me stories about magical machines…{line}Could they have been true?",
+   "text": "{Locke}: كانت جدتي تروي لي قصصا عن آلات سحرية…{line}أيعقل أنها كانت حقيقية؟"
+  },
+  {
+   "id": "returners.345",
+   "context": "Message 345 of the dialogue: {Edgar}: Could that ancient tragedy be playing out once again…{page}BANON: It's just speculation…{page}But historical studies have provided a number of conflicting and frightening theories…{page}According to one theory, humans and machines were imbued with powers drained from Espers…",
+   "text": "{Edgar}: أيمكن أن تتكرر تلك المأساة القديمة مرة أخرى…\nبانون: مجرد تخمين…\nلكن الدراسات التاريخية قدمت عددا من النظريات المتضاربة والمخيفة…\nووفق إحداها، زود البشر والآلات بقوى استنزفت من الإسبرات…"
+  },
+  {
+   "id": "returners.346",
+   "context": "Message 346 of the dialogue: {Terra}: That could explain Magitek power…",
+   "text": "{Terra}: هذا قد يفسر قوة الماجيتك…"
+  },
+  {
+   "id": "returners.347",
+   "context": "Message 347 of the dialogue: {Edgar}: We can only fight Magitek enemies with Magitek weapons…",
+   "text": "{Edgar}: لا نستطيع قتال أعداء الماجيتك إلا بأسلحة الماجيتك…"
+  },
+  {
+   "id": "returners.348",
+   "context": "Message 348 of the dialogue: BANON: It's risky, but if we have {Terra}…speak with that Esper, it might just wake up…{page}{Edgar}: I wonder if that's wise…?",
+   "text": "بانون: الأمر خطر، لكن لو جعلنا {Terra}… تخاطب ذلك الإسبر، فقد يستيقظ…\n{Edgar}: ترى هل هذا حكيم…؟"
+  },
+  {
+   "id": "returners.349",
+   "context": "Message 349 of the dialogue: BANON: Who can say?{line}Regardless,{line}we need {Terra}'s help.",
+   "text": "بانون: من يدري؟{line}على أي حال،{line}نحتاج إلى مساعدة {Terra}."
+  },
+  {
+   "id": "returners.350",
+   "context": "Message 350 of the dialogue: {Locke}: {Terra}…",
+   "text": "{Locke}: {Terra}…"
+  },
+  {
+   "id": "returners.351",
+   "context": "Message 351 of the dialogue: {Terra}: I'll do it!{page}{Sabin}: What nonsense!{line}You sound as if you're enjoying this!",
+   "text": "{Terra}: سأفعلها!\n{Sabin}: يا للهراء!{line}تبدين وكأنك تستمتعين بهذا!"
+  },
+  {
+   "id": "returners.352",
+   "context": "Message 352 of the dialogue: Emergency!{line}Sir Banon…",
+   "text": "حالة طارئة!{line}سيدي بانون…"
+  },
+  {
+   "id": "returners.353",
+   "context": "Message 353 of the dialogue: BANON: What? {Wait}{line}What's that noise?",
+   "text": "بانون: ماذا؟ {Wait}{line}ما هذه الضجة؟"
+  },
+  {
+   "id": "returners.354",
+   "context": "Message 354 of the dialogue: Uwaaaa!{line}The Empire's invading!",
+   "text": "أواااا!{line}الإمبراطورية تغزونا!"
+  },
+  {
+   "id": "returners.355",
+   "context": "Message 355 of the dialogue: Urgh…uhnn…",
+   "text": "أرغ… أهنن…"
+  },
+  {
+   "id": "returners.356",
+   "context": "Message 356 of the dialogue: !",
+   "text": "!"
+  },
+  {
+   "id": "returners.357",
+   "context": "Message 357 of the dialogue: What the…?{line}Sleep talking?",
+   "text": "ما هذا…؟{line}أتتكلم في نومك؟"
+  },
+  {
+   "id": "returners.358",
+   "context": "Message 358 of the dialogue: Here we go!{line}This raft'll take us to Narshe!",
+   "text": "ها نحن ننطلق!{line}هذا الطوف سيأخذنا إلى نارشي!"
+  },
+  {
+   "id": "returners.359",
+   "context": "Message 359 of the dialogue: Hop aboard the raft?{line}{Choice} Yes{line}{Choice} No",
+   "text": "تركب الطوف؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "returners.360",
+   "context": "Message 360 of the dialogue: Fleeing the Empire's troops,{line}Banon, {Edgar} and {Terra} ride the rapids toward Narshe.{line}But the going won't be easy…",
+   "text": "هربا من قوات الإمبراطورية،{line}يركب بانون و{Edgar} و{Terra} المنحدرات نحو نارشي.{line}لكن الطريق لن يكون سهلا…"
+  },
+  {
+   "id": "returners.361",
+   "context": "Message 361 of the dialogue: Head toward Narshe, but protect Banon at all costs.{page}If Banon is put out of commission, your journey's over.",
+   "text": "توجهوا نحو نارشي، لكن احموا بانون مهما كلف الأمر.\nإن سقط بانون، انتهت رحلتكم."
+  },
+  {
+   "id": "returners.362",
+   "context": "Message 362 of the dialogue: Which way?{line}    {Choice} (Straight){line}{line} {Choice} (Left){Spaces 06}{Choice} (Right)",
+   "text": "أي طريق؟{line}{Choice} (مستقيم){line}{line}{Choice} (يسار) {Choice} (يمين)"
+  },
+  {
+   "id": "returners.363",
+   "context": "Message 363 of the dialogue: Now which way???{line}{line}{line} {Choice} (Left){Spaces 06}{Choice} (Right)",
+   "text": "والآن أي طريق؟؟؟{line}{line}{line}{Choice} (يسار) {Choice} (يمين)"
+  },
+  {
+   "id": "returners.366",
+   "context": "Message 366 of the dialogue: Hey, which way?{line}{Spaces 09}{Choice}  (Up){line}{line} {Choice} (Left)",
+   "text": "هيه، أي طريق؟{line}{Choice} (أعلى){line}{line}{Choice} (يسار)"
+  },
+  {
+   "id": "returners.367",
+   "context": "Message 367 of the dialogue: {Edgar} and {Terra} race toward Narshe while protecting Banon…{page}…but what about {Sabin}, who was swallowed by the raging waters…?{line}And…{page}…how is {Locke} faring, after having penetrated the Empire's defenses in South Figaro…{page}Is all going according to plan…?",
+   "text": "{Edgar} و{Terra} يسرعان نحو نارشي وهما يحميان بانون…\n…لكن ماذا عن {Sabin}، الذي ابتلعته المياه الهائجة…؟{line}و…\n…كيف حال {Locke}، بعدما اخترق دفاعات الإمبراطورية في ساوث فيغارو…\nهل يسير كل شيء وفق الخطة…؟"
+  },
+  {
+   "id": "returners.368",
+   "context": "Message 368 of the dialogue: {line}(Please choose a scenario.){page}{Choice} Banon and Co.{line}{Choice} {Sabin}{line}{Choice} {Locke}",
+   "text": "{line}(رجاء اختر سيناريو.)\n{Choice} بانون ورفاقه{line}{Choice} {Sabin}{line}{Choice} {Locke}"
   }
  ]
 }
