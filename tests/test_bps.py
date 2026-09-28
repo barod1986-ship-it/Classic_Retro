@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import random
+import zlib
 
 import pytest
 
@@ -76,3 +77,35 @@ def test_corrupted_patch_is_refused():
     with pytest.raises(ClassicRetroError) as caught:
         apply_bps(bytes(data), source)
     assert caught.value.code is ErrorCode.INVALID_REBUILD_PAYLOAD
+
+
+# ---------------------------------------------------------------------------
+# Reading patches assembled by hand, without the encoder. A BPS number below
+# 128 is one byte, 0x80 | value; a command is (length - 1) << 2 | kind, the
+# kinds being SourceRead 0, TargetRead 1, SourceCopy 2 and TargetCopy 3; a
+# copy's offset is (magnitude << 1) | negative, relative to the last copy's end.
+
+
+def _hand_made(source: bytes, target: bytes, commands: bytes) -> bytes:
+    """The header, the commands and the CRC32 trailer the reader checks."""
+    patch = BPS_MAGIC + bytes([0x80 | len(source), 0x80 | len(target), 0x80]) + commands
+    patch += zlib.crc32(source).to_bytes(4, "little") + zlib.crc32(target).to_bytes(4, "little")
+    return patch + zlib.crc32(patch).to_bytes(4, "little")
+
+
+def test_an_overlapping_target_copy_repeats_the_pattern():
+    # TargetRead of "xyabc", then TargetCopy of 10 bytes from +2 in the output:
+    # 3 bytes before its end, so the copy reads what it has just written and
+    # repeats "abc" with a period of 3.
+    commands = bytes([0x80 | 4 << 2 | 1]) + b"xyabc" + bytes([0x80 | 9 << 2 | 3, 0x80 | 2 << 1])
+    target = b"xyabc" + b"abcabcabca"
+    assert apply_bps(_hand_made(b"ROM", target, commands), b"ROM") == target
+
+
+def test_source_copy_offsets_are_relative_and_may_go_backwards():
+    source = b"0123456789ABCDEF"
+    # SourceCopy of 4 bytes from +10 ("ABCD") leaves the source pointer at 14;
+    # the next SourceCopy of 5 bytes from -12 reads "23456" at 2.
+    commands = bytes([0x80 | 3 << 2 | 2, 0x80 | 10 << 1, 0x80 | 4 << 2 | 2, 0x80 | 12 << 1 | 1])
+    target = b"ABCD" + b"23456"
+    assert apply_bps(_hand_made(source, target, commands), source) == target
