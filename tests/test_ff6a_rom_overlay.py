@@ -258,3 +258,103 @@ def test_extract_reads_every_message_in_the_notation():
         "message.1": "{01F}{009}{001} {001}{PAUSE 14C}{PAGE}{002}{END}",
         "message.6": "{NARRATION}{CENTER}{01F}{009}{001} {006}{TIMED_CLOSE 243}{CLOSE}{END}",
     }
+
+
+def test_the_expansion_holds_only_the_hooks_the_font_and_the_bank(build):
+    rom, _, result = build
+    output = result.rom
+    hooks = overlay.HOOK_CODE_ADDRESS - BASE
+    font = overlay.ARABIC_FONT_ADDRESS - BASE
+    bank = overlay.TEXT_BANK_ADDRESS - BASE
+    fill = bytes([overlay.EXPANSION_FILL])
+    assert hooks == len(rom)
+    assert output[hooks + len(overlay.HOOK_CODE) : font] == fill * (
+        font - hooks - len(overlay.HOOK_CODE)
+    )
+    assert output[font + len(result.font.data) : bank] == fill * (
+        bank - font - len(result.font.data)
+    )
+    assert output[bank + result.report["text_bank_bytes"] :].count(overlay.EXPANSION_FILL) == (
+        overlay.EXPANDED_SIZE - bank - result.report["text_bank_bytes"]
+    )
+    # In the original's extent, only the hook sites and the bank references changed.
+    places = {
+        *(
+            site.address - BASE + at
+            for site in overlay.HOOK_SITES
+            for at in range(len(site.original))
+        ),
+        *(
+            reference - BASE + at
+            for reference in overlay.DIALOGUE_BANK_REFERENCES
+            for at in range(4)
+        ),
+    }
+    changed = {at for at in range(len(rom)) if output[at] != rom[at]}
+    assert changed and changed <= places
+
+
+@pytest.mark.parametrize(
+    "place",
+    [
+        "header",
+        "latin font",
+        "before a hook site",
+        "after a hook site",
+        "after a reference",
+        "after the hooks",
+        "before the font",
+        "before the bank",
+        "the last byte",
+    ],
+)
+def test_a_byte_changed_outside_the_overlays_places_is_refused(tmp_path, monkeypatch, place):
+    site = overlay.HOOK_SITES[0]
+    offset = {
+        "header": 0x0,
+        "latin font": overlay.LATIN_FONT_ADDRESS - BASE + 4,
+        "before a hook site": site.address - BASE - 1,
+        "after a hook site": site.address - BASE + len(site.original),
+        "after a reference": overlay.DIALOGUE_BANK_REFERENCES[0] - BASE + 4,
+        "after the hooks": overlay.HOOK_CODE_ADDRESS - BASE + len(overlay.HOOK_CODE),
+        "before the font": overlay.ARABIC_FONT_ADDRESS - BASE - 1,
+        "before the bank": overlay.TEXT_BANK_ADDRESS - BASE - 1,
+        "the last byte": overlay.EXPANDED_SIZE - 1,
+    }[place]
+    monkeypatch.setattr(overlay, "build_ff6a_arabic_font", _fake_font)
+    verify = overlay._verify_output
+
+    def tampering(output: bytes, *args, **kwargs) -> None:
+        """The build's own check, of the output with one byte flipped."""
+        changed = bytearray(output)
+        changed[offset] ^= 1
+        verify(bytes(changed), *args, **kwargs)
+
+    monkeypatch.setattr(overlay, "_verify_output", tampering)
+    font_file = tmp_path / "font.ttf"
+    font_file.write_bytes(b"x")
+    english = [_english(index) for index in range(24)]
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.build_ff6a_arabic_rom(
+            _synthetic_rom(english),
+            font_file,
+            messages=_translations(english),
+            verify_identity=False,
+        )
+    assert caught.value.code is ErrorCode.BUILD_VALIDATION_FAILED
+    assert str(caught.value) == f"The image changed at {offset:#x}, outside the overlay's places"
+
+
+def test_an_image_of_another_size_is_refused(tmp_path, monkeypatch):
+    monkeypatch.setattr(overlay, "build_ff6a_arabic_font", _fake_font)
+    font_file = tmp_path / "font.ttf"
+    font_file.write_bytes(b"x")
+    english = [_english(index) for index in range(24)]
+    translations = _translations(english)
+    rom = _synthetic_rom(english) + bytes([overlay.EXPANSION_FILL]) * 0x10
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.build_ff6a_arabic_rom(rom, font_file, messages=translations, verify_identity=False)
+    assert caught.value.code is ErrorCode.SOURCE_BASELINE_MISMATCH
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.extract_originals(rom, messages=translations, verify_identity=False)
+    assert caught.value.code is ErrorCode.SOURCE_BASELINE_MISMATCH

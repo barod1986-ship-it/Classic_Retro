@@ -52,6 +52,7 @@ from classic_retro.localization.translations import TranslationSet
 from classic_retro.patching.hooks import HookProgram
 from classic_retro.patching.image import ImageSpec
 from classic_retro.patching.outputs import base_report, write_image, write_patch
+from classic_retro.patching.overlay import verify_untouched
 from classic_retro.rebuild.bps import BpsPatch, create_bps
 from classic_retro.rom.ff6a_arabic_script import Ff6aArabicMessage, ff6a_arabic_messages
 from classic_retro.text.tokens import TextToken, TokenStream
@@ -147,6 +148,8 @@ def verify_usa_image(rom: bytes) -> None:
 
 def _verify_anchors(rom: bytes) -> tuple[Ff6aFont, Ff6aTextBank]:
     """Every byte the overlay relies on or replaces, checked before any change."""
+    if len(rom) != USA_SIZE:
+        raise ClassicRetroError(ErrorCode.SOURCE_BASELINE_MISMATCH, "Image is not 8 MiB")
     for site in HOOK_SITES:
         start = _offset(site.address)
         if rom[start : start + len(site.original)] != site.original:
@@ -161,10 +164,6 @@ def _verify_anchors(rom: bytes) -> tuple[Ff6aFont, Ff6aTextBank]:
                 ErrorCode.SOURCE_BASELINE_MISMATCH,
                 f"Reference at {reference:#x} does not point to the dialogue bank",
             )
-    if any(rom[_offset(HOOK_CODE_ADDRESS) :]):
-        raise ClassicRetroError(
-            ErrorCode.SAFE_REGION_CONTENT_MISMATCH, "Image already has data after 8 MiB"
-        )
     latin = Ff6aFont.parse(rom, _offset(LATIN_FONT_ADDRESS))
     codes = latin.character_codes()
     for character, (code, advance) in USA_LATIN_GLYPHS.items():
@@ -243,10 +242,13 @@ def build_ff6a_arabic_rom(
         raise ClassicRetroError(ErrorCode.RELOCATION_OVERFLOW, "Dialogue bank exceeds the image")
 
     target = bytearray(rom) + bytes([EXPANSION_FILL]) * (EXPANDED_SIZE - len(rom))
+    # Every place written, as offsets: the output is checked against them.
+    written: list[tuple[int, int]] = []
 
     def write(address: int, data: bytes) -> None:
         start = _offset(address)
         target[start : start + len(data)] = data
+        written.append((start, start + len(data)))
 
     write(HOOK_CODE_ADDRESS, HOOK_CODE)
     write(ARABIC_FONT_ADDRESS, font_data)
@@ -257,7 +259,7 @@ def build_ff6a_arabic_rom(
         write(site.address, site.replacement(HOOK_CODE_ADDRESS + HOOK_SYMBOLS[site.symbol]))
 
     output = bytes(target)
-    _verify_output(output, messages, replacements, font_data)
+    _verify_output(output, rom, messages, replacements, font_data, written)
     patch = create_bps(rom, output)
     report: dict[str, object] = {
         **base_report(IMAGE.title, rom, output, patch),
@@ -281,10 +283,24 @@ def build_ff6a_arabic_rom(
 
 def _verify_output(
     output: bytes,
+    rom: bytes,
     messages: tuple[Ff6aArabicMessage, ...],
     replacements: dict[int, bytes],
     font_data: bytes,
+    written: list[tuple[int, int]],
 ) -> None:
+    """Read the built image back: nothing changed outside ``written``, and the
+    hooks, the font and the bank are as built.
+
+    The build starts from the original expanded with 0xFF, so the output may
+    differ from that image only at the places written: the hook sites and the
+    bank references in the original, the hooks, the font and the rebuilt bank
+    in the expansion, which keeps the fill everywhere else.
+    """
+    if len(output) != EXPANDED_SIZE:
+        raise ClassicRetroError(ErrorCode.BUILD_VALIDATION_FAILED, "The image is not 16 MiB")
+    expanded = rom + bytes([EXPANSION_FILL]) * (EXPANDED_SIZE - len(rom))
+    verify_untouched(expanded, output, written, what="The image")
     bank = Ff6aTextBank.parse(output, _offset(TEXT_BANK_ADDRESS))
     original = Ff6aTextBank.parse(output, _offset(DIALOGUE_BANK_ADDRESS))
     for index in range(original.message_count):

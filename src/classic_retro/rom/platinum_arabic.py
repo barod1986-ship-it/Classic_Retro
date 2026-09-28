@@ -71,7 +71,13 @@ from classic_retro.engines.pokemon_gen4_arabic import (
 from classic_retro.localization.translations import TranslationSet
 from classic_retro.patching.hooks import HookProgram
 from classic_retro.patching.nitro import (
+    ARM9_OVERLAY_TABLE,
+    ARM9_SIZE,
+    HEADER_CRC,
     SECURE_AREA_CRC,
+    SIGNATURE_MAGIC,
+    SIGNATURE_SIZE,
+    USED_SIZE,
     Arm9Binary,
     Narc,
     NitroImage,
@@ -83,6 +89,7 @@ from classic_retro.patching.nitro import (
     set_header_crc,
 )
 from classic_retro.patching.outputs import base_report, write_image, write_patch
+from classic_retro.patching.overlay import verify_bytes, verify_untouched
 from classic_retro.rebuild.bps import BpsPatch, create_bps
 from classic_retro.rom.platinum_arabic_script import (
     BANK_STRINGS,
@@ -277,11 +284,7 @@ def _verify_code(image: NitroImage) -> Arm9Binary:
     """Every byte the overlay relies on or replaces, and room for the hooks in ITCM."""
     arm9 = Arm9Binary.from_image(image)
     expected = {**{site.address: site.original for site in SITES}, **ANCHORS}
-    for address, original in expected.items():
-        if arm9.read(address, len(original)) != original:
-            raise ClassicRetroError(
-                ErrorCode.SOURCE_BASELINE_MISMATCH, f"Unexpected bytes at {address:#x}"
-            )
+    verify_bytes(arm9.data, expected, offset=arm9.offset, what="the ARM9 binary")
     block = arm9.autoloads()[ITCM_BLOCK]
     if (block.address, block.size, block.bss) != (ITCM_BLOCK_ADDRESS, ITCM_BLOCK_SIZE, 0):
         raise ClassicRetroError(
@@ -474,22 +477,18 @@ def build_platinum_arabic_rom(
     move_arm9_overlay_table(target)
     replace_arm9(target, new_arm9.data)
     at = CONTROL_WINDOW - INTRO_OVERLAY_RAM
-    placed = replace_files(
-        target,
-        {
-            image.file_id(MESSAGE_ARCHIVE): new_messages,
-            image.file_id(FONT_ARCHIVE): new_fonts,
-            intro_file: intro[:at]
-            + CONTROL_WINDOW_NARROW
-            + intro[at + len(CONTROL_WINDOW_NARROW) :],
-        },
-    )
+    files = {
+        image.file_id(MESSAGE_ARCHIVE): new_messages,
+        image.file_id(FONT_ARCHIVE): new_fonts,
+        intro_file: intro[:at] + CONTROL_WINDOW_NARROW + intro[at + len(CONTROL_WINDOW_NARROW) :],
+    }
+    placed = replace_files(target, files)
     stored_crc = image.header.secure_area_crc
     struct.pack_into("<H", target, SECURE_AREA_CRC, secure_area_crc(rom, bytes(target), stored_crc))
     set_header_crc(target)
     output = bytes(target)
 
-    _verify_output(output, strings, encoded, rtl_font, fonts, new_arm9)
+    _verify_output(output, rom, strings, encoded, rtl_font, fonts, new_arm9, files, placed)
     patch = create_bps(rom, output)
     report: dict[str, object] = {
         **base_report(TITLE, rom, output, patch),
@@ -514,13 +513,17 @@ def build_platinum_arabic_rom(
 
 def _verify_output(
     output: bytes,
+    rom: bytes,
     strings: Sequence[PlatinumArabicString],
     encoded: Mapping[str, Gen4ArabicEncoding],
     rtl_font: Gen4RtlFont,
     fonts: Mapping[int, Gen4Font],
     arm9: Arm9Binary,
+    files: Mapping[int, bytes],
+    placed: Mapping[int, tuple[int, int]],
 ) -> None:
-    """Read the built image back: its code, its fonts and every translated string."""
+    """Read the built image back: its code, its fonts, every translated string,
+    every file written, and that nothing changed outside the build's places."""
     if not header_crc_valid(output):
         raise ClassicRetroError(ErrorCode.BUILD_VALIDATION_FAILED, "The header CRC is wrong")
     image = NitroImage(output)
@@ -530,8 +533,9 @@ def _verify_output(
         raise ClassicRetroError(
             ErrorCode.BUILD_VALIDATION_FAILED, "The control pages' window is not narrowed"
         )
+    before = NitroImage(rom)
     built = Arm9Binary.from_image(image)
-    if built.data != arm9.data:
+    if built.data != arm9.data or image.arm9_footer() != before.arm9_footer():
         raise ClassicRetroError(ErrorCode.BUILD_VALIDATION_FAILED, "The ARM9 does not read back")
     block = built.autoloads()[ITCM_BLOCK]
     hooks_at = built.block_data_offset(ITCM_BLOCK) + HOOK_CODE_ADDRESS - ITCM_BLOCK_ADDRESS
@@ -566,6 +570,68 @@ def _verify_output(
             raise ClassicRetroError(
                 ErrorCode.BUILD_VALIDATION_FAILED, f"{string.key} holds no right-to-left glyph"
             )
+    for file_id, data in files.items():
+        if image.file_range(file_id) != placed[file_id]:
+            raise ClassicRetroError(ErrorCode.BUILD_VALIDATION_FAILED, f"File {file_id} moved")
+        start, end = placed[file_id]
+        if output[start:end] != data:
+            raise ClassicRetroError(
+                ErrorCode.BUILD_VALIDATION_FAILED, f"File {file_id} does not read back"
+            )
+    _verify_untouched(rom, output, before, image, placed)
+
+
+def _verify_untouched(
+    rom: bytes,
+    output: bytes,
+    before: NitroImage,
+    after: NitroImage,
+    placed: Mapping[int, tuple[int, int]],
+) -> None:
+    """Outside the places the build wrote, the image is the original, byte for byte.
+
+    ``patching.nitro`` returns only the files' placements, so the other places
+    follow from the header before and after:
+
+    - the header fields the build sets: the ARM9's size, the overlay table's
+      offset, the secure area's CRC, the used size and the header's CRC;
+    - the ARM9's place, old and new extents with the footer: it grew over the
+      overlay table's old place, whose bytes past the new end stay as they were;
+    - the FAT entries of the files written, and the old place of a file
+      rewritten where it was (0xFF fills what it left);
+    - the tail from the old used size to the new one: the moved overlay table,
+      the files that grew, 0xFF between them and, when the image has one, the
+      RSA signature that moves after the used area.
+    """
+    old, new = before.header, after.header
+    if (new.arm9_offset, new.fat_offset, new.arm9_overlay_size) != (
+        old.arm9_offset,
+        old.fat_offset,
+        old.arm9_overlay_size,
+    ) or not old.used_size <= new.arm9_overlay_offset <= new.used_size:
+        raise ClassicRetroError(
+            ErrorCode.BUILD_VALIDATION_FAILED, "The header places a part where the build did not"
+        )
+    footer = len(before.arm9_footer())
+    magic = rom[old.used_size : old.used_size + len(SIGNATURE_MAGIC)]
+    signature = SIGNATURE_SIZE if magic == SIGNATURE_MAGIC else 0
+    allowed = [
+        (ARM9_SIZE, ARM9_SIZE + 4),
+        (ARM9_OVERLAY_TABLE, ARM9_OVERLAY_TABLE + 4),
+        (SECURE_AREA_CRC, SECURE_AREA_CRC + 2),
+        (USED_SIZE, USED_SIZE + 4),
+        (HEADER_CRC, HEADER_CRC + 2),
+        (old.arm9_offset, old.arm9_offset + max(old.arm9_size, new.arm9_size) + footer),
+        *((old.fat_offset + 8 * file_id, old.fat_offset + 8 * file_id + 8) for file_id in placed),
+        *(
+            before.file_range(file_id)
+            for file_id, (start, _) in placed.items()
+            if start == before.file_range(file_id)[0]
+        ),
+        (new.arm9_overlay_offset, new.arm9_overlay_offset + new.arm9_overlay_size),
+        (old.used_size, new.used_size + signature),
+    ]
+    verify_untouched(rom, output, allowed, what="The image")
 
 
 def check_platinum_translations(
