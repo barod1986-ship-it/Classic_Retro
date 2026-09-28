@@ -12,6 +12,7 @@ from classic_retro.patching import hooks
 from classic_retro.patching.hooks import HookProgram, assembler_for, register_assembler
 from classic_retro.patching.image import GBA_ROM_BASE, ImageSpec
 from classic_retro.patching.outputs import base_report, write_image, write_patch
+from classic_retro.patching.overlay import verify_bytes, verify_empty, verify_untouched
 from classic_retro.rebuild.bps import create_bps
 
 
@@ -251,3 +252,72 @@ def test_outputs_report_and_files(tmp_path):
     written = write_image(tmp_path / "out", "test.gba", output)
     assert (tmp_path / "out" / "test.gba").read_bytes() == output
     assert written == {"rom": str(tmp_path / "out" / "test.gba")}
+
+
+def test_verify_bytes_compares_pinned_originals_by_address():
+    image = bytes(range(256))
+    verify_bytes(image, {0x10: bytes(range(0x10, 0x14)), 0xFE: b"\xfe\xff"})
+    verify_bytes(image, {0x08000010: b"\x10\x11"}, offset=lambda address: address - 0x08000000)
+    with pytest.raises(ClassicRetroError) as error:
+        verify_bytes(image, {0x10: b"\x10\x12"}, what="the ARM9")
+    assert error.value.code is ErrorCode.SOURCE_BASELINE_MISMATCH
+    assert str(error.value) == "Unexpected bytes at 0x10 in the ARM9"
+    # An original that reaches past the image is missing, not present.
+    with pytest.raises(ClassicRetroError) as error:
+        verify_bytes(image, {0xFF: b"\xff\x00"})
+    assert str(error.value) == "Unexpected bytes at 0xff in image"
+
+
+def test_verify_empty_wants_a_real_range_of_fill():
+    image = b"\xff" * 0x20 + b"\x00" + b"\xff" * 0x1F
+    verify_empty(image, 0, 0x20, 0xFF, what="Free space")
+    verify_empty(image, 0x21, 0x40, 0xFF, what="Free space")
+    verify_empty(image, 0x20, 0x21, 0x00, what="Free space")
+    with pytest.raises(ClassicRetroError) as error:
+        verify_empty(image, 0, 0x40, 0xFF, what="Free space")
+    assert error.value.code is ErrorCode.SAFE_REGION_CONTENT_MISMATCH
+    assert str(error.value) == "Free space holds data at 0x20, where 0xff was expected"
+    # An empty, inverted or out-of-image range would check nothing.
+    for start, end in ((0x10, 0x10), (0x20, 0x10), (0x30, 0x41), (-1, 0x10)):
+        with pytest.raises(ValueError):
+            verify_empty(image, start, end, 0xFF, what="Free space")
+
+
+def test_verify_untouched_allows_changes_in_its_ranges_only():
+    original = bytes(range(256)) * 0x30  # three blocks of 0x1000
+    output = bytearray(original)
+    output[0x0100:0x0104] = bytes(4)
+    output[0x0FF8] ^= 1
+    output[0x1000] ^= 1
+    output[0x1FFF] ^= 1
+    output[0x2000] ^= 1
+    output[0x2FFF] ^= 1
+    # Overlapping ranges, ranges across a block boundary, one at the very end.
+    allowed = [
+        (0x100, 0x102),
+        (0x101, 0x104),
+        (0x0FF0, 0x1010),
+        (0x1FFF, 0x2001),
+        (0x2FFF, 0x3000),
+        (0x800, 0x800),
+    ]
+    verify_untouched(original, bytes(output), allowed)
+    verify_untouched(original, bytes(output), reversed(allowed), what="The ROM")
+    # A range's end is exclusive: the byte at it is outside.
+    output[0x104] ^= 1
+    with pytest.raises(ClassicRetroError) as error:
+        verify_untouched(original, bytes(output), allowed, what="The ROM")
+    assert error.value.code is ErrorCode.BUILD_VALIDATION_FAILED
+    assert str(error.value) == "The ROM changed at 0x104, outside the overlay's places"
+    # The first byte outside the places is named, wherever the block boundaries are.
+    output[0x104] ^= 1
+    output[0x1010] ^= 1
+    with pytest.raises(ClassicRetroError) as error:
+        verify_untouched(original, bytes(output), allowed)
+    assert str(error.value) == "image changed at 0x1010, outside the overlay's places"
+    # Only the common prefix is compared: what an overlay adds past the
+    # original's end is its own business.
+    verify_untouched(original, bytes(output[:0x1010]), allowed)
+    verify_untouched(original[:0x1010], bytes(output), allowed)
+    with pytest.raises(ValueError):
+        verify_untouched(original, original, [(0x10, 0x8)])

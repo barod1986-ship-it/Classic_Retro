@@ -21,6 +21,7 @@ from classic_retro.engines.alttp import (
     FINISH,
     MESSAGE_DATA,
     WORD_DICTIONARY,
+    lorom_address,
     lorom_offset,
     message_notation,
     messages,
@@ -112,7 +113,7 @@ def _messages(rom: bytes | None = None) -> tuple[AlttpMessage, ...]:
     stored = messages(rom or _rom())
     return tuple(
         AlttpMessage(key, index, _digest(stored[index].data), ARABIC[key])
-        for key, (index, _) in script._SOURCES.items()
+        for key, (index, _, _) in script._SOURCES.items()
     )
 
 
@@ -203,7 +204,9 @@ def test_the_added_banks_hold_the_list_the_font_and_the_arabic(built):
 
 def test_a_message_never_runs_across_a_bank(font_path):
     rom = _rom()
-    long = dataclasses.replace(_messages()[1], notation="\n".join(["مرحبا"] * 20))
+    long = dataclasses.replace(
+        _messages()[1], notation="{Window 02}{Speed 03}" + "\n".join(["مرحبا"] * 20)
+    )
     with pytest.MonkeyPatch.context() as patch:
         patch.setattr(overlay, "MESSAGES", 0x21FFF0)
         result = _build(rom, font_path, translated=(long,))
@@ -346,3 +349,101 @@ def test_the_command_group_checks_and_encodes(capsys):
     # Initial and final beh, the space, the name, the end.
     assert encoded["count"] == 5 and encoded["bytes"].split()[-3:] == ["59", "6A", "7F"]
     assert "pages" not in encoded
+
+
+def _writes(result):
+    translated = _messages()
+    encoded = overlay.encode_messages(
+        translated, engine.AlttpArabicEncoder(_map_all(), result.font)
+    )
+    writes = {overlay.HOOK_ADDRESS: overlay.HOOK_CODE}
+    writes |= overlay.data_writes(translated, encoded, result.font)
+    return translated, encoded, writes
+
+
+def test_the_output_is_read_back_before_it_is_accepted(built):
+    rom, result = built
+    translated, encoded, writes = _writes(result)
+    overlay._verify_output(result.rom, rom, writes, translated, encoded)
+    redirects = overlay.read_redirects(result.rom)
+    assert list(redirects) == [message.index for message in translated]
+    for message in translated:
+        data = overlay.read_arabic_message(result.rom, redirects[message.index])
+        assert data == encoded[message.key].data
+    a_glyph = next(code for code in result.font.glyphs if code != SPACE_CODE)
+    for address, what in (
+        (overlay.HOOK_ADDRESS + 3, "hook code"),
+        (overlay.SITES[2].address + 1, "site at $0ECAD5"),
+        (overlay.REDIRECTS + 2, "list of translated messages"),
+        (overlay.ARABIC_WIDTHS + a_glyph, "width table"),
+        (overlay.ARABIC_FONT + 64 * a_glyph + 1, "font table"),
+        (overlay.MESSAGES + 1, "Arabic text"),
+        (lorom_address(MESSAGE_DATA + 2), "outside its places"),
+    ):
+        tampered = bytearray(result.rom)
+        tampered[lorom_offset(address)] ^= 0x01
+        with pytest.raises(ClassicRetroError) as caught:
+            overlay._verify_output(bytes(tampered), rom, writes, translated, encoded)
+        assert caught.value.code is ErrorCode.BUILD_VALIDATION_FAILED, what
+        assert what in str(caught.value), what
+    # A list that sends a message elsewhere than its Arabic is caught through the reader.
+    elsewhere = bytearray(result.rom)
+    struct.pack_into("<HB", elsewhere, lorom_offset(overlay.REDIRECTS + 2), 0x8000, 0x22)
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay._verify_output(bytes(elsewhere), rom, writes, translated, encoded)
+    assert caught.value.code is ErrorCode.BUILD_VALIDATION_FAILED
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.read_arabic_message(result.rom, 0x228000)  # 0xFF fill, no end
+    assert caught.value.code is ErrorCode.BUILD_VALIDATION_FAILED
+
+
+def test_a_translation_keeps_the_originals_commands(font_path):
+    """The uncle's English starts with the player's name; Zelda's call has a window and a
+    speed. The build holds each translation against the ROM's commands, the check
+    against the pinned ones."""
+    rom = _rom()
+    uncle, zelda, _ = _messages()
+    for notation in (
+        "الباب.{line}ابق هنا.",  # the name dropped
+        "{Name}{Wait 01}، الباب.",  # a wait added
+    ):
+        with pytest.raises(ClassicRetroError) as caught:
+            _build(rom, font_path, translated=(dataclasses.replace(uncle, notation=notation),))
+        assert caught.value.code is ErrorCode.TOKEN_ORDER_VIOLATION, notation
+    swapped = dataclasses.replace(zelda, notation="{Speed 03}{Window 02}مرحبا.\nتعال.")
+    with pytest.raises(ClassicRetroError) as caught:
+        _build(rom, font_path, translated=(swapped,))
+    assert caught.value.code is ErrorCode.TOKEN_ORDER_VIOLATION
+    kept = _build(rom, font_path, translated=(uncle, zelda))
+    assert kept.report["messages"]["house.uncle"]["source_skeleton"] == ["{Name}"]
+    assert kept.report["messages"]["house.zelda_calls"]["source_skeleton"] == [
+        "{Window 02}",
+        "{Speed 03}",
+    ]
+    # The name may move among the text: only its place among the commands is held.
+    moved = dataclasses.replace(uncle, notation="الباب.{line}ابق هنا. {Name}")
+    assert _build(rom, font_path, translated=(moved,)).report["messages"]["house.uncle"][
+        "source_skeleton"
+    ] == ["{Name}"]
+    # A pinned skeleton is held against the ROM's, at the build and at the extraction.
+    pinned = dataclasses.replace(uncle, source_skeleton=("{Name}",))
+    assert _build(rom, font_path, translated=(pinned,)).rom
+    wrong = dataclasses.replace(uncle, source_skeleton=("{Wait 01}",))
+    with pytest.raises(ClassicRetroError) as caught:
+        _build(rom, font_path, translated=(wrong,))
+    assert caught.value.code is ErrorCode.SOURCE_BASELINE_MISMATCH
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.extract_originals(rom, translated=(wrong,), verify_identity=False)
+    assert caught.value.code is ErrorCode.SOURCE_BASELINE_MISMATCH
+    # Without the ROM, the pinned skeleton is what the translation is held against.
+    encoder = engine.AlttpArabicEncoder(_map_all())
+    assert overlay.encode_messages((pinned,), encoder)["house.uncle"].data.endswith(b"\x7f")
+    dropped = dataclasses.replace(pinned, notation="الباب.{line}ابق هنا.")
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.encode_messages((dropped,), encoder)
+    assert caught.value.code is ErrorCode.TOKEN_ORDER_VIOLATION
+    assert overlay.extract_skeletons(rom, translated=_messages(), verify_identity=False) == {
+        "house.uncle": ("{Name}",),
+        "house.zelda_calls": ("{Window 02}", "{Speed 03}"),
+        "house.lamp": (),
+    }

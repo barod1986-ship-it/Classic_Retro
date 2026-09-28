@@ -10,6 +10,8 @@ package holds the parts that do not depend on the game:
 - ``hooks``: hook programs stored as bytes and re-assembled from source with a
   pluggable assembler per CPU;
 - ``outputs``: the build report's common fields and the patch/image files;
+- ``overlay``: the checks of an overlay's input and output: pinned originals,
+  an empty region, and that nothing changed outside the overlay's places;
 - ``nitro``: Nintendo DS images: the header, NitroFS, NARC archives and the
   ARM9 binary, rebuilt with a file replaced or moved.
 

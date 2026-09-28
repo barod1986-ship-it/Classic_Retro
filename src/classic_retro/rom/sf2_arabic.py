@@ -8,14 +8,21 @@ it. The overlay:
    (``SITES``, ``ANCHORS``: the engine's code where the hooks go back to or
    call, the font's pointer), that its room (``ROOM_START`` to ``ROOM_END``,
    free bytes at the end of the section that holds the text) is free, and each
-   translated string's original (its number and the SHA-256 of its bytes);
-2. draws the translation's glyphs (``engines.sf2_arabic``), encodes each
-   string and writes into that room the hooks (``sf2_arabic_hooks.s``), the
+   translated string's original (its number, the SHA-256 of its bytes and,
+   where pinned, its commands);
+2. draws the translation's glyphs (``engines.sf2_arabic``), holds each
+   translation's tags against its original's (``command_skeleton``: everything
+   but the new lines the encoder writes itself), encodes each string and
+   writes into that room the hooks (``sf2_arabic_hooks.s``), the
    list that sends each translated string to its Arabic (``REDIRECTS``), the
    glyphs in the game's font format and the Arabic strings;
 3. puts a jump or a call to a hook in place of four places of the engine
    (``SITES``);
-4. sets the header's checksum.
+4. sets the header's checksum;
+5. reads everything back from the image before accepting it: the hooks, the
+   sites, the list, the font, and each Arabic string through the list as the
+   hooks find it (``read_redirects``, ``read_arabic_string``), with the
+   translation's tags; and proves nothing else changed.
 
 The English strings stay where they were, as they were: a translated one is
 read from its Arabic instead, and the hooks tell an Arabic string by its
@@ -35,7 +42,16 @@ from pathlib import Path
 
 from classic_retro.arabic.glyph_codes import GlyphCodes
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
-from classic_retro.engines.sf2 import decode_string, notation, string_bytes
+from classic_retro.cpu.m68k import jmp_long, jsr_long, nop_fill
+from classic_retro.engines.sf2 import (
+    END,
+    TAGS_WITH_ARGUMENT,
+    HuffmanTrees,
+    command_skeleton,
+    decode_string,
+    notation,
+    string_bytes,
+)
 from classic_retro.engines.sf2_arabic import (
     GLYPH_BYTES,
     SPACE_CODE,
@@ -47,7 +63,9 @@ from classic_retro.engines.sf2_arabic import (
     message_characters,
     message_preview,
     messages_sheet,
+    notation_skeleton,
     sf2_glyph_codes,
+    validate_command_skeleton,
 )
 from classic_retro.localization.translations import TranslationSet
 from classic_retro.patching.hooks import HookProgram
@@ -109,20 +127,6 @@ HOOKS = HookProgram(
 )
 PATCH_NAME = "shining-force-2-usa-arabic-new-game.bps"
 
-JMP_LONG = bytes.fromhex("4ef9")
-JSR_LONG = bytes.fromhex("4eb9")
-NOP = bytes.fromhex("4e71")
-
-
-def _jump(target: int, length: int) -> bytes:
-    """``JMP target.l``, then ``NOP`` to ``length`` bytes."""
-    return JMP_LONG + target.to_bytes(4, "big") + NOP * ((length - 6) // 2)
-
-
-def _call(target: int) -> bytes:
-    """``JSR target.l``: 6 bytes."""
-    return JSR_LONG + target.to_bytes(4, "big")
-
 
 @dataclass(frozen=True, slots=True)
 class Site:
@@ -134,29 +138,31 @@ class Site:
     what: str
 
 
+# A site jumps or calls with a long address (``cpu.m68k``), filled with NOPs to
+# its length.
 SITES = (
     Site(
         0x006272,
         bytes.fromhex("48a78000ec48"),
-        _jump(HOOKS.symbol_address("redirect_hook"), 6),
+        jmp_long(HOOKS.symbol_address("redirect_hook")),
         "DisplayText's lookup (MOVEM.W d0,-(sp); LSR.W #6,d0): a translated string, its Arabic",
     ),
     Site(
         0x00634E,
         bytes.fromhex("4ab8b77a66000012"),
-        _jump(HOOKS.symbol_address("symbol_hook"), 8),
+        nop_fill(jmp_long(HOOKS.symbol_address("symbol_hook")), 8),
         "GetNextTextSymbol (TST.L $FFB77A; BNE.W): an Arabic string's next symbol, a name whole",
     ),
     Site(
         0x006B70,
         bytes.fromhex("48a7e000024000ff"),
-        _jump(HOOKS.symbol_address("draw_hook"), 8),
+        nop_fill(jmp_long(HOOKS.symbol_address("draw_hook")), 8),
         "SymbolsToGraphics (MOVEM.W d0-d2,-(sp); ANDI.W #$FF,d0): an Arabic glyph, mirrored",
     ),
     Site(
         0x0064DA,
         bytes.fromhex("317c01680006"),
-        _call(HOOKS.symbol_address("cursor_hook")),
+        jsr_long(HOOKS.symbol_address("cursor_hook")),
         "sub_64A8 (MOVE.W #$168,6(a0)): the waiting arrow at the left in an Arabic string",
     ),
 )
@@ -236,15 +242,38 @@ def verify_rom(rom: bytes) -> None:
         )
 
 
-def _verify_source(rom: bytes, string: Sf2String) -> bytes:
-    """The string's bytes as stored (its length byte and code), as pinned."""
+def _verify_source(rom: bytes, string: Sf2String, trees: HuffmanTrees | None = None) -> bytes:
+    """The string's bytes as stored (its length byte and code), as pinned: its hash
+    and, where pinned, its commands (decoded with ``trees``, the ROM's unless given)."""
     data = string_bytes(rom, string.index)
     if source_digest(data) != string.source_sha256:
         raise ClassicRetroError(
             ErrorCode.SOURCE_BASELINE_MISMATCH,
             f"{string.key}: string {string.index:#x} differs from the pinned text",
         )
+    if (
+        string.source_skeleton is not None
+        and _skeleton(rom, string, trees) != string.source_skeleton
+    ):
+        raise ClassicRetroError(
+            ErrorCode.SOURCE_BASELINE_MISMATCH,
+            f"{string.key}: string {string.index:#x} has different commands than pinned",
+        )
     return data
+
+
+def _skeleton(rom: bytes, string: Sf2String, trees: HuffmanTrees | None) -> tuple[str, ...]:
+    return command_skeleton(decode_string(rom, string.index, trees))
+
+
+def source_skeletons(rom: bytes, translated: Sequence[Sf2String]) -> dict[str, tuple[str, ...]]:
+    """Every original's commands (``command_skeleton``), verified, by entry id."""
+    trees = HuffmanTrees.read(rom)
+    skeletons: dict[str, tuple[str, ...]] = {}
+    for string in translated:
+        _verify_source(rom, string, trees)
+        skeletons[string.key] = _skeleton(rom, string, trees)
+    return skeletons
 
 
 # ---------------------------------------------------------------------------
@@ -259,12 +288,22 @@ def strings_characters(translated: Sequence[Sf2String]) -> set[str]:
 
 
 def encode_strings(
-    translated: Sequence[Sf2String], encoder: Sf2ArabicEncoder
+    translated: Sequence[Sf2String],
+    encoder: Sf2ArabicEncoder,
+    skeletons: Mapping[str, tuple[str, ...]] | None = None,
 ) -> dict[str, EncodedString]:
+    """Every string held against its original's commands, then encoded.
+
+    The commands are the ROM's (``skeletons``, from ``source_skeletons``) or,
+    without the ROM, those pinned in the script, where they are.
+    """
     encoded: dict[str, EncodedString] = {}
     for string in translated:
         if string.key in encoded:
             raise ClassicRetroError(ErrorCode.DUPLICATE_ENTRY_ID, f"String {string.key} twice")
+        skeleton = string.source_skeleton if skeletons is None else skeletons[string.key]
+        if skeleton is not None:
+            validate_command_skeleton(skeleton, string.notation)
         encoded[string.key] = encoder.encode(string.notation)
     numbers = [string.index for string in translated]
     if len(set(numbers)) != len(numbers):
@@ -337,13 +376,12 @@ def build_sf2_arabic_rom(
         verify_usa_image(rom)
     verify_rom(rom)
     translated = translated or sf2_arabic_strings(translations)
-    for string in translated:
-        _verify_source(rom, string)
+    skeletons = source_skeletons(rom, translated)
 
     used = strings_characters(translated)
     glyph_map = sf2_glyph_codes(used)
     font = build_sf2_font(font_path, glyph_map, used)
-    encoded = encode_strings(translated, Sf2ArabicEncoder(glyph_map, font))
+    encoded = encode_strings(translated, Sf2ArabicEncoder(glyph_map, font), skeletons)
 
     output = bytearray(rom)
     writes = room_data(translated, encoded, font)
@@ -353,7 +391,7 @@ def build_sf2_arabic_rom(
         output[site.address : site.address + len(site.patched)] = site.patched
     checksum = set_checksum(output)
     result = bytes(output)
-    _verify_output(result, rom, writes)
+    _verify_output(result, rom, writes, translated, encoded)
     patch = create_bps(rom, result)
     report: dict[str, object] = {
         **base_report(IMAGE.title, rom, result, patch),
@@ -362,6 +400,8 @@ def build_sf2_arabic_rom(
                 "index": string.index,
                 "bytes": len(encoded[string.key].data),
                 "lines": [line.end for line in encoded[string.key].lines or ()],
+                # The original's commands, as the script pins them.
+                "source_skeleton": list(skeletons[string.key]),
             }
             for string in translated
         },
@@ -382,13 +422,94 @@ def _code_range(glyph_map: GlyphCodes) -> str:
     return f"{min(codes):02X}..{max(codes):02X}"
 
 
-def _verify_output(output: bytes, original: bytes, writes: Mapping[int, bytes]) -> None:
-    """Only the sites, the room and the checksum changed, and the checksum holds."""
+def read_redirects(rom: bytes) -> dict[int, int]:
+    """The list of translated strings as the hooks read it: each string's number and
+    the address of its Arabic's length byte, to the $FFFF that ends it."""
+    found: dict[int, int] = {}
+    at = REDIRECTS
+    while at + REDIRECT_ENTRY <= ARABIC_FONT:
+        index, address = struct.unpack_from(">HI", rom, at)
+        if index == 0xFFFF:
+            return found
+        found[index] = address
+        at += REDIRECT_ENTRY
+    raise ClassicRetroError(
+        ErrorCode.BUILD_VALIDATION_FAILED, "The list of translated strings has no end"
+    )
+
+
+def read_arabic_string(rom: bytes, address: int) -> bytes:
+    """An Arabic string's symbols, its end included, as the hooks read them after its
+    length byte at ``address``: a symbol a byte, a command's argument with it, within
+    the room."""
+    start = at = address + 1
+    arguments = set(TAGS_WITH_ARGUMENT.values())
+    while at < ROOM_END:
+        symbol = rom[at]
+        at += 2 if symbol in arguments else 1
+        if symbol == END:
+            return bytes(rom[start:at])
+    raise ClassicRetroError(
+        ErrorCode.BUILD_VALIDATION_FAILED, f"The Arabic string at ${address:06X} has no end"
+    )
+
+
+def _verify_output(
+    output: bytes,
+    original: bytes,
+    writes: Mapping[int, bytes],
+    translated: Sequence[Sf2String],
+    encoded: Mapping[str, EncodedString],
+) -> None:
+    """Everything written reads back, only the sites, the room and the checksum
+    changed, and the checksum holds."""
+    if len(output) != len(original):
+        raise ClassicRetroError(ErrorCode.BUILD_VALIDATION_FAILED, "The ROM's size changed")
+    if output[HOOK_ADDRESS : HOOK_ADDRESS + len(HOOK_CODE)] != HOOK_CODE:
+        raise ClassicRetroError(
+            ErrorCode.BUILD_VALIDATION_FAILED, "The hook code does not read back"
+        )
+    for site in SITES:
+        if output[site.address : site.address + len(site.patched)] != site.patched:
+            raise ClassicRetroError(
+                ErrorCode.BUILD_VALIDATION_FAILED,
+                f"The site at ${site.address:06X} does not read back",
+            )
+    names = {
+        HOOK_ADDRESS: "The hook code",
+        REDIRECTS: "The list of translated strings",
+        ARABIC_FONT: "The font table",
+    }
+    for address, data in writes.items():
+        if output[address : address + len(data)] != data:
+            what = names.get(address, "The Arabic text")
+            raise ClassicRetroError(ErrorCode.BUILD_VALIDATION_FAILED, f"{what} does not read back")
+    redirects = read_redirects(output)
+    if list(redirects) != [string.index for string in translated]:
+        raise ClassicRetroError(
+            ErrorCode.BUILD_VALIDATION_FAILED,
+            "The list of translated strings does not read back in order",
+        )
+    for string in translated:
+        address = redirects[string.index]
+        if not ARABIC_FONT <= address < ROOM_END:
+            raise ClassicRetroError(
+                ErrorCode.BUILD_VALIDATION_FAILED, f"{string.key}: its Arabic is not in the room"
+            )
+        data = read_arabic_string(output, address)
+        if data != encoded[string.key].data or output[address] != min(len(data), 0xFF):
+            raise ClassicRetroError(
+                ErrorCode.BUILD_VALIDATION_FAILED,
+                f"{string.key}: the Arabic string does not read back through the list",
+            )
+        if command_skeleton(data) != notation_skeleton(string.notation):
+            raise ClassicRetroError(
+                ErrorCode.BUILD_VALIDATION_FAILED,
+                f"{string.key}: the Arabic string read back has other commands",
+            )
     allowed = [(site.address, len(site.patched)) for site in SITES]
     allowed += [(address, len(data)) for address, data in writes.items()]
     allowed.append((CHECKSUM, 2))
-    if len(output) != len(original):
-        raise ClassicRetroError(ErrorCode.BUILD_VALIDATION_FAILED, "The ROM's size changed")
     changed = [
         at
         for at in range(0, len(original), 0x1000)
@@ -494,8 +615,24 @@ def extract_originals(
     if verify_identity:
         verify_usa_image(rom)
     translated = translated or sf2_arabic_strings(translations)
+    trees = HuffmanTrees.read(rom)
     originals = {}
     for string in translated:
-        _verify_source(rom, string)
-        originals[string.key] = notation(decode_string(rom, string.index))
+        _verify_source(rom, string, trees)
+        originals[string.key] = notation(decode_string(rom, string.index, trees))
     return originals
+
+
+def extract_skeletons(
+    rom: bytes,
+    translations: TranslationSet | None = None,
+    *,
+    translated: tuple[Sf2String, ...] | None = None,
+    verify_identity: bool = True,
+) -> dict[str, tuple[str, ...]]:
+    """Every pinned original's commands, verified, by entry id: what a maintainer pins
+    as ``source_skeleton`` in the script, so the translations are checked without the
+    ROM. The build's report carries the same."""
+    if verify_identity:
+        verify_usa_image(rom)
+    return source_skeletons(rom, translated or sf2_arabic_strings(translations))

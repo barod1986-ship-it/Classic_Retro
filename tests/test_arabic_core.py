@@ -2,11 +2,16 @@
 
 from __future__ import annotations
 
+import os
 from io import BytesIO
+from pathlib import Path
 
 import pytest
+import uharfbuzz as hb
+from fontTools.feaLib.builder import addOpenTypeFeaturesFromString
 from fontTools.fontBuilder import FontBuilder
 from fontTools.pens.ttGlyphPen import TTGlyphPen
+from fontTools.ttLib import TTFont
 from PIL import Image
 
 from classic_retro.arabic.glyph_codes import GlyphCodes, assign_glyph_codes
@@ -41,6 +46,15 @@ from classic_retro.font.previews import (
     glyph_atlas,
     pages_right_to_left,
     preview_sheet,
+)
+from classic_retro.font.shaped_text import (
+    LEFT_TO_RIGHT,
+    PRIVATE_USE_START,
+    RIGHT_TO_LEFT,
+    ShapedGlyph,
+    ShapedLineRenderer,
+    TextRun,
+    directional_runs,
 )
 from classic_retro.font.tiles import pack_4bpp, unpack_4bpp
 from classic_retro.text.commands import (
@@ -510,3 +524,188 @@ def test_preview_sheets_stack_previews_with_their_keys_on_the_left():
     assert enlarged.getpixel((29, 5)) == (255, 0, 0)
     assert enlarged.getpixel((30, 0)) == (16, 16, 16)
     assert enlarged.getpixel((33, 12)) == (0, 0, 255)
+
+
+# ---------------------------------------------------------------------------
+# Shaped lines: the bidi step before HarfBuzz
+
+# The shaping test font's glyph order: alef and beh with OpenType forms, the
+# digits of both scripts, the separators a number may hold, and the
+# punctuation the renderer would otherwise add (so glyph IDs stay as built).
+SHAPING_GLYPHS = (
+    ".notdef",
+    "space",
+    "alef",
+    "beh",
+    "beh.init",
+    "beh.medi",
+    "beh.fina",
+    *("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"),
+    *(f"uni{code:04X}" for code in range(0x0660, 0x066A)),
+    "period",
+    "comma",
+    "colon",
+    "slash",
+    "exclam",
+)
+SHAPING_CHARACTERS = {
+    " ": "space",
+    "\u0627": "alef",
+    "\u0628": "beh",
+    **{digit: SHAPING_GLYPHS[7 + value] for value, digit in enumerate("0123456789")},
+    **{chr(0x0660 + value): f"uni{0x0660 + value:04X}" for value in range(10)},
+    ".": "period",
+    ",": "comma",
+    ":": "colon",
+    "/": "slash",
+    "!": "exclam",
+}
+SHAPING_SIZE = 20
+BEH_ALEF = "\u0628\u0627"
+
+
+@pytest.fixture(scope="module")
+def shaping_font(tmp_path_factory) -> Path:
+    """Original rectangles for every shaping glyph, forms of beh through OpenType."""
+    builder = FontBuilder(1000, isTTF=True)
+    builder.setupGlyphOrder(list(SHAPING_GLYPHS))
+    builder.setupCharacterMap({ord(key): name for key, name in SHAPING_CHARACTERS.items()})
+    glyphs = {}
+    metrics = {}
+    for number, name in enumerate(SHAPING_GLYPHS):
+        pen = TTGlyphPen(None)
+        if name not in (".notdef", "space"):
+            # Each glyph a box of its own width, so advances tell the glyphs apart.
+            right = 200 + 20 * number
+            pen.moveTo((50, 0))
+            pen.lineTo((50, 600))
+            pen.lineTo((right, 600))
+            pen.lineTo((right, 0))
+            pen.closePath()
+        glyphs[name] = pen.glyph()
+        metrics[name] = (250 + 20 * number, 50)
+    builder.setupGlyf(glyphs)
+    builder.setupHorizontalMetrics(metrics)
+    builder.setupHorizontalHeader(ascent=800, descent=-200)
+    builder.setupNameTable({"familyName": "Classic Retro Shaping Test", "styleName": "Regular"})
+    builder.setupOS2(sTypoAscender=800, sTypoDescender=-200, usWinAscent=800, usWinDescent=200)
+    builder.setupPost()
+    addOpenTypeFeaturesFromString(
+        builder.font,
+        "languagesystem DFLT dflt; languagesystem arab dflt;"
+        "feature init { sub beh by beh.init; } init;"
+        "feature medi { sub beh by beh.medi; } medi;"
+        "feature fina { sub beh by beh.fina; } fina;",
+    )
+    path = tmp_path_factory.mktemp("shaping") / "shaping.ttf"
+    builder.save(path)
+    return path
+
+
+@pytest.fixture(scope="module")
+def shaper(shaping_font) -> ShapedLineRenderer:
+    return ShapedLineRenderer(shaping_font, SHAPING_SIZE)
+
+
+@pytest.fixture
+def reference_font() -> Path:
+    """The pinned reference font, from the environment; never bundled with the tests."""
+    path = os.environ.get("CLASSIC_RETRO_REFERENCE_FONT")
+    if not path:
+        pytest.skip("CLASSIC_RETRO_REFERENCE_FONT is unset")
+    return Path(path)
+
+
+def _one_rtl_buffer(font_path: Path, size: int, text: str) -> list[ShapedGlyph]:
+    """The whole line in one right-to-left HarfBuzz buffer: no bidi step at all."""
+    face = hb.Face(font_path.read_bytes())
+    buffer = hb.Buffer()
+    buffer.add_str(text)
+    buffer.direction = "rtl"
+    buffer.script = "Arab"
+    buffer.language = "ar"
+    hb.shape(hb.Font(face), buffer)
+    scale = size / face.upem
+    return [
+        ShapedGlyph(
+            chr(PRIVATE_USE_START + info.codepoint),
+            position.x_advance * scale,
+            position.x_offset * scale,
+            position.y_offset * scale,
+        )
+        for info, position in zip(buffer.glyph_infos, buffer.glyph_positions, strict=True)
+    ]
+
+
+def _glyph_names(glyphs: list[ShapedGlyph]) -> list[str]:
+    return [SHAPING_GLYPHS[ord(glyph.character) - PRIVATE_USE_START] for glyph in glyphs]
+
+
+def test_a_line_without_digits_is_one_right_to_left_run(shaping_font, shaper):
+    for text in (BEH_ALEF, BEH_ALEF + " " + BEH_ALEF + "!", "\u0628\u0628\u0628.", ": "):
+        assert directional_runs(text) == [TextRun(text, RIGHT_TO_LEFT)]
+        # Glyphs, advances and offsets: exactly what one buffer of the line gives.
+        assert shaper.shape(text) == _one_rtl_buffer(shaping_font, SHAPING_SIZE, text)
+    # And the forms are the contextual ones: beh joins the alef after it.
+    assert _glyph_names(shaper.shape(BEH_ALEF)) == ["alef", "beh.init"]
+    assert directional_runs("") == [] and shaper.shape("") == []
+
+
+def test_numbers_after_arabic_read_left_to_right(shaper):
+    # Visual order, left to right: the digits as written, the space, then the
+    # Arabic letters (the alef, being last, stands left of the initial beh).
+    arabic = ["space", "alef", "beh.init"]
+    western = shaper.shape(BEH_ALEF + " 2024")
+    assert _glyph_names(western) == ["two", "zero", "two", "four", *arabic]
+    eastern = shaper.shape(BEH_ALEF + " \u0662\u0660\u0662\u0664")
+    assert _glyph_names(eastern) == ["uni0662", "uni0660", "uni0662", "uni0664", *arabic]
+    # The line is the number followed by the Arabic run, each shaped on its own.
+    assert western == shaper.shape("2024") + shaper.shape(BEH_ALEF + " ")
+    assert shaper.width(BEH_ALEF + " 2024") == pytest.approx(
+        shaper.width("2024") + shaper.width(BEH_ALEF + " ")
+    )
+
+
+def test_a_single_separator_between_digit_groups_stays_in_the_number(shaper):
+    assert directional_runs(BEH_ALEF + " 3.5") == [
+        TextRun(BEH_ALEF + " ", RIGHT_TO_LEFT),
+        TextRun("3.5", LEFT_TO_RIGHT),
+    ]
+    assert directional_runs("1,000") == [TextRun("1,000", LEFT_TO_RIGHT)]
+    assert directional_runs("10:30 " + BEH_ALEF) == [
+        TextRun("10:30", LEFT_TO_RIGHT),
+        TextRun(" " + BEH_ALEF, RIGHT_TO_LEFT),
+    ]
+    assert directional_runs("1/2/2024.") == [
+        TextRun("1/2/2024", LEFT_TO_RIGHT),
+        TextRun(".", RIGHT_TO_LEFT),
+    ]
+    # Two separators in a row, or one at either end, are neutral punctuation.
+    assert directional_runs("1..2") == [
+        TextRun("1", LEFT_TO_RIGHT),
+        TextRun("..", RIGHT_TO_LEFT),
+        TextRun("2", LEFT_TO_RIGHT),
+    ]
+    assert directional_runs(".5") == [TextRun(".", RIGHT_TO_LEFT), TextRun("5", LEFT_TO_RIGHT)]
+    assert _glyph_names(shaper.shape(BEH_ALEF + " 3.5")) == [
+        "three", "period", "five", "space", "alef", "beh.init"
+    ]  # fmt: skip
+    assert _glyph_names(shaper.shape("1,000")) == ["one", "comma", "zero", "zero", "zero"]
+
+
+def test_a_lone_digit_is_shaped_as_before(shaping_font, shaper):
+    for text in ("7", "\u0667", BEH_ALEF + " 7", BEH_ALEF + " 7.", "7 " + BEH_ALEF):
+        assert shaper.shape(text) == _one_rtl_buffer(shaping_font, SHAPING_SIZE, text)
+    assert _glyph_names(shaper.shape(BEH_ALEF + " 7")) == ["seven", "space", "alef", "beh.init"]
+
+
+def test_reference_font_numbers_read_left_to_right(reference_font):
+    renderer = ShapedLineRenderer(reference_font, SHAPING_SIZE)
+    order = TTFont(reference_font).getGlyphOrder()
+    for year in ("2024", "\u0662\u0660\u0662\u0664"):
+        line = renderer.shape("\u0639\u0627\u0645 " + year)
+        digits = [renderer.shape(digit)[0].character for digit in year]
+        assert [glyph.character for glyph in line[:4]] == digits
+        assert line[4:] == renderer.shape("\u0639\u0627\u0645 ")
+    names = [order[ord(glyph.character) - PRIVATE_USE_START] for glyph in line]
+    assert names[:5] == ["uni0662", "uni0660", "uni0662", "uni0664", "space"]

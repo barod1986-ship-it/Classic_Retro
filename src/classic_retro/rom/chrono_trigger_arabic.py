@@ -8,16 +8,22 @@ ships as a BPS patch of it. The overlay:
    (``SITES``, ``ANCHORS``: the engine's code where the hooks go back to, its
    tile tables and steps, the font's widths and addresses), that the room it
    writes (``ROOM_START`` to ``ROOM_END``, zeros at the end of bank $DB) is
-   empty, and each translated message's original (its table's pointer and the
-   SHA-256 of its bytes);
-2. draws the translation's glyphs (``engines.chrono_trigger_arabic``), encodes
-   each message and writes into that room the hooks
+   empty, and each translated message's original (its table's pointer, the
+   SHA-256 of its bytes and, where pinned, its commands);
+2. draws the translation's glyphs (``engines.chrono_trigger_arabic``), holds
+   each translation's commands against its original's (``command_skeleton``:
+   everything but the layout the encoder writes itself), encodes each message
+   and writes into that room the hooks
    (``chrono_trigger_arabic_hooks.s``), the list that sends each translated
    message to its Arabic (``REDIRECTS``), the glyphs' widths and pixels and
    the Arabic messages;
 3. puts a long call or jump to a hook in place of three places of the engine
    (``SITES``);
-4. sets the header's checksum.
+4. sets the header's checksum;
+5. reads everything back from the image before accepting it: the hooks, the
+   sites, the list, the widths, the font, and each Arabic message through the
+   list as the hooks find it (``read_redirects``, the engine's ``string_bytes``),
+   with the translation's commands; and proves nothing else changed.
 
 The English messages stay where they were, as they were: a translated one is
 read from its Arabic instead, and the hooks tell an Arabic message by its
@@ -37,7 +43,9 @@ from pathlib import Path
 
 from classic_retro.arabic.glyph_codes import GlyphCodes
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
+from classic_retro.cpu.m65816 import jml_long, jsl_long
 from classic_retro.engines.chrono_trigger import (
+    command_skeleton,
     dictionary,
     string_bytes,
     string_notation,
@@ -54,6 +62,8 @@ from classic_retro.engines.chrono_trigger_arabic import (
     message_characters,
     message_preview,
     messages_sheet,
+    notation_skeleton,
+    validate_command_skeleton,
 )
 from classic_retro.localization.translations import TranslationSet
 from classic_retro.patching.hooks import HookProgram
@@ -128,14 +138,6 @@ def rom_offset(address: int) -> int:
     return address - ROM_BANK
 
 
-def _long(opcode: int, target: int) -> bytes:
-    return bytes((opcode, target & 0xFF, target >> 8 & 0xFF, target >> 16))
-
-
-JSL = 0x22
-JML = 0x5C
-
-
 @dataclass(frozen=True, slots=True)
 class Site:
     """Game code the overlay replaces: its address, original and new bytes, and why."""
@@ -146,23 +148,25 @@ class Site:
     what: str
 
 
+# The hooks are in another bank than the engine, so a site calls or jumps long
+# (``cpu.m65816``): four bytes, as long as each site.
 SITES = (
     Site(
         0xC257F7,
         bytes.fromhex("a50f8533"),
-        _long(JSL, HOOKS.symbol_address("setup_hook")),
+        jsl_long(HOOKS.symbol_address("setup_hook")),
         "a message's start (LDA $0F; STA $33): a translated one is read from its Arabic",
     ),
     Site(
         0xC258B2,
         bytes.fromhex("a731c220"),
-        _long(JML, HOOKS.symbol_address("reader_hook")),
+        jml_long(HOOKS.symbol_address("reader_hook")),
         "the reading loop (LDA [$31]; REP #$20): an Arabic byte from $21 is a glyph",
     ),
     Site(
         0xC25DC4,
         bytes.fromhex("c220a535"),
-        _long(JML, HOOKS.symbol_address("glyph_hook")),
+        jml_long(HOOKS.symbol_address("glyph_hook")),
         "the glyph routine (REP #$20; LDA $35): a name in Arabic text, drawn whole",
     ),
 )
@@ -249,14 +253,27 @@ def message_address(rom: bytes, message: ChronoTriggerMessage) -> int:
 
 
 def _verify_source(rom: bytes, message: ChronoTriggerMessage) -> bytes:
-    """The message's English bytes, its zero included, as pinned."""
+    """The message's English bytes, its zero included, as pinned: its hash and, where
+    pinned, its commands."""
     data = string_bytes(rom, rom_offset(message_address(rom, message)))
     if source_digest(data) != message.source_sha256:
         raise ClassicRetroError(
             ErrorCode.SOURCE_BASELINE_MISMATCH,
             f"{message.key}: message {message.index} differs from the pinned text",
         )
+    if message.source_skeleton is not None and command_skeleton(data) != message.source_skeleton:
+        raise ClassicRetroError(
+            ErrorCode.SOURCE_BASELINE_MISMATCH,
+            f"{message.key}: message {message.index} has different commands than pinned",
+        )
     return data
+
+
+def source_skeletons(
+    rom: bytes, messages: Sequence[ChronoTriggerMessage]
+) -> dict[str, tuple[str, ...]]:
+    """Every original's commands (``command_skeleton``), verified, by entry id."""
+    return {message.key: command_skeleton(_verify_source(rom, message)) for message in messages}
 
 
 # ---------------------------------------------------------------------------
@@ -271,12 +288,22 @@ def messages_characters(messages: Sequence[ChronoTriggerMessage]) -> set[str]:
 
 
 def encode_messages(
-    messages: Sequence[ChronoTriggerMessage], encoder: ChronoTriggerArabicEncoder
+    messages: Sequence[ChronoTriggerMessage],
+    encoder: ChronoTriggerArabicEncoder,
+    skeletons: Mapping[str, tuple[str, ...]] | None = None,
 ) -> dict[str, EncodedMessage]:
+    """Every message held against its original's commands, then encoded.
+
+    The commands are the ROM's (``skeletons``, from ``source_skeletons``) or,
+    without the ROM, those pinned in the script, where they are.
+    """
     encoded: dict[str, EncodedMessage] = {}
     for message in messages:
         if message.key in encoded:
             raise ClassicRetroError(ErrorCode.DUPLICATE_ENTRY_ID, f"Message {message.key} twice")
+        skeleton = message.source_skeleton if skeletons is None else skeletons[message.key]
+        if skeleton is not None:
+            validate_command_skeleton(skeleton, message.notation)
         encoded[message.key] = encoder.encode(message.notation)
     places = [(message.table, message.index) for message in messages]
     if len(set(places)) != len(places):
@@ -354,13 +381,12 @@ def build_chrono_trigger_arabic_rom(
         verify_usa_image(rom)
     verify_rom(rom)
     messages = messages or chrono_trigger_arabic_messages(translations)
-    for message in messages:
-        _verify_source(rom, message)
+    skeletons = source_skeletons(rom, messages)
 
     used = messages_characters(messages)
     glyph_map = chrono_trigger_glyph_codes(used)
     font = build_chrono_trigger_font(font_path, glyph_map, used)
-    encoded = encode_messages(messages, ChronoTriggerArabicEncoder(glyph_map, font))
+    encoded = encode_messages(messages, ChronoTriggerArabicEncoder(glyph_map, font), skeletons)
 
     output = bytearray(rom)
     writes = room_data(rom, messages, encoded, font)
@@ -372,7 +398,7 @@ def build_chrono_trigger_arabic_rom(
         output[at : at + len(site.patched)] = site.patched
     checksum = set_checksum(output)
     result = bytes(output)
-    _verify_output(result, rom, writes)
+    _verify_output(result, rom, writes, messages, encoded)
     patch = create_bps(rom, result)
     report: dict[str, object] = {
         **base_report(IMAGE.title, rom, result, patch),
@@ -384,6 +410,8 @@ def build_chrono_trigger_arabic_rom(
                     [line.end - line.start for line in box]
                     for box in encoded[message.key].boxes or ()
                 ],
+                # The original's commands, as the script pins them.
+                "source_skeleton": list(skeletons[message.key]),
             }
             for message in messages
         },
@@ -404,8 +432,76 @@ def _code_range(glyph_map: GlyphCodes) -> str:
     return f"{min(codes):02X}..{max(codes):02X}"
 
 
-def _verify_output(output: bytes, original: bytes, writes: Mapping[int, bytes]) -> None:
-    """Only the sites, the room and the checksum changed, and the checksum holds."""
+def read_redirects(rom: bytes) -> dict[int, int]:
+    """The list of translated messages as the hooks read it: each English string's
+    address and its Arabic's, to the entry whose English bank is zero."""
+    found: dict[int, int] = {}
+    at = rom_offset(REDIRECTS)
+    while at + REDIRECT_ENTRY <= rom_offset(ARABIC_WIDTHS):
+        english, english_bank, arabic, arabic_bank = struct.unpack_from("<HBHB", rom, at)
+        if english_bank == 0:
+            return found
+        found[english_bank << 16 | english] = arabic_bank << 16 | arabic
+        at += REDIRECT_ENTRY
+    raise ClassicRetroError(
+        ErrorCode.BUILD_VALIDATION_FAILED, "The list of translated messages has no end"
+    )
+
+
+def _verify_output(
+    output: bytes,
+    original: bytes,
+    writes: Mapping[int, bytes],
+    messages: Sequence[ChronoTriggerMessage],
+    encoded: Mapping[str, EncodedMessage],
+) -> None:
+    """Everything written reads back, only the sites, the room and the checksum
+    changed, and the checksum holds."""
+    if _read(output, HOOK_ADDRESS, len(HOOK_CODE)) != HOOK_CODE:
+        raise ClassicRetroError(
+            ErrorCode.BUILD_VALIDATION_FAILED, "The hook code does not read back"
+        )
+    for site in SITES:
+        if _read(output, site.address, len(site.patched)) != site.patched:
+            raise ClassicRetroError(
+                ErrorCode.BUILD_VALIDATION_FAILED,
+                f"The site at ${site.address:06X} does not read back",
+            )
+    names = {
+        HOOK_ADDRESS: "The hook code",
+        REDIRECTS: "The list of translated messages",
+        ARABIC_WIDTHS: "The width table",
+        ARABIC_FONT: "The font table",
+        MESSAGES: "The Arabic text",
+    }
+    for address, data in writes.items():
+        if _read(output, address, len(data)) != data:
+            raise ClassicRetroError(
+                ErrorCode.BUILD_VALIDATION_FAILED, f"{names[address]} does not read back"
+            )
+    redirects = read_redirects(output)
+    if list(redirects) != [message_address(original, message) for message in messages]:
+        raise ClassicRetroError(
+            ErrorCode.BUILD_VALIDATION_FAILED,
+            "The list of translated messages does not read back in order",
+        )
+    for message in messages:
+        arabic = redirects[message_address(original, message)]
+        if not MESSAGES <= arabic < ROOM_END:
+            raise ClassicRetroError(
+                ErrorCode.BUILD_VALIDATION_FAILED, f"{message.key}: its Arabic is not in the room"
+            )
+        data = string_bytes(output, rom_offset(arabic))
+        if data != encoded[message.key].data:
+            raise ClassicRetroError(
+                ErrorCode.BUILD_VALIDATION_FAILED,
+                f"{message.key}: the Arabic message does not read back through the list",
+            )
+        if command_skeleton(data) != notation_skeleton(message.notation):
+            raise ClassicRetroError(
+                ErrorCode.BUILD_VALIDATION_FAILED,
+                f"{message.key}: the Arabic message read back has other commands",
+            )
     allowed = [(rom_offset(site.address), len(site.patched)) for site in SITES]
     allowed += [(rom_offset(address), len(data)) for address, data in writes.items()]
     allowed.append((CHECKSUM, 4))
@@ -519,3 +615,18 @@ def extract_originals(
     return {
         message.key: string_notation(_verify_source(rom, message), words) for message in messages
     }
+
+
+def extract_skeletons(
+    rom: bytes,
+    translations: TranslationSet | None = None,
+    *,
+    messages: tuple[ChronoTriggerMessage, ...] | None = None,
+    verify_identity: bool = True,
+) -> dict[str, tuple[str, ...]]:
+    """Every pinned original's commands, verified, by entry id: what a maintainer pins
+    as ``source_skeleton`` in the script, so the translations are checked without the
+    ROM. The build's report carries the same."""
+    if verify_identity:
+        verify_usa_image(rom)
+    return source_skeletons(rom, messages or chrono_trigger_arabic_messages(translations))

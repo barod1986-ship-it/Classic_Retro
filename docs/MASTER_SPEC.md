@@ -55,9 +55,11 @@ src/classic_retro/
   text/           the token model, engine commands, BMG message files
   arabic/         logical-text checks, shaping and bidi, glyph codes, paint order
   font/           Arabic forms drawn from the user's font, game font formats, previews
-  cpu/            instruction encoders for hooks (Thumb, ARM, MIPS)
-  rebuild/        BPS patches, the LZ77 and BLZ compressions
-  patching/       the binary overlay kit, DS images and CD data tracks
+  cpu/            instruction encoders for hooks: thumb, arm, mips, m65816, m68k
+  rebuild/        BPS patches (bps); the LZ77 and BLZ compressions and their optimal parse
+                  (lz77, blz, lz_parse); Gran Turismo's GT-ZIP and PSLZ (gtzip, pslz)
+  patching/       the binary overlay kit (image, hooks, overlay, outputs), DS images (nitro)
+                  and CD data tracks (cdrom)
   rom/            one binary overlay per rom-overlay target
   source/         source overlays (pokefirered, tmc)
   localization/   targets, rendering strategies, translation files, `targets` commands
@@ -68,9 +70,9 @@ tests/            synthetic data only
 docs/
 ```
 
-Every system in the tree is detected; the Game Boy Advance, the Nintendo DS and the
-PlayStation also have Arabic targets. A platform is supported when a target ships on
-it, not when its adapter exists.
+Every system in the tree is detected; the Game Boy Advance, the Nintendo DS, the
+PlayStation, the Super NES and the Mega Drive also have Arabic targets. A platform is
+supported when a target ships on it, not when its adapter exists.
 
 There is one pipeline: the localization targets (§3.5). The foundation phase also
 built a generic one: a JSON translation document of token streams, table-driven text
@@ -155,16 +157,26 @@ its platform, its kind, the rendering strategies it uses, its scope, its guide a
 notes, and the operations the toolkit runs the same way for every target:
 
 - `check_hooks()`: re-assemble the hook code and compare it with the stored bytes;
-- `check_translations(font, preview_dir)`: validate the script without the game
-  image; with a font, lay out every string and write the target's previews;
-- `build(rom, font, out_dir, rom_name)`: build the patch from the user's image;
-- `prepare(source, font)`: patch the user's decompilation checkout (a source overlay);
-- `extract(input)`: read each entry's original from the user's own copy.
+- `check_translations(font, preview_dir, translations)`: validate the script without
+  the game image; with a font, lay out every string and write the target's previews;
+- `build(rom, font, out_dir, rom_name, translations)`: build the patch from the user's
+  image;
+- `prepare(source, font, translations)`: patch the user's decompilation checkout (a
+  source overlay);
+- `extract(input, translations)`: read each entry's original from the user's own copy.
+
+`translations` is a `TranslationSet` to use instead of the target's shipped file
+(§6.1: a translator's file or workspace, given with `--translations`), or None for
+the shipped one.
 
 Kinds:
 
 - `rom-overlay`: a patch built from the user's own image and shipped as BPS;
 - `source-overlay`: a patched source tree of a decompilation that builds the image.
+  It has `prepare` instead of `build`, and `check_translations` like a rom overlay:
+  the script checked without a checkout, and as its preview the font file `prepare`
+  writes into the checkout (FireRed's atlas `arabic_normal.png`, Minish Cap's
+  `arabic_font_preview.png`).
 
 `classic-retro targets list | strategies | check-hooks | check-translations | build |
 prepare | extract | strip` is the one way to run these for any target, by id, and CI
@@ -175,6 +187,20 @@ records `reference_patch_sha256`, the hash of the patch built from its pinned im
 with the reference font. A target that accepts several images (dumps that differ only
 in bytes the game never reads) records one patch for each in `reference_patches`, by the
 image's SHA-256. `targets build` reports whether a build matches the patch for its image.
+
+The output of `check-translations` is recorded too, so it is held without the image:
+`localization/digests.json` maps each target id to the SHA-256 of its report and of
+each preview, with the library versions they were made with (`generated_with`). The
+report is digested without its volatile keys (`translations`, `raster`, `digests`)
+and its path keys (`outputs`, `workspace`, `source`, `rom`, `font_png`, `widths`,
+`font_binary`), in canonical JSON; a preview by its decoded pixels (mode, size and
+pixel bytes), never by the PNG file, so a change of PNG encoder does not count.
+`targets check-translations TARGET --font FONT --preview-dir DIR --check-digests`
+compares and fails on any difference, naming each and the libraries that moved since
+the record; `--update-digests` records the entry. Both need the font and the preview
+folder and take the shipped translations only, and a target without an entry fails the
+check. CI passes `--check-digests` for every target, so a change to shared code that
+moves any target's layout or glyphs fails CI without a game image (§20).
 
 Targets are registered in `classic_retro.localization.builtin`. External packages add
 theirs through the `classic_retro.targets.v1` entry point group. The registry refuses
@@ -228,10 +254,17 @@ The parts that do not depend on the game live in:
   - `image.ImageSpec`: identity, address/offset conversion, reference scans, free-space checks
   - `hooks.HookProgram`: hook code stored as bytes, re-assembled from source in CI
     with an assembler registered per CPU
+  - `overlay`: the checks every overlay makes, whatever the game: `verify_bytes`
+    (the pinned originals are in the image before any change), `verify_empty` (a
+    region about to be filled holds nothing yet) and `verify_untouched` (the output
+    differs from the original only inside the overlay's places)
   - `outputs`: the common report fields and patch/image files
 - `classic_retro.cpu`: one module per instruction set, holding the calls, branches
   and far jumps written over game code. `cpu.thumb` covers the ARM7TDMI's Thumb
-  code, `cpu.arm` the ARM946E-S's ARM code and `cpu.mips` the PlayStation's MIPS I.
+  code (and the ARM946E-S's, encoded the same way), `cpu.arm` the ARM946E-S's ARM
+  code, `cpu.mips` the PlayStation's MIPS I, `cpu.m65816` the Super NES's 65C816
+  (absolute and long jumps and calls, `NOP` fill) and `cpu.m68k` the Mega Drive's
+  68000 (`JMP` and `JSR` with a long address, `NOP` fill).
 
 A game's overlay module keeps only what is its own: addresses, hook source,
 script, and the strategy-specific drawing.
@@ -419,6 +452,25 @@ dropped, added, changed or reordered is refused. An engine may let a translation
 page break, and marks it as inserted. The Arabic pipeline shapes and orders the text
 around the tokens without altering them ([ARABIC_PIPELINE.md](ARABIC_PIPELINE.md)).
 
+The original's commands are a command skeleton: its commands in the notation, in
+order, without the layout the Arabic encoder writes itself. Which targets check where:
+
+- A Link to the Past, Chrono Trigger and Shining Force II check at build time against
+  the original decoded from the image (`engines.alttp.command_skeleton`: every command
+  but the line, scroll and wait-for-button commands;
+  `engines.chrono_trigger.command_skeleton`: every code but the new-line and new-box
+  codes and the two-byte characters; `engines.sf2.command_skeleton`: every tag but
+  `{N}`), and again when the built image is read back, message by message through the
+  hooks' list. Their scripts may pin each original's skeleton as well
+  (`source_skeleton`, None until a maintainer records it from the build report's
+  `source_skeleton` field or the overlay's `extract_skeletons`): a pinned one is held
+  against the image at the build and at extraction, and `check-translations` holds the
+  translation to it without the ROM.
+- FireRed checks at `prepare`, against the original's names and page breaks in the
+  checkout (`engines.pokemon_gen3_arabic.command_skeleton`; line ends are the
+  translation's own). Minish Cap's originals are only in the checkout too, so its
+  `prepare` checks them and its `check-translations` checks the notation alone.
+
 ## 8. Arabic localization pipeline
 
 The project must not implement Arabic as simple character reversal.
@@ -512,8 +564,14 @@ Validation should detect:
 - unsupported glyphs,
 - malformed tokens.
 
-`targets check-translations` runs these checks for a target without its image. No
-target wraps automatically yet; when one does, its wrapping must be deterministic.
+`targets check-translations` runs these checks for a target without its image. Most
+targets keep the translator's line breaks and refuse a line that does not fit. Three
+encoders wrap as well, deterministically, from the advances of the glyphs they will
+draw: Chrono Trigger's, A Link to the Past's and Shining Force II's lay a box, a page
+or a segment out a word at a time and break the line before the word that would pass
+the box's width, keeping every break the translator wrote (their translations'
+notation notes and [SF2_ARABIC_RENDERER.md](SF2_ARABIC_RENDERER.md) say how). A
+word wider than the line is still refused, never split.
 
 ## 11. References, pointers, relocation, and storage
 
@@ -630,11 +688,19 @@ Perfect byte identity may not be possible for every format or disc build, but se
 ## 15. Testing strategy
 
 Tests live in `tests/`, a module per concern: the shared layers (`test_arabic_core.py`,
-`test_localization.py`, `test_translations.py`...) and, for each target, its engine
+`test_localization.py`, `test_translations.py`, `test_docs.py`, `test_digests.py`,
+`test_cpu_encoders.py`, `test_patching_kit.py`...) and, for each target, its engine
 (`test_<game>_engine.py`), its Arabic module (`test_<game>_arabic.py`) and its overlay
-(`test_<game>_rom_overlay.py`, `test_<game>_source_overlay.py`).
+(`test_<game>_rom_overlay.py`, `test_<game>_source_overlay.py`). The
+name is the game's or its engine's (FireRed's are `test_pokemon_gen3*.py`, Pokémon
+Platinum's engine test `test_pokemon_gen4_engine.py`), and not every target has all
+three: the engine and overlay tests of A Link to the Past, Chrono Trigger, Ridge Racer
+and Shining Force II exercise their Arabic modules themselves, and Phantom Hourglass's
+Arabic and overlay tests its engine.
 
-Commercial game images are not committed.
+Commercial game images are not committed, and no font is bundled: a test that needs
+the reference font reads its path from `CLASSIC_RETRO_REFERENCE_FONT` and skips when
+it is unset.
 
 Small synthetic fixtures are preferred for unit tests.
 
@@ -661,8 +727,8 @@ Distributed project artifacts should favor patches rather than copyrighted origi
 The patch format may differ by platform and container type.
 
 Every rom-overlay build writes the patch and `build-report.json` (base, target and
-patch hashes and sizes). The patched image is written only when asked, for local
-use.
+patch hashes and sizes, and `raster`, the library versions the glyphs were drawn
+with: §20). The patched image is written only when asked, for local use.
 
 ## 17. Error model
 
@@ -733,9 +799,25 @@ Before adding each substantially different game/engine, reusable code from previ
 - Clean rebuilds must be possible from documented inputs.
 - A platform is not considered supported merely because its directory exists.
 - A change to shared code keeps every target's results byte-identical: its reference
-  patch hash, its previews and its translation report. A target's results change only
-  with its own translation or renderer, and its reference hash is updated in the same
+  patch hash, its previews and its translation report. CI holds every target's report
+  and previews to the recorded digests (§3.5), so such a change fails there without a
+  game image. A target's results change only with its own translation or renderer,
+  and its reference hash and its digests (`--update-digests`) are updated in the same
   commit.
+- Reference patch hashes and translation digests are reproducible only with the
+  raster stack `constraints.txt` pins: every glyph is rasterized by the FreeType
+  bundled in the installed Pillow wheel and shaped by the HarfBuzz bundled in
+  uharfbuzz, and a FreeType release changes most glyph forms, since its hinting moves
+  pixels. Install as CI does, `python -m pip install -e ".[dev]" -c constraints.txt`.
+  Every build report, `check-translations` report and `prepare` report carries
+  `raster`, the versions it was made with (`core.environment.library_versions`), so a
+  hash names the versions behind it.
+- A pin is bumped in one commit: the pin in `constraints.txt` (and the range in
+  `pyproject.toml` when it no longer fits); the digests of every target with a
+  `check-translations` operation, regenerated with the reference font
+  (`--update-digests`); and a rebuild of every target whose image you have, checking
+  `matches_reference`. Where it is false, the new versions changed the output, and
+  that target's reference patch hash moves in the same commit.
 
 ## 21. Foundation acceptance criteria
 

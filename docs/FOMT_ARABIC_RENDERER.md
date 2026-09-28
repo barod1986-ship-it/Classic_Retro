@@ -1,10 +1,16 @@
 # Harvest Moon: Friends of Mineral Town Arabic Renderer v1
 
-Target: *Harvest Moon: Friends of Mineral Town* (USA). No decompilation builds this
-image; the facts below come from its own code, read with GNU binutils and checked in
-mGBA, with the notes of [StanHash/FOMT-DOC](https://github.com/StanHash/FOMT-DOC)
-(written for the image of *More Friends of Mineral Town*, whose addresses differ) as a
-guide. This is a binary ROM overlay built from the user's image.
+Target: *Harvest Moon: Friends of Mineral Town* (USA). The facts below come from its
+own code, read with GNU binutils and checked in mGBA, with the notes of
+[StanHash/FOMT-DOC](https://github.com/StanHash/FOMT-DOC) (written for the image of
+*More Friends of Mineral Town*, whose addresses differ) as a guide. Two sources by the
+same author cover this image: [StanHash/fomt](https://github.com/StanHash/fomt), a
+decompilation that builds a matching *Friends of Mineral Town* (USA) ROM, and
+[StanHash/mary](https://github.com/StanHash/mary), which compiles and decompiles its
+event scripts (97.6% of the game's scripts round-trip exactly). Both take their data
+from the original, so this stays a binary ROM overlay built from the user's image; their
+names for the routines, vtables and scripts below have not been cross-checked against the
+addresses pinned here, and should be when the overlay is next changed.
 
 | Item | Value |
 |------|-------|

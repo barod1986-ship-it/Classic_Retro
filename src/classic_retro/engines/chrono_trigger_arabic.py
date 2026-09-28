@@ -28,6 +28,15 @@ lays each box out itself, a word at a time, in the lines of a box
 its other lines and boxes indented, as the game's English does. A ``{name}``
 token writes that member's name: its width is reckoned as the widest name
 the game lets the player give (``NAME_WIDTH``).
+
+A translation keeps the original's commands: its skeleton
+(``notation_skeleton``: every token but ``{line}``, in order, as the notation
+writes it) must equal the original's
+(``engines.chrono_trigger.command_skeleton``), which leaves out the same
+layout the encoder writes itself: the new lines and the new boxes, plain or
+indented, waiting for the button or not (``engines.chrono_trigger.LAYOUT_CODES``).
+``validate_command_skeleton`` refuses a translation that drops, adds or moves
+any other code; ``{Crono}`` stands for both codes that write his name.
 """
 
 from __future__ import annotations
@@ -51,6 +60,7 @@ from classic_retro.engines.chrono_trigger import (
     LINE,
     LINE_INDENTED,
     NAMES,
+    command_skeleton,
 )
 from classic_retro.font.arabic_outline import (
     contextual_font_data,
@@ -70,9 +80,11 @@ from classic_retro.font.glyph_raster import (
     separated_dots,
 )
 from classic_retro.font.previews import glyph_atlas, preview_sheet
+from classic_retro.text.commands import require_same_commands
 from classic_retro.text.tokens import TextToken, TokenStream
 
 PROFILE = "Chrono Trigger Arabic"
+ENGINE = "Chrono Trigger"
 # A byte of an Arabic string from here is a glyph of the Arabic font.
 ARABIC_CODES = tuple(range(0x21, 0x100))
 GLYPH_BYTES = 48
@@ -299,6 +311,13 @@ def paint_text(text: str) -> str:
     return "".join(token.text for token in painted.tokens if isinstance(token, TextToken))
 
 
+def name_code(token: str) -> int:
+    """The code of a ``{name}`` token of the notation."""
+    if token not in NAME_CODES:
+        raise ClassicRetroError(ErrorCode.UNSUPPORTED_CONTROL_CODE, f"No token {{{token}}}")
+    return NAME_CODES[token]
+
+
 def _pieces(word: str) -> list[str | int]:
     """A word's text runs and names, in reading order."""
     out: list[str | int] = []
@@ -306,10 +325,7 @@ def _pieces(word: str) -> list[str | int]:
     for match in _TOKEN.finditer(word):
         if match.start() > at:
             out.append(word[at : match.start()])
-        name = match.group(1)
-        if name not in NAME_CODES:
-            raise ClassicRetroError(ErrorCode.UNSUPPORTED_CONTROL_CODE, f"No token {{{name}}}")
-        out.append(NAME_CODES[name])
+        out.append(name_code(match.group(1)))
         at = match.end()
     if at < len(word):
         out.append(word[at:])
@@ -323,6 +339,22 @@ def _words(segment: str) -> list[str]:
             ErrorCode.UNENCODABLE_TEXT, "A line of the message is empty or has two spaces"
         )
     return words
+
+
+def notation_skeleton(notation: str) -> tuple[str, ...]:
+    """A translation's names in order, in the notation, ``{line}`` left out: what
+    ``engines.chrono_trigger.command_skeleton`` gives for the bytes the encoder writes."""
+    return tuple(
+        part
+        for match in _TOKEN.finditer(notation)
+        if f"{{{match.group(1)}}}" != LINE_BREAK
+        for part in command_skeleton(bytes((name_code(match.group(1)),)))
+    )
+
+
+def validate_command_skeleton(source_skeleton: Sequence[str], notation: str) -> None:
+    """The translation's commands, but the layout, must equal the original's."""
+    require_same_commands(ENGINE, tuple(source_skeleton), notation_skeleton(notation), "".join)
 
 
 def message_characters(notation: str) -> set[str]:

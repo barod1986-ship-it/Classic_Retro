@@ -5,11 +5,17 @@ from __future__ import annotations
 import hashlib
 from pathlib import Path
 
+from classic_retro.core.environment import library_versions
 from classic_retro.rebuild.bps import BpsPatch
 
 
 def base_report(game: str, rom: bytes, output: bytes, patch: BpsPatch) -> dict[str, object]:
-    """The identity fields every build report starts with."""
+    """The identity fields every build report starts with.
+
+    ``raster`` names the library versions the glyphs were drawn with
+    (``classic_retro.core.environment``): the patch hash is reproducible only
+    with them.
+    """
     return {
         "game": game,
         "base_sha1": hashlib.sha1(rom).hexdigest(),
@@ -18,6 +24,7 @@ def base_report(game: str, rom: bytes, output: bytes, patch: BpsPatch) -> dict[s
         "patch_sha256": hashlib.sha256(patch.data).hexdigest(),
         "patch_bytes": len(patch.data),
         "target_bytes": len(output),
+        "raster": library_versions(),
     }
 
 

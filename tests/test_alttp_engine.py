@@ -12,10 +12,12 @@ from classic_retro.arabic.glyph_codes import GlyphCodes
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.alttp import (
     CHARACTERS,
+    COMMAND_CODES,
     DICTIONARY_BANK,
     DICTIONARY_CODES,
     END,
     FINISH,
+    LAYOUT_COMMANDS,
     LINE_2,
     LINE_3,
     MESSAGE_DATA,
@@ -26,6 +28,8 @@ from classic_retro.engines.alttp import (
     SWITCH_BANK,
     WAIT_KEY,
     WORD_DICTIONARY,
+    command_notation,
+    command_skeleton,
     dictionary,
     lorom_address,
     lorom_offset,
@@ -57,8 +61,10 @@ from classic_retro.engines.alttp_arabic import (
     hand_drawn_glyph,
     message_characters,
     message_preview,
+    notation_skeleton,
     outlined_glyph,
     paint_text,
+    validate_command_skeleton,
 )
 from classic_retro.font.glyph_raster import FormDoesNotFit
 
@@ -143,6 +149,56 @@ def test_the_notation_writes_words_signs_and_commands(rom):
         with pytest.raises(ClassicRetroError) as caught:
             message_notation(data, words)
         assert caught.value.code is error
+
+
+def test_the_command_skeleton_keeps_every_command_but_the_layout():
+    assert LAYOUT_COMMANDS == {0x74, LINE_2, LINE_3, SCROLL, WAIT_KEY}
+    data = bytes(
+        [0x6B, 0x02, 0x7A, 0x03, 0x0A, 0x88, 0x75, 0x78, 0x01, 0x7E, 0x73, NAME, 0x6C, 0x00]
+    )
+    skeleton = ("{Window 02}", "{Speed 03}", "{Wait 01}", "{Name}", "{Number 00}")
+    assert command_skeleton(data) == command_skeleton(data + bytes([END, 0x7D])) == skeleton
+    # Arabic glyph codes, from $80 too, are text; the commands keep their codes.
+    assert command_skeleton(bytes([0x00, 0x80, 0xE6, NAME, SPACE, END])) == ("{Name}",)
+    assert command_skeleton(_code("Go!") + bytes([END])) == ()
+    assert command_notation(NAME) == "{Name}" and command_notation(0x77, 0x1F) == "{Color 1F}"
+    for code, argument in ((NAME, 1), (0x77, None)):
+        with pytest.raises(ClassicRetroError) as caught:
+            command_notation(code, argument)
+        assert caught.value.code is ErrorCode.UNSUPPORTED_CONTROL_CODE
+    with pytest.raises(ClassicRetroError) as caught:
+        command_skeleton(bytes([0x78]))
+    assert caught.value.code is ErrorCode.MISSING_TERMINATOR
+
+
+def test_a_translations_skeleton_is_its_tokens_but_the_line_ends():
+    notation = "{Window 02}{Speed 03}ب{line}ب{Wait 01}\n{Name} ب{Number 00}"
+    assert notation_skeleton(notation) == (
+        "{Window 02}",
+        "{Speed 03}",
+        "{Wait 01}",
+        "{Name}",
+        "{Number 00}",
+    )
+    assert notation_skeleton("ب{line}ب\nب") == ()
+    # What the encoder writes has the same skeleton, whatever its layout.
+    glyph_map = _map(notation)
+    encoded = AlttpArabicEncoder(glyph_map, _font(glyph_map)).encode(notation)
+    assert command_skeleton(encoded.data) == notation_skeleton(notation)
+    validate_command_skeleton(("{Name}",), "ب {Name}")
+    for source, translation in (
+        (("{Name}",), "ب"),
+        ((), "ب {Name}"),
+        (("{Name}", "{Wait 01}"), "{Wait 01}ب {Name}"),
+        (("{Wait 01}",), "{Wait 02}ب"),
+    ):
+        with pytest.raises(ClassicRetroError) as caught:
+            validate_command_skeleton(source, translation)
+        assert caught.value.code is ErrorCode.TOKEN_ORDER_VIOLATION
+    with pytest.raises(ClassicRetroError) as caught:
+        notation_skeleton("{Choose}")
+    assert caught.value.code is ErrorCode.UNSUPPORTED_CONTROL_CODE
+    assert COMMAND_CODES["Choose"] == 0x68
 
 
 # ---------------------------------------------------------------------------

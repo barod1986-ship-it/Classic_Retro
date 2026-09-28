@@ -52,7 +52,7 @@ classic-retro research run IMAGE SCRIPT --core CORE [--option KEY=VALUE ...] [--
 | `shot FILE.png` | Save the last frame drawn |
 | `peek ADDRESS LENGTH` | Report up to 4096 bytes of memory |
 | `dump ADDRESS LENGTH FILE` | Write memory to a file |
-| `poke ADDRESS HEX` | Write bytes, in memory order (`poke 0x02000000 01ff`) |
+| `poke ADDRESS HEX...` | Write bytes, in memory order; the hex is one run or several groups (`poke 0x02000000 01ff`, `poke 0x02000000 01 ff`) |
 | `break ADDRESS [COUNT [MEMORY LENGTH]]` | Report the registers when `ADDRESS` executes (see below) |
 | `watch MODE ADDRESS [COUNT]` | Report the registers when `ADDRESS` is accessed (see below) |
 | `clear` | Remove every breakpoint and watchpoint |
@@ -72,8 +72,13 @@ classic-retro research run IMAGE SCRIPT --core CORE [--option KEY=VALUE ...] [--
 - `COUNT` works as for `break`.
 
 Key names are RetroPad buttons: `A B X Y L R L2 R2 L3 R3 SELECT START UP DOWN LEFT
-RIGHT`. Each backend accepts the ones its console has. The whole script is checked
-before the first frame runs, so a mistake on the last line costs nothing.
+RIGHT`. Each backend accepts the ones its console has. The script is parsed whole, and
+what the backend cannot do is reported before the first frame runs, every mistake by its
+line: a key the console has not got, a region the backend does not name, a touch without
+a pointer, a breakpoint or watchpoint without a debugger, a register probe off the GBA.
+A savestate file that is missing, or an address the core does not map, is found only
+when its line runs, so a mistake of that kind on the last line costs the frames before
+it.
 
 An example script finds the code that writes a variable:
 
@@ -105,7 +110,8 @@ A hit reports these fields:
 - `address`;
 - `pc`: the instruction that hit, when the backend knows it;
 - `registers`;
-- for a watchpoint: the access, and the old and new values;
+- for a watchpoint: the access; for a write, the old and new values (`old`, `new`),
+  and for a read, the value read (`value`);
 - for a breakpoint with a memory probe: the bytes it read.
 
 ### Backends
@@ -128,7 +134,8 @@ A hit reports these fields:
 - `CC` chooses the compiler. `CLASSIC_RETRO_MGBA_CFLAGS` and `CLASSIC_RETRO_MGBA_LIBS`
   set the build flags; the defaults come from pkg-config's `libmgba`, else `-lmgba`.
 - `CLASSIC_RETRO_CACHE` moves the cache.
-- `classic-retro research build-harness` builds the harness now and prints its path.
+- `classic-retro research build-harness [--out-dir DIR]` builds the harness now and
+  prints its path; `--out-dir` builds it into that directory instead of the cache.
 - `--harness` uses a harness binary you already have.
 - A watchpoint reports the instruction that made the access (`pc`), found from the
   pipeline offset of `r15`.
@@ -310,13 +317,15 @@ A text table uses the common Thingy format, one entry per line:
 ```text
 classic-retro research find IMAGE "00 B5 ?? 1C"
 classic-retro research find IMAGE "some text" --ascii
-classic-retro research disasm IMAGE 0x08012345 [--length 64] [--mode thumb|arm]
+classic-retro research disasm IMAGE 0x08012345 [--length 64] [--mode thumb|arm] [--objdump PATH]
 ```
 
 - `find` reports every offset where the pattern matches, overlapping matches included.
 - `disasm` shows ARM7TDMI code through `arm-none-eabi-objdump`. This is the same binutils
   the hook checks use; on Debian and Ubuntu, install `binutils-arm-none-eabi`.
-  - An odd address means Thumb code, as a Thumb function pointer is.
+  `--objdump` runs another objdump instead (a path, or a name on `PATH`).
+  - An odd address means Thumb code, as a Thumb function pointer is; with `--mode arm`
+    an odd address is refused, since ARM code starts on an even one.
   - Otherwise, `--mode` chooses Thumb (the default) or ARM.
 
 ## From question to command

@@ -41,6 +41,7 @@ from classic_retro.engines.pokemon_gen4_arabic import (
 from classic_retro.patching.nitro import (
     NITROCODE,
     SECURE_AREA_CRC,
+    SIGNATURE_MAGIC,
     Arm9Binary,
     Autoload,
     Narc,
@@ -626,3 +627,59 @@ def test_encode_command_prints_the_codes(capsys, tmp_path):
 @pytest.mark.skipif(shutil.which("arm-none-eabi-as") is None, reason="needs GNU ARM binutils")
 def test_stored_hook_bytes_match_the_source():
     assert overlay.check_hook_code()["match"] is True
+
+
+@pytest.mark.parametrize(
+    "place",
+    ["header", "arm7", "old overlay table", "moved file's old place", "intro overlay", "tail"],
+)
+def test_a_byte_changed_outside_the_overlays_places_is_refused(build, tmp_path, monkeypatch, place):
+    rom, result = build
+    before, after = NitroImage(rom), NitroImage(result.rom)
+    table = before.header.arm9_overlay_offset
+    offset = {
+        # A reserved byte of the header, not a field the build sets.
+        "header": 0x1F0,
+        "arm7": before.header.arm7_offset,
+        # The overlay table's old place, past where the ARM9 grew to.
+        "old overlay table": table + before.header.arm9_overlay_size - 1,
+        # The fonts grew and moved past the used area: their old place stays.
+        "moved file's old place": before.file_range(OVERLAY_COUNT)[0],
+        # The intro's overlay is rewritten where it was, and read back whole.
+        "intro overlay": before.file_range(overlay.INTRO_OVERLAY)[0],
+        "tail": IMAGE_SIZE - 1,
+    }[place]
+    arm9_end = before.header.arm9_offset + after.header.arm9_size + 12
+    assert offset < before.header.arm9_offset or offset >= arm9_end
+    verify = overlay._verify_output
+
+    def tampering(output: bytes, *args, **kwargs) -> None:
+        """The build's own check, of the output with one byte flipped."""
+        changed = bytearray(output)
+        changed[offset] ^= 1
+        verify(bytes(changed), *args, **kwargs)
+
+    monkeypatch.setattr(overlay, "_verify_output", tampering)
+    with pytest.raises(ClassicRetroError) as caught:
+        _build(rom, tmp_path)
+    assert caught.value.code is ErrorCode.BUILD_VALIDATION_FAILED
+    if place == "intro overlay":
+        assert str(caught.value) == f"File {overlay.INTRO_OVERLAY} does not read back"
+    else:
+        assert (
+            str(caught.value) == f"The image changed at {offset:#x}, outside the overlay's places"
+        )
+
+
+def test_the_signature_moves_after_the_used_area(synthetic, tmp_path):
+    """An image with the RSA signature after its used area keeps it after the new one."""
+    rom = bytearray(synthetic)
+    used = NitroImage(synthetic).header.used_size
+    signature = SIGNATURE_MAGIC + bytes(range(0x84))
+    rom[used : used + len(signature)] = signature
+    result = _build(bytes(rom), tmp_path)
+    end = NitroImage(result.rom).header.used_size
+    assert end > used
+    assert result.rom[end : end + len(signature)] == signature
+    assert result.rom[end + len(signature) :] == bytes(rom[end + len(signature) :])
+    assert apply_bps(result.patch.data, bytes(rom)) == result.rom

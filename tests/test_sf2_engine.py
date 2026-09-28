@@ -15,6 +15,7 @@ from classic_retro.engines.sf2 import (
     COMMANDS,
     END,
     FONT_POINTER,
+    LAYOUT_COMMANDS,
     NEW_LINE,
     SPACE,
     STRINGS,
@@ -26,11 +27,13 @@ from classic_retro.engines.sf2 import (
     TREE_OFFSETS,
     HuffmanTrees,
     character,
+    command_skeleton,
     decode_string,
     font_width,
     notation,
     string_bytes,
     string_offset,
+    tag_notation,
     text_banks,
 )
 from classic_retro.engines.sf2_arabic import (
@@ -61,8 +64,10 @@ from classic_retro.engines.sf2_arabic import (
     ink_glyph,
     message_characters,
     message_preview,
+    notation_skeleton,
     paint_text,
     sf2_glyph_codes,
+    validate_command_skeleton,
 )
 from classic_retro.font.glyph_raster import FormDoesNotFit
 
@@ -194,6 +199,48 @@ def test_the_notation_writes_characters_and_tags(rom):
         with pytest.raises(ClassicRetroError) as caught:
             notation(symbols)
         assert caught.value.code is error, symbols
+
+
+def test_the_command_skeleton_keeps_every_tag_but_the_new_lines(rom):
+    assert LAYOUT_COMMANDS == {NEW_LINE}
+    symbols = [0xFB, CAPITAL_H, SMALL_I, NEW_LINE, 0xFC, 0x00, 0x10, 0xFD, 3, 0xF1, 0xF7]
+    skeleton = ("{CLEAR}", "{NAME;0}", "{COLOR;3}", "{#}", "{W2}")
+    assert command_skeleton(symbols) == command_skeleton([*symbols, END, 0xFA]) == skeleton
+    assert command_skeleton(decode_string(rom, 0)) == ("{NAME;0}",)
+    # Arabic glyph codes, below the commands, are text; the commands keep their symbols.
+    assert command_skeleton([0x02, 0xED, 0xF2, SPACE, END]) == ("{NAME}",)
+    assert command_skeleton([CAPITAL_H, END]) == ()
+    assert tag_notation(0xF7) == "{W2}" and tag_notation(0xFC, 3) == "{NAME;3}"
+    for symbol, argument in ((0xF7, 1), (0xFC, None)):
+        with pytest.raises(ClassicRetroError) as caught:
+            tag_notation(symbol, argument)
+        assert caught.value.code is ErrorCode.UNSUPPORTED_CONTROL_CODE
+    with pytest.raises(ClassicRetroError) as caught:
+        command_skeleton([0xFD])
+    assert caught.value.code is ErrorCode.MISSING_TERMINATOR
+
+
+def test_a_translations_skeleton_is_its_tags_but_the_new_lines():
+    notation = "{CLEAR}ب ب{N}{NAME;0} ب{COLOR;3}{#}{W2}"
+    assert notation_skeleton(notation) == ("{CLEAR}", "{NAME;0}", "{COLOR;3}", "{#}", "{W2}")
+    assert notation_skeleton("ب{N}ب") == ()
+    # What the encoder writes has the same skeleton, whatever its layout.
+    glyph_map = _map(notation)
+    encoded = Sf2ArabicEncoder(glyph_map, _font(glyph_map)).encode(notation)
+    assert command_skeleton(encoded.data) == notation_skeleton(notation)
+    validate_command_skeleton(("{NAME;0}", "{W2}"), "{NAME;0}…{N}ب{W2}")
+    for source, translation in (
+        (("{NAME;0}", "{W2}"), "ب{W2}"),
+        (("{W2}",), "{CLEAR}ب{W2}"),
+        (("{NAME;0}", "{W2}"), "{W2}ب{NAME;0}"),
+        (("{NAME;0}",), "{NAME;1}ب"),
+    ):
+        with pytest.raises(ClassicRetroError) as caught:
+            validate_command_skeleton(source, translation)
+        assert caught.value.code is ErrorCode.TOKEN_ORDER_VIOLATION
+    with pytest.raises(ClassicRetroError) as caught:
+        notation_skeleton("{NAME;X}")
+    assert caught.value.code is ErrorCode.UNSUPPORTED_CONTROL_CODE
 
 
 def test_a_characters_width_is_its_first_words_nibble_plus_one(rom):

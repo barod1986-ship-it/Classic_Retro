@@ -20,7 +20,9 @@ none of the existing methods gets a new one (see
   Similar file names prove nothing.
 - Add a game adapter under `games/` with its `GameRevision`, and an engine adapter
   under `engines/` when the text engine is new
-  ([ADAPTER_ARCHITECTURE.md](ADAPTER_ARCHITECTURE.md)).
+  ([ADAPTER_ARCHITECTURE.md](ADAPTER_ARCHITECTURE.md)). Register both in
+  `adapters/builtin.py` (`register_builtin_adapters`), where `classic-retro detect`
+  finds them; a test holds every rom overlay's image to a revision of its game.
 - Never commit the image, the game's text or its graphics. The repository holds
   hashes, addresses and the tools that rebuild from the user's own image.
 
@@ -89,7 +91,9 @@ Only the game's formats and limits belong in the module.
 ## 4. Build a rom overlay with the kit
 
 The steps are the same for every binary target. Only the addresses, the hook source
-and the script belong to the game.
+and the script belong to the game, and they live in its overlay module
+(`rom/<game>_arabic.py`), the hook source next to it (`rom/<game>_arabic_hooks.s`)
+and the script module (`rom/<game>_arabic_script.py`, below).
 
 - `patching.image.ImageSpec`: the pinned title, SHA-256, size and base address.
   - `verify`: refuses any other image.
@@ -139,7 +143,16 @@ and the script belong to the game.
   the jump: hooks are written with `.set noreorder`, so each delay slot holds what the
   source says (Symphony of the Night).
 
-  Another CPU gets a module of its own under `cpu/`.
+  The Super NES's 65C816 and the Mega Drive's 68000 have modules too. `cpu.m65816`
+  writes `JMP` and `JSR` with an absolute address (a hook in the site's own bank: A
+  Link to the Past's, in free bytes of the text engine's bank) and `JML` and `JSL`
+  with a long one (a hook in another bank: Chrono Trigger's); `cpu.m68k` writes `JMP`
+  and `JSR` with a long address, which reach any address of the 68000's 16 MiB
+  (Shining Force II). Both fill what is left of a site with `NOP` (`nop_fill`), so
+  the bytes a hook goes back over hold nothing.
+
+  A CPU none of the five modules covers (`thumb`, `arm`, `mips`, `m65816`, `m68k`)
+  gets a module of its own under `cpu/`, holding only what its hooks need.
 - `patching.hooks.HookProgram`: the hook source (`rom/<game>_arabic_hooks.s`), its
   assembled bytes and symbol offsets stored in Python.
   - A build therefore needs no toolchain.
@@ -149,9 +162,18 @@ and the script belong to the game.
     `cpu="r3000"`, `mipsel-linux-gnu-*`; GNU as rounds its `.text` up to 16 bytes) and
     the 68000 (the Mega Drive, `cpu="68000"`, `m68k-linux-gnu-*`, its registers written
     without `%`), and cc65 for the 65C816 (the Super NES, `cpu="65816"`).
-    `patching.hooks.register_assembler` adds another CPU.
+    `patching.hooks.register_assembler` adds another CPU: its assembler goes in
+    `patching/hooks.py`, and the package it needs in the apt list of the
+    `<id>-arabic-overlay` jobs of `.github/workflows/ci.yml`, where every target's
+    hooks are re-assembled.
 - Verify the original bytes of every site before writing it, and read back
-  everything written.
+  everything written. `patching.overlay` holds the checks every overlay makes, whatever
+  the game: `verify_bytes` (the pinned originals are in the image before any change),
+  `verify_empty` (a region about to be filled holds nothing yet) and `verify_untouched`
+  (the output differs from the original only inside the overlay's places; it compares
+  blocks first, so a 128 MiB image stays linear). Final Fantasy VI Advance's and
+  Pokémon Platinum's overlays use them; the others make the same checks in their own
+  module.
 - `rebuild.bps.create_bps` builds the patch. `patching.outputs` supplies the common
   report fields and writes the patch file, plus the patched image only when asked
   (local use).
@@ -317,6 +339,12 @@ TARGET = LocalizationTarget(
 )
 ```
 
+A new target also changes what counts and lists the targets by hand: the docstrings of
+`localization/builtin/__init__.py`, `localization/__init__.py` and
+`localization/strategies.py` name their number (`tests/test_docs.py` holds it to the
+registry), and `tests/test_localization.py` keeps the ordered list of target ids and an
+assertion per target (its strategies, operations, previews and documents).
+
 A target from another package uses the `classic_retro.targets.v1` entry point group,
 where the object or a zero-argument callable returns a `LocalizationTarget`. Its
 strategies must be registered first, either built in or through
@@ -325,6 +353,11 @@ strategies must be registered first, either built in or through
 
 A source overlay has `prepare(source, font, translations)` instead of `build`: it
 patches the user's pristine checkout of the decompilation, which then builds the image.
+Both kinds have `check_translations`. A source overlay's checks the script without a
+checkout (FireRed's encodes every message and builds the atlas; Minish Cap's measures
+every line with the pinned Latin widths), and its preview is the font file `prepare`
+writes into the checkout (`arabic_normal.png`, `arabic_font_preview.png`). What the
+original commands are is only known with a checkout, so `prepare` checks those.
 
 Every target then runs the same way:
 
@@ -349,20 +382,40 @@ the image it was given (Pokémon Platinum).
 
 - Unit tests use synthetic data only: invented strings, generated images and fonts
   drawn in the test. No game bytes.
+- A target's own tests: `tests/test_<game>_engine.py` (the engine's encoding and
+  layout), `tests/test_<game>_arabic.py` (its Arabic module, with a font drawn in the
+  test) and `tests/test_<game>_rom_overlay.py` (the overlay on a synthetic image:
+  every check, the build and the read-back), or `tests/test_<game>_source_overlay.py`
+  for a source overlay.
 - `tests/test_translations.py` holds every shipped translations file against its
   target's pinned entries; add the new target there.
 - CI finds the target by itself. The `localization-targets` job reads
   `classic-retro targets list`. Every target with a `check-translations` operation
-  gets an `<id>-arabic-overlay` job, which does three things:
+  gets an `<id>-arabic-overlay` job (the source overlays too), which does four things:
   - re-assembles the hooks (if the target has any)
   - lays out the script with the reference font, and fails when a declared preview
     is missing
+  - compares the report and the previews with the recorded digests
+    (`--check-digests`, `src/classic_retro/localization/digests.json`) and fails on
+    any difference, or for want of an entry
   - uploads the previews for review
+- Record the new target's digests once its previews are right, with the reference
+  font and the pinned libraries (`constraints.txt`):
+  `classic-retro targets check-translations my-game --font reference-font.ttf
+  --preview-dir previews --update-digests`. The entry holds the SHA-256 of the report
+  (without its volatile and path keys) and of each preview's decoded pixels, with the
+  library versions it was made with. It changes only with the target's own translation
+  or renderer, in the same commit (§7).
 - Documents:
   - `docs/<GAME>_ARABIC_TEST_AR.md`: the Arabic guide for applying the patch and
     reaching the scene
   - `docs/<GAME>_ARABIC_RENDERER.md`: the research notes and limits
-  - a paragraph in the README
+  - the README: a row of the target table (`tests/test_docs.py` checks there is one
+    per registered target) and a paragraph
+  - [TRANSLATING_AR.md](TRANSLATING_AR.md): a row of its table of translation files
+  - [ARABIC_STRATEGIES.md](ARABIC_STRATEGIES.md): the target in the list of each
+    technique it uses (how the renderer turns right to left, the marker, where the
+    glyph codes come from, runtime names, the font size and shadow)
 
 ## 7. Keep results byte-identical
 
@@ -371,7 +424,22 @@ output. Before merging such a change:
 
 - build every target whose image you have with `targets build` and check
   `matches_reference`;
-- compare the CI previews and `translation-report.json` with the previous run.
+- run `targets check-translations` with `--check-digests` for every target (CI does,
+  for each), and compare the CI previews and `translation-report.json` with the
+  previous run.
 
 A target's own results change only when that target's translation or renderer is
-changed on purpose. Its `reference_patch_sha256` is updated in the same commit.
+changed on purpose. Its `reference_patch_sha256` and its digests (`--update-digests`)
+are updated in the same commit.
+
+The results depend on the raster stack as much as on the code: every glyph is
+rasterized by the FreeType bundled in the installed Pillow wheel and shaped by the
+HarfBuzz bundled in uharfbuzz, and a FreeType release changes glyph pixels. The
+reference patch hashes and the digests are therefore reproducible only with the
+versions `constraints.txt` pins. Install with
+`python -m pip install -e ".[dev]" -c constraints.txt`, as CI does, and read `raster`
+in any report for the versions it was made with. Bump a pin in one commit: the pin
+(and the range in `pyproject.toml` when it no longer fits), `--update-digests` for
+every target with a `check-translations` operation, and a rebuild of every target you
+have, checking `matches_reference`; where it is false, the versions changed the output
+and that target's reference hash moves too.

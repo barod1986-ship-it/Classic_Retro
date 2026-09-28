@@ -78,8 +78,8 @@ References:
 
 The foundation is tested on both Windows and Linux and on the oldest and newest supported Python lines. This is intentional: Classic Retro is a desktop tooling project that must not accidentally become Unix-only.
 
-## What is intentionally absent
+## What was intentionally absent (a historical note)
 
-There is no GUI, no ROM parsing logic, no platform-specific implementation, no Arabic reshaper, and no emulator automation yet.
+At the foundation, on 2026-09-23, there was no GUI, no ROM parsing logic, no platform-specific implementation, no Arabic reshaper and no emulator automation. Each of those was to come with its own research step, once its interface could be based on a real reference game or a proven cross-platform requirement.
 
-Those choices require their own research step and should only be added when their interfaces can be based on a real reference game or a proven cross-platform requirement.
+Today all of them but the GUI exist, each brought by the target that needed it: platform adapters and game-image parsing (`platforms`, `media`, `patching`), the Arabic pipeline (`arabic`, `font`) and the scripted emulator (`research`). [MASTER_SPEC.md](MASTER_SPEC.md) §3 maps the packages as built. The GUI is still absent, and stays so until the pipeline under it is stable (MASTER_SPEC §2).

@@ -32,7 +32,9 @@ from PIL import Image, ImageDraw, ImageFont
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.font.arabic_outline import joins_left_neighbour, joins_right_neighbour
 
-# Coverage (0-255) from which a pixel is ink, in every glyph-font target so far.
+# Coverage (0-255) from which a pixel is ink: the default, for an engine whose
+# letters give no level of their own. Most engines pass theirs to ``draw_form``
+# (``ink_level``), chosen against the game's own letters and shadow.
 INK_THRESHOLD = 96
 
 Pixel = tuple[int, int]

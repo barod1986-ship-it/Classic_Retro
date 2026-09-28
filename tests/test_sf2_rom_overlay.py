@@ -28,6 +28,7 @@ from classic_retro.engines.sf2 import (
 from classic_retro.engines.sf2_arabic import (
     GLYPH_BYTES,
     ROWS,
+    SPACE_CODE,
     SPACE_WIDTH,
     WIDEST,
     Sf2Font,
@@ -143,7 +144,7 @@ def _digest(data: bytes) -> str:
 def _strings(rom: bytes | None = None) -> tuple[Sf2String, ...]:
     return tuple(
         Sf2String(key, index, _digest(string_bytes(rom or _rom(), index)), ARABIC[key])
-        for key, (index, _) in script._SOURCES.items()
+        for key, (index, _, _) in script._SOURCES.items()
     )
 
 
@@ -381,3 +382,87 @@ def test_the_command_group_checks_and_encodes(capsys):
     # Initial and final beh, the space, the name and its number, the end.
     assert encoded["count"] == 6 and encoded["bytes"].split()[-4:] == ["01", "FC", "00", "FE"]
     assert "lines" not in encoded
+
+
+def test_the_output_is_read_back_before_it_is_accepted(built):
+    rom, result = built
+    translated = _strings()
+    glyph_map = engine.sf2_glyph_codes(overlay.strings_characters(translated))
+    encoded = overlay.encode_strings(translated, engine.Sf2ArabicEncoder(glyph_map, result.font))
+    writes = overlay.room_data(translated, encoded, result.font)
+    overlay._verify_output(result.rom, rom, writes, translated, encoded)
+    redirects = overlay.read_redirects(result.rom)
+    assert list(redirects) == [string.index for string in translated]
+    for string in translated:
+        data = overlay.read_arabic_string(result.rom, redirects[string.index])
+        assert data == encoded[string.key].data
+    a_glyph = next(code for code in result.font.glyphs if code != SPACE_CODE)
+    texts = max(writes)
+    for address, what in (
+        (overlay.HOOK_ADDRESS + 3, "hook code"),
+        (overlay.SITES[3].address + 1, "site at $0064DA"),
+        (overlay.REDIRECTS + 2, "list of translated strings"),
+        (overlay.ARABIC_FONT + GLYPH_BYTES * a_glyph + 2, "font table"),
+        (texts + 1, "Arabic text"),
+        (BANKS + 0x100 + 3, "outside its places"),
+    ):
+        tampered = bytearray(result.rom)
+        tampered[address] ^= 0x01
+        with pytest.raises(ClassicRetroError) as caught:
+            overlay._verify_output(bytes(tampered), rom, writes, translated, encoded)
+        assert caught.value.code is ErrorCode.BUILD_VALIDATION_FAILED, what
+        assert what in str(caught.value), what
+    # A list that sends a string elsewhere than its Arabic is caught through the reader.
+    elsewhere = bytearray(result.rom)
+    struct.pack_into(">I", elsewhere, overlay.REDIRECTS + 2, texts + 2)
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay._verify_output(bytes(elsewhere), rom, writes, translated, encoded)
+    assert caught.value.code is ErrorCode.BUILD_VALIDATION_FAILED
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.read_arabic_string(result.rom, overlay.ROOM_END - 4)  # 0xFF fill, no end
+    assert caught.value.code is ErrorCode.BUILD_VALIDATION_FAILED
+
+
+def test_a_translation_keeps_the_originals_tags(font_path):
+    """The witch's word on the name writes it, and waits. The build holds each translation
+    against the ROM's tags, the check against the pinned ones."""
+    rom = _rom()
+    greeting, _, nice_name = _strings()
+    for notation in (
+        "…{N}اسم جميل.{W2}",  # the name dropped
+        "{W2}…{N}اسم جميل.{NAME;0}",  # the tags swapped
+        "{NAME;1}…{N}اسم جميل.{W2}",  # another argument
+        "{NAME;0}…{N}اسم جميل.{W1}",  # another wait
+    ):
+        with pytest.raises(ClassicRetroError) as caught:
+            _build(rom, font_path, translated=(dataclasses.replace(nice_name, notation=notation),))
+        assert caught.value.code is ErrorCode.TOKEN_ORDER_VIOLATION, notation
+    kept = _build(rom, font_path, translated=(greeting, nice_name))
+    assert kept.report["strings"]["witch.nice_name"]["source_skeleton"] == ["{NAME;0}", "{W2}"]
+    assert kept.report["strings"]["witch.greeting"]["source_skeleton"] == ["{CLEAR}", "{W2}"]
+    # New lines are the encoder's own: more or fewer of them change nothing.
+    lines = dataclasses.replace(nice_name, notation="{NAME;0}{N}…{N}اسم{N}جميل.{W2}")
+    assert _build(rom, font_path, translated=(lines,)).rom
+    # A pinned skeleton is held against the ROM's, at the build and at the extraction.
+    pinned = dataclasses.replace(nice_name, source_skeleton=("{NAME;0}", "{W2}"))
+    assert _build(rom, font_path, translated=(pinned,)).rom
+    wrong = dataclasses.replace(nice_name, source_skeleton=("{NAME;0}", "{W1}"))
+    with pytest.raises(ClassicRetroError) as caught:
+        _build(rom, font_path, translated=(wrong,))
+    assert caught.value.code is ErrorCode.SOURCE_BASELINE_MISMATCH
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.extract_originals(rom, translated=(wrong,), verify_identity=False)
+    assert caught.value.code is ErrorCode.SOURCE_BASELINE_MISMATCH
+    # Without the ROM, the pinned skeleton is what the translation is held against.
+    glyph_map = engine.sf2_glyph_codes(overlay.strings_characters(_strings()))
+    encoder = engine.Sf2ArabicEncoder(glyph_map)
+    assert overlay.encode_strings((pinned,), encoder)["witch.nice_name"].data.endswith(b"\xfe")
+    dropped = dataclasses.replace(pinned, notation="…{N}اسم جميل.{W2}")
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.encode_strings((dropped,), encoder)
+    assert caught.value.code is ErrorCode.TOKEN_ORDER_VIOLATION
+    assert overlay.extract_skeletons(rom, translated=_strings(), verify_identity=False) == {
+        "witch.greeting": ("{CLEAR}", "{W2}"),
+        "witch.confused": ("{W2}",),
+        "witch.nice_name": ("{NAME;0}", "{W2}"),
+    }

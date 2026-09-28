@@ -5,15 +5,28 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from classic_retro.localization.targets import LocalizationTarget, print_json
+from classic_retro.localization.targets import LocalizationTarget, preview_paths, print_json
 from classic_retro.localization.translations import TranslationSet
 from classic_retro.source.tmc_arabic import (
+    FONT_PREVIEW,
     PINNED_COMMIT,
     check_tmc_arabic_source,
+    check_tmc_translations,
     encode_tmc_arabic_line,
     extract_tmc_originals,
     prepare_tmc_arabic_source,
 )
+
+# The font preview prepare writes into the checkout (data/classic_retro), here on its own.
+PREVIEWS = (Path(FONT_PREVIEW).name,)
+
+
+def check_translations(
+    font: Path | None, preview_dir: Path | None, translations: TranslationSet | None = None
+) -> dict[str, object]:
+    """The script checked without a checkout; with a font and a folder, its preview too."""
+    previews = preview_paths(font, preview_dir, *PREVIEWS)
+    return check_tmc_translations(font, *previews, translations=translations)
 
 
 def prepare(
@@ -79,6 +92,8 @@ TARGET = LocalizationTarget(
     guide="docs/MINISH_CAP_ARABIC_TEST_AR.md",
     notes="docs/TMC_ARABIC_RENDERER.md",
     register_cli=register_cli,
+    check_translations=check_translations,
     prepare=prepare,
     extract=extract,
+    previews=PREVIEWS,
 )

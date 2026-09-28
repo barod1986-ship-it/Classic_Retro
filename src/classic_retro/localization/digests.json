@@ -1,0 +1,374 @@
+{
+  "advance-wars": {
+    "generated_with": {
+      "arabic_reshaper": "3.0.1",
+      "fonttools": "4.66.0",
+      "freetype": "2.14.3",
+      "harfbuzz": "0.56.2",
+      "jsonschema": "4.26.0",
+      "pillow": "12.3.0",
+      "pycdlib": "1.21.0",
+      "python": "3.11.15",
+      "python_bidi": "0.6.11"
+    },
+    "previews": {
+      "arabic_font_preview.png": "a0e3a447d0a9b7079360aab35d1632fdec3f2e7f0dfb69616787ece222de9dab",
+      "arabic_messages_preview.png": "6a9c0a427416811a194e641d036689ed358b6a9ce2d1b57c174bae21a78a725c"
+    },
+    "report": "b4159a499e75430d618846239ecacab724e3e90ed5bfab4886035a3b1b4133be"
+  },
+  "chrono-trigger": {
+    "generated_with": {
+      "arabic_reshaper": "3.0.1",
+      "fonttools": "4.66.0",
+      "freetype": "2.14.3",
+      "harfbuzz": "0.56.2",
+      "jsonschema": "4.26.0",
+      "pillow": "12.3.0",
+      "pycdlib": "1.21.0",
+      "python": "3.11.15",
+      "python_bidi": "0.6.11"
+    },
+    "previews": {
+      "arabic_font_preview.png": "3e5babe4fcb57428b946d9e0eca1a2006bb258a3b04dd8f76730bcc02cc9119c",
+      "arabic_messages_preview.png": "f6c350545af21dbcf50499fcf5eedbfc0dbb712ac891ea23f66be55dc8679409"
+    },
+    "report": "48dafeac0ed28de6e7fcea0a4dec6fc26157b65fcee55ea8df82e691a27130d1"
+  },
+  "ff6a": {
+    "generated_with": {
+      "arabic_reshaper": "3.0.1",
+      "fonttools": "4.66.0",
+      "freetype": "2.14.3",
+      "harfbuzz": "0.56.2",
+      "jsonschema": "4.26.0",
+      "pillow": "12.3.0",
+      "pycdlib": "1.21.0",
+      "python": "3.11.15",
+      "python_bidi": "0.6.11"
+    },
+    "previews": {
+      "arabic_font_preview.png": "4c5a9d446d5e538f01d0c92c287f5d5aacc1eb1f09c2ff064755fde5175fe06a"
+    },
+    "report": "002a69f297e1eedde1a7cc9c2026be45218e9d9691a4fb5ce70d7b23f487bec7"
+  },
+  "fire-emblem": {
+    "generated_with": {
+      "arabic_reshaper": "3.0.1",
+      "fonttools": "4.66.0",
+      "freetype": "2.14.3",
+      "harfbuzz": "0.56.2",
+      "jsonschema": "4.26.0",
+      "pillow": "12.3.0",
+      "pycdlib": "1.21.0",
+      "python": "3.11.15",
+      "python_bidi": "0.6.11"
+    },
+    "previews": {
+      "arabic_font_preview.png": "7fd921d6bcc7fd871080c8ecd5e9e01f45b2301850a6636752e7949348fca205",
+      "arabic_legend_preview.png": "dec4a26e66849bc9577cfdd9f3ce22d901ad97c29c9aa415b0ce393dfa045616"
+    },
+    "report": "782aa85dc6a344bafabff6903cfccfdb6e44315c680dc992dcb06a99cfc48588"
+  },
+  "firered": {
+    "generated_with": {
+      "arabic_reshaper": "3.0.1",
+      "fonttools": "4.66.0",
+      "freetype": "2.14.3",
+      "harfbuzz": "0.56.2",
+      "jsonschema": "4.26.0",
+      "pillow": "12.3.0",
+      "pycdlib": "1.21.0",
+      "python": "3.11.15",
+      "python_bidi": "0.6.11"
+    },
+    "previews": {
+      "arabic_normal.png": "d8045ddaf67834e6d56e454c69a929a0ebb87eff6b1208f2724ece4b2277c31a"
+    },
+    "report": "d4518a93533af48fe29d1ed6700eac4c5d637d73231060f61eada4ab922b0976"
+  },
+  "fomt": {
+    "generated_with": {
+      "arabic_reshaper": "3.0.1",
+      "fonttools": "4.66.0",
+      "freetype": "2.14.3",
+      "harfbuzz": "0.56.2",
+      "jsonschema": "4.26.0",
+      "pillow": "12.3.0",
+      "pycdlib": "1.21.0",
+      "python": "3.11.15",
+      "python_bidi": "0.6.11"
+    },
+    "previews": {
+      "arabic_text_preview.png": "83a3078b5887388b844ad0c1ce9a2db3b5e00a1c7ca22178c4c6942768a3b396"
+    },
+    "report": "ac05bbea508ca9361cec23d5b34c358d4a8e2bb246f690b1a1b1493bfcc191fa"
+  },
+  "golden-sun": {
+    "generated_with": {
+      "arabic_reshaper": "3.0.1",
+      "fonttools": "4.66.0",
+      "freetype": "2.14.3",
+      "harfbuzz": "0.56.2",
+      "jsonschema": "4.26.0",
+      "pillow": "12.3.0",
+      "pycdlib": "1.21.0",
+      "python": "3.11.15",
+      "python_bidi": "0.6.11"
+    },
+    "previews": {
+      "arabic_font_preview.png": "3f83aee9cdb8bb7cbc0815cd678808c99e9607025b756fd2a0c3b2286e3a20a1"
+    },
+    "report": "52f58d0bf975211a937fc18ce754947bde80976c8c9e5498f4fae7fcafdd521f"
+  },
+  "gran-turismo": {
+    "generated_with": {
+      "arabic_reshaper": "3.0.1",
+      "fonttools": "4.66.0",
+      "freetype": "2.14.3",
+      "harfbuzz": "0.56.2",
+      "jsonschema": "4.26.0",
+      "pillow": "12.3.0",
+      "pycdlib": "1.21.0",
+      "python": "3.11.15",
+      "python_bidi": "0.6.11"
+    },
+    "previews": {
+      "arabic_briefings_preview.png": "85dbbc2c58eb7f5697efb0cc87b298292bcfecb6697d8bc4e44c12ae2fa97ae7",
+      "arabic_font_preview.png": "97e5bc6060dcef01f8b6fb9e475380444f72305fcc50539b31644702b895f30b"
+    },
+    "report": "2c192922f84f90fd64f1969697ee26386772d2fd35cb77c62876efc21f379c1a"
+  },
+  "link-to-the-past": {
+    "generated_with": {
+      "arabic_reshaper": "3.0.1",
+      "fonttools": "4.66.0",
+      "freetype": "2.14.3",
+      "harfbuzz": "0.56.2",
+      "jsonschema": "4.26.0",
+      "pillow": "12.3.0",
+      "pycdlib": "1.21.0",
+      "python": "3.11.15",
+      "python_bidi": "0.6.11"
+    },
+    "previews": {
+      "arabic_font_preview.png": "595d0cbc51e54bab38e09b5b337f78bdc1d5f073fa9b80fd57a7e96013e5a3ad",
+      "arabic_messages_preview.png": "61faf388bfc2449751942eaa2cc145d568c47b27cbceec4a907097cbeaa95f71"
+    },
+    "report": "6a991923ed1d9cd4c496f8739870cd49ab39878da0a904ce4da27db700208a2b"
+  },
+  "metroid-fusion": {
+    "generated_with": {
+      "arabic_reshaper": "3.0.1",
+      "fonttools": "4.66.0",
+      "freetype": "2.14.3",
+      "harfbuzz": "0.56.2",
+      "jsonschema": "4.26.0",
+      "pillow": "12.3.0",
+      "pycdlib": "1.21.0",
+      "python": "3.11.15",
+      "python_bidi": "0.6.11"
+    },
+    "previews": {
+      "arabic_font_preview.png": "ba6f6c6e846889e293223e5128d0eaed8f3f7ac74e6db4c3f4e0154795fe7493",
+      "arabic_messages_preview.png": "7f6b08dfa7030d4a71169ea69a7aa2d3a02a078d387563333d2c0a42e22a155a"
+    },
+    "report": "d902a1ebc512cf6b2a6df2775562e38e3799a0f5e5faf6c6786c65e87afa789d"
+  },
+  "minish-cap": {
+    "generated_with": {
+      "arabic_reshaper": "3.0.1",
+      "fonttools": "4.66.0",
+      "freetype": "2.14.3",
+      "harfbuzz": "0.56.2",
+      "jsonschema": "4.26.0",
+      "pillow": "12.3.0",
+      "pycdlib": "1.21.0",
+      "python": "3.11.15",
+      "python_bidi": "0.6.11"
+    },
+    "previews": {
+      "arabic_font_preview.png": "64b88fc1668f81e48dbc3cb7ac6c3c200dd720d220c7882933ce7219ef7f83da"
+    },
+    "report": "15b438dc77fec93cbcd08b425e37f481e8a5d6dce4450a63498caaf0944b0880"
+  },
+  "mlss": {
+    "generated_with": {
+      "arabic_reshaper": "3.0.1",
+      "fonttools": "4.66.0",
+      "freetype": "2.14.3",
+      "harfbuzz": "0.56.2",
+      "jsonschema": "4.26.0",
+      "pillow": "12.3.0",
+      "pycdlib": "1.21.0",
+      "python": "3.11.15",
+      "python_bidi": "0.6.11"
+    },
+    "previews": {
+      "arabic_font_preview.png": "7fb5f2bfba50534051ee8d21e919ca93ff6fac395d2417250cfa52eb4691d077",
+      "arabic_messages_preview.png": "d8d4a10f7fd0d23a5edfb0d51d7b455d0f6d1b2098ab2649285d894a63761728"
+    },
+    "report": "aaeb8077782f6dc07c48671d92bdded0af98b232d7319330b737df04551f7f47"
+  },
+  "mmbn": {
+    "generated_with": {
+      "arabic_reshaper": "3.0.1",
+      "fonttools": "4.66.0",
+      "freetype": "2.14.3",
+      "harfbuzz": "0.56.2",
+      "jsonschema": "4.26.0",
+      "pillow": "12.3.0",
+      "pycdlib": "1.21.0",
+      "python": "3.11.15",
+      "python_bidi": "0.6.11"
+    },
+    "previews": {
+      "arabic_pages_preview.png": "01579d5ed18bd347363e48b03d876f079c26563494cc62a096909804ef4cb2fc"
+    },
+    "report": "8f09915075085b4a0a5e6ad482592f6e065454a5c88f2e97a07e923376ae1827"
+  },
+  "nsmb": {
+    "generated_with": {
+      "arabic_reshaper": "3.0.1",
+      "fonttools": "4.66.0",
+      "freetype": "2.14.3",
+      "harfbuzz": "0.56.2",
+      "jsonschema": "4.26.0",
+      "pillow": "12.3.0",
+      "pycdlib": "1.21.0",
+      "python": "3.11.15",
+      "python_bidi": "0.6.11"
+    },
+    "previews": {
+      "arabic_font_preview.png": "682324376d33e13d52107a0beb8bb1a5bc3a395479c5707da09d688a28736a62",
+      "arabic_messages_preview.png": "ed15255f3c2e4cd18b61f9745e0561d56cf94aeae9f2110bbb7d1386a5cb5521"
+    },
+    "report": "382325740dec5af0f7d5b6d58506a1bfcb7e88e8c3382b76e20375b57b57290b"
+  },
+  "phantom-hourglass": {
+    "generated_with": {
+      "arabic_reshaper": "3.0.1",
+      "fonttools": "4.66.0",
+      "freetype": "2.14.3",
+      "harfbuzz": "0.56.2",
+      "jsonschema": "4.26.0",
+      "pillow": "12.3.0",
+      "pycdlib": "1.21.0",
+      "python": "3.11.15",
+      "python_bidi": "0.6.11"
+    },
+    "previews": {
+      "arabic_font_preview.png": "cec6e9588d52f8c98f7baa8aab6fab15edfab451c15982bde503a37963077257",
+      "arabic_messages_preview.png": "44940b1978ab29ef287ccc1e14fd0f0c2acfaeceee111a7321caff78c0cfd326"
+    },
+    "report": "b1cfff4e15623cd076c1bae3e2601cfec98030c7f143351736ca1cdc2975887e"
+  },
+  "platinum": {
+    "generated_with": {
+      "arabic_reshaper": "3.0.1",
+      "fonttools": "4.66.0",
+      "freetype": "2.14.3",
+      "harfbuzz": "0.56.2",
+      "jsonschema": "4.26.0",
+      "pillow": "12.3.0",
+      "pycdlib": "1.21.0",
+      "python": "3.11.15",
+      "python_bidi": "0.6.11"
+    },
+    "previews": {
+      "arabic_font_preview.png": "8fd1a56d53c66f3ee3c7ba1c333ad263cc5e7c1661ab62d6fd742eabddff082c",
+      "arabic_messages_preview.png": "a0a12d2b9caf215c682878ebe4b92e62844863d9db2fea2b0e5cfcddad6d2f7f"
+    },
+    "report": "776ff803fe2b212b1291bd149c852b8053cfb03848a621aececa7ecd15d60801"
+  },
+  "pmd-red": {
+    "generated_with": {
+      "arabic_reshaper": "3.0.1",
+      "fonttools": "4.66.0",
+      "freetype": "2.14.3",
+      "harfbuzz": "0.56.2",
+      "jsonschema": "4.26.0",
+      "pillow": "12.3.0",
+      "pycdlib": "1.21.0",
+      "python": "3.11.15",
+      "python_bidi": "0.6.11"
+    },
+    "previews": {
+      "arabic_font_preview.png": "c4f261873bccc303cd2c25a89120d35dd85ac6de41040c2894e490c4bc2b0daf",
+      "arabic_text_preview.png": "e9c256dc74c125ac4ac1d6019ced1e18a61356ae9e7f8bf3200250356931bf8d"
+    },
+    "report": "f8a224921264af0889e447f3d4c05be6ebaefeeabd5e3aeb3526ae996345eb95"
+  },
+  "ridge-racer": {
+    "generated_with": {
+      "arabic_reshaper": "3.0.1",
+      "fonttools": "4.66.0",
+      "freetype": "2.14.3",
+      "harfbuzz": "0.56.2",
+      "jsonschema": "4.26.0",
+      "pillow": "12.3.0",
+      "pycdlib": "1.21.0",
+      "python": "3.11.15",
+      "python_bidi": "0.6.11"
+    },
+    "previews": {
+      "arabic_font_preview.png": "18ac7560e07f83ec65da400675f10ca9d076bc17bef28b8c9e0927f52e8f3492",
+      "arabic_strings_preview.png": "292145c0a7d95b14a20ceef78a100eb2cacd1388c33bbe7617e36573a9a0bbff"
+    },
+    "report": "8616b647b661a128d41c7d8698dd1391392d81d65323ba1e4b9f95d95408bf02"
+  },
+  "shining-force-2": {
+    "generated_with": {
+      "arabic_reshaper": "3.0.1",
+      "fonttools": "4.66.0",
+      "freetype": "2.14.3",
+      "harfbuzz": "0.56.2",
+      "jsonschema": "4.26.0",
+      "pillow": "12.3.0",
+      "pycdlib": "1.21.0",
+      "python": "3.11.15",
+      "python_bidi": "0.6.11"
+    },
+    "previews": {
+      "arabic_font_preview.png": "d3114542e5446e985bfaf60b89d1fa88b8696037caa71e2511882dde15457d96",
+      "arabic_messages_preview.png": "3c3e355bf900b84a37040464d4a67b13ce603bc386f8e05f53492a5b6c73833f"
+    },
+    "report": "bf2b8624e89073be0193923f94928947e70a1789d5cfc42d92a936d681d6341e"
+  },
+  "sotn": {
+    "generated_with": {
+      "arabic_reshaper": "3.0.1",
+      "fonttools": "4.66.0",
+      "freetype": "2.14.3",
+      "harfbuzz": "0.56.2",
+      "jsonschema": "4.26.0",
+      "pillow": "12.3.0",
+      "pycdlib": "1.21.0",
+      "python": "3.11.15",
+      "python_bidi": "0.6.11"
+    },
+    "previews": {
+      "arabic_font_preview.png": "f0a217f51014192e4a8f2f26fb2273687a3c2a67640b5f8e29ba264e50d23934",
+      "arabic_messages_preview.png": "1da6ea63141a752e1cf51d49f5470d5acce200fd583166aebcdaf62a908e2f8e"
+    },
+    "report": "0cde0ccf42e0f712e30cd71763e6000267f11c88a37aa8c7643cad92065ee596"
+  },
+  "tactics-ogre": {
+    "generated_with": {
+      "arabic_reshaper": "3.0.1",
+      "fonttools": "4.66.0",
+      "freetype": "2.14.3",
+      "harfbuzz": "0.56.2",
+      "jsonschema": "4.26.0",
+      "pillow": "12.3.0",
+      "pycdlib": "1.21.0",
+      "python": "3.11.15",
+      "python_bidi": "0.6.11"
+    },
+    "previews": {
+      "arabic_font_preview.png": "6243011c8a327fd174d00b573e2c5417c2824959c2d926b455292a9bcb02046a",
+      "arabic_messages_preview.png": "84828ff8af4dbafe5e33ee39e74f58d06331e1ac0e3ee3637f33f92ed8682dec"
+    },
+    "report": "57a2b3a7ca6b461e34fcabbd9dfcf47c311325f3cf9851b1f0cf8705a9627772"
+  }
+}

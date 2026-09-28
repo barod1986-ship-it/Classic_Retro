@@ -8,11 +8,22 @@ import subprocess
 from pathlib import Path
 
 import pytest
+from PIL import Image
 
+from classic_retro.cli import main
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.tmc import control_signature, parse_tmc_string
 from classic_retro.engines.tmc_arabic import TmcArabicFontResult, build_tmc_arabic_glyph_map
 from classic_retro.source import tmc_arabic as overlay
+
+
+@pytest.fixture
+def reference_font() -> Path:
+    """The pinned reference font, from the environment; never bundled with the tests."""
+    path = os.environ.get("CLASSIC_RETRO_REFERENCE_FONT")
+    if not path:
+        pytest.skip("CLASSIC_RETRO_REFERENCE_FONT is unset")
+    return Path(path)
 
 
 def _english_tables() -> list[list[str]]:
@@ -21,6 +32,72 @@ def _english_tables() -> list[list[str]]:
     for message in overlay.tmc_arabic_messages():
         english[message.table][message.index] = "".join(control_signature(message.stream))
     return english
+
+
+def _font(width: int) -> TmcArabicFontResult:
+    """A stand-in font whose every glyph is ``width`` pixels wide and all width marker."""
+    characters = build_tmc_arabic_glyph_map().characters
+    return TmcArabicFontResult(
+        glyphs=len(characters),
+        font_size=10,
+        baseline=11,
+        widths=dict.fromkeys(characters, width),
+        max_advance=width,
+        data=b"\xff" * 128 * len(characters),
+    )
+
+
+def test_check_translations_encodes_every_message_without_a_checkout():
+    report = overlay.check_tmc_translations()
+    assert report["messages"] == list(overlay.ENTRY_IDS)
+    assert report["arabic_glyphs"] == len(build_tmc_arabic_glyph_map().characters)
+    assert report["arabic_font_page"] == 9
+    assert report["lines_measured"] is False and "font_size" not in report
+    # The notation is the one prepare writes into USA.json (unmeasured, as here).
+    translated = json.loads(
+        overlay._translate(json.dumps(_english_tables()), overlay._encoder(Path("."), None), False)
+    )
+    assert report["notation_characters"] == sum(
+        len(translated[message.table][message.index]) for message in overlay.tmc_arabic_messages()
+    )
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.check_tmc_translations(None, Path("arabic_font_preview.png"))
+    assert str(caught.value) == "A preview needs --font"
+
+
+def test_check_translations_measures_every_line_and_writes_the_preview(tmp_path, monkeypatch):
+    fonts = {"narrow.ttf": _font(2), "wide.ttf": _font(8)}
+    monkeypatch.setattr(overlay, "build_tmc_arabic_font", lambda font_path: fonts[font_path.name])
+    preview = tmp_path / "previews" / "arabic_font_preview.png"
+    preview.parent.mkdir()
+
+    report = overlay.check_tmc_translations(tmp_path / "narrow.ttf", preview)
+    assert report["lines_measured"] is True
+    assert (report["font_size"], report["font_baseline"], report["max_advance"]) == (10, 11, 2)
+    assert 0 < report["widest_line"] <= 0xF0
+    glyphs = len(build_tmc_arabic_glyph_map().characters)
+    with Image.open(preview) as atlas:
+        assert atlas.size == (16 * 18, -(-glyphs // 16) * 18)
+    # Glyphs of 8px push a narrow prologue line past its 120px box.
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.check_tmc_translations(tmp_path / "wide.ttf")
+    assert caught.value.code is ErrorCode.TEXT_BOX_OVERFLOW
+
+
+def test_check_translations_lays_out_the_shipped_script_with_the_reference_font(
+    tmp_path, reference_font
+):
+    preview = tmp_path / "arabic_font_preview.png"
+    report = overlay.check_tmc_translations(reference_font, preview)
+    assert preview.is_file() and report["lines_measured"] is True
+    assert report["widest_line"] <= 0xF0 and report["max_advance"] <= 16
+
+
+def test_cli_checks_the_script_without_a_checkout(capsys):
+    assert main(["targets", "check-translations", "minish-cap"]) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["messages"] == list(overlay.ENTRY_IDS)
+    assert report["lines_measured"] is False
 
 
 def test_messages_are_unique_and_sized_for_their_boxes():
@@ -364,18 +441,7 @@ def test_failed_font_build_does_not_modify_pristine_source(source_tree):
 
 def test_prepared_source_must_match_recorded_overlay(source_tree, monkeypatch):
     characters = build_tmc_arabic_glyph_map().characters
-
-    def build_font(font_path):
-        return TmcArabicFontResult(
-            glyphs=len(characters),
-            font_size=10,
-            baseline=11,
-            widths=dict.fromkeys(characters, 6),
-            max_advance=6,
-            data=b"\xff" * 128 * len(characters),
-        )
-
-    monkeypatch.setattr(overlay, "build_tmc_arabic_font", build_font)
+    monkeypatch.setattr(overlay, "build_tmc_arabic_font", lambda font_path: _font(6))
     (source_tree / "font.ttf").write_bytes(b"test font")
     first = overlay.prepare_tmc_arabic_source(source_tree, source_tree / "font.ttf")
     second = overlay.prepare_tmc_arabic_source(source_tree, source_tree / "font.ttf")

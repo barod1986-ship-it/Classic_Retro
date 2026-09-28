@@ -120,12 +120,23 @@ No target's font places marks yet, so every target refuses a line that holds one
 
 UAX #53 describes Arabic combining-mark rendering as a rendering-stage process rather than a new normalization form.
 
+## Numbers in shaped lines
+
+The targets that draw whole lines with HarfBuzz (`font/shaped_text.py`: `line-cells`, `text-images`) do not go through the visual output above. HarfBuzz shapes one direction at a time and runs no bidi algorithm, so a whole line in one right-to-left buffer comes out with its numbers reversed ("2024" reads 4202). `ShapedLineRenderer` therefore cuts the line into directional runs first (`directional_runs`), the part of UAX #9 a line of Arabic with numbers needs:
+
+- digits of any script (ASCII, Arabic-Indic, extended Arabic-Indic) after Arabic letters are Arabic numbers (rule W2), and a line of Arabic holds no other left-to-right text;
+- a single `,` `.` `:` or `/` between two digit groups belongs to the number (rule W4): `1,000` and `3.5` are one number, the full stop of `2024.` is not;
+- spaces and other punctuation between letters and numbers take the line's direction (rule N1).
+
+Each number is shaped left to right in a buffer of its own, every other run right to left, and the runs are joined in visual order, which for a right-to-left line is the logical order reversed. A line without digits is one run, shaped exactly as one buffer.
+
 ## How the targets use it
 
 - `arabic.logical` holds what logical text may contain: a translations file refuses direction controls, and an engine refuses presentation forms and characters its font cannot draw.
 - `arabic.repertoire.legacy_renderer_pipeline()` is the configuration every glyph target shapes with (no ligatures, nothing dropped), and `arabic_presentation_repertoire()` lists every form it can produce.
 - `arabic.paint` turns the visual output into the order a right-to-left renderer paints, and refuses marks and mirrored brackets a game font cannot draw.
 - `arabic.glyph_codes` gives the forms a script uses their codes in the game's font.
+- `font.shaped_text` shapes whole lines with HarfBuzz for the targets that draw them ahead of time, their numbers left to right (above).
 
 ```text
 classic-retro targets check-translations TARGET [--font FONT --preview-dir DIR]

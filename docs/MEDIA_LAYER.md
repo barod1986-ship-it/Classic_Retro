@@ -131,4 +131,9 @@ Some PS1 titles place important resources outside the ordinary ISO9660 directory
 Reference:
 - https://psx-spx.consoledev.net/cdromfileformats/
 
-Rebuild support will be introduced separately with fixture-backed round-trip tests.
+The rebuild support the PlayStation targets needed is the one above: `patching.cdrom`
+writes Mode 2 Form 1 sectors whole, with their EDC and ECC, and repoints ISO 9660
+records, and `tests/test_cdrom.py` proves it on synthetic tracks (the codes against
+their check values, a file moved and read back). A rebuild that changes a disc's layout,
+with the details listed above, is still not done; it would come with fixture-backed
+round-trip tests of its own, as this one did.

@@ -33,6 +33,14 @@ engine's line changes as the English does: the second line ``{2}``, the third
 layout pass through as tokens (``{Window 02}``, ``{Speed 03}``, ``{Wait 01}``...);
 ``{Name}`` writes the player's name, reckoned as wide as the widest name the
 game lets the player give (``NAME_WIDTH``).
+
+A translation keeps the original's commands: its skeleton
+(``notation_skeleton``: every token but ``{line}``, in order, as the notation
+writes it) must equal the original's (``engines.alttp.command_skeleton``),
+which leaves out the same layout the encoder writes itself: the lines to
+write on, the scroll and the wait for the button between pages
+(``engines.alttp.LAYOUT_COMMANDS``). ``validate_command_skeleton`` refuses a
+translation that drops, adds or moves any other command.
 """
 
 from __future__ import annotations
@@ -60,6 +68,7 @@ from classic_retro.engines.alttp import (
     SCROLL,
     SPACE,
     WAIT_KEY,
+    command_skeleton,
 )
 from classic_retro.font.arabic_outline import (
     contextual_font_data,
@@ -80,9 +89,11 @@ from classic_retro.font.glyph_raster import (
     separated_dots,
 )
 from classic_retro.font.previews import glyph_atlas, preview_sheet
+from classic_retro.text.commands import require_same_commands
 from classic_retro.text.tokens import TextToken, TokenStream
 
 PROFILE = "A Link to the Past Arabic"
+ENGINE = "A Link to the Past"
 # A byte of an Arabic message below the commands, or from $80 to $E6, is a glyph
 # of the Arabic font; the space keeps the game's code, which types no sound.
 ARABIC_CODES = tuple(code for code in range(FIRST_COMMAND) if code != SPACE) + tuple(
@@ -374,6 +385,22 @@ def _words(segment: str) -> list[str]:
             ErrorCode.UNENCODABLE_TEXT, "A line of the message has a space at an end, or two"
         )
     return words
+
+
+def notation_skeleton(notation: str) -> tuple[str, ...]:
+    """A translation's commands in order, in the notation, ``{line}`` left out: what
+    ``engines.alttp.command_skeleton`` gives for the bytes the encoder writes."""
+    return tuple(
+        part
+        for match in _TOKEN.finditer(notation)
+        if f"{{{match.group(1)}}}" != LINE_BREAK
+        for part in command_skeleton(command(match.group(1)).data)
+    )
+
+
+def validate_command_skeleton(source_skeleton: Sequence[str], notation: str) -> None:
+    """The translation's commands, but the layout, must equal the original's."""
+    require_same_commands(ENGINE, tuple(source_skeleton), notation_skeleton(notation), "".join)
 
 
 def message_characters(notation: str) -> set[str]:
