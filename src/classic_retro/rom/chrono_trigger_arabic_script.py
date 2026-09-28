@@ -9,7 +9,11 @@ the player may change. Every other message stays in English.
 Each original is pinned by its string table (``STRING_TABLE``, $F7:0000: the
 opening's), its number there and the SHA-256 of its bytes (its zero
 included), so the translation can be checked without the ROM and the build
-refuses another text.
+refuses another text. Its command skeleton
+(``engines.chrono_trigger.command_skeleton``: its codes with their bytes, but
+the layout) may be pinned too, so the translation's commands are checked
+without the ROM as the build checks them against the ROM's; the build's
+report carries every original's, for pinning.
 
 The Arabic lives in ``classic_retro/translations/chrono-trigger.json``: logical
 Unicode Arabic in the engine's notation (``engines.chrono_trigger_arabic``): a
@@ -29,22 +33,25 @@ STRING_TABLE = 0x370000
 
 @dataclass(frozen=True, slots=True)
 class ChronoTriggerMessage:
-    """A translated message: its entry, its table and number, and its original's
-    SHA-256."""
+    """A translated message: its entry, its table and number, its original's SHA-256
+    and, when pinned, its original's command skeleton."""
 
     key: str
     table: int
     index: int
     source_sha256: str
     notation: str
+    source_skeleton: tuple[str, ...] | None = None
 
 
-# key: (the message's number in STRING_TABLE, SHA-256 of its bytes with the zero)
+# key: (the message's number in STRING_TABLE, SHA-256 of its bytes with the zero, its
+# commands; None until a maintainer pins them from the ROM, as the build's report
+# gives them)
 # fmt: off
-_SOURCES: dict[str, tuple[int, str]] = {
-    "opening.get_up": (6, "20455acd161dc69469d5fbd332d0f231a9355414c51f913b433257da9f6d5b09"),
-    "opening.the_fair": (8, "ce65e4dd6b46292b2fd40f2a524a7dfc9690dcb387282fd1135da8f375128809"),
-    "opening.lucca": (11, "3cfee175c793fe5da8e60959975fa5ceda92e15c668df2b545d27638a747bfba"),
+_SOURCES: dict[str, tuple[int, str, tuple[str, ...] | None]] = {
+    "opening.get_up": (6, "20455acd161dc69469d5fbd332d0f231a9355414c51f913b433257da9f6d5b09", None),
+    "opening.the_fair": (8, "ce65e4dd6b46292b2fd40f2a524a7dfc9690dcb387282fd1135da8f375128809", None),
+    "opening.lucca": (11, "3cfee175c793fe5da8e60959975fa5ceda92e15c668df2b545d27638a747bfba", None),
 }
 # fmt: on
 
@@ -57,6 +64,6 @@ def chrono_trigger_arabic_messages(
     """Every translated message, in the order of the table."""
     texts = (translations or builtin_translation_set(TARGET)).texts(tuple(_SOURCES))
     return tuple(
-        ChronoTriggerMessage(key, STRING_TABLE, index, digest, texts[key])
-        for key, (index, digest) in _SOURCES.items()
+        ChronoTriggerMessage(key, STRING_TABLE, index, digest, texts[key], skeleton)
+        for key, (index, digest, skeleton) in _SOURCES.items()
     )

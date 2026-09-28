@@ -26,6 +26,13 @@ the text out in lines as wide as the game's itself, a word at a time, and ends
 a line with ``{N}`` where the next word would not fit; ``{N}`` in the
 translation ends a line where it stands. A name the game writes is reckoned as
 wide as a long one (``ISLAND_WIDTHS``).
+
+A translation keeps the original's commands: its skeleton
+(``notation_skeleton``: every tag but ``{N}``, in order, as the notation
+writes it) must equal the original's (``engines.sf2.command_skeleton``), which
+leaves out the same layout the encoder writes itself: the new line
+(``engines.sf2.LAYOUT_COMMANDS``). ``validate_command_skeleton`` refuses a
+translation that drops, adds or moves any other tag.
 """
 
 from __future__ import annotations
@@ -49,6 +56,7 @@ from classic_retro.engines.sf2 import (
     SPACE,
     TAGS,
     TAGS_WITH_ARGUMENT,
+    command_skeleton,
 )
 from classic_retro.font.arabic_outline import contextual_font_data, joins_right_neighbour
 from classic_retro.font.glyph_raster import (
@@ -64,9 +72,11 @@ from classic_retro.font.glyph_raster import (
     separated_dots,
 )
 from classic_retro.font.previews import glyph_atlas, preview_sheet
+from classic_retro.text.commands import require_same_commands
 from classic_retro.text.tokens import TextToken, TokenStream
 
 PROFILE = "Shining Force II Arabic"
+ENGINE = "Shining Force II"
 # A symbol of an Arabic string below the commands is a glyph of the Arabic font,
 # but 7C and 7D, which the game draws without a pause; the space keeps the game's
 # symbol, which speaks no sound.
@@ -348,6 +358,21 @@ def _words(segment: str) -> list[str]:
 def _segments(notation: str) -> list[str]:
     """The notation cut at each ``{N}``: the lines it asks for."""
     return notation.split("{N}")
+
+
+def notation_skeleton(notation: str) -> tuple[str, ...]:
+    """A translation's tags in order, in the notation, ``{N}`` left out: what
+    ``engines.sf2.command_skeleton`` gives for the symbols the encoder writes."""
+    return tuple(
+        part
+        for match in _TOKEN.finditer(notation)
+        for part in command_skeleton(command(match.group(1)).data)
+    )
+
+
+def validate_command_skeleton(source_skeleton: Sequence[str], notation: str) -> None:
+    """The translation's commands, but the layout, must equal the original's."""
+    require_same_commands(ENGINE, tuple(source_skeleton), notation_skeleton(notation), "".join)
 
 
 def message_characters(notation: str) -> set[str]:

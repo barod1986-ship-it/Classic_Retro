@@ -8,17 +8,23 @@ and ships as a BPS patch of it. The overlay:
    (``SITES``, ``ANCHORS``: the engine's code where the hooks go back to or call,
    its tables of widths, lines and settings, its font's address), that the
    room of the hooks (``HOOK_ROOM_START`` to ``HOOK_ROOM_END``, free bytes of
-   bank $0E) is empty, and each translated message's original (its number and
-   the SHA-256 of its bytes);
+   bank $0E) is empty, and each translated message's original (its number, the
+   SHA-256 of its bytes and, where pinned, its commands);
 2. adds a second MiB to the ROM (``EXPANDED_SIZE``, ``EXPANSION_FILL``), banks
    $20 to $3F, and says so in the header;
-3. draws the translation's glyphs (``engines.alttp_arabic``), encodes each
+3. draws the translation's glyphs (``engines.alttp_arabic``), holds each
+   translation's commands against its original's (``command_skeleton``:
+   everything but the layout the encoder writes itself), encodes each
    message and writes the hooks (``alttp_arabic_hooks.s``) into their room, and
    into the added banks the list that sends each translated message to its
    Arabic (``REDIRECTS``), the glyphs' widths and pixels and the Arabic messages;
 4. puts a jump or call to a hook in place of four places of the engine
    (``SITES``);
-5. sets the header's checksum.
+5. sets the header's checksum;
+6. reads everything back from the image before accepting it: the hooks, the
+   sites, the list, the widths, the font, and each Arabic message through the
+   list as the hooks find it (``read_redirects``, ``read_arabic_message``),
+   with the translation's commands; and proves nothing else changed.
 
 The English messages stay where they were, as they were: a translated one is
 parsed from its Arabic instead, and the hooks tell an Arabic message by its
@@ -38,7 +44,11 @@ from pathlib import Path
 
 from classic_retro.arabic.glyph_codes import GlyphCodes
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
+from classic_retro.cpu.m65816 import jmp_abs, jsr_abs, nop_fill
 from classic_retro.engines.alttp import (
+    END,
+    byte_length,
+    command_skeleton,
     dictionary,
     lorom_address,
     lorom_offset,
@@ -57,6 +67,8 @@ from classic_retro.engines.alttp_arabic import (
     message_characters,
     message_preview,
     messages_sheet,
+    notation_skeleton,
+    validate_command_skeleton,
 )
 from classic_retro.localization.translations import TranslationSet
 from classic_retro.patching.hooks import HookProgram
@@ -128,15 +140,6 @@ HOOKS = HookProgram(
 )
 PATCH_NAME = "link-to-the-past-usa-arabic-opening.bps"
 
-JMP = 0x4C
-JSR = 0x20
-NOP = 0xEA
-
-
-def _short(opcode: int, target: int, length: int) -> bytes:
-    """A jump or call within the bank, then NOPs to ``length`` bytes."""
-    return bytes((opcode, target & 0xFF, target >> 8 & 0xFF)) + bytes((NOP,) * (length - 3))
-
 
 @dataclass(frozen=True, slots=True)
 class Site:
@@ -148,11 +151,13 @@ class Site:
     what: str
 
 
+# The hooks are in the engine's bank, so a site jumps or calls within it,
+# filled with NOPs to its length (``cpu.m65816``).
 SITES = (
     Site(
         0x0EC4E2,
         bytes.fromhex("c230adf01c"),
-        _short(JMP, HOOKS.symbol_address("parse_hook"), 5),
+        nop_fill(jmp_abs(0x0EC4E2, HOOKS.symbol_address("parse_hook")), 5),
         "RenderText_ParseMessage (REP #$30; LDA $1CF0): a translated message, from its Arabic",
     ),
     Site(
@@ -164,13 +169,13 @@ SITES = (
     Site(
         0x0ECAD5,
         bytes.fromhex("205ecb"),
-        _short(JSR, HOOKS.symbol_address("draw_hook"), 3),
+        jsr_abs(0x0ECAD5, HOOKS.symbol_address("draw_hook")),
         "RenderText_DrawSingleCharacter's JSR RenderText_PerformVWFing: an Arabic glyph",
     ),
     Site(
         0x0ED313,
         bytes.fromhex("add01c186921008dd01c"),
-        _short(JSR, HOOKS.symbol_address("tilemap_hook"), 10),
+        nop_fill(jsr_abs(0x0ED313, HOOKS.symbol_address("tilemap_hook")), 10),
         "RenderText_DrawACharacter's first row ($1CD0 + $21): a tile further right in Arabic",
     ),
 )
@@ -252,7 +257,8 @@ def verify_rom(rom: bytes) -> None:
 
 
 def _verify_source(rom: bytes, message: AlttpMessage) -> bytes:
-    """The message's English bytes, its end included, as pinned."""
+    """The message's English bytes, its end included, as pinned: its hash and, where
+    pinned, its commands."""
     stored = messages(rom)
     if message.index >= len(stored):
         raise ClassicRetroError(
@@ -264,7 +270,17 @@ def _verify_source(rom: bytes, message: AlttpMessage) -> bytes:
             ErrorCode.SOURCE_BASELINE_MISMATCH,
             f"{message.key}: message {message.index:#x} differs from the pinned text",
         )
+    if message.source_skeleton is not None and command_skeleton(data) != message.source_skeleton:
+        raise ClassicRetroError(
+            ErrorCode.SOURCE_BASELINE_MISMATCH,
+            f"{message.key}: message {message.index:#x} has different commands than pinned",
+        )
     return data
+
+
+def source_skeletons(rom: bytes, translated: Sequence[AlttpMessage]) -> dict[str, tuple[str, ...]]:
+    """Every original's commands (``command_skeleton``), verified, by entry id."""
+    return {message.key: command_skeleton(_verify_source(rom, message)) for message in translated}
 
 
 # ---------------------------------------------------------------------------
@@ -279,12 +295,22 @@ def messages_characters(translated: Sequence[AlttpMessage]) -> set[str]:
 
 
 def encode_messages(
-    translated: Sequence[AlttpMessage], encoder: AlttpArabicEncoder
+    translated: Sequence[AlttpMessage],
+    encoder: AlttpArabicEncoder,
+    skeletons: Mapping[str, tuple[str, ...]] | None = None,
 ) -> dict[str, EncodedMessage]:
+    """Every message held against its original's commands, then encoded.
+
+    The commands are the ROM's (``skeletons``, from ``source_skeletons``) or,
+    without the ROM, those pinned in the script, where they are.
+    """
     encoded: dict[str, EncodedMessage] = {}
     for message in translated:
         if message.key in encoded:
             raise ClassicRetroError(ErrorCode.DUPLICATE_ENTRY_ID, f"Message {message.key} twice")
+        skeleton = message.source_skeleton if skeletons is None else skeletons[message.key]
+        if skeleton is not None:
+            validate_command_skeleton(skeleton, message.notation)
         encoded[message.key] = encoder.encode(message.notation)
     numbers = [message.index for message in translated]
     if len(set(numbers)) != len(numbers):
@@ -358,13 +384,12 @@ def build_alttp_arabic_rom(
         verify_usa_image(rom)
     verify_rom(rom)
     translated = translated or alttp_arabic_messages(translations)
-    for message in translated:
-        _verify_source(rom, message)
+    skeletons = source_skeletons(rom, translated)
 
     used = messages_characters(translated)
     glyph_map = alttp_glyph_codes(used)
     font = build_alttp_font(font_path, glyph_map, used)
-    encoded = encode_messages(translated, AlttpArabicEncoder(glyph_map, font))
+    encoded = encode_messages(translated, AlttpArabicEncoder(glyph_map, font), skeletons)
 
     output = bytearray(rom) + bytes((EXPANSION_FILL,)) * (EXPANDED_SIZE - len(rom))
     writes = {HOOK_ADDRESS: HOOK_CODE, **data_writes(translated, encoded, font)}
@@ -377,7 +402,7 @@ def build_alttp_arabic_rom(
     output[ROM_SIZE_BYTE] = ROM_SIZE_CODES[EXPANDED_SIZE]
     checksum = set_checksum(output)
     result = bytes(output)
-    _verify_output(result, rom, writes)
+    _verify_output(result, rom, writes, translated, encoded)
     patch = create_bps(rom, result)
     report: dict[str, object] = {
         **base_report(IMAGE.title, rom, result, patch),
@@ -388,6 +413,8 @@ def build_alttp_arabic_rom(
                 "pages": [
                     [line.width for line in page] for page in encoded[message.key].pages or ()
                 ],
+                # The original's commands, as the script pins them.
+                "source_skeleton": list(skeletons[message.key]),
             }
             for message in translated
         },
@@ -408,11 +435,86 @@ def _code_range(glyph_map: GlyphCodes) -> str:
     return f"{min(codes):02X}..{max(codes):02X}"
 
 
-def _verify_output(output: bytes, original: bytes, writes: Mapping[int, bytes]) -> None:
-    """Only the sites, the hooks, the header and the added banks changed, and the
-    checksum holds."""
+def read_redirects(rom: bytes) -> dict[int, int]:
+    """The list of translated messages as the hooks read it: each message's number and
+    its Arabic's address, to the $FFFF that ends it."""
+    found: dict[int, int] = {}
+    at = lorom_offset(REDIRECTS)
+    while at + REDIRECT_ENTRY <= lorom_offset(ARABIC_WIDTHS):
+        index, low, bank = struct.unpack_from("<HHB", rom, at)
+        if index == 0xFFFF:
+            return found
+        found[index] = bank << 16 | low
+        at += REDIRECT_ENTRY
+    raise ClassicRetroError(
+        ErrorCode.BUILD_VALIDATION_FAILED, "The list of translated messages has no end"
+    )
+
+
+def read_arabic_message(rom: bytes, address: int) -> bytes:
+    """An Arabic message's bytes, its end included, as the hooks read them: a glyph a
+    byte, a command with its own, within its bank."""
+    start = at = lorom_offset(address)
+    bank_end = lorom_offset(address | 0xFFFF) + 1
+    while at < bank_end:
+        code = rom[at]
+        at += byte_length(code)
+        if code == END:
+            return bytes(rom[start:at])
+    raise ClassicRetroError(
+        ErrorCode.BUILD_VALIDATION_FAILED, f"The Arabic message at ${address:06X} has no end"
+    )
+
+
+def _verify_output(
+    output: bytes,
+    original: bytes,
+    writes: Mapping[int, bytes],
+    translated: Sequence[AlttpMessage],
+    encoded: Mapping[str, EncodedMessage],
+) -> None:
+    """Everything written reads back, only the sites, the hooks, the header and the
+    added banks changed, and the checksum holds."""
     if len(output) != EXPANDED_SIZE or output[ROM_SIZE_BYTE] != ROM_SIZE_CODES[EXPANDED_SIZE]:
         raise ClassicRetroError(ErrorCode.BUILD_VALIDATION_FAILED, "The ROM is not 2 MiB")
+    if _read(output, HOOK_ADDRESS, len(HOOK_CODE)) != HOOK_CODE:
+        raise ClassicRetroError(
+            ErrorCode.BUILD_VALIDATION_FAILED, "The hook code does not read back"
+        )
+    for site in SITES:
+        if _read(output, site.address, len(site.patched)) != site.patched:
+            raise ClassicRetroError(
+                ErrorCode.BUILD_VALIDATION_FAILED,
+                f"The site at ${site.address:06X} does not read back",
+            )
+    names = {
+        HOOK_ADDRESS: "The hook code",
+        REDIRECTS: "The list of translated messages",
+        ARABIC_WIDTHS: "The width table",
+        ARABIC_FONT: "The font table",
+    }
+    for address, data in writes.items():
+        if _read(output, address, len(data)) != data:
+            what = names.get(address, f"The Arabic text at ${address:06X}")
+            raise ClassicRetroError(ErrorCode.BUILD_VALIDATION_FAILED, f"{what} does not read back")
+    redirects = read_redirects(output)
+    if list(redirects) != [message.index for message in translated]:
+        raise ClassicRetroError(
+            ErrorCode.BUILD_VALIDATION_FAILED,
+            "The list of translated messages does not read back in order",
+        )
+    for message in translated:
+        data = read_arabic_message(output, redirects[message.index])
+        if data != encoded[message.key].data:
+            raise ClassicRetroError(
+                ErrorCode.BUILD_VALIDATION_FAILED,
+                f"{message.key}: the Arabic message does not read back through the list",
+            )
+        if command_skeleton(data) != notation_skeleton(message.notation):
+            raise ClassicRetroError(
+                ErrorCode.BUILD_VALIDATION_FAILED,
+                f"{message.key}: the Arabic message read back has other commands",
+            )
     allowed = [(lorom_offset(site.address), len(site.patched)) for site in SITES]
     allowed += [
         (lorom_offset(address), len(data))
@@ -528,6 +630,21 @@ def extract_originals(
     return {
         message.key: message_notation(_verify_source(rom, message), words) for message in translated
     }
+
+
+def extract_skeletons(
+    rom: bytes,
+    translations: TranslationSet | None = None,
+    *,
+    translated: tuple[AlttpMessage, ...] | None = None,
+    verify_identity: bool = True,
+) -> dict[str, tuple[str, ...]]:
+    """Every pinned original's commands, verified, by entry id: what a maintainer pins
+    as ``source_skeleton`` in the script, so the translations are checked without the
+    ROM. The build's report carries the same."""
+    if verify_identity:
+        verify_usa_image(rom)
+    return source_skeletons(rom, translated or alttp_arabic_messages(translations))
 
 
 def message_address(rom: bytes, index: int) -> int:

@@ -15,8 +15,12 @@ from classic_retro.engines.chrono_trigger import (
     CHARACTERS,
     DICTIONARY_BANK,
     DICTIONARY_TABLE,
+    LAYOUT_CODES,
     LINE,
     LINE_INDENTED,
+    WIDE_CHARACTERS,
+    code_notation,
+    command_skeleton,
     dictionary,
     string_bytes,
     string_notation,
@@ -52,8 +56,10 @@ from classic_retro.engines.chrono_trigger_arabic import (
     hand_drawn_glyph,
     message_characters,
     message_preview,
+    notation_skeleton,
     paint_text,
     shaded_glyph,
+    validate_command_skeleton,
 )
 from classic_retro.font.glyph_raster import FormDoesNotFit
 
@@ -122,6 +128,50 @@ def test_the_notation_writes_words_names_and_codes(rom):
     with pytest.raises(ClassicRetroError) as caught:
         string_notation(bytes([0x03]), words)
     assert caught.value.code is ErrorCode.MISSING_TERMINATOR
+
+
+def test_the_command_skeleton_keeps_every_code_but_the_layout_and_the_characters():
+    assert LAYOUT_CODES == set(range(0x05, 0x0D)) and WIDE_CHARACTERS == {0x01, 0x02}
+    data = _code("MOM: ") + bytes(
+        [0x21, LINE_INDENTED, 0x15, 0x03, 0x0F, 0xDE, 0x09, 0x1B, 0x10, 0x01, 0x40, 0x1A]
+    )
+    skeleton = ("{Lucca}", "{pause 0F}", "{member 1}", "{code 10}", "{Crono}")
+    assert command_skeleton(data) == command_skeleton(data + bytes([0x00, 0x13])) == skeleton
+    # Arabic glyph codes, from $21, are text; the codes below keep their meaning.
+    assert command_skeleton(bytes([0x21, 0xFF, 0x0C, 0x15, 0x00])) == ("{Lucca}",)
+    assert command_skeleton(_code("Go!") + b"\x00") == ()
+    assert code_notation(0x15) == "{Lucca}" and code_notation(0x03, 0x1F) == "{pause 1F}"
+    assert code_notation(0x12, 0x02) == "{code 12 02}" and code_notation(0x10) == "{code 10}"
+    for code, argument in ((0x15, 1), (0x03, None)):
+        with pytest.raises(ClassicRetroError) as caught:
+            code_notation(code, argument)
+        assert caught.value.code is ErrorCode.UNSUPPORTED_CONTROL_CODE
+    with pytest.raises(ClassicRetroError) as caught:
+        command_skeleton(bytes([0x12]))
+    assert caught.value.code is ErrorCode.MISSING_TERMINATOR
+
+
+def test_a_translations_skeleton_is_its_names_but_the_line_ends():
+    notation = "ب: {Lucca} ب{line}ب\n{Crono} ب"
+    assert notation_skeleton(notation) == ("{Lucca}", "{Crono}")
+    assert notation_skeleton("ب{line}ب\nب") == ()
+    # What the encoder writes has the same skeleton, whatever its layout.
+    glyph_map = _map(notation)
+    encoded = ChronoTriggerArabicEncoder(glyph_map, _font(glyph_map)).encode(notation)
+    assert command_skeleton(encoded.data) == notation_skeleton(notation)
+    validate_command_skeleton(("{Lucca}",), "ب {Lucca}")
+    for source, translation in (
+        (("{Lucca}",), "ب"),
+        ((), "ب {Lucca}"),
+        (("{Lucca}", "{Crono}"), "{Crono} ب {Lucca}"),
+        (("{pause 0F}",), "ب"),
+    ):
+        with pytest.raises(ClassicRetroError) as caught:
+            validate_command_skeleton(source, translation)
+        assert caught.value.code is ErrorCode.TOKEN_ORDER_VIOLATION
+    with pytest.raises(ClassicRetroError) as caught:
+        notation_skeleton("{pause 0F}")
+    assert caught.value.code is ErrorCode.UNSUPPORTED_CONTROL_CODE
 
 
 def test_a_table_points_into_its_own_bank():

@@ -27,6 +27,17 @@ A string's notation writes its characters as text, a dictionary word as its
 characters and every other code as a ``{token}``. The codes' routines are in
 the table at $C2:5903 (``TextCtrlCodeTable`` in the dscotton/ct_disassembly
 disassembly).
+
+A string's command skeleton (``command_skeleton``) is its codes below the
+dictionary in that notation, in order, each with its byte, but the layout
+codes (``LAYOUT_CODES``, ``05``-``0C``): the new line and the new box, plain
+or indented, kept waiting for the button or not, which the Arabic encoder
+writes itself as it lays its own lines and boxes out; nor the characters of
+two bytes (``WIDE_CHARACTERS``), which are text. A translation must keep
+the rest: the pauses, the names, the numbers, the words and any code it
+cannot write. The skeleton skips every byte from the dictionary on, so it
+reads an Arabic string (``engines.chrono_trigger_arabic``), whose glyph codes
+replace the characters and dictionary words, as it reads an English one.
 """
 
 from __future__ import annotations
@@ -81,6 +92,11 @@ TOKENS = {
 }
 # Codes followed by one byte of their own.
 WITH_BYTE = frozenset((0x01, 0x02, PAUSE, 0x12))
+# The characters of two bytes: text, not commands.
+WIDE_CHARACTERS = frozenset((0x01, 0x02))
+# The codes the Arabic encoder writes itself, laying its own lines and boxes
+# out; a translation keeps every other code (``command_skeleton``).
+LAYOUT_CODES = frozenset(range(LINE, BOX_INDENTED + 1))
 
 
 class ChronoTriggerEngineAdapter(EngineAdapter):
@@ -117,31 +133,71 @@ def character(code: int) -> str:
     return text
 
 
+def code_notation(code: int, argument: int | None = None) -> str:
+    """A code below the dictionary as the notation writes it: ``{line+}``, ``{Lucca}``,
+    ``{pause 0F}`` with its byte, ``{code 10}`` for one without a name."""
+    if (argument is None) == (code in WITH_BYTE):
+        raise ClassicRetroError(
+            ErrorCode.UNSUPPORTED_CONTROL_CODE,
+            f"Code {code:#04x} takes {'a byte' if code in WITH_BYTE else 'no byte'}",
+        )
+    if argument is not None:
+        name = "pause" if code == PAUSE else f"code {code:02X}"
+        return f"{{{name} {argument:02X}}}"
+    return f"{{{TOKENS[code]}}}" if code in TOKENS else f"{{code {code:02X}}}"
+
+
+def _code_at(data: bytes, at: int) -> tuple[int, int | None, int]:
+    """The code at ``at``: itself, its byte (or None) and its length."""
+    code = data[at]
+    if code not in WITH_BYTE:
+        return code, None, 1
+    if at + 1 >= len(data):
+        raise ClassicRetroError(ErrorCode.MISSING_TERMINATOR, f"Code {code:#04x} lacks its byte")
+    return code, data[at + 1], 2
+
+
+def command_skeleton(data: bytes) -> tuple[str, ...]:
+    """The string's commands in order, in the notation, but the layout codes and the
+    characters of two bytes.
+
+    ``data`` is a string with its zero or without; every byte from the
+    dictionary on (a word, a character, an Arabic glyph) is skipped.
+    """
+    skeleton: list[str] = []
+    at = 0
+    while at < len(data):
+        code = data[at]
+        if code == END:
+            break
+        if code >= DICTIONARY_CODES[0]:
+            at += 1
+            continue
+        code, argument, length = _code_at(data, at)
+        if code not in LAYOUT_CODES and code not in WIDE_CHARACTERS:
+            skeleton.append(code_notation(code, argument))
+        at += length
+    return tuple(skeleton)
+
+
 def string_notation(data: bytes, words: tuple[bytes, ...]) -> str:
     """A string's notation (``data`` without its zero, or with it)."""
     text = []
     at = 0
     while at < len(data):
         code = data[at]
-        at += 1
         if code == END:
             break
         if code >= FIRST_CHARACTER:
             text.append(character(code))
+            at += 1
         elif code in DICTIONARY_CODES:
             text.append("".join(character(byte) for byte in words[code - DICTIONARY_CODES[0]]))
-        elif code in WITH_BYTE:
-            if at >= len(data):
-                raise ClassicRetroError(
-                    ErrorCode.MISSING_TERMINATOR, f"Code {code:#04x} lacks its byte"
-                )
-            name = "pause" if code == PAUSE else f"code {code:02X}"
-            text.append(f"{{{name} {data[at]:02X}}}")
             at += 1
-        elif code in TOKENS:
-            text.append(f"{{{TOKENS[code]}}}")
         else:
-            text.append(f"{{code {code:02X}}}")
+            code, argument, length = _code_at(data, at)
+            text.append(code_notation(code, argument))
+            at += length
     return "".join(text)
 
 

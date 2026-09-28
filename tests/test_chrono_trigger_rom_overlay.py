@@ -99,7 +99,7 @@ def _digest(data: bytes) -> str:
 def _messages(rom: bytes | None = None) -> tuple[ChronoTriggerMessage, ...]:
     rom = rom or _rom()
     out = []
-    for key, (index, _) in script._SOURCES.items():
+    for key, (index, _, _) in script._SOURCES.items():
         (pointer,) = struct.unpack_from("<H", rom, TABLE + 2 * index)
         at = TABLE + pointer
         data = rom[at : rom.index(b"\x00", at) + 1]
@@ -311,3 +311,84 @@ def test_the_command_group_checks_and_encodes(capsys):
     # Initial and final beh, the space, the name's code, the zero.
     assert encoded["count"] == 5 and encoded["bytes"].split()[-2:] == ["13", "00"]
     assert "boxes" not in encoded
+
+
+def test_the_output_is_read_back_before_it_is_accepted(built):
+    rom, result = built
+    messages = _messages()
+    encoded = overlay.encode_messages(
+        messages, engine.ChronoTriggerArabicEncoder(_map_all(), result.font)
+    )
+    writes = overlay.room_data(rom, messages, encoded, result.font)
+    overlay._verify_output(result.rom, rom, writes, messages, encoded)
+    redirects = overlay.read_redirects(result.rom)
+    assert list(redirects) == [overlay.message_address(rom, message) for message in messages]
+    a_glyph = next(iter(result.font.glyphs)) - engine.ARABIC_CODES[0]
+    for address, what in (
+        (overlay.HOOK_ADDRESS + 3, "hook code"),
+        (overlay.SITES[1].address + 1, "site at $C258B2"),
+        (overlay.REDIRECTS + 2, "list of translated messages"),
+        (overlay.ARABIC_WIDTHS + a_glyph, "width table"),
+        (overlay.ARABIC_FONT + 48 * a_glyph + 1, "font table"),
+        (overlay.MESSAGES + 1, "Arabic text"),
+        (0xC00000 + TABLE + 30, "outside its places"),
+    ):
+        tampered = bytearray(result.rom)
+        tampered[overlay.rom_offset(address)] ^= 0x01
+        with pytest.raises(ClassicRetroError) as caught:
+            overlay._verify_output(bytes(tampered), rom, writes, messages, encoded)
+        assert caught.value.code is ErrorCode.BUILD_VALIDATION_FAILED, what
+        assert what in str(caught.value), what
+    # A list that sends a message elsewhere than its Arabic is caught through the reader.
+    elsewhere = bytearray(result.rom)
+    struct.pack_into("<HB", elsewhere, overlay.rom_offset(overlay.REDIRECTS + 3), 0xB410, 0xDB)
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay._verify_output(bytes(elsewhere), rom, writes, messages, encoded)
+    assert caught.value.code is ErrorCode.BUILD_VALIDATION_FAILED
+    unended = bytearray(result.rom)
+    unended[overlay.rom_offset(overlay.REDIRECTS) : overlay.rom_offset(overlay.ARABIC_WIDTHS)] = (
+        b"\x01" * (overlay.ARABIC_WIDTHS - overlay.REDIRECTS)
+    )
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.read_redirects(bytes(unended))
+    assert caught.value.code is ErrorCode.BUILD_VALIDATION_FAILED
+
+
+def test_a_translation_keeps_the_originals_commands(font_path):
+    """Lucca's message writes her name. The build holds each translation against the ROM's
+    commands, the check against the pinned ones."""
+    rom = _rom()
+    get_up, _, lucca = _messages()
+    for notation in (
+        "الأم: صحيح!",  # the name dropped
+        "الأم: صحيح، {Lucca} {Crono}!",  # a name added
+        "الأم: صحيح، {Marle}!",  # another name
+    ):
+        with pytest.raises(ClassicRetroError) as caught:
+            _build(rom, font_path, messages=(dataclasses.replace(lucca, notation=notation),))
+        assert caught.value.code is ErrorCode.TOKEN_ORDER_VIOLATION, notation
+    kept = _build(rom, font_path, messages=(get_up, lucca))
+    assert kept.report["messages"]["opening.lucca"]["source_skeleton"] == ["{Lucca}"]
+    assert kept.report["messages"]["opening.get_up"]["source_skeleton"] == []
+    # A pinned skeleton is held against the ROM's, at the build and at the extraction.
+    pinned = dataclasses.replace(lucca, source_skeleton=("{Lucca}",))
+    assert _build(rom, font_path, messages=(pinned,)).rom
+    wrong = dataclasses.replace(lucca, source_skeleton=("{Crono}",))
+    with pytest.raises(ClassicRetroError) as caught:
+        _build(rom, font_path, messages=(wrong,))
+    assert caught.value.code is ErrorCode.SOURCE_BASELINE_MISMATCH
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.extract_originals(rom, messages=(wrong,), verify_identity=False)
+    assert caught.value.code is ErrorCode.SOURCE_BASELINE_MISMATCH
+    # Without the ROM, the pinned skeleton is what the translation is held against.
+    encoder = engine.ChronoTriggerArabicEncoder(_map_all())
+    assert overlay.encode_messages((pinned,), encoder)["opening.lucca"].data.endswith(b"\x00")
+    dropped = dataclasses.replace(pinned, notation="الأم: صحيح!")
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.encode_messages((dropped,), encoder)
+    assert caught.value.code is ErrorCode.TOKEN_ORDER_VIOLATION
+    assert overlay.extract_skeletons(rom, messages=_messages(), verify_identity=False) == {
+        "opening.get_up": (),
+        "opening.the_fair": (),
+        "opening.lucca": ("{Lucca}",),
+    }

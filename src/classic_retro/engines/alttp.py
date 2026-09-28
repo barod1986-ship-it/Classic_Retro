@@ -26,6 +26,16 @@ disassembly.
 A message's notation writes its characters as text, a dictionary word as its
 characters, a sign of the font that is not a letter as a ``{token}`` and a
 command as a ``{token}`` too, with its byte as two hex digits.
+
+A message's command skeleton (``command_skeleton``) is its commands in that
+notation, in order, each with its byte, but the layout commands
+(``LAYOUT_COMMANDS``): the line to write on, the scroll and the wait for the
+button between pages, which the Arabic encoder writes itself as it lays its
+own lines and pages out. A translation must keep the rest: the name, the
+window, the speed, the waits, the sounds, the colours, the numbers and any
+command it cannot write. The skeleton skips every byte that is not a command,
+so it reads an Arabic message (``engines.alttp_arabic``), whose glyph codes
+replace the characters and dictionary words, as it reads an English one.
 """
 
 from __future__ import annotations
@@ -114,6 +124,9 @@ SCROLL = COMMAND_CODES["Scroll"]
 LINE_2 = COMMAND_CODES["2"]
 LINE_3 = COMMAND_CODES["3"]
 WAIT_KEY = COMMAND_CODES["Waitkey"]
+# The commands the Arabic encoder writes itself, laying its own lines and pages
+# out; a translation keeps every other command (``command_skeleton``).
+LAYOUT_COMMANDS = frozenset((COMMAND_CODES["1"], LINE_2, LINE_3, SCROLL, WAIT_KEY))
 
 
 class AlttpEngineAdapter(EngineAdapter):
@@ -183,6 +196,48 @@ def character(code: int) -> str:
         raise ClassicRetroError(ErrorCode.UNKNOWN_TEXT_BYTE, f"No character {code:#04x}") from None
 
 
+def command_notation(code: int, argument: int | None = None) -> str:
+    """A command as the notation writes it: ``{Name}``, or ``{Wait 01}`` with its byte."""
+    name, length = COMMANDS[code]
+    if (argument is None) != (length == 1):
+        raise ClassicRetroError(
+            ErrorCode.UNSUPPORTED_CONTROL_CODE,
+            f"{{{name}}} takes {'a byte' if length == 2 else 'no byte'}",
+        )
+    return f"{{{name}}}" if argument is None else f"{{{name} {argument:02X}}}"
+
+
+def _command_at(data: bytes, at: int) -> tuple[int, int | None, int]:
+    """The command at ``at``: its code, its byte (or None) and its length."""
+    code = data[at]
+    length = COMMANDS[code][1]
+    if at + length > len(data):
+        raise ClassicRetroError(ErrorCode.MISSING_TERMINATOR, f"Command {code:#04x} lacks its byte")
+    return code, data[at + 1] if length == 2 else None, length
+
+
+def command_skeleton(data: bytes) -> tuple[str, ...]:
+    """The message's commands in order, in the notation, but the layout commands.
+
+    ``data`` is a message with its end or without; every byte that is not a
+    command (a character, a dictionary word, an Arabic glyph) is skipped.
+    """
+    skeleton: list[str] = []
+    at = 0
+    while at < len(data):
+        code = data[at]
+        if code == END:
+            break
+        if code not in COMMANDS:
+            at += 1
+            continue
+        code, argument, length = _command_at(data, at)
+        if code not in LAYOUT_COMMANDS:
+            skeleton.append(command_notation(code, argument))
+        at += length
+    return tuple(skeleton)
+
+
 def message_notation(data: bytes, words: tuple[bytes, ...]) -> str:
     """A message's notation (``data`` with its end or without)."""
     text = []
@@ -195,12 +250,8 @@ def message_notation(data: bytes, words: tuple[bytes, ...]) -> str:
             text.append(character(code))
             at += 1
         elif code in COMMANDS:
-            name, length = COMMANDS[code]
-            if at + length > len(data):
-                raise ClassicRetroError(
-                    ErrorCode.MISSING_TERMINATOR, f"Command {code:#04x} lacks its byte"
-                )
-            text.append(f"{{{name} {data[at + 1]:02X}}}" if length == 2 else f"{{{name}}}")
+            code, argument, length = _command_at(data, at)
+            text.append(command_notation(code, argument))
             at += length
         elif code in DICTIONARY_CODES:
             text.append("".join(character(byte) for byte in words[code - DICTIONARY_CODES[0]]))

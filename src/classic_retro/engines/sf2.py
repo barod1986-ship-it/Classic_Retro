@@ -25,6 +25,15 @@ A symbol is:
 The names follow the ShiningForceCentral/SF2DISASM disassembly: its tags are
 the notation's (``{N}``, ``{W1}``, ``{LEADER}``...), and a string's notation writes
 its characters as text and every command as its tag.
+
+A string's command skeleton (``command_skeleton``) is its commands in that
+notation, in order, each with its argument, but the layout command
+(``LAYOUT_COMMANDS``): the new line, which the Arabic encoder writes itself
+as it lays its own lines out. A translation must keep the rest: the waits,
+the pauses, the window cleared, the names, items, spells, classes and numbers
+the game writes, the colours. The skeleton skips every symbol below the
+commands, so it reads an Arabic string (``engines.sf2_arabic``), whose glyph
+codes replace the characters, as it reads an English one.
 """
 
 from __future__ import annotations
@@ -83,6 +92,9 @@ COMMANDS: dict[int, tuple[str, bool]] = {
 TAGS = {tag: symbol for symbol, (tag, argument) in COMMANDS.items() if not argument}
 TAGS_WITH_ARGUMENT = {tag: symbol for symbol, (tag, argument) in COMMANDS.items() if argument}
 NEW_LINE = TAGS["N"]
+# The command the Arabic encoder writes itself, laying its own lines out; a
+# translation keeps every other command (``command_skeleton``).
+LAYOUT_COMMANDS = frozenset((NEW_LINE,))
 
 
 class Sf2EngineAdapter(EngineAdapter):
@@ -197,26 +209,65 @@ def character(symbol: int) -> str:
     return CHARACTERS[symbol - 1]
 
 
+def tag_notation(symbol: int, argument: int | None = None) -> str:
+    """A command as the notation writes it: ``{W2}``, or ``{NAME;0}`` with its argument."""
+    tag, takes_argument = COMMANDS[symbol]
+    if (argument is None) == takes_argument:
+        raise ClassicRetroError(
+            ErrorCode.UNSUPPORTED_CONTROL_CODE,
+            f"{{{tag}}} takes {'an argument' if takes_argument else 'no argument'}",
+        )
+    return f"{{{tag}}}" if argument is None else f"{{{tag};{argument}}}"
+
+
+def _command_at(symbols: Sequence[int], at: int) -> tuple[int, int | None, int]:
+    """The command at ``at``: its symbol, its argument (or None) and its length."""
+    symbol = symbols[at]
+    tag, takes_argument = COMMANDS[symbol]
+    if not takes_argument:
+        return symbol, None, 1
+    if at + 1 >= len(symbols):
+        raise ClassicRetroError(ErrorCode.MISSING_TERMINATOR, f"{{{tag}}} lacks its value")
+    return symbol, symbols[at + 1], 2
+
+
+def command_skeleton(symbols: Sequence[int]) -> tuple[str, ...]:
+    """The string's commands in order, in the notation, but the layout commands.
+
+    ``symbols`` are a string's with its end or without; every symbol below the
+    commands (a character, an Arabic glyph) is skipped.
+    """
+    skeleton: list[str] = []
+    at = 0
+    while at < len(symbols):
+        symbol = symbols[at]
+        if symbol == END:
+            break
+        if symbol < FIRST_COMMAND:
+            at += 1
+            continue
+        symbol, argument, length = _command_at(symbols, at)
+        if symbol not in LAYOUT_COMMANDS:
+            skeleton.append(tag_notation(symbol, argument))
+        at += length
+    return tuple(skeleton)
+
+
 def notation(symbols: Sequence[int]) -> str:
     """Symbols (their end included or not) in the notation."""
     text = []
     at = 0
     while at < len(symbols):
         symbol = symbols[at]
-        at += 1
         if symbol == END:
             break
         if symbol < FIRST_COMMAND:
             text.append(character(symbol))
-            continue
-        tag, argument = COMMANDS[symbol]
-        if argument:
-            if at >= len(symbols):
-                raise ClassicRetroError(ErrorCode.MISSING_TERMINATOR, f"{{{tag}}} lacks its value")
-            text.append(f"{{{tag};{symbols[at]}}}")
             at += 1
-        else:
-            text.append(f"{{{tag}}}")
+            continue
+        symbol, argument, length = _command_at(symbols, at)
+        text.append(tag_notation(symbol, argument))
+        at += length
     return "".join(text)
 
 
