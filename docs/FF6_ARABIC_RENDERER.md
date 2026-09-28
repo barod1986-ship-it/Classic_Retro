@@ -129,7 +129,7 @@ variants, shifted right by 0 to 8 pixels into three bytes a row (45 bytes a vari
 glyph), and the shadow of a glyph at pixel `s` of its tile is the variant `s + 1`. The
 glyphs take codes `20` to `FF` in the font's order (the space, the punctuation, the digits,
 then the repertoire by code point), 224 at most, and their variants take two banks, no glyph
-across one (161 a bank); the first six chapters use 138. The quotes `«` `»` and the brackets
+across one (161 a bank); the first seven chapters use 138. The quotes `«` `»` and the brackets
 `(` `)` are drawn by hand as their mirror images, since a right-to-left run shows them
 mirrored and the painter does not mirror; the opera's note `♪`, which the English writes
 with the font's note icon, is drawn by hand too.
@@ -196,7 +196,7 @@ address to its end within its bank.
 
 ## Translations
 
-`rom/ff6_arabic_script.py` pins the 1884 messages of the first six chapters by their
+`rom/ff6_arabic_script.py` pins the 2164 messages of the first seven chapters by their
 numbers, with the SHA-256 of each and its command skeleton. The Narshe chapter (`narshe`,
 0 to 63; 0 shares 1's text and pointer): the cliffs above Narshe (1-5, their
 `{KeyAfter 18}{Key}` pacing kept), the narration (6-9, centred with `{center}`,
@@ -242,7 +242,14 @@ lines that sit among them: Maranda (`maranda`, 1537-1549), Tzen (`tzen`, 1550-15
 Albrook (`albrook`, 1573-1612), Lone Wolf and Mog in Narshe with the lessons and lines
 near them (`narshe-wolf`, 1734-1766; 1749 is a message of two commands and no text, kept
 as it is), and the world of ruin's dragons, Duncan and Narshe's stone (`ruin`,
-1498-1535; the dragon counts centred). The Arabic is in
+1498-1535; the dragon counts centred). The seventh chapter, 1888-2167, is the end of the
+world: Albrook with Leo, Celes and Shadow, the voyage and Crescent Island (`voyage`,
+1888-1929), Thamasa, Strago, Relm, the fire and the Mage Warriors (`thamasa`,
+1930-2026), Ultros at the statues, the goddesses' story and Yura's Espers (`espers`,
+2027-2062), Kefka's betrayal, Leo's death and the return (`leo`, 2063-2117), and the
+Floating Continent, Shadow, the Statues and the day the world changed (`continent`,
+2118-2167; Kefka's hate over three pages, the last centred, and the closing line centred
+with its wait and pause). The Arabic is in
 `translations/final-fantasy-iii.json`, a line a page, `{line}` where a line must end. The names are `name.terra` to `name.umaro`, the fourteen characters
 the name commands write, in the game's order, one word each, 64 pixels at most. A
 translation keeps its original's commands but the layout (`{line}`, `{page}`, the spaces):
@@ -272,12 +279,16 @@ the drunk's pauses inside a line and Madonna's plea over its pages. The sixth: t
 smith's three pages ending in two bracketed choices with guillemets, the dragons' two
 centred pages, the three toasts and the three questions with the cursor moving among
 them, Gestahl's four pages with their wait, the centred count, Lone Wolf's centred
-lines, the hairpin over its pages and Setzer's five pages. The messages that follow the scope show the game's English as before. The RetroPad's
+lines, the hairpin over its pages and Setzer's five pages. The seventh: the airship's
+prompt after its page with the cursor moving with Down, Kefka's hate over its three
+pages, the closing line centred with its wait, Strago's waits inside a line, the goddesses'
+story over four pages, the jump's choices with a name in one, the inn's bracketed
+choices after their page and Strago's warning over four pages. The messages that follow the scope show the game's English as before. The RetroPad's
 A is the Super NES's A.
 
 ## Limits
 
-- The first six chapters' 1884 messages and the characters' names are in Arabic; every
+- The first seven chapters' 2164 messages and the characters' names are in Arabic; every
   other message stays English, and the menus and the battles are other text engines,
   untouched, so the classroom's lessons name menu entries and statuses in Arabic that the
   menus still show in English.

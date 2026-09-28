@@ -75,14 +75,15 @@ TARGET = LocalizationTarget(
     kind="rom-overlay",
     strategies=("glyph-font",),
     scope=(
-        "The first six chapters, the opening to the Emperor's banquet: the 1884 messages "
+        "The first seven chapters, the opening to the end of the world of balance: the 2164 messages "
         "of Narshe, Figaro Castle, South Figaro, Mt. Kolts, the Returners' hideout and "
         "the raft, the three scenarios (Locke and Celes, Banon's party, Sabin's road "
         "through Doma, the Phantom Train, the Veldt and Nikeah), the classroom, the "
         "battle for Narshe and Terra's flight, then Kohlingen, Jidoor, Zozo and Ramuh, "
         "the Opera House and Setzer's coin, then Vector, the Magitek Research Facility, "
         "the escape and Maduin's story, then the sealed gate, the Espers' rush on Vector, "
-        "the banquet and Albrook, and the characters' names in them; the "
+        "the banquet and Albrook, then Thamasa, the Espers, Leo's death and the Floating "
+        "Continent, and the characters' names in them; the "
         "others stay in English"
     ),
     guide="docs/FF6_ARABIC_TEST_AR.md",
@@ -93,5 +94,5 @@ TARGET = LocalizationTarget(
     build=build,
     extract=extract,
     previews=PREVIEWS,
-    reference_patch_sha256="6fe31007e314fb464c6c80976340f5c7377ca52b540d856c7ac4c065dc43c098",
+    reference_patch_sha256="1bdcbac5eac1dfd987268f6b109ed7b8e08014d58fe161bbbcd8368e0a3edae2",
 )

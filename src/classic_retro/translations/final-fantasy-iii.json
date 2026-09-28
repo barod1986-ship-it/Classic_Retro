@@ -9515,6 +9515,1406 @@
    "id": "setzer.1887",
    "context": "Message 1887 of the dialogue: {Setzer}: …{line}Poor Daryl…",
    "text": "{Setzer}: …{line}مسكينة داريل…"
+  },
+  {
+   "id": "voyage.1888",
+   "context": "Message 1888 of the dialogue: LEO: There you are. Another of the Empire's generals, and a person I hired in town will be traveling with us.",
+   "text": "ليو: ها أنتم. جنرال آخر من جنرالات الإمبراطورية، وشخص استأجرته في البلدة سيسافران معنا."
+  },
+  {
+   "id": "voyage.1889",
+   "context": "Message 1889 of the dialogue: LEO: We should arrive tomorrow morning. Why not rest until then?",
+   "text": "ليو: سنصل صباح الغد. لم لا ترتاحون حتى ذلك الحين؟"
+  },
+  {
+   "id": "voyage.1890",
+   "context": "Message 1890 of the dialogue: {Terra}: {Celes}… {Wait}{line}{Celes}: ……",
+   "text": "{Terra}: {Celes}… {Wait}{line}{Celes}: ……"
+  },
+  {
+   "id": "voyage.1891",
+   "context": "Message 1891 of the dialogue: {Locke}: {Celes}…",
+   "text": "{Locke}: {Celes}…"
+  },
+  {
+   "id": "voyage.1892",
+   "context": "Message 1892 of the dialogue: LEO: Right…let's go.",
+   "text": "ليو: حسنا… لننطلق."
+  },
+  {
+   "id": "voyage.1893",
+   "context": "Message 1893 of the dialogue: {Shadow}: I'm working for the Empire. But don't worry…{line}I'm not going to garrote you!",
+   "text": "{Shadow}: أنا أعمل لحساب الإمبراطورية. لكن لا تقلقوا…{line}لن أخنقكم!"
+  },
+  {
+   "id": "voyage.1894",
+   "context": "Message 1894 of the dialogue: General Leo's waiting for you.",
+   "text": "الجنرال ليو في انتظاركم."
+  },
+  {
+   "id": "voyage.1895",
+   "context": "Message 1895 of the dialogue: General Leo's holding a meeting.",
+   "text": "الجنرال ليو يعقد اجتماعا."
+  },
+  {
+   "id": "voyage.1896",
+   "context": "Message 1896 of the dialogue: LEO: Let me introduce…{line}General {Celes}…and {Shadow}.",
+   "text": "ليو: أقدم لكم…{line}الجنرال {Celes}… و{Shadow}."
+  },
+  {
+   "id": "voyage.1897",
+   "context": "Message 1897 of the dialogue: LEO: Is something wrong? {Wait}{line}{Locke}: No…",
+   "text": "ليو: هل هناك خطب ما؟ {Wait}{line}{Locke}: لا…"
+  },
+  {
+   "id": "voyage.1898",
+   "context": "Message 1898 of the dialogue: LEO: Our departure isn't till tomorrow. I've arranged some lodging for you.",
+   "text": "ليو: لن ننطلق قبل الغد. رتبت لكم مكانا للمبيت."
+  },
+  {
+   "id": "voyage.1899",
+   "context": "Message 1899 of the dialogue: LEO: Please, get some rest.",
+   "text": "ليو: أرجوكم، ارتاحوا قليلا."
+  },
+  {
+   "id": "voyage.1900",
+   "context": "Message 1900 of the dialogue: {Shadow}: You kids stay out of trouble now, you hear?",
+   "text": "{Shadow}: ابتعدوا عن المتاعب أيها الصغار، مفهوم؟"
+  },
+  {
+   "id": "voyage.1901",
+   "context": "Message 1901 of the dialogue: {Locke}: Not a word of this to anyone else, o shrouded one…",
+   "text": "{Locke}: لا كلمة عن هذا لأحد، أيها الملثم…"
+  },
+  {
+   "id": "voyage.1902",
+   "context": "Message 1902 of the dialogue: {Locke}: Come on…! {Wait}{line}Why won't you speak to me?",
+   "text": "{Locke}: هيا…! {Wait}{line}لماذا لا تكلمينني؟"
+  },
+  {
+   "id": "voyage.1903",
+   "context": "Message 1903 of the dialogue: {Locke}: {Celes}…",
+   "text": "{Locke}: {Celes}…"
+  },
+  {
+   "id": "voyage.1904",
+   "context": "Message 1904 of the dialogue: {Locke}: Even if it was only a little…{line}I doubted you… {Wait}{line}But I'm still your friend…",
+   "text": "{Locke}: حتى لو كان قليلا…{line}لقد شككت فيك… {Wait}{line}لكنني ما زلت صديقك…"
+  },
+  {
+   "id": "voyage.1905",
+   "context": "Message 1905 of the dialogue: {Locke}: {Celes}!",
+   "text": "{Locke}: {Celes}!"
+  },
+  {
+   "id": "voyage.1906",
+   "context": "Message 1906 of the dialogue: LEO: You all right?",
+   "text": "ليو: أأنت بخير؟"
+  },
+  {
+   "id": "voyage.1907",
+   "context": "Message 1907 of the dialogue: LEO: Looks like you're feeling better…",
+   "text": "ليو: يبدو أنك تشعرين بتحسن…"
+  },
+  {
+   "id": "voyage.1908",
+   "context": "Message 1908 of the dialogue: {Terra}: Funny, isn't it…{line}I was used by the Empire…{line}even had my thoughts ripped from me…{page}But here I am cooperating with the “enemy”…",
+   "text": "{Terra}: مضحك، أليس كذلك…{line}استغلتني الإمبراطورية…{line}بل انتزعت أفكاري مني…\nوها أنا أتعاون مع «العدو»…"
+  },
+  {
+   "id": "voyage.1909",
+   "context": "Message 1909 of the dialogue: LEO: People are people.{line}Not all of us are like Kefka.",
+   "text": "ليو: الناس ناس.{line}لسنا كلنا مثل كيفكا."
+  },
+  {
+   "id": "voyage.1910",
+   "context": "Message 1910 of the dialogue: {Terra}: What…{line}{Wait}what's with you?",
+   "text": "{Terra}: ماذا…{line}{Wait}ما خطبك؟"
+  },
+  {
+   "id": "voyage.1911",
+   "context": "Message 1911 of the dialogue: LEO: I knew you were being used as a kind of biological weapon…{page}And because I didn't do anything about it, I'm no different than Kefka…",
+   "text": "ليو: كنت أعرف أنك تستخدمين كنوع من الأسلحة الحية…\nولأنني لم أفعل شيئا حيال ذلك، فلست مختلفا عن كيفكا…"
+  },
+  {
+   "id": "voyage.1912",
+   "context": "Message 1912 of the dialogue: {Terra}: I'm the product of a human and an Esper…{line}{Wait}Will I ever be able to love someone?",
+   "text": "{Terra}: أنا نتاج بشري وإسبر…{line}{Wait}هل سأستطيع يوما أن أحب أحدا؟"
+  },
+  {
+   "id": "voyage.1913",
+   "context": "Message 1913 of the dialogue: LEO: Of course!",
+   "text": "ليو: طبعا!"
+  },
+  {
+   "id": "voyage.1914",
+   "context": "Message 1914 of the dialogue: {Terra}: But…{line}{Wait}I haven't felt that way yet…",
+   "text": "{Terra}: لكن…{line}{Wait}لم أشعر بذلك الشعور بعد…"
+  },
+  {
+   "id": "voyage.1915",
+   "context": "Message 1915 of the dialogue: LEO: You're just young.{line}{Wait}…but I understand what you mean. {Wait}I understand only too well…",
+   "text": "ليو: أنت صغيرة فحسب.{line}{Wait}…لكنني أفهم ما تقصدين. {Wait}أفهمه جيدا…"
+  },
+  {
+   "id": "voyage.1916",
+   "context": "Message 1916 of the dialogue: {Terra}: But…{line}{Wait}I want to know what love is…{line}now!",
+   "text": "{Terra}: لكن…{line}{Wait}أريد أن أعرف ما الحب…{line}الآن!"
+  },
+  {
+   "id": "voyage.1917",
+   "context": "Message 1917 of the dialogue: {Terra}: Who is it?",
+   "text": "{Terra}: من هناك؟"
+  },
+  {
+   "id": "voyage.1918",
+   "context": "Message 1918 of the dialogue: {Shadow}: Thought I'd sleep out under the stars.",
+   "text": "{Shadow}: فكرت أن أنام تحت النجوم."
+  },
+  {
+   "id": "voyage.1919",
+   "context": "Message 1919 of the dialogue: {Terra}: Did you hear…{line}{Wait}…what we were just talking about?",
+   "text": "{Terra}: هل سمعت…{line}{Wait}…ما كنا نتكلم عنه للتو؟"
+  },
+  {
+   "id": "voyage.1920",
+   "context": "Message 1920 of the dialogue: {Terra}: Umm…",
+   "text": "{Terra}: أممم…"
+  },
+  {
+   "id": "voyage.1921",
+   "context": "Message 1921 of the dialogue: {Shadow}: I can't help you.{line}You must look within for answers.",
+   "text": "{Shadow}: لا أستطيع مساعدتك.{line}عليك أن تبحثي في داخلك عن الأجوبة."
+  },
+  {
+   "id": "voyage.1922",
+   "context": "Message 1922 of the dialogue: {Shadow}: I didn't mean to overhear anything.",
+   "text": "{Shadow}: لم أقصد أن أتنصت على شيء."
+  },
+  {
+   "id": "voyage.1923",
+   "context": "Message 1923 of the dialogue: {Shadow}: {Terra}.",
+   "text": "{Shadow}: {Terra}."
+  },
+  {
+   "id": "voyage.1924",
+   "context": "Message 1924 of the dialogue: {Shadow}: In this world are many like me who've killed their emotions. Don't forget that.",
+   "text": "{Shadow}: في هذا العالم كثيرون مثلي قتلوا مشاعرهم. لا تنسي ذلك."
+  },
+  {
+   "id": "voyage.1925",
+   "context": "Message 1925 of the dialogue: LEO: We're almost at Crescent Island. When we disembark, we'll split into two groups.{page}{Celes} and I will form one group. {Terra}, you go with {Locke} and {Shadow}.{page}If you spot the Espers, report at once!",
+   "text": "ليو: كدنا نصل إلى جزيرة الهلال. حين ننزل، سننقسم إلى مجموعتين.\n{Celes} وأنا نشكل مجموعة. {Terra}، اذهبي مع {Locke} و{Shadow}.\nإن رأيتم الإسبرات، فأبلغوا فورا!"
+  },
+  {
+   "id": "voyage.1926",
+   "context": "Message 1926 of the dialogue: LEO: {Terra}, we'll continue yesterday's conversation later…",
+   "text": "ليو: {Terra}، سنكمل حديث الأمس لاحقا…"
+  },
+  {
+   "id": "voyage.1927",
+   "context": "Message 1927 of the dialogue: {Locke}: Let's go.",
+   "text": "{Locke}: لنذهب."
+  },
+  {
+   "id": "voyage.1928",
+   "context": "Message 1928 of the dialogue: {Celes}: Um, I…",
+   "text": "{Celes}: أمم، أنا…"
+  },
+  {
+   "id": "voyage.1929",
+   "context": "Message 1929 of the dialogue: {Locke}: Come on.",
+   "text": "{Locke}: هيا."
+  },
+  {
+   "id": "thamasa.1930",
+   "context": "Message 1930 of the dialogue: Oh, wow!!!{line}Strangers!!",
+   "text": "أوه، واو!!!{line}غرباء!!"
+  },
+  {
+   "id": "thamasa.1931",
+   "context": "Message 1931 of the dialogue: MAYOR: Welcome, welcome!{line}{Wait}Magic…? What is this “magic”?",
+   "text": "العمدة: أهلا، أهلا!{line}{Wait}سحر…؟ ما هذا «السحر»؟"
+  },
+  {
+   "id": "thamasa.1932",
+   "context": "Message 1932 of the dialogue: MAYOR: No one is to divulge that we are able to use magic!",
+   "text": "العمدة: لا يبوح أحد بأننا نستطيع استعمال السحر!"
+  },
+  {
+   "id": "thamasa.1933",
+   "context": "Message 1933 of the dialogue: Use rods as items during battle for some amazing results!{page}Only problem is they break after being used once!",
+   "text": "استعمل العصي كأدوات في المعركة لنتائج مذهلة!\nالمشكلة الوحيدة أنها تنكسر بعد استعمالها مرة!"
+  },
+  {
+   "id": "thamasa.1934",
+   "context": "Message 1934 of the dialogue: Have you talked to old man {Strago}? Do so, and the inn keeper may be more reasonable.",
+   "text": "هل كلمت العجوز {Strago}؟ افعل، فقد يصير صاحب الفندق أكثر تعقلا."
+  },
+  {
+   "id": "thamasa.1935",
+   "context": "Message 1935 of the dialogue: For some reason the inn keeper doesn't like strangers!",
+   "text": "لسبب ما، صاحب الفندق لا يحب الغرباء!"
+  },
+  {
+   "id": "thamasa.1936",
+   "context": "Message 1936 of the dialogue: You're strangers…{page}1500 GP if you wanna stay.{line}{Choice} (Well, okay.){line}{Choice} (No way!)",
+   "text": "أنتم غرباء…\n1500 غيل إن أردتم المبيت.{line}{Choice} (حسنا، موافق.){line}{Choice} (مستحيل!)"
+  },
+  {
+   "id": "thamasa.1937",
+   "context": "Message 1937 of the dialogue: Espers? What in blazes are they? If they're animals, talk to the old guy that lives on the edge of town.",
+   "text": "إسبرات؟ ما هذه بحق السماء؟ إن كانت حيوانات، فكلم العجوز الذي يعيش على طرف البلدة."
+  },
+  {
+   "id": "thamasa.1938",
+   "context": "Message 1938 of the dialogue: Ha!{line}No admittance!",
+   "text": "ها!{line}ممنوع الدخول!"
+  },
+  {
+   "id": "thamasa.1939",
+   "context": "Message 1939 of the dialogue: Old man {Strago} looks like he's on his last legs, but he used to be a powerful warrior.",
+   "text": "العجوز {Strago} يبدو كأنه في آخر أيامه، لكنه كان محاربا جبارا."
+  },
+  {
+   "id": "thamasa.1940",
+   "context": "Message 1940 of the dialogue: Have you met little {Relm}? She loves to paint pictures! Wonder if she'd do my portrait?",
+   "text": "هل قابلت الصغيرة {Relm}؟ إنها تعشق رسم الصور! ترى هل ترسم صورتي؟"
+  },
+  {
+   "id": "thamasa.1941",
+   "context": "Message 1941 of the dialogue: Actually, {Relm} isn't {Strago}'s real grandchild.{page}I heard she's his friend's daughter.",
+   "text": "في الحقيقة، {Relm} ليست حفيدة {Strago} الحقيقية.\nسمعت أنها ابنة صديقه."
+  },
+  {
+   "id": "thamasa.1942",
+   "context": "Message 1942 of the dialogue: {Strago} is a Blue Mage by training. He can memorize the attacks of monsters he has fought…",
+   "text": "{Strago} ساحر أزرق بالتدريب. يستطيع حفظ هجمات الوحوش التي قاتلها…"
+  },
+  {
+   "id": "thamasa.1943",
+   "context": "Message 1943 of the dialogue: Listen, I have to tell you… {Wait}{line}Naaah…never mind.",
+   "text": "اسمع، علي أن أخبرك… {Wait}{line}لااا… انس الأمر."
+  },
+  {
+   "id": "thamasa.1944",
+   "context": "Message 1944 of the dialogue: My house burned down!",
+   "text": "احترق بيتي!"
+  },
+  {
+   "id": "thamasa.1945",
+   "context": "Message 1945 of the dialogue: Get outta the way!",
+   "text": "ابتعد عن الطريق!"
+  },
+  {
+   "id": "thamasa.1946",
+   "context": "Message 1946 of the dialogue: I've never seen you before.",
+   "text": "لم أرك من قبل."
+  },
+  {
+   "id": "thamasa.1947",
+   "context": "Message 1947 of the dialogue: …… {Wait}Right!",
+   "text": "…… {Wait}صحيح!"
+  },
+  {
+   "id": "thamasa.1948",
+   "context": "Message 1948 of the dialogue: And who might YOU be?",
+   "text": "ومن تكون أنت؟"
+  },
+  {
+   "id": "thamasa.1949",
+   "context": "Message 1949 of the dialogue: 1 GP per night.{line}Why not relax for a spell?{line}{Choice} Yes{line}{Choice} No",
+   "text": "غيل واحد لليلة.{line}لم لا تسترخي قليلا؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "thamasa.1950",
+   "context": "Message 1950 of the dialogue: Whatcha want with me?",
+   "text": "ماذا تريد مني؟"
+  },
+  {
+   "id": "thamasa.1951",
+   "context": "Message 1951 of the dialogue: An elderly gentleman, pure of heart, and learned in the ways of monsters…",
+   "text": "رجل مسن، نقي القلب، عليم بطبائع الوحوش…"
+  },
+  {
+   "id": "thamasa.1952",
+   "context": "Message 1952 of the dialogue: FIRE!!",
+   "text": "حريق!!"
+  },
+  {
+   "id": "thamasa.1953",
+   "context": "Message 1953 of the dialogue: Uh?! What was that?",
+   "text": "هاه؟! ما كان ذلك؟"
+  },
+  {
+   "id": "thamasa.1954",
+   "context": "Message 1954 of the dialogue: N'ga! Oh no!",
+   "text": "نغا! أوه لا!"
+  },
+  {
+   "id": "thamasa.1955",
+   "context": "Message 1955 of the dialogue: Mama…it hurts…",
+   "text": "ماما… يؤلمني…"
+  },
+  {
+   "id": "thamasa.1956",
+   "context": "Message 1956 of the dialogue: Oh all right. Cure…",
+   "text": "حسنا. شفاء…"
+  },
+  {
+   "id": "thamasa.1957",
+   "context": "Message 1957 of the dialogue: …medicine…where is my cure medicine?!",
+   "text": "…الدواء… أين دواء الشفاء؟!"
+  },
+  {
+   "id": "thamasa.1958",
+   "context": "Message 1958 of the dialogue: Mama!{line}Please use cure on me!",
+   "text": "ماما!{line}استعملي الشفاء علي!"
+  },
+  {
+   "id": "thamasa.1959",
+   "context": "Message 1959 of the dialogue: {Strago}: Espers?{line}Espers…Hmm…{line}Not really familiar with that word.{page}{Locke}: But you've heard it before?",
+   "text": "{Strago}: إسبرات؟{line}إسبرات… همم…{line}لست على معرفة حقيقية بهذه الكلمة.\n{Locke}: لكنك سمعتها من قبل؟"
+  },
+  {
+   "id": "thamasa.1960",
+   "context": "Message 1960 of the dialogue: {Strago}: Nope, uhn uhn…{line}Can't say I have.{line}{Wait}Honestly {Wait}can't say {Wait}I have! {Wait}",
+   "text": "{Strago}: لا، أبدا…{line}لا أستطيع القول إنني سمعتها.{line}{Wait}بصدق {Wait}لا أستطيع {Wait}القول! {Wait}"
+  },
+  {
+   "id": "thamasa.1961",
+   "context": "Message 1961 of the dialogue: Grandpa!",
+   "text": "جدي!"
+  },
+  {
+   "id": "thamasa.1962",
+   "context": "Message 1962 of the dialogue: {Strago}: Hey…HEY!",
+   "text": "{Strago}: هيه… هيه!"
+  },
+  {
+   "id": "thamasa.1963",
+   "context": "Message 1963 of the dialogue: {Strago}: What in blazes…{line}What're you doing?",
+   "text": "{Strago}: ما هذا بحق…{line}ماذا تفعلين؟"
+  },
+  {
+   "id": "thamasa.1964",
+   "context": "Message 1964 of the dialogue: In her pictures she captures everything:{line}forests, water, light…{line}the very essence of life…",
+   "text": "في صورها تلتقط كل شيء:{line}الغابات والماء والنور…{line}جوهر الحياة نفسه…"
+  },
+  {
+   "id": "thamasa.1965",
+   "context": "Message 1965 of the dialogue: That's odd…",
+   "text": "هذا غريب…"
+  },
+  {
+   "id": "thamasa.1966",
+   "context": "Message 1966 of the dialogue: {Relm}: Grandpa.{line}Who are these people? Friends? Can they use magic, too?{line}{Strago}: Yaa! Hush!",
+   "text": "{Relm}: جدي.{line}من هؤلاء؟ أصدقاء؟ أيستطيعون استعمال السحر أيضا؟{line}{Strago}: يا! اصمتي!"
+  },
+  {
+   "id": "thamasa.1967",
+   "context": "Message 1967 of the dialogue: {Relm}: What a cute doggy!{line}{Shadow}: Get away.{line}He bites.",
+   "text": "{Relm}: يا له من كلب لطيف!{line}{Shadow}: ابتعدي.{line}إنه يعض."
+  },
+  {
+   "id": "thamasa.1968",
+   "context": "Message 1968 of the dialogue: {Strago}: Go to your room!{line}{Relm}: I will not!{line}What a fussy old man!",
+   "text": "{Strago}: اذهبي إلى غرفتك!{line}{Relm}: لن أفعل!{line}يا لك من عجوز نكد!"
+  },
+  {
+   "id": "thamasa.1969",
+   "context": "Message 1969 of the dialogue: {Strago}: Please…leave us!{line}{Relm}: Well…all right…",
+   "text": "{Strago}: أرجوك… اتركينا!{line}{Relm}: حسنا… لا بأس…"
+  },
+  {
+   "id": "thamasa.1970",
+   "context": "Message 1970 of the dialogue: {Relm}: What a sweet puppy!",
+   "text": "{Relm}: يا له من جرو حلو!"
+  },
+  {
+   "id": "thamasa.1971",
+   "context": "Message 1971 of the dialogue: {Strago}: Hoo boy…{line}Seems to like your dog…",
+   "text": "{Strago}: يا للهول…{line}يبدو أنه يحب كلبك…"
+  },
+  {
+   "id": "thamasa.1972",
+   "context": "Message 1972 of the dialogue: {Strago}: This is terrible…",
+   "text": "{Strago}: هذا فظيع…"
+  },
+  {
+   "id": "thamasa.1973",
+   "context": "Message 1973 of the dialogue: {Strago}: Sorry.{line}{Shadow}: No problem.{line}The dog usually doesn't like people, though…",
+   "text": "{Strago}: آسف.{line}{Shadow}: لا مشكلة.{line}لكن الكلب لا يحب الناس عادة…"
+  },
+  {
+   "id": "thamasa.1974",
+   "context": "Message 1974 of the dialogue: {Strago}: Please excuse her.{line}She's just young.{line}{Locke}: Hmmm…{page}{Strago}: This is just a back-water village. We can tell you nothing about your Espers…",
+   "text": "{Strago}: اعذرها من فضلك.{line}إنها صغيرة فحسب.{line}{Locke}: هممم…\n{Strago}: هذه مجرد قرية نائية. لا نستطيع أن نخبركم شيئا عن إسبراتكم…"
+  },
+  {
+   "id": "thamasa.1975",
+   "context": "Message 1975 of the dialogue: {Locke}: I see…{line}{Wait}There's something wrong here…{line}{Terra}: Let's have a look around.",
+   "text": "{Locke}: فهمت…{line}{Wait}هناك شيء غريب هنا…{line}{Terra}: لنلق نظرة في الأرجاء."
+  },
+  {
+   "id": "thamasa.1976",
+   "context": "Message 1976 of the dialogue: {Locke}: Thanks for your time!{line}{Strago}: Sorry I couldn't have been more helpful!",
+   "text": "{Locke}: شكرا على وقتك!{line}{Strago}: آسف لأنني لم أستطع مساعدتكم أكثر!"
+  },
+  {
+   "id": "thamasa.1977",
+   "context": "Message 1977 of the dialogue: {Shadow}: Interceptor!{line}Come!",
+   "text": "{Shadow}: إنترسبتور!{line}تعال!"
+  },
+  {
+   "id": "thamasa.1978",
+   "context": "Message 1978 of the dialogue: {Relm}: Oh, all right…",
+   "text": "{Relm}: أوه، حسنا…"
+  },
+  {
+   "id": "thamasa.1979",
+   "context": "Message 1979 of the dialogue: {Strago}: What a beautiful day.",
+   "text": "{Strago}: يا له من يوم جميل."
+  },
+  {
+   "id": "thamasa.1980",
+   "context": "Message 1980 of the dialogue: {Relm}: Interceptor, please come back again and play!",
+   "text": "{Relm}: إنترسبتور، عد مرة أخرى لنلعب!"
+  },
+  {
+   "id": "thamasa.1981",
+   "context": "Message 1981 of the dialogue: {Strago}: This is awful!{line}{Relm}…she's…",
+   "text": "{Strago}: هذا فظيع!{line}{Relm}… إنها…"
+  },
+  {
+   "id": "thamasa.1982",
+   "context": "Message 1982 of the dialogue: {Terra}: {Relm}'s in danger?{line}{Strago}: Yes!{page}She was at a neighbor's house when a fire broke out. I won't be able to stand it if something happens to her!",
+   "text": "{Terra}: {Relm} في خطر؟{line}{Strago}: نعم!\nكانت في بيت الجيران حين اندلع حريق. لن أحتمل إن أصابها شيء!"
+  },
+  {
+   "id": "thamasa.1983",
+   "context": "Message 1983 of the dialogue: {Strago}: Please!{line}Won't you help?!",
+   "text": "{Strago}: أرجوكم!{line}ألا تساعدون؟!"
+  },
+  {
+   "id": "thamasa.1984",
+   "context": "Message 1984 of the dialogue: {Locke}: {Shadow}!",
+   "text": "{Locke}: {Shadow}!"
+  },
+  {
+   "id": "thamasa.1985",
+   "context": "Message 1985 of the dialogue: {Shadow}: Interceptor…{line}{Wait}Where are you?!",
+   "text": "{Shadow}: إنترسبتور…{line}{Wait}أين أنت؟!"
+  },
+  {
+   "id": "thamasa.1986",
+   "context": "Message 1986 of the dialogue: Waaah…my beautiful house…!",
+   "text": "وااه… بيتي الجميل…!"
+  },
+  {
+   "id": "thamasa.1987",
+   "context": "Message 1987 of the dialogue: {Strago}: {Relm}'s inside that house!",
+   "text": "{Strago}: {Relm} داخل ذلك البيت!"
+  },
+  {
+   "id": "thamasa.1988",
+   "context": "Message 1988 of the dialogue: FIRE!!",
+   "text": "حريق!!"
+  },
+  {
+   "id": "thamasa.1989",
+   "context": "Message 1989 of the dialogue: {Strago}: {Relm}!!!!!",
+   "text": "{Strago}: {Relm}!!!!!"
+  },
+  {
+   "id": "thamasa.1990",
+   "context": "Message 1990 of the dialogue: {Locke}: What're you doing?",
+   "text": "{Locke}: ماذا تفعل؟"
+  },
+  {
+   "id": "thamasa.1991",
+   "context": "Message 1991 of the dialogue: Flames be GONE!!! {Pause 02}{Key}",
+   "text": "اخمدي أيتها النيران!!! {Pause 02}{Key}"
+  },
+  {
+   "id": "thamasa.1992",
+   "context": "Message 1992 of the dialogue: MAYOR: Magic is forbidden!{line}{Terra}: Magic…?!",
+   "text": "العمدة: السحر ممنوع!{line}{Terra}: سحر…؟!"
+  },
+  {
+   "id": "thamasa.1993",
+   "context": "Message 1993 of the dialogue: {Strago}: I don't care!{line}{Wait}{Relm}'s inside!!!",
+   "text": "{Strago}: لا يهمني!{line}{Wait}{Relm} في الداخل!!!"
+  },
+  {
+   "id": "thamasa.1994",
+   "context": "Message 1994 of the dialogue: Mayor!!",
+   "text": "أيها العمدة!!"
+  },
+  {
+   "id": "thamasa.1995",
+   "context": "Message 1995 of the dialogue: MAYOR: All right.{line}{Wait}We really have no choice.",
+   "text": "العمدة: حسنا.{line}{Wait}لا خيار لنا حقا."
+  },
+  {
+   "id": "thamasa.1996",
+   "context": "Message 1996 of the dialogue: MAYOR: Stand back.",
+   "text": "العمدة: تراجعوا."
+  },
+  {
+   "id": "thamasa.1997",
+   "context": "Message 1997 of the dialogue: {Strago}: It's no use.{line}The fire's too strong!{page}MAYOR: I think that's because they keep so many Fire Rods in here…",
+   "text": "{Strago}: لا فائدة.{line}النار أقوى من أن تخمد!\nالعمدة: أظن السبب أنهم يخزنون عصي نار كثيرة هنا…"
+  },
+  {
+   "id": "thamasa.1998",
+   "context": "Message 1998 of the dialogue: {Strago}: I'm going in!",
+   "text": "{Strago}: سأدخل!"
+  },
+  {
+   "id": "thamasa.1999",
+   "context": "Message 1999 of the dialogue: {Terra}: Wait…I'm going too.{line}{Locke}: Count me in. You'd better stay out here, gramps.{page}{Strago}: Fool!{line}I may be old, but I'm not powerless!",
+   "text": "{Terra}: انتظر… سأذهب أنا أيضا.{line}{Locke}: وأنا معكم. من الأفضل أن تبقى في الخارج يا جدو.\n{Strago}: أحمق!{line}قد أكون عجوزا، لكنني لست عاجزا!"
+  },
+  {
+   "id": "thamasa.2000",
+   "context": "Message 2000 of the dialogue: Quickly!",
+   "text": "بسرعة!"
+  },
+  {
+   "id": "thamasa.2001",
+   "context": "Message 2001 of the dialogue: Is this the source of our blaze…?",
+   "text": "أهذا مصدر حريقنا…؟"
+  },
+  {
+   "id": "thamasa.2002",
+   "context": "Message 2002 of the dialogue: {Locke}: Try to avoid the flames.{line}{Terra}: Easier said than done.{page}{Strago}: Hurry!{line}We have to find {Relm}!",
+   "text": "{Locke}: حاولوا تجنب النيران.{line}{Terra}: القول أسهل من الفعل.\n{Strago}: بسرعة!{line}علينا أن نجد {Relm}!"
+  },
+  {
+   "id": "thamasa.2003",
+   "context": "Message 2003 of the dialogue: Uwaaa!!{line}Too late! {Pause 05}{Key}",
+   "text": "أوااا!!{line}فات الأوان! {Pause 05}{Key}"
+  },
+  {
+   "id": "thamasa.2004",
+   "context": "Message 2004 of the dialogue: Huh!? {Pause 02}{Key}",
+   "text": "هاه!؟ {Pause 02}{Key}"
+  },
+  {
+   "id": "thamasa.2005",
+   "context": "Message 2005 of the dialogue: {Strago}: {Relm}!!!{line}Where are you?!",
+   "text": "{Strago}: {Relm}!!!{line}أين أنت؟!"
+  },
+  {
+   "id": "thamasa.2006",
+   "context": "Message 2006 of the dialogue: {Shadow}: Let's get outta here! {Wait}I'll use a Smoke Bomb!!",
+   "text": "{Shadow}: لنخرج من هنا! {Wait}سأستعمل قنبلة دخان!!"
+  },
+  {
+   "id": "thamasa.2007",
+   "context": "Message 2007 of the dialogue: {Strago}: Are you okay?{line}{Relm}: Yes. Thanks, Grandpa!",
+   "text": "{Strago}: أأنت بخير؟{line}{Relm}: نعم. شكرا يا جدي!"
+  },
+  {
+   "id": "thamasa.2008",
+   "context": "Message 2008 of the dialogue: {Strago}: Save your thanks for these people.{line}{Relm}: Thank you…",
+   "text": "{Strago}: وفري شكرك لهؤلاء الناس.{line}{Relm}: شكرا لكم…"
+  },
+  {
+   "id": "thamasa.2009",
+   "context": "Message 2009 of the dialogue: {Strago}: I guess our town's little secret is out now…",
+   "text": "{Strago}: أظن أن سر بلدتنا الصغير انكشف الآن…"
+  },
+  {
+   "id": "thamasa.2010",
+   "context": "Message 2010 of the dialogue: {Locke}: Can everyone here use magic? What's going on here?",
+   "text": "{Locke}: أيستطيع كل من هنا استعمال السحر؟ ماذا يجري هنا؟"
+  },
+  {
+   "id": "thamasa.2011",
+   "context": "Message 2011 of the dialogue: {Strago}: This is…{line}{Wait}…the village of the Mage Warriors…",
+   "text": "{Strago}: هذه…{line}{Wait}…قرية فرسان السحر…"
+  },
+  {
+   "id": "thamasa.2012",
+   "context": "Message 2012 of the dialogue: {Strago}: Long ago humans used Magicite to gain magical powers. They came to be known as Mage Warriors.",
+   "text": "{Strago}: منذ زمن بعيد استعمل البشر الماجيسايت ليكتسبوا قوى سحرية. وعرفوا باسم فرسان السحر."
+  },
+  {
+   "id": "thamasa.2013",
+   "context": "Message 2013 of the dialogue: {Locke}: But I thought they perished centuries ago…",
+   "text": "{Locke}: لكنني ظننت أنهم انقرضوا منذ قرون…"
+  },
+  {
+   "id": "thamasa.2014",
+   "context": "Message 2014 of the dialogue: {Strago}: After the War of the Magi, the Espers fled to their new world behind the sealed gate.{page}They wished to live peacefully, without fear of being used by humans. They left us here to fend for ourselves…{page}But we were despised by normal people. Everyone felt we had begun that war…",
+   "text": "{Strago}: بعد حرب السحرة، فر الإسبرات إلى عالمهم الجديد وراء البوابة المختومة.\nأرادوا أن يعيشوا بسلام، دون خوف من أن يستغلهم البشر. وتركونا هنا نتدبر أمرنا…\nلكن الناس العاديين احتقرونا. شعر الجميع أننا من بدأ تلك الحرب…"
+  },
+  {
+   "id": "thamasa.2015",
+   "context": "Message 2015 of the dialogue: {Strago}: They sent people to hunt us down like animals.{line}There weren't even any trials…{page}{Terra}: Even though the only difference was that you could use magic…?",
+   "text": "{Strago}: أرسلوا أناسا ليطاردونا كالحيوانات.{line}ولم تكن هناك حتى محاكمات…\n{Terra}: رغم أن الفرق الوحيد أنكم تستطيعون استعمال السحر…؟"
+  },
+  {
+   "id": "thamasa.2016",
+   "context": "Message 2016 of the dialogue: {Strago}: A few Mage Warriors escaped and found their way here. They were our ancestors.{page}Our powers have weakened over time, but some of it remains.",
+   "text": "{Strago}: هرب قلة من فرسان السحر ووجدوا طريقهم إلى هنا. كانوا أجدادنا.\nضعفت قوانا مع الزمن، لكن شيئا منها بقي."
+  },
+  {
+   "id": "thamasa.2017",
+   "context": "Message 2017 of the dialogue: {Terra}: Look, if you're up to it, we could use your help. {Wait}{page}{Strago}: So, you're after the Espers, eh…?",
+   "text": "{Terra}: اسمع، إن كنت قادرا، فنحن بحاجة إلى مساعدتك. {Wait}\n{Strago}: إذن، أنتم تسعون وراء الإسبرات، ها…؟"
+  },
+  {
+   "id": "thamasa.2018",
+   "context": "Message 2018 of the dialogue: {Strago}: Well, I owe you for saving {Relm}. {Wait}I'll help you find your Espers.",
+   "text": "{Strago}: حسنا، أنا مدين لكم بإنقاذ {Relm}. {Wait}سأساعدكم في إيجاد إسبراتكم."
+  },
+  {
+   "id": "thamasa.2019",
+   "context": "Message 2019 of the dialogue: {Relm}: Me too! {Wait}{line}{Strago}: I don't think so.",
+   "text": "{Relm}: وأنا أيضا! {Wait}{line}{Strago}: لا أظن ذلك."
+  },
+  {
+   "id": "thamasa.2020",
+   "context": "Message 2020 of the dialogue: {Relm}: What a fuddy duddy…",
+   "text": "{Relm}: يا له من عجوز متزمت…"
+  },
+  {
+   "id": "thamasa.2021",
+   "context": "Message 2021 of the dialogue: {Locke}: But…where do we start looking?{page}{Strago}: Hmm…{line}{Wait}If they're here, they must be  hiding in the mountains to the west.",
+   "text": "{Locke}: لكن… من أين نبدأ البحث؟\n{Strago}: همم…{line}{Wait}إن كانوا هنا، فلا بد أنهم يختبئون في الجبال إلى الغرب."
+  },
+  {
+   "id": "thamasa.2022",
+   "context": "Message 2022 of the dialogue: {Locke}: Why there?{line}{Strago}: Those mountains have powerful magical properties.{page}They say the Espers were created there…",
+   "text": "{Locke}: لماذا هناك؟{line}{Strago}: تلك الجبال لها خصائص سحرية قوية.\nيقال إن الإسبرات خلقوا هناك…"
+  },
+  {
+   "id": "thamasa.2023",
+   "context": "Message 2023 of the dialogue: {Terra}: Maybe they're drawn to that place?",
+   "text": "{Terra}: ربما ينجذبون إلى ذلك المكان؟"
+  },
+  {
+   "id": "thamasa.2024",
+   "context": "Message 2024 of the dialogue: {Locke}: I think it's worth a look.",
+   "text": "{Locke}: أظن أن الأمر يستحق النظر."
+  },
+  {
+   "id": "thamasa.2025",
+   "context": "Message 2025 of the dialogue: {Shadow}: Don't misunderstand me. I just wanted my dog back.",
+   "text": "{Shadow}: لا تسيئوا فهمي. أردت كلبي فحسب."
+  },
+  {
+   "id": "thamasa.2026",
+   "context": "Message 2026 of the dialogue: {Locke}: Going somewhere?{line}{Shadow}: I'll search for the Espers in my own way.",
+   "text": "{Locke}: ذاهب إلى مكان ما؟{line}{Shadow}: سأبحث عن الإسبرات بطريقتي."
+  },
+  {
+   "id": "espers.2027",
+   "context": "Message 2027 of the dialogue: ULTROS: G'heh, heh…these shiny statues are all mine!{line}These'll get Ziegfried's attention!",
+   "text": "أولتروس: غهيه، هيه… هذه التماثيل اللامعة كلها لي!{line}هذه ستلفت انتباه زيغفريد!"
+  },
+  {
+   "id": "espers.2028",
+   "context": "Message 2028 of the dialogue: ULTROS: Oh!{line}They're glowing!!{line}They're…beautiful!",
+   "text": "أولتروس: أوه!{line}إنها تتوهج!!{line}إنها… جميلة!"
+  },
+  {
+   "id": "espers.2029",
+   "context": "Message 2029 of the dialogue: {Locke}: Hey, squidball!{line}Don't you ever learn?{page}ULTROS: Uh, well they always said I was a slow learner…{line}but I eat FAST!!",
+   "text": "{Locke}: هيه، يا كرة الحبار!{line}ألا تتعلم أبدا؟\nأولتروس: آه، حسنا، لطالما قالوا إنني بطيء التعلم…{line}لكنني آكل بسرعة!!"
+  },
+  {
+   "id": "espers.2030",
+   "context": "Message 2030 of the dialogue: {Relm}: Hey! Did you see me? I was awesome!{line}Wouldn't I be more helpful than Gramps?{page}{Strago}: G…GRAMPS!!?",
+   "text": "{Relm}: هيه! هل رأيتموني؟ كنت رائعة!{line}ألن أكون أنفع من جدو؟\n{Strago}: ج… جدو!!؟"
+  },
+  {
+   "id": "espers.2031",
+   "context": "Message 2031 of the dialogue: {Terra}: I suppose it wouldn't hurt to have you along…",
+   "text": "{Terra}: أظن أن وجودك معنا لن يضر…"
+  },
+  {
+   "id": "espers.2032",
+   "context": "Message 2032 of the dialogue: {Strago}: I can't believe it…{line}{Wait}The Statues…!{line}{Terra}: “The” Statues?!",
+   "text": "{Strago}: لا أصدق…{line}{Wait}التماثيل…!{line}{Terra}: «التماثيل» تلك؟!"
+  },
+  {
+   "id": "espers.2033",
+   "context": "Message 2033 of the dialogue: The birth of magic…{page}3 goddesses were banished here. In time they began quarreling, which led to all-out war.{page}Those unlucky humans who got in the way were transformed into Espers, and used as living war machines…",
+   "text": "مولد السحر…\nنفيت 3 إلهات إلى هنا. ومع الوقت بدأن يتشاجرن، فقاد ذلك إلى حرب شاملة.\nوالبشر التعساء الذين وقفوا في الطريق تحولوا إلى إسبرات، واستعملوا آلات حرب حية…"
+  },
+  {
+   "id": "espers.2034",
+   "context": "Message 2034 of the dialogue: {Locke}: Some faint letters are carved on the back of the stone figures…",
+   "text": "{Locke}: هناك حروف باهتة منقوشة على ظهر التماثيل الحجرية…"
+  },
+  {
+   "id": "espers.2035",
+   "context": "Message 2035 of the dialogue: {Locke}: Say, old man, what else can you tell us about these goddesses?",
+   "text": "{Locke}: قل يا عجوز، ماذا تستطيع أن تخبرنا أيضا عن هذه الإلهات؟"
+  },
+  {
+   "id": "espers.2036",
+   "context": "Message 2036 of the dialogue: {Strago}: They quite literally created magic, as we know it.{page}{Locke}: So, they're the goddesses of magic, then?{line}{Strago}: You could say that.",
+   "text": "{Strago}: لقد خلقن السحر بمعنى الكلمة، كما نعرفه.\n{Locke}: إذن هن إلهات السحر؟{line}{Strago}: يمكنك قول ذلك."
+  },
+  {
+   "id": "espers.2037",
+   "context": "Message 2037 of the dialogue: {Terra}: I can feel their power…{line}{Strago}: The Statues are the source of all magic.{page}It's said the Espers made these images, and put them in a very special place.{page}These represent power beyond all comprehension…",
+   "text": "{Terra}: أشعر بقوتهن…{line}{Strago}: التماثيل مصدر كل سحر.\nيقال إن الإسبرات صنعوا هذه الصور، ووضعوها في مكان خاص جدا.\nإنها تمثل قوة تفوق كل إدراك…"
+  },
+  {
+   "id": "espers.2038",
+   "context": "Message 2038 of the dialogue: {Terra}: Our Espers no doubt came to this island to bask in all this magical power!",
+   "text": "{Terra}: إسبراتنا جاؤوا حتما إلى هذه الجزيرة ليستمتعوا بكل هذه القوة السحرية!"
+  },
+  {
+   "id": "espers.2039",
+   "context": "Message 2039 of the dialogue: The goddesses finally realized that they were being laughed at by those who had banished them here.{page}In a rare moment of mutual clarity, they agreed to seal themselves away from the world.{page}With their last ounce of energy they gave the Espers back their own free will, and then transformed themselves…{page}…into stone.{line}Their only request was that the Espers keep them sealed away for all eternity.",
+   "text": "أدركت الإلهات أخيرا أن من نفوهن إلى هنا كانوا يسخرون منهن.\nوفي لحظة نادرة من الصفاء المشترك، اتفقن على أن يختمن أنفسهن بعيدا عن العالم.\nوبآخر ما بقي لهن من طاقة أعدن إلى الإسبرات إرادتهم الحرة، ثم حولن أنفسهن…\n…إلى حجر.{line}وكان طلبهن الوحيد أن يبقيهن الإسبرات مختومات إلى الأبد."
+  },
+  {
+   "id": "espers.2040",
+   "context": "Message 2040 of the dialogue: The Espers created these statues as a symbol of their vow to let the goddesses sleep in peace.{page}The Espers have sworn to keep the goddesses' power from being abused.",
+   "text": "صنع الإسبرات هذه التماثيل رمزا لعهدهم أن يدعوا الإلهات ينمن بسلام.\nوأقسم الإسبرات أن يمنعوا إساءة استعمال قوة الإلهات."
+  },
+  {
+   "id": "espers.2041",
+   "context": "Message 2041 of the dialogue: {Locke}: Phew…what a story.{page}{Terra}: If the Espers were attracted here by these statues, they must be around here somewhere!",
+   "text": "{Locke}: أوف… يا لها من قصة.\n{Terra}: إن كانت هذه التماثيل هي ما جذب الإسبرات إلى هنا، فلا بد أنهم في مكان قريب!"
+  },
+  {
+   "id": "espers.2042",
+   "context": "Message 2042 of the dialogue: {Locke}: Say, old timer,{line}what happened to the stone goddesses?{page}{Strago}: Legend has it that they're hidden somewhere beyond the reach of humans.{page}I'd say they're beyond the sealed gate…",
+   "text": "{Locke}: قل يا عجوز،{line}ماذا حل بالإلهات الحجرية؟\n{Strago}: تقول الأسطورة إنهن مخبآت في مكان ما بعيدا عن متناول البشر.\nأقول إنهن وراء البوابة المختومة…"
+  },
+  {
+   "id": "espers.2043",
+   "context": "Message 2043 of the dialogue: {Terra}: I wonder if the barrier that protects that place is generated by those stone goddesses?",
+   "text": "{Terra}: أتساءل إن كان الحاجز الذي يحمي ذلك المكان تولده تلك الإلهات الحجرية؟"
+  },
+  {
+   "id": "espers.2044",
+   "context": "Message 2044 of the dialogue: {Relm}: Are these…Espers?!",
+   "text": "{Relm}: أهؤلاء… إسبرات؟!"
+  },
+  {
+   "id": "espers.2045",
+   "context": "Message 2045 of the dialogue: {Terra}: I didn't think they'd look so… {Wait}{page}{Locke}: Gramps, take {Relm} and clear outta here!",
+   "text": "{Terra}: لم أتوقع أن يبدوا هكذا… {Wait}\n{Locke}: جدو، خذ {Relm} واخرجا من هنا!"
+  },
+  {
+   "id": "espers.2046",
+   "context": "Message 2046 of the dialogue: {Strago}: What about you?",
+   "text": "{Strago}: وماذا عنكم؟"
+  },
+  {
+   "id": "espers.2047",
+   "context": "Message 2047 of the dialogue: YURA: Halt!",
+   "text": "يورا: قفوا!"
+  },
+  {
+   "id": "espers.2048",
+   "context": "Message 2048 of the dialogue: {Relm}: What is it?{line}{Strago}: I sense some immense magical power in {Terra}… {Wait}It…frightens me…",
+   "text": "{Relm}: ما الأمر؟{line}{Strago}: أشعر بقوة سحرية هائلة في {Terra}… {Wait}إنها… تخيفني…"
+  },
+  {
+   "id": "espers.2049",
+   "context": "Message 2049 of the dialogue: {Locke}: I wonder if she's gonna go ballistic again?!",
+   "text": "{Locke}: أتساءل إن كانت ستفقد السيطرة مجددا؟!"
+  },
+  {
+   "id": "espers.2050",
+   "context": "Message 2050 of the dialogue: YURA: You're somehow different…{line}{Wait}I sense a familiar power radiating from you…{page}{Terra}: Yes.",
+   "text": "يورا: أنت مختلفة بطريقة ما…{line}{Wait}أشعر بقوة مألوفة تشع منك…\n{Terra}: نعم."
+  },
+  {
+   "id": "espers.2051",
+   "context": "Message 2051 of the dialogue: {Strago}: You're the Espers that fled through the sealed gate?{page}YURA: As a rule, we are not allowed to visit to your world.{page}We few had gathered near the gate, and were wondering how we could save the Espers that had been kidnapped.{page}It was just a coincidence that {Terra} appeared when she did…",
+   "text": "{Strago}: أنتم الإسبرات الذين فروا عبر البوابة المختومة؟\nيورا: كقاعدة، لا يسمح لنا بزيارة عالمكم.\nكنا قلة اجتمعنا قرب البوابة، نتساءل كيف ننقذ الإسبرات الذين اختطفوا.\nوكانت مجرد مصادفة أن ظهرت {Terra} حين ظهرت…"
+  },
+  {
+   "id": "espers.2052",
+   "context": "Message 2052 of the dialogue: {Terra}: I felt…{line}your presence…{line}through the gate.{page}YURA: We bolted the moment {Terra} opened the gate.{line}But once in your world, we lost control of our powers.",
+   "text": "{Terra}: شعرت…{line}بوجودكم…{line}عبر البوابة.\nيورا: اندفعنا لحظة فتحت {Terra} البوابة.{line}لكن ما إن دخلنا عالمكم حتى فقدنا السيطرة على قوانا."
+  },
+  {
+   "id": "espers.2053",
+   "context": "Message 2053 of the dialogue: YURA: We completely leveled a city…and took some innocent lives…",
+   "text": "يورا: سوينا مدينة كاملة بالأرض… وأزهقنا أرواحا بريئة…"
+  },
+  {
+   "id": "espers.2054",
+   "context": "Message 2054 of the dialogue: {Terra}: That's what happened to me! I lost all control of my power…",
+   "text": "{Terra}: هذا ما حدث لي! فقدت كل سيطرة على قوتي…"
+  },
+  {
+   "id": "espers.2055",
+   "context": "Message 2055 of the dialogue: {Strago}: There must be something in your world that allows you to focus your power differently.{page}You must use caution while in our world…",
+   "text": "{Strago}: لا بد أن في عالمكم شيئا يتيح لكم تركيز قوتكم بطريقة مختلفة.\nعليكم توخي الحذر ما دمتم في عالمنا…"
+  },
+  {
+   "id": "espers.2056",
+   "context": "Message 2056 of the dialogue: YURA: We are deeply sorry to have caused you humans such suffering and pain.",
+   "text": "يورا: نأسف بشدة لما سببناه لكم أيها البشر من معاناة وألم."
+  },
+  {
+   "id": "espers.2057",
+   "context": "Message 2057 of the dialogue: {Locke}: The past is history. The Empire seems to want to talk peace with you. Why not come with us?{page}YURA: They would forgive us so easily?",
+   "text": "{Locke}: الماضي مضى. يبدو أن الإمبراطورية تريد التفاوض على السلام معكم. لم لا تأتون معنا؟\nيورا: أيغفرون لنا بهذه السهولة؟"
+  },
+  {
+   "id": "espers.2058",
+   "context": "Message 2058 of the dialogue: {Locke}: Let's go to Thamasa and talk with General Leo.{line}{Terra}: Right!",
+   "text": "{Locke}: لنذهب إلى ثماسا ونتكلم مع الجنرال ليو.{line}{Terra}: حسنا!"
+  },
+  {
+   "id": "espers.2059",
+   "context": "Message 2059 of the dialogue: {Locke}: General Leo.{page}LEO: {Locke}…you're back! And you've made the Espers understand our desire for peace!",
+   "text": "{Locke}: أيها الجنرال ليو.\nليو: {Locke}… عدتم! وجعلتم الإسبرات يفهمون رغبتنا في السلام!"
+  },
+  {
+   "id": "espers.2060",
+   "context": "Message 2060 of the dialogue: LEO: I am General Leo.{line}May I have your name, please?{line}YURA: I am called Yura.",
+   "text": "ليو: أنا الجنرال ليو.{line}أيمكنني معرفة اسمك، من فضلك؟{line}يورا: أدعى يورا."
+  },
+  {
+   "id": "espers.2061",
+   "context": "Message 2061 of the dialogue: YURA: We have done something inexcusable to your people.{page}YURA: This probably isn't the time or place to ask for your forgiveness, but…",
+   "text": "يورا: فعلنا بشعبكم شيئا لا يغتفر.\nيورا: ربما ليس هذا وقت طلب المغفرة ولا مكانه، لكن…"
+  },
+  {
+   "id": "espers.2062",
+   "context": "Message 2062 of the dialogue: LEO: Speak no further.{line}It is we who owe you an apology. We hungered for your power…{page}How close we came to reenacting the War of the Magi!!!{page}YURA: We must put this all behind us.",
+   "text": "ليو: لا تقل المزيد.{line}نحن من ندين لكم باعتذار. تعطشنا إلى قوتكم…\nكم اقتربنا من إعادة تمثيل حرب السحرة!!!\nيورا: علينا أن نترك كل هذا وراءنا."
+  },
+  {
+   "id": "leo.2063",
+   "context": "Message 2063 of the dialogue: KEFKA: I don't care for the appearance of this pitiful little hamlet…{line}So burn it!!",
+   "text": "كيفكا: لا يعجبني منظر هذه القرية الصغيرة البائسة…{line}فأحرقوها!!"
+  },
+  {
+   "id": "leo.2064",
+   "context": "Message 2064 of the dialogue: {Locke}: I believe our job is finally over! I, for one, could use some peace and quiet…{page}{Celes}: Let's return to Vector.",
+   "text": "{Locke}: أظن أن مهمتنا انتهت أخيرا! أنا شخصيا أحتاج إلى بعض الهدوء والسكينة…\n{Celes}: لنعد إلى فيكتور."
+  },
+  {
+   "id": "leo.2065",
+   "context": "Message 2065 of the dialogue: {Celes}: Please, not another word.",
+   "text": "{Celes}: أرجوك، لا كلمة أخرى."
+  },
+  {
+   "id": "leo.2066",
+   "context": "Message 2066 of the dialogue: {Relm}: I'm too hot, Grandpa.{line}{Strago}: Kids!!",
+   "text": "{Relm}: أشعر بحر شديد يا جدي.{line}{Strago}: أطفال!!"
+  },
+  {
+   "id": "leo.2067",
+   "context": "Message 2067 of the dialogue: LEO: Kefka! What ARE you doing?!{line}KEFKA: G'ha, ha, ha! Emperor's orders!{page}I'm to bring the Magicite remains of these Espers to his excellency! Behold! A Magicite mother lode!!",
+   "text": "ليو: كيفكا! ماذا تفعل؟!{line}كيفكا: غها، ها، ها! أوامر الإمبراطور!\nعلي أن أحضر بقايا الماجيسايت من هؤلاء الإسبرات إلى صاحب الجلالة! انظروا! منجم ماجيسايت هائل!!"
+  },
+  {
+   "id": "leo.2068",
+   "context": "Message 2068 of the dialogue: LEO: Kefka! No!",
+   "text": "ليو: كيفكا! لا!"
+  },
+  {
+   "id": "leo.2069",
+   "context": "Message 2069 of the dialogue: KEFKA: Shut up!",
+   "text": "كيفكا: اخرس!"
+  },
+  {
+   "id": "leo.2070",
+   "context": "Message 2070 of the dialogue: M.TEK TROOPER: General Leo, prepare yourself!",
+   "text": "جندي الماجيتك: أيها الجنرال ليو، استعد!"
+  },
+  {
+   "id": "leo.2071",
+   "context": "Message 2071 of the dialogue: LEO: No.{line}I won't let this happen!",
+   "text": "ليو: لا.{line}لن أدع هذا يحدث!"
+  },
+  {
+   "id": "leo.2072",
+   "context": "Message 2072 of the dialogue: LEO: Kefka!{line}{Wait}Your behavior is dishonorable!{line}I can't allow this!",
+   "text": "ليو: كيفكا!{line}{Wait}سلوكك مشين!{line}لا أستطيع السماح بهذا!"
+  },
+  {
+   "id": "leo.2073",
+   "context": "Message 2073 of the dialogue: KEFKA: Hee, hee…!{line}How 'bout a little Magitek mayhem!",
+   "text": "كيفكا: هي، هي…!{line}ما رأيك في قليل من فوضى الماجيتك!"
+  },
+  {
+   "id": "leo.2074",
+   "context": "Message 2074 of the dialogue: KEFKA: Now for a little Magicite hocus-pocus…!",
+   "text": "كيفكا: والآن قليل من شعوذة الماجيسايت…!"
+  },
+  {
+   "id": "leo.2075",
+   "context": "Message 2075 of the dialogue: KEFKA: Whoa! Yes, I feel some incredible magic power here, today! Wave after wave of pure, magical energy…",
+   "text": "كيفكا: أوووه! نعم، أشعر بقوة سحرية مذهلة هنا اليوم! موجة بعد موجة من الطاقة السحرية الخالصة…"
+  },
+  {
+   "id": "leo.2076",
+   "context": "Message 2076 of the dialogue: KEFKA: I'd say you're all charged up, boys and girls…or whatever…{page}Say, remind me to show you my Magicite collection someday! You might see a few familiar faces!!!",
+   "text": "كيفكا: أقول إنكم مشحونون تماما يا أولاد ويا بنات… أو أيا كنتم…\nبالمناسبة، ذكروني أن أريكم مجموعتي من الماجيسايت يوما! قد ترون بعض الوجوه المألوفة!!!"
+  },
+  {
+   "id": "leo.2077",
+   "context": "Message 2077 of the dialogue: KEFKA: First, let's neutralize your abilities.",
+   "text": "كيفكا: أولا، لنبطل قدراتكم."
+  },
+  {
+   "id": "leo.2078",
+   "context": "Message 2078 of the dialogue: KEFKA: Now, little Espers…{line}Let's see whatcha got!",
+   "text": "كيفكا: والآن أيها الإسبرات الصغار…{line}لنر ما عندكم!"
+  },
+  {
+   "id": "leo.2079",
+   "context": "Message 2079 of the dialogue: KEFKA: This is ridiculous!{line}I had no idea you were such wimps! {Wait}Time to put a stop to all of this.",
+   "text": "كيفكا: هذا سخيف!{line}لم أكن أعرف أنكم ضعفاء إلى هذا الحد! {Wait}حان وقت إنهاء كل هذا."
+  },
+  {
+   "id": "leo.2080",
+   "context": "Message 2080 of the dialogue: KEFKA: Eh?!{line}You wanna take me on?{line}Fine. Here I am…",
+   "text": "كيفكا: إيه؟!{line}تريد أن تتحداني؟{line}حسنا. ها أنا…"
+  },
+  {
+   "id": "leo.2081",
+   "context": "Message 2081 of the dialogue: KEFKA: Phew…{line}I think I have plenty of Magicite for the time being…{page}that is, until I make my way through your precious sealed gate!!",
+   "text": "كيفكا: أوف…{line}أظن أن عندي ما يكفي من الماجيسايت في الوقت الحالي…\nإلى أن أشق طريقي عبر بوابتكم المختومة الغالية!!"
+  },
+  {
+   "id": "leo.2082",
+   "context": "Message 2082 of the dialogue: It hurts…",
+   "text": "يؤلمني…"
+  },
+  {
+   "id": "leo.2083",
+   "context": "Message 2083 of the dialogue: Curse the Empire…Curse Kefka!",
+   "text": "لعنة على الإمبراطورية… لعنة على كيفكا!"
+  },
+  {
+   "id": "leo.2084",
+   "context": "Message 2084 of the dialogue: The Espers…are they all…?",
+   "text": "الإسبرات… هل كلهم…؟"
+  },
+  {
+   "id": "leo.2085",
+   "context": "Message 2085 of the dialogue: MAYOR: I can only take some comfort in the fact that there were so few casualties.",
+   "text": "العمدة: عزائي الوحيد أن الضحايا كانوا قلة."
+  },
+  {
+   "id": "leo.2086",
+   "context": "Message 2086 of the dialogue: {Terra}: General Leo…",
+   "text": "{Terra}: أيها الجنرال ليو…"
+  },
+  {
+   "id": "leo.2087",
+   "context": "Message 2087 of the dialogue: {Terra}: People only seem to want power. Do they really want to be like me?",
+   "text": "{Terra}: يبدو أن الناس لا يريدون سوى القوة. أيريدون حقا أن يكونوا مثلي؟"
+  },
+  {
+   "id": "leo.2088",
+   "context": "Message 2088 of the dialogue: {Terra}: I…I wanted to learn so much more from you…",
+   "text": "{Terra}: أنا… أردت أن أتعلم منك أكثر بكثير…"
+  },
+  {
+   "id": "leo.2089",
+   "context": "Message 2089 of the dialogue: Interceptor!?{line}That's a nasty wound!",
+   "text": "إنترسبتور!؟{line}هذا جرح بليغ!"
+  },
+  {
+   "id": "leo.2090",
+   "context": "Message 2090 of the dialogue: {Locke}: We not only lost Leo, but {Shadow}, too…{line}{Wait}Curse the Empire!",
+   "text": "{Locke}: لم نفقد ليو فحسب، بل {Shadow} أيضا…{line}{Wait}لعنة على الإمبراطورية!"
+  },
+  {
+   "id": "leo.2091",
+   "context": "Message 2091 of the dialogue: {Locke}: This'll have to do…",
+   "text": "{Locke}: هذا سيفي بالغرض…"
+  },
+  {
+   "id": "leo.2092",
+   "context": "Message 2092 of the dialogue: {Celes}: He was so gentle…",
+   "text": "{Celes}: كان لطيفا جدا…"
+  },
+  {
+   "id": "leo.2093",
+   "context": "Message 2093 of the dialogue: {Relm}: I'll go with you.",
+   "text": "{Relm}: سأذهب معكم."
+  },
+  {
+   "id": "leo.2094",
+   "context": "Message 2094 of the dialogue: {Locke}: Now I'm worried about {Edgar} and the others…{page}{Terra}: I wish I could say they were safe…",
+   "text": "{Locke}: الآن أنا قلق على {Edgar} والآخرين…\n{Terra}: ليتني أستطيع القول إنهم بأمان…"
+  },
+  {
+   "id": "leo.2095",
+   "context": "Message 2095 of the dialogue: {Setzer}: We've been had!!{line}The Emperor is a liar!",
+   "text": "{Setzer}: لقد خدعنا!!{line}الإمبراطور كاذب!"
+  },
+  {
+   "id": "leo.2096",
+   "context": "Message 2096 of the dialogue: {Cyan}: Thanks to {Edgar}, we escaped before anything bad happened…",
+   "text": "{Cyan}: بفضل {Edgar}، هربنا قبل أن يحدث أي مكروه…"
+  },
+  {
+   "id": "leo.2097",
+   "context": "Message 2097 of the dialogue: {Locke}: Way to go, {Edgar}!",
+   "text": "{Locke}: أحسنت يا {Edgar}!"
+  },
+  {
+   "id": "leo.2098",
+   "context": "Message 2098 of the dialogue: {Edgar}: I got to know the gal who brought us tea.{line}After a while, she just blurted out the whole crooked plan.",
+   "text": "{Edgar}: تعرفت إلى الفتاة التي جلبت لنا الشاي.{line}وبعد قليل، أفشت الخطة الملتوية كلها."
+  },
+  {
+   "id": "leo.2099",
+   "context": "Message 2099 of the dialogue: {Sabin}: So…you finally hit pay dirt, eh?",
+   "text": "{Sabin}: إذن… أصبت الهدف أخيرا، ها؟"
+  },
+  {
+   "id": "leo.2100",
+   "context": "Message 2100 of the dialogue: {Edgar}: Watch your mouth!{line}There're ladies present!{line}I was a perfect gentleman.",
+   "text": "{Edgar}: احترس لكلامك!{line}هناك سيدات حاضرات!{line}كنت رجلا مهذبا تماما."
+  },
+  {
+   "id": "leo.2101",
+   "context": "Message 2101 of the dialogue: {Locke}: General Leo's gone…{line}{Wait}Kefka did him in… {Wait}",
+   "text": "{Locke}: الجنرال ليو رحل…{line}{Wait}كيفكا قضى عليه… {Wait}"
+  },
+  {
+   "id": "leo.2102",
+   "context": "Message 2102 of the dialogue: {Cyan}: Sir Leo?! Gone?!{line}{Wait}What a waste…{line}He was their finest soldier…",
+   "text": "{Cyan}: السيد ليو؟! رحل؟!{line}{Wait}يا للخسارة…{line}كان أفضل جنودهم…"
+  },
+  {
+   "id": "leo.2103",
+   "context": "Message 2103 of the dialogue: {Edgar}: We need to rethink our plans. Let's return to the airship.",
+   "text": "{Edgar}: علينا إعادة التفكير في خططنا. لنعد إلى السفينة الطائرة."
+  },
+  {
+   "id": "leo.2104",
+   "context": "Message 2104 of the dialogue: {Strago}: May I accompany you?",
+   "text": "{Strago}: أيمكنني مرافقتكم؟"
+  },
+  {
+   "id": "leo.2105",
+   "context": "Message 2105 of the dialogue: {Edgar}: Who're you?",
+   "text": "{Edgar}: من أنت؟"
+  },
+  {
+   "id": "leo.2106",
+   "context": "Message 2106 of the dialogue: {Locke}: He's one of this town's citizens.",
+   "text": "{Locke}: إنه أحد سكان هذه البلدة."
+  },
+  {
+   "id": "leo.2107",
+   "context": "Message 2107 of the dialogue: {Terra}: He's descended from the Mage Warriors of yore…{line}I think he can be a big help.",
+   "text": "{Terra}: إنه من نسل فرسان السحر القدامى…{line}أظن أنه سيكون عونا كبيرا."
+  },
+  {
+   "id": "leo.2108",
+   "context": "Message 2108 of the dialogue: {Strago}: We must expect the Empire to flex its new-found muscle soon.",
+   "text": "{Strago}: علينا أن نتوقع أن تستعرض الإمبراطورية عضلاتها الجديدة قريبا."
+  },
+  {
+   "id": "leo.2109",
+   "context": "Message 2109 of the dialogue: {Relm}: I'm coming along, too.",
+   "text": "{Relm}: أنا قادمة أيضا."
+  },
+  {
+   "id": "leo.2110",
+   "context": "Message 2110 of the dialogue: {Sabin}: Yeah, right kid!",
+   "text": "{Sabin}: نعم، طبعا يا صغيرة!"
+  },
+  {
+   "id": "leo.2111",
+   "context": "Message 2111 of the dialogue: {Relm}: What?{line}Who is this puffed up aerobics instructor, anyway?{page}{Sabin}: Kid's got quite a lip!",
+   "text": "{Relm}: ماذا؟{line}ومن يكون مدرب الرياضة المنفوخ هذا أصلا؟\n{Sabin}: للصغيرة لسان سليط!"
+  },
+  {
+   "id": "leo.2112",
+   "context": "Message 2112 of the dialogue: {Relm}: Aaack!{line}I'm gonna paint your portrait!",
+   "text": "{Relm}: آآك!{line}سأرسم صورتك!"
+  },
+  {
+   "id": "leo.2113",
+   "context": "Message 2113 of the dialogue: Uwaaa! S…stop!",
+   "text": "أوااا! ت… توقفي!"
+  },
+  {
+   "id": "leo.2114",
+   "context": "Message 2114 of the dialogue: {Strago}: All right all ready!{line}If you insist…{line}{Relm}: That's better!",
+   "text": "{Strago}: حسنا، حسنا!{line}إن كنت مصرة…{line}{Relm}: هذا أفضل!"
+  },
+  {
+   "id": "leo.2115",
+   "context": "Message 2115 of the dialogue: {Relm}: What's wrong, lover boy?{line}{Edgar}: How old are you?{line}{Relm}: 10…why?",
+   "text": "{Relm}: ما بك يا فتى الغرام؟{line}{Edgar}: كم عمرك؟{line}{Relm}: 10… لماذا؟"
+  },
+  {
+   "id": "leo.2116",
+   "context": "Message 2116 of the dialogue: {Edgar}: You've grown up entirely too fast!{line}{Wait}Lighten up, okay?!",
+   "text": "{Edgar}: كبرت أسرع مما ينبغي بكثير!{line}{Wait}تمهلي، اتفقنا؟!"
+  },
+  {
+   "id": "leo.2117",
+   "context": "Message 2117 of the dialogue: General Leo…",
+   "text": "أيها الجنرال ليو…"
+  },
+  {
+   "id": "continent.2118",
+   "context": "Message 2118 of the dialogue: GESTAHL: Fuwa, ha, ha!{line}Now THIS is power!{line}This, and my Magicite…{line}now nothing can stop me!",
+   "text": "غشتال: فووا، ها، ها!{line}هذه هي القوة!{line}هذه، ومع ماجيسايتي…{line}لا شيء يوقفني الآن!"
+  },
+  {
+   "id": "continent.2119",
+   "context": "Message 2119 of the dialogue: {Strago}: The beginning of all magic…{line}{Terra}: Those?{page}{Strago}: It is said that they somehow neutralized each other's power, then sealed themselves away…{page}{Strago}: If the 3 statues should ever be moved out of alignment, the resulting inbalance of power would…{page}…rearrange the face of our planet…{line}{Terra}: What?!",
+   "text": "{Strago}: بداية كل سحر…{line}{Terra}: تلك؟\n{Strago}: يقال إنهن أبطلن قوة بعضهن بطريقة ما، ثم ختمن أنفسهن…\n{Strago}: لو أزيحت التماثيل الثلاثة عن اصطفافها يوما، فإن اختلال القوة الناتج…\n…سيعيد تشكيل وجه كوكبنا…{line}{Terra}: ماذا؟!"
+  },
+  {
+   "id": "continent.2120",
+   "context": "Message 2120 of the dialogue: Quick! Back to the airship!!",
+   "text": "بسرعة! عودوا إلى السفينة الطائرة!!"
+  },
+  {
+   "id": "continent.2121",
+   "context": "Message 2121 of the dialogue: {Setzer}: The Empire's after the sealed gate! They're looking for some statues or something.{page}{Strago}: No!!!",
+   "text": "{Setzer}: الإمبراطورية تسعى وراء البوابة المختومة! يبحثون عن تماثيل أو شيء من هذا القبيل.\n{Strago}: لا!!!"
+  },
+  {
+   "id": "continent.2122",
+   "context": "Message 2122 of the dialogue: {Celes}: What's wrong, {Terra}?{page}{Terra}: The island…{line}The world is groaning in pain…",
+   "text": "{Celes}: ما بك يا {Terra}؟\n{Terra}: الجزيرة…{line}العالم يئن من الألم…"
+  },
+  {
+   "id": "continent.2123",
+   "context": "Message 2123 of the dialogue: GESTAHL: Oh, those silly Espers! To think they opened the gate themselves! The Statues should be just ahead.{page}If we can just get our hands on them, we'll have everything we ever dreamed of!",
+   "text": "غشتال: أوه، أولئك الإسبرات الحمقى! أن يفتحوا البوابة بأنفسهم! التماثيل أمامنا مباشرة.\nإن وضعنا أيدينا عليها، فسيكون لنا كل ما حلمنا به يوما!"
+  },
+  {
+   "id": "continent.2124",
+   "context": "Message 2124 of the dialogue: GESTAHL: Come quickly!",
+   "text": "غشتال: تعالوا بسرعة!"
+  },
+  {
+   "id": "continent.2125",
+   "context": "Message 2125 of the dialogue: {Setzer}: Quick!{line}Let's jump onto that thing!{page}Only 3 allowed in your party.{line}The others must stay on board.",
+   "text": "{Setzer}: بسرعة!{line}لنقفز على ذلك الشيء!\nثلاثة فقط مسموح بهم في الفريق.{line}على الباقين البقاء على المتن."
+  },
+  {
+   "id": "continent.2126",
+   "context": "Message 2126 of the dialogue: Only 3 allowed in your party.{line}The others must stay on board.",
+   "text": "ثلاثة فقط مسموح بهم في الفريق.{line}على الباقين البقاء على المتن."
+  },
+  {
+   "id": "continent.2127",
+   "context": "Message 2127 of the dialogue: Uh, oh!!!{line}The Imperial Airforce (IAF)!{page}We're surrounded!{line}Let's give 'em a bloody lip!",
+   "text": "أوه، لا!!!{line}القوة الجوية الإمبراطورية!\nنحن محاصرون!{line}لنلقنهم درسا!"
+  },
+  {
+   "id": "continent.2128",
+   "context": "Message 2128 of the dialogue: Something…{line}curious…approaches!!",
+   "text": "شيء ما…{line}غريب… يقترب!!"
+  },
+  {
+   "id": "continent.2129",
+   "context": "Message 2129 of the dialogue: Kefka, Gestahl…and the Statues are just ahead.",
+   "text": "كيفكا، وغشتال… والتماثيل أمامنا مباشرة."
+  },
+  {
+   "id": "continent.2130",
+   "context": "Message 2130 of the dialogue: {Shadow}: Down with the Empire! Once I outlived my usefulness, they tried to off me!{page}“We thought you were a goner!”",
+   "text": "{Shadow}: تسقط الإمبراطورية! ما إن انتهت فائدتي حتى حاولوا التخلص مني!\n«ظنناك هلكت!»"
+  },
+  {
+   "id": "continent.2131",
+   "context": "Message 2131 of the dialogue: {Shadow}: Is Interceptor all right?{page}“He's fine.{line}Come on, let's go!”",
+   "text": "{Shadow}: هل إنترسبتور بخير؟\n«إنه بخير.{line}هيا، لنذهب!»"
+  },
+  {
+   "id": "continent.2132",
+   "context": "Message 2132 of the dialogue: {Shadow}: Forget about me.{page}“We can't just leave you!”",
+   "text": "{Shadow}: انسوا أمري.\n«لا يمكننا أن نتركك ببساطة!»"
+  },
+  {
+   "id": "continent.2133",
+   "context": "Message 2133 of the dialogue: {Shadow}: I sold my skills to the Empire…{line}I have no right to fight together with you.",
+   "text": "{Shadow}: بعت مهاراتي للإمبراطورية…{line}لا حق لي في القتال معكم."
+  },
+  {
+   "id": "continent.2134",
+   "context": "Message 2134 of the dialogue: {Shadow}: We meet again.",
+   "text": "{Shadow}: نلتقي مجددا."
+  },
+  {
+   "id": "continent.2135",
+   "context": "Message 2135 of the dialogue: The airship's below!{page}Do you wish to return?{line}{Choice} (No){line}{Choice} (Yes)",
+   "text": "السفينة الطائرة في الأسفل!\nأتريد العودة؟{line}{Choice} (لا){line}{Choice} (نعم)"
+  },
+  {
+   "id": "continent.2136",
+   "context": "Message 2136 of the dialogue: GESTAHL: Well, well…",
+   "text": "غشتال: حسنا، حسنا…"
+  },
+  {
+   "id": "continent.2137",
+   "context": "Message 2137 of the dialogue: {Celes}!!{line}Welcome back!{page}{Celes}: I came to stop you!",
+   "text": "{Celes}!!{line}أهلا بعودتك!\n{Celes}: جئت لأوقفك!"
+  },
+  {
+   "id": "continent.2138",
+   "context": "Message 2138 of the dialogue: GESTAHL: Fwa, ha, ha…{line}Then you're just in time to perish. Behold! The Statues!!",
+   "text": "غشتال: فوا، ها، ها…{line}إذن جئت في الوقت المناسب لتهلكي. انظري! التماثيل!!"
+  },
+  {
+   "id": "continent.2139",
+   "context": "Message 2139 of the dialogue: GESTAHL: Ooh! I've got goose bumps! What power…{page}{Celes}: Emperor Gestahl!{line}Please, stop this madness!",
+   "text": "غشتال: أووه! قشعريرة! يا لها من قوة…\n{Celes}: أيها الإمبراطور غشتال!{line}أرجوك، أوقف هذا الجنون!"
+  },
+  {
+   "id": "continent.2140",
+   "context": "Message 2140 of the dialogue: GESTAHL: {Celes}…{line}Come to me, my pretty!{page}You and Kefka were given life to serve me!!{line}It is your birthright to rule the world with me!!",
+   "text": "غشتال: {Celes}…{line}تعالي إلي يا جميلتي!\nأنت وكيفكا منحتما الحياة لتخدماني!!{line}حقك بالولادة أن تحكمي العالم معي!!"
+  },
+  {
+   "id": "continent.2141",
+   "context": "Message 2141 of the dialogue: KEFKA: Kill the others and we'll overlook your treachery!",
+   "text": "كيفكا: اقتلي الآخرين وسنغض الطرف عن خيانتك!"
+  },
+  {
+   "id": "continent.2142",
+   "context": "Message 2142 of the dialogue: KEFKA: Take this sword!{line}Take care of them. Immediately!!",
+   "text": "كيفكا: خذي هذا السيف!{line}تولي أمرهم. فورا!!"
+  },
+  {
+   "id": "continent.2143",
+   "context": "Message 2143 of the dialogue: GESTAHL: {Celes}…together we can rule an entire world!{line}Think of it…!",
+   "text": "غشتال: {Celes}… معا نستطيع أن نحكم عالما بأكمله!{line}فكري في الأمر…!"
+  },
+  {
+   "id": "continent.2144",
+   "context": "Message 2144 of the dialogue: {Celes}: Power only breeds war…{line}I wish I'd never been…born.",
+   "text": "{Celes}: القوة لا تولد إلا الحرب…{line}ليتني لم… أولد قط."
+  },
+  {
+   "id": "continent.2145",
+   "context": "Message 2145 of the dialogue: KEFKA: Ouch!!",
+   "text": "كيفكا: آي!!"
+  },
+  {
+   "id": "continent.2146",
+   "context": "Message 2146 of the dialogue: KEFKA: B…blood!?",
+   "text": "كيفكا: د… دم!؟"
+  },
+  {
+   "id": "continent.2147",
+   "context": "Message 2147 of the dialogue: KEFKA: You…vicious brat!",
+   "text": "كيفكا: أيتها… الشقية الشرسة!"
+  },
+  {
+   "id": "continent.2148",
+   "context": "Message 2148 of the dialogue: Grrr… {Wait}Aargh…",
+   "text": "غرر… {Wait}آرغ…"
+  },
+  {
+   "id": "continent.2149",
+   "context": "Message 2149 of the dialogue: I{line}hate hate hate{line}hate hate hate…{page}hate hate hate hate hate{line}hate hate hate hate hate{page}{line}{Spaces 06}HATE YOU! Grrr…",
+   "text": "أنا{line}أكره أكره أكره{line}أكره أكره أكره…\nأكره أكره أكره أكره أكره{line}أكره أكره أكره أكره أكره\n{center}{line}أكرهك! غرر…"
+  },
+  {
+   "id": "continent.2150",
+   "context": "Message 2150 of the dialogue: KEFKA: Goddesses…you were born only to fight.{line}I implore you…show me your power!!",
+   "text": "كيفكا: أيتها الإلهات… لم تولدن إلا لتقاتلن.{line}أتوسل إليكن… أرينني قوتكن!!"
+  },
+  {
+   "id": "continent.2151",
+   "context": "Message 2151 of the dialogue: KEFKA: I command you!{line}Give me your power!{line}Arrrgh! Curses!",
+   "text": "كيفكا: آمركن!{line}أعطينني قوتكن!{line}أرررغ! لعنة!"
+  },
+  {
+   "id": "continent.2152",
+   "context": "Message 2152 of the dialogue: KEFKA: Listen to me,{line}or you'll regret it!{line}Give me…POWER!",
+   "text": "كيفكا: أصغين إلي،{line}وإلا ندمتن!{line}أعطينني… القوة!"
+  },
+  {
+   "id": "continent.2153",
+   "context": "Message 2153 of the dialogue: GESTAHL: Kefka, stop it!{line}Revive those statues, and you'll destroy the very world we're trying to possess!{page}KEFKA: Shuddap!",
+   "text": "غشتال: كيفكا، توقف!{line}أحي تلك التماثيل، وستدمر العالم نفسه الذي نحاول امتلاكه!\nكيفكا: اخرس!"
+  },
+  {
+   "id": "continent.2154",
+   "context": "Message 2154 of the dialogue: GESTAHL: There'll be no one to worship us…",
+   "text": "غشتال: لن يبقى أحد ليعبدنا…"
+  },
+  {
+   "id": "continent.2155",
+   "context": "Message 2155 of the dialogue: {Celes}: Snap out of it, Kefka!",
+   "text": "{Celes}: أفق يا كيفكا!"
+  },
+  {
+   "id": "continent.2156",
+   "context": "Message 2156 of the dialogue: {Celes}: Oh, that's really smart, Kefka!{line}Disturb their delicate balance, and they'll go haywire…!",
+   "text": "{Celes}: أوه، هذا ذكاء حقا يا كيفكا!{line}أخل بتوازنهن الدقيق، وسيجن جنونهن…!"
+  },
+  {
+   "id": "continent.2157",
+   "context": "Message 2157 of the dialogue: KEFKA: Who're you?!",
+   "text": "كيفكا: من أنت؟!"
+  },
+  {
+   "id": "continent.2158",
+   "context": "Message 2158 of the dialogue: KEFKA: Noooo!",
+   "text": "كيفكا: لااا!"
+  },
+  {
+   "id": "continent.2159",
+   "context": "Message 2159 of the dialogue: {Shadow}: Go!{line}There are people counting on you!",
+   "text": "{Shadow}: اذهبوا!{line}هناك من يعتمدون عليكم!"
+  },
+  {
+   "id": "continent.2160",
+   "context": "Message 2160 of the dialogue: {Shadow}……{line}Get outta here on the double!",
+   "text": "{Shadow}……{line}اخرجوا من هنا فورا!"
+  },
+  {
+   "id": "continent.2161",
+   "context": "Message 2161 of the dialogue: {Shadow}: Don't worry about me! Run!!{line}I can't stop this chain reaction!{page}I'll see you again.{line}Count on it!{page}KEFKA: You can't escape me!!",
+   "text": "{Shadow}: لا تقلقوا علي! اهربوا!!{line}لا أستطيع إيقاف هذا التفاعل المتسلسل!\nسأراكم مجددا.{line}ثقوا بذلك!\nكيفكا: لن تفلتوا مني!!"
+  },
+  {
+   "id": "continent.2162",
+   "context": "Message 2162 of the dialogue: The airship's below.{line}{Choice} (Jump!!){line}{Choice} (Wait!!)",
+   "text": "السفينة الطائرة في الأسفل.{line}{Choice} (نقفز!!){line}{Choice} (ننتظر!!)"
+  },
+  {
+   "id": "continent.2163",
+   "context": "Message 2163 of the dialogue: {Choice} (Jump!!){line}{Choice} (Gotta wait for {Shadow}…)",
+   "text": "{Choice} (نقفز!!){line}{Choice} (علينا انتظار {Shadow}…)"
+  },
+  {
+   "id": "continent.2164",
+   "context": "Message 2164 of the dialogue: “{Shadow}!!”{line}{Shadow}: I'll be blown to bits before I can even collect my pay…",
+   "text": "«{Shadow}!!»{line}{Shadow}: سأتمزق إربا قبل أن أقبض أجري حتى…"
+  },
+  {
+   "id": "continent.2165",
+   "context": "Message 2165 of the dialogue: Can't you diffuse the statues?!",
+   "text": "ألا تستطيع إبطال التماثيل؟!"
+  },
+  {
+   "id": "continent.2166",
+   "context": "Message 2166 of the dialogue: {Setzer}: Hang on!",
+   "text": "{Setzer}: تمسكوا!"
+  },
+  {
+   "id": "continent.2167",
+   "context": "Message 2167 of the dialogue: {line}{Spaces 05}On that day, {Wait}the world{line}{Spaces 05}was changed forever… {Pause 20}{Key}",
+   "text": "{center}{line}في ذلك اليوم، {Wait}تغير العالم{line}إلى الأبد… {Pause 20}{Key}"
   }
  ]
 }
