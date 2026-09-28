@@ -200,6 +200,7 @@ def test_assemblers_are_registered_per_cpu(tmp_path, monkeypatch):
     assert assembler_for("arm7tdmi") is hooks.assemble_gnu_arm
     assert assembler_for("arm946e-s") is hooks.assemble_gnu_arm9
     assert assembler_for("r3000") is hooks.assemble_gnu_r3000
+    assert assembler_for("68000") is hooks.assemble_gnu_68000
     with pytest.raises(ClassicRetroError) as error:
         register_assembler("fake-cpu", fake)
     assert error.value.code is ErrorCode.ADAPTER_ID_CONFLICT
@@ -220,6 +221,20 @@ def test_mips_hook_programs_assemble_with_their_delay_slots(tmp_path):
     program = HookProgram("test hooks", source, 0x801C2600, code, {"entry": 0, "after": 8}, "r3000")
     assert program.check()["match"] is True
     assert program.symbol_address("after") == 0x801C2608
+
+
+@pytest.mark.skipif(shutil.which("m68k-linux-gnu-as") is None, reason="needs GNU m68k binutils")
+def test_68000_hook_programs_assemble_with_registers_without_a_prefix(tmp_path):
+    source = tmp_path / "hooks.s"
+    source.write_text(
+        ".text\n.globl entry\nentry:\n    moveq #1,d0\n    rts\n"
+        ".globl after\nafter:\n    jmp 0x6278\n"
+    )
+    # moveq, rts, and a jump to an address under $8000 in its short absolute form.
+    code = bytes.fromhex("70014e754ef86278")
+    program = HookProgram("test hooks", source, 0x042600, code, {"entry": 0, "after": 4}, "68000")
+    assert program.check()["match"] is True
+    assert program.symbol_address("after") == 0x042604
 
 
 def test_outputs_report_and_files(tmp_path):

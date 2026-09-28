@@ -94,6 +94,7 @@ runs the same way for every target.
 | `ridge-racer` | Ridge Racer (USA), PlayStation | ROM overlay | `glyph-font` |
 | `chrono-trigger` | Chrono Trigger (USA), Super NES | ROM overlay | `glyph-font` |
 | `link-to-the-past` | The Legend of Zelda: A Link to the Past (USA), Super NES | ROM overlay | `glyph-font` |
+| `shining-force-2` | Shining Force II (USA), Mega Drive | ROM overlay | `glyph-font` |
 
 ```text
 classic-retro targets list                          # every target, its documents and operations
@@ -130,7 +131,7 @@ classic-retro targets strip fomt.workspace.json --out fomt.json
 Every check and build holds a translations file against the originals pinned in the
 target's code. See [the translator's guide](docs/TRANSLATING_AR.md) (in Arabic).
 
-The four rendering strategies are what the twenty targets proved, not the only ones
+The four rendering strategies are what the twenty-one targets proved, not the only ones
 possible. Games on other platforms will need other methods, and the strategy and
 target registries accept them from this repository or from other packages through
 entry points. See [the rendering strategies](docs/ARABIC_STRATEGIES.md) and
@@ -160,8 +161,9 @@ A script holds commands such as `run 300`, `tap START`, `touch 128 272`, `shot m
 
 ## Repository status
 
-**Localization platform with twenty reference targets: twelve on the Game Boy Advance, three
-on the Nintendo DS, three on the PlayStation and two on the Super NES.**
+**Localization platform with twenty-one reference targets: twelve on the Game Boy Advance,
+three on the Nintendo DS, three on the PlayStation, two on the Super NES and one on the Mega
+Drive.**
 
 The first end-to-end example translates the 13 Professor OAK speech strings in
 the new-game intro. This is a renderer/font test, not a complete game translation.
@@ -415,5 +417,22 @@ of the pen and the name as a block left to right, and move the lines against the
 side; the English messages stay as they were, and the patch is about 4 KB. See
 [the A Link to the Past testing guide](docs/ALTTP_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/ALTTP_ARABIC_RENDERER.md).
+
+The twenty-first reference target, and the first on the Mega Drive, is **Shining Force II
+(USA)**. Its text engine was read from the
+[ShiningForceCentral/SF2DISASM](https://github.com/ShiningForceCentral/SF2DISASM)
+disassembly, which assembles back into this ROM, checked against the ROM's bytes and run in
+Genesis Plus GX. Three strings of the witch who starts a new game are in Arabic, chosen to be
+unlike: her greeting, which clears the window and waits; her question, three English lines
+laid out again as two; and her word on the name the player gave, which starts with it. The
+game decodes its strings from Huffman code a symbol at a time and draws them with a
+variable-width font of 15 rows, a bit a pixel, so the Arabic takes the `glyph-font` strategy
+with a font of its own in the same format, one colour, 10 pixels, and strings stored
+uncompressed. Four 68000 hooks, assembled with GNU binutils, in the free bytes at the end of
+the section that holds the text, send a translated string to its Arabic, draw each glyph at
+the mirror of the pen and a name as a block left to right, and move the waiting arrow to the
+window's left; the English strings stay as they were, the ROM keeps its size, and the patch
+is about 2 KB. See [the Shining Force II testing guide](docs/SF2_ARABIC_TEST_AR.md) and
+[the renderer notes](docs/SF2_ARABIC_RENDERER.md).
 
 See [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md).

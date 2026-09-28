@@ -18,6 +18,7 @@ from classic_retro.engines.pmd import PmdEngineAdapter
 from classic_retro.engines.pokemon_gen3 import PokemonGen3EngineAdapter
 from classic_retro.engines.pokemon_gen4 import PokemonGen4EngineAdapter
 from classic_retro.engines.ridge_racer import RidgeRacerEngineAdapter
+from classic_retro.engines.sf2 import Sf2EngineAdapter
 from classic_retro.engines.sotn import SotnEngineAdapter
 from classic_retro.engines.tactics_ogre import TacticsOgreEngineAdapter
 from classic_retro.engines.tmc import TmcEngineAdapter
@@ -37,6 +38,7 @@ from classic_retro.games.pokemon_firered import PokemonFireRedRev1GameAdapter
 from classic_retro.games.pokemon_mystery_dungeon_red import PokemonMysteryDungeonRedUsaGameAdapter
 from classic_retro.games.pokemon_platinum import PokemonPlatinumUsaGameAdapter
 from classic_retro.games.ridge_racer import RidgeRacerUsaGameAdapter
+from classic_retro.games.shining_force_2 import ShiningForce2UsaGameAdapter
 from classic_retro.games.tactics_ogre import TacticsOgreUsaGameAdapter
 from classic_retro.games.zelda_link_to_the_past import ZeldaLinkToThePastUsaGameAdapter
 from classic_retro.games.zelda_minish_cap import ZeldaMinishCapUsaGameAdapter
@@ -85,6 +87,7 @@ def register_builtin_adapters(registry: AdapterRegistry) -> None:
     registry.register_engine(RidgeRacerEngineAdapter())
     registry.register_engine(ChronoTriggerEngineAdapter())
     registry.register_engine(AlttpEngineAdapter())
+    registry.register_engine(Sf2EngineAdapter())
     registry.register_game(PokemonFireRedRev1GameAdapter())
     registry.register_game(ZeldaMinishCapUsaGameAdapter())
     registry.register_game(FinalFantasyVIAdvanceUsaGameAdapter())
@@ -105,3 +108,4 @@ def register_builtin_adapters(registry: AdapterRegistry) -> None:
     registry.register_game(RidgeRacerUsaGameAdapter())
     registry.register_game(ChronoTriggerUsaGameAdapter())
     registry.register_game(ZeldaLinkToThePastUsaGameAdapter())
+    registry.register_game(ShiningForce2UsaGameAdapter())

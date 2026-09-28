@@ -94,7 +94,7 @@ class _EntryPoint:
         return self._loaded
 
 
-def test_the_twenty_reference_targets_keep_their_order_and_strategies():
+def test_the_twenty_one_reference_targets_keep_their_order_and_strategies():
     registry = build_target_registry(load_external=False)
     described = {target.id: target for target in registry}
     assert list(described) == [
@@ -118,6 +118,7 @@ def test_the_twenty_reference_targets_keep_their_order_and_strategies():
         "ridge-racer",
         "chrono-trigger",
         "link-to-the-past",
+        "shining-force-2",
     ]
     assert registry.using("line-cells") == ["mmbn", "fomt"]
     assert registry.using("text-images") == ["fire-emblem"]
@@ -196,6 +197,17 @@ def test_the_twenty_reference_targets_keep_their_order_and_strategies():
     ]
     assert link_to_the_past.strategies == ("glyph-font",)
     assert len(link_to_the_past.reference_patch_sha256 or "") == 64
+    # The first Mega Drive target: its hooks are 68000 code in free bytes of the ROM.
+    shining_force_2 = described["shining-force-2"]
+    assert (shining_force_2.kind, shining_force_2.platform_id) == ("rom-overlay", "megadrive")
+    assert shining_force_2.operations() == [
+        "check-hooks",
+        "check-translations",
+        "build",
+        "extract",
+    ]
+    assert shining_force_2.strategies == ("glyph-font",)
+    assert len(shining_force_2.reference_patch_sha256 or "") == 64
     adapters = build_registry(load_external=False)
     for target in registry:
         assert (REPO / target.guide).is_file(), target.guide
@@ -548,6 +560,7 @@ def test_game_groups_hold_only_their_engine_tools(capsys):
         "ridge-racer",
         "chrono-trigger",
         "link-to-the-past",
+        "shining-force-2",
     ):
         tools = ["encode-arabic", "source-check"] if group in sources else ["encode-arabic"]
         assert sorted(_subcommands(groups[group])) == tools, group
@@ -560,7 +573,7 @@ def test_game_groups_hold_only_their_engine_tools(capsys):
 
     assert main(["targets", "list"]) == 0
     listed = json.loads(capsys.readouterr().out)
-    assert [target["id"] for target in listed][-1] == "link-to-the-past"
+    assert [target["id"] for target in listed][-1] == "shining-force-2"
     assert main(["targets", "check-hooks", "not-a-target"]) == 2
     assert capsys.readouterr().err.startswith("INVALID_REFERENCE: Unknown localization target")
 
@@ -588,4 +601,4 @@ def test_every_rom_overlay_builds_from_a_revision_detect_knows():
         assert images.items() <= revisions.items(), target.id
         assert set(target.reference_patches) <= set(images), target.id
         checked.append(target.id)
-    assert len(checked) == 18
+    assert len(checked) == 19

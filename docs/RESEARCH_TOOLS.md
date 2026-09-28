@@ -205,6 +205,18 @@ A hit reports these fields:
   - To walk the hero by script, `dump` his place after each move: A Link to the Past's
     Link is at `system_ram:0x20` (Y, then X at `0x22`, 16 bits each), and a move that
     leaves them as they were has met a wall or a table.
+- For the Mega Drive, `libretro-genesisplusgx` (Genesis Plus GX,
+  `genesis_plus_gx_libretro`) runs a ROM without BIOS files. A shot is the picture the
+  core draws (256x224 for Shining Force II). `save_ram` is the cartridge's RAM as the
+  68000 sees it from `$200000`. The RetroPad's `A` is the pad's C.
+  - Its savestates do not keep the save RAM: after a `load` it is all `FF`, which
+    Shining Force II reads as two used slots. Start from power-on, or `poke` the game's
+    signature back after the `load` (Shining Force II's starts at `save_ram:0x2011`, a
+    character every other byte: the cartridge's RAM is on the odd addresses).
+  - The research tools disassemble ARM only; read 68000 code with
+    `m68k-linux-gnu-objdump -D -b binary -m m68k:68000`, from the binutils the hook checks
+    use (`binutils-m68k-linux-gnu`), and check it against the game's disassembly when
+    there is one (Shining Force II's `ShiningForceCentral/SF2DISASM`).
 
 A savestate belongs to the backend and core that wrote it.
 

@@ -54,6 +54,7 @@ from classic_retro.rom.phantom_hourglass_arabic_script import ph_arabic_messages
 from classic_retro.rom.platinum_arabic_script import platinum_arabic_strings
 from classic_retro.rom.pmd_arabic_script import pmd_arabic_strings
 from classic_retro.rom.ridge_racer_arabic_script import ridge_racer_arabic_strings
+from classic_retro.rom.sf2_arabic_script import sf2_arabic_strings
 from classic_retro.rom.sotn_arabic_script import sotn_arabic_messages, sotn_arabic_names
 from classic_retro.rom.tactics_ogre_arabic_script import (
     tactics_ogre_arabic_messages,
@@ -85,6 +86,7 @@ TARGETS = (
     "ridge-racer",
     "chrono-trigger",
     "link-to-the-past",
+    "shining-force-2",
 )
 RLE = chr(0x202B)
 
@@ -122,6 +124,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "ridge-racer": len(ridge_racer_arabic_strings()),
         "chrono-trigger": len(chrono_trigger_arabic_messages()),
         "link-to-the-past": len(alttp_arabic_messages()),
+        "shining-force-2": len(sf2_arabic_strings()),
     }
     assert counts == {
         "firered": 13,
@@ -144,6 +147,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "ridge-racer": 3,
         "chrono-trigger": 3,
         "link-to-the-past": 3,
+        "shining-force-2": 3,
     }
     for target in TARGETS:
         translations = builtin_translation_set(target)
@@ -406,3 +410,13 @@ def test_link_to_the_past_messages_are_pages_of_arabic_with_the_name():
     # Zelda's call keeps the English's window and speed, and its pages.
     assert messages[1].notation.startswith("{Window 02}{Speed 03}")
     assert messages[1].notation.count("\n") == 5
+
+
+def test_shining_force_2_strings_keep_the_english_tags_and_the_name():
+    strings = sf2_arabic_strings()
+    assert [string.index for string in strings] == [0xD8, 0xD9, 0xDF]
+    for string in strings:
+        assert string.notation.endswith("{W2}"), string.key
+        assert string.notation.count("{N}") == 1, string.key
+    assert strings[0].notation.startswith("{CLEAR}")
+    assert strings[2].notation.startswith("{NAME;0}")
