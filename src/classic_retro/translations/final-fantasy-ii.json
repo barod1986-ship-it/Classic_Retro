@@ -1,0 +1,130 @@
+{
+ "schema_version": "1.0",
+ "target": "final-fantasy-ii",
+ "language": "ar",
+ "notation": "Logical Arabic in the engine notation (engines.ff4_arabic): a line for each page of the message (the box shows four rows of 26 cells; the game waits for the button between pages), {line} where a row must end, {blank} for an empty row; the encoder breaks the other rows itself, a word at a time. {Name 00} writes a character's name: the entries name.00 to name.0D give the fourteen characters' names in Arabic (Cecil first), which the hook writes in place of the name the player gave; a row counts six cells for a name. {Song 2A}, {Wait 10} and {Gil} pass to the game as the English has them, and {Close} at the very end closes the window at once. A message holds Arabic letters, spaces, Western or Arabic-Indic digits and the signs . , : ! - … ' % / ، ؛ ؟ only. No vowel marks: the font has none.",
+ "glossary": [
+  {
+   "term": "Crew",
+   "text": "الطاقم"
+  },
+  {
+   "term": "Red Wings",
+   "text": "الأجنحة الحمراء"
+  },
+  {
+   "term": "Baron",
+   "text": "بارون"
+  },
+  {
+   "term": "Mysidia",
+   "text": "ميسيديا"
+  },
+  {
+   "term": "crystal",
+   "text": "البلورة"
+  }
+ ],
+ "entries": [
+  {
+   "id": "name.00",
+   "context": "The name of Cecil, a character, as the game writes it in a message (six cells at most)",
+   "text": "سيسل"
+  },
+  {
+   "id": "name.01",
+   "context": "The name of Kain, a character, as the game writes it in a message (six cells at most)",
+   "text": "كاين"
+  },
+  {
+   "id": "name.02",
+   "context": "The name of Rydia, a character, as the game writes it in a message (six cells at most)",
+   "text": "ريديا"
+  },
+  {
+   "id": "name.03",
+   "context": "The name of Tellah, a character, as the game writes it in a message (six cells at most)",
+   "text": "تيلا"
+  },
+  {
+   "id": "name.04",
+   "context": "The name of Edward, a character, as the game writes it in a message (six cells at most)",
+   "text": "إدوارد"
+  },
+  {
+   "id": "name.05",
+   "context": "The name of Rosa, a character, as the game writes it in a message (six cells at most)",
+   "text": "روزا"
+  },
+  {
+   "id": "name.06",
+   "context": "The name of Yang, a character, as the game writes it in a message (six cells at most)",
+   "text": "يانغ"
+  },
+  {
+   "id": "name.07",
+   "context": "The name of Palom, a character, as the game writes it in a message (six cells at most)",
+   "text": "بالوم"
+  },
+  {
+   "id": "name.08",
+   "context": "The name of Porom, a character, as the game writes it in a message (six cells at most)",
+   "text": "بوروم"
+  },
+  {
+   "id": "name.09",
+   "context": "The name of Cid, a character, as the game writes it in a message (six cells at most)",
+   "text": "سيد"
+  },
+  {
+   "id": "name.0A",
+   "context": "The name of Edge, a character, as the game writes it in a message (six cells at most)",
+   "text": "إدج"
+  },
+  {
+   "id": "name.0B",
+   "context": "The name of FuSoYa, a character, as the game writes it in a message (six cells at most)",
+   "text": "فسويا"
+  },
+  {
+   "id": "name.0C",
+   "context": "The name of Golbez, a character, as the game writes it in a message (six cells at most)",
+   "text": "غولبز"
+  },
+  {
+   "id": "name.0D",
+   "context": "The name of Anna, a character, as the game writes it in a message (six cells at most)",
+   "text": "آنا"
+  },
+  {
+   "id": "deck.arrive",
+   "context": "On the deck of the Red Wings' airship, the opening: a crewman tells the captain they are about to arrive ({Name 00} is the captain's name, Cecil), and Cecil answers",
+   "text": "الطاقم:أيها القائد {Name 00}،{line}أوشكنا على الوصول!{line}{Name 00}:جيد."
+  },
+  {
+   "id": "deck.robbing",
+   "context": "Crewmen talk among themselves: why are they robbing crystals from innocent people; that is their duty; do they really have to keep doing this",
+   "text": "الطاقم:لماذا نسلب البلورات من أناس أبرياء؟{line}الطاقم:هذا واجبنا.\nالطاقم:هل علينا حقا أن نواصل فعل هذا؟"
+  },
+  {
+   "id": "deck.captain",
+   "context": "The crew protests to the captain; Cecil ({Name 00}) answers that possessing the crystal is essential to the kingdom's prosperity, that the king judged the Mysidians know too much about its secret, that they are the Red Wings, the air force of Baron, and the royal command is absolute; the crew calls to him again",
+   "text": "الطاقم:أيها القائد!{line}الطاقم:لم نعد نحتمل فعل هذا!{line}{Name 00}:أنصتوا!\nامتلاك البلورة عامل جوهري في ازدهارنا.{line}كما أن جلالته رأى أن أهل ميسيديا يعرفون الكثير\nعن سر البلورة.{line}نحن الأجنحة الحمراء، سلاح الجو لمملكة بارون!{line}الأمر الملكي مطلق.\nالطاقم:أيها القائد!"
+  },
+  {
+   "id": "deck.monsters",
+   "context": "A crewman cries out as monsters attack the airship",
+   "text": "الطاقم:وحوش!!"
+  },
+  {
+   "id": "deck.ouch",
+   "context": "During the attack: a crewman is hit, Cecil ({Name 00}) asks if he is all right, more monsters come, Cecil warns them",
+   "text": "الطاقم:آه!{line}{Name 00}:هل أنت بخير؟{line}الطاقم:المزيد قادم!{line}{Name 00}:احذر!"
+  },
+  {
+   "id": "deck.baron",
+   "context": "The airship reaches Baron: a crewman reports it, and Cecil ({Name 00}) orders the landing",
+   "text": "الطاقم:نحن فوق بارون!{line}{Name 00}:اهبط."
+  }
+ ]
+}

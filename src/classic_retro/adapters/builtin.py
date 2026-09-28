@@ -4,6 +4,7 @@ from classic_retro.adapters.registry import AdapterRegistry
 from classic_retro.engines.advance_wars import AdvanceWarsEngineAdapter
 from classic_retro.engines.alttp import AlttpEngineAdapter
 from classic_retro.engines.chrono_trigger import ChronoTriggerEngineAdapter
+from classic_retro.engines.ff4 import Ff4EngineAdapter
 from classic_retro.engines.ff6a import Ff6aEngineAdapter
 from classic_retro.engines.fire_emblem import FireEmblemEngineAdapter
 from classic_retro.engines.fomt import FomtEngineAdapter
@@ -25,6 +26,7 @@ from classic_retro.engines.tmc import TmcEngineAdapter
 from classic_retro.games.advance_wars import AdvanceWarsUsaGameAdapter
 from classic_retro.games.castlevania_sotn import CastlevaniaSotnUsaGameAdapter
 from classic_retro.games.chrono_trigger import ChronoTriggerUsaGameAdapter
+from classic_retro.games.final_fantasy_ii import FinalFantasyIIUsaGameAdapter
 from classic_retro.games.final_fantasy_vi_advance import FinalFantasyVIAdvanceUsaGameAdapter
 from classic_retro.games.fire_emblem_sacred_stones import FireEmblemSacredStonesUsaGameAdapter
 from classic_retro.games.golden_sun import GoldenSunUsaEuropeGameAdapter
@@ -88,6 +90,7 @@ def register_builtin_adapters(registry: AdapterRegistry) -> None:
     registry.register_engine(ChronoTriggerEngineAdapter())
     registry.register_engine(AlttpEngineAdapter())
     registry.register_engine(Sf2EngineAdapter())
+    registry.register_engine(Ff4EngineAdapter())
     registry.register_game(PokemonFireRedRev1GameAdapter())
     registry.register_game(ZeldaMinishCapUsaGameAdapter())
     registry.register_game(FinalFantasyVIAdvanceUsaGameAdapter())
@@ -109,3 +112,4 @@ def register_builtin_adapters(registry: AdapterRegistry) -> None:
     registry.register_game(ChronoTriggerUsaGameAdapter())
     registry.register_game(ZeldaLinkToThePastUsaGameAdapter())
     registry.register_game(ShiningForce2UsaGameAdapter())
+    registry.register_game(FinalFantasyIIUsaGameAdapter())

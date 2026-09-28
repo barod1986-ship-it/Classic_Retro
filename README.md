@@ -96,6 +96,7 @@ runs the same way for every target.
 | `chrono-trigger` | Chrono Trigger (USA), Super NES | ROM overlay | `glyph-font` |
 | `link-to-the-past` | The Legend of Zelda: A Link to the Past (USA), Super NES | ROM overlay | `glyph-font` |
 | `shining-force-2` | Shining Force II (USA), Mega Drive | ROM overlay | `glyph-font` |
+| `final-fantasy-ii` | Final Fantasy II (USA, Rev 1), Super NES | ROM overlay | `glyph-font` |
 
 ```text
 classic-retro targets list                          # every target, its documents and operations
@@ -135,7 +136,7 @@ classic-retro targets strip fomt.workspace.json --out fomt.json
 Every check and build holds a translations file against the originals pinned in the
 target's code. See [the translator's guide](docs/TRANSLATING_AR.md) (in Arabic).
 
-The four rendering strategies are what the twenty-one targets proved, not the only ones
+The four rendering strategies are what the twenty-two targets proved, not the only ones
 possible. Games on other platforms will need other methods, and the strategy and
 target registries accept them from this repository or from other packages through
 entry points. See [the rendering strategies](docs/ARABIC_STRATEGIES.md) and
@@ -165,9 +166,9 @@ A script holds commands such as `run 300`, `tap START`, `touch 128 272`, `shot m
 
 ## Repository status
 
-**Localization platform with twenty-one reference targets: twelve on the Game Boy Advance,
-three on the Nintendo DS, three on the PlayStation, two on the Super NES and one on the Mega
-Drive.**
+**Localization platform with twenty-two reference targets: twelve on the Game Boy Advance,
+three on the Nintendo DS, three on the PlayStation, three on the Super NES and one on the
+Mega Drive.**
 
 Every target translates one scene or a few strings chosen to prove its renderer, not
 a whole game; the paragraphs below say what each covers. The Game Boy and Game Boy
@@ -443,5 +444,24 @@ the mirror of the pen and a name as a block left to right, and move the waiting 
 window's left; the English strings stay as they were, the ROM keeps its size, and the patch
 is about 2 KB. See [the Shining Force II testing guide](docs/SF2_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/SF2_ARABIC_RENDERER.md).
+
+The twenty-second reference target, and the third on the Super NES, is **Final Fantasy II
+(USA, Rev 1)**. Its text engine was read from the ROM's own 65C816 code, checked against the
+[everything8215/ff4](https://github.com/everything8215/ff4) disassembly, which rebuilds this
+revision and names its routines, and run in snes9x. Six messages of the opening on the deck of
+the Red Wings' airship are in Arabic, with the fourteen characters' names the game writes in
+them: short exchanges that write the captain's name, and Cecil's answer over four pages. The
+game writes each code of a message straight into the tilemap as a tile of its 256-tile font,
+26 tiles a row under a blank row, so the Arabic takes the `glyph-font` strategy with forms
+drawn into cells of 8x16 pixels, 12 pixels, white on the window's blue, each cell's halves
+tiles of their own among 146 free codes: the pair codes, blank in the font, and the letters'
+codes, whose Arabic tiles a hook loads over the Latin letters while an Arabic page shows. The
+overlay adds a second MiB for the hooks, the tiles and the messages. Seven 65C816 hooks in the
+added bank, assembled with cc65, read a translated message from its Arabic, take a pair code
+as a glyph's half, mirror each row whole when a page is decoded (the game's icons and digits
+turned back), write a character's name from the translation's own, and swap the letters'
+tiles by DMA; the English messages stay as they were, and the patch is about 4 KB. See
+[the Final Fantasy II testing guide](docs/FF4_ARABIC_TEST_AR.md) and
+[the renderer notes](docs/FF4_ARABIC_RENDERER.md).
 
 See [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md).
