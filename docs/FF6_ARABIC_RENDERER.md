@@ -129,7 +129,7 @@ variants, shifted right by 0 to 8 pixels into three bytes a row (45 bytes a vari
 glyph), and the shadow of a glyph at pixel `s` of its tile is the variant `s + 1`. The
 glyphs take codes `20` to `FF` in the font's order (the space, the punctuation, the digits,
 then the repertoire by code point), 224 at most, and their variants take two banks, no glyph
-across one (161 a bank); the first four chapters use 136. The quotes `«` `»` and the brackets
+across one (161 a bank); the first five chapters use 136. The quotes `«` `»` and the brackets
 `(` `)` are drawn by hand as their mirror images, since a right-to-left run shows them
 mirrored and the painter does not mirror; the opera's note `♪`, which the English writes
 with the font's note icon, is drawn by hand too.
@@ -196,7 +196,7 @@ address to its end within its bank.
 
 ## Translations
 
-`rom/ff6_arabic_script.py` pins the 1327 messages of the first four chapters by their
+`rom/ff6_arabic_script.py` pins the 1495 messages of the first five chapters by their
 numbers, with the SHA-256 of each and its command skeleton. The Narshe chapter (`narshe`,
 0 to 63; 0 shares 1's text and pointer): the cliffs above Narshe (1-5, their
 `{KeyAfter 18}{Key}` pacing kept), the narration (6-9, centred with `{center}`,
@@ -224,7 +224,14 @@ brothers' memory (`castle`, 933-985), Kohlingen and Rachel (`kohlingen`, 986-102
 (`jidoor`, 1029-1042), Zozo with its clocks (two choices a line over three lines), Ramuh's
 story and the plan (`zozo`, 1043-1151), the Opera House (`opera`, 1152-1269: the arias
 keep the English's pauses and button waits between their words, the note written with `♪`)
-and Setzer's coin and airship (`airship`, 1270-1329). The Arabic is in
+and Setzer's coin and airship (`airship`, 1270-1329). The fifth chapter, 1330-1497: Vector
+under the Empire (`vector`, 1330-1346), Banon's return to Narshe (`narshe-return`,
+1347-1354), the Magitek Research Facility with Ifrit, Shiva, Cid, Kefka and Celes's apparent
+betrayal (`facility`, 1355-1409; the Magicite lines centred), the escape on the airship
+(`escape`, 1410-1421) and, back in Zozo, Terra's memory of the Esper world: Maduin,
+Madonna and Gestahl's raid (`maduin`, 1422-1497; the title, the three lines of Maduin's
+question and «2 years later» centred). Its text is the first past bank `$F3`: 151 of its
+messages sit in bank `$F4`, read through the table's three-byte addresses. The Arabic is in
 `translations/final-fantasy-iii.json`, a line a page, `{line}` where a line must end. The names are `name.terra` to `name.umaro`, the fourteen characters
 the name commands write, in the game's order, one word each, 64 pixels at most. A
 translation keeps its original's commands but the layout (`{line}`, `{page}`, the spaces):
@@ -248,12 +255,14 @@ chapter the same way: the chest's three choices, the ghosts' centred lines drawn
 time with their pauses, Lola's letter over its pages and the Esper lesson. The fourth: the
 aria with its note and its pauses, Zozo's clock with its six choices over three lines and
 the cursor moving among them with Right and Down, the centred Magicite lines and Setzer's
-answer. The messages that follow the scope show the game's English as before. The RetroPad's
+answer. The fifth, from bank `$F4`: the oath's choices, Ifrit's Magicite line, Maduin's
+two pages with their bracketed choices, Kefka's boast with its pauses, the centred title,
+the drunk's pauses inside a line and Madonna's plea over its pages. The messages that follow the scope show the game's English as before. The RetroPad's
 A is the Super NES's A.
 
 ## Limits
 
-- The first four chapters' 1327 messages and the characters' names are in Arabic; every
+- The first five chapters' 1495 messages and the characters' names are in Arabic; every
   other message stays English, and the menus and the battles are other text engines,
   untouched, so the classroom's lessons name menu entries and statuses in Arabic that the
   menus still show in English.

@@ -6730,6 +6730,846 @@
    "id": "airship.1329",
    "context": "Message 1329 of the dialogue: Ugly brute…{line}Better make tracks!",
    "text": "وحش قبيح…{line}من الأفضل أن نهرب!"
+  },
+  {
+   "id": "vector.1330",
+   "context": "Message 1330 of the dialogue: Pledge your allegiance to the Empire?{line}{Choice} Yes{line}{Choice} No",
+   "text": "تتعهد بالولاء للإمبراطورية؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "vector.1331",
+   "context": "Message 1331 of the dialogue: What!!",
+   "text": "ماذا!!"
+  },
+  {
+   "id": "vector.1332",
+   "context": "Message 1332 of the dialogue: Fine.",
+   "text": "حسنا."
+  },
+  {
+   "id": "vector.1333",
+   "context": "Message 1333 of the dialogue: Magitek Research Facility.{line}No Entry!",
+   "text": "منشأة أبحاث الماجيتك.{line}ممنوع الدخول!"
+  },
+  {
+   "id": "vector.1334",
+   "context": "Message 1334 of the dialogue: Cid, the director of Magitek research, is a genius! He gave my child the gift of cure magic!",
+   "text": "سيد، مدير أبحاث الماجيتك، عبقري! لقد وهب طفلي موهبة سحر الشفاء!"
+  },
+  {
+   "id": "vector.1335",
+   "context": "Message 1335 of the dialogue: Hey, YOU! {Pause 01}… {Pause 01}… {Pause 01}{line}You're Returners!!",
+   "text": "هيه، أنت! {Pause 01}… {Pause 01}… {Pause 01}{line}أنتم من العائدين!!"
+  },
+  {
+   "id": "vector.1336",
+   "context": "Message 1336 of the dialogue: Peaceful times are here…",
+   "text": "زمن السلام قد حل…"
+  },
+  {
+   "id": "vector.1337",
+   "context": "Message 1337 of the dialogue: And…CURE!!!",
+   "text": "و… شفاء!!!"
+  },
+  {
+   "id": "vector.1338",
+   "context": "Message 1338 of the dialogue: General Leo's a good man.{line}Compared to him, Kefka's a… {Wait}{line}Oh! What am I saying?!",
+   "text": "الجنرال ليو رجل طيب.{line}مقارنة به، كيفكا… {Wait}{line}أوه! ماذا أقول؟!"
+  },
+  {
+   "id": "vector.1339",
+   "context": "Message 1339 of the dialogue: Tzen…Maranda…Albrook…{line}They're all controlled by the Empire. It's all because of the Returners…",
+   "text": "تزن… ماراندا… ألبروك…{line}كلها تحت سيطرة الإمبراطورية. وكل هذا بسبب العائدين…"
+  },
+  {
+   "id": "vector.1340",
+   "context": "Message 1340 of the dialogue: You're Returners?",
+   "text": "أنتم من العائدين؟"
+  },
+  {
+   "id": "vector.1341",
+   "context": "Message 1341 of the dialogue: Not a problem by me. Shall I tell you something neat?{line}{Choice} Yes{line}{Choice} No",
+   "text": "لا مشكلة عندي. أأخبرك بشيء طريف؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "vector.1342",
+   "context": "Message 1342 of the dialogue: All the soldiers in the Magitek Research Facility can use magic! That Prof. Cid is truly a genius!",
+   "text": "كل الجنود في منشأة أبحاث الماجيتك يستطيعون استعمال السحر! ذلك البروفيسور سيد عبقري حقا!"
+  },
+  {
+   "id": "vector.1343",
+   "context": "Message 1343 of the dialogue: Here's one for you… {Wait}{line}That guy Kefka? He was Cid's first experimental Magitek Knight.{page}But the process wasn't perfected yet. Something in Kefka's mind snapped that day…!",
+   "text": "إليك هذه… {Wait}{line}ذلك الرجل كيفكا؟ كان أول فارس ماجيتك تجريبي عند سيد.\nلكن العملية لم تكن قد أتقنت بعد. شيء ما في عقل كيفكا انكسر ذلك اليوم…!"
+  },
+  {
+   "id": "vector.1344",
+   "context": "Message 1344 of the dialogue: General Leo refused a Magitek infusion! He's a warrior's warrior!",
+   "text": "الجنرال ليو رفض حقن الماجيتك! إنه محارب بحق!"
+  },
+  {
+   "id": "vector.1345",
+   "context": "Message 1345 of the dialogue: General {Celes} turned traitor! Why? The other side's sure to lose!",
+   "text": "الجنرال {Celes} صارت خائنة! لماذا؟ الطرف الآخر سيخسر حتما!"
+  },
+  {
+   "id": "vector.1346",
+   "context": "Message 1346 of the dialogue: Your friends…{line}They're in the cafe.",
+   "text": "أصدقاؤك…{line}إنهم في المقهى."
+  },
+  {
+   "id": "narshe-return.1347",
+   "context": "Message 1347 of the dialogue: BANON: What ARE you talking about…?!{page}……!!{line}Talking with…Espers…?",
+   "text": "بانون: عم تتكلم…؟!\n……!!{line}تكلمت مع… الإسبرات…؟"
+  },
+  {
+   "id": "narshe-return.1348",
+   "context": "Message 1348 of the dialogue: ARVIS: It was like this when we got here.",
+   "text": "أرفيس: كان الوضع هكذا حين وصلنا."
+  },
+  {
+   "id": "narshe-return.1349",
+   "context": "Message 1349 of the dialogue: RETURNER: What on earth…",
+   "text": "العائد: ما الذي…"
+  },
+  {
+   "id": "narshe-return.1350",
+   "context": "Message 1350 of the dialogue: BANON: Could Gestahl have meant such a thing? Team up with the Empire to track down an Esper… {Wait} Hmm…",
+   "text": "بانون: أيمكن أن غشتال قصد شيئا كهذا؟ التعاون مع الإمبراطورية لتعقب إسبر… {Wait} همم…"
+  },
+  {
+   "id": "narshe-return.1351",
+   "context": "Message 1351 of the dialogue: ARVIS: Makes sense.{line}Can't just forget about Espers…",
+   "text": "أرفيس: منطقي.{line}لا يمكن تجاهل الإسبرات ببساطة…"
+  },
+  {
+   "id": "narshe-return.1352",
+   "context": "Message 1352 of the dialogue: RETURNER: The war…{line}It's over…right?",
+   "text": "العائد: الحرب…{line}انتهت… صحيح؟"
+  },
+  {
+   "id": "narshe-return.1353",
+   "context": "Message 1353 of the dialogue: NARSHE GUARD: We didn't have to do a thing!{line}The Empire's troops just ran away in terror!",
+   "text": "حارس نارشي: لم نضطر إلى فعل شيء!{line}جنود الإمبراطورية فروا مذعورين!"
+  },
+  {
+   "id": "narshe-return.1354",
+   "context": "Message 1354 of the dialogue: NARSHE GUARD: What's going on?",
+   "text": "حارس نارشي: ماذا يجري؟"
+  },
+  {
+   "id": "facility.1355",
+   "context": "Message 1355 of the dialogue: Is it true they extract magic from monsters inside the facility?",
+   "text": "أصحيح أنهم يستخرجون السحر من الوحوش داخل المنشأة؟"
+  },
+  {
+   "id": "facility.1356",
+   "context": "Message 1356 of the dialogue: Shh!{line}I'm a Returner sympathizer!{line}I've heard of you!",
+   "text": "شش!{line}أنا متعاطف مع العائدين!{line}سمعت عنكم!"
+  },
+  {
+   "id": "facility.1357",
+   "context": "Message 1357 of the dialogue: While I distract the soldiers, climb onto the steel tower from this box, and enter the facility!",
+   "text": "بينما أشغل الجنود، تسلقوا إلى البرج الفولاذي من هذا الصندوق، وادخلوا المنشأة!"
+  },
+  {
+   "id": "facility.1358",
+   "context": "Message 1358 of the dialogue: All ready?{line}{Choice} Yes{line}{Choice} No",
+   "text": "مستعدون؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "facility.1359",
+   "context": "Message 1359 of the dialogue: Who goes there?!{line}This is off-limits!",
+   "text": "من هناك؟!{line}هذه منطقة محظورة!"
+  },
+  {
+   "id": "facility.1360",
+   "context": "Message 1360 of the dialogue: MAN: I…I'm gonna be sick!{line}SOLDIER: Get outta here!",
+   "text": "الرجل: س… سأتقيأ!{line}الجندي: اغرب من هنا!"
+  },
+  {
+   "id": "facility.1361",
+   "context": "Message 1361 of the dialogue: MAN: Urghh…{line}Gonna {Pause 01}toss {Pause 01}it {Pause 01}all… {Pause 01}{line}SOLDIER: Hey…",
+   "text": "الرجل: أرغغ…{line}سأخرج {Pause 01}كل {Pause 01}ما {Pause 01}في… {Pause 01}{line}الجندي: هيه…"
+  },
+  {
+   "id": "facility.1362",
+   "context": "Message 1362 of the dialogue: Phew!",
+   "text": "أوف!"
+  },
+  {
+   "id": "facility.1363",
+   "context": "Message 1363 of the dialogue: Right…{line}I'm sure you can do it!",
+   "text": "صحيح…{line}أنا واثق أنكم تستطيعون!"
+  },
+  {
+   "id": "facility.1364",
+   "context": "Message 1364 of the dialogue: Young people…{line}Hang in there!",
+   "text": "أيها الشباب…{line}اصمدوا!"
+  },
+  {
+   "id": "facility.1365",
+   "context": "Message 1365 of the dialogue: Danger…danger…",
+   "text": "خطر… خطر…"
+  },
+  {
+   "id": "facility.1366",
+   "context": "Message 1366 of the dialogue: SOLDIER: Returner scum!",
+   "text": "الجندي: حثالة العائدين!"
+  },
+  {
+   "id": "facility.1367",
+   "context": "Message 1367 of the dialogue: Guess I'll stay here and volunteer to be a soldier…",
+   "text": "أظن أنني سأبقى هنا وأتطوع جنديا…"
+  },
+  {
+   "id": "facility.1368",
+   "context": "Message 1368 of the dialogue: In the army that destroyed our village??? What about your promise to begin anew in Maranda?",
+   "text": "في الجيش الذي دمر قريتنا؟؟؟ وماذا عن وعدك بالبدء من جديد في ماراندا؟"
+  },
+  {
+   "id": "facility.1369",
+   "context": "Message 1369 of the dialogue: It's on the house.{line}Have a snooze!{line}{Choice} Yes{line}{Choice} No",
+   "text": "على حساب المحل.{line}خذ غفوة!{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "facility.1370",
+   "context": "Message 1370 of the dialogue: 1000 GP stolen!",
+   "text": "سرق 1000 غيل!"
+  },
+  {
+   "id": "facility.1371",
+   "context": "Message 1371 of the dialogue: Nee, hee, hee, hee, hee!",
+   "text": "نيي، هي، هي، هي، هي!"
+  },
+  {
+   "id": "facility.1372",
+   "context": "Message 1372 of the dialogue: KEFKA: I'm all-powerful!{line}Hee, hee, haw!{line}I'm collecting Espers!{line}I'm extracting magic!{page}And… {Wait}… {Wait}… {Wait}{line}I'll restore the…Statues!",
+   "text": "كيفكا: أنا القدير!{line}هي، هي، هاو!{line}أجمع الإسبرات!{line}أستخرج السحر!\nو… {Wait}… {Wait}… {Wait}{line}سأعيد… التماثيل!"
+  },
+  {
+   "id": "facility.1373",
+   "context": "Message 1373 of the dialogue: KEFKA: You've been completely drained of your powers!{line}Now you're useless to me!",
+   "text": "كيفكا: استنزفت قواك بالكامل!{line}لم تعد تنفعني في شيء!"
+  },
+  {
+   "id": "facility.1374",
+   "context": "Message 1374 of the dialogue: KEFKA: And you! Take a hike!",
+   "text": "كيفكا: وأنت! اغرب!"
+  },
+  {
+   "id": "facility.1375",
+   "context": "Message 1375 of the dialogue: IFRIT: Hmmm…{line}SHIVA: Well, Ramuh DID entrust them with his power.",
+   "text": "إفريت: هممم…{line}شيفا: حسنا، رامو ائتمنهم فعلا على قوته."
+  },
+  {
+   "id": "facility.1376",
+   "context": "Message 1376 of the dialogue: IFRIT: Gestahl has grabbed our friends and is trying to drain them of their power.{page}I, too, suffered my turn in one of the glass tubes…",
+   "text": "إفريت: غشتال اختطف أصدقاءنا ويحاول استنزاف قوتهم.\nوأنا أيضا عانيت دوري في إحدى الأنابيب الزجاجية…"
+  },
+  {
+   "id": "facility.1377",
+   "context": "Message 1377 of the dialogue: SHIVA: They drained our powers, then threw us away to…{line}We haven't long to live…",
+   "text": "شيفا: استنزفوا قوانا، ثم رمونا إلى…{line}لم يبق لنا الكثير من العمر…"
+  },
+  {
+   "id": "facility.1378",
+   "context": "Message 1378 of the dialogue: We will follow Ramuh's lead, and give to you our power…",
+   "text": "سنحذو حذو رامو، ونهبكم قوتنا…"
+  },
+  {
+   "id": "facility.1379",
+   "context": "Message 1379 of the dialogue: Our friends are all gone…{line}We haven't much time left…{line}No choice but to entrust you with our essences…",
+   "text": "أصدقاؤنا رحلوا جميعا…{line}لم يبق لنا الكثير من الوقت…{line}لا خيار سوى أن نأتمنكم على جوهرنا…"
+  },
+  {
+   "id": "facility.1380",
+   "context": "Message 1380 of the dialogue: {line}{Spaces 05}Received the Magicite{line}{Spaces 0E}“Ifrit.”",
+   "text": "{center}{line}حصلت على الماجيسايت{line}«إفريت»."
+  },
+  {
+   "id": "facility.1381",
+   "context": "Message 1381 of the dialogue: {line}{Spaces 05}Received the Magicite{line}{Spaces 0E}“Shiva.”",
+   "text": "{center}{line}حصلت على الماجيسايت{line}«شيفا»."
+  },
+  {
+   "id": "facility.1382",
+   "context": "Message 1382 of the dialogue: ESPER: You want to help me…{line}But… {Wait}I haven't long to live.{line}Just as Ifrit did before me,{line}I'll give to you my power…",
+   "text": "الإسبر: تريدون مساعدتي…{line}لكن… {Wait}لم يبق لي الكثير من العمر.{line}كما فعل إفريت قبلي،{line}سأهبكم قوتي…"
+  },
+  {
+   "id": "facility.1383",
+   "context": "Message 1383 of the dialogue: CID: What are you doing there?",
+   "text": "سيد: ماذا تفعلون هناك؟"
+  },
+  {
+   "id": "facility.1384",
+   "context": "Message 1384 of the dialogue: CID: W…what's this!?",
+   "text": "سيد: م… ما هذا!؟"
+  },
+  {
+   "id": "facility.1385",
+   "context": "Message 1385 of the dialogue: CID: So…Esper magical power can only truly be transferred when one of them passes away…",
+   "text": "سيد: إذن… لا تنتقل قوة الإسبر السحرية كاملة إلا حين يفارق أحدهم الحياة…"
+  },
+  {
+   "id": "facility.1386",
+   "context": "Message 1386 of the dialogue: {line}{Spaces 05}Received Magicite!",
+   "text": "{center}{line}حصلت على ماجيسايت!"
+  },
+  {
+   "id": "facility.1387",
+   "context": "Message 1387 of the dialogue: {Celes}: Professor Cid.{line}CID: General {Celes}!{line}And who might these dubious characters be? Your troops?",
+   "text": "{Celes}: البروفيسور سيد.{line}سيد: الجنرال {Celes}!{line}ومن عساهم يكونون هؤلاء المريبون؟ جنودك؟"
+  },
+  {
+   "id": "facility.1388",
+   "context": "Message 1388 of the dialogue: {Celes}: No…{line}You see, …{page}CID: Can it be true that you came here as a spy, seeking to cause an uprising?!",
+   "text": "{Celes}: لا…{line}كما ترى، …\nسيد: أصحيح أنك جئت إلى هنا جاسوسة، تسعين لإثارة انتفاضة؟!"
+  },
+  {
+   "id": "facility.1389",
+   "context": "Message 1389 of the dialogue: KEFKA: {Celes}!{line}W…what are you doing?{line}Stop it!!!",
+   "text": "كيفكا: {Celes}!{line}م… ماذا تفعلين؟{line}توقفي!!!"
+  },
+  {
+   "id": "facility.1390",
+   "context": "Message 1390 of the dialogue: {Locke}: !?{line}{Celes}…?",
+   "text": "{Locke}: !؟{line}{Celes}…؟"
+  },
+  {
+   "id": "facility.1391",
+   "context": "Message 1391 of the dialogue: KEFKA: So that's it!{line}Magicite…{line}Cid, you miserable blockhead! Now…",
+   "text": "كيفكا: إذن هذا هو الأمر!{line}ماجيسايت…{line}سيد، أيها الأبله البائس! والآن…"
+  },
+  {
+   "id": "facility.1392",
+   "context": "Message 1392 of the dialogue: KEFKA: General {Celes}!! {Wait}{line}The game's over.{line}Bring me those Magicite shards!",
+   "text": "كيفكا: أيتها الجنرال {Celes}!! {Wait}{line}انتهت اللعبة.{line}أحضري لي شظايا الماجيسايت تلك!"
+  },
+  {
+   "id": "facility.1393",
+   "context": "Message 1393 of the dialogue: {Locke}: {Celes}!{line}You…deceived me?!{line}{Celes}: Of course not!{line}Have a little faith!",
+   "text": "{Locke}: {Celes}!{line}أنت… خدعتني؟!{line}{Celes}: طبعا لا!{line}ثق بي قليلا!"
+  },
+  {
+   "id": "facility.1394",
+   "context": "Message 1394 of the dialogue: {Cyan}: See!{line}I knew she couldn't be trusted!",
+   "text": "{Cyan}: أرأيتم!{line}عرفت أنها لا تستحق الثقة!"
+  },
+  {
+   "id": "facility.1395",
+   "context": "Message 1395 of the dialogue: KEFKA: G'hee, hee, hee!{line}She has tricked you all!{line}{Celes}, that's so…YOU!",
+   "text": "كيفكا: غهي، هي، هي!{line}لقد خدعتكم جميعا!{line}{Celes}، هذا… أنت بعينك!"
+  },
+  {
+   "id": "facility.1396",
+   "context": "Message 1396 of the dialogue: {Celes}: {Locke}…{line}Please believe me…{page}{Locke}: I… {Wait}… {Wait}…",
+   "text": "{Celes}: {Locke}…{line}أرجوك صدقني…\n{Locke}: أنا… {Wait}… {Wait}…"
+  },
+  {
+   "id": "facility.1397",
+   "context": "Message 1397 of the dialogue: KEFKA: NOW!!",
+   "text": "كيفكا: الآن!!"
+  },
+  {
+   "id": "facility.1398",
+   "context": "Message 1398 of the dialogue: KEFKA: Exterminate all of them!",
+   "text": "كيفكا: أبيدوهم جميعا!"
+  },
+  {
+   "id": "facility.1399",
+   "context": "Message 1399 of the dialogue: {Celes}: {Locke}… {Wait}{line}Let me protect you for once… {Wait}{line}Maybe now… {Wait}{line}Now you'll believe me…",
+   "text": "{Celes}: {Locke}… {Wait}{line}دعني أحميك ولو مرة… {Wait}{line}ربما الآن… {Wait}{line}الآن ستصدقني…"
+  },
+  {
+   "id": "facility.1400",
+   "context": "Message 1400 of the dialogue: {Locke}: {Celes}…",
+   "text": "{Locke}: {Celes}…"
+  },
+  {
+   "id": "facility.1401",
+   "context": "Message 1401 of the dialogue: CID: Ooh, ooh…{line}What happened?",
+   "text": "سيد: أوه، أوه…{line}ماذا حدث؟"
+  },
+  {
+   "id": "facility.1402",
+   "context": "Message 1402 of the dialogue: CID: This is a disaster!{line}Your fighting has caused the capsules to rupture! Their contents are spilling out!",
+   "text": "سيد: هذه كارثة!{line}قتالكم تسبب في تمزق الكبسولات! محتوياتها تتسرب!"
+  },
+  {
+   "id": "facility.1403",
+   "context": "Message 1403 of the dialogue: CID: Quick! Over here!",
+   "text": "سيد: بسرعة! من هنا!"
+  },
+  {
+   "id": "facility.1404",
+   "context": "Message 1404 of the dialogue: CID: Kefka has used me…{line}used the Empire.{line}What have I done…?",
+   "text": "سيد: كيفكا استغلني…{line}استغل الإمبراطورية.{line}ماذا فعلت…؟"
+  },
+  {
+   "id": "facility.1405",
+   "context": "Message 1405 of the dialogue: CID: The life-energy of those Espers…",
+   "text": "سيد: طاقة الحياة لتلك الإسبرات…"
+  },
+  {
+   "id": "facility.1406",
+   "context": "Message 1406 of the dialogue: CID: You've helped me come to a decision. I'm going to talk to the Emperor and have this stupid war stopped!",
+   "text": "سيد: ساعدتموني على اتخاذ قرار. سأكلم الإمبراطور ليوقف هذه الحرب الغبية!"
+  },
+  {
+   "id": "facility.1407",
+   "context": "Message 1407 of the dialogue: CID: {Celes}…{line}I've known her since she was a baby. I raised her as if she was my own daughter!{page}But she was forced to become a Magitek Knight, and has done some awful things.{page}If I could only talk to her…{line}I'd apologize for the way her life has turned out.",
+   "text": "سيد: {Celes}…{line}أعرفها منذ كانت رضيعة. ربيتها كأنها ابنتي!\nلكنها أجبرت على أن تصبح فارسة ماجيتك، وارتكبت أفعالا فظيعة.\nلو أستطيع فقط أن أكلمها…{line}لاعتذرت لها عما آلت إليه حياتها."
+  },
+  {
+   "id": "facility.1408",
+   "context": "Message 1408 of the dialogue: CID: No! It's Kefka!",
+   "text": "سيد: لا! إنه كيفكا!"
+  },
+  {
+   "id": "facility.1409",
+   "context": "Message 1409 of the dialogue: CID: GO!!",
+   "text": "سيد: اذهبوا!!"
+  },
+  {
+   "id": "escape.1410",
+   "context": "Message 1410 of the dialogue: {Setzer}: I was starting to worry…",
+   "text": "{Setzer}: بدأت أقلق…"
+  },
+  {
+   "id": "escape.1411",
+   "context": "Message 1411 of the dialogue: {Setzer}: ?{line}What's up with {Celes}?{line}{Locke}: ……",
+   "text": "{Setzer}: ؟{line}ما خطب {Celes}؟{line}{Locke}: ……"
+  },
+  {
+   "id": "escape.1412",
+   "context": "Message 1412 of the dialogue: {Setzer}: Huh?",
+   "text": "{Setzer}: هاه؟"
+  },
+  {
+   "id": "escape.1413",
+   "context": "Message 1413 of the dialogue: KEFKA: Crud!{line}What a mess!!",
+   "text": "كيفكا: تبا!{line}يا لها من فوضى!!"
+  },
+  {
+   "id": "escape.1414",
+   "context": "Message 1414 of the dialogue: {Setzer}: We'll talk later.{line}Let's get outta here!",
+   "text": "{Setzer}: نتكلم لاحقا.{line}لنخرج من هنا!"
+  },
+  {
+   "id": "escape.1415",
+   "context": "Message 1415 of the dialogue: KEFKA: I don't think so…!{line}You won't get away!",
+   "text": "كيفكا: لا أظن ذلك…!{line}لن تفلتوا!"
+  },
+  {
+   "id": "escape.1416",
+   "context": "Message 1416 of the dialogue: {Locke}: I'm worried about {Terra}. Let's return to Zozo.",
+   "text": "{Locke}: أنا قلق على {Terra}. لنعد إلى زوزو."
+  },
+  {
+   "id": "escape.1417",
+   "context": "Message 1417 of the dialogue: {Setzer}: {Terra}?{line}Who's that?{page}{Locke}: I'll explain on the way…{line}…about {Terra}…Espers…the Returners…",
+   "text": "{Setzer}: {Terra}؟{line}من تلك؟\n{Locke}: سأشرح في الطريق…{line}…عن {Terra}… والإسبرات… والعائدين…"
+  },
+  {
+   "id": "escape.1418",
+   "context": "Message 1418 of the dialogue: {Terra}: Father…?",
+   "text": "{Terra}: أبي…؟"
+  },
+  {
+   "id": "escape.1419",
+   "context": "Message 1419 of the dialogue: We're all here…",
+   "text": "كلنا هنا…"
+  },
+  {
+   "id": "escape.1420",
+   "context": "Message 1420 of the dialogue: {Locke}: {Terra}…",
+   "text": "{Locke}: {Terra}…"
+  },
+  {
+   "id": "escape.1421",
+   "context": "Message 1421 of the dialogue: {Locke}: Magicite!!",
+   "text": "{Locke}: ماجيسايت!!"
+  },
+  {
+   "id": "maduin.1422",
+   "context": "Message 1422 of the dialogue: {Terra}: I remember it all…{line}I was raised in the Esper's world.",
+   "text": "{Terra}: أذكر كل شيء…{line}نشأت في عالم الإسبرات."
+  },
+  {
+   "id": "maduin.1423",
+   "context": "Message 1423 of the dialogue: {Terra}: I remember it all…{line}I was raised in the Esper's world.",
+   "text": "{Terra}: أذكر كل شيء…{line}نشأت في عالم الإسبرات."
+  },
+  {
+   "id": "maduin.1424",
+   "context": "Message 1424 of the dialogue: {line}{line}{Spaces 05}The Esper World… {Pause 12}{Key}",
+   "text": "{center}{line}{line}عالم الإسبرات… {Pause 12}{Key}"
+  },
+  {
+   "id": "maduin.1425",
+   "context": "Message 1425 of the dialogue: MADUIN: Listen well, and think clearly!{page}What will you do?{line}{Choice}(Return together?){line}{Choice}(Leave her here?)",
+   "text": "مادوين: أصغوا جيدا، وفكروا بوضوح!\nماذا ستفعلون؟{line}{Choice} (نعود معا؟){line}{Choice} (نتركها هنا؟)"
+  },
+  {
+   "id": "maduin.1426",
+   "context": "Message 1426 of the dialogue: She's pretty weak.{line}Better let her rest for a moment.",
+   "text": "إنها ضعيفة جدا.{line}من الأفضل أن ندعها ترتاح قليلا."
+  },
+  {
+   "id": "maduin.1427",
+   "context": "Message 1427 of the dialogue: ELDER: Did I hear there was a human here?{page}MADUIN: Probably…{line}…wandered in here by mistake.",
+   "text": "الشيخ: هل سمعت أن هناك بشريا هنا؟\nمادوين: على الأرجح…{line}…تاه ودخل إلى هنا خطأ."
+  },
+  {
+   "id": "maduin.1428",
+   "context": "Message 1428 of the dialogue: ELDER: This evening is an ill omen…",
+   "text": "الشيخ: هذا المساء نذير شؤم…"
+  },
+  {
+   "id": "maduin.1429",
+   "context": "Message 1429 of the dialogue: You okay, Maduin?",
+   "text": "أأنت بخير يا مادوين؟"
+  },
+  {
+   "id": "maduin.1430",
+   "context": "Message 1430 of the dialogue: You'd better do away with it. Humans and Espers are incompatible…",
+   "text": "من الأفضل أن تتخلص منه. البشر والإسبرات لا يتوافقون…"
+  },
+  {
+   "id": "maduin.1431",
+   "context": "Message 1431 of the dialogue: You're the Gate Keeper, Maduin?",
+   "text": "أأنت حارس البوابة يا مادوين؟"
+  },
+  {
+   "id": "maduin.1432",
+   "context": "Message 1432 of the dialogue: Everyone here's feeling uneasy.",
+   "text": "الجميع هنا يشعرون بالقلق."
+  },
+  {
+   "id": "maduin.1433",
+   "context": "Message 1433 of the dialogue: You just want to peer into the human realm beyond the north gate, eh, Maduin?",
+   "text": "تريد فقط أن تختلس النظر إلى عالم البشر وراء البوابة الشمالية، أليس كذلك يا مادوين؟"
+  },
+  {
+   "id": "maduin.1434",
+   "context": "Message 1434 of the dialogue: Why'd you bring that thing here?",
+   "text": "لماذا أحضرت ذلك الشيء إلى هنا؟"
+  },
+  {
+   "id": "maduin.1435",
+   "context": "Message 1435 of the dialogue: Strong winds…{line}Be careful, Maduin.",
+   "text": "رياح قوية…{line}احذر يا مادوين."
+  },
+  {
+   "id": "maduin.1436",
+   "context": "Message 1436 of the dialogue: The link between worlds has surely weakened over the past 1000 years.",
+   "text": "الصلة بين العالمين ضعفت حتما خلال الألف عام الماضية."
+  },
+  {
+   "id": "maduin.1437",
+   "context": "Message 1437 of the dialogue: You okay Maduin?",
+   "text": "أأنت بخير يا مادوين؟"
+  },
+  {
+   "id": "maduin.1438",
+   "context": "Message 1438 of the dialogue: Do you even know what you've done?",
+   "text": "هل تدرك حتى ما فعلت؟"
+  },
+  {
+   "id": "maduin.1439",
+   "context": "Message 1439 of the dialogue: Elder's orders…{line}No one passes through the gate.",
+   "text": "أوامر الشيخ…{line}لا أحد يعبر البوابة."
+  },
+  {
+   "id": "maduin.1440",
+   "context": "Message 1440 of the dialogue: Emergency!{line}Something's coming through the gate!",
+   "text": "حالة طارئة!{line}شيء ما يعبر البوابة!"
+  },
+  {
+   "id": "maduin.1441",
+   "context": "Message 1441 of the dialogue: They say a human girl's here…",
+   "text": "يقولون إن فتاة بشرية هنا…"
+  },
+  {
+   "id": "maduin.1442",
+   "context": "Message 1442 of the dialogue: ……",
+   "text": "……"
+  },
+  {
+   "id": "maduin.1443",
+   "context": "Message 1443 of the dialogue: ……",
+   "text": "……"
+  },
+  {
+   "id": "maduin.1444",
+   "context": "Message 1444 of the dialogue: MADUIN: Did I awaken you?",
+   "text": "مادوين: هل أيقظتك؟"
+  },
+  {
+   "id": "maduin.1445",
+   "context": "Message 1445 of the dialogue: GIRL: You're…an Esper?{line}What's that pendant for?",
+   "text": "الفتاة: أنت… إسبر؟{line}ما فائدة هذه القلادة؟"
+  },
+  {
+   "id": "maduin.1446",
+   "context": "Message 1446 of the dialogue: MADUIN: It's…yours now!{line}It helps protect the Esper World.{page}GIRL: Esper World…{line}Boy, did I take the low road or what?{page}MADUIN: The Esper folk are pretty upset, you being a human and all…{page}GIRL: You the one who…saved me?",
+   "text": "مادوين: إنها… لك الآن!{line}إنها تساعد على حماية عالم الإسبرات.\nالفتاة: عالم الإسبرات…{line}يا إلهي، لقد ضللت الطريق تماما، أليس كذلك؟\nمادوين: قوم الإسبرات منزعجون جدا، لأنك بشرية وما إلى ذلك…\nالفتاة: أأنت من… أنقذني؟"
+  },
+  {
+   "id": "maduin.1447",
+   "context": "Message 1447 of the dialogue: ESPER: I am Maduin.{line}I tired living in the human world…{page}That world is filled with desire, greed and loathing. It's highly infectious…",
+   "text": "الإسبر: أنا مادوين.{line}سئمت العيش في عالم البشر…\nذلك العالم مليء بالرغبة والجشع والكراهية. وهي شديدة العدوى…"
+  },
+  {
+   "id": "maduin.1448",
+   "context": "Message 1448 of the dialogue: MADUIN: Are humans and Espers{line}truly…so different?",
+   "text": "مادوين: هل البشر والإسبرات{line}حقا… مختلفون إلى هذا الحد؟"
+  },
+  {
+   "id": "maduin.1449",
+   "context": "Message 1449 of the dialogue: MADONNA: So…I'm an example of the evil in this world, huh?{line}MADUIN: No, I mean…",
+   "text": "مادونا: إذن… أنا مثال على الشر في هذا العالم، ها؟{line}مادوين: لا، أقصد…"
+  },
+  {
+   "id": "maduin.1450",
+   "context": "Message 1450 of the dialogue: MADONNA: I'll return to my world tomorrow!{line}MADUIN: You'll need a guide.",
+   "text": "مادونا: سأعود إلى عالمي غدا!{line}مادوين: ستحتاجين إلى مرشد."
+  },
+  {
+   "id": "maduin.1451",
+   "context": "Message 1451 of the dialogue: ELDER: Everything all right?{line}WHAT? The human's gone?",
+   "text": "الشيخ: هل كل شيء على ما يرام؟{line}ماذا؟ البشرية اختفت؟"
+  },
+  {
+   "id": "maduin.1452",
+   "context": "Message 1452 of the dialogue: If this generation of humans knew about our abilities…{line}And decided they wanted to utilize our powers…{page}It would be a total disaster!",
+   "text": "لو عرف هذا الجيل من البشر بقدراتنا…{line}وقرروا أنهم يريدون استغلال قوانا…\nلكانت كارثة شاملة!"
+  },
+  {
+   "id": "maduin.1453",
+   "context": "Message 1453 of the dialogue: A human girl made it all the way to the gate!",
+   "text": "فتاة بشرية وصلت إلى البوابة نفسها!"
+  },
+  {
+   "id": "maduin.1454",
+   "context": "Message 1454 of the dialogue: Why has this happened now after all these years?",
+   "text": "لماذا حدث هذا الآن بعد كل هذه السنين؟"
+  },
+  {
+   "id": "maduin.1455",
+   "context": "Message 1455 of the dialogue: YOUTH: What's wrong, Maduin?",
+   "text": "الشاب: ما الأمر يا مادوين؟"
+  },
+  {
+   "id": "maduin.1456",
+   "context": "Message 1456 of the dialogue: MADUIN: If you don't want to return to your world, you may stay here.{page}MADONNA: But humans and Espers can never coexist…!",
+   "text": "مادوين: إن كنت لا تريدين العودة إلى عالمك، فيمكنك البقاء هنا.\nمادونا: لكن البشر والإسبرات لا يمكنهم التعايش أبدا…!"
+  },
+  {
+   "id": "maduin.1457",
+   "context": "Message 1457 of the dialogue: MADUIN: How do we know for sure unless we observe for ourselves?",
+   "text": "مادوين: كيف نعرف ذلك يقينا ما لم نلاحظ بأنفسنا؟"
+  },
+  {
+   "id": "maduin.1458",
+   "context": "Message 1458 of the dialogue: {line}    How do we know…",
+   "text": "{center}{line}كيف نعرف…"
+  },
+  {
+   "id": "maduin.1459",
+   "context": "Message 1459 of the dialogue: {line}{Spaces 08}unless we…",
+   "text": "{center}{line}ما لم…"
+  },
+  {
+   "id": "maduin.1460",
+   "context": "Message 1460 of the dialogue: {line}   observe for ourselves…?",
+   "text": "{center}{line}نلاحظ بأنفسنا…؟"
+  },
+  {
+   "id": "maduin.1461",
+   "context": "Message 1461 of the dialogue: MADUIN: We've given her a name…{line}MADONNA: What?{page}MADUIN: It's {Terra}.{line}Not bad, huh?",
+   "text": "مادوين: أعطيناها اسما…{line}مادونا: ماذا؟\nمادوين: إنه {Terra}.{line}ليس سيئا، ها؟"
+  },
+  {
+   "id": "maduin.1462",
+   "context": "Message 1462 of the dialogue: {line}{Spaces 06}2 years later…",
+   "text": "{center}{line}بعد سنتين…"
+  },
+  {
+   "id": "maduin.1463",
+   "context": "Message 1463 of the dialogue: Humans!!!!!{line}The nexus between our worlds has opened again!! The wind…{line}so odd…just like 2 years ago…",
+   "text": "بشر!!!!!{line}الصلة بين عالمينا انفتحت مجددا!! الرياح…{line}غريبة جدا… تماما مثل قبل سنتين…"
+  },
+  {
+   "id": "maduin.1464",
+   "context": "Message 1464 of the dialogue: But something's different now…{line}Troops have come seeking our magical power.",
+   "text": "لكن شيئا ما مختلف الآن…{line}جاءت قوات تسعى وراء قوتنا السحرية."
+  },
+  {
+   "id": "maduin.1465",
+   "context": "Message 1465 of the dialogue: Blast it!{line}They've made it as far as the Elder's house!",
+   "text": "تبا!{line}وصلوا حتى بيت الشيخ!"
+  },
+  {
+   "id": "maduin.1466",
+   "context": "Message 1466 of the dialogue: GESTAHL: Aha!{line}We've finally found it!{page}Those ancient writings told us of this world, and described the awesome magical properties of these beasts!",
+   "text": "غشتال: آها!{line}وجدناه أخيرا!\nتلك الكتابات القديمة أخبرتنا عن هذا العالم، ووصفت الخصائص السحرية الرهيبة لهذه المخلوقات!"
+  },
+  {
+   "id": "maduin.1467",
+   "context": "Message 1467 of the dialogue: GESTAHL: Grab them!{line}Riches to any man who captures an Esper!{line}GO!",
+   "text": "غشتال: أمسكوا بهم!{line}ثروة لكل من يأسر إسبرا!{line}هيا!"
+  },
+  {
+   "id": "maduin.1468",
+   "context": "Message 1468 of the dialogue: ELDER: We've no choice…{line}We must do what we've been avoiding…{page}MADUIN: You mean…{line}the magic barrier?",
+   "text": "الشيخ: لا خيار لنا…{line}علينا أن نفعل ما كنا نتجنبه…\nمادوين: تقصد…{line}الحاجز السحري؟"
+  },
+  {
+   "id": "maduin.1469",
+   "context": "Message 1469 of the dialogue: It's dangerous out there!",
+   "text": "الخطر في الخارج!"
+  },
+  {
+   "id": "maduin.1470",
+   "context": "Message 1470 of the dialogue: Soon the humans will arrive!",
+   "text": "قريبا يصل البشر!"
+  },
+  {
+   "id": "maduin.1471",
+   "context": "Message 1471 of the dialogue: MADONNA: {Terra}'s all right.",
+   "text": "مادونا: {Terra} بخير."
+  },
+  {
+   "id": "maduin.1472",
+   "context": "Message 1472 of the dialogue: ELDER: Here's the plan. We'll cause a tempest that'll sweep all the nasty creatures out of our realm.{page}Then we'll seal the gate…{line}I am the last of our kind able to cast this magical seal.",
+   "text": "الشيخ: هذه هي الخطة. سنثير عاصفة تكنس كل المخلوقات الخبيثة من عالمنا.\nثم نختم البوابة…{line}أنا آخر من يستطيع من بني جنسنا إلقاء هذا الختم السحري."
+  },
+  {
+   "id": "maduin.1473",
+   "context": "Message 1473 of the dialogue: MADUIN: But in your state, you might just…{page}ELDER: Pass away…{line}but at least we will finally be safe.{line}MADUIN: Madonna……",
+   "text": "مادوين: لكن في حالتك، قد…\nالشيخ: أفارق الحياة…{line}لكننا على الأقل سنكون بأمان أخيرا.{line}مادوين: مادونا……"
+  },
+  {
+   "id": "maduin.1474",
+   "context": "Message 1474 of the dialogue: MADONNA: I, for one, will not miss the other side…",
+   "text": "مادونا: أما أنا، فلن أشتاق إلى الجانب الآخر…"
+  },
+  {
+   "id": "maduin.1475",
+   "context": "Message 1475 of the dialogue: ELDER: Let's do it.{line}We have no other choice.",
+   "text": "الشيخ: لنفعلها.{line}لا خيار آخر لنا."
+  },
+  {
+   "id": "maduin.1476",
+   "context": "Message 1476 of the dialogue: ESPER: This is all because of that human girl!{page}MADUIN: Nonsense!{page}ESPER: I'm sure she helped the others find us!",
+   "text": "الإسبر: كل هذا بسبب تلك الفتاة البشرية!\nمادوين: هراء!\nالإسبر: أنا واثق أنها ساعدت الآخرين على إيجادنا!"
+  },
+  {
+   "id": "maduin.1477",
+   "context": "Message 1477 of the dialogue: MADUIN: Get a grip on yourself!{page}ESPER: No! She's one of them!{line}Soon she'll be wearing our hide!",
+   "text": "مادوين: تمالك نفسك!\nالإسبر: لا! إنها واحدة منهم!{line}قريبا سترتدي جلودنا!"
+  },
+  {
+   "id": "maduin.1478",
+   "context": "Message 1478 of the dialogue: MADUIN: Urghhh!",
+   "text": "مادوين: أرغغغ!"
+  },
+  {
+   "id": "maduin.1479",
+   "context": "Message 1479 of the dialogue: Madonna took {Terra} to the gate!",
+   "text": "مادونا أخذت {Terra} إلى البوابة!"
+  },
+  {
+   "id": "maduin.1480",
+   "context": "Message 1480 of the dialogue: ELDER: Where are you going?! D' goh!{line}MADUIN: Madonna's getting drawn into the next world…!{page}ELDER: Impossible!{line}It's too late! I've already begun casting the barrier. There's no turning back!{page}MADUIN: That fool…",
+   "text": "الشيخ: إلى أين تذهب؟! أوه!{line}مادوين: مادونا تنجذب إلى العالم الآخر…!\nالشيخ: مستحيل!{line}فات الأوان! بدأت بإلقاء الحاجز. لا رجعة الآن!\nمادوين: تلك الحمقاء…"
+  },
+  {
+   "id": "maduin.1481",
+   "context": "Message 1481 of the dialogue: MADUIN: Madonna!!",
+   "text": "مادوين: مادونا!!"
+  },
+  {
+   "id": "maduin.1482",
+   "context": "Message 1482 of the dialogue: {Terra}!!!",
+   "text": "{Terra}!!!"
+  },
+  {
+   "id": "maduin.1483",
+   "context": "Message 1483 of the dialogue: MADONNA: Maduin…{line}I'm not their friend…{page}MADUIN: I understand that!{page}MADONNA: Thank you…{line}MADUIN: Can you make it back here?{page}MADONNA: Sure…",
+   "text": "مادونا: مادوين…{line}لست صديقتهم…\nمادوين: أفهم ذلك!\nمادونا: شكرا لك…{line}مادوين: أتستطيعين العودة إلى هنا؟\nمادونا: طبعا…"
+  },
+  {
+   "id": "maduin.1484",
+   "context": "Message 1484 of the dialogue: GESTAHL: Shriek!!!{line}Just when we were in reach of a veritable bonanza…!",
+   "text": "غشتال: يا للهول!!!{line}حين كنا على بعد خطوة من كنز حقيقي…!"
+  },
+  {
+   "id": "maduin.1485",
+   "context": "Message 1485 of the dialogue: SOLDIER: Look what popped out!",
+   "text": "الجندي: انظروا ماذا خرج!"
+  },
+  {
+   "id": "maduin.1486",
+   "context": "Message 1486 of the dialogue: GESTAHL: A…human girl?{line}{Wait}Wh… {Wait}Who is she?",
+   "text": "غشتال: ف… فتاة بشرية؟{line}{Wait}م… {Wait}من تكون؟"
+  },
+  {
+   "id": "maduin.1487",
+   "context": "Message 1487 of the dialogue: MADONNA: Please…{line}take care…of my baby…{page}GESTAHL: YOUR girl!?{line}Eh!? Hmmm…Then she's half human and half…{line}{Wait}How absolutely fascinating!{page}GESTAHL: Mwa, ha, ha…{line}She will help us realize our dream faster than we ever imagined!",
+   "text": "مادونا: أرجوكم…{line}اعتنوا… بطفلتي…\nغشتال: ابنتك أنت!؟{line}إيه!؟ هممم… إذن هي نصف بشرية ونصف…{line}{Wait}يا له من أمر مثير للغاية!\nغشتال: موا، ها، ها…{line}ستساعدنا على تحقيق حلمنا أسرع مما تخيلنا يوما!"
+  },
+  {
+   "id": "maduin.1488",
+   "context": "Message 1488 of the dialogue: MADONNA: N…noooo!!!{line}GESTAHL: Quiet, my dear!!",
+   "text": "مادونا: ل… لااا!!!{line}غشتال: اصمتي يا عزيزتي!!"
+  },
+  {
+   "id": "maduin.1489",
+   "context": "Message 1489 of the dialogue: GESTAHL: We will own this world!{line}Ha, ha, ha…",
+   "text": "غشتال: سنملك هذا العالم!{line}ها، ها، ها…"
+  },
+  {
+   "id": "maduin.1490",
+   "context": "Message 1490 of the dialogue: MADUIN: Maadoonaaa!!",
+   "text": "مادوين: مااادوووناااا!!"
+  },
+  {
+   "id": "maduin.1491",
+   "context": "Message 1491 of the dialogue: {Terra}: That was my father…?",
+   "text": "{Terra}: كان ذلك أبي…؟"
+  },
+  {
+   "id": "maduin.1492",
+   "context": "Message 1492 of the dialogue: {Terra}: I'm the product of an Esper and a human…{line}That's where I got my powers…{page}Now I understand…{line}I finally feel I can begin to control this power of mine…",
+   "text": "{Terra}: أنا نتاج إسبر وبشرية…{line}من هناك جاءت قواي…\nالآن فهمت…{line}أشعر أخيرا أنني أستطيع البدء في التحكم بهذه القوة التي أملكها…"
+  },
+  {
+   "id": "maduin.1493",
+   "context": "Message 1493 of the dialogue: {Edgar}: So Gestahl must've known the secret of the Espers' power back then.{page}{Locke}: And those Espers at the facility were grabbed during that expedition!{page}That means {Celes}'s power came……{line}at the expense of an Esper…",
+   "text": "{Edgar}: إذن لا بد أن غشتال عرف سر قوة الإسبرات منذ ذلك الحين.\n{Locke}: وتلك الإسبرات في المنشأة أسرت في تلك الحملة!\nأي أن قوة {Celes} جاءت……{line}على حساب إسبر…"
+  },
+  {
+   "id": "maduin.1494",
+   "context": "Message 1494 of the dialogue: {Sabin}: They can't get away with this! We have to strike back!",
+   "text": "{Sabin}: لن يفلتوا بفعلتهم! علينا أن نرد الضربة!"
+  },
+  {
+   "id": "maduin.1495",
+   "context": "Message 1495 of the dialogue: {Terra}: What's happening in Narshe?{page}{Locke}: Hmm…{line}Maybe we should head back that way.",
+   "text": "{Terra}: ماذا يجري في نارشي؟\n{Locke}: همم…{line}ربما علينا العودة إلى هناك."
+  },
+  {
+   "id": "maduin.1496",
+   "context": "Message 1496 of the dialogue: {Setzer}: The airship's ready!",
+   "text": "{Setzer}: السفينة الطائرة جاهزة!"
+  },
+  {
+   "id": "maduin.1497",
+   "context": "Message 1497 of the dialogue: {Terra}: Come on!",
+   "text": "{Terra}: هيا!"
   }
  ]
 }

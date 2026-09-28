@@ -469,8 +469,8 @@ The twenty-third reference target, and the fourth on the Super NES, is **Final F
 (USA)**, the Super NES release of Final Fantasy VI. Its text engine was read from the
 [everything8215/ff6](https://github.com/everything8215/ff6) disassembly, which rebuilds this
 ROM and names its routines, checked byte by byte against the ROM and run in snes9x. It is
-the first target translated chapter by chapter towards a whole game: the 1327 messages of
-the first four chapters, the opening through Setzer's airship, are in Arabic, with the
+the first target translated chapter by chapter towards a whole game: the 1495 messages of
+the first five chapters, the opening through Terra's memory of the Esper world, are in Arabic, with the
 fourteen characters' names the game writes in them: the dialogue on the cliffs, the centred
 narration over the Magitek walk, Narshe's town and mines, Arvis's house, Kefka's and the
 Empire's scenes, Locke and the Moogles, then Figaro Castle and its dive under the sand, South
@@ -478,7 +478,8 @@ Figaro, Mt. Kolts and Sabin, the Returners' hideout and Banon, the raft's three-
 and the three scenarios (Locke and Celes, Banon's party, Sabin's road through Doma, the
 Phantom Train, the Veldt and Nikeah), the beginner's classroom, the battle for Narshe and
 Terra's flight, then Kohlingen, Jidoor, Zozo and Ramuh, the Opera House with its arias and
-Setzer's coin. The game draws
+Setzer's coin, then Vector, the Magitek Research Facility with Ifrit, Shiva, Cid and Kefka,
+the escape on the airship and Maduin's story. The game draws
 a letter a frame with a variable-width font into cells of 16x16 pixels sent to the text's
 tiles in the vertical blank, so the Arabic takes the `glyph-font` strategy with a font of the
 overlay's own: forms of 16x15 pixels, 12 pixels, white with a black shadow on the window's
@@ -491,7 +492,7 @@ columns the first time the engine reaches it and send it by DMA in the vertical 
 the engine keeps walking the line's codes so its pauses, button waits, pages and choices work
 as before; each choice's cursor takes the cell the layout kept for it, so two choices may
 share a line, and a character's name comes from the translation's own table. The English
-messages stay as they were, and the patch is about 110 KB. See
+messages stay as they were, and the patch is about 120 KB. See
 [the Final Fantasy III testing guide](docs/FF6_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/FF6_ARABIC_RENDERER.md).
 

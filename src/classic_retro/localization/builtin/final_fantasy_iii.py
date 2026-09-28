@@ -75,12 +75,13 @@ TARGET = LocalizationTarget(
     kind="rom-overlay",
     strategies=("glyph-font",),
     scope=(
-        "The first four chapters, the opening to Setzer's airship: the 1327 messages "
+        "The first five chapters, the opening to the Esper world: the 1495 messages "
         "of Narshe, Figaro Castle, South Figaro, Mt. Kolts, the Returners' hideout and "
         "the raft, the three scenarios (Locke and Celes, Banon's party, Sabin's road "
         "through Doma, the Phantom Train, the Veldt and Nikeah), the classroom, the "
         "battle for Narshe and Terra's flight, then Kohlingen, Jidoor, Zozo and Ramuh, "
-        "the Opera House and Setzer's coin, and the characters' names in them; the "
+        "the Opera House and Setzer's coin, then Vector, the Magitek Research Facility, "
+        "the escape and Maduin's story, and the characters' names in them; the "
         "others stay in English"
     ),
     guide="docs/FF6_ARABIC_TEST_AR.md",
@@ -91,5 +92,5 @@ TARGET = LocalizationTarget(
     build=build,
     extract=extract,
     previews=PREVIEWS,
-    reference_patch_sha256="a756e149f6cdc595d57894d8e1e7841cda766f8862a6b79a7eebcc2caf532297",
+    reference_patch_sha256="dc625533b820bc4074201d7a54958f3b664b5d856a9f2cc8625e05df47928d7f",
 )
