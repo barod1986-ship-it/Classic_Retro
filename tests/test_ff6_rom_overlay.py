@@ -356,17 +356,17 @@ def test_the_hook_source_uses_the_overlay_addresses_and_the_engine_geometry():
 
 
 @pytest.mark.skipif(shutil.which("ca65") is None, reason="needs cc65")
-def test_the_stored_hook_matches_its_source():
+def test_the_stored_hook_matches_its_source(capsys):
     report = overlay.check_hook_code()
     assert report["match"] and report["hook_bytes"] == len(overlay.HOOK_CODE)
+    assert main(["targets", "check-hooks", "final-fantasy-iii"]) == 0
+    assert str(len(overlay.HOOK_CODE)) in capsys.readouterr().out
 
 
-def test_the_command_group_checks_and_encodes(capsys):
+def test_the_command_group_encodes(capsys):
     assert main(["final-fantasy-iii", "encode-arabic", "{Terra}: هيا"]) == 0
     encoded = json.loads(capsys.readouterr().out)
     assert encoded["count"] == 7 and encoded["bytes"].startswith("02 ")
-    assert main(["targets", "check-hooks", "final-fantasy-iii"]) == 0
-    assert str(len(overlay.HOOK_CODE)) in capsys.readouterr().out
 
 
 def test_the_translations_are_checked_and_encoded_without_the_rom():
