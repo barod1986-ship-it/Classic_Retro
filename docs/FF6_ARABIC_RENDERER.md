@@ -129,7 +129,7 @@ variants, shifted right by 0 to 8 pixels into three bytes a row (45 bytes a vari
 glyph), and the shadow of a glyph at pixel `s` of its tile is the variant `s + 1`. The
 glyphs take codes `20` to `FF` in the font's order (the space, the punctuation, the digits,
 then the repertoire by code point), 224 at most, and their variants take two banks, no glyph
-across one (161 a bank); the first seven chapters use 138. The quotes `«` `»` and the brackets
+across one (161 a bank); the first eight chapters use 138. The quotes `«` `»` and the brackets
 `(` `)` are drawn by hand as their mirror images, since a right-to-left run shows them
 mirrored and the painter does not mirror; the opera's note `♪`, which the English writes
 with the font's note icon, is drawn by hand too.
@@ -196,7 +196,7 @@ address to its end within its bank.
 
 ## Translations
 
-`rom/ff6_arabic_script.py` pins the 2164 messages of the first seven chapters by their
+`rom/ff6_arabic_script.py` pins the 2415 messages of the first eight chapters by their
 numbers, with the SHA-256 of each and its command skeleton. The Narshe chapter (`narshe`,
 0 to 63; 0 shares 1's text and pointer): the cliffs above Narshe (1-5, their
 `{KeyAfter 18}{Key}` pacing kept), the narration (6-9, centred with `{center}`,
@@ -249,7 +249,15 @@ world: Albrook with Leo, Celes and Shadow, the voyage and Crescent Island (`voya
 2027-2062), Kefka's betrayal, Leo's death and the return (`leo`, 2063-2117), and the
 Floating Continent, Shadow, the Statues and the day the world changed (`continent`,
 2118-2167; Kefka's hate over three pages, the last centred, and the closing line centred
-with its wait and pause). The Arabic is in
+with its wait and pause). The eighth chapter, 2168-2418, opens the world of ruin: Celes
+and Cid on the island (`island`, 2168-2200), Albrook and Tzen after the fall with
+Sabin's collapsing house (`albrook-ruin`, 2201-2208; `tzen-ruin`, 2209-2240), Strago and
+Relm at the cult's tower (`cult`, 2241-2254), Mobliz with Terra, Duane, Katarin and
+Phunbaba (`mobliz-ruin`, 2255-2323), Nikeah with the Crimson Robbers and Gerad
+(`nikeah-ruin`, 2324-2348), South Figaro after the fall (`south-figaro-ruin`,
+2349-2373), the cave to Figaro, Edgar unmasked and the castle (`figaro-ruin`,
+2374-2403) and the Ancient Castle with Odin and the queen's diary (`ancient-castle`,
+2404-2418; the Magicite's level and Odin's shard centred). The Arabic is in
 `translations/final-fantasy-iii.json`, a line a page, `{line}` where a line must end. The names are `name.terra` to `name.umaro`, the fourteen characters
 the name commands write, in the game's order, one word each, 64 pixels at most. A
 translation keeps its original's commands but the layout (`{line}`, `{page}`, the spaces):
@@ -283,12 +291,16 @@ lines, the hairpin over its pages and Setzer's five pages. The seventh: the airs
 prompt after its page with the cursor moving with Down, Kefka's hate over its three
 pages, the closing line centred with its wait, Strago's waits inside a line, the goddesses'
 story over four pages, the jump's choices with a name in one, the inn's bracketed
-choices after their page and Strago's warning over four pages. The messages that follow the scope show the game's English as before. The RetroPad's
+choices after their page and Strago's warning over four pages. The eighth: Cid's four
+pages with their waits, the treasure's bracketed choices, the cult's centred lines,
+Fenrir's Magicite after its page, Terra's «love» with its waits, the children's centred
+cries, the thieves' centred cry with its button wait, Edgar's six pages, Odin's centred
+level-up over two pages and his attack's centred name. The messages that follow the scope show the game's English as before. The RetroPad's
 A is the Super NES's A.
 
 ## Limits
 
-- The first seven chapters' 2164 messages and the characters' names are in Arabic; every
+- The first eight chapters' 2415 messages and the characters' names are in Arabic; every
   other message stays English, and the menus and the battles are other text engines,
   untouched, so the classroom's lessons name menu entries and statuses in Arabic that the
   menus still show in English.

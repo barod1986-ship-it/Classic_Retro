@@ -10915,6 +10915,1261 @@
    "id": "continent.2167",
    "context": "Message 2167 of the dialogue: {line}{Spaces 05}On that day, {Wait}the world{line}{Spaces 05}was changed forever… {Pause 20}{Key}",
    "text": "{center}{line}في ذلك اليوم، {Wait}تغير العالم{line}إلى الأبد… {Pause 20}{Key}"
+  },
+  {
+   "id": "island.2168",
+   "context": "Message 2168 of the dialogue: CID: {Celes}…at last…!",
+   "text": "سيد: {Celes}… أخيرا…!"
+  },
+  {
+   "id": "island.2169",
+   "context": "Message 2169 of the dialogue: CID: You're finally awake!{line}{Celes}: I…feel like I've been sleeping for ever…{page}CID: For one year, actually…{line}I thought you were out for good.{page}{Celes}: A whole year…{line}{Wait}You've watched over me the whole time?",
+   "text": "سيد: استيقظت أخيرا!{line}{Celes}: أشعر… كأنني نمت دهرا…\nسيد: سنة كاملة، في الحقيقة…{line}ظننتك لن تفيقي أبدا.\n{Celes}: سنة كاملة…{line}{Wait}وأنت تسهر علي طوال الوقت؟"
+  },
+  {
+   "id": "island.2170",
+   "context": "Message 2170 of the dialogue: CID: Yes, and I'm about out of energy.",
+   "text": "سيد: نعم، وقد أوشكت طاقتي على النفاد."
+  },
+  {
+   "id": "island.2171",
+   "context": "Message 2171 of the dialogue: CID: We're on a tiny, deserted island. After the world crumbled, I awoke to find us here together with…{page}…a few strangers.{line}{Celes}: The world…!{line}So, it wasn't just a dream.",
+   "text": "سيد: نحن على جزيرة صغيرة مهجورة. بعد أن انهار العالم، أفقت لأجدنا هنا معا مع…\n…بضعة غرباء.{line}{Celes}: العالم…!{line}إذن لم يكن مجرد حلم."
+  },
+  {
+   "id": "island.2172",
+   "context": "Message 2172 of the dialogue: {Celes}: Where are my friends? Where's {Locke}…?{page}CID: I don't know.{line}I only know we're here…{line}Maybe we're the only people left alive…{page}CID: Since that day, the world's continued its slide into ruin. Animals and plants are dying…{page}The few others who washed up here with us passed away of boredom and despair.",
+   "text": "{Celes}: أين أصدقائي؟ أين {Locke}…؟\nسيد: لا أعرف.{line}كل ما أعرفه أننا هنا…{line}ربما نحن آخر من بقي على قيد الحياة…\nسيد: منذ ذلك اليوم، والعالم يواصل انزلاقه نحو الخراب. الحيوانات والنباتات تموت…\nوالقلة الذين جرفهم البحر إلى هنا معنا ماتوا من الملل واليأس."
+  },
+  {
+   "id": "island.2173",
+   "context": "Message 2173 of the dialogue: {Celes}: My friends…{line}they're probably all gone…",
+   "text": "{Celes}: أصدقائي…{line}على الأرجح رحلوا جميعا…"
+  },
+  {
+   "id": "island.2174",
+   "context": "Message 2174 of the dialogue: CID: {Celes}…you're the closest thing to family that I have…we could just live out our lives here peacefully…{page}{Celes}: I suppose so, Cid…{line}{Wait}Or should I say, Granddad?!{line}May I call you that?{page}CID: Gramps, eh?{line}I'm overwhelmed! All of a sudden I have a granddaughter!{line}{Wait}Cough… {Wait}Wheeze…{page}{Celes}: My long-lost Granddad…",
+   "text": "سيد: {Celes}… أنت أقرب ما لي إلى عائلة… يمكننا أن نعيش حياتنا هنا بسلام…\n{Celes}: أظن ذلك يا سيد…{line}{Wait}أم أقول، يا جدي؟!{line}أيمكنني أن أدعوك هكذا؟\nسيد: جدو، ها؟{line}أنا غارق في المشاعر! فجأة صار لي حفيدة!{line}{Wait}كح… {Wait}أح…\n{Celes}: جدي الذي طال غيابه…"
+  },
+  {
+   "id": "island.2175",
+   "context": "Message 2175 of the dialogue: CID: Ha, ha…hack…cough!{line}{Celes}: Hey, are you hungry?{page}CID: I…haven't eaten in 3 or so days, ever since I became ill.{page}{Celes}: What would you like?{page}CID: Well, unless I ask for fish,{line}I won't get anything!{line}That's all there is here!{line}{Celes}: I'll go catch some.",
+   "text": "سيد: ها، ها… كح… كح!{line}{Celes}: هيه، أأنت جائع؟\nسيد: لم… آكل منذ 3 أيام تقريبا، منذ مرضت.\n{Celes}: ماذا تشتهي؟\nسيد: حسنا، إن لم أطلب سمكا،{line}فلن أحصل على شيء!{line}هذا كل ما هنا!{line}{Celes}: سأذهب لأصطاد بعضه."
+  },
+  {
+   "id": "island.2176",
+   "context": "Message 2176 of the dialogue: CID: I feel much better!{line}Thanks, {Celes}!",
+   "text": "سيد: أشعر بتحسن كبير!{line}شكرا يا {Celes}!"
+  },
+  {
+   "id": "island.2177",
+   "context": "Message 2177 of the dialogue: CID: My dear,{line}I…feel I'm not going to be around much longer…",
+   "text": "سيد: يا عزيزتي،{line}أشعر… أنني لن أبقى طويلا…"
+  },
+  {
+   "id": "island.2178",
+   "context": "Message 2178 of the dialogue: CID: {Celes}, thanks for all you've done for me!",
+   "text": "سيد: {Celes}، شكرا على كل ما فعلته من أجلي!"
+  },
+  {
+   "id": "island.2179",
+   "context": "Message 2179 of the dialogue: CID: Hackack!!{line}I feel a little better!",
+   "text": "سيد: كح كح!!{line}أشعر بتحسن طفيف!"
+  },
+  {
+   "id": "island.2180",
+   "context": "Message 2180 of the dialogue: CID: Cough…wheeze…{line}I can't bear this any longer…",
+   "text": "سيد: كح… أح…{line}لم أعد أحتمل هذا…"
+  },
+  {
+   "id": "island.2181",
+   "context": "Message 2181 of the dialogue: CID: I…I'm not long for this cruel new world…",
+   "text": "سيد: أنا… لن أعمر طويلا في هذا العالم الجديد القاسي…"
+  },
+  {
+   "id": "island.2182",
+   "context": "Message 2182 of the dialogue: CID: My worst nightmare is to think of you alone here on this wretched island…hack…wheeze!!",
+   "text": "سيد: أسوأ كوابيسي أن أتخيلك وحيدة هنا على هذه الجزيرة البائسة… كح… أح!!"
+  },
+  {
+   "id": "island.2183",
+   "context": "Message 2183 of the dialogue: CID: Cough…hack…ACK!!{line}While I can still talk, I…wheeze…pant…want to thank you…cough!",
+   "text": "سيد: كح… كح… آك!!{line}ما دمت أستطيع الكلام، أنا… أح… أريد… أن أشكرك… كح!"
+  },
+  {
+   "id": "island.2184",
+   "context": "Message 2184 of the dialogue: CID: Good-bye…",
+   "text": "سيد: وداعا…"
+  },
+  {
+   "id": "island.2185",
+   "context": "Message 2185 of the dialogue: ……",
+   "text": "……"
+  },
+  {
+   "id": "island.2186",
+   "context": "Message 2186 of the dialogue: {Celes}: Granddad, here's a fish! Eat up!{line}CID: Oh! Yum…{line}Chomp, munch, chew…",
+   "text": "{Celes}: جدي، ها هي سمكة! كلها!{line}سيد: أوه! لذيذ…{line}قضم، مضغ، بلع…"
+  },
+  {
+   "id": "island.2187",
+   "context": "Message 2187 of the dialogue: {Celes}: What's up?{page}CID: {Celes}…the project that kept me going over the past year is down below. Go have a look at it!",
+   "text": "{Celes}: ما الأمر؟\nسيد: {Celes}… المشروع الذي أبقاني حيا طوال السنة الماضية في الأسفل. اذهبي وألقي نظرة عليه!"
+  },
+  {
+   "id": "island.2188",
+   "context": "Message 2188 of the dialogue: {Celes}: Granddad.{line}You have to eat, or else…{page}W…what's the matter?",
+   "text": "{Celes}: جدي.{line}عليك أن تأكل، وإلا…\nم… ما الأمر؟"
+  },
+  {
+   "id": "island.2189",
+   "context": "Message 2189 of the dialogue: {Celes}: Cid…",
+   "text": "{Celes}: سيد…"
+  },
+  {
+   "id": "island.2190",
+   "context": "Message 2190 of the dialogue: {Celes}: No…NO!!{line}You promised you'd stay here with me!!",
+   "text": "{Celes}: لا… لا!!{line}وعدتني أن تبقى هنا معي!!"
+  },
+  {
+   "id": "island.2191",
+   "context": "Message 2191 of the dialogue: {Celes}: Granddad, ANSWER ME!{line}Tell me you're just joking!",
+   "text": "{Celes}: جدي، أجبني!{line}قل لي إنك تمزح!"
+  },
+  {
+   "id": "island.2192",
+   "context": "Message 2192 of the dialogue: {Celes}: Cid…Granddad…!",
+   "text": "{Celes}: سيد… جدي…!"
+  },
+  {
+   "id": "island.2193",
+   "context": "Message 2193 of the dialogue: {Celes}: Granddad.{page}CID: {Celes}…{line}You must leave this place.{line}You have to find your friends!{page}{Celes}: I know…{line}But I'll bring 'em all back to meet you!{page}CID: That {Locke} fellow, too, no doubt…",
+   "text": "{Celes}: جدي.\nسيد: {Celes}…{line}عليك أن تغادري هذا المكان.{line}عليك أن تجدي أصدقاءك!\n{Celes}: أعرف…{line}لكنني سأعود بهم كلهم ليقابلوك!\nسيد: وذلك المدعو {Locke} أيضا، بلا شك…"
+  },
+  {
+   "id": "island.2194",
+   "context": "Message 2194 of the dialogue: {Celes}: I'll make you proud of me…Granddad…",
+   "text": "{Celes}: سأجعلك فخورا بي… يا جدي…"
+  },
+  {
+   "id": "island.2195",
+   "context": "Message 2195 of the dialogue: CID: Those others who were here…{page}when they were feeling down they'd take a leap of faith from the cliffs up north…perked 'em right up!",
+   "text": "سيد: أولئك الآخرون الذين كانوا هنا…\nحين كانوا يشعرون بالإحباط كانوا يقفزون قفزة إيمان من الجروف في الشمال… فتنتعش أرواحهم فورا!"
+  },
+  {
+   "id": "island.2196",
+   "context": "Message 2196 of the dialogue: {Celes}: Everyone's gone…{line}Even {Locke}, who promised to watch over me…{page}The world's slowly ebbing away…",
+   "text": "{Celes}: رحل الجميع…{line}حتى {Locke}، الذي وعد أن يرعاني…\nوالعالم يتلاشى ببطء…"
+  },
+  {
+   "id": "island.2197",
+   "context": "Message 2197 of the dialogue: {Celes}: Phew…{line}Why did you nurse me back to health? Did I ever ask you to help me?!",
+   "text": "{Celes}: أوف…{line}لماذا أعدتني إلى الحياة؟ هل طلبت منك يوما أن تساعدني؟!"
+  },
+  {
+   "id": "island.2198",
+   "context": "Message 2198 of the dialogue: {Celes}: A bandana???{line}{Wait}No…it can't be…{page}{Celes}: Hey, you!{line}Where'd you get this?!{line}Is the person who healed you still alive? Answer me!",
+   "text": "{Celes}: عصابة رأس؟؟؟{line}{Wait}لا… لا يمكن…\n{Celes}: هيه، أنت!{line}من أين حصلت على هذه؟!{line}هل الشخص الذي عالجك ما زال حيا؟ أجبني!"
+  },
+  {
+   "id": "island.2199",
+   "context": "Message 2199 of the dialogue: {Celes}: He's alive…{line}{Wait}{Locke}'s still alive!!!",
+   "text": "{Celes}: إنه حي…{line}{Wait}{Locke} ما زال حيا!!!"
+  },
+  {
+   "id": "island.2200",
+   "context": "Message 2200 of the dialogue: You need to leave! The others are surely waiting for you!{page}Find the stairs next to the stove. Down them lies your road to freedom.{line}{Spaces 0B}Love, Granddad",
+   "text": "عليك أن ترحلي! الآخرون ينتظرونك حتما!\nابحثي عن الدرج بجانب الموقد. تحته يكمن طريقك إلى الحرية.{line}مع حبي، جدك"
+  },
+  {
+   "id": "albrook-ruin.2201",
+   "context": "Message 2201 of the dialogue: Thanks for saving the child!",
+   "text": "شكرا لإنقاذ الطفل!"
+  },
+  {
+   "id": "albrook-ruin.2202",
+   "context": "Message 2202 of the dialogue: I was on lookout duty for Kefka…{line}But I lost my nerve…",
+   "text": "كنت في مهمة مراقبة لحساب كيفكا…{line}لكنني فقدت شجاعتي…"
+  },
+  {
+   "id": "albrook-ruin.2203",
+   "context": "Message 2203 of the dialogue: Anyone who opposes Kefka is doomed. He uses his “Light of Judgment” from high atop his tower to burn whole towns.",
+   "text": "كل من يعارض كيفكا هالك. يستعمل «ضوء الدينونة» من أعلى برجه ليحرق بلدات بأكملها."
+  },
+  {
+   "id": "albrook-ruin.2204",
+   "context": "Message 2204 of the dialogue: I saw it! Kefka used a light beam to burn the village of Mobliz, to the east.{page}Most of the adults there perished trying to save their children…",
+   "text": "رأيته! كيفكا استعمل شعاعا من الضوء ليحرق قرية موبليز، إلى الشرق.\nمعظم البالغين هناك هلكوا وهم يحاولون إنقاذ أطفالهم…"
+  },
+  {
+   "id": "albrook-ruin.2205",
+   "context": "Message 2205 of the dialogue: The “Serpent Trench” used to be deep under water.{line}Now it's above sea level.{page}Some “Cult of Kefka” members have built a tower there…",
+   "text": "«خندق الأفعى» كان في أعماق الماء.{line}والآن صار فوق سطح البحر.\nبعض أعضاء «طائفة كيفكا» بنوا برجا هناك…"
+  },
+  {
+   "id": "albrook-ruin.2206",
+   "context": "Message 2206 of the dialogue: Many monsters nowadays attack with “Zombie”, “Petrify” and the like. Have you equipped suitable Relics?",
+   "text": "وحوش كثيرة هذه الأيام تهاجم بحالات مثل «زومبي» و«تحجر». هل جهزت التمائم المناسبة؟"
+  },
+  {
+   "id": "albrook-ruin.2207",
+   "context": "Message 2207 of the dialogue: To the east you'll find the “Serpent Trench.” Further east you'll find the village of Mobliz.{page}Boy, the Light of Judgment really fried that town…",
+   "text": "إلى الشرق تجد «خندق الأفعى». وأبعد شرقا تجد قرية موبليز.\nيا إلهي، ضوء الدينونة شوى تلك البلدة حقا…"
+  },
+  {
+   "id": "albrook-ruin.2208",
+   "context": "Message 2208 of the dialogue: Head north on the Serpent Trench and you'll reach Nikeah. Ships still sail from there.",
+   "text": "اتجه شمالا عبر خندق الأفعى تصل إلى نيكيا. السفن ما زالت تبحر من هناك."
+  },
+  {
+   "id": "tzen-ruin.2209",
+   "context": "Message 2209 of the dialogue: Heeeeee…{line}I've never been more frightened!",
+   "text": "هييييي…{line}لم أخف هكذا في حياتي!"
+  },
+  {
+   "id": "tzen-ruin.2210",
+   "context": "Message 2210 of the dialogue: My child's inside!{line}Do something!",
+   "text": "طفلي في الداخل!{line}افعلوا شيئا!"
+  },
+  {
+   "id": "tzen-ruin.2211",
+   "context": "Message 2211 of the dialogue: Must have irritated Kefka…",
+   "text": "لا بد أننا أغضبنا كيفكا…"
+  },
+  {
+   "id": "tzen-ruin.2212",
+   "context": "Message 2212 of the dialogue: There are monsters inside! They keep petrifying everyone who goes in to help. You using suitable Relics?",
+   "text": "في الداخل وحوش! تحجر كل من يدخل للمساعدة. هل جهزتم التمائم المناسبة؟"
+  },
+  {
+   "id": "tzen-ruin.2213",
+   "context": "Message 2213 of the dialogue: We resisted Kefka, so he unleashed his Light of Judgment on us!",
+   "text": "قاومنا كيفكا، فأطلق علينا ضوء الدينونة!"
+  },
+  {
+   "id": "tzen-ruin.2214",
+   "context": "Message 2214 of the dialogue: Hurry, or the house'll collapse!",
+   "text": "بسرعة، وإلا انهار البيت!"
+  },
+  {
+   "id": "tzen-ruin.2215",
+   "context": "Message 2215 of the dialogue: {Celes}: {Sabin}!{page}{Sabin}: Hey! {Celes}!{line}{Celes}: Let's head in!{line}{Sabin}: Wait!!",
+   "text": "{Celes}: {Sabin}!\n{Sabin}: هيه! {Celes}!{line}{Celes}: لندخل!{line}{Sabin}: انتظري!!"
+  },
+  {
+   "id": "tzen-ruin.2216",
+   "context": "Message 2216 of the dialogue: “{Sabin}!!”{page}{Sabin}: Hey! You're alive!!!{line}Get in there, quick!",
+   "text": "«{Sabin}!!»\n{Sabin}: هيه! أنت حي!!!{line}ادخل بسرعة!"
+  },
+  {
+   "id": "tzen-ruin.2217",
+   "context": "Message 2217 of the dialogue: {Sabin}: If I move…{line}The whole house'll collapse. First… {Wait}save the child that's in there…{page}I can't hold this up forever, so…{line}Get out on the hum…urgh…",
+   "text": "{Sabin}: إن تحركت…{line}انهار البيت كله. أولا… {Wait}أنقذوا الطفل الذي في الداخل…\nلا أستطيع رفع هذا إلى الأبد، لذا…{line}اخرجوا بسرعة… أرغ…"
+  },
+  {
+   "id": "tzen-ruin.2218",
+   "context": "Message 2218 of the dialogue: {Sabin}: I…I…{line}I'm losing my grip…{line}Keep up the fight, brother!",
+   "text": "{Sabin}: أنا… أنا…{line}قبضتي تنزلق…{line}واصل الكفاح يا أخي!"
+  },
+  {
+   "id": "tzen-ruin.2219",
+   "context": "Message 2219 of the dialogue: {Sabin}: Wait!",
+   "text": "{Sabin}: انتظروا!"
+  },
+  {
+   "id": "tzen-ruin.2220",
+   "context": "Message 2220 of the dialogue: {Celes}: {Sabin}!{line}You're alive!",
+   "text": "{Celes}: {Sabin}!{line}أنت حي!"
+  },
+  {
+   "id": "tzen-ruin.2221",
+   "context": "Message 2221 of the dialogue: {Sabin}!{line}You're alive!",
+   "text": "{Sabin}!{line}أنت حي!"
+  },
+  {
+   "id": "tzen-ruin.2222",
+   "context": "Message 2222 of the dialogue: {Sabin}: But of course!{line}You think a minor thing like the end of the world was gonna do me in?",
+   "text": "{Sabin}: طبعا!{line}أتظنون أن شيئا تافها كنهاية العالم سيقضي علي؟"
+  },
+  {
+   "id": "tzen-ruin.2223",
+   "context": "Message 2223 of the dialogue: {Celes}: I thought everyone was gone…{line}I had given up all hope…{page}But… {Wait}fortunately, I was wrong! Now I know they're all alive! We need to find everyone! Then…",
+   "text": "{Celes}: ظننت أن الجميع رحلوا…{line}كنت قد فقدت كل أمل…\nلكن… {Wait}لحسن الحظ، كنت مخطئة! الآن أعرف أنهم كلهم أحياء! علينا أن نجد الجميع! ثم…"
+  },
+  {
+   "id": "tzen-ruin.2224",
+   "context": "Message 2224 of the dialogue: We thought everyone was gone…{line}We'd given up all hope…{page}But… {Wait}fortunately, I was wrong! Now I know they're all alive! We need to find everyone! Then…",
+   "text": "ظننا أن الجميع رحلوا…{line}كنا قد فقدنا كل أمل…\nلكن… {Wait}لحسن الحظ، كنت مخطئا! الآن أعرف أنهم كلهم أحياء! علينا أن نجد الجميع! ثم…"
+  },
+  {
+   "id": "tzen-ruin.2225",
+   "context": "Message 2225 of the dialogue: {Sabin}: I know, I know…{line}We smash Kefka, and deliver peace unto the world…",
+   "text": "{Sabin}: أعرف، أعرف…{line}نسحق كيفكا، ونجلب السلام للعالم…"
+  },
+  {
+   "id": "tzen-ruin.2226",
+   "context": "Message 2226 of the dialogue: Come on!!{line}Please help!",
+   "text": "هيا!!{line}أرجوكم ساعدوا!"
+  },
+  {
+   "id": "tzen-ruin.2227",
+   "context": "Message 2227 of the dialogue: All I can do now is restore your health.{line}Please…go back inside and save that child!!",
+   "text": "كل ما أستطيع فعله الآن أن أعيد إليكم عافيتكم.{line}أرجوكم… عودوا إلى الداخل وأنقذوا ذلك الطفل!!"
+  },
+  {
+   "id": "tzen-ruin.2228",
+   "context": "Message 2228 of the dialogue: “I'm scared…!”{line}“Don't worry, you're safe now.”",
+   "text": "«أنا خائف…!»{line}«لا تقلق، أنت بأمان الآن.»"
+  },
+  {
+   "id": "tzen-ruin.2229",
+   "context": "Message 2229 of the dialogue: Did you see that tower…?",
+   "text": "هل رأيت ذلك البرج…؟"
+  },
+  {
+   "id": "tzen-ruin.2230",
+   "context": "Message 2230 of the dialogue: Kefka's up there, 'n he's using the power of the Statues…{line}He's like a god…",
+   "text": "كيفكا في الأعلى، ويستعمل قوة التماثيل…{line}إنه كالإله…"
+  },
+  {
+   "id": "tzen-ruin.2231",
+   "context": "Message 2231 of the dialogue: Everything changed on that day…",
+   "text": "كل شيء تغير في ذلك اليوم…"
+  },
+  {
+   "id": "tzen-ruin.2232",
+   "context": "Message 2232 of the dialogue: Anyone who opposes Kefka gets his or her town fried by the “Light of Judgment.”",
+   "text": "كل من يعارض كيفكا، يحرق «ضوء الدينونة» بلدته."
+  },
+  {
+   "id": "tzen-ruin.2233",
+   "context": "Message 2233 of the dialogue: On THAT day, debris from all over the world floated eerily to the center of this land mass, and formed that tower…",
+   "text": "في ذلك اليوم، طفا الحطام من أنحاء العالم كله بشكل مخيف إلى وسط هذه اليابسة، وشكل ذلك البرج…"
+  },
+  {
+   "id": "tzen-ruin.2234",
+   "context": "Message 2234 of the dialogue: How can ya make a GP in a world like this?",
+   "text": "كيف تكسب غيلا واحدا في عالم كهذا؟"
+  },
+  {
+   "id": "tzen-ruin.2235",
+   "context": "Message 2235 of the dialogue: When the world was ripped apart, many long-sealed monsters were released…{page}Phunbaba…Doom Gaze…{line}And the 8 Dragons…",
+   "text": "حين تمزق العالم، تحررت وحوش كثيرة طال ختمها…\nفونبابا… دوم غيز…{line}والتنانين الثمانية…"
+  },
+  {
+   "id": "tzen-ruin.2236",
+   "context": "Message 2236 of the dialogue: I saw Doom Gaze soaring through the sky!{line}I'd rather take an acid bath than fight that thing!",
+   "text": "رأيت دوم غيز يحلق في السماء!{line}أفضل حمام حمض على قتال ذلك الشيء!"
+  },
+  {
+   "id": "tzen-ruin.2237",
+   "context": "Message 2237 of the dialogue: Uh? You again…?{line}{Wait}Oh, sorry. You look just like a man who was here searching for his friends…{page}He said he was going north, to Tzen.",
+   "text": "هاه؟ أنت مجددا…؟{line}{Wait}أوه، آسف. تشبه تماما رجلا كان هنا يبحث عن أصدقائه…\nقال إنه ذاهب شمالا، إلى تزن."
+  },
+  {
+   "id": "tzen-ruin.2238",
+   "context": "Message 2238 of the dialogue: You…the sparkle in your eye…{line}You're the spittin' image of a man who came through here recently.",
+   "text": "أنت… بريق عينيك…{line}أنت صورة طبق الأصل عن رجل مر من هنا مؤخرا."
+  },
+  {
+   "id": "tzen-ruin.2239",
+   "context": "Message 2239 of the dialogue: Oh…I think back on how nice the world used to be…",
+   "text": "أوه… أتذكر كم كان العالم جميلا…"
+  },
+  {
+   "id": "tzen-ruin.2240",
+   "context": "Message 2240 of the dialogue: …and realize it'll never be the same again…",
+   "text": "…وأدرك أنه لن يعود كما كان أبدا…"
+  },
+  {
+   "id": "cult.2241",
+   "context": "Message 2241 of the dialogue: {Relm}: You!!{line}You old fool!!!{line}You're still standing?!",
+   "text": "{Relm}: أنت!!{line}أيها العجوز الأحمق!!!{line}ما زلت واقفا؟!"
+  },
+  {
+   "id": "cult.2242",
+   "context": "Message 2242 of the dialogue: {Strago}: {Relm}!{line}Is that you, my dear?{line}You're alive!!",
+   "text": "{Strago}: {Relm}!{line}أهذه أنت يا عزيزتي؟{line}أنت حية!!"
+  },
+  {
+   "id": "cult.2243",
+   "context": "Message 2243 of the dialogue: {Relm}: Idiot!{line}Of course I'm all right!{line}{Strago}: Oh…{line}I'm so happy…{page}{Relm}: Did you think I was gonna check out before you, old man?! {Wait}Ah, ha, ha…",
+   "text": "{Relm}: أبله!{line}طبعا أنا بخير!{line}{Strago}: أوه…{line}كم أنا سعيد…\n{Relm}: أظننت أنني سأرحل قبلك أيها العجوز؟! {Wait}آه، ها، ها…"
+  },
+  {
+   "id": "cult.2244",
+   "context": "Message 2244 of the dialogue: {Strago}: You're as foul-mouthed as ever, bless your heart!{page}{Relm}: Come along now…{line}We're all glad to see you!",
+   "text": "{Strago}: ما زلت سليطة اللسان كعادتك، يا حبيبتي!\n{Relm}: هيا الآن…{line}كلنا سعداء برؤيتك!"
+  },
+  {
+   "id": "cult.2245",
+   "context": "Message 2245 of the dialogue: {Strago}: Whoa!{line}Well I'll be…{line}All right, make room for me!",
+   "text": "{Strago}: أوه!{line}يا للعجب…{line}حسنا، أفسحوا لي مكانا!"
+  },
+  {
+   "id": "cult.2246",
+   "context": "Message 2246 of the dialogue: The members of the “Cult of Kefka” live in this tower.{line}There's something wondrous atop it!{page}You can only use magic attacks inside, so unless your magic's strong, you'll never make it to the top!",
+   "text": "أعضاء «طائفة كيفكا» يعيشون في هذا البرج.{line}وفي قمته شيء عجيب!\nلا يمكن استعمال سوى هجمات السحر في الداخل، فما لم يكن سحرك قويا، فلن تبلغ القمة أبدا!"
+  },
+  {
+   "id": "cult.2247",
+   "context": "Message 2247 of the dialogue: Treasure…treasure…",
+   "text": "كنز… كنز…"
+  },
+  {
+   "id": "cult.2248",
+   "context": "Message 2248 of the dialogue: For 100000 GP I'll tell ya 'bout a secret treasure!{line}{Choice} (Hand over 100000 GP!){line}{Choice} (No way!)",
+   "text": "مقابل 100000 غيل أخبرك عن كنز سري!{line}{Choice} (هات 100000 غيل!){line}{Choice} (مستحيل!)"
+  },
+  {
+   "id": "cult.2249",
+   "context": "Message 2249 of the dialogue: Hooey!!!! {Wait}{line}Right, here's the scoop:{line}Beneath the Desert of Figaro lies an ancient castle…{page}…loaded with treasure.{line}By the way, an old man who lives in the Weapon Shop in Narshe is looking for you…",
+   "text": "هووي!!!! {Wait}{line}حسنا، إليك الخبر:{line}تحت صحراء فيغارو تقع قلعة قديمة…\n…مليئة بالكنوز.{line}بالمناسبة، عجوز يعيش في متجر الأسلحة في نارشي يبحث عنك…"
+  },
+  {
+   "id": "cult.2250",
+   "context": "Message 2250 of the dialogue: No use talking to them. They've sold their hearts to Kefka.{line}All they do is mope around, thinking of him…",
+   "text": "لا فائدة من الكلام معهم. باعوا قلوبهم لكيفكا.{line}كل ما يفعلونه أن يجلسوا مكتئبين، يفكرون فيه…"
+  },
+  {
+   "id": "cult.2251",
+   "context": "Message 2251 of the dialogue:    Master Kefka's treasure…{line}{Spaces 06}Return it…   Now…!",
+   "text": "{center}كنز السيد كيفكا…{line}أعيدوه… الآن…!"
+  },
+  {
+   "id": "cult.2252",
+   "context": "Message 2252 of the dialogue: Uwaaa!{line}Someone's coming!!",
+   "text": "أوااا!{line}أحدهم قادم!!"
+  },
+  {
+   "id": "cult.2253",
+   "context": "Message 2253 of the dialogue: You're gonna have to fight your way in here, chumps!!",
+   "text": "عليكم أن تشقوا طريقكم بالقتال إلى هنا أيها الأغبياء!!"
+  },
+  {
+   "id": "cult.2254",
+   "context": "Message 2254 of the dialogue: {line}{Spaces 0F}Wait!",
+   "text": "{center}{line}انتظروا!"
+  },
+  {
+   "id": "mobliz-ruin.2255",
+   "context": "Message 2255 of the dialogue: {Terra}!!",
+   "text": "{Terra}!!"
+  },
+  {
+   "id": "mobliz-ruin.2256",
+   "context": "Message 2256 of the dialogue: Mama!{line}Are these your friends?!",
+   "text": "ماما!{line}أهؤلاء أصدقاؤك؟!"
+  },
+  {
+   "id": "mobliz-ruin.2257",
+   "context": "Message 2257 of the dialogue: {Terra}: Oh! I'm so glad to see that you're safe!{line}I've missed you!",
+   "text": "{Terra}: أوه! كم أنا سعيدة أنكم بخير!{line}اشتقت إليكم!"
+  },
+  {
+   "id": "mobliz-ruin.2258",
+   "context": "Message 2258 of the dialogue: “{Terra}…come one, let's go! Unless we stop Kefka, all's lost…”{line}{Terra}: I…",
+   "text": "«{Terra}… هيا، لنذهب! ما لم نوقف كيفكا، فسيضيع كل شيء…»{line}{Terra}: أنا…"
+  },
+  {
+   "id": "mobliz-ruin.2259",
+   "context": "Message 2259 of the dialogue: {Terra}: That is {Wait}I… {Wait}um…{line}I can't fight any longer…",
+   "text": "{Terra}: أعني {Wait}أنا… {Wait}أمم…{line}لم أعد أستطيع القتال…"
+  },
+  {
+   "id": "mobliz-ruin.2260",
+   "context": "Message 2260 of the dialogue: {Terra}: The very day the world fell, Kefka turned some kind of beam on this town.{page}Almost all of the adults perished trying to save their children…",
+   "text": "{Terra}: في اليوم الذي سقط فيه العالم، وجه كيفكا نوعا من الشعاع على هذه البلدة.\nمعظم البالغين هلكوا وهم يحاولون إنقاذ أطفالهم…"
+  },
+  {
+   "id": "mobliz-ruin.2261",
+   "context": "Message 2261 of the dialogue: {Terra}: There were only children here… {Wait}{line}The moment I arrived, I felt needed…",
+   "text": "{Terra}: لم يكن هنا سوى أطفال… {Wait}{line}لحظة وصولي، شعرت أنهم بحاجة إلي…"
+  },
+  {
+   "id": "mobliz-ruin.2262",
+   "context": "Message 2262 of the dialogue: DUANE: You can't take {Terra} away!",
+   "text": "دوان: لا يمكنكم أخذ {Terra}!"
+  },
+  {
+   "id": "mobliz-ruin.2263",
+   "context": "Message 2263 of the dialogue: KATARIN: Duane… {Wait}{page}Please excuse him. It's just that if {Terra} goes, she takes with her the very spirit of our survival…",
+   "text": "كاتارين: دوان… {Wait}\nأرجوكم اعذروه. الأمر فقط أن {Terra} إن رحلت، أخذت معها روح بقائنا نفسها…"
+  },
+  {
+   "id": "mobliz-ruin.2264",
+   "context": "Message 2264 of the dialogue: {Terra}: I don't know why these kids need me…{page}But they've made me feel things I've never felt before.{page}The moment I sensed this, I lost my will to fight.",
+   "text": "{Terra}: لا أعرف لماذا يحتاج إلي هؤلاء الأطفال…\nلكنهم جعلوني أشعر بأشياء لم أشعر بها من قبل.\nولحظة أحسست بذلك، فقدت رغبتي في القتال."
+  },
+  {
+   "id": "mobliz-ruin.2265",
+   "context": "Message 2265 of the dialogue: {Terra}: I can honestly say I don't know what's going on inside of me…{page}And the more I try to understand it, the less inclined I am to fight.",
+   "text": "{Terra}: بصراحة لا أعرف ما يجري في داخلي…\nوكلما حاولت فهمه، قلت رغبتي في القتال."
+  },
+  {
+   "id": "mobliz-ruin.2266",
+   "context": "Message 2266 of the dialogue: Help!!! Run!!!{line}Phunbaba's coming!!",
+   "text": "النجدة!!! اهربوا!!!{line}فونبابا قادم!!"
+  },
+  {
+   "id": "mobliz-ruin.2267",
+   "context": "Message 2267 of the dialogue: {Terra}: Phunbaba's an ancient demon who was released when the world was undone.",
+   "text": "{Terra}: فونبابا شيطان قديم تحرر حين تمزق العالم."
+  },
+  {
+   "id": "mobliz-ruin.2268",
+   "context": "Message 2268 of the dialogue: {Terra}!!{line}Wake up!{line}Uh, oh…here it comes!!",
+   "text": "{Terra}!!{line}استيقظي!{line}أوه، لا… ها هو قادم!!"
+  },
+  {
+   "id": "mobliz-ruin.2269",
+   "context": "Message 2269 of the dialogue: {Terra}: I've really lost it…{line}My fighting edge…",
+   "text": "{Terra}: فقدتها حقا…{line}حدة قتالي…"
+  },
+  {
+   "id": "mobliz-ruin.2270",
+   "context": "Message 2270 of the dialogue: Mama!{line}Are you okay?!",
+   "text": "ماما!{line}أأنت بخير؟!"
+  },
+  {
+   "id": "mobliz-ruin.2271",
+   "context": "Message 2271 of the dialogue: {Terra}: I'm staying here.{line}As you can see, I can't be of any help to you.{page}And besides, the children really need me.{line}“But {Terra}…!”",
+   "text": "{Terra}: سأبقى هنا.{line}كما ترون، لا أستطيع مساعدتكم في شيء.\nثم إن الأطفال يحتاجون إلي حقا.{line}«لكن يا {Terra}…!»"
+  },
+  {
+   "id": "mobliz-ruin.2272",
+   "context": "Message 2272 of the dialogue: {Terra}: Maybe after a little more time passes…{line}I need to understand what's happening to me…",
+   "text": "{Terra}: ربما بعد أن يمر مزيد من الوقت…{line}أحتاج إلى أن أفهم ما يحدث لي…"
+  },
+  {
+   "id": "mobliz-ruin.2273",
+   "context": "Message 2273 of the dialogue: Thanks for scaring Phunbaba away! In his haste, he dropped this. Here!{page}{line}{Spaces 05}Received the Magicite{line}{Spaces 0E}“Fenrir.”",
+   "text": "شكرا لأنكم أخفتم فونبابا! في عجلته أسقط هذا. خذوه!\n{center}{line}حصلت على الماجيسايت{line}«فنرير»."
+  },
+  {
+   "id": "mobliz-ruin.2274",
+   "context": "Message 2274 of the dialogue: Mama…are you all right?",
+   "text": "ماما… أأنت بخير؟"
+  },
+  {
+   "id": "mobliz-ruin.2275",
+   "context": "Message 2275 of the dialogue: You can't take Mama away!",
+   "text": "لا يمكنكم أخذ ماما!"
+  },
+  {
+   "id": "mobliz-ruin.2276",
+   "context": "Message 2276 of the dialogue: I'll have you if something happens to Mama!!",
+   "text": "سأنال منكم إن أصاب ماما شيء!!"
+  },
+  {
+   "id": "mobliz-ruin.2277",
+   "context": "Message 2277 of the dialogue: {Terra}: I'm sorry…{line}I'm staying!{line}The children need me.",
+   "text": "{Terra}: آسفة…{line}سأبقى!{line}الأطفال يحتاجون إلي."
+  },
+  {
+   "id": "mobliz-ruin.2278",
+   "context": "Message 2278 of the dialogue: Katarin's gone…",
+   "text": "كاتارين اختفت…"
+  },
+  {
+   "id": "mobliz-ruin.2279",
+   "context": "Message 2279 of the dialogue: Duane was being mean to her, so Katarin took off!",
+   "text": "دوان كان قاسيا معها، فرحلت كاتارين!"
+  },
+  {
+   "id": "mobliz-ruin.2280",
+   "context": "Message 2280 of the dialogue: Katarin's belly's growing bigger!",
+   "text": "بطن كاتارين يكبر!"
+  },
+  {
+   "id": "mobliz-ruin.2281",
+   "context": "Message 2281 of the dialogue: I know! Katarin's gonna have a baby! My Mom looked like that before my brother appeared!",
+   "text": "عرفت! كاتارين ستنجب طفلا! أمي بدت هكذا قبل أن يظهر أخي!"
+  },
+  {
+   "id": "mobliz-ruin.2282",
+   "context": "Message 2282 of the dialogue: DUANE: I…don't know what to do. Katarin's pregnant…",
+   "text": "دوان: لا… أعرف ماذا أفعل. كاتارين حامل…"
+  },
+  {
+   "id": "mobliz-ruin.2283",
+   "context": "Message 2283 of the dialogue: {Terra}: Hey you guys!",
+   "text": "{Terra}: هيه يا رفاق!"
+  },
+  {
+   "id": "mobliz-ruin.2284",
+   "context": "Message 2284 of the dialogue: {Terra}: Katarin's having a baby.",
+   "text": "{Terra}: كاتارين ستنجب طفلا."
+  },
+  {
+   "id": "mobliz-ruin.2285",
+   "context": "Message 2285 of the dialogue: KATARIN: I'm so happy to have had a child…{line}But Duane seems miserable…",
+   "text": "كاتارين: أنا سعيدة جدا بأن يكون لي طفل…{line}لكن دوان يبدو بائسا…"
+  },
+  {
+   "id": "mobliz-ruin.2286",
+   "context": "Message 2286 of the dialogue: DUANE: Katarin… {Wait}… {Wait}{line}I'm sorry.{line}I didn't know how to handle this.{page}I've been an awful husband…{line}But I'm learning.{line}Please, come back with me.",
+   "text": "دوان: كاتارين… {Wait}… {Wait}{line}أنا آسف.{line}لم أعرف كيف أتعامل مع هذا.\nكنت زوجا فظيعا…{line}لكنني أتعلم.{line}أرجوك، عودي معي."
+  },
+  {
+   "id": "mobliz-ruin.2287",
+   "context": "Message 2287 of the dialogue: Waaaaa!{line}Phunbaba's back again!",
+   "text": "وااااا!{line}فونبابا عاد مجددا!"
+  },
+  {
+   "id": "mobliz-ruin.2288",
+   "context": "Message 2288 of the dialogue: {Terra}: Please!{line}Save this village!{line}I simply can't fight…",
+   "text": "{Terra}: أرجوكم!{line}أنقذوا هذه القرية!{line}أنا ببساطة لا أستطيع القتال…"
+  },
+  {
+   "id": "mobliz-ruin.2289",
+   "context": "Message 2289 of the dialogue: DUANE: I'll keep Katarin safe.",
+   "text": "دوان: سأحمي كاتارين."
+  },
+  {
+   "id": "mobliz-ruin.2290",
+   "context": "Message 2290 of the dialogue: KATARIN: I feel safe when Duane's around.",
+   "text": "كاتارين: أشعر بالأمان حين يكون دوان قربي."
+  },
+  {
+   "id": "mobliz-ruin.2291",
+   "context": "Message 2291 of the dialogue: Please!!{line}Rid us of Phunbaba once and for all!",
+   "text": "أرجوكم!!{line}خلصونا من فونبابا إلى الأبد!"
+  },
+  {
+   "id": "mobliz-ruin.2292",
+   "context": "Message 2292 of the dialogue: Monster again…{line}I'm afraid…{line}I'm always afraid…",
+   "text": "وحش مجددا…{line}أنا خائف…{line}أنا خائف دائما…"
+  },
+  {
+   "id": "mobliz-ruin.2293",
+   "context": "Message 2293 of the dialogue: Mama… {Wait}{line}It is you, isn't it! {Wait}{line}I can tell…",
+   "text": "ماما… {Wait}{line}هذه أنت، أليس كذلك! {Wait}{line}أستطيع أن أعرف…"
+  },
+  {
+   "id": "mobliz-ruin.2294",
+   "context": "Message 2294 of the dialogue: Huh? Mama?{line}{Terra}?",
+   "text": "هاه؟ ماما؟{line}{Terra}؟"
+  },
+  {
+   "id": "mobliz-ruin.2295",
+   "context": "Message 2295 of the dialogue: Mama!!{line}{Terra}!!!",
+   "text": "ماما!!{line}{Terra}!!!"
+  },
+  {
+   "id": "mobliz-ruin.2296",
+   "context": "Message 2296 of the dialogue: {Terra}: I…I can fight!",
+   "text": "{Terra}: أنا… أستطيع القتال!"
+  },
+  {
+   "id": "mobliz-ruin.2297",
+   "context": "Message 2297 of the dialogue: {Terra}: Finally…{line}I understand that feeling…{line}Even though I kept it buried for so long.{page}I'm sure it's called…{line}…… {Wait}…… {Wait}{line}“Love!”{page}I now realize that we must fight for the future of our children.",
+   "text": "{Terra}: أخيرا…{line}فهمت ذلك الشعور…{line}رغم أنني أبقيته مدفونا طويلا.\nأنا واثقة أن اسمه…{line}…… {Wait}…… {Wait}{line}«الحب!»\nأدرك الآن أن علينا أن نقاتل من أجل مستقبل أطفالنا."
+  },
+  {
+   "id": "mobliz-ruin.2298",
+   "context": "Message 2298 of the dialogue: {Terra}: Duane…{line}Katarin needs your help…{line}so does your new baby.{page}Listen children, your “Mama” has to go away for a while.{line}I'll return when I feel your future's guaranteed!",
+   "text": "{Terra}: دوان…{line}كاتارين تحتاج إلى مساعدتك…{line}وكذلك طفلكما الجديد.\nاسمعوا يا أطفال، «ماما» عليها أن تغيب فترة.{line}سأعود حين أشعر أن مستقبلكم مضمون!"
+  },
+  {
+   "id": "mobliz-ruin.2299",
+   "context": "Message 2299 of the dialogue: “Mama…{line}I'm not gonna cry!”{line}“Me either!”{page}{Terra}: I'll be back.{line}I promise!{line}Till then…you behave!",
+   "text": "«ماما…{line}لن أبكي!»{line}«ولا أنا!»\n{Terra}: سأعود.{line}أعدكم!{line}حتى ذلك الحين… كونوا مؤدبين!"
+  },
+  {
+   "id": "mobliz-ruin.2300",
+   "context": "Message 2300 of the dialogue: {Terra}: Thank you…{line}You helped me to understand a part of myself.{page}Now I must go to war. We must all believe we have a future. We must fight for those who aren't even born yet!",
+   "text": "{Terra}: شكرا لكم…{line}ساعدتموني على فهم جزء من نفسي.\nالآن علي أن أذهب إلى الحرب. علينا جميعا أن نؤمن بأن لنا مستقبلا. علينا أن نقاتل من أجل من لم يولدوا بعد!"
+  },
+  {
+   "id": "mobliz-ruin.2301",
+   "context": "Message 2301 of the dialogue: Our papas and mamas are gone…",
+   "text": "آباؤنا وأمهاتنا رحلوا…"
+  },
+  {
+   "id": "mobliz-ruin.2302",
+   "context": "Message 2302 of the dialogue: But we'll be happy,{line}if {Terra}'ll come back to us!",
+   "text": "لكننا سنكون سعداء،{line}إن عادت {Terra} إلينا!"
+  },
+  {
+   "id": "mobliz-ruin.2303",
+   "context": "Message 2303 of the dialogue: A badly wounded soldier passed away here in Mobliz.",
+   "text": "جندي مصاب بجروح بليغة فارق الحياة هنا في موبليز."
+  },
+  {
+   "id": "mobliz-ruin.2304",
+   "context": "Message 2304 of the dialogue: Everyone here calls {Terra}, “Mama.”",
+   "text": "الجميع هنا ينادون {Terra} «ماما»."
+  },
+  {
+   "id": "mobliz-ruin.2305",
+   "context": "Message 2305 of the dialogue: Duane and Katarin are the oldest ones here.",
+   "text": "دوان وكاتارين أكبر من هنا."
+  },
+  {
+   "id": "mobliz-ruin.2306",
+   "context": "Message 2306 of the dialogue: I saw Duane kissing Katarin!",
+   "text": "رأيت دوان يقبل كاتارين!"
+  },
+  {
+   "id": "mobliz-ruin.2307",
+   "context": "Message 2307 of the dialogue: You're not gonna take {Terra} away, are you?",
+   "text": "لن تأخذوا {Terra}، أليس كذلك؟"
+  },
+  {
+   "id": "mobliz-ruin.2308",
+   "context": "Message 2308 of the dialogue: The light took everyone…{line}…everyone… {Wait}… {Wait}{line}Dad…Mom…",
+   "text": "الضوء أخذ الجميع…{line}…الجميع… {Wait}… {Wait}{line}أبي… أمي…"
+  },
+  {
+   "id": "mobliz-ruin.2309",
+   "context": "Message 2309 of the dialogue: DUANE: This is our village.{line}You can't just waltz in here and start barking out orders!",
+   "text": "دوان: هذه قريتنا.{line}لا يمكنكم أن تدخلوا هكذا وتبدؤوا بإصدار الأوامر!"
+  },
+  {
+   "id": "mobliz-ruin.2310",
+   "context": "Message 2310 of the dialogue: KATARIN: {Terra}'s helped us all to survive. Ever since she's been here, we've felt hopeful for the future.",
+   "text": "كاتارين: {Terra} ساعدتنا كلنا على البقاء. ومنذ جاءت، ونحن نشعر بالأمل في المستقبل."
+  },
+  {
+   "id": "mobliz-ruin.2311",
+   "context": "Message 2311 of the dialogue: I wanna see Katarin's baby!",
+   "text": "أريد أن أرى طفل كاتارين!"
+  },
+  {
+   "id": "mobliz-ruin.2312",
+   "context": "Message 2312 of the dialogue: We'll be okay 'till mama comes back!",
+   "text": "سنكون بخير حتى تعود ماما!"
+  },
+  {
+   "id": "mobliz-ruin.2313",
+   "context": "Message 2313 of the dialogue: Mama…{line}Don't feel sad.{line}We'll be okay.",
+   "text": "ماما…{line}لا تحزني.{line}سنكون بخير."
+  },
+  {
+   "id": "mobliz-ruin.2314",
+   "context": "Message 2314 of the dialogue: Duane and Katarin'll take good care of us.",
+   "text": "دوان وكاتارين سيعتنيان بنا جيدا."
+  },
+  {
+   "id": "mobliz-ruin.2315",
+   "context": "Message 2315 of the dialogue: I'm not gonna cry.{line}If I do, {Terra}'ll feel sad…",
+   "text": "لن أبكي.{line}إن بكيت، حزنت {Terra}…"
+  },
+  {
+   "id": "mobliz-ruin.2316",
+   "context": "Message 2316 of the dialogue: The baby in Katarin's belly is kicking!",
+   "text": "الطفل في بطن كاتارين يركل!"
+  },
+  {
+   "id": "mobliz-ruin.2317",
+   "context": "Message 2317 of the dialogue: See!{line}It just did it again!",
+   "text": "أرأيت!{line}فعلها مجددا للتو!"
+  },
+  {
+   "id": "mobliz-ruin.2318",
+   "context": "Message 2318 of the dialogue: Say, Katarin.{line}What're you gonna name the baby?",
+   "text": "قولي يا كاتارين.{line}ماذا ستسمين الطفل؟"
+  },
+  {
+   "id": "mobliz-ruin.2319",
+   "context": "Message 2319 of the dialogue: DUANE: A new life…{line}I've got to do my best to help make the world a safer place…",
+   "text": "دوان: حياة جديدة…{line}علي أن أبذل قصارى جهدي لأجعل العالم مكانا أكثر أمانا…"
+  },
+  {
+   "id": "mobliz-ruin.2320",
+   "context": "Message 2320 of the dialogue: KATARIN: We'll be okay.{line}Just make sure these kids'll have a world to grow up in!",
+   "text": "كاتارين: سنكون بخير.{line}فقط احرصوا على أن يكون لهؤلاء الأطفال عالم يكبرون فيه!"
+  },
+  {
+   "id": "mobliz-ruin.2321",
+   "context": "Message 2321 of the dialogue: It's heading this way!{line}Protect the kids!!!",
+   "text": "إنه قادم نحونا!{line}احموا الأطفال!!!"
+  },
+  {
+   "id": "mobliz-ruin.2322",
+   "context": "Message 2322 of the dialogue: {Spaces 06}Papa!!{line}{Spaces 06}Mama!!!",
+   "text": "{center}بابا!!{line}ماما!!!"
+  },
+  {
+   "id": "mobliz-ruin.2323",
+   "context": "Message 2323 of the dialogue: I'm hiding away from Kefka.",
+   "text": "أنا مختبئ من كيفكا."
+  },
+  {
+   "id": "nikeah-ruin.2324",
+   "context": "Message 2324 of the dialogue: The ship to South Figaro's about to leave.",
+   "text": "السفينة إلى ساوث فيغارو على وشك المغادرة."
+  },
+  {
+   "id": "nikeah-ruin.2325",
+   "context": "Message 2325 of the dialogue: This ship belongs to the Crimson Robbers.",
+   "text": "هذه السفينة ملك للصوص القرمزيين."
+  },
+  {
+   "id": "nikeah-ruin.2326",
+   "context": "Message 2326 of the dialogue: The thieves are hanging out at the coffee shop. They all escaped from Figaro Castle.",
+   "text": "اللصوص يتسكعون في المقهى. كلهم هربوا من قلعة فيغارو."
+  },
+  {
+   "id": "nikeah-ruin.2327",
+   "context": "Message 2327 of the dialogue: The road you followed here used to be under water.",
+   "text": "الطريق الذي سلكته إلى هنا كان تحت الماء."
+  },
+  {
+   "id": "nikeah-ruin.2328",
+   "context": "Message 2328 of the dialogue: After the end of the world,{line}I awoke all alone in Doma Castle.{page}When I would try to sleep there, demons would come for me… Oh! I don't want to remember that!",
+   "text": "بعد نهاية العالم،{line}أفقت وحيدا تماما في قلعة دوما.\nوحين كنت أحاول النوم هناك، كانت الشياطين تأتي إلي… أوه! لا أريد أن أتذكر ذلك!"
+  },
+  {
+   "id": "nikeah-ruin.2329",
+   "context": "Message 2329 of the dialogue: While traveling under the desert, Figaro Castle hit an obstacle and came to a halt.",
+   "text": "بينما كانت قلعة فيغارو تسافر تحت الصحراء، اصطدمت بعائق وتوقفت."
+  },
+  {
+   "id": "nikeah-ruin.2330",
+   "context": "Message 2330 of the dialogue: {line}{Spaces 05}Received the Magicite{line}{Spaces 0E}“Palidor”!",
+   "text": "{center}{line}حصلت على الماجيسايت{line}«باليدور»!"
+  },
+  {
+   "id": "nikeah-ruin.2331",
+   "context": "Message 2331 of the dialogue: There's an eerie tower at the end of the Serpents Trench.",
+   "text": "هناك برج موحش في نهاية خندق الأفعى."
+  },
+  {
+   "id": "nikeah-ruin.2332",
+   "context": "Message 2332 of the dialogue: What're ya doin'?{line}Get away!",
+   "text": "ماذا تفعل؟{line}ابتعد!"
+  },
+  {
+   "id": "nikeah-ruin.2333",
+   "context": "Message 2333 of the dialogue: GERAD: Oh, yeah, you know how to get into Figaro Castle, don't you?!{page}HENCHMAN: G'ho ho, do we ever!",
+   "text": "جيراد: أوه، نعم، تعرفون كيف ندخل قلعة فيغارو، أليس كذلك؟!\nالتابع: غهو هو، وهل نعرف غير ذلك!"
+  },
+  {
+   "id": "nikeah-ruin.2334",
+   "context": "Message 2334 of the dialogue: GERAD: Yeah, You lead the way since it's buried.",
+   "text": "جيراد: نعم، تقدموا أنتم الطريق ما دامت مدفونة."
+  },
+  {
+   "id": "nikeah-ruin.2335",
+   "context": "Message 2335 of the dialogue: I understand they escaped from Figaro Castle's prison.",
+   "text": "علمت أنهم هربوا من سجن قلعة فيغارو."
+  },
+  {
+   "id": "nikeah-ruin.2336",
+   "context": "Message 2336 of the dialogue: From out of nowhere a bunch of huge sandworms burrowed into the prison!{page}We followed their tunnels back to the surface and escaped.",
+   "text": "من العدم حفرت مجموعة من ديدان الرمل الضخمة إلى داخل السجن!\nتبعنا أنفاقها إلى السطح وهربنا."
+  },
+  {
+   "id": "nikeah-ruin.2337",
+   "context": "Message 2337 of the dialogue: Our last boss perished that day. We met up with Gerad in this town.",
+   "text": "زعيمنا السابق هلك ذلك اليوم. والتقينا جيراد في هذه البلدة."
+  },
+  {
+   "id": "nikeah-ruin.2338",
+   "context": "Message 2338 of the dialogue: The boss wants to sneak into Figaro Castle. He wants to get our booty back from the storage room there.",
+   "text": "الزعيم يريد التسلل إلى قلعة فيغارو. يريد استعادة غنيمتنا من غرفة التخزين هناك."
+  },
+  {
+   "id": "nikeah-ruin.2339",
+   "context": "Message 2339 of the dialogue: We'll enter da castle through a secret cave dat only we knows about!",
+   "text": "سندخل القلعة عبر كهف سري لا يعرفه غيرنا!"
+  },
+  {
+   "id": "nikeah-ruin.2340",
+   "context": "Message 2340 of the dialogue: I've been chatting with the boss of this gang, Gerad.{line}He's kinda handsome!",
+   "text": "كنت أتحدث مع زعيم هذه العصابة، جيراد.{line}إنه وسيم نوعا ما!"
+  },
+  {
+   "id": "nikeah-ruin.2341",
+   "context": "Message 2341 of the dialogue: All right, let's go!",
+   "text": "حسنا، لننطلق!"
+  },
+  {
+   "id": "nikeah-ruin.2342",
+   "context": "Message 2342 of the dialogue: GERAD: What's your problem?{page}{Celes}: Y…{line}you're {Edgar}, aren't you?!",
+   "text": "جيراد: ما مشكلتك؟\n{Celes}: أ…{line}أنت {Edgar}، أليس كذلك؟!"
+  },
+  {
+   "id": "nikeah-ruin.2343",
+   "context": "Message 2343 of the dialogue: {Celes}: {Edgar}?{page}GERAD: Enough of this nonsense! I have things to do.",
+   "text": "{Celes}: {Edgar}؟\nجيراد: كفى هراء! عندي أعمال."
+  },
+  {
+   "id": "nikeah-ruin.2344",
+   "context": "Message 2344 of the dialogue: GERAD: I'll be busy getting ready for our departure to Figaro.{page}{Celes}: Don't play possum with me! {Edgar}?{line}Or have you somehow lost your memory?",
+   "text": "جيراد: سأكون مشغولا بالتحضير لرحيلنا إلى فيغارو.\n{Celes}: لا تتظاهر أمامي! {Edgar}؟{line}أم أنك فقدت ذاكرتك بطريقة ما؟"
+  },
+  {
+   "id": "nikeah-ruin.2345",
+   "context": "Message 2345 of the dialogue: GERAD: Listen, my lady,{line}I've been “Gerad” all my life!",
+   "text": "جيراد: اسمعي يا سيدتي،{line}كنت «جيراد» طوال حياتي!"
+  },
+  {
+   "id": "nikeah-ruin.2346",
+   "context": "Message 2346 of the dialogue: {Sabin}: What's going on, here? Brother!!",
+   "text": "{Sabin}: ماذا يجري هنا؟ أخي!!"
+  },
+  {
+   "id": "nikeah-ruin.2347",
+   "context": "Message 2347 of the dialogue: {Celes}: Only {Edgar} would say, “my lady.”",
+   "text": "{Celes}: {Edgar} وحده من يقول «يا سيدتي»."
+  },
+  {
+   "id": "nikeah-ruin.2348",
+   "context": "Message 2348 of the dialogue: GERAD: What's all the bloomin' fuss about?{line}The words, “my lady” are used the world over!",
+   "text": "جيراد: ما كل هذه الجلبة؟{line}عبارة «يا سيدتي» تقال في العالم كله!"
+  },
+  {
+   "id": "south-figaro-ruin.2349",
+   "context": "Message 2349 of the dialogue: Figaro Castle disappeared the day the world became…{line}unzipped…",
+   "text": "اختفت قلعة فيغارو يوم صار العالم…{line}مفكوكا…"
+  },
+  {
+   "id": "south-figaro-ruin.2350",
+   "context": "Message 2350 of the dialogue: Figaro Castle had an accident under the desert.{line}Don't know what happened to its people…",
+   "text": "قلعة فيغارو تعرضت لحادث تحت الصحراء.{line}لا أعرف ماذا حل بأهلها…"
+  },
+  {
+   "id": "south-figaro-ruin.2351",
+   "context": "Message 2351 of the dialogue: That sweet little girl stopped coming around right after the world ended…",
+   "text": "تلك الفتاة الصغيرة اللطيفة توقفت عن المجيء بعد نهاية العالم مباشرة…"
+  },
+  {
+   "id": "south-figaro-ruin.2352",
+   "context": "Message 2352 of the dialogue: I'm so relieved the Empire's finally outta here!",
+   "text": "كم أنا مرتاح أن الإمبراطورية رحلت أخيرا من هنا!"
+  },
+  {
+   "id": "south-figaro-ruin.2353",
+   "context": "Message 2353 of the dialogue: Now all these thieves are demanding all our time.{line}Phew…I'm exhausted.",
+   "text": "والآن كل هؤلاء اللصوص يستهلكون وقتنا كله.{line}أوف… أنا منهك."
+  },
+  {
+   "id": "south-figaro-ruin.2354",
+   "context": "Message 2354 of the dialogue: There's nothing left of my home town.",
+   "text": "لم يبق شيء من بلدتي."
+  },
+  {
+   "id": "south-figaro-ruin.2355",
+   "context": "Message 2355 of the dialogue: Jump on the turtle.{line}Oh, jump on the turtle…{page}Oops…never mind.",
+   "text": "اقفز على السلحفاة.{line}أوه، اقفز على السلحفاة…\nأوبس… انس الأمر."
+  },
+  {
+   "id": "south-figaro-ruin.2356",
+   "context": "Message 2356 of the dialogue: Just when we thought the Empire was gone…heeeeeres Kefka!",
+   "text": "ما إن ظننا أن الإمبراطورية رحلت… حتى جاء كيفكا!"
+  },
+  {
+   "id": "south-figaro-ruin.2357",
+   "context": "Message 2357 of the dialogue: I'm so relieved to know my grandchild's alive!",
+   "text": "كم أنا مرتاح لأن حفيدي حي!"
+  },
+  {
+   "id": "south-figaro-ruin.2358",
+   "context": "Message 2358 of the dialogue: DUNCAN'S WIFE: No, dear! Duncan's still alive and well! He's meditating just north of Narshe.",
+   "text": "زوجة دنكان: لا يا عزيزي! دنكان ما زال حيا وبخير! إنه يتأمل شمال نارشي مباشرة."
+  },
+  {
+   "id": "south-figaro-ruin.2359",
+   "context": "Message 2359 of the dialogue: Gerad's a boss we can trust! But he looks awfully familiar…",
+   "text": "جيراد زعيم يمكننا أن نثق به! لكنه يبدو مألوفا جدا…"
+  },
+  {
+   "id": "south-figaro-ruin.2360",
+   "context": "Message 2360 of the dialogue: Souvenir of the Empire, anyone?!",
+   "text": "تذكار من الإمبراطورية، من يريد؟!"
+  },
+  {
+   "id": "south-figaro-ruin.2361",
+   "context": "Message 2361 of the dialogue: GERAD: You still here?!",
+   "text": "جيراد: ما زلت هنا؟!"
+  },
+  {
+   "id": "south-figaro-ruin.2362",
+   "context": "Message 2362 of the dialogue: We're storming Figaro Castle! That treasure's rightfully ours!",
+   "text": "سنقتحم قلعة فيغارو! ذلك الكنز ملكنا بحق!"
+  },
+  {
+   "id": "south-figaro-ruin.2363",
+   "context": "Message 2363 of the dialogue: We won't stop 'till we get our treasure back!",
+   "text": "لن نتوقف حتى نستعيد كنزنا!"
+  },
+  {
+   "id": "south-figaro-ruin.2364",
+   "context": "Message 2364 of the dialogue: We mustn't rest now!{line}We have to start rebuilding!",
+   "text": "يجب ألا نرتاح الآن!{line}علينا أن نبدأ إعادة البناء!"
+  },
+  {
+   "id": "south-figaro-ruin.2365",
+   "context": "Message 2365 of the dialogue: We may be thieves, but at least we have goals in life!",
+   "text": "قد نكون لصوصا، لكن لنا على الأقل أهداف في الحياة!"
+  },
+  {
+   "id": "south-figaro-ruin.2366",
+   "context": "Message 2366 of the dialogue: For each life lost, a new one arrives to fill the void!{page}Okay!{line}Nothing's gonna stop us!",
+   "text": "مقابل كل حياة تضيع، تأتي حياة جديدة لتملأ الفراغ!\nحسنا!{line}لا شيء سيوقفنا!"
+  },
+  {
+   "id": "south-figaro-ruin.2367",
+   "context": "Message 2367 of the dialogue: Oh…!{line}That person!",
+   "text": "أوه…!{line}ذلك الشخص!"
+  },
+  {
+   "id": "south-figaro-ruin.2368",
+   "context": "Message 2368 of the dialogue: Whoa!{line}Am I dizzy!",
+   "text": "أوه!{line}يا لي من دائخ!"
+  },
+  {
+   "id": "south-figaro-ruin.2369",
+   "context": "Message 2369 of the dialogue: If the “Light of Judgment” should burn our town down 100 times, we'll rebuild it 100 times!",
+   "text": "لو أحرق «ضوء الدينونة» بلدتنا 100 مرة، لأعدنا بناءها 100 مرة!"
+  },
+  {
+   "id": "south-figaro-ruin.2370",
+   "context": "Message 2370 of the dialogue: Did you hear that Duncan's alive? His wife said so!",
+   "text": "هل سمعت أن دنكان حي؟ زوجته قالت ذلك!"
+  },
+  {
+   "id": "south-figaro-ruin.2371",
+   "context": "Message 2371 of the dialogue: Some guy came through here a little while ago looking for some secret treasure.",
+   "text": "مر رجل من هنا قبل قليل يبحث عن كنز سري."
+  },
+  {
+   "id": "south-figaro-ruin.2372",
+   "context": "Message 2372 of the dialogue: The boss of these thieves is on the second floor.",
+   "text": "زعيم هؤلاء اللصوص في الطابق الثاني."
+  },
+  {
+   "id": "south-figaro-ruin.2373",
+   "context": "Message 2373 of the dialogue: The thieves have all left town!",
+   "text": "اللصوص غادروا البلدة كلهم!"
+  },
+  {
+   "id": "figaro-ruin.2374",
+   "context": "Message 2374 of the dialogue: GERAD: Let's go help 'em…{line}Hang on a sec… {Wait} ……?{line}{Wait}Are you people STILL here?{page}{Celes}: Be polite now…{line}{Edgar}!",
+   "text": "جيراد: لنذهب لمساعدتهم…{line}لحظة… {Wait} ……؟{line}{Wait}أما زلتم هنا؟\n{Celes}: كن مهذبا الآن…{line}{Edgar}!"
+  },
+  {
+   "id": "figaro-ruin.2375",
+   "context": "Message 2375 of the dialogue: Boss, everything's ready.{line}Let's go!{page}GERAD: Case of mistaken identity, my dear.{line}Give it up!",
+   "text": "أيها الزعيم، كل شيء جاهز.{line}لننطلق!\nجيراد: خلط في الهوية يا عزيزتي.{line}استسلمي!"
+  },
+  {
+   "id": "figaro-ruin.2376",
+   "context": "Message 2376 of the dialogue: GERAD: Now, where were we…?",
+   "text": "جيراد: والآن، أين كنا…؟"
+  },
+  {
+   "id": "figaro-ruin.2377",
+   "context": "Message 2377 of the dialogue: Here, boy…{line}Here's some nice food for you!",
+   "text": "تعال يا صغير…{line}إليك طعاما لذيذا!"
+  },
+  {
+   "id": "figaro-ruin.2378",
+   "context": "Message 2378 of the dialogue: Presto!{line}GERAD: Good Job!{line}I used to have a turtle…!",
+   "text": "بريستو!{line}جيراد: أحسنت!{line}كانت عندي سلحفاة يوما…!"
+  },
+  {
+   "id": "figaro-ruin.2379",
+   "context": "Message 2379 of the dialogue: SIGFRIED: Pretty dangerous from here on. I'll go in first and clear out all the monsters. Wait here.",
+   "text": "زيغفريد: الطريق خطر من هنا فصاعدا. سأدخل أولا وأنظف الوحوش كلها. انتظروا هنا."
+  },
+  {
+   "id": "figaro-ruin.2380",
+   "context": "Message 2380 of the dialogue: {line}    On the hum, let's go!!!! {KeyAfter 04}{Key}",
+   "text": "{center}{line}على الفور، لننطلق!!!! {KeyAfter 04}{Key}"
+  },
+  {
+   "id": "figaro-ruin.2381",
+   "context": "Message 2381 of the dialogue: GERAD: You all right?{line}You were almost a goner.",
+   "text": "جيراد: أأنتم بخير؟{line}كدتم تهلكون."
+  },
+  {
+   "id": "figaro-ruin.2382",
+   "context": "Message 2382 of the dialogue: I…it was awful…",
+   "text": "ك… كان فظيعا…"
+  },
+  {
+   "id": "figaro-ruin.2383",
+   "context": "Message 2383 of the dialogue: GERAD: Here's the problem…{line}What a mess…{page}Boss! What're we gonna do? Our treasure's stored in the room back there!",
+   "text": "جيراد: ها هي المشكلة…{line}يا لها من فوضى…\nأيها الزعيم! ماذا نفعل؟ كنزنا مخزن في الغرفة التي في الخلف!"
+  },
+  {
+   "id": "figaro-ruin.2384",
+   "context": "Message 2384 of the dialogue: GERAD: You guys get in there while I keep this thing busy!{line}“But boss! That's dangerous!”{page}GERAD: Get going!",
+   "text": "جيراد: ادخلوا أنتم بينما أشغل هذا الشيء!{line}«لكن يا زعيم! هذا خطر!»\nجيراد: انطلقوا!"
+  },
+  {
+   "id": "figaro-ruin.2385",
+   "context": "Message 2385 of the dialogue: {Celes}: {Edgar}!",
+   "text": "{Celes}: {Edgar}!"
+  },
+  {
+   "id": "figaro-ruin.2386",
+   "context": "Message 2386 of the dialogue: {Edgar}: What're ya waiting for, {Celes}?{page}Give me a hand!!{page}{Celes}: {Edgar}!{line}It IS you!",
+   "text": "{Edgar}: ماذا تنتظرين يا {Celes}؟\nساعديني!!\n{Celes}: {Edgar}!{line}إنه أنت حقا!"
+  },
+  {
+   "id": "figaro-ruin.2387",
+   "context": "Message 2387 of the dialogue: {Celes}: Why the stupid farce?{page}{Edgar}: Well, I heard that Figaro had had an accident.{line}I wanted to help, but didn't know where to look.{page}Then I heard that those idiots had escaped from the prison.{page}{Celes}: You needed to use them…{page}{Edgar}: Bingo.{line}I had to wait until they led me to their secret cave.{page}{Celes}: Amazing, considering that you threw most of 'em in jail to begin with!",
+   "text": "{Celes}: لماذا هذه المسرحية السخيفة؟\n{Edgar}: حسنا، سمعت أن فيغارو تعرضت لحادث.{line}أردت المساعدة، لكنني لم أعرف أين أبحث.\nثم سمعت أن أولئك الأغبياء هربوا من السجن.\n{Celes}: احتجت إلى استغلالهم…\n{Edgar}: بالضبط.{line}كان علي أن أنتظر حتى يقودوني إلى كهفهم السري.\n{Celes}: مذهل، بالنظر إلى أنك من زج بمعظمهم في السجن أصلا!"
+  },
+  {
+   "id": "figaro-ruin.2388",
+   "context": "Message 2388 of the dialogue: {Sabin}: Don't treat us like strangers anymore!",
+   "text": "{Sabin}: لا تعاملنا كغرباء بعد الآن!"
+  },
+  {
+   "id": "figaro-ruin.2389",
+   "context": "Message 2389 of the dialogue: {Edgar}: Uh, oh…!{line}Let's hide!",
+   "text": "{Edgar}: أوه، لا…!{line}لنختبئ!"
+  },
+  {
+   "id": "figaro-ruin.2390",
+   "context": "Message 2390 of the dialogue: Boss! ……?{line}Boss?",
+   "text": "أيها الزعيم! ……؟{line}أيها الزعيم؟"
+  },
+  {
+   "id": "figaro-ruin.2391",
+   "context": "Message 2391 of the dialogue: Must have been eaten by that thing…",
+   "text": "لا بد أن ذلك الشيء أكله…"
+  },
+  {
+   "id": "figaro-ruin.2392",
+   "context": "Message 2392 of the dialogue: It wasn't even much of a monster…{page}Well, let's go…",
+   "text": "لم يكن حتى وحشا يذكر…\nحسنا، لننطلق…"
+  },
+  {
+   "id": "figaro-ruin.2393",
+   "context": "Message 2393 of the dialogue: “You don't want that treasure back…?”{line}{Edgar}: It's completely worthless.{page}Besides, Kefka's the one we need to worry about.{line}Those guys haven't committed any serious crimes…{page}{Celes}: Come on, let's go…",
+   "text": "«ألا تريدون استعادة ذلك الكنز…؟»{line}{Edgar}: إنه عديم القيمة تماما.\nثم إن كيفكا هو من يجب أن نقلق بشأنه.{line}أولئك الرجال لم يرتكبوا جرائم خطيرة…\n{Celes}: هيا، لنذهب…"
+  },
+  {
+   "id": "figaro-ruin.2394",
+   "context": "Message 2394 of the dialogue: {Sabin}: There's only one little problem, eh, brother!",
+   "text": "{Sabin}: هناك مشكلة صغيرة واحدة فقط، ها يا أخي!"
+  },
+  {
+   "id": "figaro-ruin.2395",
+   "context": "Message 2395 of the dialogue: Nonsense!{line}It's been fixed!{line}Next stop, the surface!",
+   "text": "هراء!{line}لقد أصلحت!{line}المحطة التالية، السطح!"
+  },
+  {
+   "id": "figaro-ruin.2396",
+   "context": "Message 2396 of the dialogue: Who'd have thought air could be so precious!",
+   "text": "من كان يظن أن الهواء بهذه القيمة!"
+  },
+  {
+   "id": "figaro-ruin.2397",
+   "context": "Message 2397 of the dialogue: Several of the castle's citizens left to join the Cult of Kefka.{page}If a loved one should call out a cult member's name, however…",
+   "text": "عدد من أهل القلعة رحلوا للانضمام إلى طائفة كيفكا.\nلكن إن نادى أحد أحبائهم عضوا من الطائفة باسمه…"
+  },
+  {
+   "id": "figaro-ruin.2398",
+   "context": "Message 2398 of the dialogue: Magicite gives humans magical powers?{line}Amazing!",
+   "text": "الماجيسايت يمنح البشر قوى سحرية؟{line}مذهل!"
+  },
+  {
+   "id": "figaro-ruin.2399",
+   "context": "Message 2399 of the dialogue: Has magic really made a comeback…",
+   "text": "هل عاد السحر حقا…"
+  },
+  {
+   "id": "figaro-ruin.2400",
+   "context": "Message 2400 of the dialogue: Kefka's “one shy of a six pack!”",
+   "text": "كيفكا «فاقد صوابه»!"
+  },
+  {
+   "id": "figaro-ruin.2401",
+   "context": "Message 2401 of the dialogue: I know someone who deserves to be locked up in here!",
+   "text": "أعرف شخصا يستحق أن يحبس هنا!"
+  },
+  {
+   "id": "figaro-ruin.2402",
+   "context": "Message 2402 of the dialogue: You found an ancient text at the library, right?",
+   "text": "وجدت نصا قديما في المكتبة، صحيح؟"
+  },
+  {
+   "id": "figaro-ruin.2403",
+   "context": "Message 2403 of the dialogue: No more Returners…no more Empire. Now who am I gonna side with?",
+   "text": "لا عائدين بعد الآن… ولا إمبراطورية. فمع من أقف الآن؟"
+  },
+  {
+   "id": "ancient-castle.2404",
+   "context": "Message 2404 of the dialogue: What the…?",
+   "text": "ما هذا…؟"
+  },
+  {
+   "id": "ancient-castle.2405",
+   "context": "Message 2405 of the dialogue: It's an Esper attack!{line}Let's show him some of OUR Esper magic!",
+   "text": "إنه هجوم إسبر!{line}لنريه بعضا من سحر إسبراتنا نحن!"
+  },
+  {
+   "id": "ancient-castle.2406",
+   "context": "Message 2406 of the dialogue: A 1000 years in the past, a battle was waged here…",
+   "text": "قبل 1000 عام، دارت هنا معركة…"
+  },
+  {
+   "id": "ancient-castle.2407",
+   "context": "Message 2407 of the dialogue: “Only Odin is here!”{line}“Are your wounds healed?”",
+   "text": "«أودين وحده هنا!»{line}«هل شفيت جراحك؟»"
+  },
+  {
+   "id": "ancient-castle.2408",
+   "context": "Message 2408 of the dialogue: We're fresh outta options.{line}We'll have to leave this battle in Odin's hands…",
+   "text": "لم يبق لنا خيار.{line}علينا أن نترك هذه المعركة في يد أودين…"
+  },
+  {
+   "id": "ancient-castle.2409",
+   "context": "Message 2409 of the dialogue: A city, ruined during the War of the Magi…",
+   "text": "مدينة دمرت في حرب السحرة…"
+  },
+  {
+   "id": "ancient-castle.2410",
+   "context": "Message 2410 of the dialogue: ODIN: Don't do it…{line}You can't turn me into Magicite…",
+   "text": "أودين: لا تفعل…{line}لا يمكنك تحويلي إلى ماجيسايت…"
+  },
+  {
+   "id": "ancient-castle.2411",
+   "context": "Message 2411 of the dialogue: There's an ancient legend…{page}It tells of a battle between{line}Odin and a powerful sorcerer{line}that took place in a great{line}hall of the castle…",
+   "text": "هناك أسطورة قديمة…\nتروي معركة بين{line}أودين وساحر جبار{line}دارت في قاعة كبرى{line}من قاعات القلعة…"
+  },
+  {
+   "id": "ancient-castle.2412",
+   "context": "Message 2412 of the dialogue: A book,{line}with a gem-{line}encrusted cover…{line}“Queen's Diary”{page}I realize, now, that I am in love with Odin…{line}This…breaks every rule of our society.{page}But my heart longs for this noble, elegant man.{line}How could anyone blame me?{page}After the fighting is over I'm going to bare my soul to him…",
+   "text": "كتاب،{line}غلافه مرصع{line}بالجواهر…{line}«يوميات الملكة»\nأدرك الآن أنني أحب أودين…{line}هذا… يخالف كل قواعد مجتمعنا.\nلكن قلبي يتوق إلى هذا الرجل النبيل الأنيق.{line}كيف يلومني أحد؟\nبعد أن ينتهي القتال، سأكشف له عن مكنون روحي…"
+  },
+  {
+   "id": "ancient-castle.2413",
+   "context": "Message 2413 of the dialogue: {Terra}: Love between a human and an Esper…",
+   "text": "{Terra}: حب بين بشرية وإسبر…"
+  },
+  {
+   "id": "ancient-castle.2414",
+   "context": "Message 2414 of the dialogue: Even the Queen was turned to stone…",
+   "text": "حتى الملكة تحولت إلى حجر…"
+  },
+  {
+   "id": "ancient-castle.2415",
+   "context": "Message 2415 of the dialogue: A tear comes…{line}From the stone…?",
+   "text": "دمعة تنساب…{line}من الحجر…؟"
+  },
+  {
+   "id": "ancient-castle.2416",
+   "context": "Message 2416 of the dialogue: {line}   The Magicite “Odin” gains{line}{Spaces 0E}a level…{page}{line}   and becomes the Magicite{line}{Spaces 0E}“Raiden!”",
+   "text": "{center}{line}الماجيسايت «أودين» يرتفع{line}مستوى…\n{center}{line}ويصير الماجيسايت{line}«رايدن»!"
+  },
+  {
+   "id": "ancient-castle.2417",
+   "context": "Message 2417 of the dialogue: {line}{Spaces 07}Odin turned into a{line}{Spaces 09}Magicite shard…",
+   "text": "{center}{line}تحول أودين إلى{line}شظية ماجيسايت…"
+  },
+  {
+   "id": "ancient-castle.2418",
+   "context": "Message 2418 of the dialogue: {Spaces 0B}Atom Edge! {KeyAfter 04}{Key}",
+   "text": "{center}نصل الذرة! {KeyAfter 04}{Key}"
   }
  ]
 }
