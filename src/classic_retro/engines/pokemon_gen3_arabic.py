@@ -160,6 +160,19 @@ def pokemon_gen3_notation(stream: TokenStream) -> str:
     return "".join(parts)
 
 
+def command_skeleton(stream: TokenStream) -> tuple[str, ...]:
+    """The commands a translation must keep, in the translators' notation.
+
+    The names and the page breaks, in order; line ends are the translation's
+    own, since Arabic lines fall where Arabic words end.
+    """
+    return tuple(
+        pokemon_gen3_notation(TokenStream((token,)))
+        for token in stream.inline_tokens
+        if token.kind is not TokenKind.LINE_BREAK
+    )
+
+
 class PokemonGen3ArabicEncoder:
     def __init__(self) -> None:
         self.pipeline = legacy_renderer_pipeline()

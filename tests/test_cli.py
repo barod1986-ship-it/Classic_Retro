@@ -32,3 +32,17 @@ def test_cli_media_inspect(tmp_path, capsys):
     assert output["kind"] == "single-file"
     assert output["members"][0]["name"] == "sample.rom"
     assert len(output["identity_sha256"]) == 64
+
+
+def test_cli_check_translations_records_the_library_versions(capsys):
+    assert main(["targets", "check-translations", "ff6a"]) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["raster"]["pillow"] and report["raster"]["freetype"]
+    assert "digests" not in report
+
+
+def test_cli_digest_flags_need_a_font_and_a_preview_folder(capsys):
+    assert main(["targets", "check-translations", "ff6a", "--check-digests"]) == 2
+    assert capsys.readouterr().err.startswith(
+        "FONT_BUILD_FAILED: --check-digests and --update-digests need --font and --preview-dir"
+    )

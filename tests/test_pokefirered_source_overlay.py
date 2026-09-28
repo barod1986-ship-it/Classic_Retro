@@ -1,15 +1,61 @@
 from __future__ import annotations
 
 import ctypes
+import json
 import os
+import re
 import shutil
 import subprocess
+from dataclasses import replace
+from pathlib import Path
 
 import pytest
+from PIL import Image
 
+from classic_retro.cli import main
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
-from classic_retro.engines.pokemon_gen3_arabic import build_arabic_glyph_map
+from classic_retro.engines.pokemon_gen3_arabic import (
+    FontAtlasResult,
+    build_arabic_glyph_map,
+    command_skeleton,
+)
+from classic_retro.localization.translations import TranslationSet, builtin_translation_set
 from classic_retro.source import pokefirered_arabic as overlay
+from classic_retro.text.tokens import TokenStream
+
+
+@pytest.fixture
+def reference_font() -> Path:
+    """The pinned reference font, from the environment; never bundled with the tests."""
+    path = os.environ.get("CLASSIC_RETRO_REFERENCE_FONT")
+    if not path:
+        pytest.skip("CLASSIC_RETRO_REFERENCE_FONT is unset")
+    return Path(path)
+
+
+def _oak_blocks(streams: dict[str, TokenStream]) -> str:
+    """A stand-in new_game_intro.inc whose Oak speech carries the translations' commands."""
+    blocks = [
+        f"{label}::\n"
+        f'    .string "Invented speech {number}\\n"\n'
+        f'    .string "{"".join(command_skeleton(stream))}$"'
+        for number, (label, stream) in enumerate(streams.items())
+    ]
+    return "\n\n".join(blocks) + "\n\n"
+
+
+def _asm_bytes(asm: str) -> bytes:
+    """Every byte of the ``.byte`` lines, in order; a sequence may straddle two lines."""
+    return bytes(int(value, 16) for value in re.findall(r"0x([0-9A-F]{2})", asm))
+
+
+def _retranslated(label: str, text: str) -> TranslationSet:
+    """The shipped translations, with ``label``'s Arabic replaced by ``text``."""
+    shipped = builtin_translation_set(overlay.TARGET)
+    entries = tuple(
+        replace(entry, text=text) if entry.id == label else entry for entry in shipped.entries
+    )
+    return replace(shipped, entries=entries)
 
 
 def test_charmap_overlay_adds_rtl_controls_and_all_arabic_glyphs():
@@ -43,15 +89,101 @@ def test_graphics_overlay_uses_full_width_font_container():
 
 
 def test_oak_intro_overlay_replaces_all_oak_speech_blocks():
-    labels = tuple(overlay._oak_speech_streams())
-    original = "\n\n".join(f'{label}::\n    .string "placeholder$"' for label in labels) + "\n\n"
+    streams = overlay._oak_speech_streams()
+    original = _oak_blocks(streams)
 
     patched = overlay._patch_oak_intro(original)
 
-    assert patched.count("CLASSIC_RETRO_ARABIC_V1 — Arabic OAK speech") == len(labels)
+    assert patched.count("CLASSIC_RETRO_ARABIC_V1 — Arabic OAK speech") == len(streams)
     # The standard dialogue window is 26 tiles (208 px), not 28 tiles.
-    assert patched.count(".byte 0xFC, 0x19, 0xD0") == len(labels)
-    assert '.string "placeholder$"' not in patched
+    assert patched.count(".byte 0xFC, 0x19, 0xD0") == len(streams)
+    assert ".string" not in patched and patched.endswith("\n\n")
+    # The last block may end the file without a blank line after it.
+    assert overlay._patch_oak_intro(original.rstrip("\n")).rstrip("\n") == patched.rstrip("\n")
+
+
+def test_oak_intro_overlay_keeps_the_originals_names_and_page_breaks():
+    """A translation may move a line end, never a name or a page break."""
+    original = _oak_blocks(overlay._oak_speech_streams())
+    label = "gOakSpeech_Text_LetsGo"
+    moved_line_end = _retranslated(label, "{PLAYER}\\pحان وقت بدء\nأسطورتك!\\pهيا\nبنا!")
+    patched = _asm_bytes(overlay._patch_oak_intro(original, moved_line_end))
+    assert patched.count(b"\xfc\x1b\x01") == 2 and patched.count(b"\xfc\x1b\x06") == 2
+
+    refused = {
+        "حان وقت بدء أسطورتك!\\pهيا بنا!\\p": "{PLAYER}\\p\\p != \\p\\p",
+        "\\p{PLAYER}\\pهيا بنا!": "{PLAYER}\\p\\p != \\p{PLAYER}\\p",
+        "{RIVAL}\\pحان وقت بدء أسطورتك!\\pهيا بنا!": "{PLAYER}\\p\\p != {RIVAL}\\p\\p",
+        "{PLAYER}\\pحان وقت بدء أسطورتك!\\pهيا بنا!\\p": "{PLAYER}\\p\\p != {PLAYER}\\p\\p\\p",
+    }
+    for text, notations in refused.items():
+        with pytest.raises(ClassicRetroError) as error:
+            overlay._patch_oak_intro(original, _retranslated(label, text))
+        assert error.value.code is ErrorCode.TOKEN_ORDER_VIOLATION
+        assert str(error.value) == f"FireRed {label} commands differ from the original: {notations}"
+
+
+def test_check_translations_validates_the_notation_without_a_checkout(tmp_path):
+    report = overlay.check_pokefirered_translations()
+    assert report["messages"] == list(overlay.OAK_SPEECH_LABELS)
+    assert report["encoded_bytes"] == sum(
+        len(overlay._oak_message_bytes(label)) for label in overlay.OAK_SPEECH_LABELS
+    )
+    assert report["arabic_glyphs"] == len(build_arabic_glyph_map().characters)
+    assert report["oak_intro_right_x"] == 26 * 8
+    assert report["lines_measured"] is False and "font_size" not in report
+
+    with pytest.raises(ClassicRetroError) as error:
+        overlay.check_pokefirered_translations(
+            translations=_retranslated("gOakSpeech_Text_ThisWorld", "هذا {WORLD}...")
+        )
+    assert error.value.code is ErrorCode.UNSUPPORTED_CONTROL_CODE
+    with pytest.raises(ClassicRetroError) as error:
+        overlay.check_pokefirered_translations(None, tmp_path / "arabic_normal.png")
+    assert str(error.value) == "A preview needs --font"
+    with pytest.raises(ClassicRetroError, match="font file not found"):
+        overlay.check_pokefirered_translations(tmp_path / "absent.ttf")
+
+
+def test_check_translations_writes_the_atlas_prepare_would(tmp_path, monkeypatch):
+    built = []
+
+    def build_font(font, atlas, widths):
+        built.append((atlas, widths))
+        atlas.write_bytes(b"atlas")
+        widths.write_bytes(b"widths")
+        return FontAtlasResult(133, 13, 9, 9)
+
+    monkeypatch.setattr(overlay, "build_arabic_font_atlas", build_font)
+    font = tmp_path / "font.ttf"
+    font.write_bytes(b"test font")
+    preview = tmp_path / "previews" / "arabic_normal.png"
+    preview.parent.mkdir()
+
+    report = overlay.check_pokefirered_translations(font, preview)
+    assert (report["font_size"], report["font_rows"], report["max_advance"]) == (13, 9, 9)
+    assert preview.read_bytes() == b"atlas"
+    # The widths file is prepare's, not a preview: it went to a temporary folder.
+    assert built[-1] == (preview, built[-1][1]) and not built[-1][1].exists()
+    # Without a preview folder the atlas is still built, and left nowhere.
+    report = overlay.check_pokefirered_translations(font)
+    assert report["font_size"] == 13 and not built[-1][0].exists()
+
+
+def test_check_translations_builds_the_atlas_with_the_reference_font(tmp_path, reference_font):
+    preview = tmp_path / "arabic_normal.png"
+    report = overlay.check_pokefirered_translations(reference_font, preview)
+    with Image.open(preview) as atlas:
+        assert atlas.size == (256, report["font_rows"] * 16)
+    assert 1 <= report["max_advance"] <= 16
+    assert report["encoded_bytes"] == overlay.check_pokefirered_translations()["encoded_bytes"]
+
+
+def test_cli_checks_the_script_without_a_checkout(capsys):
+    assert main(["targets", "check-translations", "firered"]) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["messages"] == list(overlay.OAK_SPEECH_LABELS)
+    assert report["lines_measured"] is False
 
 
 def test_oak_intro_bytes_preserve_newlines_pages_and_eos():
@@ -301,6 +433,84 @@ def test_legacy_overlay_is_not_silently_reused(source_tree):
     (source_tree / "src/text.c").write_text(overlay._PATCH_MARKER, encoding="utf-8")
     with pytest.raises(ClassicRetroError, match="fresh checkout"):
         overlay.prepare_pokefirered_arabic_source(source_tree, source_tree / "font.ttf")
+
+
+@pytest.fixture
+def oak_source_tree(tmp_path, monkeypatch):
+    """A checkout of two pinned files: Oak's speech, patched for real, and one merely marked."""
+    source = tmp_path / "upstream"
+    (source / "src").mkdir(parents=True)
+    (source / "data/text").mkdir(parents=True)
+    intro = _oak_blocks(overlay._oak_speech_streams()).encode("utf-8")
+    (source / "src/text.c").write_bytes(b"pristine\n")
+    (source / "data/text/new_game_intro.inc").write_bytes(intro)
+    monkeypatch.setattr(
+        overlay,
+        "_PINNED_BLOBS",
+        {
+            "src/text.c": overlay._git_blob_sha(b"pristine\n"),
+            "data/text/new_game_intro.inc": overlay._git_blob_sha(intro),
+        },
+    )
+    monkeypatch.setattr(
+        overlay,
+        "_patch_all",
+        lambda texts, translations=None: {
+            "src/text.c": overlay._PATCH_MARKER + "\n",
+            "data/text/new_game_intro.inc": overlay._patch_oak_intro(
+                texts["data/text/new_game_intro.inc"], translations
+            ),
+        },
+    )
+    return source
+
+
+def _tree_files(source: Path) -> dict[Path, bytes]:
+    return {path: path.read_bytes() for path in sorted(source.rglob("*")) if path.is_file()}
+
+
+def test_prepare_and_source_check_refuse_a_translation_that_drops_a_name(oak_source_tree):
+    dropped = _retranslated("gOakSpeech_Text_LetsGo", "حان وقت بدء أسطورتك!\\pهيا بنا!\\p")
+    before = _tree_files(oak_source_tree)
+    for check in (
+        lambda: overlay.prepare_pokefirered_arabic_source(
+            oak_source_tree, oak_source_tree / "absent.ttf", dropped
+        ),
+        lambda: overlay.check_pokefirered_arabic_source(oak_source_tree, dropped),
+    ):
+        with pytest.raises(ClassicRetroError) as error:
+            check()
+        assert error.value.code is ErrorCode.TOKEN_ORDER_VIOLATION
+        assert "gOakSpeech_Text_LetsGo commands differ from the original: {PLAYER}\\p\\p" in str(
+            error.value
+        )
+    # Refused before the font was even looked for: nothing in the tree changed.
+    assert _tree_files(oak_source_tree) == before
+    assert not (oak_source_tree / overlay._STATE_FILE).exists()
+
+    # The shipped translations keep every command: the dry run and prepare both pass.
+    report = overlay.check_pokefirered_arabic_source(oak_source_tree)
+    assert (report["files_verified"], report["oak_intro_messages"]) == (2, 13)
+
+
+def test_prepare_writes_the_arabic_oak_speech_it_checked(oak_source_tree, monkeypatch):
+    def build_font(font, atlas, widths):
+        atlas.write_bytes(b"atlas")
+        widths.write_bytes(b"widths")
+        return FontAtlasResult(133, 13, 9, 9)
+
+    monkeypatch.setattr(overlay, "build_arabic_font_atlas", build_font)
+    (oak_source_tree / "font.ttf").write_bytes(b"test font")
+    report = overlay.prepare_pokefirered_arabic_source(
+        oak_source_tree, oak_source_tree / "font.ttf"
+    )
+    assert not report["already_patched"] and report["oak_intro_messages"] == 13
+    intro = (oak_source_tree / "data/text/new_game_intro.inc").read_text(encoding="utf-8")
+    assert intro.count("Arabic OAK speech") == 13 and ".string" not in intro
+    # The names' left-to-right placeholders, twice each, and every message's terminator.
+    data = _asm_bytes(intro)
+    assert data.count(b"\xfc\x1b\x01") == 2 and data.count(b"\xfc\x1b\x06") == 2
+    assert data.count(b"\xfc\x1a\xff") == 13
 
 
 def test_extract_reads_the_oak_speech_of_a_checkout(tmp_path, monkeypatch):

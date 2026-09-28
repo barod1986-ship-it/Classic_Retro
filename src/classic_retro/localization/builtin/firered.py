@@ -6,15 +6,28 @@ import argparse
 from pathlib import Path
 
 from classic_retro.engines.pokemon_gen3_arabic import PokemonGen3ArabicEncoder
-from classic_retro.localization.targets import LocalizationTarget, print_json
+from classic_retro.localization.targets import LocalizationTarget, preview_paths, print_json
 from classic_retro.localization.translations import TranslationSet
 from classic_retro.source.pokefirered_arabic import (
+    FONT_ATLAS,
     PINNED_COMMIT,
     check_pokefirered_arabic_source,
+    check_pokefirered_translations,
     extract_pokefirered_originals,
     prepare_pokefirered_arabic_source,
 )
 from classic_retro.text.tokens import TextToken, TokenStream
+
+# The font atlas prepare writes into the checkout, here as the preview.
+PREVIEWS = (FONT_ATLAS,)
+
+
+def check_translations(
+    font: Path | None, preview_dir: Path | None, translations: TranslationSet | None = None
+) -> dict[str, object]:
+    """The script checked without a checkout; with a font and a folder, the atlas too."""
+    previews = preview_paths(font, preview_dir, *PREVIEWS)
+    return check_pokefirered_translations(font, *previews, translations=translations)
 
 
 def prepare(
@@ -86,6 +99,8 @@ TARGET = LocalizationTarget(
     guide="docs/FIRERED_ARABIC_TEST_AR.md",
     notes="docs/POKEMON_GEN3_ARABIC_RENDERER.md",
     register_cli=register_cli,
+    check_translations=check_translations,
     prepare=prepare,
     extract=extract,
+    previews=PREVIEWS,
 )

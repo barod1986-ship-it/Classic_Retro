@@ -5,6 +5,11 @@ target without knowing its module. A target's own command group holds only
 the tools of its engine (``encode-arabic``, ``source-check``).
 ``--translations`` gives any of them a translations file or workspace
 (``classic_retro.localization.translations``) instead of the shipped one.
+
+Every report that draws glyphs carries ``raster``, the library versions it
+was made with (``classic_retro.core.environment``); ``check-translations``
+compares or records digests of its output (``--check-digests``,
+``--update-digests``; ``classic_retro.localization.digests``).
 """
 
 from __future__ import annotations
@@ -13,7 +18,9 @@ import argparse
 from dataclasses import replace
 from pathlib import Path
 
+from classic_retro.core.environment import library_versions
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
+from classic_retro.localization.digests import compare, digest_entry, load_expected, save_expected
 from classic_retro.localization.targets import LocalizationTarget, TargetRegistry, print_json
 from classic_retro.localization.translations import (
     TranslationSet,
@@ -71,6 +78,18 @@ def register_cli(subcommands: argparse._SubParsersAction, registry: TargetRegist
         "--preview-dir", type=Path, help="With --font: write the target's previews into it"
     )
     check.add_argument("--translations", type=Path, help=_TRANSLATIONS_HELP)
+    digests = check.add_mutually_exclusive_group()
+    digests.add_argument(
+        "--check-digests",
+        action="store_true",
+        help="With --font and --preview-dir: compare the report and previews with the "
+        "recorded digests, and fail on any difference",
+    )
+    digests.add_argument(
+        "--update-digests",
+        action="store_true",
+        help="With --font and --preview-dir: record the report's and previews' digests",
+    )
     check.set_defaults(handler=lambda args: _check_translations(registry, args))
 
     build = commands.add_parser(
@@ -161,6 +180,18 @@ def _check_translations(registry: TargetRegistry, args: argparse.Namespace) -> i
         raise _unsupported(target.id, "check-translations")
     if args.preview_dir is not None and args.font is None:
         raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, "A preview needs --font")
+    digests = args.check_digests or args.update_digests
+    if digests and (args.font is None or args.preview_dir is None):
+        raise ClassicRetroError(
+            ErrorCode.FONT_BUILD_FAILED,
+            "--check-digests and --update-digests need --font and --preview-dir",
+        )
+    if digests and args.translations is not None:
+        raise ClassicRetroError(
+            ErrorCode.INVALID_REFERENCE,
+            "The digests are those of the shipped translations: "
+            "--check-digests and --update-digests do not take --translations",
+        )
     translations = _translations(target, args.translations)
     report = target.check_translations(args.font, args.preview_dir, translations)
     if args.preview_dir is not None:
@@ -170,11 +201,40 @@ def _check_translations(registry: TargetRegistry, args: argparse.Namespace) -> i
                 ErrorCode.BUILD_VALIDATION_FAILED,
                 f"Target {target.id} did not write {', '.join(missing)}",
             )
+    report = {**report, "raster": library_versions()}
     if translations is not None:
-        report = {**report, "translations": str(args.translations)}
+        report["translations"] = str(args.translations)
         if translations.is_workspace:
             report["glossary"] = glossary_report(translations)
+    if digests:
+        report["digests"] = _digests(target, report, args)
     return print_json(report)
+
+
+def _digests(
+    target: LocalizationTarget, report: dict[str, object], args: argparse.Namespace
+) -> dict[str, object]:
+    """Record the report's digests, or compare them: the outcome, for the report.
+
+    Neither changes the rest of the report. A comparison that finds a
+    difference fails the command, listing every difference.
+    """
+    if args.update_digests:
+        entry = digest_entry(report, args.preview_dir, target.previews)
+        expected = load_expected()
+        expected[target.id] = entry
+        save_expected(expected)
+        outcome = "recorded"
+    else:
+        differences = compare(target.id, report, args.preview_dir, target.previews)
+        if differences:
+            raise ClassicRetroError(
+                ErrorCode.BUILD_VALIDATION_FAILED,
+                f"Target {target.id} differs from its recorded digests: " + "; ".join(differences),
+            )
+        entry = digest_entry(report, args.preview_dir, target.previews)
+        outcome = "match"
+    return {"outcome": outcome, "report": entry["report"], "previews": entry["previews"]}
 
 
 def _build(registry: TargetRegistry, args: argparse.Namespace) -> int:
@@ -204,7 +264,8 @@ def _prepare(registry: TargetRegistry, args: argparse.Namespace) -> int:
     if target.prepare is None:
         raise _unsupported(target.id, "prepare")
     translations = _translations(target, args.translations)
-    return print_json(target.prepare(args.source, args.font, translations))
+    report = target.prepare(args.source, args.font, translations)
+    return print_json({**report, "raster": library_versions()})
 
 
 def _writable(out: Path, force: bool) -> Path:

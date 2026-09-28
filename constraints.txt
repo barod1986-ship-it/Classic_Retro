@@ -1,0 +1,27 @@
+# Exact versions of the runtime dependencies; pyproject.toml pins only ranges.
+#
+# Every glyph is rasterized by the FreeType bundled in the installed Pillow
+# wheel and shaped by the HarfBuzz bundled in uharfbuzz, so the glyphs a
+# target builds, and with them its patch, depend on these exact wheels: a
+# FreeType release changes most glyph forms. The reference patch hashes
+# (reference_patch_sha256 in "classic-retro targets list") and the translation
+# digests (src/classic_retro/localization/digests.json) are reproducible only
+# with these versions. Every report records them under "raster". Install with:
+#
+#   python -m pip install -e ".[dev]" -c constraints.txt
+#
+# To bump a version, do all of this in one commit:
+#   1. change the pin here (and the range in pyproject.toml when it no longer fits);
+#   2. regenerate the digests of every target that has a check-translations
+#      operation ("classic-retro targets list"), with the reference font:
+#        classic-retro targets check-translations TARGET --font FONT --preview-dir DIR --update-digests
+#   3. rebuild every target you can ("classic-retro targets build ...") and check
+#      that matches_reference is true; where it is false, the new versions
+#      changed the output, and that target's reference patch hash moves too.
+arabic-reshaper==3.0.1
+fonttools==4.66.0
+jsonschema==4.26.0
+Pillow==12.3.0
+pycdlib==1.21.0
+python-bidi==0.6.11
+uharfbuzz==0.56.2

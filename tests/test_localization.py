@@ -11,6 +11,7 @@ import pytest
 
 from classic_retro.adapters.registry import build_registry
 from classic_retro.cli import _build_parser, main
+from classic_retro.core.environment import library_versions
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.localization import strategies as strategies_module
 from classic_retro.localization import targets as targets_module
@@ -49,6 +50,9 @@ ROM_OVERLAYS = (
     "metroid-fusion",
     "tactics-ogre",
 )
+# What the FF6A guide says while no reference patch is recorded for the target
+# (test_the_ff6a_guide_says_whether_a_reference_patch_is_recorded).
+FF6A_NO_REFERENCE_PHRASE = "لم تُسجَّل بعد بصمة رقعة مرجعية"
 
 
 def _no_cli(_: argparse._SubParsersAction) -> None:
@@ -123,17 +127,28 @@ def test_the_twenty_one_reference_targets_keep_their_order_and_strategies():
     assert registry.using("line-cells") == ["mmbn", "fomt"]
     assert registry.using("text-images") == ["fire-emblem"]
     assert described["fire-emblem"].strategies == ("glyph-font", "text-images")
+    # The source overlays check their script without a checkout; their preview
+    # is the font file prepare puts in the checkout.
     for target_id in ("firered", "minish-cap"):
         assert described[target_id].kind == "source-overlay"
-        assert described[target_id].operations() == ["prepare", "extract"]
-        assert described[target_id].previews == ()
+        assert described[target_id].operations() == ["check-translations", "prepare", "extract"]
+    assert described["firered"].previews == ("arabic_normal.png",)
+    assert described["minish-cap"].previews == ("arabic_font_preview.png",)
+    # CI's arabic-overlay matrix is the targets with check-translations: every one.
+    checked = [target.id for target in registry if target.check_translations is not None]
+    assert checked == list(described) and len(checked) == 21
     for target_id in ROM_OVERLAYS:
         target = described[target_id]
         assert target.kind == "rom-overlay" and target.platform_id == "gba"
         assert target.operations() == ["check-hooks", "check-translations", "build", "extract"]
         assert target.previews and all(name.endswith(".png") for name in target.previews)
         reference = target.reference_patch_sha256
-        assert reference is None if target_id == "ff6a" else len(reference) == 64
+        if target_id == "ff6a":
+            # The one rom overlay without a reference patch, which its guide says
+            # (test_the_ff6a_guide_says_whether_a_reference_patch_is_recorded).
+            assert reference is None
+        else:
+            assert len(reference) == 64
         assert target.reference_patches == {}
     # The first DS target draws its Arabic through the game's own routines: no hooks.
     nsmb = described["nsmb"]
@@ -214,6 +229,25 @@ def test_the_twenty_one_reference_targets_keep_their_order_and_strategies():
         assert (REPO / target.notes).is_file(), target.notes
         assert adapters.games[target.game_id].platform_id == target.platform_id
     assert registry.get("harvest-moon-fomt-usa") is described["fomt"]
+
+
+def test_the_ff6a_guide_says_whether_a_reference_patch_is_recorded():
+    """The reader of the FF6A guide learns that no reference patch is recorded yet.
+
+    The target's exemption from ``reference_patch_sha256`` and the guide's
+    sentence go together: recording a reference patch means removing the
+    sentence, and the sentence may not appear while a reference exists.
+    """
+    target = build_target_registry(load_external=False).get("ff6a")
+    assert target.reference_patches == {}
+    guide = (REPO / target.guide).read_text(encoding="utf-8")
+    says_none_recorded = FF6A_NO_REFERENCE_PHRASE in guide
+    if target.reference_patch_sha256 is None and not says_none_recorded:
+        pytest.skip(
+            f"{target.guide} does not say {FF6A_NO_REFERENCE_PHRASE!r} yet: the sentence "
+            "documenting the missing reference patch is still to be written"
+        )
+    assert says_none_recorded == (target.reference_patch_sha256 is None)
 
 
 def test_the_proven_strategies_are_a_starting_set():
@@ -335,6 +369,13 @@ def _run(registry: TargetRegistry, argv: list[str]) -> int:
     return args.handler(args)
 
 
+def _report(capsys) -> dict:
+    """The command's report, less the library versions every report that draws carries."""
+    report = json.loads(capsys.readouterr().out)
+    assert set(report.pop("raster")) == set(library_versions())
+    return report
+
+
 def _demo_translations(tmp_path, target: str = "demo", text: str = "مرحبا") -> Path:
     """A translations file of the demo target; the invented original names Mila."""
     translations = TranslationSet(
@@ -419,7 +460,7 @@ def test_targets_commands_run_any_target_by_id(tmp_path, capsys):
     font = tmp_path / "font.ttf"
     argv = ["targets", "check-translations", "demo", "--font", str(font)]
     assert _run(registry, [*argv, "--preview-dir", str(tmp_path / "previews")]) == 0
-    assert json.loads(capsys.readouterr().out) == {"strings": 2, "preview": "demo_preview.png"}
+    assert _report(capsys) == {"strings": 2, "preview": "demo_preview.png"}
     assert calls[-1] == (
         "check-translations",
         font,
@@ -427,7 +468,7 @@ def test_targets_commands_run_any_target_by_id(tmp_path, capsys):
         None,
     )
     assert _run(registry, ["targets", "check-translations", "demo"]) == 0
-    assert json.loads(capsys.readouterr().out) == {"strings": 2, "preview": None}
+    assert _report(capsys) == {"strings": 2, "preview": None}
 
     rom = tmp_path / "game.gba"
     rom.write_bytes(b"\x01\x02")
@@ -438,7 +479,7 @@ def test_targets_commands_run_any_target_by_id(tmp_path, capsys):
     assert calls[-1] == ("build", b"\x01\x02", font, tmp_path / "out", "x.gba", None)
 
     assert _run(registry, ["targets", "prepare", "bare", str(tmp_path / "src"), "--font", "f"]) == 0
-    assert json.loads(capsys.readouterr().out) == {"prepared": "src"}
+    assert _report(capsys) == {"prepared": "src"}
     assert calls[-1] == ("prepare", tmp_path / "src", Path("f"), None)
 
 

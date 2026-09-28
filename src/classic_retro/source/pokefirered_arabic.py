@@ -1,3 +1,13 @@
+"""Arabic source overlay for the pret/pokefirered decompilation (FireRed, Rev 1).
+
+The overlay only targets the pinned upstream commit. Every touched file is
+checked by Git blob hash before modification, the font atlas is generated
+before any source edit, and the result is recorded so that a partially or
+differently patched tree is refused. The Oak speech of the new-game intro is
+replaced by its Arabic bytes; each translation must keep the original's names
+and page breaks, in order, since the game expands them at run time.
+"""
+
 from __future__ import annotations
 
 import hashlib
@@ -12,9 +22,11 @@ from classic_retro.engines.pokemon_gen3_arabic import (
     build_arabic_font_atlas,
     build_arabic_glyph_map,
     charmap_lines,
+    command_skeleton,
     parse_pokemon_gen3_notation,
 )
 from classic_retro.localization.translations import TranslationSet, builtin_translation_set
+from classic_retro.text.commands import require_same_commands
 from classic_retro.text.tokens import TokenStream
 
 PINNED_COMMIT = "c75f352304d529f6ba92d4f74b9cf8b5c3810788"
@@ -36,6 +48,47 @@ _PINNED_BLOBS = {
 # Oak uses the standard 26-tile dialogue window, not the earlier 28-tile
 # controls-guide window. The right edge is exclusive in the RTL printer.
 _OAK_INTRO_RIGHT_X = 26 * 8
+# The font atlas ``prepare`` writes into graphics/fonts; ``check-translations``
+# writes the same one as its preview.
+FONT_ATLAS = "arabic_normal.png"
+FONT_WIDTHS = "arabic_normal_widths.bin"
+
+
+def check_pokefirered_translations(
+    font_path: Path | None = None,
+    preview_path: Path | None = None,
+    *,
+    translations: TranslationSet | None = None,
+) -> dict[str, object]:
+    """Validate the translations without a checkout; with a font, build the atlas too.
+
+    Every Oak message is parsed and encoded, which checks the notation and the
+    glyph map. With a font, the atlas ``prepare`` would write is built the same
+    way, to ``preview_path`` when one is given. Lines are not measured: the
+    widths of the game's own Latin font, which the names use, are not pinned.
+    """
+    if preview_path is not None and font_path is None:
+        raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, "A preview needs --font")
+    encoder = PokemonGen3ArabicEncoder()
+    encoded = {
+        label: encoder.encode_message(stream, right_x=_OAK_INTRO_RIGHT_X, terminator=True)
+        for label, stream in _oak_speech_streams(translations).items()
+    }
+    report: dict[str, object] = {
+        "messages": list(encoded),
+        "arabic_glyphs": len(encoder.glyph_map.characters),
+        "lines_measured": False,
+        "encoded_bytes": sum(len(data) for data in encoded.values()),
+        "oak_intro_right_x": _OAK_INTRO_RIGHT_X,
+    }
+    if font_path is not None:
+        with tempfile.TemporaryDirectory(prefix="classic-retro-") as temp:
+            atlas = Path(temp) / FONT_ATLAS if preview_path is None else preview_path
+            font_result = build_arabic_font_atlas(font_path, atlas, Path(temp) / FONT_WIDTHS)
+        report["font_size"] = font_result.font_size
+        report["font_rows"] = font_result.rows
+        report["max_advance"] = font_result.max_advance
+    return report
 
 
 def check_pokefirered_arabic_source(
@@ -79,8 +132,8 @@ def prepare_pokefirered_arabic_source(
         texts = _read_pristine_source(source)
         patched = _patch_all(texts, translations)
 
-    atlas = source / "graphics/fonts/arabic_normal.png"
-    widths = source / "graphics/fonts/arabic_normal_widths.bin"
+    atlas = source / "graphics/fonts" / FONT_ATLAS
+    widths = source / "graphics/fonts" / FONT_WIDTHS
     # Complete font generation before changing even one upstream source file.
     # A missing/unsupported font must leave both pristine and patched trees intact.
     with tempfile.TemporaryDirectory(prefix="classic-retro-", dir=source.parent) as temp:
@@ -246,25 +299,34 @@ _STRING_LINE = re.compile(r'^\s*\.string\s+"((?:[^"\\]|\\.)*)"\s*$')
 def extract_pokefirered_originals(
     source: Path, translations: TranslationSet | None = None
 ) -> dict[str, str]:
-    """The Oak speech of a pristine pokefirered checkout, by label, in the translators' notation.
+    """The Oak speech of a pristine pokefirered checkout, by label, in the translators' notation."""
+    texts = _read_pristine_source(source.expanduser().resolve())
+    _oak_speech_streams(translations)
+    return _oak_original_texts(texts["data/text/new_game_intro.inc"])
+
+
+def _oak_block(text: str, label: str) -> tuple[int, int]:
+    """Where ``label``'s block is in the .inc text: its label to the blank line after it."""
+    start = text.find(label + "::\n")
+    if start < 0:
+        raise ClassicRetroError(
+            ErrorCode.SOURCE_PATCH_FAILED, f"OAK speech label not found: {label}"
+        )
+    end = text.find("\n\n", start)
+    return start, end if end >= 0 else len(text)
+
+
+def _oak_original_texts(intro: str) -> dict[str, str]:
+    """The Oak speech of a pristine new_game_intro.inc, by label, in the translators' notation.
 
     Lines of a label's block are joined, the ``$`` terminator dropped and ``\\n``
     made a line end; ``\\p`` and the placeholders stay as they are written.
     """
-    texts = _read_pristine_source(source.expanduser().resolve())
-    _oak_speech_streams(translations)
-    intro = texts["data/text/new_game_intro.inc"]
     originals: dict[str, str] = {}
     for label in OAK_SPEECH_LABELS:
-        start = intro.find(label + "::\n")
-        if start < 0:
-            raise ClassicRetroError(
-                ErrorCode.SOURCE_PATCH_FAILED, f"OAK speech label not found: {label}"
-            )
-        end = intro.find("\n\n", start)
-        block = intro[start + len(label) + 3 : end if end >= 0 else len(intro)]
+        start, end = _oak_block(intro, label)
         parts = []
-        for line in block.splitlines():
+        for line in intro[start + len(label) + 3 : end].splitlines():
             match = _STRING_LINE.match(line)
             if match is None:
                 raise ClassicRetroError(
@@ -273,6 +335,17 @@ def extract_pokefirered_originals(
             parts.append(match.group(1))
         originals[label] = "".join(parts).removesuffix("$").replace("\\n", "\n")
     return originals
+
+
+def _require_original_commands(label: str, original: str, stream: TokenStream) -> None:
+    """The translation keeps the original's names and page breaks, in order.
+
+    The game expands ``{PLAYER}`` and ``{RIVAL}`` at run time and waits at
+    every ``\\p``; a translation that drops or moves one changes what the
+    player sees and answers. Line ends are the translation's own.
+    """
+    source = command_skeleton(parse_pokemon_gen3_notation(original, f"{label}_original_"))
+    require_same_commands(f"FireRed {label}", source, command_skeleton(stream), "".join)
 
 
 def _oak_message_bytes(label: str, translations: TranslationSet | None = None) -> bytes:
@@ -302,24 +375,23 @@ def _format_asm_bytes(data: bytes) -> str:
 
 
 def _patch_oak_intro(text: str, translations: TranslationSet | None = None) -> str:
-    for label in OAK_SPEECH_LABELS:
-        start = text.find(label + "::\n")
-        if start < 0:
-            raise ClassicRetroError(
-                ErrorCode.SOURCE_PATCH_FAILED,
-                f"OAK speech label not found: {label}",
-            )
-        end = text.find("\n\n", start)
-        tail = end + 1
-        if end < 0:
-            end = len(text)
-            tail = len(text)
+    """Every Oak block replaced by its Arabic bytes, once each keeps the original's commands."""
+    originals = _oak_original_texts(text)
+    streams = _oak_speech_streams(translations)
+    for label, stream in streams.items():
+        _require_original_commands(label, originals[label], stream)
 
+    encoder = PokemonGen3ArabicEncoder()
+    for label, stream in streams.items():
+        start, end = _oak_block(text, label)
+        # The replacement ends with a line end; the blank line's second one stays.
+        tail = min(end + 1, len(text))
+        data = encoder.encode_message(stream, right_x=_OAK_INTRO_RIGHT_X, terminator=True)
         replacement = (
             label
             + "::\n"
             + "    @ CLASSIC_RETRO_ARABIC_V1 — Arabic OAK speech\n"
-            + _format_asm_bytes(_oak_message_bytes(label, translations))
+            + _format_asm_bytes(data)
             + "\n"
         )
         text = text[:start] + replacement + text[tail:]

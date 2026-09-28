@@ -12,6 +12,7 @@ from fontTools.fontBuilder import FontBuilder
 from fontTools.pens.ttGlyphPen import TTGlyphPen
 
 from classic_retro.cli import main
+from classic_retro.core.environment import library_versions
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.cpu import thumb
 from classic_retro.engines.fomt import (
@@ -419,6 +420,7 @@ def test_hook_source_assembles_to_the_stored_bytes():
 def test_cli_checks_translations_without_rom(capsys):
     assert main(["targets", "check-translations", "fomt"]) == 0
     report = json.loads(capsys.readouterr().out)
+    assert report.pop("raster") == library_versions()
     assert report == {"laid_out": False, "speaker_names": 5, "strings": 33}
 
 

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -22,6 +23,7 @@ from classic_retro.engines.tmc import (
     parse_tmc_string,
 )
 from classic_retro.engines.tmc_arabic import (
+    TMC_ARABIC_FONT_PAGE,
     TmcArabicEncoder,
     TmcArabicFontResult,
     build_tmc_arabic_font,
@@ -179,16 +181,55 @@ def check_tmc_arabic_source(
     }
 
 
+def check_tmc_translations(
+    font_path: Path | None = None,
+    preview_path: Path | None = None,
+    *,
+    translations: TranslationSet | None = None,
+) -> dict[str, object]:
+    """Validate the translations without a checkout; with a font, measure every line.
+
+    Every message is put in tmc_strings notation with the pinned USA Latin
+    widths, as ``prepare`` writes it. With a font, each line is measured
+    against its box, and the font's preview (the one ``prepare`` puts in the
+    checkout) goes to ``preview_path`` when one is given. What the original
+    commands are is only known with a checkout: ``prepare`` checks those.
+    """
+    if preview_path is not None and font_path is None:
+        raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, "A preview needs --font")
+    glyph_map = build_tmc_arabic_glyph_map()
+    font = build_tmc_arabic_font(font_path) if font_path is not None else None
+    if font is not None and preview_path is not None:
+        font_preview(font, glyph_map).save(preview_path)
+    encoder = _pinned_encoder(font)
+    messages = tmc_arabic_messages(translations)
+    encoded = {
+        message.label: encoder.encode_message(
+            message.stream, line_width=message.line_width if font is not None else None
+        )
+        for message in messages
+    }
+    report: dict[str, object] = {
+        "messages": list(encoded),
+        "arabic_glyphs": len(glyph_map.characters),
+        "arabic_font_page": TMC_ARABIC_FONT_PAGE,
+        "lines_measured": font is not None,
+        "notation_characters": sum(len(text) for text in encoded.values()),
+    }
+    if font is not None:
+        report["font_size"] = font.font_size
+        report["font_baseline"] = font.baseline
+        report["max_advance"] = font.max_advance
+        report["widest_line"] = max(
+            line.width for message in messages for line in encoder.line_widths(message.stream)
+        )
+    return report
+
+
 def encode_tmc_arabic_line(text: str, font_path: Path | None = None) -> dict[str, object]:
     """Encode one logical line; with a font, also report its rendered pixel width."""
     font = build_tmc_arabic_font(font_path) if font_path is not None else None
-    encoder = TmcArabicEncoder(
-        arabic_widths=font.widths
-        if font is not None
-        else dict.fromkeys(build_tmc_arabic_glyph_map().characters, 0),
-        latin_widths=dict(_USA_LATIN_WIDTHS),
-        player_width=TMC_PLAYER_NAME_LENGTH * _USA_NAME_GLYPH_MAX,
-    )
+    encoder = _pinned_encoder(font)
     stream = TokenStream((TextToken(text),))
     result: dict[str, object] = {
         "tmc_strings": encoder.encode_message(stream),
@@ -261,6 +302,13 @@ def prepare_tmc_arabic_source(
 
 
 def _encoder(source: Path, font: TmcArabicFontResult | None) -> TmcArabicEncoder:
+    """The encoder of a checkout: its extracted Latin font, if built, must match the pinned one."""
+    return _pinned_encoder(font, latin_widths=_latin_widths(source))
+
+
+def _pinned_encoder(
+    font: TmcArabicFontResult | None, *, latin_widths: Mapping[str, int] = _USA_LATIN_WIDTHS
+) -> TmcArabicEncoder:
     # Without a font the glyph notation is still exact; widths are placeholders
     # and callers must not ask for line measurement.
     if font is not None:
@@ -269,7 +317,7 @@ def _encoder(source: Path, font: TmcArabicFontResult | None) -> TmcArabicEncoder
         arabic = dict.fromkeys(build_tmc_arabic_glyph_map().characters, 0)
     return TmcArabicEncoder(
         arabic_widths=arabic,
-        latin_widths=_latin_widths(source),
+        latin_widths=dict(latin_widths),
         player_width=TMC_PLAYER_NAME_LENGTH * _USA_NAME_GLYPH_MAX,
     )
 
