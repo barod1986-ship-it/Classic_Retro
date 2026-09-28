@@ -390,11 +390,11 @@ def test_the_command_group_encodes(capsys):
 
 def test_the_translations_are_checked_and_encoded_without_the_rom():
     report = overlay.check_ff6_translations()
-    assert report["messages"] == 930 and set(report["names"]) == set(NAME_KEYS)
+    assert report["messages"] == 1327 and set(report["names"]) == set(NAME_KEYS)
     assert report["keys"][:2] == ["narshe.000", "narshe.001"]
-    assert report["keys"][-1] == "narshe-battle.932" and report["keys"][367] == "locke.369"
-    assert report["keys"][64] == "figaro.064" and "returners.364" not in report["keys"]
-    assert "doma.484" not in report["keys"]
+    assert report["keys"][-1] == "airship.1329" and report["keys"][367] == "locke.369"
+    assert report["keys"][930] == "castle.933" and report["keys"][64] == "figaro.064"
+    assert "returners.364" not in report["keys"] and "doma.484" not in report["keys"]
     encoded = overlay.encode_ff6_arabic_message("{Terra}: هيا")
     assert encoded["count"] == 7 and encoded["bytes"].startswith("02 ")
 

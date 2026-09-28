@@ -144,6 +144,11 @@ PUNCTUATION: dict[str, tuple[tuple[str, ...], int]] = {
     "»": (("..#.#", ".#.#.", "#.#..", ".#.#.", "..#.#"), 6),
     "(": (("#..", ".#.", "..#", "..#", "..#", "..#", "..#", "..#", ".#.", "#.."), 9),
     ")": (("..#", ".#.", "#..", "#..", "#..", "#..", "#..", "#..", ".#.", "..#"), 9),
+    # The opera's note, which the English writes with the font's note icon.
+    "♪": (
+        ("...#..", "...##.", "...#.#", "...#..", "...#..", "...#..", ".###..", "####..", ".##..."),
+        9,
+    ),
 }
 # The brackets drawn mirrored above: the painter lets them through.
 MIRRORED_SIGNS = frozenset("()«»")

@@ -2,7 +2,7 @@
  "schema_version": "1.0",
  "target": "final-fantasy-iii",
  "language": "ar",
- "notation": "Logical Arabic in the engine notation (engines.ff6_arabic): a line for each page of the message (the box shows four lines of 220 pixels; the game waits for the button between pages), {line} where a line must end; the encoder breaks the other lines itself, a word at a time, by the glyphs' widths. {Terra}, {Locke}, {Cyan}, {Shadow}, {Edgar}, {Sabin}, {Celes}, {Strago}, {Relm}, {Setzer}, {Mog}, {Gau}, {Gogo} and {Umaro} write a character's name: the entries name.terra to name.umaro give the fourteen names in Arabic, which the hook draws in place of the name the player gave. {center} at a page's start centres its lines (the narration). {Choice} starts a line of a choice and leaves the game's cursor its place at the line's right; {Wait}, {Pause 04}, {Key} and {KeyAfter 04} pass to the game as the English has them, and a translation keeps its original's commands. A message holds Arabic letters, spaces, Western or Arabic-Indic digits and the signs . , : ! - … ، ؛ ؟ « » ( ) only (the quotes and the brackets are drawn mirrored, as a right-to-left run shows them). No vowel marks: the font has none.",
+ "notation": "Logical Arabic in the engine notation (engines.ff6_arabic): a line for each page of the message (the box shows four lines of 220 pixels; the game waits for the button between pages), {line} where a line must end; the encoder breaks the other lines itself, a word at a time, by the glyphs' widths. {Terra}, {Locke}, {Cyan}, {Shadow}, {Edgar}, {Sabin}, {Celes}, {Strago}, {Relm}, {Setzer}, {Mog}, {Gau}, {Gogo} and {Umaro} write a character's name: the entries name.terra to name.umaro give the fourteen names in Arabic, which the hook draws in place of the name the player gave. {center} at a page's start centres its lines (the narration). {Choice} starts a line of a choice and leaves the game's cursor its place at the line's right; {Wait}, {Pause 04}, {Key} and {KeyAfter 04} pass to the game as the English has them, and a translation keeps its original's commands. A message holds Arabic letters, spaces, Western or Arabic-Indic digits and the signs . , : ! - … ، ؛ ؟ « » ( ) ♪ only (the quotes and the brackets are drawn mirrored, as a right-to-left run shows them; ♪ is the opera's note). No vowel marks: the font has none.",
  "glossary": [
   {
    "term": "Narshe",
@@ -4745,6 +4745,1991 @@
    "id": "narshe-battle.932",
    "context": "Message 932 of the dialogue: Geothermal devices keep this town warm!",
    "text": "أجهزة الطاقة الحرارية الأرضية تبقي هذه البلدة دافئة!"
+  },
+  {
+   "id": "castle.933",
+   "context": "Message 933 of the dialogue: Wanna know how to ride a chocobo?",
+   "text": "أتريد أن تعرف كيف تركب التشوكوبو؟"
+  },
+  {
+   "id": "castle.934",
+   "context": "Message 934 of the dialogue: Press the A Button, or up on the Control Pad, to go forward.{line}Steer with the Control Pad.{page}Press the B Button to dismount. Careful! Once you get off, the bird'll return to its pen!",
+   "text": "اضغط زر إيه، أو إلى الأعلى على لوحة التحكم، للتقدم.{line}وجه بلوحة التحكم.\nاضغط زر بي للنزول. احذر! ما إن تنزل يعود الطائر إلى حظيرته!"
+  },
+  {
+   "id": "castle.935",
+   "context": "Message 935 of the dialogue: Chocobo ride, 100 GP!{line}How about it?{line}{Choice} Yes{line}{Choice} No",
+   "text": "ركوب التشوكوبو مقابل 100 غيل!{line}ما رأيك؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "castle.936",
+   "context": "Message 936 of the dialogue: King {Edgar}!{line}Welcome back!",
+   "text": "الملك {Edgar}!{line}أهلا بعودتك!"
+  },
+  {
+   "id": "castle.937",
+   "context": "Message 937 of the dialogue: We sighted Kefka in the area.",
+   "text": "شوهد كيفكا في المنطقة."
+  },
+  {
+   "id": "castle.938",
+   "context": "Message 938 of the dialogue: That girl…{line}wrapped in a fireball…{line}Headed off to the west…",
+   "text": "تلك الفتاة…{line}ملفوفة بكرة نار…{line}انطلقت نحو الغرب…"
+  },
+  {
+   "id": "castle.939",
+   "context": "Message 939 of the dialogue: Who'd have thought a person could fly over a mountain range?",
+   "text": "من كان يظن أن إنسانا يستطيع الطيران فوق سلسلة جبال؟"
+  },
+  {
+   "id": "castle.940",
+   "context": "Message 940 of the dialogue: Submerged, this castle could even travel under a mountain range!",
+   "text": "هذه القلعة، وهي غائصة، تستطيع حتى العبور تحت سلسلة جبال!"
+  },
+  {
+   "id": "castle.941",
+   "context": "Message 941 of the dialogue: Wanna get past the mountains?{line}This castle can't fly, but it can submerge! Find the person in charge of the Engine Room!",
+   "text": "تريد تجاوز الجبال؟{line}هذه القلعة لا تطير، لكنها تغوص! ابحث عن المسؤول عن غرفة المحرك!"
+  },
+  {
+   "id": "castle.942",
+   "context": "Message 942 of the dialogue: The Empire is no longer our ally!",
+   "text": "لم تعد الإمبراطورية حليفتنا!"
+  },
+  {
+   "id": "castle.943",
+   "context": "Message 943 of the dialogue: You must be tired!{line}How about a rest?",
+   "text": "لا بد أنك متعب!{line}ما رأيك في قسط من الراحة؟"
+  },
+  {
+   "id": "castle.944",
+   "context": "Message 944 of the dialogue: {Edgar}: If only {Sabin} were here…",
+   "text": "{Edgar}: ليت {Sabin} كان هنا…"
+  },
+  {
+   "id": "castle.945",
+   "context": "Message 945 of the dialogue: {Sabin}: This's like old times!{line}I have to wander around for a while!",
+   "text": "{Sabin}: كأنها الأيام الخوالي!{line}علي أن أتجول قليلا!"
+  },
+  {
+   "id": "castle.946",
+   "context": "Message 946 of the dialogue: {Sabin}: Hey!{line}Wait. I'm going too!",
+   "text": "{Sabin}: هيه!{line}انتظر. أنا قادم أيضا!"
+  },
+  {
+   "id": "castle.947",
+   "context": "Message 947 of the dialogue: MATRON: {Sabin}…{line}Every bit an adult, now…{page}I remember that time so vividly. I was so angry…{page}I learned something important on that day…",
+   "text": "المربية: {Sabin}…{line}صرت رجلا بكل معنى الكلمة…\nأذكر ذلك الوقت بوضوح شديد. كنت غاضبة جدا…\nتعلمت شيئا مهما في ذلك اليوم…"
+  },
+  {
+   "id": "castle.948",
+   "context": "Message 948 of the dialogue: CHANCELLOR: Welcome back, King {Edgar}!",
+   "text": "المستشار: أهلا بعودتك أيها الملك {Edgar}!"
+  },
+  {
+   "id": "castle.949",
+   "context": "Message 949 of the dialogue: CHANCELLOR: Huh!?{line}{Sabin}…{line}What a splendid young man you've become!",
+   "text": "المستشار: هاه!؟{line}{Sabin}…{line}يا لك من شاب رائع قد صرت!"
+  },
+  {
+   "id": "castle.950",
+   "context": "Message 950 of the dialogue: CHANCELLOR: Make yourselves at home here.",
+   "text": "المستشار: اعتبروا أنفسكم في بيتكم."
+  },
+  {
+   "id": "castle.951",
+   "context": "Message 951 of the dialogue: {Sabin}: Hmm…{line}Castle hasn't changed much…",
+   "text": "{Sabin}: همم…{line}القلعة لم تتغير كثيرا…"
+  },
+  {
+   "id": "castle.952",
+   "context": "Message 952 of the dialogue: {Sabin}: And yet it's all different… Mom and Dad are gone… Everyone's gone…{line}Since that day…",
+   "text": "{Sabin}: ومع ذلك كل شيء مختلف… أمي وأبي رحلا… الجميع رحلوا…{line}منذ ذلك اليوم…"
+  },
+  {
+   "id": "castle.953",
+   "context": "Message 953 of the dialogue: …tonight…{line}…took a turn for the worse…{line}…there's a chance he might… {Pause 0A}{Key}",
+   "text": "…الليلة…{line}…ساءت حالته…{line}…هناك احتمال أن… {Pause 0A}{Key}"
+  },
+  {
+   "id": "castle.954",
+   "context": "Message 954 of the dialogue: Nooo…!{line}Y…you're wrong…!{line}This can't be… {Pause 0A}{Key}",
+   "text": "لااا…!{line}أ… أنت مخطئ…!{line}لا يمكن… {Pause 0A}{Key}"
+  },
+  {
+   "id": "castle.955",
+   "context": "Message 955 of the dialogue: Matron…{line}…The King…he's… {Pause 0A}{Key}",
+   "text": "أيتها المربية…{line}…الملك… لقد… {Pause 0A}{Key}"
+  },
+  {
+   "id": "castle.956",
+   "context": "Message 956 of the dialogue: …{Sabin}…{line}…{Sabin}!!!!! {Pause 0A}{Key}",
+   "text": "…{Sabin}…{line}…{Sabin}!!!!! {Pause 0A}{Key}"
+  },
+  {
+   "id": "castle.957",
+   "context": "Message 957 of the dialogue: …My father…{line}…I don't believe this… {Pause 0A}{Key}",
+   "text": "…أبي…{line}…لا أصدق هذا… {Pause 0A}{Key}"
+  },
+  {
+   "id": "castle.958",
+   "context": "Message 958 of the dialogue: {Sabin}: B…brother…{line}Waa, ahhh, ahhh…{page}{Edgar}: So…{line}They went and told you…",
+   "text": "{Sabin}: أ… أخي…{line}واا، آه، آه…\n{Edgar}: إذن…{line}ذهبوا وأخبروك…"
+  },
+  {
+   "id": "castle.959",
+   "context": "Message 959 of the dialogue: MATRON: {Edgar}!{line}Here you are…",
+   "text": "المربية: {Edgar}!{line}ها أنت هنا…"
+  },
+  {
+   "id": "castle.960",
+   "context": "Message 960 of the dialogue: MATRON: Your father…{line}He just uttered his last wish that Figaro be divided between you…",
+   "text": "المربية: أبوك…{line}نطق للتو بأمنيته الأخيرة أن تقسم فيغارو بينكما…"
+  },
+  {
+   "id": "castle.961",
+   "context": "Message 961 of the dialogue: {Sabin}: This is NONSENSE!!{line}Everyone's saying that the Empire poisoned Dad…{page}And the only thing on your minds is “Who's going to be the next king?!”{line}You're all pathetic!",
+   "text": "{Sabin}: هذا هراء!!{line}الجميع يقولون إن الإمبراطورية سممت أبي…\nوكل ما يشغل بالكم هو «من سيكون الملك التالي؟!»{line}كلكم مثيرون للشفقة!"
+  },
+  {
+   "id": "castle.962",
+   "context": "Message 962 of the dialogue: {Sabin}: No one cared when Mom passed away, either…{page}MATRON: That's not…",
+   "text": "{Sabin}: لم يهتم أحد حين ماتت أمي أيضا…\nالمربية: هذا ليس…"
+  },
+  {
+   "id": "castle.963",
+   "context": "Message 963 of the dialogue: {Sabin}: You were as bad as any of 'em!{line}{Edgar}: {Sabin}…{page}{Sabin}: Empire of murderers…{line}They won't get away with this!",
+   "text": "{Sabin}: كنت سيئا مثلهم جميعا!{line}{Edgar}: {Sabin}…\n{Sabin}: إمبراطورية القتلة…{line}لن يفلتوا بفعلتهم!"
+  },
+  {
+   "id": "castle.964",
+   "context": "Message 964 of the dialogue: {Sabin}: I'm outta here!{line}I'm forsaking this war-sick realm for my dignity and freedom.{page}{Sabin}: You said you were sick of it too, right?!{line}{Edgar}: …freedom…",
+   "text": "{Sabin}: سأرحل من هنا!{line}سأهجر هذه المملكة المريضة بالحرب من أجل كرامتي وحريتي.\n{Sabin}: قلت إنك سئمتها أنت أيضا، صحيح؟!{line}{Edgar}: …الحرية…"
+  },
+  {
+   "id": "castle.965",
+   "context": "Message 965 of the dialogue: {Edgar}: Matron…{line}Please leave us…",
+   "text": "{Edgar}: أيتها المربية…{line}اتركينا من فضلك…"
+  },
+  {
+   "id": "castle.966",
+   "context": "Message 966 of the dialogue: {Edgar}: What'll happen to this realm if we both leave?{line}And what would Dad say…?",
+   "text": "{Edgar}: ماذا سيحل بهذه المملكة إن رحلنا كلانا؟{line}وماذا كان أبي سيقول…؟"
+  },
+  {
+   "id": "castle.967",
+   "context": "Message 967 of the dialogue: {Edgar}: {Sabin}, let's settle this with a toss of a coin.",
+   "text": "{Edgar}: {Sabin}، لنحسم هذا برمية عملة."
+  },
+  {
+   "id": "castle.968",
+   "context": "Message 968 of the dialogue: {Edgar}: If it's heads, you win.{page}We'll choose whichever path we want, without any regrets. Okay?",
+   "text": "{Edgar}: إن كانت صورة، فأنت الفائز.\nوسيختار كل منا الطريق الذي يريده، دون ندم. اتفقنا؟"
+  },
+  {
+   "id": "castle.969",
+   "context": "Message 969 of the dialogue: {Edgar}: This is for Dad!",
+   "text": "{Edgar}: هذه من أجل أبي!"
+  },
+  {
+   "id": "castle.970",
+   "context": "Message 970 of the dialogue: {Edgar}: And then, you opted for your freedom.",
+   "text": "{Edgar}: وعندها، اخترت حريتك."
+  },
+  {
+   "id": "castle.971",
+   "context": "Message 971 of the dialogue: {Edgar}: It's been…10 years.{line}The little shrimp's grown into a whopping lobster!{page}{Sabin}: And you're a king crab!",
+   "text": "{Edgar}: مرت… 10 سنوات.{line}الجمبري الصغير صار كركندا ضخما!\n{Sabin}: وأنت سلطعون ملكي!"
+  },
+  {
+   "id": "castle.972",
+   "context": "Message 972 of the dialogue: {Edgar}: {Sabin}…{line}I often wonder if he'd be proud of me…",
+   "text": "{Edgar}: {Sabin}…{line}كثيرا ما أتساءل إن كان سيفخر بي…"
+  },
+  {
+   "id": "castle.973",
+   "context": "Message 973 of the dialogue: {Sabin}: Don't you ever doubt that!",
+   "text": "{Sabin}: لا تشك في ذلك أبدا!"
+  },
+  {
+   "id": "castle.974",
+   "context": "Message 974 of the dialogue: {Edgar}: 10 years…{line}{Sabin}: Where has the time gone…?",
+   "text": "{Edgar}: 10 سنوات…{line}{Sabin}: أين ذهب الزمن…؟"
+  },
+  {
+   "id": "castle.975",
+   "context": "Message 975 of the dialogue: {Edgar}: Here's to a couple of confused grownups!",
+   "text": "{Edgar}: نخب رجلين حائرين!"
+  },
+  {
+   "id": "castle.976",
+   "context": "Message 976 of the dialogue: {Edgar}: Here's to Dad…",
+   "text": "{Edgar}: نخب أبي…"
+  },
+  {
+   "id": "castle.977",
+   "context": "Message 977 of the dialogue: {Sabin}: …to Mom…{line}…and to Figaro.",
+   "text": "{Sabin}: …ونخب أمي…{line}…ونخب فيغارو."
+  },
+  {
+   "id": "castle.978",
+   "context": "Message 978 of the dialogue: Lots of requests this month!{line}If it's your wish, I'll take you beyond the mountains.",
+   "text": "طلبات كثيرة هذا الشهر!{line}إن شئت، آخذك إلى ما وراء الجبال."
+  },
+  {
+   "id": "castle.979",
+   "context": "Message 979 of the dialogue: {Choice} (Go to Figaro?){line}{Choice} (Stop?)",
+   "text": "{Choice} (نذهب إلى فيغارو؟){line}{Choice} (نتوقف؟)"
+  },
+  {
+   "id": "castle.980",
+   "context": "Message 980 of the dialogue: {Choice} (Go to Kohlingen?){line}{Choice} (Stop?)",
+   "text": "{Choice} (نذهب إلى كولينغن؟){line}{Choice} (نتوقف؟)"
+  },
+  {
+   "id": "castle.981",
+   "context": "Message 981 of the dialogue: Beyond is the Figaro Castle Engine Room.{line}We're ready to leave at a moment's notice!",
+   "text": "وراء هذا غرفة محرك قلعة فيغارو.{line}نحن مستعدون للانطلاق في أي لحظة!"
+  },
+  {
+   "id": "castle.982",
+   "context": "Message 982 of the dialogue: That's dangerous!",
+   "text": "هذا خطر!"
+  },
+  {
+   "id": "castle.983",
+   "context": "Message 983 of the dialogue: Urgggh!",
+   "text": "أرغغغ!"
+  },
+  {
+   "id": "castle.984",
+   "context": "Message 984 of the dialogue: Next stop, Kohlingen!{line}Watch your step!",
+   "text": "المحطة التالية، كولينغن!{line}انتبه لخطواتك!"
+  },
+  {
+   "id": "castle.985",
+   "context": "Message 985 of the dialogue: Next stop, South Figaro.{line}Watch your step!",
+   "text": "المحطة التالية، ساوث فيغارو.{line}انتبه لخطواتك!"
+  },
+  {
+   "id": "kohlingen.986",
+   "context": "Message 986 of the dialogue: Oh…! {Wait} It came to my house!{line}A monster of light…{line}Looked somehow human!",
+   "text": "أوه…! {Wait} جاء إلى بيتي!{line}وحش من نور…{line}بدا بشريا نوعا ما!"
+  },
+  {
+   "id": "kohlingen.987",
+   "context": "Message 987 of the dialogue: Everyone was scared when the glowing creature stopped here.{line}It left to the south, toward Jidoor.",
+   "text": "خاف الجميع حين توقف المخلوق المتوهج هنا.{line}غادر جنوبا، نحو جيدور."
+  },
+  {
+   "id": "kohlingen.988",
+   "context": "Message 988 of the dialogue: That shining creature!{line}So frightening to us all!{line}But I found it… {Wait}beautiful!",
+   "text": "ذلك المخلوق اللامع!{line}أرعبنا جميعا!{line}لكنني وجدته… {Wait}جميلا!"
+  },
+  {
+   "id": "kohlingen.989",
+   "context": "Message 989 of the dialogue: My dream is to see an opera at the opera house south of Jidoor. I'd wear a sequined dress…{line}And bring a handsome escort…!",
+   "text": "حلمي أن أشاهد أوبرا في دار الأوبرا جنوب جيدور. سأرتدي فستانا مرصعا…{line}وأصطحب مرافقا وسيما…!"
+  },
+  {
+   "id": "kohlingen.990",
+   "context": "Message 990 of the dialogue: Hey, 'zat you, {Locke}?{line}Have you stopped to see Rachel?",
+   "text": "هيه، أهذا أنت يا {Locke}؟{line}هل مررت لترى راشيل؟"
+  },
+  {
+   "id": "kohlingen.991",
+   "context": "Message 991 of the dialogue: You a friend of {Locke}'s?{line}He always stops by Rachel's house when he comes here!",
+   "text": "أأنت صديق {Locke}؟{line}إنه يمر دائما ببيت راشيل حين يأتي إلى هنا!"
+  },
+  {
+   "id": "kohlingen.992",
+   "context": "Message 992 of the dialogue: Best stay away from the house on the eastern edge of town.{line}The old coot there spends his days mixing curious herbs.{page}I heard he keeps ghosts under his house!",
+   "text": "من الأفضل أن تبتعد عن البيت في الطرف الشرقي من البلدة.{line}العجوز الغريب هناك يقضي أيامه في خلط أعشاب عجيبة.\nسمعت أنه يحتفظ بأشباح تحت بيته!"
+  },
+  {
+   "id": "kohlingen.993",
+   "context": "Message 993 of the dialogue: My brother's a bit…touched.{line}Lives alone to the north, and dreams of building a colosseum!",
+   "text": "أخي… مخبول بعض الشيء.{line}يعيش وحيدا في الشمال، ويحلم ببناء حلبة مصارعة!"
+  },
+  {
+   "id": "kohlingen.994",
+   "context": "Message 994 of the dialogue: Was it really a ghost?{line}It stopped right in front of me. I could see it had gentle eyes…",
+   "text": "أكان شبحا حقا؟{line}توقف أمامي تماما. رأيت أن عينيه رقيقتان…"
+  },
+  {
+   "id": "kohlingen.995",
+   "context": "Message 995 of the dialogue: {Shadow}: We meet again…",
+   "text": "{Shadow}: نلتقي مجددا…"
+  },
+  {
+   "id": "kohlingen.996",
+   "context": "Message 996 of the dialogue: I've forsaken the world.{line}Some people call me…",
+   "text": "هجرت العالم.{line}بعض الناس يدعونني…"
+  },
+  {
+   "id": "kohlingen.997",
+   "context": "Message 997 of the dialogue: {Shadow}: Leave me alone…",
+   "text": "{Shadow}: دعوني وشأني…"
+  },
+  {
+   "id": "kohlingen.998",
+   "context": "Message 998 of the dialogue: People call me…{line}{Shadow}…",
+   "text": "الناس يدعونني…{line}{Shadow}…"
+  },
+  {
+   "id": "kohlingen.999",
+   "context": "Message 999 of the dialogue: {Shadow}: Just need 'nough to feed my dog.{line}Say, oh…3000 GP.{page}Buy {Shadow}'s help?{line} {Choice} Yes{line} {Choice} No",
+   "text": "{Shadow}: أحتاج ما يكفي لإطعام كلبي فحسب.{line}لنقل… 3000 غيل.\nتشتري مساعدة {Shadow}؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "kohlingen.1000",
+   "context": "Message 1000 of the dialogue: {Locke}: …wasn't able to… {Wait}{line}save her when she needed me…",
+   "text": "{Locke}: …لم أستطع… {Wait}{line}إنقاذها حين احتاجت إلي…"
+  },
+  {
+   "id": "kohlingen.1001",
+   "context": "Message 1001 of the dialogue: RACHEL: {Locke}!{line}What are we off to find today?",
+   "text": "راشيل: {Locke}!{line}ماذا سنبحث عنه اليوم؟"
+  },
+  {
+   "id": "kohlingen.1002",
+   "context": "Message 1002 of the dialogue: {Locke}: Soon, you'll…",
+   "text": "{Locke}: قريبا، سوف…"
+  },
+  {
+   "id": "kohlingen.1003",
+   "context": "Message 1003 of the dialogue: {Locke}: You're not going to believe what awaits us up here!{line}Come on, it's worth a fortune!",
+   "text": "{Locke}: لن تصدقي ما ينتظرنا هنا في الأعلى!{line}هيا، إنه يساوي ثروة!"
+  },
+  {
+   "id": "kohlingen.1004",
+   "context": "Message 1004 of the dialogue: RACHEL: {Locke}!{line}Look out!",
+   "text": "راشيل: {Locke}!{line}احترس!"
+  },
+  {
+   "id": "kohlingen.1005",
+   "context": "Message 1005 of the dialogue: {Locke}: RACHEL!!",
+   "text": "{Locke}: راشيل!!"
+  },
+  {
+   "id": "kohlingen.1006",
+   "context": "Message 1006 of the dialogue: {Locke}: Rachel!{line}Are you awake?",
+   "text": "{Locke}: راشيل!{line}هل أفقت؟"
+  },
+  {
+   "id": "kohlingen.1007",
+   "context": "Message 1007 of the dialogue: RACHEL: … {Wait}{line}……? {Wait}{line}I… {Wait}{line}I can't remember anything…",
+   "text": "راشيل: … {Wait}{line}……؟ {Wait}{line}أنا… {Wait}{line}لا أذكر شيئا…"
+  },
+  {
+   "id": "kohlingen.1008",
+   "context": "Message 1008 of the dialogue: RACHEL'S DAD: Get outta here!{line}It's your fault she's lost her memory!{page}{Locke}: Wait a minute!{line}She said “Yes!” We were gonna…",
+   "text": "والد راشيل: اخرج من هنا!{line}أنت السبب في فقدانها ذاكرتها!\n{Locke}: لحظة!{line}لقد قالت «نعم!» كنا سوف…"
+  },
+  {
+   "id": "kohlingen.1009",
+   "context": "Message 1009 of the dialogue: RACHEL: Go!{line}I don't know who you are, but ever since you came here my parents have been upset!",
+   "text": "راشيل: اذهب!{line}لا أعرف من أنت، لكن منذ جئت إلى هنا ووالداي منزعجان!"
+  },
+  {
+   "id": "kohlingen.1010",
+   "context": "Message 1010 of the dialogue: You'd best leave Rachel alone.{page}She's going to have to make a new start of it.{line}{Locke}…{line}Your being here doesn't help.",
+   "text": "من الأفضل أن تترك راشيل وشأنها.\nعليها أن تبدأ بداية جديدة.{line}{Locke}…{line}وجودك هنا لا يساعد."
+  },
+  {
+   "id": "kohlingen.1011",
+   "context": "Message 1011 of the dialogue: A year passed…{line}When I returned here, I learned that Rachel had perished in an Imperial attack.{page}Her memory returned just before she passed away.{line}The last thing she uttered was… {Wait}my name…{page}I should never have left her side.{page}I… {Wait}{line}I failed her…",
+   "text": "مرت سنة…{line}حين عدت إلى هنا، علمت أن راشيل قضت في هجوم إمبراطوري.\nعادت إليها ذاكرتها قبيل وفاتها.{line}وآخر ما نطقت به كان… {Wait}اسمي…\nما كان ينبغي أن أترك جانبها أبدا.\nأنا… {Wait}{line}خذلتها…"
+  },
+  {
+   "id": "kohlingen.1012",
+   "context": "Message 1012 of the dialogue: A girl named Rachel used to live in that house.{line}Now it's deserted.",
+   "text": "كانت فتاة تدعى راشيل تسكن ذلك البيت.{line}وهو مهجور الآن."
+  },
+  {
+   "id": "kohlingen.1013",
+   "context": "Message 1013 of the dialogue: Rachel's… {Wait}{line}…memory returned just before she passed away.{page}She said, “If a man named {Locke} returns, please tell him I love him…”",
+   "text": "راشيل… {Wait}{line}…عادت إليها ذاكرتها قبيل وفاتها.\nقالت: «إن عاد رجل يدعى {Locke}، فأرجوكم أخبروه أنني أحبه…»"
+  },
+  {
+   "id": "kohlingen.1014",
+   "context": "Message 1014 of the dialogue: Stay away from that guy.{line}He's an assasin!",
+   "text": "ابتعد عن ذلك الرجل.{line}إنه قاتل مأجور!"
+  },
+  {
+   "id": "kohlingen.1015",
+   "context": "Message 1015 of the dialogue: I never want to return to Zozo! Phew!",
+   "text": "لا أريد العودة إلى زوزو أبدا! أوف!"
+  },
+  {
+   "id": "kohlingen.1016",
+   "context": "Message 1016 of the dialogue: Some pretty bad sorts come in here. That guy's an assasin!",
+   "text": "يأتي إلى هنا أناس من أسوأ الأنواع. ذلك الرجل قاتل مأجور!"
+  },
+  {
+   "id": "kohlingen.1017",
+   "context": "Message 1017 of the dialogue: 'Till a moment ago, an assasin sat over there!",
+   "text": "حتى لحظة مضت، كان قاتل مأجور يجلس هناك!"
+  },
+  {
+   "id": "kohlingen.1018",
+   "context": "Message 1018 of the dialogue: Oh! Is that you, {Locke}?{line}It's been a while!{page}Uh? Oh, that?! Worry not!{line}Your treasure's quite safe!{line}Uwa, ha, ha!",
+   "text": "أوه! أهذا أنت يا {Locke}؟{line}مضى وقت طويل!\nهاه؟ أوه، ذاك؟! لا تقلق!{line}كنزك في أمان تام!{line}أوا، ها، ها!"
+  },
+  {
+   "id": "kohlingen.1019",
+   "context": "Message 1019 of the dialogue: Are we through here?{line}All done? Finished?{line}Mwa, ha, ha!",
+   "text": "هل انتهينا هنا؟{line}كل شيء تم؟ انتهى؟{line}موا، ها، ها!"
+  },
+  {
+   "id": "kohlingen.1020",
+   "context": "Message 1020 of the dialogue: {Locke}: Rachel…",
+   "text": "{Locke}: راشيل…"
+  },
+  {
+   "id": "kohlingen.1021",
+   "context": "Message 1021 of the dialogue: I used some herbs to put her into suspended animation.{line}She won't age a day! Uwaa, ha!{page}That's what you wanted, right?{line}Had to use my herbs, I did!",
+   "text": "استعملت بعض الأعشاب لأضعها في سبات.{line}لن تكبر يوما واحدا! أواا، ها!\nهذا ما أردته، صحيح؟{line}اضطررت إلى استعمال أعشابي، نعم!"
+  },
+  {
+   "id": "kohlingen.1022",
+   "context": "Message 1022 of the dialogue: {Locke}: You mean those herbs have actually saved her?",
+   "text": "{Locke}: أتقصد أن تلك الأعشاب أنقذتها حقا؟"
+  },
+  {
+   "id": "kohlingen.1023",
+   "context": "Message 1023 of the dialogue: Of course!{line}The love of your life will sleep here like this forever.{line}Kwa, ha, ha!",
+   "text": "طبعا!{line}حب حياتك ستنام هنا هكذا إلى الأبد.{line}كوا، ها، ها!"
+  },
+  {
+   "id": "kohlingen.1024",
+   "context": "Message 1024 of the dialogue: {Locke}: What if there were some way to…call her back?",
+   "text": "{Locke}: ماذا لو كانت هناك طريقة ما… لاستعادتها؟"
+  },
+  {
+   "id": "kohlingen.1025",
+   "context": "Message 1025 of the dialogue: If you could call her back…{line}…she'd come back!{line}Wah, ha, ha!{page}I'm sure you'll find something that'll bring her around!{line}Kuha, ha, ha!!",
+   "text": "لو استطعت استعادتها…{line}…لعادت!{line}واه، ها، ها!\nأنا واثق أنك ستجد شيئا يعيدها!{line}كوها، ها، ها!!"
+  },
+  {
+   "id": "kohlingen.1026",
+   "context": "Message 1026 of the dialogue: I… {Wait}{line}failed her…",
+   "text": "أنا… {Wait}{line}خذلتها…"
+  },
+  {
+   "id": "kohlingen.1027",
+   "context": "Message 1027 of the dialogue: {Celes}: {Locke}…",
+   "text": "{Celes}: {Locke}…"
+  },
+  {
+   "id": "kohlingen.1028",
+   "context": "Message 1028 of the dialogue: That?{line}Oh, that's {Locke}'s…{line}Dear, me! Almost spilled the beans! Kwa, ha!",
+   "text": "ذاك؟{line}أوه، ذاك يخص {Locke}…{line}يا إلهي! كدت أفشي السر! كوا، ها!"
+  },
+  {
+   "id": "jidoor.1029",
+   "context": "Message 1029 of the dialogue: This is Jidoor, the western most town on the world map!",
+   "text": "هذه جيدور، أقصى بلدة غربا على خريطة العالم!"
+  },
+  {
+   "id": "jidoor.1030",
+   "context": "Message 1030 of the dialogue: This region is very class-conscious.{page}In the south part of town live the middle classes. The rich folks live to the north.",
+   "text": "هذه المنطقة شديدة الاهتمام بالطبقات.\nفي جنوب البلدة تعيش الطبقات الوسطى. والأغنياء يعيشون في الشمال."
+  },
+  {
+   "id": "jidoor.1031",
+   "context": "Message 1031 of the dialogue: The poor people have all left here for the mountains to the north. There they've built a town.",
+   "text": "الفقراء كلهم غادروا إلى الجبال في الشمال. وبنوا هناك بلدة."
+  },
+  {
+   "id": "jidoor.1032",
+   "context": "Message 1032 of the dialogue: Maria, the opera singer, is gorgeous!",
+   "text": "ماريا، مغنية الأوبرا، فاتنة!"
+  },
+  {
+   "id": "jidoor.1033",
+   "context": "Message 1033 of the dialogue: I wanna be an opera singer when I grow up!{page}Opera house?{line}It's far to the south.",
+   "text": "أريد أن أصبح مغنية أوبرا حين أكبر!\nدار الأوبرا؟{line}إنها بعيدة في الجنوب."
+  },
+  {
+   "id": "jidoor.1034",
+   "context": "Message 1034 of the dialogue: A girl wrapped in fire sped off to the north, into the mountains.",
+   "text": "فتاة ملفوفة بالنار انطلقت شمالا، إلى الجبال."
+  },
+  {
+   "id": "jidoor.1035",
+   "context": "Message 1035 of the dialogue: To the north is the town of Zozo. Watch out for the people there.",
+   "text": "إلى الشمال بلدة زوزو. احذر من أهلها."
+  },
+  {
+   "id": "jidoor.1036",
+   "context": "Message 1036 of the dialogue: Bunch o' liars up in Zozo!{line}Never can trust 'em.",
+   "text": "حفنة من الكذابين هناك في زوزو!{line}لا يمكن الوثوق بهم أبدا."
+  },
+  {
+   "id": "jidoor.1037",
+   "context": "Message 1037 of the dialogue: Oops! Sorry.",
+   "text": "عفوا! آسف."
+  },
+  {
+   "id": "jidoor.1038",
+   "context": "Message 1038 of the dialogue: Once in a while one of the idiots from Zozo'll wander down here, lookin' for an easy mark. Watch your wallet!",
+   "text": "بين الحين والآخر يأتي أحد أغبياء زوزو إلى هنا، بحثا عن ضحية سهلة. انتبه لمحفظتك!"
+  },
+  {
+   "id": "jidoor.1039",
+   "context": "Message 1039 of the dialogue: Hey…you're not from around here!{line}You look…ah…dorky!",
+   "text": "هيه… لست من هنا!{line}تبدو… آه… أخرق!"
+  },
+  {
+   "id": "jidoor.1040",
+   "context": "Message 1040 of the dialogue: You like art?{line}No?! Philistines!",
+   "text": "تحب الفن؟{line}لا؟! يا لكم من جهلة!"
+  },
+  {
+   "id": "jidoor.1041",
+   "context": "Message 1041 of the dialogue: You can get some priceless things at this auction. Whether you can appreciate them or not, who knows!",
+   "text": "يمكنك الحصول على أشياء لا تقدر بثمن في هذا المزاد. أما إن كنت تقدرها أم لا، فمن يدري!"
+  },
+  {
+   "id": "jidoor.1042",
+   "context": "Message 1042 of the dialogue: I need something that will bring back wayward spirits.{page}I heard only in the Imperial capital of Vector does such a thing exist.",
+   "text": "أحتاج إلى شيء يعيد الأرواح الضالة.\nسمعت أن شيئا كهذا لا يوجد إلا في فيكتور، عاصمة الإمبراطورية."
+  },
+  {
+   "id": "zozo.1043",
+   "context": "Message 1043 of the dialogue: Zozo!?{line}Never heard of it.",
+   "text": "زوزو!؟{line}لم أسمع بها قط."
+  },
+  {
+   "id": "zozo.1044",
+   "context": "Message 1044 of the dialogue: Great people, here!",
+   "text": "أهل رائعون هنا!"
+  },
+  {
+   "id": "zozo.1045",
+   "context": "Message 1045 of the dialogue: Beautiful weather!",
+   "text": "طقس جميل!"
+  },
+  {
+   "id": "zozo.1046",
+   "context": "Message 1046 of the dialogue: It's now 2:00.",
+   "text": "الساعة الآن 2:00."
+  },
+  {
+   "id": "zozo.1047",
+   "context": "Message 1047 of the dialogue: Time?{line}It's 4:00.",
+   "text": "الوقت؟{line}إنها 4:00."
+  },
+  {
+   "id": "zozo.1048",
+   "context": "Message 1048 of the dialogue: You can trust me!{line}It's 8:00.",
+   "text": "يمكنك الوثوق بي!{line}إنها 8:00."
+  },
+  {
+   "id": "zozo.1049",
+   "context": "Message 1049 of the dialogue: 10:00!{line}Time to go home!",
+   "text": "10:00!{line}حان وقت العودة إلى البيت!"
+  },
+  {
+   "id": "zozo.1050",
+   "context": "Message 1050 of the dialogue: It's already 12:00.",
+   "text": "إنها 12:00 بالفعل."
+  },
+  {
+   "id": "zozo.1051",
+   "context": "Message 1051 of the dialogue: Girl?{line}Haven't seen any girls here. Might wanna check the top of this building.",
+   "text": "فتاة؟{line}لم أر أي فتاة هنا. قد يجدر بك أن تفحص أعلى هذا المبنى."
+  },
+  {
+   "id": "zozo.1052",
+   "context": "Message 1052 of the dialogue: It's safe here!",
+   "text": "المكان آمن هنا!"
+  },
+  {
+   "id": "zozo.1053",
+   "context": "Message 1053 of the dialogue: Clock's hands have stopped.{line}Please reset the hour.{page}{Choice} (2:00)   {Choice} (4:00){line}{Choice} (6:00)   {Choice} (8:00){line}{Choice} (10:00)  {Choice} (12:00)",
+   "text": "عقارب الساعة متوقفة.{line}رجاء اضبط الساعة.\n{Choice} (2:00) {Choice} (4:00){line}{Choice} (6:00) {Choice} (8:00){line}{Choice} (10:00) {Choice} (12:00)"
+  },
+  {
+   "id": "zozo.1054",
+   "context": "Message 1054 of the dialogue: Phew…!{line}How long we gonna have ta do this!?",
+   "text": "أوف…!{line}إلى متى سنظل نفعل هذا!؟"
+  },
+  {
+   "id": "zozo.1055",
+   "context": "Message 1055 of the dialogue: Clock's hands have stopped.{line}Please reset the minute.{page}{Choice} (0:10)   {Choice} (0:20){line}{Choice} (0:30)   {Choice} (0:40){line}{Choice} (0:50)",
+   "text": "عقارب الساعة متوقفة.{line}رجاء اضبط الدقائق.\n{Choice} (0:10) {Choice} (0:20){line}{Choice} (0:30) {Choice} (0:40){line}{Choice} (0:50)"
+  },
+  {
+   "id": "zozo.1056",
+   "context": "Message 1056 of the dialogue: Clock's hands have stopped.{line}Please reset the second.{page}{Choice} (0:00:10)   {Choice} (0:00:20){line}{Choice} (0:00:30)   {Choice} (0:00:40){line}{Choice} (0:00:50)",
+   "text": "عقارب الساعة متوقفة.{line}رجاء اضبط الثواني.\n{Choice} (0:00:10) {Choice} (0:00:20){line}{Choice} (0:00:30) {Choice} (0:00:40){line}{Choice} (0:00:50)"
+  },
+  {
+   "id": "zozo.1057",
+   "context": "Message 1057 of the dialogue: Clock's second hand's pointin' at 30.",
+   "text": "عقرب الثواني في الساعة يشير إلى 30."
+  },
+  {
+   "id": "zozo.1058",
+   "context": "Message 1058 of the dialogue: That clock has no minute hand. It's never pointing to the right time anyway!",
+   "text": "تلك الساعة بلا عقرب دقائق. إنها لا تشير إلى الوقت الصحيح أبدا على أي حال!"
+  },
+  {
+   "id": "zozo.1059",
+   "context": "Message 1059 of the dialogue: The seconds? They're divisible by 20!",
+   "text": "الثواني؟ إنها تقبل القسمة على 20!"
+  },
+  {
+   "id": "zozo.1060",
+   "context": "Message 1060 of the dialogue: “Some woman flew up to the top floor!”{line}“Did you say…“flew…”?{line}That must be {Terra}!!!!”{page}Creepy monster's live up there. Look out fer 'em!",
+   "text": "«امرأة ما طارت إلى الطابق الأعلى!»{line}«هل قلت… «طارت…»؟{line}لا بد أنها {Terra}!!!!»\nوحوش مخيفة تعيش هناك في الأعلى. احذروا منها!"
+  },
+  {
+   "id": "zozo.1061",
+   "context": "Message 1061 of the dialogue: The second hand of my watch is pointing at four.",
+   "text": "عقرب الثواني في ساعتي يشير إلى الرابعة."
+  },
+  {
+   "id": "zozo.1062",
+   "context": "Message 1062 of the dialogue: Climb the stairs of the building with the CAFE sign on it, and you can find a path leading to Mt. Zozo.",
+   "text": "اصعد درج المبنى الذي عليه لافتة المقهى، فتجد طريقا يؤدي إلى جبل زوزو."
+  },
+  {
+   "id": "zozo.1063",
+   "context": "Message 1063 of the dialogue: With this Rust-Rid you can open that door.{page}Yours for 1000 GP!{line}{Choice} Yes{line}{Choice} No",
+   "text": "بمزيل الصدأ هذا تستطيع فتح ذلك الباب.\nهو لك مقابل 1000 غيل!{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "zozo.1064",
+   "context": "Message 1064 of the dialogue: Purchased Rust-Rid!",
+   "text": "اشتريت مزيل الصدأ!"
+  },
+  {
+   "id": "zozo.1065",
+   "context": "Message 1065 of the dialogue: This place is dangerous!{line}And don't you dare think about jumping between buildings!",
+   "text": "هذا المكان خطر!{line}وإياك أن تفكر في القفز بين المباني!"
+  },
+  {
+   "id": "zozo.1066",
+   "context": "Message 1066 of the dialogue: Hand's pointin' at the two.",
+   "text": "العقرب يشير إلى الثانية."
+  },
+  {
+   "id": "zozo.1067",
+   "context": "Message 1067 of the dialogue: {line}    Didn't reset clock…",
+   "text": "{center}{line}لم تضبط الساعة…"
+  },
+  {
+   "id": "zozo.1068",
+   "context": "Message 1068 of the dialogue: Get in line!",
+   "text": "قف في الصف!"
+  },
+  {
+   "id": "zozo.1069",
+   "context": "Message 1069 of the dialogue: Good day, gentle folks.{line}Can I be of service?{line}I hate fighting, so I'd better let you pass!",
+   "text": "طاب يومكم أيها الكرام.{line}أيمكنني خدمتكم؟{line}أكره القتال، فمن الأفضل أن أدعكم تمرون!"
+  },
+  {
+   "id": "zozo.1070",
+   "context": "Message 1070 of the dialogue: Rusted shut.",
+   "text": "مقفل بالصدأ."
+  },
+  {
+   "id": "zozo.1071",
+   "context": "Message 1071 of the dialogue: Rust dissolved.",
+   "text": "ذاب الصدأ."
+  },
+  {
+   "id": "zozo.1072",
+   "context": "Message 1072 of the dialogue: Oooooh…gurururu…",
+   "text": "أووووه… غورورورو…"
+  },
+  {
+   "id": "zozo.1073",
+   "context": "Message 1073 of the dialogue: {Terra}?",
+   "text": "{Terra}؟"
+  },
+  {
+   "id": "zozo.1074",
+   "context": "Message 1074 of the dialogue: RAMUH: She's scared, you know.",
+   "text": "رامو: إنها خائفة، كما تعلمون."
+  },
+  {
+   "id": "zozo.1075",
+   "context": "Message 1075 of the dialogue: Who're you?",
+   "text": "من أنت؟"
+  },
+  {
+   "id": "zozo.1076",
+   "context": "Message 1076 of the dialogue: RAMUH: This girl is your friend?",
+   "text": "رامو: هذه الفتاة صديقتكم؟"
+  },
+  {
+   "id": "zozo.1077",
+   "context": "Message 1077 of the dialogue: Is {Terra} all right?",
+   "text": "هل {Terra} بخير؟"
+  },
+  {
+   "id": "zozo.1078",
+   "context": "Message 1078 of the dialogue: {Cyan}: Is Miss {Terra} okay?",
+   "text": "{Cyan}: هل الآنسة {Terra} بخير؟"
+  },
+  {
+   "id": "zozo.1079",
+   "context": "Message 1079 of the dialogue: {Celes}: Is {Terra} okay?",
+   "text": "{Celes}: هل {Terra} بخير؟"
+  },
+  {
+   "id": "zozo.1080",
+   "context": "Message 1080 of the dialogue: {Gau}: {Terra}…she ok?",
+   "text": "{Gau}: {Terra}… هي بخير؟"
+  },
+  {
+   "id": "zozo.1081",
+   "context": "Message 1081 of the dialogue: RAMUH: You call her {Terra}…{line}…{Terra}?? How odd…",
+   "text": "رامو: تدعونها {Terra}…{line}…{Terra}؟؟ يا للغرابة…"
+  },
+  {
+   "id": "zozo.1082",
+   "context": "Message 1082 of the dialogue: RAMUH: She is undamaged. But I fear she can't understand you. As for me, I am Ramuh. The Esper, Ramuh.",
+   "text": "رامو: لم يصبها أذى. لكنني أخشى أنها لا تفهمكم. أما أنا، فأنا رامو. الإسبر رامو."
+  },
+  {
+   "id": "zozo.1083",
+   "context": "Message 1083 of the dialogue: ESPER!?",
+   "text": "إسبر!؟"
+  },
+  {
+   "id": "zozo.1084",
+   "context": "Message 1084 of the dialogue: “But don't Espers live in another world?”",
+   "text": "«لكن ألا يعيش الإسبرات في عالم آخر؟»"
+  },
+  {
+   "id": "zozo.1085",
+   "context": "Message 1085 of the dialogue: {Celes}: But don't Espers live in another world?",
+   "text": "{Celes}: لكن ألا يعيش الإسبرات في عالم آخر؟"
+  },
+  {
+   "id": "zozo.1086",
+   "context": "Message 1086 of the dialogue: {Gau}: Espers…from other world?",
+   "text": "{Gau}: إسبرات… من عالم آخر؟"
+  },
+  {
+   "id": "zozo.1087",
+   "context": "Message 1087 of the dialogue: RAMUH: That doesn't mean we don't live here, too.{line}Espers take a variety of forms.{page}Sometimes we live here, taking the shape of humans.{line}You have nothing to fear from us.",
+   "text": "رامو: هذا لا يعني أننا لا نعيش هنا أيضا.{line}الإسبرات تتخذ أشكالا متنوعة.\nأحيانا نعيش هنا، متخذين هيئة البشر.{line}لا خوف عليكم منا."
+  },
+  {
+   "id": "zozo.1088",
+   "context": "Message 1088 of the dialogue: “Why do you hide the fact that you're Espers?”",
+   "text": "«لماذا تخفون أنكم إسبرات؟»"
+  },
+  {
+   "id": "zozo.1089",
+   "context": "Message 1089 of the dialogue: {Gau}: Why hide fact you Esper?",
+   "text": "{Gau}: لماذا تخفي أنك إسبر؟"
+  },
+  {
+   "id": "zozo.1090",
+   "context": "Message 1090 of the dialogue: RAMUH: Humans and Espers can't survive together.",
+   "text": "رامو: لا يستطيع البشر والإسبرات العيش معا."
+  },
+  {
+   "id": "zozo.1091",
+   "context": "Message 1091 of the dialogue: {Locke}: But my grandma told me that Espers and people once lived side by side!{page}Was that just a fairy tale?",
+   "text": "{Locke}: لكن جدتي أخبرتني أن الإسبرات والبشر عاشوا يوما جنبا إلى جنب!\nأكانت تلك مجرد حكاية خرافية؟"
+  },
+  {
+   "id": "zozo.1092",
+   "context": "Message 1092 of the dialogue: “But grandmother once told me that Espers and people once lived side by side.{line}Was that just a fairy tale?”",
+   "text": "«لكن جدتي أخبرتني يوما أن الإسبرات والبشر عاشوا جنبا إلى جنب.{line}أكانت تلك مجرد حكاية خرافية؟»"
+  },
+  {
+   "id": "zozo.1093",
+   "context": "Message 1093 of the dialogue: I heard that Espers and people once lived side by side.{line}Was that just a fairy tale…?",
+   "text": "سمعت أن الإسبرات والبشر عاشوا يوما جنبا إلى جنب.{line}أكانت تلك مجرد حكاية خرافية…؟"
+  },
+  {
+   "id": "zozo.1094",
+   "context": "Message 1094 of the dialogue: {Gau}: {Gau} hear fairy tale. People…Esper once live together peacefully…",
+   "text": "{Gau}: {Gau} سمع حكاية. البشر… الإسبرات عاشوا معا بسلام يوما…"
+  },
+  {
+   "id": "zozo.1095",
+   "context": "Message 1095 of the dialogue: RAMUH: No, that was no fairy tale. That was true.{line}We started out as friends.{page}Then along came the War of the Magi…",
+   "text": "رامو: لا، لم تكن حكاية خرافية. كانت حقيقة.{line}بدأنا أصدقاء.\nثم جاءت حرب السحرة…"
+  },
+  {
+   "id": "zozo.1096",
+   "context": "Message 1096 of the dialogue: War of the Magi…",
+   "text": "حرب السحرة…"
+  },
+  {
+   "id": "zozo.1097",
+   "context": "Message 1097 of the dialogue: RAMUH: It took place…long ago. Espers fought humans who were infused with magical power extracted from Espers…",
+   "text": "رامو: وقعت… منذ زمن بعيد. قاتل الإسبرات بشرا حقنوا بقوة سحرية استخرجت من الإسبرات…"
+  },
+  {
+   "id": "zozo.1098",
+   "context": "Message 1098 of the dialogue: Fearing our magical powers would once again become a target, we fashioned a new realm, and moved there.",
+   "text": "وخوفا من أن تصبح قوانا السحرية هدفا مرة أخرى، صنعنا عالما جديدا وانتقلنا إليه."
+  },
+  {
+   "id": "zozo.1099",
+   "context": "Message 1099 of the dialogue: About 20 years ago, humans stumbled upon it…humans who knew about Espers, and the secret to Magitek power. {Pause 18}{Key}",
+   "text": "قبل نحو 20 عاما، عثر عليه البشر… بشر يعرفون الإسبرات، وسر قوة الماجيتك. {Pause 18}{Key}"
+  },
+  {
+   "id": "zozo.1100",
+   "context": "Message 1100 of the dialogue: Thus began a hunt for Espers. Only in this way could Emperor Gestahl create his invincible army. {Pause 18}{Key}",
+   "text": "وهكذا بدأ صيد الإسبرات. بهذه الطريقة وحدها استطاع الإمبراطور غشتال أن يبني جيشه الذي لا يقهر. {Pause 18}{Key}"
+  },
+  {
+   "id": "zozo.1101",
+   "context": "Message 1101 of the dialogue: In response to this, we erected a doorway, and threw the humans out.",
+   "text": "وردا على ذلك، أقمنا بوابة، وطردنا البشر."
+  },
+  {
+   "id": "zozo.1102",
+   "context": "Message 1102 of the dialogue: RAMUH: Even as we speak, many of my kind are trapped in the Empire's Magitek Research Facility, being…{page}…drained of their powers…{line}I fled here to avoid a similar fate.",
+   "text": "رامو: وحتى ونحن نتكلم، كثير من بني جنسي محتجزون في منشأة أبحاث الماجيتك الإمبراطورية، حيث…\n…تستنزف قواهم…{line}وأنا هربت إلى هنا لأتجنب المصير نفسه."
+  },
+  {
+   "id": "zozo.1103",
+   "context": "Message 1103 of the dialogue: RAMUH: That's right, relax.",
+   "text": "رامو: هذا صحيح، اهدؤوا."
+  },
+  {
+   "id": "zozo.1104",
+   "context": "Message 1104 of the dialogue: RAMUH: I sensed that {Terra} was in trouble.{line}My magic…summoned her here.",
+   "text": "رامو: شعرت أن {Terra} في ورطة.{line}سحري… استدعاها إلى هنا."
+  },
+  {
+   "id": "zozo.1105",
+   "context": "Message 1105 of the dialogue: “{Terra}'s…an Esper?”",
+   "text": "«{Terra}… إسبر؟»"
+  },
+  {
+   "id": "zozo.1106",
+   "context": "Message 1106 of the dialogue: RAMUH: No, she's actually quite different.",
+   "text": "رامو: لا، إنها في الحقيقة مختلفة تماما."
+  },
+  {
+   "id": "zozo.1107",
+   "context": "Message 1107 of the dialogue: “{Terra} looks like she's in pain.”{page}RAMUH: Her very existence strikes fear into her own heart.",
+   "text": "«{Terra} تبدو متألمة.»\nرامو: وجودها نفسه يبث الرعب في قلبها."
+  },
+  {
+   "id": "zozo.1108",
+   "context": "Message 1108 of the dialogue: “How can we help her?”",
+   "text": "«كيف نساعدها؟»"
+  },
+  {
+   "id": "zozo.1109",
+   "context": "Message 1109 of the dialogue: RAMUH: When she accepts this aspect of herself, I think she'll be all right.",
+   "text": "رامو: حين تتقبل هذا الجانب من نفسها، أظنها ستكون بخير."
+  },
+  {
+   "id": "zozo.1110",
+   "context": "Message 1110 of the dialogue: “We have to do something!”{page}RAMUH: Then free those of my kind imprisoned in Gestahl's Magitek Research Facility. One of them can surely help her.",
+   "text": "«علينا أن نفعل شيئا!»\nرامو: إذن حرروا بني جنسي المسجونين في منشأة أبحاث الماجيتك عند غشتال. أحدهم يستطيع مساعدتها حتما."
+  },
+  {
+   "id": "zozo.1111",
+   "context": "Message 1111 of the dialogue: “If we find the Magitek Research Facility, you're sure we'll find your people?”",
+   "text": "«إن وجدنا منشأة أبحاث الماجيتك، أأنت واثق أننا سنجد بني جنسك؟»"
+  },
+  {
+   "id": "zozo.1112",
+   "context": "Message 1112 of the dialogue: {Celes}: The Magitek Research Facility…?{line}Your people are still there?!",
+   "text": "{Celes}: منشأة أبحاث الماجيتك…؟{line}بنو جنسك ما زالوا هناك؟!"
+  },
+  {
+   "id": "zozo.1113",
+   "context": "Message 1113 of the dialogue: {Gau}: Magitek Research Facility…?{line}There…your people?",
+   "text": "{Gau}: منشأة أبحاث الماجيتك…؟{line}هناك… بنو جنسك؟"
+  },
+  {
+   "id": "zozo.1114",
+   "context": "Message 1114 of the dialogue: {Celes}: Magitek Research Facility…{line}Your people are…",
+   "text": "{Celes}: منشأة أبحاث الماجيتك…{line}بنو جنسك…"
+  },
+  {
+   "id": "zozo.1115",
+   "context": "Message 1115 of the dialogue: RAMUH: Like a coward, I escaped leaving the others there.{line}It'll be the end of them…",
+   "text": "رامو: كالجبان، هربت وتركت الآخرين هناك.{line}ستكون نهايتهم…"
+  },
+  {
+   "id": "zozo.1116",
+   "context": "Message 1116 of the dialogue: “What do you mean?”",
+   "text": "«ماذا تقصد؟»"
+  },
+  {
+   "id": "zozo.1117",
+   "context": "Message 1117 of the dialogue: RAMUH: Gestahl's methods are incorrect. You can't drain a live Esper of all its power.{page}It is only when we are reduced to Magicite that our abilities can be transferred in total…",
+   "text": "رامو: أساليب غشتال خاطئة. لا يمكن استنزاف قوة إسبر حي كلها.\nفقط حين نتحول إلى ماجيسايت يمكن نقل قدراتنا كاملة…"
+  },
+  {
+   "id": "zozo.1118",
+   "context": "Message 1118 of the dialogue: “Pardon?!”{page}RAMUH: When we transform into Magicite, our power can be relocated.{line}“Magicite…?!”{page}RAMUH: That's what's left of us when we…pass away.",
+   "text": "«عفوا؟!»\nرامو: حين نتحول إلى ماجيسايت، يمكن نقل قوتنا.{line}«ماجيسايت…؟!»\nرامو: هذا ما يبقى منا حين… نرحل."
+  },
+  {
+   "id": "zozo.1119",
+   "context": "Message 1119 of the dialogue: RAMUH: These are my comrades who fell while escaping the Empire. And I will give you my power, as well…",
+   "text": "رامو: هؤلاء رفاقي الذين سقطوا وهم يهربون من الإمبراطورية. وسأمنحكم قوتي أنا أيضا…"
+  },
+  {
+   "id": "zozo.1120",
+   "context": "Message 1120 of the dialogue: “Why are you doing this…?”",
+   "text": "«لماذا تفعل هذا…؟»"
+  },
+  {
+   "id": "zozo.1121",
+   "context": "Message 1121 of the dialogue: RAMUH: We few can help save many. The War of the Magi must not be repeated…",
+   "text": "رامو: نحن القلة نستطيع أن نساعد في إنقاذ الكثيرين. يجب ألا تتكرر حرب السحرة…"
+  },
+  {
+   "id": "zozo.1122",
+   "context": "Message 1122 of the dialogue: “Old man…”{line}Are you really gone…?",
+   "text": "«أيها العجوز…»{line}أرحلت حقا…؟"
+  },
+  {
+   "id": "zozo.1123",
+   "context": "Message 1123 of the dialogue: {Shadow}: You old fool…{line}Why throw it all away?",
+   "text": "{Shadow}: أيها العجوز الأحمق…{line}لماذا رميت كل شيء؟"
+  },
+  {
+   "id": "zozo.1124",
+   "context": "Message 1124 of the dialogue: {Cyan}: He's…gone…",
+   "text": "{Cyan}: لقد… رحل…"
+  },
+  {
+   "id": "zozo.1125",
+   "context": "Message 1125 of the dialogue: {Celes}: Ramuh…{line}Why…?",
+   "text": "{Celes}: رامو…{line}لماذا…؟"
+  },
+  {
+   "id": "zozo.1126",
+   "context": "Message 1126 of the dialogue: {Gau}: R.a.m.u.h…{line}You leave…?",
+   "text": "{Gau}: ر.ا.م.و…{line}أنت ترحل…؟"
+  },
+  {
+   "id": "zozo.1127",
+   "context": "Message 1127 of the dialogue: Magicite…?",
+   "text": "ماجيسايت…؟"
+  },
+  {
+   "id": "zozo.1128",
+   "context": "Message 1128 of the dialogue: He traded his power, so that others might live…",
+   "text": "قايض قوته، ليعيش الآخرون…"
+  },
+  {
+   "id": "zozo.1129",
+   "context": "Message 1129 of the dialogue: {Cyan}: He traded his power, so that others might live…",
+   "text": "{Cyan}: قايض قوته، ليعيش الآخرون…"
+  },
+  {
+   "id": "zozo.1130",
+   "context": "Message 1130 of the dialogue: {Celes}: He traded his power, so that others might live…",
+   "text": "{Celes}: قايض قوته، ليعيش الآخرون…"
+  },
+  {
+   "id": "zozo.1131",
+   "context": "Message 1131 of the dialogue: {Gau}: Awoooo…!",
+   "text": "{Gau}: أوووو…!"
+  },
+  {
+   "id": "zozo.1132",
+   "context": "Message 1132 of the dialogue: {Terra}…wait for us.{line}We'll be back!",
+   "text": "{Terra}… انتظرينا.{line}سنعود!"
+  },
+  {
+   "id": "zozo.1133",
+   "context": "Message 1133 of the dialogue: {line}{Spaces 05}Received the Magicite{line}{Spaces 0E}“Ramuh.”",
+   "text": "{center}{line}حصلت على الماجيسايت{line}«رامو»."
+  },
+  {
+   "id": "zozo.1134",
+   "context": "Message 1134 of the dialogue: {line}{Spaces 05}Received the Magicite{line}{Spaces 0E}“Siren.”",
+   "text": "{center}{line}حصلت على الماجيسايت{line}«سايرن»."
+  },
+  {
+   "id": "zozo.1135",
+   "context": "Message 1135 of the dialogue: {line}{Spaces 05}Received the Magicite{line}{Spaces 0E}“Kirin.”",
+   "text": "{center}{line}حصلت على الماجيسايت{line}«كيرين»."
+  },
+  {
+   "id": "zozo.1136",
+   "context": "Message 1136 of the dialogue: {line}{Spaces 05}Received the Magicite{line}{Spaces 0E}“Stray.”",
+   "text": "{center}{line}حصلت على الماجيسايت{line}«ستراي»."
+  },
+  {
+   "id": "zozo.1137",
+   "context": "Message 1137 of the dialogue: Everyone here?{line}I was thinking, …{page}{Edgar}: Let's talk on the way!",
+   "text": "الجميع هنا؟{line}كنت أفكر، …\n{Edgar}: لنتحدث في الطريق!"
+  },
+  {
+   "id": "zozo.1138",
+   "context": "Message 1138 of the dialogue: {Edgar}: The Empire's trying to drain magic from Espers… {Pause 10}{Key}",
+   "text": "{Edgar}: الإمبراطورية تحاول استنزاف السحر من الإسبرات… {Pause 10}{Key}"
+  },
+  {
+   "id": "zozo.1139",
+   "context": "Message 1139 of the dialogue: {Sabin}: This can't be true…{line}{Celes}…? {Pause 10}{Key}",
+   "text": "{Sabin}: لا يمكن أن يكون هذا صحيحا…{line}{Celes}…؟ {Pause 10}{Key}"
+  },
+  {
+   "id": "zozo.1140",
+   "context": "Message 1140 of the dialogue: {Celes}: I don't remember because I was asleep when they…augmented me.{page}But I've heard rumors to that effect.",
+   "text": "{Celes}: لا أذكر لأنني كنت نائمة حين… عززوني.\nلكنني سمعت شائعات بهذا المعنى."
+  },
+  {
+   "id": "zozo.1141",
+   "context": "Message 1141 of the dialogue: {Cyan}: Then we're going in…{page}{Edgar}: We'd best split into 2 groups.{line}We still need to beef up our defenses in Narshe.",
+   "text": "{Cyan}: إذن سندخل…\n{Edgar}: من الأفضل أن ننقسم إلى مجموعتين.{line}ما زلنا بحاجة إلى تعزيز دفاعاتنا في نارشي."
+  },
+  {
+   "id": "zozo.1142",
+   "context": "Message 1142 of the dialogue: {Cyan}: Indeed.",
+   "text": "{Cyan}: بالتأكيد."
+  },
+  {
+   "id": "zozo.1143",
+   "context": "Message 1143 of the dialogue: {Celes}: I'll go to the Empire. I know it well…{page}{Sabin}: But alone…?",
+   "text": "{Celes}: سأذهب إلى الإمبراطورية. أعرفها جيدا…\n{Sabin}: لكن وحدك…؟"
+  },
+  {
+   "id": "zozo.1144",
+   "context": "Message 1144 of the dialogue: {Locke}: Don't worry, I'll go with her.",
+   "text": "{Locke}: لا تقلق، سأذهب معها."
+  },
+  {
+   "id": "zozo.1145",
+   "context": "Message 1145 of the dialogue: {Celes}: {Locke}!",
+   "text": "{Celes}: {Locke}!"
+  },
+  {
+   "id": "zozo.1146",
+   "context": "Message 1146 of the dialogue: {Cyan}: You need a hand?",
+   "text": "{Cyan}: تحتاجان إلى مساعدة؟"
+  },
+  {
+   "id": "zozo.1147",
+   "context": "Message 1147 of the dialogue: {Locke}: Please wait for us in Narshe. We'll find our way back safely.{page}“If you wish to change group members, head for Narshe.”",
+   "text": "{Locke}: انتظرونا في نارشي رجاء. سنجد طريق العودة بسلام.\n«إن أردت تغيير أعضاء المجموعة، فتوجه إلى نارشي.»"
+  },
+  {
+   "id": "zozo.1148",
+   "context": "Message 1148 of the dialogue: {Shadow}: There's no need for me to remain with you.",
+   "text": "{Shadow}: لا حاجة لأن أبقى معكم."
+  },
+  {
+   "id": "zozo.1149",
+   "context": "Message 1149 of the dialogue: {Celes}: So…how we gonna get there? The Empire's on the continent to the south. No boats go there…{page}{Locke}: The people of Jidoor, a town to the south, can probably help us.",
+   "text": "{Celes}: إذن… كيف سنصل إلى هناك؟ الإمبراطورية في القارة الجنوبية. ولا سفن تذهب إليها…\n{Locke}: أهل جيدور، بلدة في الجنوب، يستطيعون مساعدتنا على الأرجح."
+  },
+  {
+   "id": "zozo.1150",
+   "context": "Message 1150 of the dialogue: {Celes}: {Locke}.{page}{Locke}: Yes?{line}{Celes}: Why are you coming with me?",
+   "text": "{Celes}: {Locke}.\n{Locke}: نعم؟{line}{Celes}: لماذا تأتي معي؟"
+  },
+  {
+   "id": "zozo.1151",
+   "context": "Message 1151 of the dialogue: {Locke}: Well…{line}There're bound to be treasures there.{page}And besides, I've always wanted an inside look at the Empire!",
+   "text": "{Locke}: حسنا…{line}لا بد أن هناك كنوزا.\nثم إنني لطالما أردت أن أرى الإمبراطورية من الداخل!"
+  },
+  {
+   "id": "opera.1152",
+   "context": "Message 1152 of the dialogue: Ain't no easy way to make the Imperial lands…!",
+   "text": "لا طريق سهلا إلى أراضي الإمبراطورية…!"
+  },
+  {
+   "id": "opera.1153",
+   "context": "Message 1153 of the dialogue: Only way to reach the Empire's by air. Of course you realize you'd need an airship!",
+   "text": "الطريق الوحيد إلى الإمبراطورية جوا. وطبعا تدرك أنك تحتاج إلى سفينة طائرة!"
+  },
+  {
+   "id": "opera.1154",
+   "context": "Message 1154 of the dialogue: There's only one airship in the world. It's owned by a gambler, or should I say pirate…?",
+   "text": "لا توجد إلا سفينة طائرة واحدة في العالم. يملكها مقامر، أو لعلي أقول قرصان…؟"
+  },
+  {
+   "id": "opera.1155",
+   "context": "Message 1155 of the dialogue: The gambler likes flashy shows. He's always at the opera. I think he likes the beautiful divas…",
+   "text": "المقامر يحب العروض المبهرجة. إنه دائما في الأوبرا. أظنه يحب المغنيات الجميلات…"
+  },
+  {
+   "id": "opera.1156",
+   "context": "Message 1156 of the dialogue: You're the spittin' image of Maria! Huh? Haven't heard of her? She's a famous opera singer!",
+   "text": "أنت صورة طبق الأصل عن ماريا! هاه؟ لم تسمعي بها؟ إنها مغنية أوبرا مشهورة!"
+  },
+  {
+   "id": "opera.1157",
+   "context": "Message 1157 of the dialogue: IMPRESARIO: Maria!?",
+   "text": "مدير المسرح: ماريا!؟"
+  },
+  {
+   "id": "opera.1158",
+   "context": "Message 1158 of the dialogue: {Celes}: Are you talking to me?",
+   "text": "{Celes}: أتكلمني أنا؟"
+  },
+  {
+   "id": "opera.1159",
+   "context": "Message 1159 of the dialogue: IMPRESARIO: Sorry…my mistake.{line}Wow, you could pass for Maria in a heartbeat! Hoo boy, now I really am in trouble…",
+   "text": "مدير المسرح: آسف… خطئي.{line}يا للعجب، يمكن أن تمري على أنك ماريا في لمح البصر! يا إلهي، أنا في ورطة حقا الآن…"
+  },
+  {
+   "id": "opera.1160",
+   "context": "Message 1160 of the dialogue: {Celes} looks just like Maria…?",
+   "text": "{Celes} تشبه ماريا تماما…؟"
+  },
+  {
+   "id": "opera.1161",
+   "context": "Message 1161 of the dialogue: That PERSON dropped it off.",
+   "text": "ذلك الشخص هو من تركها."
+  },
+  {
+   "id": "opera.1162",
+   "context": "Message 1162 of the dialogue: MASTER: He's the director of the operas here. Everyone just calls him “Impresario.”{page}He's been in a tizzy ever since that letter arrived.",
+   "text": "المعلم: إنه مدير عروض الأوبرا هنا. الجميع يدعونه «مدير المسرح» فحسب.\nوهو في حالة هياج منذ وصلت تلك الرسالة."
+  },
+  {
+   "id": "opera.1163",
+   "context": "Message 1163 of the dialogue: {Locke}: Who's this “Wandering…”? what's-his-name?{page}MASTER: You born on a farm, son?",
+   "text": "{Locke}: من هذا «الجوال…»؟ ما اسمه؟\nالمعلم: أولدت في مزرعة يا بني؟"
+  },
+  {
+   "id": "opera.1164",
+   "context": "Message 1164 of the dialogue: That's {Setzer}, owner of the world's only airship.",
+   "text": "إنه {Setzer}، مالك السفينة الطائرة الوحيدة في العالم."
+  },
+  {
+   "id": "opera.1165",
+   "context": "Message 1165 of the dialogue: A blackjack-playing, world-traveling, casino-dwelling free spirit…",
+   "text": "روح حرة تلعب البلاك جاك، وتجوب العالم، وتقيم في الكازينوهات…"
+  },
+  {
+   "id": "opera.1166",
+   "context": "Message 1166 of the dialogue: My Dear Maria,{line}I want you for my wife.{line}I'm coming for you…{line}{Spaces 06}The Wandering Gambler",
+   "text": "عزيزتي ماريا،{line}أريدك زوجة لي.{line}أنا قادم لأخذك…{line}المقامر الجوال"
+  },
+  {
+   "id": "opera.1167",
+   "context": "Message 1167 of the dialogue: {Celes}: If we could get that airship, we'd make the Empire in no time.{page}{Locke}: Let's set up a meeting…with {Setzer}…",
+   "text": "{Celes}: لو حصلنا على تلك السفينة الطائرة، لبلغنا الإمبراطورية في لمح البصر.\n{Locke}: لنرتب لقاء… مع {Setzer}…"
+  },
+  {
+   "id": "opera.1168",
+   "context": "Message 1168 of the dialogue: The Opera House's closed.",
+   "text": "دار الأوبرا مغلقة."
+  },
+  {
+   "id": "opera.1169",
+   "context": "Message 1169 of the dialogue: Performance underway.",
+   "text": "العرض جار."
+  },
+  {
+   "id": "opera.1170",
+   "context": "Message 1170 of the dialogue: IMPRESARIO: Ah! You again!",
+   "text": "مدير المسرح: آه! أنتم مجددا!"
+  },
+  {
+   "id": "opera.1171",
+   "context": "Message 1171 of the dialogue: {Locke}: I read that letter.{line}{Setzer}'s coming to steal her…{page}IMPRESARIO: He'll probably appear right at the climax of Scene 1. He loves an entrance…",
+   "text": "{Locke}: قرأت تلك الرسالة.{line}{Setzer} قادم ليخطفها…\nمدير المسرح: سيظهر على الأرجح عند ذروة المشهد الأول. إنه يعشق الظهور المثير…"
+  },
+  {
+   "id": "opera.1172",
+   "context": "Message 1172 of the dialogue: {Locke}: Right!{line}If we could only grab him then…!",
+   "text": "{Locke}: صحيح!{line}لو أمكننا الإمساك به عندها…!"
+  },
+  {
+   "id": "opera.1173",
+   "context": "Message 1173 of the dialogue: IMPRESARIO: Dear me, NO!{line}You'll ruin the performance!{line}I'll lose my job!",
+   "text": "مدير المسرح: يا إلهي، لا!{line}ستفسدون العرض!{line}سأفقد عملي!"
+  },
+  {
+   "id": "opera.1174",
+   "context": "Message 1174 of the dialogue: {Celes}: Then you're history!{page}IMPRESARIO: This is simply horrid! I want the performance to be a success!{page}But I don't want Maria to be abducted…!",
+   "text": "{Celes}: إذن انتهى أمرك!\nمدير المسرح: هذا فظيع ببساطة! أريد للعرض أن ينجح!\nلكنني لا أريد أن تختطف ماريا…!"
+  },
+  {
+   "id": "opera.1175",
+   "context": "Message 1175 of the dialogue: {Locke}: We'll let him grab her…",
+   "text": "{Locke}: سندعه يخطفها…"
+  },
+  {
+   "id": "opera.1176",
+   "context": "Message 1176 of the dialogue: {Locke}: We'll use {Celes} as a decoy. After she's abducted, I'll follow 'em right to his airship!",
+   "text": "{Locke}: سنستعمل {Celes} طعما. بعد اختطافها، سأتبعهم مباشرة إلى سفينته الطائرة!"
+  },
+  {
+   "id": "opera.1177",
+   "context": "Message 1177 of the dialogue: IMPRESARIO: Are you mad?!!{line}If something should happen to Maria…",
+   "text": "مدير المسرح: أجننت؟!!{line}إن أصاب ماريا مكروه…"
+  },
+  {
+   "id": "opera.1178",
+   "context": "Message 1178 of the dialogue: {Locke}: That's why the decoy! We'll hide Maria somewhere safe!{page}IMPRESARIO: Come again?",
+   "text": "{Locke}: لهذا الطعم! سنخبئ ماريا في مكان آمن!\nمدير المسرح: عفوا؟"
+  },
+  {
+   "id": "opera.1179",
+   "context": "Message 1179 of the dialogue: {Locke}: You said SHE looks like Maria, right?",
+   "text": "{Locke}: قلت إنها تشبه ماريا، صحيح؟"
+  },
+  {
+   "id": "opera.1180",
+   "context": "Message 1180 of the dialogue: {Celes}: Now just a minute…",
+   "text": "{Celes}: لحظة من فضلكم…"
+  },
+  {
+   "id": "opera.1181",
+   "context": "Message 1181 of the dialogue: {Locke}: {Celes} will be our Maria! She'll lead us to the airship!",
+   "text": "{Locke}: {Celes} ستكون ماريا! وستقودنا إلى السفينة الطائرة!"
+  },
+  {
+   "id": "opera.1182",
+   "context": "Message 1182 of the dialogue: IMPRESARIO: Brilliant!",
+   "text": "مدير المسرح: عبقري!"
+  },
+  {
+   "id": "opera.1183",
+   "context": "Message 1183 of the dialogue: {Celes}: W…wait!{line}I'm a GENERAL, not some opera floozy!",
+   "text": "{Celes}: ا… انتظروا!{line}أنا جنرال، لا مغنية أوبرا تافهة!"
+  },
+  {
+   "id": "opera.1184",
+   "context": "Message 1184 of the dialogue: Mii… {Wait}Mii… {Wait}{line}Do, re, mi…{line}Faa…hack, cough…{page}{line}{line}Maa… {Wait}rii {Wait}aaaa",
+   "text": "مي… {Wait}مي… {Wait}{line}دو، ري، مي…{line}فاا… كح، كح…\n{line}{line}ماا… {Wait}ريي {Wait}اااا"
+  },
+  {
+   "id": "opera.1185",
+   "context": "Message 1185 of the dialogue: {Locke}: Not bad, {Celes}!",
+   "text": "{Locke}: ليس سيئا يا {Celes}!"
+  },
+  {
+   "id": "opera.1186",
+   "context": "Message 1186 of the dialogue: ULTROS: Mwa, ha, ha!{line}I'll pretend to be {Setzer} and foil their little plan!",
+   "text": "أولتروس: موا، ها، ها!{line}سأتظاهر بأنني {Setzer} وأفسد خطتهم الصغيرة!"
+  },
+  {
+   "id": "opera.1187",
+   "context": "Message 1187 of the dialogue: {Locke}: Let's get ready!{line}{Celes}, it's show time!",
+   "text": "{Locke}: لنستعد!{line}{Celes}، حان وقت العرض!"
+  },
+  {
+   "id": "opera.1188",
+   "context": "Message 1188 of the dialogue: ULTROS: D'haaaaa!{line}Come on! Read it…!",
+   "text": "أولتروس: دهااااا!{line}هيا! اقرؤوها…!"
+  },
+  {
+   "id": "opera.1189",
+   "context": "Message 1189 of the dialogue: The West and East {Pause 18}{Key}{line}were waging war… {Pause 18}{Key}{page}{line}Draco, the West's great hero, {Pause 18}{Key}{line}thinks of his love, Maria. {Pause 18}{Key}{line}Is she safe? Is she waiting? {Pause 18}{Key}",
+   "text": "الغرب والشرق {Pause 18}{Key}{line}كانا في حرب… {Pause 18}{Key}\n{line}دراكو، بطل الغرب العظيم، {Pause 18}{Key}{line}يفكر في حبيبته ماريا. {Pause 18}{Key}{line}أهي بأمان؟ أهي تنتظر؟ {Pause 18}{Key}"
+  },
+  {
+   "id": "opera.1190",
+   "context": "Message 1190 of the dialogue: {Note} Oh {Pause 0A}Maria {Pause 10}{Key}{line}   Oh {Pause 0A}Maria {Pause 0E}{Key}{line}   Please, {Pause 0D}hear my {Pause 0D}voice! {Pause 17}{Key}{line}   How I long to {Pause 13}be with you! {Note} {Pause 1D}{Key}",
+   "text": "♪ أوه {Pause 0A}ماريا {Pause 10}{Key}{line}أوه {Pause 0A}ماريا {Pause 0E}{Key}{line}أرجوك، {Pause 0D}اسمع {Pause 0D}صوتي! {Pause 17}{Key}{line}كم أتوق {Pause 13}لأن أكون معك {Pause 1D}{Key}"
+  },
+  {
+   "id": "opera.1191",
+   "context": "Message 1191 of the dialogue: {Locke}: I'm going to the dressing room.",
+   "text": "{Locke}: سأذهب إلى غرفة الملابس."
+  },
+  {
+   "id": "opera.1192",
+   "context": "Message 1192 of the dialogue: {Edgar}: Go right ahead.",
+   "text": "{Edgar}: تفضل."
+  },
+  {
+   "id": "opera.1193",
+   "context": "Message 1193 of the dialogue: {Sabin}: Uh?{line}Why's everyone singing?",
+   "text": "{Sabin}: هاه؟{line}لماذا يغني الجميع؟"
+  },
+  {
+   "id": "opera.1194",
+   "context": "Message 1194 of the dialogue: {Cyan}: Going somewhere?{line}I'm going to relax!",
+   "text": "{Cyan}: ذاهب إلى مكان ما؟{line}أنا سأسترخي!"
+  },
+  {
+   "id": "opera.1195",
+   "context": "Message 1195 of the dialogue: {Gau}: Pretty song!",
+   "text": "{Gau}: أغنية جميلة!"
+  },
+  {
+   "id": "opera.1196",
+   "context": "Message 1196 of the dialogue: IMPRESARIO: Is everything okay?",
+   "text": "مدير المسرح: هل كل شيء على ما يرام؟"
+  },
+  {
+   "id": "opera.1197",
+   "context": "Message 1197 of the dialogue: IMPRESARIO: Your friend left.{line}Said he'd have fallen asleep in another 5 minutes…",
+   "text": "مدير المسرح: صديقك غادر.{line}قال إنه كان سينام لو بقي 5 دقائق أخرى…"
+  },
+  {
+   "id": "opera.1198",
+   "context": "Message 1198 of the dialogue: {Locke}: Aye yai yai!{line}Izzat…you!?",
+   "text": "{Locke}: يا ويلي!{line}أهذه… أنت!؟"
+  },
+  {
+   "id": "opera.1199",
+   "context": "Message 1199 of the dialogue: {Celes}: {Locke}.{line}Why did you help me escape back there?{page}{Locke}: I…once abandoned someone when she needed me…",
+   "text": "{Celes}: {Locke}.{line}لماذا ساعدتني على الهرب هناك؟\n{Locke}: أنا… تخليت يوما عن شخص حين احتاجت إلي…"
+  },
+  {
+   "id": "opera.1200",
+   "context": "Message 1200 of the dialogue: {Celes}: Somewhere inside you were saving…her, weren't you…?",
+   "text": "{Celes}: في أعماقك كنت تنقذ… هي، أليس كذلك…؟"
+  },
+  {
+   "id": "opera.1201",
+   "context": "Message 1201 of the dialogue: {Locke}: That ribbon suits you.",
+   "text": "{Locke}: ذلك الشريط يليق بك."
+  },
+  {
+   "id": "opera.1202",
+   "context": "Message 1202 of the dialogue: {Celes}: On with the show!{line}This is a big scene in which Maria senses that something's happened to Draco!",
+   "text": "{Celes}: فليستمر العرض!{line}هذا مشهد كبير تشعر فيه ماريا أن شيئا قد أصاب دراكو!"
+  },
+  {
+   "id": "opera.1203",
+   "context": "Message 1203 of the dialogue: {Locke}: Don't make any more mistakes!",
+   "text": "{Locke}: لا ترتكبي مزيدا من الأخطاء!"
+  },
+  {
+   "id": "opera.1204",
+   "context": "Message 1204 of the dialogue: {Locke}: You'd better check the score one last time.",
+   "text": "{Locke}: من الأفضل أن تراجعي النوتة مرة أخيرة."
+  },
+  {
+   "id": "opera.1205",
+   "context": "Message 1205 of the dialogue: Read the score?{line}{Choice} (Yes){line}{Choice} (No)",
+   "text": "تقرئين النوتة؟{line}{Choice} (نعم){line}{Choice} (لا)"
+  },
+  {
+   "id": "opera.1206",
+   "context": "Message 1206 of the dialogue: Scene 1{page}Oh my hero, so far away now. Will I ever see your smile?{line}Love goes away, like night into day. It's just a fading dream…{page}I'm the darkness, you're the stars. Our love is brighter than the sun. For eternity, for me there can be,{page}only you, my chosen one…{line}Must I forget you? Our solemn promise? Will autumn take the place of spring?{page}What shall I do? I'm lost without you. Speak to me once more!{page}…here you pick up the flowers.{line}Climb the stairs to the balcony high atop the castle. Raise the flowers to the stars.{page}(Hurry! You have just moments before Scene 2 starts!{line}{Spaces 07}The Impresario){page}Scene 2{line}…………………………",
+   "text": "المشهد الأول\nيا بطلي، البعيد الآن. هل أرى ابتسامتك يوما؟{line}الحب يمضي، كالليل حين يصير نهارا. إنه مجرد حلم يتلاشى…\nأنا الظلام، وأنت النجوم. حبنا أسطع من الشمس. إلى الأبد، ليس لي\nسواك، يا من اخترت…{line}أعلي أن أنساك؟ وعهدنا المقدس؟ أيحل الخريف محل الربيع؟\nماذا أفعل؟ أنا ضائعة من دونك. كلمني مرة أخرى!\n…هنا تلتقطين الزهور.{line}اصعدي الدرج إلى الشرفة في أعلى القلعة. ارفعي الزهور إلى النجوم.\n(أسرعي! لم يبق سوى لحظات قبل بدء المشهد الثاني!{line}مدير المسرح)\nالمشهد الثاني{line}…………………………"
+  },
+  {
+   "id": "opera.1207",
+   "context": "Message 1207 of the dialogue: {Locke}: Good luck…!",
+   "text": "{Locke}: حظا سعيدا…!"
+  },
+  {
+   "id": "opera.1208",
+   "context": "Message 1208 of the dialogue: The forces of the West fell,{line}and Maria's castle was taken. {Pause 10}{Key}{page}Prince Ralse, of the East, took her hand by force.{line}But she never stopped yearning for Draco… {Pause 10}{Key}",
+   "text": "سقطت قوات الغرب،{line}وأخذت قلعة ماريا. {Pause 10}{Key}\nالأمير رالس، أمير الشرق، أخذ يدها عنوة.{line}لكنها لم تكف قط عن الحنين إلى دراكو… {Pause 10}{Key}"
+  },
+  {
+   "id": "opera.1209",
+   "context": "Message 1209 of the dialogue: The next line is…?{line}   {Choice}(Oh my hero…){line}   {Choice}(Alas, Draco…){KeyAfter 11}{Key}",
+   "text": "السطر التالي هو…؟{line}{Choice} (يا بطلي…){line}{Choice} (وا أسفاه، دراكو…){KeyAfter 11}{Key}"
+  },
+  {
+   "id": "opera.1210",
+   "context": "Message 1210 of the dialogue: {Note} Oh {Pause 03}my {Pause 04}hero, {Pause 09}{line}   so far away now. {Pause 0C}{Key}{line}   Will I ever {Pause 0A}see your smile? {Pause 10}{Key}{page}{Note} Love goes away, {Pause 0D}{line}   like night into day. {Pause 0C}{Key}{page}{Note} It's just a fading dream… {Note} {Pause 08}{Key}{line}   {Choice}(I wish I…){line}   {Choice}(I'm the darkness) {KeyAfter 0E}{Key}",
+   "text": "♪ يا {Pause 03}بطلي، {Pause 04}يا {Pause 09}{line}البعيد الآن. {Pause 0C}{Key}{line}هل أرى {Pause 0A}ابتسامتك يوما؟ {Pause 10}{Key}\n♪ الحب يمضي، {Pause 0D}{line}كالليل حين يصير نهارا. {Pause 0C}{Key}\n♪ إنه مجرد حلم يتلاشى… ♪ {Pause 08}{Key}{line}{Choice} (ليتني…){line}{Choice} (أنا الظلام) {KeyAfter 0E}{Key}"
+  },
+  {
+   "id": "opera.1211",
+   "context": "Message 1211 of the dialogue: {Note} Alas, Draco!{line}   You're outta here! {Pause 10}{Key}",
+   "text": "♪ وا أسفاه، دراكو!{line}اخرج من هنا! {Pause 10}{Key}"
+  },
+  {
+   "id": "opera.1212",
+   "context": "Message 1212 of the dialogue: Something's wrong…eh?{line}{Wait}Oops…sorry!",
+   "text": "ثمة خطأ… ها؟{line}{Wait}عفوا… آسفة!"
+  },
+  {
+   "id": "opera.1213",
+   "context": "Message 1213 of the dialogue: {Note} I'm the darkness, {Pause 0E}{line}   you're the stars. {Pause 0B}{Key}{line}   Our love {Pause 08}is brighter than{line}   the sun. {Pause 11}{Key}{page}{Note} For eternity, {Pause 0A}{line}   for me there can be, {Pause 0C}{Key}{page}{Note} only you, my chosen one… {Note} {Pause 08}{Key}{line}   {Choice}(Must I…){line}   {Choice}(Prince Ralse…){KeyAfter 0A}{Key}",
+   "text": "♪ أنا الظلام، {Pause 0E}{line}وأنت النجوم. {Pause 0B}{Key}{line}حبنا {Pause 08}أسطع من{line}الشمس. {Pause 11}{Key}\n♪ إلى الأبد، {Pause 0A}{line}ليس لي، {Pause 0C}{Key}\n♪ سواك، يا من اخترت… ♪ {Pause 08}{Key}{line}{Choice} (أعلي…){line}{Choice} (الأمير رالس…){KeyAfter 0A}{Key}"
+  },
+  {
+   "id": "opera.1214",
+   "context": "Message 1214 of the dialogue: {Note} I wish I…uh? {Pause 10}{Key}",
+   "text": "♪ ليتني… هاه؟ {Pause 10}{Key}"
+  },
+  {
+   "id": "opera.1215",
+   "context": "Message 1215 of the dialogue: {Note} Must I forget you? {Pause 0A}{line}   Our solemn promise? {Pause 0B}{Key}{line}   Will autumn {Pause 09}take the place{line}   of spring? {Pause 10}{Key}{page}{Note} What shall I do? {Pause 0A}{line}   I'm lost without you. {Pause 0C}{Key}{line}   Speak {Pause 06}to me {Pause 03}once more! {Note} {Pause 10}{Key}",
+   "text": "♪ أعلي أن أنساك؟ {Pause 0A}{line}وعهدنا المقدس؟ {Pause 0B}{Key}{line}أيحل الخريف {Pause 09}محل{line}الربيع؟ {Pause 10}{Key}\n♪ ماذا أفعل؟ {Pause 0A}{line}أنا ضائعة من دونك. {Pause 0C}{Key}{line}كلمني {Pause 06}مرة {Pause 03}أخرى! ♪ {Pause 10}{Key}"
+  },
+  {
+   "id": "opera.1216",
+   "context": "Message 1216 of the dialogue: {Note} Prince Ralse…yeah, so?{line}   I hate him! {Wait}Everyone does. {Pause 10}{Key}",
+   "text": "♪ الأمير رالس… نعم، وماذا؟{line}أكرهه! {Wait}الجميع يكرهونه. {Pause 10}{Key}"
+  },
+  {
+   "id": "opera.1217",
+   "context": "Message 1217 of the dialogue: Uhnn…not in time…{line}We messed up.",
+   "text": "أنه… لم نلحق…{line}أخفقنا."
+  },
+  {
+   "id": "opera.1218",
+   "context": "Message 1218 of the dialogue: {Note} We must part now. {Pause 0A}{line}   My life goes on. {Pause 0C}{Key}{line}   But my heart {Pause 08}won't give{line}   you up. {Pause 11}{Key}{page}{Note} Ere I walk away, {Pause 0A}{line}   let me hear you say. {Pause 0C}{Key}{line}   I meant as much to you… {Note} {Pause 13}{Key}",
+   "text": "♪ علينا أن نفترق الآن. {Pause 0A}{line}حياتي تمضي. {Pause 0C}{Key}{line}لكن قلبي {Pause 08}لن يتخلى{line}عنك. {Pause 11}{Key}\n♪ قبل أن أمضي، {Pause 0A}{line}دعني أسمعك تقول {Pause 0C}{Key}{line}إنني كنت أعني لك الكثير… ♪ {Pause 13}{Key}"
+  },
+  {
+   "id": "opera.1219",
+   "context": "Message 1219 of the dialogue: {Note} So gently, {Pause 0A}{line}   you touched my heart. {Pause 0B}{Key}{line}   I will be {Pause 09}forever {Pause 06}yours. {Pause 0A}{Key}{page}{Note} Come what may, {Pause 0C}{line}   I won't age a day, {Pause 0C}{Key}{line}   I'll wait {Pause 07}for you, {Pause 04}always… {Note} {Pause 0C}{Key}",
+   "text": "♪ بكل رقة، {Pause 0A}{line}لمست قلبي. {Pause 0B}{Key}{line}سأكون {Pause 09}لك {Pause 06}إلى الأبد. {Pause 0A}{Key}\n♪ مهما يحدث، {Pause 0C}{line}لن أكبر يوما، {Pause 0C}{Key}{line}سأنتظرك {Pause 07}أنت، {Pause 04}دائما… ♪ {Pause 0C}{Key}"
+  },
+  {
+   "id": "opera.1220",
+   "context": "Message 1220 of the dialogue: DRACO: Come, Maria!{line}Follow my lead…",
+   "text": "دراكو: تعالي يا ماريا!{line}اتبعي خطواتي…"
+  },
+  {
+   "id": "opera.1221",
+   "context": "Message 1221 of the dialogue: DRACO: Ha, ha, ha…",
+   "text": "دراكو: ها، ها، ها…"
+  },
+  {
+   "id": "opera.1222",
+   "context": "Message 1222 of the dialogue: CHANCELLOR: Prince Ralse is looking for a dance partner. {Pause 10}{Key}{page}Leave the past behind!{line}Our kingdom is adopting the spirit of the East…! {Pause 10}{Key}",
+   "text": "المستشار: الأمير رالس يبحث عن شريكة للرقص. {Pause 10}{Key}\nاتركي الماضي وراءك!{line}مملكتنا تتبنى روح الشرق…! {Pause 10}{Key}"
+  },
+  {
+   "id": "opera.1223",
+   "context": "Message 1223 of the dialogue: {Locke}: Well done, {Celes}.",
+   "text": "{Locke}: أحسنت يا {Celes}."
+  },
+  {
+   "id": "opera.1224",
+   "context": "Message 1224 of the dialogue: I owe you one, so I'm gonna jam up your opera!{line}{Spaces 15}Ultros",
+   "text": "أنا مدين لكم، لذا سأخرب أوبراكم!{line}أولتروس"
+  },
+  {
+   "id": "opera.1225",
+   "context": "Message 1225 of the dialogue: {Locke}: Uh oh…{line}Better tell the Impresario!",
+   "text": "{Locke}: أوه لا…{line}من الأفضل أن أخبر مدير المسرح!"
+  },
+  {
+   "id": "opera.1226",
+   "context": "Message 1226 of the dialogue: {Locke}: Again!",
+   "text": "{Locke}: مجددا!"
+  },
+  {
+   "id": "opera.1227",
+   "context": "Message 1227 of the dialogue: IMPRESARIO: What!!!?",
+   "text": "مدير المسرح: ماذا!!!؟"
+  },
+  {
+   "id": "opera.1228",
+   "context": "Message 1228 of the dialogue: “The survivors of the West attack!”{line}RALSE: Impossible! {Pause 0C}{Key}",
+   "text": "«الناجون من الغرب يهاجمون!»{line}رالس: مستحيل! {Pause 0C}{Key}"
+  },
+  {
+   "id": "opera.1229",
+   "context": "Message 1229 of the dialogue: {Spaces 07}Attack!! {Pause 0C}{Key}",
+   "text": "{center}هجوم!! {Pause 0C}{Key}"
+  },
+  {
+   "id": "opera.1230",
+   "context": "Message 1230 of the dialogue: {Spaces 07}Wait!! {Pause 08}{Key}",
+   "text": "{center}انتظروا!! {Pause 08}{Key}"
+  },
+  {
+   "id": "opera.1231",
+   "context": "Message 1231 of the dialogue: {Note} Maria {Pause 12}{Key}",
+   "text": "♪ ماريا {Pause 12}{Key}"
+  },
+  {
+   "id": "opera.1232",
+   "context": "Message 1232 of the dialogue: {Note} Draco, {Pause 0C}{Key}{line}   I've waited so long. {Pause 0C}{Key}{line}   I knew you'd come. {Note} {Pause 10}{Key}",
+   "text": "♪ دراكو، {Pause 0C}{Key}{line}انتظرت طويلا. {Pause 0C}{Key}{line}عرفت أنك ستأتي. ♪ {Pause 10}{Key}"
+  },
+  {
+   "id": "opera.1233",
+   "context": "Message 1233 of the dialogue: {Note} Maria {Pause 06}{Key}will finally {Pause 07}{Key}{line}   have to {Pause 07}{Key}become my queen! {Note} {Pause 09}{Key}",
+   "text": "♪ ماريا {Pause 06}{Key}أخيرا {Pause 07}{Key}{line}ستصبح {Pause 07}{Key}ملكتي! ♪ {Pause 09}{Key}"
+  },
+  {
+   "id": "opera.1234",
+   "context": "Message 1234 of the dialogue: {Note} For the {Pause 07}{Key}rest of my {Pause 08}{Key}life {Pause 03}{Key}{line}   I'll keep you {Pause 07}{Key}near… {Note} {Pause 08}{Key}",
+   "text": "♪ لبقية {Pause 07}{Key}حياتي {Pause 08}{Key}كلها {Pause 03}{Key}{line}سأبقيك {Pause 07}{Key}قريبة… ♪ {Pause 08}{Key}"
+  },
+  {
+   "id": "opera.1235",
+   "context": "Message 1235 of the dialogue:   It's a duel! {Note} {Pause 08}{Key}",
+   "text": "إنها مبارزة! ♪ {Pause 08}{Key}"
+  },
+  {
+   "id": "opera.1236",
+   "context": "Message 1236 of the dialogue: {Locke}: Impresario, what's up above the stage?",
+   "text": "{Locke}: أيها المدير، ماذا يوجد فوق المسرح؟"
+  },
+  {
+   "id": "opera.1237",
+   "context": "Message 1237 of the dialogue: IMPRESARIO: But how might he disrupt the opera?{page}…With that?!",
+   "text": "مدير المسرح: لكن كيف له أن يعطل الأوبرا؟\n…بذلك؟!"
+  },
+  {
+   "id": "opera.1238",
+   "context": "Message 1238 of the dialogue: {Locke}: That has to be a joke!",
+   "text": "{Locke}: لا بد أنها مزحة!"
+  },
+  {
+   "id": "opera.1239",
+   "context": "Message 1239 of the dialogue: ULTROS: Mwa ha ha!{line}Let's see if Maria can shrug THIS off!",
+   "text": "أولتروس: موا ها ها!{line}لنر إن كانت ماريا تستطيع تجاهل هذا!"
+  },
+  {
+   "id": "opera.1240",
+   "context": "Message 1240 of the dialogue: {Locke}: We haven't a second to lose!{page}IMPRESARIO: Talk to the man in the room to the far right!{line}He'll help you get up there!{page}{Locke}: It's as good as done!",
+   "text": "{Locke}: ليس لدينا ثانية نضيعها!\nمدير المسرح: كلم الرجل في الغرفة في أقصى اليمين!{line}سيساعدك على الصعود إلى هناك!\n{Locke}: اعتبره منتهيا!"
+  },
+  {
+   "id": "opera.1241",
+   "context": "Message 1241 of the dialogue: ULTROS: N'ghaaa!{line}This is heavier than I thought! It'll take me 5 minutes to drop it!",
+   "text": "أولتروس: نغهااا!{line}هذا أثقل مما ظننت! سيلزمني 5 دقائق لإسقاطه!"
+  },
+  {
+   "id": "opera.1242",
+   "context": "Message 1242 of the dialogue: ULTROS: N'ghooo!{line}And it only weighs 4 tons…!",
+   "text": "أولتروس: نغهووو!{line}ووزنه 4 أطنان فقط…!"
+  },
+  {
+   "id": "opera.1243",
+   "context": "Message 1243 of the dialogue: ULTROS: Phew! Rats!",
+   "text": "أولتروس: أوف! تبا!"
+  },
+  {
+   "id": "opera.1244",
+   "context": "Message 1244 of the dialogue: IMPRESARIO: Disaster!{line}If the two heroes are flattened, the opera's over! Then who'll win the girl?!",
+   "text": "مدير المسرح: كارثة!{line}إن سحق البطلان، انتهت الأوبرا! فمن سيفوز بالفتاة إذن؟!"
+  },
+  {
+   "id": "opera.1245",
+   "context": "Message 1245 of the dialogue: {Locke}: Neither Draco nor Ralse will save {Celes}!",
+   "text": "{Locke}: لا دراكو ولا رالس سينقذ {Celes}!"
+  },
+  {
+   "id": "opera.1246",
+   "context": "Message 1246 of the dialogue: {Locke}: I, {Locke}, the world's premier adventurer, will save her!",
+   "text": "{Locke}: أنا، {Locke}، أعظم مغامر في العالم، سأنقذها!"
+  },
+  {
+   "id": "opera.1247",
+   "context": "Message 1247 of the dialogue: IMPRESARIO: Aya…{line}What awful acting!",
+   "text": "مدير المسرح: آيا…{line}يا له من تمثيل فظيع!"
+  },
+  {
+   "id": "opera.1248",
+   "context": "Message 1248 of the dialogue: ULTROS: Silence! You are in the presence of octopus royalty! A lowborn thug like you could never defeat me!",
+   "text": "أولتروس: صمتا! أنت في حضرة ملوك الأخطبوط! سفاح وضيع مثلك لن يهزمني أبدا!"
+  },
+  {
+   "id": "opera.1249",
+   "context": "Message 1249 of the dialogue: IMPRESARIO: Hmm…{line}Might as well make the most of this. MUSIC!!",
+   "text": "مدير المسرح: همم…{line}لنستفد من هذا إلى أقصى حد. موسيقى!!"
+  },
+  {
+   "id": "opera.1250",
+   "context": "Message 1250 of the dialogue: Just a darn minute!",
+   "text": "لحظة واحدة!"
+  },
+  {
+   "id": "opera.1251",
+   "context": "Message 1251 of the dialogue: What a performance!!",
+   "text": "يا له من عرض!!"
+  },
+  {
+   "id": "opera.1252",
+   "context": "Message 1252 of the dialogue: IMPRESARIO: {Setzer}!{line}{Setzer}: I'm a man of my word, music man!",
+   "text": "مدير المسرح: {Setzer}!{line}{Setzer}: أنا رجل يفي بكلمته، يا رجل الموسيقى!"
+  },
+  {
+   "id": "opera.1253",
+   "context": "Message 1253 of the dialogue: {Celes}: That's HIM…?!",
+   "text": "{Celes}: أهذا هو…؟!"
+  },
+  {
+   "id": "opera.1254",
+   "context": "Message 1254 of the dialogue: IMPRESARIO: What a reversal!{line}Thinking she's {Locke}'s new queen, Maria is instead nabbed by {Setzer}!{page}What fate lies in store for her? Stay tuned for Part 2!",
+   "text": "مدير المسرح: يا لها من مفاجأة!{line}ظنا منه أنها ملكة {Locke} الجديدة، يخطف {Setzer} ماريا بدلا من ذلك!\nأي مصير ينتظرها؟ ترقبوا الجزء الثاني!"
+  },
+  {
+   "id": "opera.1255",
+   "context": "Message 1255 of the dialogue: IMPRESARIO: Sorry,{line}but yesterday's performance was awful! I'll give you just 3 more chances!",
+   "text": "مدير المسرح: آسف،{line}لكن عرض الأمس كان فظيعا! سأمنحك 3 فرص أخرى فقط!"
+  },
+  {
+   "id": "opera.1256",
+   "context": "Message 1256 of the dialogue: IMPRESARIO: You have 2 more chances.",
+   "text": "مدير المسرح: بقيت لك فرصتان."
+  },
+  {
+   "id": "opera.1257",
+   "context": "Message 1257 of the dialogue: IMPRESARIO: You have 1 more chance.",
+   "text": "مدير المسرح: بقيت لك فرصة واحدة."
+  },
+  {
+   "id": "opera.1258",
+   "context": "Message 1258 of the dialogue: IMPRESARIO: We're all in this together!",
+   "text": "مدير المسرح: كلنا في هذا معا!"
+  },
+  {
+   "id": "opera.1259",
+   "context": "Message 1259 of the dialogue: You don't have enough acting ability to convince your own mama!",
+   "text": "ليس لديك من موهبة التمثيل ما يقنع أمك حتى!"
+  },
+  {
+   "id": "opera.1260",
+   "context": "Message 1260 of the dialogue: STAGE MASTER: Off limits!{line}Please turn around.",
+   "text": "مدير الخشبة: ممنوع الدخول!{line}استدر من فضلك."
+  },
+  {
+   "id": "opera.1261",
+   "context": "Message 1261 of the dialogue: STAGE MASTER: The Impresario asked me to have you press the far right switch.",
+   "text": "مدير الخشبة: طلب مني مدير المسرح أن أجعلك تضغط المفتاح في أقصى اليمين."
+  },
+  {
+   "id": "opera.1262",
+   "context": "Message 1262 of the dialogue: STAGE MASTER: Don't press the wrong switch, or…",
+   "text": "مدير الخشبة: لا تضغط المفتاح الخطأ، وإلا…"
+  },
+  {
+   "id": "opera.1263",
+   "context": "Message 1263 of the dialogue: STAGE MASTER: Enter the room to the far left of the stage, then make for the framework above the stage.",
+   "text": "مدير الخشبة: ادخل الغرفة في أقصى يسار المسرح، ثم اتجه إلى الهيكل فوق المسرح."
+  },
+  {
+   "id": "opera.1264",
+   "context": "Message 1264 of the dialogue: ULTROS: N'ghaa, ha, ha!{line}Whooooopie!!",
+   "text": "أولتروس: نغهاا، ها، ها!{line}هووووبي!!"
+  },
+  {
+   "id": "opera.1265",
+   "context": "Message 1265 of the dialogue: {Setzer}: I'll deal with you in a minute!",
+   "text": "{Setzer}: سأتعامل معك بعد قليل!"
+  },
+  {
+   "id": "opera.1266",
+   "context": "Message 1266 of the dialogue: {Locke}: What a performance!{line}{Celes}: Enough already!",
+   "text": "{Locke}: يا له من عرض!{line}{Celes}: كفى!"
+  },
+  {
+   "id": "opera.1267",
+   "context": "Message 1267 of the dialogue: {Locke}: But this is the tough one! Part 2 begins now!",
+   "text": "{Locke}: لكن هذا هو الجزء الصعب! الجزء الثاني يبدأ الآن!"
+  },
+  {
+   "id": "opera.1268",
+   "context": "Message 1268 of the dialogue: {Locke}: …{line}Where's {Setzer}?",
+   "text": "{Locke}: …{line}أين {Setzer}؟"
+  },
+  {
+   "id": "opera.1269",
+   "context": "Message 1269 of the dialogue: {Celes}: He's coming.",
+   "text": "{Celes}: إنه قادم."
+  },
+  {
+   "id": "airship.1270",
+   "context": "Message 1270 of the dialogue: {Setzer}: W…who're YOU?{line}You're not Maria!",
+   "text": "{Setzer}: م… من أنت؟{line}لست ماريا!"
+  },
+  {
+   "id": "airship.1271",
+   "context": "Message 1271 of the dialogue: {Celes}: {Setzer}, we need your help. We have to go to Vector. We need this ship to get there.",
+   "text": "{Celes}: {Setzer}، نحتاج إلى مساعدتك. علينا الذهاب إلى فيكتور. ونحتاج إلى هذه السفينة لنصل إلى هناك."
+  },
+  {
+   "id": "airship.1272",
+   "context": "Message 1272 of the dialogue: {Setzer}: Look, if you're not Maria, I don't want you aboard.",
+   "text": "{Setzer}: اسمعي، إن لم تكوني ماريا، فلا أريدك على متن السفينة."
+  },
+  {
+   "id": "airship.1273",
+   "context": "Message 1273 of the dialogue: {Celes}: Wait! {Wait}{line}We were told your ship is the finest vessel in the world.",
+   "text": "{Celes}: انتظر! {Wait}{line}قيل لنا إن سفينتك أفضل مركبة في العالم."
+  },
+  {
+   "id": "airship.1274",
+   "context": "Message 1274 of the dialogue: {Locke}: And that you were the world's most notorious gambler…",
+   "text": "{Locke}: وإنك أشهر مقامر في العالم…"
+  },
+  {
+   "id": "airship.1275",
+   "context": "Message 1275 of the dialogue: {Edgar}: I'm the King of Figaro. If you cooperate, you'll be well rewarded…",
+   "text": "{Edgar}: أنا ملك فيغارو. إن تعاونت، فستكافأ جيدا…"
+  },
+  {
+   "id": "airship.1276",
+   "context": "Message 1276 of the dialogue: {Sabin}: My brother's the King of Figaro. Cooperate, and you'll be well rewarded!",
+   "text": "{Sabin}: أخي ملك فيغارو. تعاون، وستكافأ جيدا!"
+  },
+  {
+   "id": "airship.1277",
+   "context": "Message 1277 of the dialogue: {Cyan}: I'm one of Doma's Knights. Please, help us.",
+   "text": "{Cyan}: أنا أحد فرسان دوما. أرجوك، ساعدنا."
+  },
+  {
+   "id": "airship.1278",
+   "context": "Message 1278 of the dialogue: {Setzer}: Come here.",
+   "text": "{Setzer}: تعالوا هنا."
+  },
+  {
+   "id": "airship.1279",
+   "context": "Message 1279 of the dialogue: {Celes}: Yeah… {Wait}{page}{Setzer}: Don't misunderstand me. I'm still not sure if I'm going to help you.",
+   "text": "{Celes}: نعم… {Wait}\n{Setzer}: لا تسيئوا فهمي. ما زلت غير متأكد إن كنت سأساعدكم."
+  },
+  {
+   "id": "airship.1280",
+   "context": "Message 1280 of the dialogue: {Setzer}: Phew…{line}The Empire's made me a rich man.",
+   "text": "{Setzer}: أوف…{line}الإمبراطورية جعلتني رجلا ثريا."
+  },
+  {
+   "id": "airship.1281",
+   "context": "Message 1281 of the dialogue: {Celes}: Stop thinking of yourself. Many towns and villages have been smashed by the Empire.",
+   "text": "{Celes}: كف عن التفكير في نفسك. بلدات وقرى كثيرة سحقتها الإمبراطورية."
+  },
+  {
+   "id": "airship.1282",
+   "context": "Message 1282 of the dialogue: {Locke}: The Empire's also totally rotten! It's using magic to enslave the world.",
+   "text": "{Locke}: والإمبراطورية فاسدة تماما أيضا! إنها تستعمل السحر لاستعباد العالم."
+  },
+  {
+   "id": "airship.1283",
+   "context": "Message 1283 of the dialogue: {Edgar}: The Empire and my realm were allies…{line}until recently.",
+   "text": "{Edgar}: كانت الإمبراطورية ومملكتي حليفتين…{line}حتى وقت قريب."
+  },
+  {
+   "id": "airship.1284",
+   "context": "Message 1284 of the dialogue: {Sabin}: The Empire'll end up owning you!",
+   "text": "{Sabin}: الإمبراطورية ستملكك في النهاية!"
+  },
+  {
+   "id": "airship.1285",
+   "context": "Message 1285 of the dialogue: {Cyan}: …I lost my friends…{line}and my family.",
+   "text": "{Cyan}: …فقدت أصدقائي…{line}وعائلتي."
+  },
+  {
+   "id": "airship.1286",
+   "context": "Message 1286 of the dialogue: {Setzer}: The Empire {Wait}…evil…?",
+   "text": "{Setzer}: الإمبراطورية {Wait}…شريرة…؟"
+  },
+  {
+   "id": "airship.1287",
+   "context": "Message 1287 of the dialogue: {Celes}: We all hate the Empire for the same reasons. That's why…{page}{Setzer}: You know…you're even more stunning than Maria.{line}{Celes}: ????",
+   "text": "{Celes}: كلنا نكره الإمبراطورية للأسباب نفسها. لهذا…\n{Setzer}: أتعلمين… أنت أكثر فتنة من ماريا حتى.{line}{Celes}: ؟؟؟؟"
+  },
+  {
+   "id": "airship.1288",
+   "context": "Message 1288 of the dialogue: {Setzer}: Enough!{page}If you…{line}If {Celes} becomes my wife, I'll help. Otherwise…",
+   "text": "{Setzer}: كفى!\nإن…{line}إن صارت {Celes} زوجتي، فسأساعد. وإلا…"
+  },
+  {
+   "id": "airship.1289",
+   "context": "Message 1289 of the dialogue: {Locke}: WHAT!{line}Are you stupid!?",
+   "text": "{Locke}: ماذا!{line}أأنت غبي!؟"
+  },
+  {
+   "id": "airship.1290",
+   "context": "Message 1290 of the dialogue: {Celes}: We haven't any choice.",
+   "text": "{Celes}: لا خيار لنا."
+  },
+  {
+   "id": "airship.1291",
+   "context": "Message 1291 of the dialogue: {Setzer}: Yes! It's settled!",
+   "text": "{Setzer}: نعم! تم الاتفاق!"
+  },
+  {
+   "id": "airship.1292",
+   "context": "Message 1292 of the dialogue: {Celes}: But I have conditions…",
+   "text": "{Celes}: لكن لي شروط…"
+  },
+  {
+   "id": "airship.1293",
+   "context": "Message 1293 of the dialogue: We'll decide with a coin toss.{page}If it's heads, you'll help us. If it's tails, I'll go with you.{line}Well, Mr. Gambler…?",
+   "text": "سنحسم الأمر برمية عملة.\nإن كانت صورة، فستساعدنا. وإن كانت كتابة، فسأذهب معك.{line}حسنا، سيد المقامر…؟"
+  },
+  {
+   "id": "airship.1294",
+   "context": "Message 1294 of the dialogue: {Setzer}: Oho! Fine!{line}I accept!",
+   "text": "{Setzer}: أوهو! حسنا!{line}أقبل!"
+  },
+  {
+   "id": "airship.1295",
+   "context": "Message 1295 of the dialogue: {Locke}: Listen to yourself!{line}{Celes}…you can't become his wife! You just can't!",
+   "text": "{Locke}: اسمعي ما تقولين!{line}{Celes}… لا يمكنك أن تصبحي زوجته! لا يمكنك!"
+  },
+  {
+   "id": "airship.1296",
+   "context": "Message 1296 of the dialogue: {Cyan}: That man uses people…",
+   "text": "{Cyan}: ذلك الرجل يستغل الناس…"
+  },
+  {
+   "id": "airship.1297",
+   "context": "Message 1297 of the dialogue: {Celes}: Ready?",
+   "text": "{Celes}: مستعد؟"
+  },
+  {
+   "id": "airship.1298",
+   "context": "Message 1298 of the dialogue: {Celes}: I win!{line}Now, honor your part of the bargain!",
+   "text": "{Celes}: فزت!{line}والآن، أوف بجزئك من الاتفاق!"
+  },
+  {
+   "id": "airship.1299",
+   "context": "Message 1299 of the dialogue: {Setzer}: How…unusual!{line}A coin with identical sides…!",
+   "text": "{Setzer}: يا… للغرابة!{line}عملة بوجهين متطابقين…!"
+  },
+  {
+   "id": "airship.1300",
+   "context": "Message 1300 of the dialogue: {Celes}: I think you've been hustled, Mr. Gambler.",
+   "text": "{Celes}: أظن أنك خدعت، سيد المقامر."
+  },
+  {
+   "id": "airship.1301",
+   "context": "Message 1301 of the dialogue: {Setzer}: Ha!{line}How low can you get?!{line}I love it!{page}All right, I'll help you.{line}Nothing to lose but my life…",
+   "text": "{Setzer}: ها!{line}إلى أي حد يمكنك أن تنحطي؟!{line}أعشق هذا!\nحسنا، سأساعدكم.{line}لا شيء أخسره سوى حياتي…"
+  },
+  {
+   "id": "airship.1302",
+   "context": "Message 1302 of the dialogue: My life is a chip in your pile! Ante up!",
+   "text": "حياتي رقاقة في كومتكم! ارفعوا الرهان!"
+  },
+  {
+   "id": "airship.1303",
+   "context": "Message 1303 of the dialogue: G'ho! Customers!{line}Need any refreshment?{line}{Choice} Yes{line}{Choice} No",
+   "text": "غهو! زبائن!{line}تحتاجون إلى مرطبات؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "airship.1304",
+   "context": "Message 1304 of the dialogue: {line}    Locked…",
+   "text": "{center}{line}مقفل…"
+  },
+  {
+   "id": "airship.1305",
+   "context": "Message 1305 of the dialogue: {line}Can't open or shut during flight",
+   "text": "{line}لا يفتح ولا يغلق أثناء الطيران"
+  },
+  {
+   "id": "airship.1306",
+   "context": "Message 1306 of the dialogue: {Sabin}: That coin…!? {Wait}{line}BIG BROTHER!!! Don't tell me…!",
+   "text": "{Sabin}: تلك العملة…!؟ {Wait}{line}أخي الأكبر!!! لا تقل لي…!"
+  },
+  {
+   "id": "airship.1307",
+   "context": "Message 1307 of the dialogue: {Locke}: This unwieldy-looking ship really moves! Could it crash?",
+   "text": "{Locke}: هذه السفينة التي تبدو ثقيلة تتحرك حقا! أيمكن أن تتحطم؟"
+  },
+  {
+   "id": "airship.1308",
+   "context": "Message 1308 of the dialogue: {Setzer}: When things fall, they fall! {Wait}It's all a matter of fate…",
+   "text": "{Setzer}: حين تسقط الأشياء، فإنها تسقط! {Wait}كله مسألة قدر…"
+  },
+  {
+   "id": "airship.1309",
+   "context": "Message 1309 of the dialogue: {Locke}: This ship's going to stick out like a sore thumb. Better land some distance away.{page}{Setzer}: Right.{line}I'll wait on board in case of an emergency.",
+   "text": "{Locke}: هذه السفينة ستلفت الأنظار كلها. من الأفضل أن نهبط على مسافة.\n{Setzer}: صحيح.{line}سأنتظر على المتن تحسبا لأي طارئ."
+  },
+  {
+   "id": "airship.1310",
+   "context": "Message 1310 of the dialogue: {Setzer}: What's going on?{line}The Empire's becoming paranoid!",
+   "text": "{Setzer}: ماذا يجري؟{line}الإمبراطورية صارت مرتابة!"
+  },
+  {
+   "id": "airship.1311",
+   "context": "Message 1311 of the dialogue: {Setzer}: I'll have to repair the air ship. Go scout around and let me know what's happening.",
+   "text": "{Setzer}: علي أن أصلح السفينة الطائرة. اذهبوا واستطلعوا الأمر وأخبروني بما يحدث."
+  },
+  {
+   "id": "airship.1312",
+   "context": "Message 1312 of the dialogue: {Setzer}: Repairs aren't finished yet. You'd better take the boat from Albrook.",
+   "text": "{Setzer}: لم تنته الإصلاحات بعد. من الأفضل أن تأخذوا السفينة من ألبروك."
+  },
+  {
+   "id": "airship.1313",
+   "context": "Message 1313 of the dialogue: {Setzer}: By all means! {Wait}{line}Take a turn at the wheel!",
+   "text": "{Setzer}: بكل تأكيد! {Wait}{line}خذ دورك عند الدفة!"
+  },
+  {
+   "id": "airship.1314",
+   "context": "Message 1314 of the dialogue: Operating instructions:",
+   "text": "تعليمات التشغيل:"
+  },
+  {
+   "id": "airship.1315",
+   "context": "Message 1315 of the dialogue: Control Pad:{line}L/R = direction{line}Up/down = Altitude{page}Press the A Button to move forward. Press the X Button to go amidships. There you can change your party,{page}or purchase items.{line}Press the B Button to land.{line}Press the A Button to lift off.",
+   "text": "لوحة التحكم:{line}يسار ويمين: الاتجاه{line}أعلى وأسفل: الارتفاع\nاضغط زر إيه للتقدم. اضغط زر إكس للذهاب إلى وسط السفينة. هناك يمكنك تغيير فريقك،\nأو شراء الأدوات.{line}اضغط زر بي للهبوط.{line}اضغط زر إيه للإقلاع."
+  },
+  {
+   "id": "airship.1316",
+   "context": "Message 1316 of the dialogue: All right?{line}{Choice} Yes{line}{Choice} No",
+   "text": "حسنا؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "airship.1317",
+   "context": "Message 1317 of the dialogue: Shall I teach you a technique, too?{line}{Choice} Yes{line}{Choice} No",
+   "text": "أأعلمك تقنية أيضا؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "airship.1318",
+   "context": "Message 1318 of the dialogue: Press the Start Button to view the world map.{page}Hold the Y Button down and use the Control Pad to move in all directions.{page}Use the L and R Buttons with the Control Pad for high speed turns.",
+   "text": "اضغط زر ستارت لعرض خريطة العالم.\nاضغط زر واي مع الاستمرار واستعمل لوحة التحكم للتحرك في كل الاتجاهات.\nاستعمل زري إل وآر مع لوحة التحكم للانعطاف بسرعة عالية."
+  },
+  {
+   "id": "airship.1319",
+   "context": "Message 1319 of the dialogue: {Choice} (Find the Floating Continent){line}{Choice} (Lift-off){line}{Choice} (Not just yet)",
+   "text": "{Choice} (نبحث عن القارة الطائرة){line}{Choice} (نقلع){line}{Choice} (ليس بعد)"
+  },
+  {
+   "id": "airship.1320",
+   "context": "Message 1320 of the dialogue: Change party members?{line}{Choice} No{line}{Choice} Yes",
+   "text": "تغير أعضاء الفريق؟{line}{Choice} لا{line}{Choice} نعم"
+  },
+  {
+   "id": "airship.1321",
+   "context": "Message 1321 of the dialogue: {line}   Only 3 members, please.",
+   "text": "{line}ثلاثة أعضاء فقط، رجاء."
+  },
+  {
+   "id": "airship.1322",
+   "context": "Message 1322 of the dialogue: {Choice}(Lift-off){line}{Choice}(Not just yet)",
+   "text": "{Choice} (نقلع){line}{Choice} (ليس بعد)"
+  },
+  {
+   "id": "airship.1323",
+   "context": "Message 1323 of the dialogue: {Locke}: Let's not overstay our visit. We're outta here on the double!",
+   "text": "{Locke}: لا نطل الزيارة. لنخرج من هنا بسرعة!"
+  },
+  {
+   "id": "airship.1324",
+   "context": "Message 1324 of the dialogue: {Setzer}: Right. {Wait}{line}Speaking of which…{line}Maybe we should be leaving.",
+   "text": "{Setzer}: صحيح. {Wait}{line}وبالحديث عن ذلك…{line}ربما علينا أن نرحل."
+  },
+  {
+   "id": "airship.1325",
+   "context": "Message 1325 of the dialogue: {Cyan}: Whoa!{line}What IS that?!",
+   "text": "{Cyan}: مهلا!{line}ما هذا؟!"
+  },
+  {
+   "id": "airship.1326",
+   "context": "Message 1326 of the dialogue: {Edgar}: Something horrible's coming!!",
+   "text": "{Edgar}: شيء مروع قادم!!"
+  },
+  {
+   "id": "airship.1327",
+   "context": "Message 1327 of the dialogue: {Sabin}: Uwaaoo!{line}What in the…?",
+   "text": "{Sabin}: أوااو!{line}ما هذا بحق…؟"
+  },
+  {
+   "id": "airship.1328",
+   "context": "Message 1328 of the dialogue: {Gau}: Gau!{line}{Gau} go!!",
+   "text": "{Gau}: غاو!{line}{Gau} يذهب!!"
+  },
+  {
+   "id": "airship.1329",
+   "context": "Message 1329 of the dialogue: Ugly brute…{line}Better make tracks!",
+   "text": "وحش قبيح…{line}من الأفضل أن نهرب!"
   }
  ]
 }
