@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "target": "link-to-the-past",
+  "language": "ar",
+  "notation": "Logical Arabic in the engine notation (engines.alttp_arabic): a line for each page of the message, {line} where a line must end; the encoder breaks the other lines itself, a page holding three lines, and the game waits for the button between pages. {Name} writes the player's name as the player gave it, in Latin letters; a line counts 42 pixels for it. {Window 02}, {Speed 03}, {Wait 01}, {Sound 2D}, {Color 02} and {Number 00} pass to the game as the English has them. A message holds Arabic letters, spaces, Western or Arabic-Indic digits and the punctuation . , : ! - … ، ؛ ؟ only. No vowel marks: the font has none.",
+  "glossary": [
+    {
+      "term": "Zelda",
+      "text": "زيلدا"
+    },
+    {
+      "term": "Agahnim",
+      "text": "أغانيم"
+    },
+    {
+      "term": "Lamp",
+      "text": "المصباح"
+    }
+  ],
+  "entries": [
+    {
+      "id": "house.uncle",
+      "context": "Link's uncle, leaving the house at night: he will be back by morning, and Link must stay in ({Name} is the player's name)",
+      "text": "{Name}، سأخرج لبعض الوقت.{line}سأعود في الصباح.{line}لا تغادر البيت."
+    },
+    {
+      "id": "house.zelda_calls",
+      "context": "Zelda calls to Link in his sleep, in the window without a frame, slowly: she is a prisoner in the castle's dungeon, the wizard has taken the other girls and seized the castle to break the seal of the seven wise men",
+      "text": "{Window 02}{Speed 03}ساعدني…{Wait 01}{line}{line}أرجوك ساعدني…\nأنا سجينة في زنزانة القلعة.{line}اسمي زيلدا.\nلقد فعل الساحر أغانيم شيئا بالفتيات المفقودات، ولم يبق غيري…\nاستولى أغانيم على القلعة، وهو يحاول الآن فتح ختم الحكماء السبعة…\nأنا في زنزانة القلعة.\nأرجوك ساعدني…"
+    },
+    {
+      "id": "house.lamp",
+      "context": "The chest in Link's house: he gets the lamp, which lights torches and shows the way in the dark",
+      "text": "حصلت على المصباح!{line}يمكنك الآن إشعال المشاعل{line}ورؤية طريقك في الظلام."
+    }
+  ]
+}

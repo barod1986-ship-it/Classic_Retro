@@ -94,7 +94,7 @@ class _EntryPoint:
         return self._loaded
 
 
-def test_the_nineteen_reference_targets_keep_their_order_and_strategies():
+def test_the_twenty_reference_targets_keep_their_order_and_strategies():
     registry = build_target_registry(load_external=False)
     described = {target.id: target for target in registry}
     assert list(described) == [
@@ -117,6 +117,7 @@ def test_the_nineteen_reference_targets_keep_their_order_and_strategies():
         "gran-turismo",
         "ridge-racer",
         "chrono-trigger",
+        "link-to-the-past",
     ]
     assert registry.using("line-cells") == ["mmbn", "fomt"]
     assert registry.using("text-images") == ["fire-emblem"]
@@ -184,6 +185,17 @@ def test_the_nineteen_reference_targets_keep_their_order_and_strategies():
     ]
     assert chrono_trigger.strategies == ("glyph-font",)
     assert len(chrono_trigger.reference_patch_sha256 or "") == 64
+    # The second Super NES target: it adds a MiB to the ROM for its font and messages.
+    link_to_the_past = described["link-to-the-past"]
+    assert (link_to_the_past.kind, link_to_the_past.platform_id) == ("rom-overlay", "snes")
+    assert link_to_the_past.operations() == [
+        "check-hooks",
+        "check-translations",
+        "build",
+        "extract",
+    ]
+    assert link_to_the_past.strategies == ("glyph-font",)
+    assert len(link_to_the_past.reference_patch_sha256 or "") == 64
     adapters = build_registry(load_external=False)
     for target in registry:
         assert (REPO / target.guide).is_file(), target.guide
@@ -535,6 +547,7 @@ def test_game_groups_hold_only_their_engine_tools(capsys):
         "gran-turismo",
         "ridge-racer",
         "chrono-trigger",
+        "link-to-the-past",
     ):
         tools = ["encode-arabic", "source-check"] if group in sources else ["encode-arabic"]
         assert sorted(_subcommands(groups[group])) == tools, group
@@ -547,7 +560,7 @@ def test_game_groups_hold_only_their_engine_tools(capsys):
 
     assert main(["targets", "list"]) == 0
     listed = json.loads(capsys.readouterr().out)
-    assert [target["id"] for target in listed][-1] == "chrono-trigger"
+    assert [target["id"] for target in listed][-1] == "link-to-the-past"
     assert main(["targets", "check-hooks", "not-a-target"]) == 2
     assert capsys.readouterr().err.startswith("INVALID_REFERENCE: Unknown localization target")
 
@@ -575,4 +588,4 @@ def test_every_rom_overlay_builds_from_a_revision_detect_knows():
         assert images.items() <= revisions.items(), target.id
         assert set(target.reference_patches) <= set(images), target.id
         checked.append(target.id)
-    assert len(checked) == 17
+    assert len(checked) == 18
