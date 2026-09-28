@@ -2,7 +2,7 @@
 
 Version: 1
 
-The twenty-one reference targets put Arabic on screen with four rendering strategies.
+The twenty-two reference targets put Arabic on screen with four rendering strategies.
 They are a starting set, not a closed list. Engines on other platforms will need
 other methods, and the registry (`classic_retro.localization.strategies`) accepts
 them the same way it holds these four:
@@ -24,7 +24,7 @@ already worked.
 Used by: `firered`, `minish-cap`, `ff6a`, `golden-sun`, `fire-emblem` (dialogue),
 `pmd-red`, `mlss`, `advance-wars`, `metroid-fusion`, `tactics-ogre`, `nsmb`, `platinum`,
 `phantom-hourglass`, `gran-turismo`, `ridge-racer`, `chrono-trigger`, `link-to-the-past`,
-`shining-force-2`.
+`shining-force-2`, `final-fantasy-ii`.
 
 Every contextual form of the letters (the 133 presentation forms of
 `arabic/repertoire.py`) is drawn from the reference font into the game's own font
@@ -105,7 +105,7 @@ glyphs in right-to-left paint order, as with `glyph-font`.
 
 | Way | How | Targets |
 |-----|-----|---------|
-| Mirrored draw | The game's pen keeps advancing left to right. Only where a glyph (or cell) is drawn moves to the mirror of the pen inside the line: `draw_x = left + right - pen - width`, or column `27 - x` for 28-column cells | `minish-cap`, `ff6a`, `golden-sun`, `fire-emblem`, `pmd-red`, `mlss`, `mmbn`, `fomt`, `metroid-fusion`, `tactics-ogre`, `platinum`, `phantom-hourglass`, `chrono-trigger`, `link-to-the-past`, `shining-force-2` |
+| Mirrored draw | The game's pen keeps advancing left to right. Only where a glyph (or cell) is drawn moves to the mirror of the pen inside the line: `draw_x = left + right - pen - width`, or column `27 - x` for 28-column cells | `minish-cap`, `ff6a`, `golden-sun`, `fire-emblem`, `pmd-red`, `mlss`, `mmbn`, `fomt`, `metroid-fusion`, `tactics-ogre`, `platinum`, `phantom-hourglass`, `chrono-trigger`, `link-to-the-past`, `shining-force-2`, `final-fantasy-ii` (each row mirrored whole, with its top tiles, when a page is decoded) |
 | Mirrored tilemap | The game draws the line left to right into its tiles as usual; each tile column goes into the tilemap at its mirror inside the text area, with the hardware's horizontal flip, and the glyphs are stored flipped | `advance-wars` |
 | Reversed pen | The pen starts at the line's right edge and subtracts each advance before drawing. Newline, page clear and scroll restore the right edge | `firered`, `sotn` (a pen of the hook's own) |
 | Visual order | No change to the renderer: every line is stored reversed, its glyphs from the leftmost to the rightmost, and the game draws it left to right as it is | `nsmb` |
@@ -177,7 +177,7 @@ left edge.
 | Direction control codes the source overlay adds (`FC 19 xx` / `FC 1A`, `04 16` / `04 17`) | `firered`, `minish-cap` |
 | The first code of a message (`0x5FF`, `0x0B`, `0x1E`) | `ff6a`, `golden-sun`, `fire-emblem`, `ridge-racer` (`01` centred, `02` mirrored: no English string starts below the space) |
 | The glyph itself: a charmap flag, or a glyph of the right-to-left font | `pmd-red`, `mlss`, `metroid-fusion` (where a glyph is drawn), `platinum` (a line that holds one; a menu whose first entry does), `phantom-hourglass` (each glyph of its range), `sotn` (a code from `80`), `gran-turismo` (a word whose first glyph is `86` or above) |
-| The text's own codes or address: cell codes, a bank table sorted by text address, or the address range of the Arabic bank | `fomt`, `mmbn`, `advance-wars`, `metroid-fusion` (its cursors, arrow and fade), `tactics-ogre`, `chrono-trigger` (its text pointer's bank: a translated message is read from its Arabic in bank `$DB`), `link-to-the-past` (its message's number: a translated message is parsed from its Arabic, and a byte of the engine's settings tells the draw), `shining-force-2` (its string's code address: a translated string is read from its Arabic in free bytes of the text's section) |
+| The text's own codes or address: cell codes, a bank table sorted by text address, or the address range of the Arabic bank | `fomt`, `mmbn`, `advance-wars`, `metroid-fusion` (its cursors, arrow and fade), `tactics-ogre`, `chrono-trigger` (its text pointer's bank: a translated message is read from its Arabic in bank `$DB`), `link-to-the-past` (its message's number: a translated message is parsed from its Arabic, and a byte of the engine's settings tells the draw), `shining-force-2` (its string's code address: a translated string is read from its Arabic in free bytes of the text's section), `final-fantasy-ii` (its bank and offset in the redirect list: a translated message is read from its Arabic in bank `$21`) |
 | None: the renderer does not change, and a translated line is stored in visual order | `nsmb` |
 
 English text never carries the marker, so untranslated messages keep the original
@@ -404,7 +404,7 @@ commands.
 ## Candidates for other platforms (not implemented)
 
 None of these has been built or tested. They are research notes for engines the
-twenty-one targets did not cover, and each becomes an `experimental` strategy together
+twenty-two targets did not cover, and each becomes an `experimental` strategy together
 with its first target.
 
 - **Tile-composed variable-width text.** Many NES, Game Boy and SNES engines put

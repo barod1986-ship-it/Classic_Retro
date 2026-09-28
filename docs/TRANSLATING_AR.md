@@ -29,6 +29,7 @@
 | `chrono-trigger.json` | Chrono Trigger (Super NES) |
 | `link-to-the-past.json` | The Legend of Zelda: A Link to the Past (Super NES) |
 | `shining-force-2.json` | Shining Force II (Mega Drive) |
+| `final-fantasy-ii.json` | Final Fantasy II (Super NES) |
 
 في كل ملف:
 
