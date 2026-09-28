@@ -36,6 +36,7 @@ from classic_retro.localization.translations import (
     translation_set_from_dict,
 )
 from classic_retro.rom.advance_wars_arabic_script import advance_wars_arabic_messages
+from classic_retro.rom.alttp_arabic_script import alttp_arabic_messages
 from classic_retro.rom.chrono_trigger_arabic_script import chrono_trigger_arabic_messages
 from classic_retro.rom.ff6a_arabic_script import ff6a_arabic_messages
 from classic_retro.rom.fire_emblem_arabic_script import (
@@ -83,6 +84,7 @@ TARGETS = (
     "gran-turismo",
     "ridge-racer",
     "chrono-trigger",
+    "link-to-the-past",
 )
 RLE = chr(0x202B)
 
@@ -119,6 +121,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "gran-turismo": len(gran_turismo_arabic_briefings()),
         "ridge-racer": len(ridge_racer_arabic_strings()),
         "chrono-trigger": len(chrono_trigger_arabic_messages()),
+        "link-to-the-past": len(alttp_arabic_messages()),
     }
     assert counts == {
         "firered": 13,
@@ -140,6 +143,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "gran-turismo": 3,
         "ridge-racer": 3,
         "chrono-trigger": 3,
+        "link-to-the-past": 3,
     }
     for target in TARGETS:
         translations = builtin_translation_set(target)
@@ -391,3 +395,14 @@ def test_chrono_trigger_messages_are_boxes_of_arabic_with_their_names():
         assert all(box.strip() for box in message.notation.split("\n")), message.key
     assert "{Lucca}" in messages[2].notation
     assert messages[1].notation.count("\n") == 1
+
+
+def test_link_to_the_past_messages_are_pages_of_arabic_with_the_name():
+    messages = alttp_arabic_messages()
+    assert [message.index for message in messages] == [0x0D, 0x1F, 0x51]
+    for message in messages:
+        assert all(page.strip() for page in message.notation.split("\n")), message.key
+    assert messages[0].notation.startswith("{Name}")
+    # Zelda's call keeps the English's window and speed, and its pages.
+    assert messages[1].notation.startswith("{Window 02}{Speed 03}")
+    assert messages[1].notation.count("\n") == 5

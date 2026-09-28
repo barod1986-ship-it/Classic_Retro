@@ -3,13 +3,13 @@
 Version: 1
 
 A **localization target** is one supported game revision together with the way it
-is put into Arabic. Nineteen targets are registered today:
+is put into Arabic. Twenty targets are registered today:
 
 ```text
 classic-retro targets list
 ```
 
-This guide collects what those nineteen taught, in the order the work happens. It is a
+This guide collects what those twenty taught, in the order the work happens. It is a
 checklist, not a template: every game gets its own research, and a game that fits
 none of the existing methods gets a new one (see
 [ARABIC_STRATEGIES.md](ARABIC_STRATEGIES.md)).
@@ -259,6 +259,21 @@ sector rather than by name:
 - A hook needs no memory of its own when it can tell its state from the engine's: Chrono
   Trigger's knows an Arabic message by its text pointer's bank, and draws a name the
   engine expands whole, then tells the engine the name's last character is done.
+- When the ROM is full, add to it. A Link to the Past's 1 MiB has no room for a font of
+  16x16 glyphs: the overlay adds a second MiB (the header's size byte from `0A` to `0B`,
+  `FF` where it writes nothing) for the font and the messages, and keeps its hooks in free
+  bytes of the text engine's own bank, where they reach its code and tables with short
+  calls. BPS carries the added MiB in a few bytes.
+- A game that writes a message out before it draws it lets the hook mark there what the
+  drawing needs. A Link to the Past expands its dictionary words and the player's name
+  into a buffer: the hook's parse writes the name between two codes no English message
+  leaves there, and the draw table's entry for the first draws the name left to right.
+- A byte of the engine's settings that nothing reads can be the hook's memory: A Link to
+  the Past copies 32 bytes of settings for each message, and one of them (`$1CE4`), 0 in
+  the settings and read nowhere, says the message is Arabic until the next one starts.
+- Compare an English message the overlay leaves alone with the original's, pixel for
+  pixel, in a research build that does not translate it: A Link to the Past's uncle, left
+  in English, draws his box as the original ROM does.
 
 ## 5. Register the target
 

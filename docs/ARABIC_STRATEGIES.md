@@ -2,7 +2,7 @@
 
 Version: 1
 
-The nineteen reference targets put Arabic on screen with four rendering strategies.
+The twenty reference targets put Arabic on screen with four rendering strategies.
 They are a starting set, not a closed list. Engines on other platforms will need
 other methods, and the registry (`classic_retro.localization.strategies`) accepts
 them the same way it holds these four:
@@ -23,7 +23,7 @@ already worked.
 
 Used by: `firered`, `minish-cap`, `ff6a`, `golden-sun`, `fire-emblem` (dialogue),
 `pmd-red`, `mlss`, `advance-wars`, `metroid-fusion`, `tactics-ogre`, `nsmb`, `platinum`,
-`phantom-hourglass`, `gran-turismo`, `ridge-racer`, `chrono-trigger`.
+`phantom-hourglass`, `gran-turismo`, `ridge-racer`, `chrono-trigger`, `link-to-the-past`.
 
 Every contextual form of the letters (the 133 presentation forms of
 `arabic/repertoire.py`) is drawn from the reference font into the game's own font
@@ -170,7 +170,7 @@ left edge.
 | Direction control codes the source overlay adds (`FC 19 xx` / `FC 1A`, `04 16` / `04 17`) | `firered`, `minish-cap` |
 | The first code of a message (`0x5FF`, `0x0B`, `0x1E`) | `ff6a`, `golden-sun`, `fire-emblem`, `ridge-racer` (`01` centred, `02` mirrored: no English string starts below the space) |
 | The glyph itself: a charmap flag, or a glyph of the right-to-left font | `pmd-red`, `mlss`, `metroid-fusion` (where a glyph is drawn), `platinum` (a line that holds one; a menu whose first entry does), `phantom-hourglass` (each glyph of its range), `sotn` (a code from `80`), `gran-turismo` (a word whose first glyph is `86` or above) |
-| The text's own codes or address: cell codes, a bank table sorted by text address, or the address range of the Arabic bank | `fomt`, `mmbn`, `advance-wars`, `metroid-fusion` (its cursors, arrow and fade), `tactics-ogre`, `chrono-trigger` (its text pointer's bank: a translated message is read from its Arabic in bank `$DB`) |
+| The text's own codes or address: cell codes, a bank table sorted by text address, or the address range of the Arabic bank | `fomt`, `mmbn`, `advance-wars`, `metroid-fusion` (its cursors, arrow and fade), `tactics-ogre`, `chrono-trigger` (its text pointer's bank: a translated message is read from its Arabic in bank `$DB`), `link-to-the-past` (its message's number: a translated message is parsed from its Arabic, and a byte of the engine's settings tells the draw) |
 | None: the renderer does not change, and a translated line is stored in visual order | `nsmb` |
 
 English text never carries the marker, so untranslated messages keep the original
@@ -210,6 +210,10 @@ messages in English outside the bank.
 - The game's dictionary codes, read as glyphs in Arabic text: Chrono Trigger (`21..FF`: its
   English packs common words into `21..9F` and draws `A0..FF`; in an Arabic message the
   hook draws every byte from `21` from a font of its own).
+- The codes below the commands and past the dictionary's switch, read as glyphs in Arabic
+  text: A Link to the Past (`00..66` and `80..E6`: the hook parses an Arabic message's
+  bytes as they are, and the game's draw takes any byte, its bit 7 dropped, below `67` as
+  a character; the hook draws them from a font of its own).
 - Tables of the overlay's own, for glyphs it draws itself: Ridge Racer (`20..9F`, one table
   a font, the glyphs in an atlas the hook uploads to free VRAM; the game's fonts are fixed
   cells of capitals in full pages).
@@ -244,7 +248,10 @@ name commands in the translation, and its glyph hook draws any run of the game's
 inside an Arabic line left to right as a block at the mirror of the run. Chrono Trigger's
 does the same for every name and number the engine expands in an Arabic message: it draws
 the whole expansion at once, then tells the engine its last character is done, so the
-name the player gave shows in Latin letters, the right way round. The Arabic around
+name the player gave shows in Latin letters, the right way round. A Link to the Past's
+hook writes the player's name and a number's digits between two codes when it parses an
+Arabic message, one block for those that follow each other, and draws the block in the
+English font, left to right. The Arabic around
 the run uses the Arabic font's spaces and punctuation, so a name never joins its
 neighbours.
 
@@ -277,6 +284,8 @@ The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
     letters' baseline)
   - 9 px for Chrono Trigger (12x12 glyphs on row 8, the row under its capitals; at 10
     seen and sheen outgrow the cell)
+  - 11 px for A Link to the Past (16x16 glyphs on row 11, two rows above its letters'
+    last; at 12 seen and sheen outgrow the cell)
 - Draw marks that vanish at that size by hand:
   - hamza or madda over alef (Mario & Luigi, Pokémon Mystery Dungeon, Metroid Fusion,
     New Super Mario Bros.)
@@ -329,7 +338,10 @@ The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
   a black outline all round but on the joining sides. Chrono Trigger's letters are white
   with a shadow a pixel right and below, darker in the corner: its Arabic glyphs are drawn
   the same way, the shadow kept inside each glyph's width, and ORed into the tile buffer,
-  since a glyph drawn right to left shares a byte with the glyph on its right.
+  since a glyph drawn right to left shares a byte with the glyph on its right. A Link to
+  the Past's letters are white strokes a pixel wide with a dark outline all round: its
+  Arabic glyphs are drawn the same way, the outline left off on a joining side, and ORed
+  into the lines' tiles for the same reason.
 
 ## The shared core
 
@@ -373,7 +385,7 @@ commands.
 ## Candidates for other platforms (not implemented)
 
 None of these has been built or tested. They are research notes for engines the
-nineteen targets did not cover, and each becomes an `experimental` strategy together
+twenty targets did not cover, and each becomes an `experimental` strategy together
 with its first target.
 
 - **Tile-composed variable-width text.** Many NES, Game Boy and SNES engines put

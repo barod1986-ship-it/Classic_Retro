@@ -200,6 +200,11 @@ A hit reports these fields:
     HiROM banks `$C0-$FF` to the file.
   - A pattern `poke`d into a text buffer ahead of the pen shows whether the game sends
     the whole line to VRAM (Chrono Trigger does), before a hook draws glyphs there.
+  - A LoROM game maps each 32 KiB of the file to `$8000`-`$FFFF` of a bank (A Link to
+    the Past: bank `$0E` is `0x70000`).
+  - To walk the hero by script, `dump` his place after each move: A Link to the Past's
+    Link is at `system_ram:0x20` (Y, then X at `0x22`, 16 bits each), and a move that
+    leaves them as they were has met a wall or a table.
 
 A savestate belongs to the backend and core that wrote it.
 

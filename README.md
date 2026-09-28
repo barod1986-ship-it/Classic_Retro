@@ -93,6 +93,7 @@ runs the same way for every target.
 | `gran-turismo` | Gran Turismo (USA) (Rev 1), PlayStation | ROM overlay | `glyph-font` |
 | `ridge-racer` | Ridge Racer (USA), PlayStation | ROM overlay | `glyph-font` |
 | `chrono-trigger` | Chrono Trigger (USA), Super NES | ROM overlay | `glyph-font` |
+| `link-to-the-past` | The Legend of Zelda: A Link to the Past (USA), Super NES | ROM overlay | `glyph-font` |
 
 ```text
 classic-retro targets list                          # every target, its documents and operations
@@ -129,7 +130,7 @@ classic-retro targets strip fomt.workspace.json --out fomt.json
 Every check and build holds a translations file against the originals pinned in the
 target's code. See [the translator's guide](docs/TRANSLATING_AR.md) (in Arabic).
 
-The four rendering strategies are what the nineteen targets proved, not the only ones
+The four rendering strategies are what the twenty targets proved, not the only ones
 possible. Games on other platforms will need other methods, and the strategy and
 target registries accept them from this repository or from other packages through
 entry points. See [the rendering strategies](docs/ARABIC_STRATEGIES.md) and
@@ -159,8 +160,8 @@ A script holds commands such as `run 300`, `tap START`, `touch 128 272`, `shot m
 
 ## Repository status
 
-**Localization platform with nineteen reference targets: twelve on the Game Boy Advance, three
-on the Nintendo DS, three on the PlayStation and one on the Super NES.**
+**Localization platform with twenty reference targets: twelve on the Game Boy Advance, three
+on the Nintendo DS, three on the PlayStation and two on the Super NES.**
 
 The first end-to-end example translates the 13 Professor OAK speech strings in
 the new-game intro. This is a renderer/font test, not a complete game translation.
@@ -398,5 +399,21 @@ right; the English messages stay as they were, and the patch is about 2 KB. The 
 run the game in snes9x. See
 [the Chrono Trigger testing guide](docs/CHRONO_TRIGGER_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/CHRONO_TRIGGER_ARABIC_RENDERER.md).
+
+The twentieth reference target, and the second on the Super NES, is **The Legend of Zelda: A
+Link to the Past (USA)**. Its text engine was read from the
+[spannerisms/usdasm](https://github.com/spannerisms/usdasm) disassembly, which assembles to
+this ROM, checked against the ROM's bytes and run in snes9x. Three messages of the opening are
+in Arabic, chosen to be unlike: Zelda's call, six pages that wait and scroll in the window
+without a frame; the uncle's words, which start with the name the player gave; and the lamp's,
+an item's. The game draws its dialogue with a variable-width font of 8x16 pixels into three
+lines of tiles, so the Arabic takes the `glyph-font` strategy with a font of its own, 16x16,
+white strokes with the game's dark outline, 11 pixels. The ROM is full, so the overlay adds a
+second MiB for the font and the messages. Four 65C816 hooks in free bytes of the engine's bank,
+assembled with cc65, parse a translated message from its Arabic, draw each glyph at the mirror
+of the pen and the name as a block left to right, and move the lines against the window's right
+side; the English messages stay as they were, and the patch is about 4 KB. See
+[the A Link to the Past testing guide](docs/ALTTP_ARABIC_TEST_AR.md) and
+[the renderer notes](docs/ALTTP_ARABIC_RENDERER.md).
 
 See [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md).
