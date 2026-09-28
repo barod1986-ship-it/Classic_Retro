@@ -76,7 +76,7 @@ class _EntryPoint:
         return self._loaded
 
 
-def test_the_twenty_two_reference_targets_keep_their_order_and_strategies():
+def test_the_twenty_three_reference_targets_keep_their_order_and_strategies():
     registry = build_target_registry(load_external=False)
     described = {target.id: target for target in registry}
     assert list(described) == [
@@ -102,6 +102,7 @@ def test_the_twenty_two_reference_targets_keep_their_order_and_strategies():
         "link-to-the-past",
         "shining-force-2",
         "final-fantasy-ii",
+        "final-fantasy-iii",
     ]
     assert registry.using("line-cells") == ["mmbn", "fomt"]
     assert registry.using("text-images") == ["fire-emblem"]
@@ -115,7 +116,7 @@ def test_the_twenty_two_reference_targets_keep_their_order_and_strategies():
     assert described["minish-cap"].previews == ("arabic_font_preview.png",)
     # CI's arabic-overlay matrix is the targets with check-translations: every one.
     checked = [target.id for target in registry if target.check_translations is not None]
-    assert checked == list(described) and len(checked) == 22
+    assert checked == list(described) and len(checked) == 23
     for target_id in ROM_OVERLAYS:
         target = described[target_id]
         assert target.kind == "rom-overlay" and target.platform_id == "gba"
@@ -214,6 +215,18 @@ def test_the_twenty_two_reference_targets_keep_their_order_and_strategies():
     ]
     assert final_fantasy_ii.strategies == ("glyph-font",)
     assert len(final_fantasy_ii.reference_patch_sha256 or "") == 64
+    # The fourth Super NES target: its hooks lay each Arabic line out whole into a
+    # buffer of the line's cells, sent in the vertical blank.
+    final_fantasy_iii = described["final-fantasy-iii"]
+    assert (final_fantasy_iii.kind, final_fantasy_iii.platform_id) == ("rom-overlay", "snes")
+    assert final_fantasy_iii.operations() == [
+        "check-hooks",
+        "check-translations",
+        "build",
+        "extract",
+    ]
+    assert final_fantasy_iii.strategies == ("glyph-font",)
+    assert len(final_fantasy_iii.reference_patch_sha256 or "") == 64
     adapters = build_registry(load_external=False)
     for target in registry:
         assert (REPO / target.guide).is_file(), target.guide
@@ -612,6 +625,7 @@ def test_game_groups_hold_only_their_engine_tools(capsys):
         "link-to-the-past",
         "shining-force-2",
         "final-fantasy-ii",
+        "final-fantasy-iii",
     ):
         tools = ["encode-arabic", "source-check"] if group in sources else ["encode-arabic"]
         assert sorted(_subcommands(groups[group])) == tools, group
@@ -624,7 +638,7 @@ def test_game_groups_hold_only_their_engine_tools(capsys):
 
     assert main(["targets", "list"]) == 0
     listed = json.loads(capsys.readouterr().out)
-    assert [target["id"] for target in listed][-1] == "final-fantasy-ii"
+    assert [target["id"] for target in listed][-1] == "final-fantasy-iii"
     assert main(["targets", "check-hooks", "not-a-target"]) == 2
     assert capsys.readouterr().err.startswith("INVALID_REFERENCE: Unknown localization target")
 
@@ -652,4 +666,4 @@ def test_every_rom_overlay_builds_from_a_revision_detect_knows():
         assert images.items() <= revisions.items(), target.id
         assert set(target.reference_patches) <= set(images), target.id
         checked.append(target.id)
-    assert len(checked) == 20
+    assert len(checked) == 21

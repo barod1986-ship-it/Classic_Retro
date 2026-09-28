@@ -1,0 +1,225 @@
+# Final Fantasy III Arabic Renderer v1
+
+Target: *Final Fantasy III* (USA, SNS-F6-USA; the Super NES release of Final Fantasy VI),
+the fourth Super NES target. The [everything8215/ff6](https://github.com/everything8215/ff6)
+disassembly rebuilds this revision (its "Final Fantasy III 1.0 (U)", CRC32 `A27F1C7A`) and
+names its code, but it takes the ROM's data from the user's ROM, so this is a binary ROM
+overlay: it patches the user's ROM and ships as a BPS patch of it. The text engine was read
+from the disassembly (`field/text.asm`), its addresses derived from the disassembly's own
+numbered labels, checked byte by byte against the ROM and run in snes9x with the
+[research tools](RESEARCH_TOOLS.md). Names in brackets are the disassembly's.
+
+| Item | Value |
+|------|-------|
+| No-Intro | *Final Fantasy III (USA)*: one ROM, version 1.0, no copier header (a dump of 3146240 bytes carries a 512-byte one, to be removed first) |
+| ROM | 3145728 bytes, HiROM: CRC32 `A27F1C7A`, SHA-256 `0f51b4fca41b7fd509e4b8f9d543151f68efa5e97b08493e4b2a0c06f5d8d5e2` |
+| Header | at `$FFC0`: its map byte at `$FFD5` (`31`: HiROM, fast), its size byte at `$FFD7` (`0C`: 4 MiB, already, for a 3 MiB ROM), its checksum and complement at `$FFDC`; `classic-retro detect` names the platform and the game (`final-fantasy-iii-usa`) |
+| Output | The ROM with a fourth MiB (banks `$F0`-`$FF`, `FF` where nothing is written) and its header's checksum set again; the size byte stays `0C`. Shipped as BPS |
+
+## Engine facts the overlay relies on
+
+- **Mapping.** HiROM: bank `$C0` is the ROM's first 64 KiB, and so on, so `$CD:0000` is
+  offset `0xD0000`; banks `$40`-`$7D` mirror them. Banks `$00`-`$3F` show work RAM's first
+  8 KiB at `$0000`-`$1FFF`; the rest of it is in bank `$7E`.
+- **Messages.** One table of 16-bit offsets [`DlgPtrs`, `$CC:E602`, 3084 entries] from the
+  text [`Dlg`, `$CD:0000`, a block of `$1F100` bytes over banks `$CD` and `$CE`]; a message
+  whose number is the word at `$CC:E600` [`DlgBankInc`, 1574] or more counts from `$CE:0000`.
+  The event script gives the number (`$D0`), [`GetDlgPtr`, `$C0:7FBF`] sets the pointer
+  (`$C9`-`$CB`) and enables the display (`$0568` = 1), and the engine reads the bytes with
+  `lda [$c9],y` ([`engines/ff6.py`](../src/classic_retro/engines/ff6.py)).
+- **Codes.** `00`: the end (the window waits for the button and closes). `01`: the end of a
+  line; `13`: the end of a page (the window waits for the button and clears); `14` and a
+  byte: that many spaces. `02`-`0F`: a character's name (Terra to Umaro, from the names the
+  player gave at `$1602`, 37 bytes a character); `10`: a pause of a second; `11` and a byte:
+  a pause of that many quarter seconds; `12`: waiting for the button; `16` and a byte: the
+  pause then the button; `15`: a choice's mark; `19`: the gil amount; `1A`: the item's name;
+  `1B`: the spell's name; `1C`-`1F` and a byte: the Japanese game's letters beyond the first
+  256, unused. `20`-`7F`: a letter (the capitals from `20`, the small letters from `3A`, the
+  digits from `54`, the signs, icons from `76`, `7F` the space). `80`-`FF`: a pair of letters
+  [`DTETbl`, `$C0:DFA0`: two bytes a code from `80`].
+- **The draw.** A letter a frame: [`UpdateDlgText`, `$C0:814C`] in the main loop reads the
+  next byte, [`CalcTextWidth`, `$C0:8067`] measures the next word and [`NewLine`,
+  `$C0:851A`] starts a line where the word would pass the pen's end (`$C8` = 224).
+  [`DrawDlgText`, `$C0:84D0`] shifts the letter's glyph to the pen (`$BF`, from 4) into a
+  cell of 16x16 pixels ([`LoadLetterGfx`], [`DrawLetter`]: `$7E:9003` and `$7E:9103`,
+  the letter's 16 pixels in a word, ORed in), copies the cell to `$7E:9083`
+  ([`CopyDlgTextToBuf`]) and moves the pen on by the letter's width [`FontWidth`,
+  `$C4:8FC0`, a byte a code]. In the vertical blank [`TfrDlgTextGfx`, `$C0:8603`] sends the
+  cell (64 bytes: four tiles of two planes, the second plane the glyph a pixel right, the
+  shadow) by DMA to the word address `$3800` + `$C3`: the text's tiles are four lines of
+  `$200` words, 16 cells of 16 pixels a line, of which the box shows 14 (224 pixels).
+  `NewLine` moves the line pointer `$C1` a line on and, after the fourth line, has the box
+  wait for the button (`$CC` = 9, `$D3` = 2); [`NewPage`, `$C0:8554`] moves it to the top the
+  same way; then [`ClearDlgTextRegion`] clears the text's tiles over eight frames and the
+  message goes on. A choice's mark takes the pen's cell for its cursor (`$C1` into `$0570`,
+  a word a choice) and draws a wide space.
+- **The font.** [`LargeFontGfx`, `$C4:90C0`]: 22 bytes a letter from `20`, eleven rows of a
+  16-bit word, the leftmost pixel in bit 15; the letters are white (palette entries 1 and 3)
+  with a black shadow (2) on the window's blue.
+
+## Right-to-left text
+
+The overlay's hooks (`rom/ff6_arabic_hooks.s`, 1699 bytes) live at `$F0:0000`, the first
+bytes of the MiB the overlay adds; the engine's code is in bank `$C0`, so eight sites call
+them with `JSL` and they go back with `RTL` to the site's end, or with `JML` to the engine
+where the site's own code branched. They run with the engine's data bank `$00` and direct
+page `$0000`, the accumulator 8 bits and the index registers 16.
+
+- **Arabic messages.** At `GetDlgPtr`'s end (`redirect_hook`) a message whose number is in
+  the overlay's list is read from its Arabic text instead: `$C9`-`$CB` becomes `$F2:0000` +
+  the Arabic's offset and a flag in work RAM (`$7E:9D00`) says the message is Arabic; any
+  other message clears it. The English stays where it was, as it was.
+- **Glyphs.** In an Arabic message every byte from `20` is a glyph of the overlay's own font
+  (`dte_hook`: a byte from `80` is a glyph, not a pair); the commands keep their meaning.
+- **A line laid out whole.** Where `UpdateDlgTextOneLine` adds the next word's width to the
+  pen (`width_hook`), in an Arabic message the line the engine is on is laid out whole the
+  first time (`lay_out_line`, outside the vertical blank): from the right edge (224)
+  leftwards, each glyph's variant of its pixel is ORed into a buffer of the line's tile
+  columns at `$7E:9800` (32 columns of 32 bytes: 16 rows of two planes), the next variant as
+  its shadow in the second plane; a name's glyphs come from the names' table; `14` and a
+  byte moves the pen that many pixels (the narration's centring); `15` leaves 16 pixels for
+  the choice's cursor; the pauses and the button waits are skipped; the line ends at `00`,
+  `01` or `13`. The word's width is then nothing, so the engine never breaks a line itself,
+  and `DrawDlgText` draws nothing (`draw_hook`): the engine still walks the line a byte a
+  frame, so its pauses, button waits, pages and choices work as before.
+- **The transfer.** In the vertical blank (`transfer_hook`, at `TfrDlgTextGfx`'s start), a
+  line laid out is sent by DMA, 896 bytes (14 cells), to its tiles at `$3800` + `$C1`; then
+  the engine's own cell as before. `NewLine` and `NewPage` (`line_hook`, `page_hook`) keep
+  the engine's line and page logic (the pen back to 4, the line pointer on or to the top,
+  the wait for the button) without its blank cell, and mark the next line as not laid out;
+  at the message's end (`00`) the message is over, so what the engine draws next (a map's
+  name) is English.
+- **Choices.** `choice_hook`: a choice's cursor takes the line's last shown cell (cell 13,
+  pixels 208-223), at the right of the choice's text; the game's own cursor graphic and its
+  moves are untouched.
+- **Names.** `{Terra}` to `{Umaro}` in an Arabic message write the translation's own name of
+  the character (from `$F0:1300`, 32 bytes a name, its glyph codes then `FF`), in place of
+  the name the player gave.
+- **Two lessons.** The engine keeps the accumulator's high byte zero in its 8-bit code (its
+  `shorta0` is `TDC` then `SEP #$20`) and moves the whole accumulator into a 16-bit index
+  with `TAX` (`LDA $CF; TAX; LDA $7E9183,x`), and the event interpreter does the same after
+  `GetDlgPtr`; a hook that used 16 bits clears the high byte before going back (`clear_b`:
+  `XBA; LDA #0; XBA`), or the event script and the text buffer's index go astray, as they
+  did in snes9x until they did. And the hooks' flags count only the value 1 as set: the
+  emulator fills work RAM with `55` at power-on, which would otherwise read as Arabic mode
+  before the first message.
+
+## Glyphs
+
+The reference font is Noto Kufi Arabic SemiBold. A glyph is 16 pixels wide and 15 rows
+tall (the cell's rows 0 to 14, the letters on row 10, four rows left below for the tails),
+drawn at 12 pixels: the largest size, from 15 down to 9, at which every form of the
+repertoire and every digit fits. Coverage from 128 of 255 is ink, and a dot between 60 and
+128 keeps its strongest pixel. The merged dots of two- and three-dot letters are drawn apart
+(`separated_dots`), the deep dots under a letter are raised to the last row
+(`raised_marks`), hamza above alef is drawn by hand over the font's alef
+(`alef_with_mark`), and final and isolated yeh are raised a row when their tail would leave
+the cell. The signs `.`, `,`, `:`, `!`, `-`, `…`, `،`, `؛` and `؟` are drawn by hand; the
+space is a blank glyph 4 pixels wide. Each glyph has a width, the pen's advance: a form that
+joins the glyph on its right (the letter before it in reading order) has its stroke run on
+to its edge, and any other form keeps its advance with a pixel free after its ink, as
+Chrono Trigger's do; the glyphs are ORed together, so a stroke meets its neighbour's.
+
+The hook draws at any pixel without shifting: the overlay writes each glyph in nine
+variants, shifted right by 0 to 8 pixels into three bytes a row (45 bytes a variant, 405 a
+glyph), and the shadow of a glyph at pixel `s` of its tile is the variant `s + 1`. The
+glyphs take codes `20` to `FF` in the font's order (the space, the punctuation, the digits,
+then the repertoire by code point), 224 at most, and their variants must fit one bank (about
+160 glyphs); the Narshe scope uses 115.
+
+## Layout
+
+The encoder lays each page out itself, a word at a time: a line holds 220 pixels (from the
+right edge, 224, to 4), a page four lines. A line of the notation is a page and `{line}` ends
+a line where it stands; `{center}` at a page's start centres its lines, each written with
+`14` and its indent in pixels. Lines are written with `01` between them; a page short of
+four lines ends with `13` when another page follows, and a full page with `01` alone, since
+the game turns the page itself after a fourth line; the message ends with `00`. The other
+commands pass through as the English has them: `{Wait}`, `{Pause xx}`, `{Key}`,
+`{KeyAfter xx}`, and `{Choice}`, which starts a choice's line and counts 16 pixels; a name
+counts its translation's width. The glyphs of a line are stored in the order they are
+painted from the right (a run of digits reads left to right by the shaper's own order).
+
+## The overlay's room
+
+| Address | Content |
+|---------|---------|
+| `$F0:0000` | the hooks: `redirect_hook` at `+0`, `width_hook` at `+$46`, `dte_hook` at `+$65`, `draw_hook` at `+$7B`, `line_hook` at `+$91`, `page_hook` at `+$D3`, `choice_hook` at `+$10A`, `transfer_hook` at `+$126` |
+| `$F0:1000` | a width a code from `20` (0 where there is no glyph), 224 bytes |
+| `$F0:1100` | a word a code from `20`: the glyph's first byte in the glyphs, 448 bytes |
+| `$F0:1300` | the fourteen names: 32 bytes each, the codes then `FF` |
+| `$F0:1500` | the list: 4 bytes a message (its number, its Arabic's offset); `FFFF` ends it |
+| `$F1:0000` | the glyphs, 405 bytes each |
+| `$F2:0000` | the Arabic messages, an offset each |
+
+In work RAM the hooks use `$7E:9D00` (the Arabic flag), `$7E:9D01` (the line laid out),
+`$7E:9D02` (a line waiting to be sent), `$7E:9D04`-`$7E:9D0D` (the line's tiles, the pen and
+scratch) and `$7E:9800`-`$7E:9BFF` (the line's tile columns): the tail of the engine's own
+text buffer (`$7E:9183`-`$7E:9DFF`), of which it writes the first 256 bytes at most. The
+added MiB is `FF` where the overlay writes nothing.
+
+| Site | Original | Arabic |
+|------|----------|--------|
+| `$C0:7FDF`, `GetDlgPtr`'s end | `LDA #1`; `STA $0568` | `JSL redirect_hook` |
+| `$C0:8250`, `UpdateDlgTextOneLine`, the word's width | `LDA $BF`; `CLC`; `ADC $C0` | `JSL width_hook` |
+| `$C0:828F`, where a byte from `80` is a pair | `LDA $BD`; `BMI` | `JSL dte_hook` |
+| `$C0:84D0`, `DrawDlgText` | `LDX $CD`; `LDA f:FontWidth,x` | `JSL draw_hook` |
+| `$C0:851A`, `NewLine` | `LDA #$FF`; `STA $CD` | `JSL line_hook` |
+| `$C0:8554`, `NewPage` | `LDA #$FF`; `STA $CD` | `JSL page_hook` |
+| `$C0:8603`, `TfrDlgTextGfx` | `LDA $C5`; `BEQ`; `STZ $C5` | `JSL transfer_hook` |
+| `$C0:836D`, a choice's mark | `LDA $C1`; `STA $0570,y` | `JSL choice_hook` |
+
+A `JSL` is 4 bytes; a longer site is filled with `NOP`.
+
+Anchors checked before any change: the ROM (SHA-256, size, its header's map and size
+bytes); `GetDlgPtr`'s `RTS` after its site; `UpdateDlgTextOneLine` after the width (the
+overflow check, `NewLine`, the buffer); after the pair check (the command check, a letter,
+the pair's letters at `$C0:8466`); `DrawDlgText` after its site and its `RTS` at `$C0:8519`;
+`NewLine` and `NewPage` after their sites and their `RTS`s at `$C0:8553` and `$C0:857D`;
+the choice's mark after its site; `TfrDlgTextGfx` after its site (the engine's cell sent)
+and its `RTS` at `$C0:8641`; each translated message (its number, the SHA-256 of its bytes
+and, where pinned, its commands). The build then sets the header's checksum, reads
+everything back from the image (the hooks, the sites, the tables, the list, the glyphs, and
+each Arabic message through the list as the hooks find it, with the translation's commands)
+and checks that nothing but the sites, the header's checksum and the added MiB changed.
+
+## Translations
+
+`rom/ff6_arabic_script.py` pins the sixty-four messages of the opening through the end of
+Narshe by their numbers, 0 to 63 (0 shares 1's text and pointer), with the SHA-256 of each
+and its command skeleton: the cliffs above Narshe (1-5, their `{KeyAfter 18}{Key}` pacing
+kept), the narration (6-9, centred with `{center}`, `{Pause FF}{Key}`), the save point
+(10, two `{Choice}`), the town and the mines (11-20), Arvis's house (21-33, `{Terra}`), the
+guards, Kefka's and the Empire's scenes (34-40), Locke and Arvis (41-48), the Moogles (49-58,
+a `{Terra}` and two `{Choice}` in 54) and the escape (59-63). The Arabic is in
+`translations/final-fantasy-iii.json`, a line a page, `{line}` where a line must end. The
+names are `name.terra` to `name.umaro`, the fourteen characters the name commands write, in
+the game's order, one word each, 64 pixels at most. A translation keeps its original's
+commands but the layout (`{line}`, `{page}`, the spaces): its skeleton must equal the
+original's, which the build takes from the ROM and the script pins too. The messages and
+the names use 114 distinct forms, digits and signs.
+
+## Verification
+
+With the reference font the build matches the reference patch (its SHA-256 is pinned with
+the target, and the build report's `matches_reference` says so). In snes9x
+(`snes9x_libretro`) through `classic-retro research run`, from power-on with the patched
+ROM, a new game: the narration's four pages centred, the cliff dialogues right-aligned in
+the box a page at a time, the first Narshe dialogue in Arabic; a message with a name draws
+«تيرا» and «لوك» from the translation, and a two-way choice draws its lines with the cursor
+at their right, moves with Down and confirms with A. The messages that follow the scope
+show the game's English as before. The RetroPad's A is the Super NES's A.
+
+## Limits
+
+- Sixty-four messages and the characters' names are in Arabic; every other message stays
+  English, and the menus and the battles are other text engines, untouched.
+- A message holds no Latin letters; `{Gil}`, `{Item}` and `{Spell}` are refused: the game
+  writes them in its own letters, which the Arabic draw leaves out.
+- A line is laid out whole when the engine reaches it, so a `{Key}` in the middle of a line
+  shows the rest of the line at once; the scope's messages wait at a line's end.
+- A choice's cursor is the game's right-pointing arrow, at the right of the choice's text.
+- A name in an Arabic message is the translation's, not the one the player gave.
+- A page holds four lines of 220 pixels; the encoder refuses more, and a word wider than a
+  line. The font is 12 pixels; no vowel marks, lam and alef stay two glyphs.
+- The ROM grows to 4 MiB; the added banks hold only the overlay's hooks and data.
