@@ -12170,6 +12170,981 @@
    "id": "ancient-castle.2418",
    "context": "Message 2418 of the dialogue: {Spaces 0B}Atom Edge! {KeyAfter 04}{Key}",
    "text": "{center}نصل الذرة! {KeyAfter 04}{Key}"
+  },
+  {
+   "id": "colosseum.2419",
+   "context": "Message 2419 of the dialogue: 400 GP per night.{line}Wanna rest?{line}{Choice} Yes{line}{Choice} No",
+   "text": "400 غيل لليلة.{line}تريد أن ترتاح؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "colosseum.2420",
+   "context": "Message 2420 of the dialogue: Care to fight in the colosseum?{line}{Choice}(With pleasure.){line}{Choice}(No thanks.){line}{Choice}(Explanation, please!)",
+   "text": "تود القتال في الكولوسيوم؟{line}{Choice} (بكل سرور.){line}{Choice} (لا شكرا.){line}{Choice} (اشرح لي من فضلك!)"
+  },
+  {
+   "id": "colosseum.2421",
+   "context": "Message 2421 of the dialogue: Creatures from all over the world come here to compete.",
+   "text": "مخلوقات من أنحاء العالم كله تأتي إلى هنا لتتنافس."
+  },
+  {
+   "id": "colosseum.2422",
+   "context": "Message 2422 of the dialogue: Get a load of the crowds!",
+   "text": "انظر إلى هذه الحشود!"
+  },
+  {
+   "id": "colosseum.2423",
+   "context": "Message 2423 of the dialogue: There's some guy here who's dressed all in black!{line}He's looking for a blade known as the Striker…",
+   "text": "هناك رجل هنا يرتدي الأسود كله!{line}يبحث عن نصل يدعى «سترايكر»…"
+  },
+  {
+   "id": "colosseum.2424",
+   "context": "Message 2424 of the dialogue: We can't let the world become too peaceful!{line}People are at their best when they're at war…{page}My colosseum will be a monument to war!{line}If I can ever get the help I need to finish it, that is!",
+   "text": "لا يمكننا أن ندع العالم يصير مسالما أكثر من اللازم!{line}الناس في أفضل حالاتهم حين يكونون في حرب…\nكولوسيومي سيكون نصبا للحرب!{line}هذا إن حصلت يوما على العون الذي أحتاجه لإتمامه!"
+  },
+  {
+   "id": "colosseum.2425",
+   "context": "Message 2425 of the dialogue: This is my colosseum.{page}Finally, the whole world is at war! I'm so happy!{line}And I owe it all to Kefka!",
+   "text": "هذا كولوسيومي.\nأخيرا، العالم كله في حرب! أنا سعيد جدا!{line}وكل هذا بفضل كيفكا!"
+  },
+  {
+   "id": "colosseum.2426",
+   "context": "Message 2426 of the dialogue: Ultros is your receptionist?{page}He couldn't pay his debt, so I put him to work!{line}I figure he'll be here about another 100 years.",
+   "text": "أولتروس موظف الاستقبال عندك؟\nلم يستطع سداد دينه، فشغلته!{line}أظنه سيبقى هنا نحو 100 عام أخرى."
+  },
+  {
+   "id": "colosseum.2427",
+   "context": "Message 2427 of the dialogue: ULTROS: Look at me!{line}I'm a receptionist!{line}G'fa, ha, ha!{page}Now, you'd better watch what ya bet, or master Chupon'll just come and take it from ya!",
+   "text": "أولتروس: انظروا إلي!{line}أنا موظف استقبال!{line}غفا، ها، ها!\nوالآن، احذروا ما تراهنون به، وإلا جاء السيد تشوبون وأخذه منكم ببساطة!"
+  },
+  {
+   "id": "colosseum.2428",
+   "context": "Message 2428 of the dialogue: We fight for items, etc. here. First choose the thing you want to wager.{page}Next, your opponent will appear. Choose someone from your party to fight this opponent.{page}A one-on-one auto-battle will then take place. The item you wagered covers your participation fee.{page}If you win, you'll be rewarded with an even better item! That's all there is to it!",
+   "text": "نقاتل هنا من أجل الأدوات وغيرها. أولا اختر الشيء الذي تريد المراهنة به.\nثم يظهر خصمك. اختر أحدا من فريقك ليقاتل هذا الخصم.\nثم تجري معركة آلية واحد لواحد. الأداة التي راهنت بها تغطي رسم مشاركتك.\nإن فزت، كوفئت بأداة أفضل! هذا كل ما في الأمر!"
+  },
+  {
+   "id": "colosseum.2429",
+   "context": "Message 2429 of the dialogue: The more precious the item wagered, the better your prize will be!",
+   "text": "كلما كانت الأداة التي تراهن بها أثمن، كانت جائزتك أفضل!"
+  },
+  {
+   "id": "colosseum.2430",
+   "context": "Message 2430 of the dialogue: Battles at the colosseum are one-on-one.",
+   "text": "معارك الكولوسيوم واحد لواحد."
+  },
+  {
+   "id": "colosseum.2431",
+   "context": "Message 2431 of the dialogue: SIGFRIED: Someone's been pretending to be me!{line}Don't be fooled!",
+   "text": "زيغفريد: أحدهم ينتحل شخصيتي!{line}لا تنخدعوا!"
+  },
+  {
+   "id": "colosseum.2432",
+   "context": "Message 2432 of the dialogue: This is Dragon's Neck Colosseum. Champions from all over the world come here to fight for prizes.",
+   "text": "هذا كولوسيوم عنق التنين. أبطال من أنحاء العالم كله يأتون إلى هنا ليقاتلوا من أجل الجوائز."
+  },
+  {
+   "id": "colosseum.2433",
+   "context": "Message 2433 of the dialogue: “What're you doing here?”{line}{Shadow}: The only thing I know how to do is fight…",
+   "text": "«ماذا تفعل هنا؟»{line}{Shadow}: الشيء الوحيد الذي أجيده هو القتال…"
+  },
+  {
+   "id": "colosseum.2434",
+   "context": "Message 2434 of the dialogue: “Why not come with us?”{line}{Shadow}: Well…",
+   "text": "«لم لا تأتي معنا؟»{line}{Shadow}: حسنا…"
+  },
+  {
+   "id": "colosseum.2435",
+   "context": "Message 2435 of the dialogue: {Shadow}: First I need to see how far I can get here…",
+   "text": "{Shadow}: أولا علي أن أرى إلى أي مدى أستطيع الوصول هنا…"
+  },
+  {
+   "id": "kohlingen-ruin.2436",
+   "context": "Message 2436 of the dialogue: Huh?!{line}{Locke}?{line}He must be searching the world over for that fabled treasure…{page}Find the treasure, and you'll find {Locke}!",
+   "text": "هاه؟!{line}{Locke}؟{line}لا بد أنه يجوب العالم كله بحثا عن ذلك الكنز الأسطوري…\nجد الكنز، تجد {Locke}!"
+  },
+  {
+   "id": "kohlingen-ruin.2437",
+   "context": "Message 2437 of the dialogue: Those beautiful days will never return…",
+   "text": "تلك الأيام الجميلة لن تعود أبدا…"
+  },
+  {
+   "id": "kohlingen-ruin.2438",
+   "context": "Message 2438 of the dialogue: Narshe is filled with monsters. I don't have any place to go home to…",
+   "text": "نارشي مليئة بالوحوش. ليس لي بيت أعود إليه…"
+  },
+  {
+   "id": "kohlingen-ruin.2439",
+   "context": "Message 2439 of the dialogue: But I refuse to give up!{page}I'm going back to Narshe.{line}There's that frozen Esper…{line}With you guys along, we'll be able to wake that thing up!",
+   "text": "لكنني أرفض الاستسلام!\nسأعود إلى نارشي.{line}هناك ذلك الإسبر المتجمد…{line}بوجودكم معي، سنستطيع إيقاظ ذلك الشيء!"
+  },
+  {
+   "id": "kohlingen-ruin.2440",
+   "context": "Message 2440 of the dialogue: {Locke} just left here a while ago. He was happy…{page}…saying something about learning where some mystic treasure was…",
+   "text": "{Locke} غادر من هنا قبل قليل. كان سعيدا…\n…يقول شيئا عن معرفته بمكان كنز خفي…"
+  },
+  {
+   "id": "kohlingen-ruin.2441",
+   "context": "Message 2441 of the dialogue: {Celes}: {Locke}…{line}He's alive!!",
+   "text": "{Celes}: {Locke}…{line}إنه حي!!"
+  },
+  {
+   "id": "kohlingen-ruin.2442",
+   "context": "Message 2442 of the dialogue: We planted some seeds, but nothing's growing…",
+   "text": "زرعنا بعض البذور، لكن لا شيء ينمو…"
+  },
+  {
+   "id": "kohlingen-ruin.2443",
+   "context": "Message 2443 of the dialogue: It's as if the plants have lost their will to live…",
+   "text": "كأن النباتات فقدت رغبتها في الحياة…"
+  },
+  {
+   "id": "kohlingen-ruin.2444",
+   "context": "Message 2444 of the dialogue: There's a real mean guy fighting at the colosseum. Seems he's looking for a weapon called the “Striker”…",
+   "text": "هناك رجل شرس حقا يقاتل في الكولوسيوم. يبدو أنه يبحث عن سلاح يدعى «سترايكر»…"
+  },
+  {
+   "id": "kohlingen-ruin.2445",
+   "context": "Message 2445 of the dialogue: Unless life begins to flourish again, it doesn't matter how beautifully we restore our village.",
+   "text": "ما لم تعد الحياة إلى الازدهار، فلا يهم كم نعيد بناء قريتنا بجمال."
+  },
+  {
+   "id": "kohlingen-ruin.2446",
+   "context": "Message 2446 of the dialogue: A handsome man with a quaint way of talking visited our village recently. He kept saying, “Thou” to everyone!",
+   "text": "رجل وسيم له طريقة كلام عتيقة زار قريتنا مؤخرا. ظل يخاطب الجميع بلغة الفرسان القديمة!"
+  },
+  {
+   "id": "kohlingen-ruin.2447",
+   "context": "Message 2447 of the dialogue: {Celes}: {Setzer}!{line}{Setzer}: You're alive!?",
+   "text": "{Celes}: {Setzer}!{line}{Setzer}: أنت حية!؟"
+  },
+  {
+   "id": "kohlingen-ruin.2448",
+   "context": "Message 2448 of the dialogue: {Celes}: Come along with us!{line}We're after Kefka!{page}{Setzer}: Phew…{line}I don't know if I have it in me anymore…{page}{Celes}: What are you saying?!{line}{Setzer}: I'm just a gambler…{page}I just want to be left alone…{line}This world is too chaotic for me. What's worse, I've lost my wings…",
+   "text": "{Celes}: تعال معنا!{line}نحن نلاحق كيفكا!\n{Setzer}: أوف…{line}لا أعرف إن كان في داخلي ما يكفي لذلك بعد…\n{Celes}: ماذا تقول؟!{line}{Setzer}: أنا مجرد مقامر…\nأريد فقط أن أترك وشأني…{line}هذا العالم فوضوي أكثر مما أحتمل. والأسوأ أنني فقدت جناحي…"
+  },
+  {
+   "id": "kohlingen-ruin.2449",
+   "context": "Message 2449 of the dialogue: {Celes}: But before the world collapsed, you fought with all your heart! You were absolutely fearless…{page}{Setzer}: That was then…{line}We can never have that world back!{page}{Celes}: You want to live in this world as it is?{line}No?{line}Then do something about it!",
+   "text": "{Celes}: لكن قبل أن ينهار العالم، قاتلت بكل قلبك! كنت بلا خوف على الإطلاق…\n{Setzer}: كان ذلك حينها…{line}لن نستعيد ذلك العالم أبدا!\n{Celes}: أتريد أن تعيش في هذا العالم كما هو؟{line}لا؟{line}إذن افعل شيئا حيال ذلك!"
+  },
+  {
+   "id": "kohlingen-ruin.2450",
+   "context": "Message 2450 of the dialogue: {Setzer}: Mwa ha!{line}All right…you win!{line}I'm starting to feel lucky!!",
+   "text": "{Setzer}: موا ها!{line}حسنا… فزت!{line}بدأت أشعر أن الحظ يحالفني!!"
+  },
+  {
+   "id": "kohlingen-ruin.2451",
+   "context": "Message 2451 of the dialogue: {Setzer}: Thanks…{line}I needed that.{line}Now, let's go visit Daryl's Tomb.",
+   "text": "{Setzer}: شكرا…{line}كنت بحاجة إلى ذلك.{line}والآن، لنزر قبر داريل."
+  },
+  {
+   "id": "kohlingen-ruin.2452",
+   "context": "Message 2452 of the dialogue: {Setzer}: ……{line}We're gonna get us another one… {Wait}{line}Airship, that is…!",
+   "text": "{Setzer}: ……{line}سنحصل على واحدة أخرى… {Wait}{line}سفينة طائرة، أقصد…!"
+  },
+  {
+   "id": "kohlingen-ruin.2453",
+   "context": "Message 2453 of the dialogue: There're still some people with vision, even in this world.{line}Like my brother up north.",
+   "text": "ما زال هناك من يملكون رؤية، حتى في هذا العالم.{line}مثل أخي في الشمال."
+  },
+  {
+   "id": "kohlingen-ruin.2454",
+   "context": "Message 2454 of the dialogue: Don't step there!{line}Give the seedlings a chance!",
+   "text": "لا تدس هناك!{line}أعط الشتلات فرصة!"
+  },
+  {
+   "id": "kohlingen-ruin.2455",
+   "context": "Message 2455 of the dialogue: Cough…{line}This world's already on the heap!",
+   "text": "كح…{line}هذا العالم على المزبلة أصلا!"
+  },
+  {
+   "id": "kohlingen-ruin.2456",
+   "context": "Message 2456 of the dialogue: I overheard your conversation…{line}I, too, still have faith in this world!",
+   "text": "سمعت حديثكم…{line}أنا أيضا ما زلت أومن بهذا العالم!"
+  },
+  {
+   "id": "kohlingen-ruin.2457",
+   "context": "Message 2457 of the dialogue: Hope…",
+   "text": "الأمل…"
+  },
+  {
+   "id": "kohlingen-ruin.2458",
+   "context": "Message 2458 of the dialogue: Hope…{line}We must never give up hope!",
+   "text": "الأمل…{line}يجب ألا نفقد الأمل أبدا!"
+  },
+  {
+   "id": "tomb.2459",
+   "context": "Message 2459 of the dialogue: {Celes}: This person…{line}She was your friend?{page}{Setzer}: Yeah.{line}She was a piece of work.{line}Nothing scared her…",
+   "text": "{Celes}: هذه الشخص…{line}كانت صديقتك؟\n{Setzer}: نعم.{line}كانت فريدة من نوعها.{line}لا شيء كان يخيفها…"
+  },
+  {
+   "id": "tomb.2460",
+   "context": "Message 2460 of the dialogue: {Setzer}: Could be anything lurking down here, so keep your eyes peeled!",
+   "text": "{Setzer}: قد يكون أي شيء كامنا هنا في الأسفل، فابقوا متيقظين!"
+  },
+  {
+   "id": "tomb.2461",
+   "context": "Message 2461 of the dialogue: DARYL: This experimental airship is probably a bit unstable…",
+   "text": "داريل: هذه السفينة الطائرة التجريبية غير مستقرة بعض الشيء على الأرجح…"
+  },
+  {
+   "id": "tomb.2462",
+   "context": "Message 2462 of the dialogue: {Setzer}: This brings back a lot of memories.",
+   "text": "{Setzer}: هذا يعيد إلي ذكريات كثيرة."
+  },
+  {
+   "id": "tomb.2463",
+   "context": "Message 2463 of the dialogue: {Setzer}: Watch your step.",
+   "text": "{Setzer}: انتبهوا لخطواتكم."
+  },
+  {
+   "id": "tomb.2464",
+   "context": "Message 2464 of the dialogue: {line}{Spaces 06}DARYL SLEEPS HERE",
+   "text": "{center}{line}هنا ترقد داريل"
+  },
+  {
+   "id": "tomb.2465",
+   "context": "Message 2465 of the dialogue: {Setzer}: You can't be serious!{line}What are you trying to prove?!",
+   "text": "{Setzer}: لا يمكن أن تكوني جادة!{line}ماذا تحاولين أن تثبتي؟!"
+  },
+  {
+   "id": "tomb.2466",
+   "context": "Message 2466 of the dialogue: DARYL: If something should happen to me, the Falcon's yours!",
+   "text": "داريل: إن أصابني مكروه، فالفالكون لك!"
+  },
+  {
+   "id": "tomb.2467",
+   "context": "Message 2467 of the dialogue: {Setzer}: Nonsense!{line}I'll win the Falcon from you when I whip you in a race!{page}{Setzer}: You'd better clear outta my way!{line}DARYL: Big talk, buster!",
+   "text": "{Setzer}: هراء!{line}سأكسب الفالكون منك حين أهزمك في سباق!\n{Setzer}: من الأفضل أن تفسحي لي الطريق!{line}داريل: كلام كبير يا صاح!"
+  },
+  {
+   "id": "tomb.2468",
+   "context": "Message 2468 of the dialogue: {Setzer}: There's nothing like flying!",
+   "text": "{Setzer}: لا شيء يضاهي الطيران!"
+  },
+  {
+   "id": "tomb.2469",
+   "context": "Message 2469 of the dialogue: {Setzer}: I put it in storage.{line}I couldn't bear to look at it.{line}But now it just may save us…{page}{line}{Spaces 0A}The Falcon.",
+   "text": "{Setzer}: وضعتها في المخزن.{line}لم أحتمل النظر إليها.{line}لكنها الآن قد تنقذنا…\n{center}{line}الفالكون."
+  },
+  {
+   "id": "tomb.2470",
+   "context": "Message 2470 of the dialogue: DARYL: Come on!{line}Stop lagging back there!",
+   "text": "داريل: هيا!{line}كف عن التخلف هناك في الخلف!"
+  },
+  {
+   "id": "tomb.2471",
+   "context": "Message 2471 of the dialogue: DARYL: Or do you like chewing on my wake!",
+   "text": "داريل: أم تحب أن تمضغ غباري!"
+  },
+  {
+   "id": "tomb.2472",
+   "context": "Message 2472 of the dialogue: {Setzer}: Listen to you!",
+   "text": "{Setzer}: اسمعي نفسك!"
+  },
+  {
+   "id": "tomb.2473",
+   "context": "Message 2473 of the dialogue: DARYL: This time's for real.{line}I'm going to break every record!{page}I'll be known as the woman who flew closest to the stars!",
+   "text": "داريل: هذه المرة جدية.{line}سأحطم كل الأرقام القياسية!\nسأعرف بالمرأة التي حلقت أقرب ما يكون إلى النجوم!"
+  },
+  {
+   "id": "tomb.2474",
+   "context": "Message 2474 of the dialogue: {Setzer}: Be back before sunset! I'll be waiting for you on our hill.",
+   "text": "{Setzer}: عودي قبل الغروب! سأنتظرك على تلتنا."
+  },
+  {
+   "id": "tomb.2475",
+   "context": "Message 2475 of the dialogue: {line}  The wreck of the Falcon was{line}    found a full year later,{line}{Spaces 06}in a distant land…",
+   "text": "{center}{line}عثر على حطام الفالكون{line}بعد عام كامل،{line}في أرض بعيدة…"
+  },
+  {
+   "id": "tomb.2476",
+   "context": "Message 2476 of the dialogue: {Setzer}: I restored the craft, and then put it to rest down here.",
+   "text": "{Setzer}: رممت السفينة، ثم أودعتها راحتها هنا في الأسفل."
+  },
+  {
+   "id": "tomb.2477",
+   "context": "Message 2477 of the dialogue: {Edgar}: This is THE Falcon?",
+   "text": "{Edgar}: أهذه هي الفالكون؟"
+  },
+  {
+   "id": "tomb.2478",
+   "context": "Message 2478 of the dialogue: {Edgar}: I finally think we're gonna pull this off!{page}{Celes}: We can attack Kefka's tower from the air!{page}{Edgar}: The Falcon's going to give us one last chance at that guy…",
+   "text": "{Edgar}: أظن أخيرا أننا سننجح في هذا!\n{Celes}: نستطيع مهاجمة برج كيفكا من الجو!\n{Edgar}: الفالكون ستمنحنا فرصة أخيرة مع ذلك الرجل…"
+  },
+  {
+   "id": "tomb.2479",
+   "context": "Message 2479 of the dialogue: {Setzer}: But first we need to find our friends!",
+   "text": "{Setzer}: لكن أولا علينا أن نجد أصدقاءنا!"
+  },
+  {
+   "id": "tomb.2480",
+   "context": "Message 2480 of the dialogue: {Edgar}: Right.{line}First things first.{line}{Wait}For once I feel hopeful!",
+   "text": "{Edgar}: صحيح.{line}الأهم أولا.{line}{Wait}للمرة الأولى أشعر بالأمل!"
+  },
+  {
+   "id": "tomb.2481",
+   "context": "Message 2481 of the dialogue: {Celes}: Hey!{line}A bird!",
+   "text": "{Celes}: هيه!{line}طائر!"
+  },
+  {
+   "id": "tomb.2482",
+   "context": "Message 2482 of the dialogue: {Celes}: {Setzer}!{line}Follow that bird!{page}{Setzer}: But why?{page}{Celes}: I…don't know…!{line}Something inside just tells me it's important…",
+   "text": "{Celes}: {Setzer}!{line}اتبع ذلك الطائر!\n{Setzer}: لكن لماذا؟\n{Celes}: لا… أعرف…!{line}شيء في داخلي يقول لي إنه مهم…"
+  },
+  {
+   "id": "tomb.2483",
+   "context": "Message 2483 of the dialogue: {Choice} DLRO{line}{Choice} ERAU{line}{Choice} QSSI{line}{Choice} WEHT",
+   "text": "{Choice} العالم{line}{Choice} إن{line}{Choice} هذا{line}{Choice} مربع"
+  },
+  {
+   "id": "tomb.2484",
+   "context": "Message 2484 of the dialogue: {Choice} ERAU{line}{Choice} QSSI{line}{Choice} WEHT",
+   "text": "{Choice} إن{line}{Choice} هذا{line}{Choice} مربع"
+  },
+  {
+   "id": "tomb.2485",
+   "context": "Message 2485 of the dialogue: {Choice} DLRO{line}{Choice} QSSI{line}{Choice} WEHT",
+   "text": "{Choice} العالم{line}{Choice} هذا{line}{Choice} مربع"
+  },
+  {
+   "id": "tomb.2486",
+   "context": "Message 2486 of the dialogue: {Choice} DLRO{line}{Choice} ERAU{line}{Choice} WEHT",
+   "text": "{Choice} العالم{line}{Choice} إن{line}{Choice} مربع"
+  },
+  {
+   "id": "tomb.2487",
+   "context": "Message 2487 of the dialogue: {Choice} DLRO{line}{Choice} ERAU{line}{Choice} QSSI",
+   "text": "{Choice} العالم{line}{Choice} إن{line}{Choice} هذا"
+  },
+  {
+   "id": "tomb.2488",
+   "context": "Message 2488 of the dialogue: {line}{Choice} QSSI{line}{Choice} WEHT",
+   "text": "{line}{Choice} هذا{line}{Choice} مربع"
+  },
+  {
+   "id": "tomb.2489",
+   "context": "Message 2489 of the dialogue: {line}{Choice} ERAU{line}{Choice} WEHT",
+   "text": "{line}{Choice} إن{line}{Choice} مربع"
+  },
+  {
+   "id": "tomb.2490",
+   "context": "Message 2490 of the dialogue: {line}{Choice} ERAU{line}{Choice} QSSI",
+   "text": "{line}{Choice} إن{line}{Choice} هذا"
+  },
+  {
+   "id": "tomb.2491",
+   "context": "Message 2491 of the dialogue: {line}{Choice} QSSI{line}{Choice} WEHT",
+   "text": "{line}{Choice} هذا{line}{Choice} مربع"
+  },
+  {
+   "id": "tomb.2492",
+   "context": "Message 2492 of the dialogue: {line}{Choice} DLRO{line}{Choice} WEHT",
+   "text": "{line}{Choice} العالم{line}{Choice} مربع"
+  },
+  {
+   "id": "tomb.2493",
+   "context": "Message 2493 of the dialogue: {line}{Choice} DLRO{line}{Choice} QSSI",
+   "text": "{line}{Choice} العالم{line}{Choice} هذا"
+  },
+  {
+   "id": "tomb.2494",
+   "context": "Message 2494 of the dialogue: {line}{Choice} ERAU{line}{Choice} WEHT",
+   "text": "{line}{Choice} إن{line}{Choice} مربع"
+  },
+  {
+   "id": "tomb.2495",
+   "context": "Message 2495 of the dialogue: {line}{Choice} DLRO{line}{Choice} WEHT",
+   "text": "{line}{Choice} العالم{line}{Choice} مربع"
+  },
+  {
+   "id": "tomb.2496",
+   "context": "Message 2496 of the dialogue: {line}{Choice} DLRO{line}{Choice} ERAU",
+   "text": "{line}{Choice} العالم{line}{Choice} إن"
+  },
+  {
+   "id": "tomb.2497",
+   "context": "Message 2497 of the dialogue: {line}{Choice} ERAU{line}{Choice} QSSI",
+   "text": "{line}{Choice} إن{line}{Choice} هذا"
+  },
+  {
+   "id": "tomb.2498",
+   "context": "Message 2498 of the dialogue: {line}{Choice} DLRO{line}{Choice} QSSI",
+   "text": "{line}{Choice} العالم{line}{Choice} هذا"
+  },
+  {
+   "id": "tomb.2499",
+   "context": "Message 2499 of the dialogue: {line}{Choice} DLRO{line}{Choice} ERAU",
+   "text": "{line}{Choice} العالم{line}{Choice} إن"
+  },
+  {
+   "id": "tomb.2500",
+   "context": "Message 2500 of the dialogue: {line}ERAUQS SI DLROW EHT",
+   "text": "{line}إن هذا العالم مربع"
+  },
+  {
+   "id": "tomb.2501",
+   "context": "Message 2501 of the dialogue: {line}QSSI ERAUDL ROWEHT",
+   "text": "{line}هذا إن العالم مربع"
+  },
+  {
+   "id": "tomb.2502",
+   "context": "Message 2502 of the dialogue: {line}QSSIRO DLERAUWEHT",
+   "text": "{line}هذا العالم إن مربع"
+  },
+  {
+   "id": "tomb.2503",
+   "context": "Message 2503 of the dialogue: {line}DLROQSSIAU ERWEHT",
+   "text": "{line}العالم هذا إن مربع"
+  },
+  {
+   "id": "tomb.2504",
+   "context": "Message 2504 of the dialogue: {line}DLROERAU QSSIWEHT",
+   "text": "{line}العالم إن هذا مربع"
+  },
+  {
+   "id": "tomb.2505",
+   "context": "Message 2505 of the dialogue: {line}AUERDLRO QSSIWEHT",
+   "text": "{line}إن العالم هذا مربع"
+  },
+  {
+   "id": "tomb.2506",
+   "context": "Message 2506 of the dialogue: {line}QSSIAU ERWEHTDLRO",
+   "text": "{line}هذا إن مربع العالم"
+  },
+  {
+   "id": "tomb.2507",
+   "context": "Message 2507 of the dialogue: {line}ERAUQSSIWEHTDLRO",
+   "text": "{line}إن هذا مربع العالم"
+  },
+  {
+   "id": "tomb.2508",
+   "context": "Message 2508 of the dialogue: {line}QSSIWEHT ERAUDLRO",
+   "text": "{line}هذا مربع إن العالم"
+  },
+  {
+   "id": "tomb.2509",
+   "context": "Message 2509 of the dialogue: {line}WEHTQSSI ERAUDLRO",
+   "text": "{line}مربع هذا إن العالم"
+  },
+  {
+   "id": "tomb.2510",
+   "context": "Message 2510 of the dialogue: {line}WEHT ERAUQSSIRO DL",
+   "text": "{line}مربع إن هذا العالم"
+  },
+  {
+   "id": "tomb.2511",
+   "context": "Message 2511 of the dialogue: {line}ERAUWEHT QSSIRO DL",
+   "text": "{line}إن مربع هذا العالم"
+  },
+  {
+   "id": "tomb.2512",
+   "context": "Message 2512 of the dialogue: {line}ERAUDLROHT WEQSSI",
+   "text": "{line}إن العالم مربع هذا"
+  },
+  {
+   "id": "tomb.2513",
+   "context": "Message 2513 of the dialogue: {line}DLRO ERAUHT WEQSSI",
+   "text": "{line}العالم إن مربع هذا"
+  },
+  {
+   "id": "tomb.2514",
+   "context": "Message 2514 of the dialogue: {line}DLROWEHT ERAUQSSI",
+   "text": "{line}العالم مربع إن هذا"
+  },
+  {
+   "id": "tomb.2515",
+   "context": "Message 2515 of the dialogue: {line}WEHTDLRO ERAUQSSI",
+   "text": "{line}مربع العالم إن هذا"
+  },
+  {
+   "id": "tomb.2516",
+   "context": "Message 2516 of the dialogue: {line}WEHTERAUDLROQSSI",
+   "text": "{line}مربع إن العالم هذا"
+  },
+  {
+   "id": "tomb.2517",
+   "context": "Message 2517 of the dialogue: {line}ERAUWEHTDLROQSSI",
+   "text": "{line}إن مربع العالم هذا"
+  },
+  {
+   "id": "tomb.2518",
+   "context": "Message 2518 of the dialogue: {line}QSSIDLROWEHTERAU",
+   "text": "{line}هذا العالم مربع إن"
+  },
+  {
+   "id": "tomb.2519",
+   "context": "Message 2519 of the dialogue: {line}DLROQSSIWEHTERAU",
+   "text": "{line}العالم هذا مربع إن"
+  },
+  {
+   "id": "tomb.2520",
+   "context": "Message 2520 of the dialogue: {line}DLROWEHTQSSIERAU",
+   "text": "{line}العالم مربع هذا إن"
+  },
+  {
+   "id": "tomb.2521",
+   "context": "Message 2521 of the dialogue: {line}WEHTDLROQSSIERAU",
+   "text": "{line}مربع العالم هذا إن"
+  },
+  {
+   "id": "tomb.2522",
+   "context": "Message 2522 of the dialogue: {line}WEHTQSSIDLROERAU",
+   "text": "{line}مربع هذا العالم إن"
+  },
+  {
+   "id": "tomb.2523",
+   "context": "Message 2523 of the dialogue: {line}QSSIWEHTDLROERAU",
+   "text": "{line}هذا مربع العالم إن"
+  },
+  {
+   "id": "tomb.2524",
+   "context": "Message 2524 of the dialogue: The tombstone is blank.{line}Carve something?{line}{Choice}  Yes{line} {Choice}  No",
+   "text": "شاهد القبر فارغ.{line}تنقش شيئا؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "tomb.2525",
+   "context": "Message 2525 of the dialogue: Nothing appropriate comes to mind…",
+   "text": "لا يخطر ببالي شيء مناسب…"
+  },
+  {
+   "id": "tomb.2526",
+   "context": "Message 2526 of the dialogue: Letters have been carved here…",
+   "text": "نقشت هنا كلمات…"
+  },
+  {
+   "id": "tomb.2527",
+   "context": "Message 2527 of the dialogue: {line}DLRO",
+   "text": "{line}العالم"
+  },
+  {
+   "id": "tomb.2528",
+   "context": "Message 2528 of the dialogue: {line}ERAU",
+   "text": "{line}إن"
+  },
+  {
+   "id": "tomb.2529",
+   "context": "Message 2529 of the dialogue: {line}QSSI",
+   "text": "{line}هذا"
+  },
+  {
+   "id": "tomb.2530",
+   "context": "Message 2530 of the dialogue: {line}WEHT",
+   "text": "{line}مربع"
+  },
+  {
+   "id": "tomb.2531",
+   "context": "Message 2531 of the dialogue: {line}  Find the “Exp. Egg” hidden{line}{Spaces 0A}in a back room{line}{Spaces 05}in the 3rd basement…",
+   "text": "{center}{line}ابحث عن «بيضة الخبرة» المخبأة{line}في غرفة خلفية{line}في الطابق السفلي الثالث…"
+  },
+  {
+   "id": "maranda-ruin.2532",
+   "context": "Message 2532 of the dialogue: A Knight came through here recently…{line}He was amazing! But his heart was full of chaos…{page}When he can cope with his pain, he'll be the mightiest warrior alive.",
+   "text": "مر فارس من هنا مؤخرا…{line}كان مذهلا! لكن قلبه كان مليئا بالفوضى…\nحين يستطيع التعامل مع ألمه، سيكون أعظم محارب على قيد الحياة."
+  },
+  {
+   "id": "maranda-ruin.2533",
+   "context": "Message 2533 of the dialogue: I used to be a thief.{line}But one day I uncovered a secret so awesome, I had to run and hide!",
+   "text": "كنت لصا.{line}لكنني ذات يوم اكتشفت سرا رهيبا اضطررت معه إلى الهرب والاختباء!"
+  },
+  {
+   "id": "maranda-ruin.2534",
+   "context": "Message 2534 of the dialogue: I'm a former thief. My old accomplice used to mumble this in his sleep, “To the right of the treasure chest…”",
+   "text": "أنا لص سابق. شريكي القديم كان يتمتم بهذا في نومه: «إلى يمين صندوق الكنز…»"
+  },
+  {
+   "id": "maranda-ruin.2535",
+   "context": "Message 2535 of the dialogue: I used to be a thief. I climbed the tower of Kefka's followers, in spite of the danger.{page}But I got hurt, and had to turn back after the first treasure room…",
+   "text": "كنت لصا. تسلقت برج أتباع كيفكا رغم الخطر.\nلكنني أصبت، واضطررت إلى العودة بعد غرفة الكنز الأولى…"
+  },
+  {
+   "id": "maranda-ruin.2536",
+   "context": "Message 2536 of the dialogue: A spell ago, some oddball came strolling through here.{line}Kept callin' people “thou.”",
+   "text": "قبل فترة، مر من هنا شخص غريب الأطوار.{line}ظل يخاطب الناس بلغة الفرسان القديمة."
+  },
+  {
+   "id": "maranda-ruin.2537",
+   "context": "Message 2537 of the dialogue: I've learned a lot about our new world from the thieves and travelers that have come through here.{page}What shall I talk about?{page}{Choice} (Narshe){line}{Choice} (The Veldt){line}{Choice} (Doma Castle){line}{Choice} (Nothing, thanks!)",
+   "text": "تعلمت الكثير عن عالمنا الجديد من اللصوص والمسافرين الذين مروا من هنا.\nعم أحدثك؟\n{Choice} (نارشي){line}{Choice} (الفيلدت){line}{Choice} (قلعة دوما){line}{Choice} (لا شيء، شكرا!)"
+  },
+  {
+   "id": "maranda-ruin.2538",
+   "context": "Message 2538 of the dialogue: You know that guy in Zozo who says,{line}“This place is dangerous!”?{page}He's the only one guy in that town who tells the truth.{line}Maybe he can help you.",
+   "text": "أتعرف ذلك الرجل في زوزو الذي يقول:{line}«هذا المكان خطر!»؟\nإنه الوحيد في تلك البلدة الذي يقول الحقيقة.{line}ربما يستطيع مساعدتك."
+  },
+  {
+   "id": "maranda-ruin.2539",
+   "context": "Message 2539 of the dialogue: Your own past can be your worst enemy. Friends…family…gotta let 'em all go…",
+   "text": "ماضيك قد يكون ألد أعدائك. الأصدقاء… العائلة… عليك أن تتركهم جميعا…"
+  },
+  {
+   "id": "maranda-ruin.2540",
+   "context": "Message 2540 of the dialogue: Could that have been you,{line}{Cyan}…?{line}You look so confused, maybe{line}you'd better go back home.",
+   "text": "أيمكن أن يكون ذاك أنت،{line}يا {Cyan}…؟{line}تبدو مشوشا جدا، ربما{line}من الأفضل أن تعود إلى بيتك."
+  },
+  {
+   "id": "maranda-ruin.2541",
+   "context": "Message 2541 of the dialogue: Recently Lola has been receiving a lot of letters.{line}Must be from that guy in Mobliz…?",
+   "text": "مؤخرا صارت لولا تتلقى رسائل كثيرة.{line}لا بد أنها من ذلك الشاب في موبليز…؟"
+  },
+  {
+   "id": "maranda-ruin.2542",
+   "context": "Message 2542 of the dialogue: LOLA: Look!{line}My boyfriend in Mobliz sent me all these flowers!{page}They're all hand-made of silk. And these are letters he has written to me…",
+   "text": "لولا: انظر!{line}حبيبي في موبليز أرسل لي كل هذه الزهور!\nكلها مصنوعة يدويا من الحرير. وهذه رسائل كتبها لي…"
+  },
+  {
+   "id": "maranda-ruin.2543",
+   "context": "Message 2543 of the dialogue: ???{line}But wasn't Mobliz demolished by Kefka? Somebody else must have written these…",
+   "text": "؟؟؟{line}لكن ألم يدمر كيفكا موبليز؟ لا بد أن أحدا آخر كتب هذه…"
+  },
+  {
+   "id": "maranda-ruin.2544",
+   "context": "Message 2544 of the dialogue: Read the letter?{line}{Choice} Yes{line}{Choice} No",
+   "text": "تقرأ الرسالة؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "maranda-ruin.2545",
+   "context": "Message 2545 of the dialogue: My beloved Lola,{line}We're still busy trying to rebuild this town…{page}If all goes well I'll be able to come home to you soon…",
+   "text": "حبيبتي لولا،{line}ما زلنا منشغلين بمحاولة إعادة بناء هذه البلدة…\nإن سار كل شيء على ما يرام فسأستطيع العودة إليك قريبا…"
+  },
+  {
+   "id": "maranda-ruin.2546",
+   "context": "Message 2546 of the dialogue: …this handwriting…{line}It looks a lot like {Cyan}'s… But where is he mailing them from?",
+   "text": "…هذا الخط…{line}يشبه كثيرا خط {Cyan}… لكن من أين يرسلها؟"
+  },
+  {
+   "id": "maranda-ruin.2547",
+   "context": "Message 2547 of the dialogue: LOLA: Could you please attach this reply to a carrier pigeon?{page}Do this favor for Lola?{line}{Choice} Yes{line}{Choice} No",
+   "text": "لولا: هلا ربطت هذا الرد بحمامة زاجل؟\nتفعل هذا المعروف للولا؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "maranda-ruin.2548",
+   "context": "Message 2548 of the dialogue: LOLA: Thank you.",
+   "text": "لولا: شكرا لك."
+  },
+  {
+   "id": "maranda-ruin.2549",
+   "context": "Message 2549 of the dialogue: LOLA: I hope his reply comes soon!",
+   "text": "لولا: آمل أن يصل رده قريبا!"
+  },
+  {
+   "id": "maranda-ruin.2550",
+   "context": "Message 2550 of the dialogue: Silk flowers…{line}Beautifully made, too…",
+   "text": "زهور من حرير…{line}ومصنوعة بإتقان أيضا…"
+  },
+  {
+   "id": "maranda-ruin.2551",
+   "context": "Message 2551 of the dialogue: LOLA: I knew that these flowers and letters weren't sent by my boyfriend. I just didn't want to admit it.{page}I was lying to myself…{line}But I'm all right now.{line}As I read those letters…{page}…the pain I felt in my heart became bearable…{line}I'm sure whoever wrote them has suffered greatly… {Wait}{page}I wish I could meet him…",
+   "text": "لولا: كنت أعرف أن هذه الزهور والرسائل لم يرسلها حبيبي. لكنني لم أرد الاعتراف بذلك.\nكنت أكذب على نفسي…{line}لكنني بخير الآن.{line}وأنا أقرأ تلك الرسائل…\n…صار الألم الذي أشعر به في قلبي محتملا…{line}أنا واثقة أن من كتبها عانى كثيرا… {Wait}\nليتني أستطيع لقاءه…"
+  },
+  {
+   "id": "maranda-ruin.2552",
+   "context": "Message 2552 of the dialogue: Actually, …",
+   "text": "في الحقيقة، …"
+  },
+  {
+   "id": "maranda-ruin.2553",
+   "context": "Message 2553 of the dialogue: {Cyan}: Look to the future…{line}We have a lot of life left to live…",
+   "text": "{Cyan}: انظري إلى المستقبل…{line}أمامنا حياة طويلة لنعيشها…"
+  },
+  {
+   "id": "maranda-ruin.2554",
+   "context": "Message 2554 of the dialogue: I feel like I have a future now! I'll take your words to heart… {Wait}{line}I'll be okay.",
+   "text": "أشعر أن لي مستقبلا الآن! سأحفظ كلماتك في قلبي… {Wait}{line}سأكون بخير."
+  },
+  {
+   "id": "maranda-ruin.2555",
+   "context": "Message 2555 of the dialogue: {Cyan} exchanged the letters…",
+   "text": "{Cyan} بدل الرسائل…"
+  },
+  {
+   "id": "maranda-ruin.2556",
+   "context": "Message 2556 of the dialogue: {line}  The world before the fall…{line}Delightful is the light of dawn…{line}  Noble is the heart of man… {Pause 1C}{Key}",
+   "text": "{center}{line}العالم قبل السقوط…{line}بهيج هو نور الفجر…{line}نبيل هو قلب الإنسان… {Pause 1C}{Key}"
+  },
+  {
+   "id": "maranda-ruin.2557",
+   "context": "Message 2557 of the dialogue: {Cyan}!!",
+   "text": "{Cyan}!!"
+  },
+  {
+   "id": "maranda-ruin.2558",
+   "context": "Message 2558 of the dialogue: {Cyan}: Hey!!{line}You're alive!?",
+   "text": "{Cyan}: هيه!!{line}أنتم أحياء!؟"
+  },
+  {
+   "id": "maranda-ruin.2559",
+   "context": "Message 2559 of the dialogue: {Cyan}…",
+   "text": "{Cyan}…"
+  },
+  {
+   "id": "maranda-ruin.2560",
+   "context": "Message 2560 of the dialogue: {Cyan}: I shall go with you!{line}I shan't leave the world as it is!{page}But how did you find me? {Wait}{line}W…wait!{line}Tell me you didn't read my letters…!!",
+   "text": "{Cyan}: سأذهب معكم!{line}لن أترك العالم على حاله!\nلكن كيف وجدتموني؟ {Wait}{line}ا… انتظروا!{line}قولوا لي إنكم لم تقرؤوا رسائلي…!!"
+  },
+  {
+   "id": "maranda-ruin.2561",
+   "context": "Message 2561 of the dialogue: {Cyan}: These… {Wait}{line}they're… {Wait}um… {Wait}{line}Merely a diversion of mine…",
+   "text": "{Cyan}: هذه… {Wait}{line}إنها… {Wait}أمم… {Wait}{line}مجرد تسلية من تسلياتي…"
+  },
+  {
+   "id": "maranda-ruin.2562",
+   "context": "Message 2562 of the dialogue: {Cyan}.{line}These flowers are gorgeous!",
+   "text": "{Cyan}.{line}هذه الزهور رائعة!"
+  },
+  {
+   "id": "maranda-ruin.2563",
+   "context": "Message 2563 of the dialogue: {Cyan}: Mm…m…!?{line}This is an outrage…!",
+   "text": "{Cyan}: مم… م…!؟{line}هذه إهانة…!"
+  },
+  {
+   "id": "maranda-ruin.2564",
+   "context": "Message 2564 of the dialogue: {Cyan}: Seriously?",
+   "text": "{Cyan}: حقا؟"
+  },
+  {
+   "id": "maranda-ruin.2565",
+   "context": "Message 2565 of the dialogue: {Cyan}: I learned of that poor girl when I passed through Maranda.{page}When I heard that she sent a letter each day, but never received any replies…{line}Something inside me snapped…",
+   "text": "{Cyan}: علمت بأمر تلك الفتاة المسكينة حين مررت بماراندا.\nوحين سمعت أنها ترسل رسالة كل يوم، ولا تتلقى ردا أبدا…{line}انكسر شيء في داخلي…"
+  },
+  {
+   "id": "maranda-ruin.2566",
+   "context": "Message 2566 of the dialogue: {Cyan}: As I wrote to that girl, I realized I was very much like her.{page}I was looking behind…full of despair. My eyes were closed…{line}And then something changed…",
+   "text": "{Cyan}: وأنا أكتب لتلك الفتاة، أدركت أنني أشبهها كثيرا.\nكنت أنظر إلى الوراء… مليئا باليأس. كانت عيناي مغمضتين…{line}ثم تغير شيء ما…"
+  },
+  {
+   "id": "maranda-ruin.2567",
+   "context": "Message 2567 of the dialogue: I bumped into Sir {Gau} in Maranda. He said he had to become stronger if he was to face Kefka.{page}He probably returned to the Veldt.",
+   "text": "صادفت السيد {Gau} في ماراندا. قال إن عليه أن يصير أقوى إن كان سيواجه كيفكا.\nعلى الأرجح عاد إلى الفيلدت."
+  },
+  {
+   "id": "maranda-ruin.2568",
+   "context": "Message 2568 of the dialogue: Dear Lola,{line}I am writing to beg for your forgiveness. I am guilty of perpetuating a terrible lie…{page}I have only now realized the error of my ways. I hope I can correct a great wrong.{page}Your boyfriend, who you thought was in Mobliz, passed away some time ago. I have been writing in his stead…{page}We humans tend to allow the past to destroy our lives.{line}I implore you not to let this happen.{page}It is time to look forward, to rediscover love, and embrace the beauty of life.{page}You have so much of life left to live…{line}{Spaces 0C}{Cyan}",
+   "text": "عزيزتي لولا،{line}أكتب لأتوسل إليك أن تسامحيني. أنا مذنب بإدامة كذبة فظيعة…\nلم أدرك إلا الآن خطأ ما فعلت. آمل أن أصلح خطأ جسيما.\nحبيبك، الذي ظننته في موبليز، فارق الحياة منذ مدة. وكنت أكتب بدلا منه…\nنحن البشر نميل إلى أن ندع الماضي يدمر حياتنا.{line}أتوسل إليك ألا تدعي هذا يحدث.\nحان وقت التطلع إلى الأمام، وإعادة اكتشاف الحب، واحتضان جمال الحياة.\nأمامك الكثير من الحياة لتعيشيها…{line}{Cyan}"
+  },
+  {
+   "id": "maranda-ruin.2569",
+   "context": "Message 2569 of the dialogue: Locked!",
+   "text": "مقفل!"
+  },
+  {
+   "id": "maranda-ruin.2570",
+   "context": "Message 2570 of the dialogue: W…why…{line}{Wait}A child could use this machine!{line}This is a joke! I'll never be afraid of machines again!{page}Found “Machinery Manual”{line}……and…… {Wait}{line}“Book of Secrets.”",
+   "text": "ل… لماذا…{line}{Wait}طفل يستطيع استعمال هذه الآلة!{line}هذه مزحة! لن أخاف من الآلات مجددا أبدا!\nوجدت «دليل الآلات»{line}…… و…… {Wait}{line}«كتاب الأسرار»."
+  },
+  {
+   "id": "maranda-ruin.2571",
+   "context": "Message 2571 of the dialogue: {Cyan}: No!{line}That's mine!!!",
+   "text": "{Cyan}: لا!{line}هذا لي!!!"
+  },
+  {
+   "id": "maranda-ruin.2572",
+   "context": "Message 2572 of the dialogue: Found the key to {Cyan}'s treasure chest.",
+   "text": "وجدت مفتاح صندوق كنز {Cyan}."
+  },
+  {
+   "id": "gogo.2573",
+   "context": "Message 2573 of the dialogue: Shrouded in odd clothing,{line}…is this a man…?{line}…a woman…?{line}…or should we ask…?",
+   "text": "ملفوف بثياب غريبة،{line}…أهذا رجل…؟{line}…امرأة…؟{line}…أم علينا أن نسأل…؟"
+  },
+  {
+   "id": "gogo.2574",
+   "context": "Message 2574 of the dialogue: CREATURE: I am {Gogo}, master of the simulacrum…{page}My miming skills will astonish you.",
+   "text": "المخلوق: أنا {Gogo}، سيد المحاكاة…\nمهاراتي في التقليد ستذهلكم."
+  },
+  {
+   "id": "gogo.2575",
+   "context": "Message 2575 of the dialogue: {Gogo}: Yes…I have been idle for too long. If I deem you worthy, I'll mime your actions in battle.{page}But first you must tell me what you're doing here.",
+   "text": "{Gogo}: نعم… بقيت خاملا أكثر من اللازم. إن رأيتكم جديرين، فسأقلد أفعالكم في المعركة.\nلكن أولا عليكم أن تخبروني ماذا تفعلون هنا."
+  },
+  {
+   "id": "gogo.2576",
+   "context": "Message 2576 of the dialogue: {Gogo}: What an unusual tale…{page}But I sense that you're trying to help make things right again. This should be fun.{line}When do we leave?",
+   "text": "{Gogo}: يا لها من حكاية غير عادية…\nلكنني أشعر أنكم تحاولون المساعدة في إصلاح الأمور. سيكون هذا ممتعا.{line}متى نرحل؟"
+  },
+  {
+   "id": "gogo.2577",
+   "context": "Message 2577 of the dialogue: You're…coming with us?",
+   "text": "أنت… قادم معنا؟"
+  },
+  {
+   "id": "veldt-cave.2578",
+   "context": "Message 2578 of the dialogue: Look at those wounds…",
+   "text": "انظروا إلى تلك الجراح…"
+  },
+  {
+   "id": "veldt-cave.2579",
+   "context": "Message 2579 of the dialogue: We can't do anything for her here.{page}Let's take her back to Thamasa using the airship.",
+   "text": "لا نستطيع فعل شيء لها هنا.\nلنعدها إلى ثماسا بالسفينة الطائرة."
+  },
+  {
+   "id": "veldt-cave.2580",
+   "context": "Message 2580 of the dialogue: You were having a nightmare…",
+   "text": "كنت تعانين من كابوس…"
+  },
+  {
+   "id": "veldt-cave.2581",
+   "context": "Message 2581 of the dialogue: Let's rest here for a moment.",
+   "text": "لنرتح هنا لحظة."
+  },
+  {
+   "id": "veldt-cave.2582",
+   "context": "Message 2582 of the dialogue: ……",
+   "text": "……"
+  },
+  {
+   "id": "veldt-cave.2583",
+   "context": "Message 2583 of the dialogue: Are you okay?",
+   "text": "أأنت بخير؟"
+  },
+  {
+   "id": "veldt-cave.2584",
+   "context": "Message 2584 of the dialogue: {Relm}: I'm still a bit groggy…{line}{Wait}But I'm okay. Interceptor always makes me happy!",
+   "text": "{Relm}: ما زلت مترنحة قليلا…{line}{Wait}لكنني بخير. إنترسبتور يسعدني دائما!"
+  },
+  {
+   "id": "veldt-cave.2585",
+   "context": "Message 2585 of the dialogue: {Shadow}: No need to worry. It's just a scratch.{line}{Wait}Also, he's gonna stand guard,{line}so you just relax.",
+   "text": "{Shadow}: لا داعي للقلق. مجرد خدش.{line}{Wait}وهو سيقف حارسا،{line}فاسترخي أنت."
+  },
+  {
+   "id": "veldt-cave.2586",
+   "context": "Message 2586 of the dialogue: We 3 recently went hunting on the Veldt. We saw some weird kid there dressed all in hides…",
+   "text": "نحن الثلاثة ذهبنا مؤخرا للصيد في الفيلدت. رأينا هناك فتى غريبا يرتدي الجلود كلها…"
+  },
+  {
+   "id": "veldt-cave.2587",
+   "context": "Message 2587 of the dialogue: You came to fetch me…{line}{Wait}But I won't be coming back…{line}{Wait}I want you, and the girl,{line}to live in a peaceful world…",
+   "text": "جئتم لتأخذوني…{line}{Wait}لكنني لن أعود…{line}{Wait}أريدك أنت، والفتاة،{line}أن تعيشا في عالم يسوده السلام…"
+  },
+  {
+   "id": "veldt-cave.2588",
+   "context": "Message 2588 of the dialogue: Papa…?{line}{Wait}Where'd he go?{line}{Wait}Is he ever coming back?",
+   "text": "بابا…؟{line}{Wait}أين ذهب؟{line}{Wait}هل سيعود يوما؟"
+  },
+  {
+   "id": "veldt-cave.2589",
+   "context": "Message 2589 of the dialogue: For some reason he never came near when all 4 of us were together.",
+   "text": "لسبب ما لم يقترب قط حين كنا نحن الأربعة معا."
+  },
+  {
+   "id": "veldt-cave.2590",
+   "context": "Message 2590 of the dialogue: Reduce the number of people in your party if you want him to approach you.",
+   "text": "قلل عدد أفراد فريقك إن أردته أن يقترب منك."
+  },
+  {
+   "id": "veldt-cave.2591",
+   "context": "Message 2591 of the dialogue: In a forest north of the Veldt dwells a frightful dragon.{page}I suppose no human could ever defeat it…but oh, how free we would be if someone could…",
+   "text": "في غابة شمال الفيلدت يسكن تنين مخيف.\nأظن أن لا بشري يستطيع هزيمته أبدا… لكن آه، كم سنكون أحرارا لو استطاع أحد…"
+  },
+  {
+   "id": "phoenix.2592",
+   "context": "Message 2592 of the dialogue: {Locke}!!",
+   "text": "{Locke}!!"
+  },
+  {
+   "id": "phoenix.2593",
+   "context": "Message 2593 of the dialogue: {Locke}: You're all safe! {Wait} Behold…{line}A legendary relic that can restore life…",
+   "text": "{Locke}: أنتم جميعا بخير! {Wait} انظروا…{line}تميمة أسطورية تستطيع إعادة الحياة…"
+  },
+  {
+   "id": "phoenix.2594",
+   "context": "Message 2594 of the dialogue: That looks like… {Wait}{line}Magicite…{page}{Locke}: Correct!{line}Legend has it that ages ago the Phoenix was turned to stone…{page}And many legends are based on facts…{page}This has some major cracks in it though…{line}I fear it may have lost its power over time…",
+   "text": "هذا يبدو مثل… {Wait}{line}ماجيسايت…\n{Locke}: صحيح!{line}تقول الأسطورة إن الفينيكس تحول إلى حجر منذ عصور…\nوكثير من الأساطير مبنية على حقائق…\nلكن فيه تشققات كبيرة…{line}أخشى أن يكون قد فقد قوته مع الزمن…"
+  },
+  {
+   "id": "phoenix.2595",
+   "context": "Message 2595 of the dialogue: {Celes}: {Locke}…{line}That's for Rachel, isn't it…?",
+   "text": "{Celes}: {Locke}…{line}هذا من أجل راشيل، أليس كذلك…؟"
+  },
+  {
+   "id": "phoenix.2596",
+   "context": "Message 2596 of the dialogue: {Locke}: I wasn't able to save Rachel…{line}I've lost all sense of purpose…{page}My life will have no meaning until I can right this terrible wrong…",
+   "text": "{Locke}: لم أستطع إنقاذ راشيل…{line}فقدت كل إحساس بالهدف…\nلن يكون لحياتي معنى حتى أصلح هذا الخطأ الفظيع…"
+  },
+  {
+   "id": "phoenix.2597",
+   "context": "Message 2597 of the dialogue: Will you come with us?{line}Only as far as Kohlingen…",
+   "text": "أتأتون معي؟{line}إلى كولينغن فقط…"
+  },
+  {
+   "id": "phoenix.2598",
+   "context": "Message 2598 of the dialogue: {line}{line}{line}   The village of Kohlingen… {Pause FF}{Key}",
+   "text": "{center}{line}{line}{line}قرية كولينغن… {Pause FF}{Key}"
+  },
+  {
+   "id": "phoenix.2599",
+   "context": "Message 2599 of the dialogue: PATRIARCH: If only the Magicite didn't bear those deep cracks…{line}I think you've been wasting your time, young man!",
+   "text": "العجوز: لو لم تكن في الماجيسايت تلك التشققات العميقة…{line}أظنك أضعت وقتك يا شاب!"
+  },
+  {
+   "id": "phoenix.2600",
+   "context": "Message 2600 of the dialogue: {Locke}: Rachel!!!",
+   "text": "{Locke}: راشيل!!!"
+  },
+  {
+   "id": "phoenix.2601",
+   "context": "Message 2601 of the dialogue: PATRIARCH: Uwaaaaaa!{line}The Magicite's gonna shatter!",
+   "text": "العجوز: أوااااا!{line}الماجيسايت سيتحطم!"
+  },
+  {
+   "id": "phoenix.2602",
+   "context": "Message 2602 of the dialogue: RACHEL: {Locke}…",
+   "text": "راشيل: {Locke}…"
+  },
+  {
+   "id": "phoenix.2603",
+   "context": "Message 2603 of the dialogue: I'm an Imperial Trooper! {Wait}{line}Probably, the last of 'em…{line}I have some valuable information for you!{page}“Talk to the Emperor twice.”{line}Use this when you've found the place where the Emperor hid a secret treasure.",
+   "text": "أنا جندي إمبراطوري! {Wait}{line}على الأرجح آخرهم…{line}عندي معلومة قيمة لكم!\n«كلم الإمبراطور مرتين.»{line}استعملها حين تجد المكان الذي خبأ فيه الإمبراطور كنزا سريا."
+  },
+  {
+   "id": "phoenix.2604",
+   "context": "Message 2604 of the dialogue: RACHEL: {Locke}…{line}I've dreamed of seeing you.{line}I wanted to hear your voice.{line}{Locke}: Rachel…{page}RACHEL: The Phoenix has given me so little time…{line}I have to leave again soon…{page}But I have something I must tell you…",
+   "text": "راشيل: {Locke}…{line}حلمت برؤيتك.{line}أردت أن أسمع صوتك.{line}{Locke}: راشيل…\nراشيل: الفينيكس لم يمنحني إلا وقتا قصيرا…{line}علي أن أرحل مجددا قريبا…\nلكن عندي شيء يجب أن أخبرك به…"
+  },
+  {
+   "id": "phoenix.2605",
+   "context": "Message 2605 of the dialogue: {Locke}: ……{page}RACHEL: {Locke}… {Wait}… {Wait}{line}With you I was so happy…{page}In the instant that the accident occurred, I thought only of you… {Wait}{page}And about the joy you brought me. Thank you, {Locke}…{line}I'll never forget you… {Wait}",
+   "text": "{Locke}: ……\nراشيل: {Locke}… {Wait}… {Wait}{line}كنت معك سعيدة جدا…\nفي لحظة وقوع الحادث، لم أفكر إلا فيك… {Wait}\nوفي الفرح الذي جلبته لي. شكرا لك يا {Locke}…{line}لن أنساك أبدا… {Wait}"
+  },
+  {
+   "id": "phoenix.2606",
+   "context": "Message 2606 of the dialogue: {Locke}: RACHEL!!!!{page}RACHEL: I have to go now… {Wait}{line}…I'll always love you…{page}You must now cast off the anguish you've been harboring inside for so long…{line}Today I set your heart free.{page}You must learn to love yourself again, and regain your self respect.{page}…… {Wait}Phoenix!{line}Be reborn again!!{line}And give your power…to {Locke}!!",
+   "text": "{Locke}: راشيل!!!!\nراشيل: علي أن أذهب الآن… {Wait}{line}…سأحبك دائما…\nعليك الآن أن تنفض عنك العذاب الذي حملته في داخلك طويلا…{line}اليوم أحرر قلبك.\nعليك أن تتعلم أن تحب نفسك مجددا، وتستعيد احترامك لذاتك.\n…… {Wait}أيها الفينيكس!{line}ولد من جديد!!{line}وامنح قوتك… إلى {Locke}!!"
+  },
+  {
+   "id": "phoenix.2607",
+   "context": "Message 2607 of the dialogue: {Locke}: Rachel!!!!",
+   "text": "{Locke}: راشيل!!!!"
+  },
+  {
+   "id": "phoenix.2608",
+   "context": "Message 2608 of the dialogue: {Celes}: {Locke}…",
+   "text": "{Celes}: {Locke}…"
+  },
+  {
+   "id": "phoenix.2609",
+   "context": "Message 2609 of the dialogue: {Locke}: Thanks, I'm okay… {Wait}{line}I feel lighter than air…{line}From here on… {Wait}{page}I'll be all right.{line}Let's go!{line}We have work to do!!",
+   "text": "{Locke}: شكرا، أنا بخير… {Wait}{line}أشعر بخفة كالهواء…{line}من الآن فصاعدا… {Wait}\nسأكون بخير.{line}لنذهب!{line}أمامنا عمل!!"
+  },
+  {
+   "id": "phoenix.2610",
+   "context": "Message 2610 of the dialogue: {Celes}: What's up?",
+   "text": "{Celes}: ما الأمر؟"
+  },
+  {
+   "id": "phoenix.2611",
+   "context": "Message 2611 of the dialogue: {line}{Spaces 08}“X-Potion”!{page}{line}{Spaces 08}“Fenix Down”!{page}{line}{Spaces 08}“X-Ether”!{page}{line}{Spaces 08}“Elixir”!{page}{line}{Spaces 08}“Flame Shld”!{page}{line}{Spaces 08}“ValiantKnife”!",
+   "text": "{center}{line}«جرعة إكس»!\n{center}{line}«ريشة الفينيكس»!\n{center}{line}«إيثر إكس»!\n{center}{line}«إكسير»!\n{center}{line}«درع اللهب»!\n{center}{line}«السكين الباسلة»!"
+  },
+  {
+   "id": "phoenix.2612",
+   "context": "Message 2612 of the dialogue: {Locke}: The treasures of the Phoenix Cave!",
+   "text": "{Locke}: كنوز كهف الفينيكس!"
+  },
+  {
+   "id": "phoenix.2613",
+   "context": "Message 2613 of the dialogue: {Locke}: Right, let's move out! We have an appointment with Kefka!",
+   "text": "{Locke}: حسنا، لننطلق! لدينا موعد مع كيفكا!"
   }
  ]
 }

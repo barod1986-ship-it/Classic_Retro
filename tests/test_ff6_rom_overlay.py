@@ -390,13 +390,16 @@ def test_the_command_group_encodes(capsys):
 
 def test_the_translations_are_checked_and_encoded_without_the_rom():
     report = overlay.check_ff6_translations()
-    assert report["messages"] == 2415 and set(report["names"]) == set(NAME_KEYS)
+    assert report["messages"] == 2610 and set(report["names"]) == set(NAME_KEYS)
     assert report["keys"][:2] == ["narshe.000", "narshe.001"]
-    assert report["keys"][-1] == "ancient-castle.2418" and report["keys"][367] == "locke.369"
+    assert report["keys"][-1] == "phoenix.2613" and report["keys"][367] == "locke.369"
     assert report["keys"][1327] == "vector.1330" and report["keys"][1326] == "airship.1329"
     assert report["keys"][1495] == "ruin.1498" and report["keys"][1494] == "maduin.1497"
     assert report["keys"][1884] == "voyage.1888" and report["keys"][1883] == "setzer.1887"
     assert report["keys"][2164] == "island.2168" and report["keys"][2163] == "continent.2167"
+    assert (
+        report["keys"][2415] == "colosseum.2419" and report["keys"][2414] == "ancient-castle.2418"
+    )
     assert report["keys"][930] == "castle.933" and report["keys"][64] == "figaro.064"
     assert "returners.364" not in report["keys"] and "doma.484" not in report["keys"]
     encoded = overlay.encode_ff6_arabic_message("{Terra}: هيا")

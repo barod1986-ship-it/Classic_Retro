@@ -129,7 +129,7 @@ variants, shifted right by 0 to 8 pixels into three bytes a row (45 bytes a vari
 glyph), and the shadow of a glyph at pixel `s` of its tile is the variant `s + 1`. The
 glyphs take codes `20` to `FF` in the font's order (the space, the punctuation, the digits,
 then the repertoire by code point), 224 at most, and their variants take two banks, no glyph
-across one (161 a bank); the first eight chapters use 138. The quotes `«` `»` and the brackets
+across one (161 a bank); the first nine chapters use 139. The quotes `«` `»` and the brackets
 `(` `)` are drawn by hand as their mirror images, since a right-to-left run shows them
 mirrored and the painter does not mirror; the opera's note `♪`, which the English writes
 with the font's note icon, is drawn by hand too.
@@ -196,7 +196,7 @@ address to its end within its bank.
 
 ## Translations
 
-`rom/ff6_arabic_script.py` pins the 2415 messages of the first eight chapters by their
+`rom/ff6_arabic_script.py` pins the 2610 messages of the first nine chapters by their
 numbers, with the SHA-256 of each and its command skeleton. The Narshe chapter (`narshe`,
 0 to 63; 0 shares 1's text and pointer): the cliffs above Narshe (1-5, their
 `{KeyAfter 18}{Key}` pacing kept), the narration (6-9, centred with `{center}`,
@@ -257,12 +257,22 @@ Phunbaba (`mobliz-ruin`, 2255-2323), Nikeah with the Crimson Robbers and Gerad
 (`nikeah-ruin`, 2324-2348), South Figaro after the fall (`south-figaro-ruin`,
 2349-2373), the cave to Figaro, Edgar unmasked and the castle (`figaro-ruin`,
 2374-2403) and the Ancient Castle with Odin and the queen's diary (`ancient-castle`,
-2404-2418; the Magicite's level and Odin's shard centred). The Arabic is in
+2404-2418; the Magicite's level and Odin's shard centred). The ninth chapter, 2419-2613,
+gathers the friends: the Colosseum (`colosseum`, 2419-2435), Kohlingen and Setzer
+(`kohlingen-ruin`, 2436-2458), Daryl's tomb (`tomb`, 2459-2531), Maranda's letters, Lola
+and Cyan (`maranda-ruin`, 2532-2572; Cyan's poem centred with its pause), Gogo (`gogo`,
+2573-2577), the Veldt cave with Relm, Shadow and Interceptor (`veldt-cave`, 2578-2591)
+and Locke, the Phoenix and Rachel's farewell (`phoenix`, 2592-2613; the cave's treasures
+centred a page each). The tombstone puzzle (2483-2530) is the one place the English
+writes Latin letters the Arabic cannot draw: its four reversed groups, which spell «THE
+WORLD IS SQUARE» backwards in the right order, become the four words of «إن هذا العالم
+مربع», so the player orders words instead of letters and the game's own check of the
+order is untouched. The Arabic is in
 `translations/final-fantasy-iii.json`, a line a page, `{line}` where a line must end. The names are `name.terra` to `name.umaro`, the fourteen characters
 the name commands write, in the game's order, one word each, 64 pixels at most. A
 translation keeps its original's commands but the layout (`{line}`, `{page}`, the spaces):
 its skeleton must equal the original's, which the build takes from the ROM and the script
-pins too. The messages and the names use 138 distinct forms, digits and signs.
+pins too. The messages and the names use 139 distinct forms, digits and signs.
 
 ## Verification
 
@@ -295,12 +305,16 @@ choices after their page and Strago's warning over four pages. The eighth: Cid's
 pages with their waits, the treasure's bracketed choices, the cult's centred lines,
 Fenrir's Magicite after its page, Terra's «love» with its waits, the children's centred
 cries, the thieves' centred cry with its button wait, Edgar's six pages, Odin's centred
-level-up over two pages and his attack's centred name. The messages that follow the scope show the game's English as before. The RetroPad's
+level-up over two pages and his attack's centred name. The ninth: the tombstone's four
+words as choices with the cursor moving among them, the carved sentence, the carving
+prompt, the egg's centred hint, Cyan's centred poem, his letter over its pages, Kohlingen's
+centred title, Rachel's farewell over five pages, the cave's six centred treasures, the
+Colosseum's three bracketed choices and the traveller's four. The messages that follow the scope show the game's English as before. The RetroPad's
 A is the Super NES's A.
 
 ## Limits
 
-- The first eight chapters' 2415 messages and the characters' names are in Arabic; every
+- The first nine chapters' 2610 messages and the characters' names are in Arabic; every
   other message stays English, and the menus and the battles are other text engines,
   untouched, so the classroom's lessons name menu entries and statuses in Arabic that the
   menus still show in English.
