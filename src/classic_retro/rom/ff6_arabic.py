@@ -1,4 +1,4 @@
-"""Arabic ROM overlay for *Final Fantasy III* (USA): the opening, to the end of Narshe.
+"""Arabic ROM overlay for *Final Fantasy III* (USA): the whole dialogue.
 
 The ROM is the No-Intro dump (SHA-256 below, pinned from the user's own ROM),
 3 MiB mapped as HiROM, whose banks $C0 to $EF are its 64 KiB pieces; the

@@ -90,5 +90,5 @@ TARGET = LocalizationTarget(
     build=build,
     extract=extract,
     previews=PREVIEWS,
-    reference_patch_sha256="a7747d9cb046507a3811862efa508482aa5a33aac384e268c14183df436ada5f",
+    reference_patch_sha256="a89814c777e80fb2b7b8f63dbc393880fd105398a038ee67bc50e6c3363e01f5",
 )
