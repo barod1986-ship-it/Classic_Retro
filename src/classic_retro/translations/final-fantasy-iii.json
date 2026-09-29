@@ -9,20 +9,457 @@
    "text": "نارشي"
   },
   {
-   "term": "Esper",
-   "text": "إسبر"
+   "term": "Figaro",
+   "text": "فيغارو"
+  },
+  {
+   "term": "South Figaro",
+   "text": "ساوث فيغارو"
+  },
+  {
+   "term": "Kohlingen",
+   "text": "كولينغن"
+  },
+  {
+   "term": "Jidoor",
+   "text": "جيدور"
+  },
+  {
+   "term": "Zozo",
+   "text": "زوزو"
+  },
+  {
+   "term": "Vector",
+   "text": "فيكتور"
+  },
+  {
+   "term": "Albrook",
+   "text": "ألبروك"
+  },
+  {
+   "term": "Tzen",
+   "text": "تزن"
+  },
+  {
+   "term": "Maranda",
+   "text": "ماراندا"
+  },
+  {
+   "term": "Doma",
+   "text": "دوما"
+  },
+  {
+   "term": "Nikeah",
+   "text": "نيكيا"
+  },
+  {
+   "term": "Mobliz",
+   "text": "موبليز"
+  },
+  {
+   "term": "Thamasa",
+   "text": "ثماسا"
+  },
+  {
+   "term": "Kolts",
+   "text": "كولتس"
+  },
+  {
+   "term": "Veldt",
+   "text": "الفيلدت"
+  },
+  {
+   "term": "Lete River",
+   "text": "نهر ليتي"
+  },
+  {
+   "term": "Serpent Trench",
+   "text": "خندق الأفعى"
+  },
+  {
+   "term": "Baren Falls",
+   "text": "شلالات بارين"
+  },
+  {
+   "term": "Crescent Island",
+   "text": "جزيرة الهلال"
+  },
+  {
+   "term": "Ebot's Rock",
+   "text": "صخرة إيبوت"
+  },
+  {
+   "term": "Phoenix Cave",
+   "text": "كهف الفينيكس"
+  },
+  {
+   "term": "Opera House",
+   "text": "دار الأوبرا"
+  },
+  {
+   "term": "Colosseum",
+   "text": "كولوسيوم",
+   "notes": "الكولوسيوم; كولوسيوم عنق التنين"
+  },
+  {
+   "term": "Magitek Research Facility",
+   "text": "منشأة أبحاث الماجيتك"
+  },
+  {
+   "term": "Floating Continent",
+   "text": "القارة الطائرة"
+  },
+  {
+   "term": "Esper World",
+   "text": "عالم الإسبرات"
+  },
+  {
+   "term": "sealed gate",
+   "text": "البوابة المختومة"
+  },
+  {
+   "term": "Auction House",
+   "text": "دار المزاد"
+  },
+  {
+   "term": "Phantom Train",
+   "text": "قطار الأشباح"
+  },
+  {
+   "term": "Cult of Kefka",
+   "text": "طائفة كيفكا"
+  },
+  {
+   "term": "Light of Judgment",
+   "text": "ضوء الدينونة"
+  },
+  {
+   "term": "Returners",
+   "text": "عائد",
+   "notes": "the stem: العائدون, العائدين"
+  },
+  {
+   "term": "Returner",
+   "text": "عائد",
+   "notes": "the stem: العائدون, العائدين"
+  },
+  {
+   "term": "Empire",
+   "text": "إمبراطوري",
+   "notes": "the stem: الإمبراطورية, للإمبراطورية, إمبراطوريتي"
+  },
+  {
+   "term": "Emperor",
+   "text": "الإمبراطور"
   },
   {
    "term": "Magitek",
    "text": "ماجيتك"
   },
   {
-   "term": "Empire",
-   "text": "الإمبراطورية"
+   "term": "Magicite",
+   "text": "ماجيسايت"
   },
   {
-   "term": "Returners",
-   "text": "العائدون"
+   "term": "Esper",
+   "text": "إسبر",
+   "notes": "الإسبر, الإسبرات"
+  },
+  {
+   "term": "Espers",
+   "text": "إسبر",
+   "notes": "الإسبر, الإسبرات"
+  },
+  {
+   "term": "War of the Magi",
+   "text": "حرب السحرة"
+  },
+  {
+   "term": "Mage Warriors",
+   "text": "فرسان السحر"
+  },
+  {
+   "term": "Statues",
+   "text": "التماثيل"
+  },
+  {
+   "term": "Relics",
+   "text": "التمائم"
+  },
+  {
+   "term": "Relic",
+   "text": "تميمة"
+  },
+  {
+   "term": "GP",
+   "text": "غيل",
+   "notes": "the currency"
+  },
+  {
+   "term": "Moogle",
+   "text": "موغل",
+   "notes": "الموغل, الموغلز"
+  },
+  {
+   "term": "Moogles",
+   "text": "موغل",
+   "notes": "الموغل, الموغلز"
+  },
+  {
+   "term": "Chocobo",
+   "text": "تشوكوبو"
+  },
+  {
+   "term": "Slave Crown",
+   "text": "تاج العبودية"
+  },
+  {
+   "term": "Kefka",
+   "text": "كيفكا"
+  },
+  {
+   "term": "Gestahl",
+   "text": "غشتال"
+  },
+  {
+   "term": "Leo",
+   "text": "ليو"
+  },
+  {
+   "term": "Banon",
+   "text": "بانون"
+  },
+  {
+   "term": "Arvis",
+   "text": "أرفيس"
+  },
+  {
+   "term": "Cid",
+   "text": "سيد"
+  },
+  {
+   "term": "Duncan",
+   "text": "دنكان"
+  },
+  {
+   "term": "Vargas",
+   "text": "فارغاس"
+  },
+  {
+   "term": "Rachel",
+   "text": "راشيل"
+  },
+  {
+   "term": "Lola",
+   "text": "لولا"
+  },
+  {
+   "term": "Daryl",
+   "text": "داريل"
+  },
+  {
+   "term": "Maduin",
+   "text": "مادوين"
+  },
+  {
+   "term": "Madonna",
+   "text": "مادونا"
+  },
+  {
+   "term": "Ramuh",
+   "text": "رامو"
+  },
+  {
+   "term": "Ifrit",
+   "text": "إفريت"
+  },
+  {
+   "term": "Shiva",
+   "text": "شيفا"
+  },
+  {
+   "term": "Tritoch",
+   "text": "تريتوك"
+  },
+  {
+   "term": "Odin",
+   "text": "أودين"
+  },
+  {
+   "term": "Raiden",
+   "text": "رايدن"
+  },
+  {
+   "term": "Bahamut",
+   "text": "باهاموت"
+  },
+  {
+   "term": "Phoenix",
+   "text": "الفينيكس"
+  },
+  {
+   "term": "Ultros",
+   "text": "أولتروس"
+  },
+  {
+   "term": "Chupon",
+   "text": "تشوبون"
+  },
+  {
+   "term": "Ziegfried",
+   "text": "زيغفريد"
+  },
+  {
+   "term": "Sigfried",
+   "text": "زيغفريد"
+  },
+  {
+   "term": "Yura",
+   "text": "يورا"
+  },
+  {
+   "term": "Gungho",
+   "text": "غونغهو"
+  },
+  {
+   "term": "Hidon",
+   "text": "هيدون"
+  },
+  {
+   "term": "Owzer",
+   "text": "أوزر"
+  },
+  {
+   "term": "Chadarnook",
+   "text": "تشادارنوك"
+  },
+  {
+   "term": "Wrexsoul",
+   "text": "ريكسول"
+  },
+  {
+   "term": "Phunbaba",
+   "text": "فونبابا"
+  },
+  {
+   "term": "Doom Gaze",
+   "text": "دوم غيز"
+  },
+  {
+   "term": "Gerad",
+   "text": "جيراد"
+  },
+  {
+   "term": "Katarin",
+   "text": "كاتارين"
+  },
+  {
+   "term": "Duane",
+   "text": "دوان"
+  },
+  {
+   "term": "Elayne",
+   "text": "إيلين"
+  },
+  {
+   "term": "Owain",
+   "text": "أوين"
+  },
+  {
+   "term": "Baram",
+   "text": "بارام"
+  },
+  {
+   "term": "Maria",
+   "text": "ماريا"
+  },
+  {
+   "term": "Draco",
+   "text": "دراكو"
+  },
+  {
+   "term": "Ralse",
+   "text": "رالس"
+  },
+  {
+   "term": "Vicks",
+   "text": "فيكس"
+  },
+  {
+   "term": "Wedge",
+   "text": "ويدج"
+  },
+  {
+   "term": "Lone Wolf",
+   "text": "الذئب الوحيد"
+  },
+  {
+   "term": "Interceptor",
+   "text": "إنترسبتور"
+  },
+  {
+   "term": "Starlet",
+   "text": "ستارلت"
+  },
+  {
+   "term": "Fenrir",
+   "text": "فنرير"
+  },
+  {
+   "term": "Alexandr",
+   "text": "ألكسندر"
+  },
+  {
+   "term": "Golem",
+   "text": "غوليم"
+  },
+  {
+   "term": "ZoneSeek",
+   "text": "زون سيك"
+  },
+  {
+   "term": "Sraphim",
+   "text": "سيرافيم"
+  },
+  {
+   "term": "Palidor",
+   "text": "باليدور"
+  },
+  {
+   "term": "Terrato",
+   "text": "تيراتو"
+  },
+  {
+   "term": "Crusader",
+   "text": "كروسيدر"
+  },
+  {
+   "term": "Siren",
+   "text": "سايرن"
+  },
+  {
+   "term": "Kirin",
+   "text": "كيرين"
+  },
+  {
+   "term": "Stray",
+   "text": "ستراي"
+  },
+  {
+   "term": "Whelk",
+   "text": "ويلك"
+  },
+  {
+   "term": "Falcon",
+   "text": "الفالكون"
+  },
+  {
+   "term": "Impresario",
+   "text": "مدير المسرح"
+  },
+  {
+   "term": "Exp. Egg",
+   "text": "بيضة الخبرة"
   }
  ],
  "entries": [
@@ -279,7 +716,7 @@
   {
    "id": "narshe.036",
    "context": "Message 36 of the dialogue: KEFKA: My sweet little magic {line}user…! Uweee, he, he! With this Slave Crown I'll practically OWN you!!",
-   "text": "كيفكا: يا ساحرتي الصغيرة{line}الحلوة…! أوييي، هي، هي! بهذا التاج سأمتلكك عمليا!!"
+   "text": "كيفكا: يا ساحرتي الصغيرة{line}الحلوة…! أوييي، هي، هي! بتاج العبودية هذا سأمتلكك عمليا!!"
   },
   {
    "id": "narshe.037",
@@ -6264,7 +6701,7 @@
   {
    "id": "opera.1236",
    "context": "Message 1236 of the dialogue: {Locke}: Impresario, what's up above the stage?",
-   "text": "{Locke}: أيها المدير، ماذا يوجد فوق المسرح؟"
+   "text": "{Locke}: يا مدير المسرح، ماذا يوجد فوق المسرح؟"
   },
   {
    "id": "opera.1237",

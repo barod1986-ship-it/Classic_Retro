@@ -196,97 +196,53 @@ address to its end within its bank.
 
 ## Translations
 
-`rom/ff6_arabic_script.py` pins the whole dialogue, 3077 messages in eleven chapters, by their
-numbers, with the SHA-256 of each and its command skeleton. The Narshe chapter (`narshe`,
-0 to 63; 0 shares 1's text and pointer): the cliffs above Narshe (1-5, their
-`{KeyAfter 18}{Key}` pacing kept), the narration (6-9, centred with `{center}`,
-`{Pause FF}{Key}`), the save point (10, two `{Choice}`), the town and the mines (11-20),
-Arvis's house (21-33, `{Terra}`), the guards, Kefka's and the Empire's scenes (34-40), Locke
-and Arvis (41-48), the Moogles (49-58) and the escape (59-63). The second chapter: Figaro
-Castle, Kefka's visit, the dive under the sand and the cave with the clock key (`figaro`,
-64-178), South Figaro and Duncan's cabin (`south-figaro`, 179-236), Mt. Kolts, Vargas and
-Sabin (`kolts`, 237-266), the Returners' hideout, Banon's choice, the strategy meeting and
-the raft down the Lete River to the scenario choice (`returners`, 267-368; 364 and 365 are
-empty messages and stay as they are). The raft's prompts (362, 363, 366) put two choices on
-a line; the chests and the relics (286-289, 311, 318) centre their item line with
-`{center}`. The third chapter, 369-932 but the empty 484: Locke and Celes in South Figaro
-(`locke`, 369-416), Banon's party at Narshe's checkpoint (`banon`, 417-428), Gau's father's
-house and the merchants (`veldt`, 429-451), the Imperial camp and Shadow's dream (`sabin`,
-452-479), Doma, Leo, Kefka's poison, Cyan and the escape in Magitek armour (`doma`,
-480-598), Narshe's beginner's classroom (`classroom`, 599-637, its status names in
-guillemets and the buttons written out), a few lines of the ship and the dining car that
-sit among them (`ship`, 638-660), the Phantom Train (`train`, 661-735), Baren Falls, the
-Veldt, Gau, Mobliz and the Serpent Trench (`veldt`, 736-802), Nikeah and the return
-(`nikeah`, 803-836), and the Elder, the battle for Narshe, Terra's flight and the town
-(`narshe-battle`, 837-932). The ghosts' lines (686, 691) and the lesson's title (628) are
-centred with `{center}`. The fourth chapter, 933-1329: Figaro Castle again and the
-brothers' memory (`castle`, 933-985), Kohlingen and Rachel (`kohlingen`, 986-1028), Jidoor
-(`jidoor`, 1029-1042), Zozo with its clocks (two choices a line over three lines), Ramuh's
-story and the plan (`zozo`, 1043-1151), the Opera House (`opera`, 1152-1269: the arias
-keep the English's pauses and button waits between their words, the note written with `♪`)
-and Setzer's coin and airship (`airship`, 1270-1329). The fifth chapter, 1330-1497: Vector
-under the Empire (`vector`, 1330-1346), Banon's return to Narshe (`narshe-return`,
-1347-1354), the Magitek Research Facility with Ifrit, Shiva, Cid, Kefka and Celes's apparent
-betrayal (`facility`, 1355-1409; the Magicite lines centred), the escape on the airship
-(`escape`, 1410-1421) and, back in Zozo, Terra's memory of the Esper world: Maduin,
-Madonna and Gestahl's raid (`maduin`, 1422-1497; the title, the three lines of Maduin's
-question and «2 years later» centred). Its text is the first past bank `$F3`: 151 of its
-messages sit in bank `$F4`, read through the table's three-byte addresses. The sixth
-chapter, 1498-1887 but the empty 1536, is the end of the world of balance: Narshe and
-Banon's plan (`narshe-plan`, 1613-1637), the sealed gate and the Espers' rush (`gate`,
-1638-1690), Vector after them, its buried treasures and Kefka in jail (`vector`,
-1691-1733), the Emperor's banquet with its toasts, questions and answers (three choices
-a page), the soldiers, the count of those talked to (centred) and the rewards
-(`banquet`, 1767-1874), Cid and Setzer's memory of Daryl (`setzer`, 1875-1887), and the
-lines that sit among them: Maranda (`maranda`, 1537-1549), Tzen (`tzen`, 1550-1572) and
-Albrook (`albrook`, 1573-1612), Lone Wolf and Mog in Narshe with the lessons and lines
-near them (`narshe-wolf`, 1734-1766; 1749 is a message of two commands and no text, kept
-as it is), and the world of ruin's dragons, Duncan and Narshe's stone (`ruin`,
-1498-1535; the dragon counts centred). The seventh chapter, 1888-2167, is the end of the
-world: Albrook with Leo, Celes and Shadow, the voyage and Crescent Island (`voyage`,
-1888-1929), Thamasa, Strago, Relm, the fire and the Mage Warriors (`thamasa`,
-1930-2026), Ultros at the statues, the goddesses' story and Yura's Espers (`espers`,
-2027-2062), Kefka's betrayal, Leo's death and the return (`leo`, 2063-2117), and the
-Floating Continent, Shadow, the Statues and the day the world changed (`continent`,
-2118-2167; Kefka's hate over three pages, the last centred, and the closing line centred
-with its wait and pause). The eighth chapter, 2168-2418, opens the world of ruin: Celes
-and Cid on the island (`island`, 2168-2200), Albrook and Tzen after the fall with
-Sabin's collapsing house (`albrook-ruin`, 2201-2208; `tzen-ruin`, 2209-2240), Strago and
-Relm at the cult's tower (`cult`, 2241-2254), Mobliz with Terra, Duane, Katarin and
-Phunbaba (`mobliz-ruin`, 2255-2323), Nikeah with the Crimson Robbers and Gerad
-(`nikeah-ruin`, 2324-2348), South Figaro after the fall (`south-figaro-ruin`,
-2349-2373), the cave to Figaro, Edgar unmasked and the castle (`figaro-ruin`,
-2374-2403) and the Ancient Castle with Odin and the queen's diary (`ancient-castle`,
-2404-2418; the Magicite's level and Odin's shard centred). The ninth chapter, 2419-2613,
-gathers the friends: the Colosseum (`colosseum`, 2419-2435), Kohlingen and Setzer
-(`kohlingen-ruin`, 2436-2458), Daryl's tomb (`tomb`, 2459-2531), Maranda's letters, Lola
-and Cyan (`maranda-ruin`, 2532-2572; Cyan's poem centred with its pause), Gogo (`gogo`,
-2573-2577), the Veldt cave with Relm, Shadow and Interceptor (`veldt-cave`, 2578-2591)
-and Locke, the Phoenix and Rachel's farewell (`phoenix`, 2592-2613; the cave's treasures
-centred a page each). The tombstone puzzle (2483-2530) is the one place the English
-writes Latin letters the Arabic cannot draw: its four reversed groups, which spell «THE
-WORLD IS SQUARE» backwards in the right order, become the four words of «إن هذا العالم
-مربع», so the player orders words instead of letters and the game's own check of the
-order is untouched. The tenth chapter, 2614-2799: Narshe with Tritoch, Mog and Umaro
-(`narshe-ruin`, 2614-2622), Jidoor's auction house with its bids (`auction`, 2623-2699;
-the lots and the bids centred), the Emperor's letter, Owzer's house, his diary, Relm and
-Chadarnook (`owzer`, 2700-2757) and Cyan's dream in Doma with the three stooges, his
-family's timed lines and Wrexsoul (`dream`, 2758-2799). Its text is the first past bank
-`$F4`: 73 of its messages sit in bank `$F5`. The eleventh chapter, the last, 2800-3083 but
-2949, 2950 and 2951: Gau's father and the clothes in Jidoor (`gau-father`, 2800-2841),
-Thamasa after the fall, Gungho, Hidon and Strago's tale with its centred sound effects
-(`thamasa-ruin`, 2842-2913), the scattered lines of the first chapters' places that sit
-here (`scattered`, 2914-2947), the system messages of inns, chocobos, chests and the crane
-(`system`, 2948-2963), Kefka's tower and the friends' resolve (`tower`, 2964-2984), Kefka's
-speech and the friends' answers (`kefka`, 2985-3019) and the escape from the tower, the
-ending's timed lines (`ending`, 3020-3083). The three messages left out write an item, a
-spell or a sum with `{Item}`, `{Spell}` and `{Gil}`, which the Arabic draw cannot show,
-and stay English with the four empty messages. The Arabic is in
-`translations/final-fantasy-iii.json`, a line a page, `{line}` where a line must end. The names are `name.terra` to `name.umaro`, the fourteen characters
-the name commands write, in the game's order, one word each, 64 pixels at most. A
-translation keeps its original's commands but the layout (`{line}`, `{page}`, the spaces):
-its skeleton must equal the original's, which the build takes from the ROM and the script
-pins too. The messages and the names use 139 distinct forms, digits and signs.
+`rom/ff6_arabic_script.py` pins the whole dialogue, 3077 messages, by their numbers, with
+the SHA-256 of each and its command skeleton, in eleven chapters that follow the game; each
+entry's id is a scene prefix and the message number.
+
+| Chapter | Messages | Scenes (prefix, messages) |
+|---|---|---|
+| 1. Narshe | 0-63 (0 shares 1's text and pointer) | the cliffs, the narration, the save point, the town and the mines, Arvis's house, Kefka's and the Empire's scenes, Locke and the Moogles, the escape (`narshe`) |
+| 2. Figaro to the raft | 64-368 but the empty 364 and 365 | Figaro Castle, Kefka's visit, the dive and the clock key's cave (`figaro`, 64-178); South Figaro and Duncan's cabin (`south-figaro`, 179-236); Mt. Kolts, Vargas and Sabin (`kolts`, 237-266); the Returners' hideout, Banon's choice, the meeting and the raft (`returners`, 267-368) |
+| 3. The scenarios and the battle for Narshe | 369-932 but the empty 484 | Locke and Celes (`locke`, 369-416); Banon's party (`banon`, 417-428); Gau's father's house and the merchants (`veldt`, 429-451); the Imperial camp and Shadow's dream (`sabin`, 452-479); Doma, Leo, Kefka's poison and Cyan (`doma`, 480-598); the classroom (`classroom`, 599-637); the ship and the dining car (`ship`, 638-660); the Phantom Train (`train`, 661-735); Baren Falls, the Veldt, Gau, Mobliz and the Serpent Trench (`veldt`, 736-802); Nikeah (`nikeah`, 803-836); the Elder, the battle and Terra's flight (`narshe-battle`, 837-932) |
+| 4. The search for Terra | 933-1329 | Figaro Castle and the brothers' memory (`castle`, 933-985); Kohlingen and Rachel (`kohlingen`, 986-1028); Jidoor (`jidoor`, 1029-1042); Zozo, its clocks, Ramuh and the plan (`zozo`, 1043-1151); the Opera House (`opera`, 1152-1269); Setzer's coin and airship (`airship`, 1270-1329) |
+| 5. Vector and the Esper world | 1330-1497 | Vector (`vector`, 1330-1346); Banon's return (`narshe-return`, 1347-1354); the Magitek Research Facility (`facility`, 1355-1409); the escape (`escape`, 1410-1421); Terra's memory of the Esper world (`maduin`, 1422-1497) |
+| 6. The sealed gate and the banquet | 1498-1887 but the empty 1536 | the world of ruin's dragons, Duncan and Narshe's stone (`ruin`, 1498-1535); Maranda, Tzen and Albrook (`maranda`, 1537-1549; `tzen`, 1550-1572; `albrook`, 1573-1612); Narshe and Banon's plan (`narshe-plan`, 1613-1637); the sealed gate (`gate`, 1638-1690); Vector after the Espers (`vector`, 1691-1733); Lone Wolf and Mog (`narshe-wolf`, 1734-1766; 1749 is two commands and no text); the banquet, the soldiers and the rewards (`banquet`, 1767-1874); Cid and Setzer's memory of Daryl (`setzer`, 1875-1887) |
+| 7. Thamasa and the Floating Continent | 1888-2167 | Albrook, the voyage and Crescent Island (`voyage`, 1888-1929); Thamasa, Strago, Relm and the fire (`thamasa`, 1930-2026); Ultros, the goddesses' story and Yura (`espers`, 2027-2062); Kefka's betrayal, Leo's death and the return (`leo`, 2063-2117); the Floating Continent and the day the world changed (`continent`, 2118-2167) |
+| 8. The world of ruin's first towns | 2168-2418 | Celes and Cid on the island (`island`, 2168-2200); Albrook and Tzen after the fall (`albrook-ruin`, 2201-2208; `tzen-ruin`, 2209-2240); the cult's tower (`cult`, 2241-2254); Mobliz (`mobliz-ruin`, 2255-2323); Nikeah and Gerad (`nikeah-ruin`, 2324-2348); South Figaro (`south-figaro-ruin`, 2349-2373); the cave to Figaro and the castle (`figaro-ruin`, 2374-2403); the Ancient Castle (`ancient-castle`, 2404-2418) |
+| 9. The gathering of the friends | 2419-2613 | the Colosseum (`colosseum`, 2419-2435); Kohlingen and Setzer (`kohlingen-ruin`, 2436-2458); Daryl's tomb (`tomb`, 2459-2531); Maranda's letters and Cyan (`maranda-ruin`, 2532-2572); Gogo (`gogo`, 2573-2577); the Veldt cave (`veldt-cave`, 2578-2591); Locke, the Phoenix and Rachel (`phoenix`, 2592-2613) |
+| 10. Tritoch, the auction and Cyan's dream | 2614-2799 | Narshe with Tritoch, Mog and Umaro (`narshe-ruin`, 2614-2622); Jidoor's auction house (`auction`, 2623-2699); the Emperor's letter, Owzer, Relm and Chadarnook (`owzer`, 2700-2757); Cyan's dream (`dream`, 2758-2799) |
+| 11. Kefka's tower and the ending | 2800-3083 but 2949, 2950 and 2951 | Gau's father (`gau-father`, 2800-2841); Thamasa, Gungho and Hidon (`thamasa-ruin`, 2842-2913); the scattered lines of the first chapters' places (`scattered`, 2914-2947); the system messages (`system`, 2948-2963); Kefka's tower (`tower`, 2964-2984); Kefka's speech (`kefka`, 2985-3019); the escape and the ending (`ending`, 3020-3083) |
+
+The four empty messages stay as they are, and so do 2949, 2950 and 2951, which write an item,
+a spell or a sum with `{Item}`, `{Spell}` and `{Gil}`: the game draws those in its own
+letters, which the Arabic draw cannot show. The text of the first four chapters fits bank
+`$F3`; the fifth chapter's is the first past it (151 of its messages sit in bank `$F4`) and
+the tenth's the first past bank `$F4` (73 in `$F5`), read through the table's three-byte
+addresses.
+
+What the notation carries, by example: the cliffs' `{KeyAfter 18}{Key}` pacing and the
+narration's `{Pause FF}{Key}` are kept; the narration, the item and Magicite lines, the
+dragon counts, the banquet's count of soldiers, the tombstone's hint, Cyan's poem and the
+ending's timed lines are centred with `{center}`; the raft's prompts (362, 363, 366) and
+Zozo's clocks put two choices on a line; the arias keep the English's pauses and button
+waits between their words, the note written with `♪`; the classroom's status names are in
+guillemets and the buttons written out. The tombstone puzzle (2483-2530) is the one place
+the English writes Latin letters the Arabic cannot draw: its four reversed groups, which
+spell «THE WORLD IS SQUARE» backwards in the right order, become the four words of «إن هذا
+العالم مربع», so the player orders words instead of letters and the game's own check of
+the order (the choice indices) is untouched.
+
+The Arabic is in `translations/final-fantasy-iii.json`, a line a page, `{line}` where a
+line must end; its `glossary` fixes how every place, character, Esper and term is written,
+and `check-translations` on a workspace reports each message whose original names a term
+that its Arabic does not use (a reminder, not an error: a stem such as `إمبراطوري` covers
+the inflections, and a message may say «هو» instead of the name). The names are
+`name.terra` to `name.umaro`, the fourteen characters the name commands write, in the
+game's order, one word each, 64 pixels at most. A translation keeps its original's
+commands but the layout (`{line}`, `{page}`, the spaces): its skeleton must equal the
+original's, which the build takes from the ROM and the script pins too. The messages and
+the names use 139 distinct forms, digits and signs.
 
 ## Verification
 
@@ -333,8 +289,35 @@ bracketed choices, Strago's tale with its centred sound effects, the merchant's 
 the scenario prompt and the chest's monster centred, Kefka's welcome and his speech over
 its pages, the ending's centred timed lines, Sabin's three timed pages and Maduin's
 farewell with its pauses. The three messages left English show the game's own text as
-before; the messages that follow the scope show the game's English as before. The RetroPad's
-A is the Super NES's A.
+before. The RetroPad's A is the Super NES's A.
+
+Any message can be shown the same way after an edit. The intro's narration is message 6,
+the first the game shows; pointing its table entry at another message's Arabic makes that
+message the first shown, three bytes in the patched ROM:
+
+```python
+from pathlib import Path
+from classic_retro.engines.ff6 import hirom_offset
+from classic_retro.rom import ff6_arabic as overlay
+
+rom = bytearray(Path("Final Fantasy III (USA) (Arabic).sfc").read_bytes())
+table = overlay.read_message_table(rom)  # message number -> Arabic address
+entry = hirom_offset(overlay.MESSAGES + 6 * overlay.MESSAGE_ENTRY)
+rom[entry : entry + 3] = table[2483].to_bytes(3, "little")  # show 2483 first
+overlay.set_checksum(rom)
+Path("variant.sfc").write_bytes(rom)
+```
+
+Then `classic-retro research run --core snes9x_libretro.so --out-dir DIR variant.sfc SCRIPT`
+with a script that starts a new game and takes shots: `run 600`, `tap START 4 8`, `run
+120`, `tap START 4 8`, `run 120`, `tap A 4 8`, `run 180`, `tap A 4 8`, then `shot v1.png`
+and `tap A 4 8` or `tap DOWN 4 8` for the next page or choice. The intro fades out about
+700 frames after the message opens, so take a long message's pages a few dozen frames
+apart; a message whose page ends in `{KeyAfter n}` or `{Pause n}{Key}` closes itself
+after n quarter-seconds, so shoot it early; a centred page draws its blank lines first,
+about a hundred frames each. The original of any message, in the notation, is
+`engines.ff6.message_notation(engines.ff6.message_at(rom, number).data, engines.ff6.dte_pairs(rom))`
+on the unpatched ROM; `targets extract` writes them all into a workspace.
 
 ## Limits
 
