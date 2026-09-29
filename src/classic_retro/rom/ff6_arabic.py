@@ -184,7 +184,7 @@ HOOK_SYMBOLS = {
 HOOKS = HookProgram(
     "Final Fantasy III hooks", HOOK_SOURCE, HOOK_ADDRESS, HOOK_CODE, HOOK_SYMBOLS, cpu="65816"
 )
-PATCH_NAME = "final-fantasy-iii-usa-arabic-narshe-to-lete.bps"
+PATCH_NAME = "final-fantasy-iii-usa-arabic.bps"
 
 
 @dataclass(frozen=True, slots=True)

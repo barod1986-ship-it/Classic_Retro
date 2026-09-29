@@ -75,11 +75,12 @@ TARGET = LocalizationTarget(
     kind="rom-overlay",
     strategies=("glyph-font",),
     scope=(
-        "The first two chapters, the opening to the raft on the Lete River: the 367 "
-        "messages of Narshe (the cliffs, the narration, the town, the mines, Arvis's "
-        "house, the escape with Locke and the Moogles), Figaro Castle, South Figaro, "
-        "Mt. Kolts and the Returners' hideout, and the characters' names in them; the "
-        "others stay in English"
+        "The whole dialogue, the opening to the ending in eleven chapters: 3077 messages "
+        "of Narshe, Figaro, the scenarios, the battle for Narshe, Zozo, the opera, "
+        "Vector and the Esper world, the sealed gate and the banquet, Thamasa and the "
+        "Floating Continent, and the world of ruin to Kefka's tower and the ending, "
+        "with the characters' names in them; three messages that write an item, a "
+        "spell or a sum with the game's own letters stay English"
     ),
     guide="docs/FF6_ARABIC_TEST_AR.md",
     notes="docs/FF6_ARABIC_RENDERER.md",
@@ -89,5 +90,5 @@ TARGET = LocalizationTarget(
     build=build,
     extract=extract,
     previews=PREVIEWS,
-    reference_patch_sha256="7efa359cf2919964428ff47b48ad4f07a2e554c2a9ea319a3f6bed7dd389df06",
+    reference_patch_sha256="a7747d9cb046507a3811862efa508482aa5a33aac384e268c14183df436ada5f",
 )
