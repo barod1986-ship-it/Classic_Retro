@@ -75,19 +75,12 @@ TARGET = LocalizationTarget(
     kind="rom-overlay",
     strategies=("glyph-font",),
     scope=(
-        "The first ten chapters, the opening to Cyan's dream: the 2796 messages "
-        "of Narshe, Figaro Castle, South Figaro, Mt. Kolts, the Returners' hideout and "
-        "the raft, the three scenarios (Locke and Celes, Banon's party, Sabin's road "
-        "through Doma, the Phantom Train, the Veldt and Nikeah), the classroom, the "
-        "battle for Narshe and Terra's flight, then Kohlingen, Jidoor, Zozo and Ramuh, "
-        "the Opera House and Setzer's coin, then Vector, the Magitek Research Facility, "
-        "the escape and Maduin's story, then the sealed gate, the Espers' rush on Vector, "
-        "the banquet and Albrook, then Thamasa, the Espers, Leo's death and the Floating "
-        "Continent, then Celes's island, Mobliz, Nikeah, Figaro Castle and the Ancient "
-        "Castle, the Colosseum, Daryl's tomb, Cyan's letters, Gogo and the Phoenix, Tritoch, "
-        "Jidoor's auction, Owzer and Cyan's dream, and the "
-        "characters' names in them; the "
-        "others stay in English"
+        "The whole dialogue, the opening to the ending in eleven chapters: 3077 messages "
+        "of Narshe, Figaro, the scenarios, the battle for Narshe, Zozo, the opera, "
+        "Vector and the Esper world, the sealed gate and the banquet, Thamasa and the "
+        "Floating Continent, and the world of ruin to Kefka's tower and the ending, "
+        "with the characters' names in them; three messages that write an item, a "
+        "spell or a sum with the game's own letters stay English"
     ),
     guide="docs/FF6_ARABIC_TEST_AR.md",
     notes="docs/FF6_ARABIC_RENDERER.md",
@@ -97,5 +90,5 @@ TARGET = LocalizationTarget(
     build=build,
     extract=extract,
     previews=PREVIEWS,
-    reference_patch_sha256="654339011be377f07d80b94953e3e349755d851eddd9f2a9074da8cb928f08fa",
+    reference_patch_sha256="a7747d9cb046507a3811862efa508482aa5a33aac384e268c14183df436ada5f",
 )

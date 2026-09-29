@@ -390,9 +390,9 @@ def test_the_command_group_encodes(capsys):
 
 def test_the_translations_are_checked_and_encoded_without_the_rom():
     report = overlay.check_ff6_translations()
-    assert report["messages"] == 2796 and set(report["names"]) == set(NAME_KEYS)
+    assert report["messages"] == 3077 and set(report["names"]) == set(NAME_KEYS)
     assert report["keys"][:2] == ["narshe.000", "narshe.001"]
-    assert report["keys"][-1] == "dream.2799" and report["keys"][367] == "locke.369"
+    assert report["keys"][-1] == "ending.3083" and report["keys"][367] == "locke.369"
     assert report["keys"][1327] == "vector.1330" and report["keys"][1326] == "airship.1329"
     assert report["keys"][1495] == "ruin.1498" and report["keys"][1494] == "maduin.1497"
     assert report["keys"][1884] == "voyage.1888" and report["keys"][1883] == "setzer.1887"
@@ -401,6 +401,8 @@ def test_the_translations_are_checked_and_encoded_without_the_rom():
         report["keys"][2415] == "colosseum.2419" and report["keys"][2414] == "ancient-castle.2418"
     )
     assert report["keys"][2610] == "narshe-ruin.2614" and report["keys"][2609] == "phoenix.2613"
+    assert report["keys"][2796] == "gau-father.2800" and report["keys"][2795] == "dream.2799"
+    assert "system.2949" not in report["keys"] and "system.2952" in report["keys"]
     assert report["keys"][930] == "castle.933" and report["keys"][64] == "figaro.064"
     assert "returners.364" not in report["keys"] and "doma.484" not in report["keys"]
     encoded = overlay.encode_ff6_arabic_message("{Terra}: هيا")

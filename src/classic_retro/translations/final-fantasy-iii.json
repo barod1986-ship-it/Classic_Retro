@@ -14075,6 +14075,1411 @@
    "id": "dream.2799",
    "context": "Message 2799 of the dialogue: {line}{Spaces 05}Received the Magicite{line}{Spaces 0E}“Alexandr.”",
    "text": "{center}{line}حصلت على الماجيسايت{line}«ألكسندر»."
+  },
+  {
+   "id": "gau-father.2800",
+   "context": "Message 2800 of the dialogue: Memorize the positions.{line}This knowledge might save you.",
+   "text": "احفظوا المواضع.{line}هذه المعرفة قد تنقذكم."
+  },
+  {
+   "id": "gau-father.2801",
+   "context": "Message 2801 of the dialogue: {line}    Received “Lump of Metal.”",
+   "text": "{center}{line}حصلت على «كتلة معدن»."
+  },
+  {
+   "id": "gau-father.2802",
+   "context": "Message 2802 of the dialogue: {Sabin}: You don't suppose…{line}{Gau}, could this be your father?{page}{Gau}: Uooo…",
+   "text": "{Sabin}: ألا تظن…{line}{Gau}، أيمكن أن يكون هذا والدك؟\n{Gau}: أووو…"
+  },
+  {
+   "id": "gau-father.2803",
+   "context": "Message 2803 of the dialogue: {Sabin}: Come on,{line}{Gau}.{line}It's true, right?{line}{Gau}: …fffatherrr…?{page}{Sabin}: Yes.{line}This is definitely your father.{page}{Gau}: ……???{line}…{Gau}'s…father?!{line}Oooogauooooo!",
+   "text": "{Sabin}: هيا،{line}{Gau}.{line}هذا صحيح، أليس كذلك؟{line}{Gau}: …أأأبي…؟\n{Sabin}: نعم.{line}هذا والدك بالتأكيد.\n{Gau}: ……؟؟؟{line}…والد… {Gau}؟!{line}أووووغاووووو!"
+  },
+  {
+   "id": "gau-father.2804",
+   "context": "Message 2804 of the dialogue: {Sabin}: Right!!{line}Let's go tell your father the news!{page}He needs to know you're his son!",
+   "text": "{Sabin}: حسنا!!{line}لنذهب ونخبر والدك بالخبر!\nعليه أن يعرف أنك ابنه!"
+  },
+  {
+   "id": "gau-father.2805",
+   "context": "Message 2805 of the dialogue: {Sabin}: Just a minute…{line}We can't just go there with you looking like this.{page}{Sabin}: I know!{line}Let's go to Jidoor and give you a make-over!",
+   "text": "{Sabin}: لحظة…{line}لا يمكننا أن نذهب إليه وأنت بهذا المظهر.\n{Sabin}: عرفت!{line}لنذهب إلى جيدور ونجدد مظهرك!"
+  },
+  {
+   "id": "gau-father.2806",
+   "context": "Message 2806 of the dialogue: {Sabin}: No, {Gau}!{line}Don't eat with your fingers!",
+   "text": "{Sabin}: لا يا {Gau}!{line}لا تأكل بأصابعك!"
+  },
+  {
+   "id": "gau-father.2807",
+   "context": "Message 2807 of the dialogue: {Gau}: Yaoooo…",
+   "text": "{Gau}: ياوووو…"
+  },
+  {
+   "id": "gau-father.2808",
+   "context": "Message 2808 of the dialogue: {Sabin}: Don't say “Yaoooo” when you mean “Yes!”",
+   "text": "{Sabin}: لا تقل «ياوووو» حين تقصد «نعم!»"
+  },
+  {
+   "id": "gau-father.2809",
+   "context": "Message 2809 of the dialogue: {Gau}: Ho!",
+   "text": "{Gau}: هو!"
+  },
+  {
+   "id": "gau-father.2810",
+   "context": "Message 2810 of the dialogue: {Sabin}: ……",
+   "text": "{Sabin}: ……"
+  },
+  {
+   "id": "gau-father.2811",
+   "context": "Message 2811 of the dialogue: {Terra}: How do you like these?{line}Wait! What about those?{page}Hm…oh well…",
+   "text": "{Terra}: ما رأيك في هذه؟{line}انتظر! وماذا عن تلك؟\nهمم… لا بأس…"
+  },
+  {
+   "id": "gau-father.2812",
+   "context": "Message 2812 of the dialogue: {Terra}: Did you say something?{line}“N…no! Nothing…{line}…Uh huh…”",
+   "text": "{Terra}: هل قلت شيئا؟{line}«ل… لا! لا شيء…{line}…أها…»"
+  },
+  {
+   "id": "gau-father.2813",
+   "context": "Message 2813 of the dialogue: {Celes}: Which is it gonna be? Oh! This is nice…but…{line}Do you think it becomes {Gau}?{page}Well…",
+   "text": "{Celes}: أيهما سيكون؟ أوه! هذه جميلة… لكن…{line}أتظن أنها تناسب {Gau}؟\nحسنا…"
+  },
+  {
+   "id": "gau-father.2814",
+   "context": "Message 2814 of the dialogue: {Celes}: What?!{line}“…Nothing…”",
+   "text": "{Celes}: ماذا؟!{line}«…لا شيء…»"
+  },
+  {
+   "id": "gau-father.2815",
+   "context": "Message 2815 of the dialogue: {Cyan}: What a jaunty hat!{line}“Not at…”",
+   "text": "{Cyan}: يا لها من قبعة مرحة!{line}«أبدا…»"
+  },
+  {
+   "id": "gau-father.2816",
+   "context": "Message 2816 of the dialogue: {Cyan}: Wait a minute!{line}Where's the hat?{line}“……”",
+   "text": "{Cyan}: لحظة!{line}أين القبعة؟{line}«……»"
+  },
+  {
+   "id": "gau-father.2817",
+   "context": "Message 2817 of the dialogue: {Sabin}: This is it!{line}Me go to funeral?{line}{Sabin}: Perfect!{line}Functional yet sporty! Done!{page}“I don't think…”",
+   "text": "{Sabin}: هذه هي!{line}أنا أذهب إلى جنازة؟{line}{Sabin}: مثالية!{line}عملية ورياضية معا! تم!\n«لا أظن…»"
+  },
+  {
+   "id": "gau-father.2818",
+   "context": "Message 2818 of the dialogue: {Setzer}: Phew!{line}Completely lacking in fashion…{page}{Setzer}: Excuse me, sir.{line}Could you order some clothes like the ones I'm wearing?{page}Impossible!{line}{Setzer}! How dare you think of sticking him in that kinda getup?!",
+   "text": "{Setzer}: أوف!{line}لا ذوق في الأزياء على الإطلاق…\n{Setzer}: عفوا يا سيدي.{line}أيمكنك أن تطلب ثيابا كالتي أرتديها؟\nمستحيل!{line}{Setzer}! كيف تجرؤ على التفكير في وضعه في هيئة كهذه؟!"
+  },
+  {
+   "id": "gau-father.2819",
+   "context": "Message 2819 of the dialogue: {Edgar}: I got it!{line}A tuxedo, silk hat…and…{line}…a rose in his teeth!",
+   "text": "{Edgar}: وجدتها!{line}بدلة سهرة، وقبعة حريرية… و…{line}…وردة بين أسنانه!"
+  },
+  {
+   "id": "gau-father.2820",
+   "context": "Message 2820 of the dialogue: {Locke}: I think that's overdoing it just a bit…{line}He should have a bandana on his head!",
+   "text": "{Locke}: أظن أن هذا مبالغ فيه قليلا…{line}ينبغي أن يضع عصابة رأس!"
+  },
+  {
+   "id": "gau-father.2821",
+   "context": "Message 2821 of the dialogue: {Edgar}: What's so great about a bandana? Most of the time I see 'em tied around dogs at the beach!",
+   "text": "{Edgar}: وما العظيم في عصابة الرأس؟ في معظم الأحيان أراها مربوطة على الكلاب عند الشاطئ!"
+  },
+  {
+   "id": "gau-father.2822",
+   "context": "Message 2822 of the dialogue: {Locke}: HEY!{line}What do you mean by that?",
+   "text": "{Locke}: هيه!{line}ماذا تقصد بذلك؟"
+  },
+  {
+   "id": "gau-father.2823",
+   "context": "Message 2823 of the dialogue: {Sabin}: Okay, {Gau}?{line}Now, any father'd be glad to have a son like you!{line}{Gau}: Hooo…",
+   "text": "{Sabin}: حسنا يا {Gau}؟{line}الآن، أي أب سيسعد بابن مثلك!{line}{Gau}: هووو…"
+  },
+  {
+   "id": "gau-father.2824",
+   "context": "Message 2824 of the dialogue: {Sabin}: Excuse me, Sir.{line}AGED MAN: Who'n blazes 'r you? {Wait}{line}Oh! The repairman!{page}{Sabin}: Sir…{line}You…had a son, right?{line}You with me!?",
+   "text": "{Sabin}: عفوا يا سيدي.{line}الشيخ: من تكون بحق السماء؟ {Wait}{line}أوه! المصلح!\n{Sabin}: سيدي…{line}كان… لك ابن، صحيح؟{line}أتتابعني!؟"
+  },
+  {
+   "id": "gau-father.2825",
+   "context": "Message 2825 of the dialogue: {Sabin}: Now, Sir… {Wait}{line}AGED MAN: Oh! Yes!{line}I'd like you to make those repairs on the double!{page}{Sabin}: Sir…{line}You…had a son, right?{line}You with me!?",
+   "text": "{Sabin}: والآن يا سيدي… {Wait}{line}الشيخ: أوه! نعم!{line}أريدك أن تنجز تلك الإصلاحات فورا!\n{Sabin}: سيدي…{line}كان… لك ابن، صحيح؟{line}أتتابعني!؟"
+  },
+  {
+   "id": "gau-father.2826",
+   "context": "Message 2826 of the dialogue: AGED MAN: …son?{line}{Sabin}: Right.{line}The truth is, he's alive!{line}Come here, {Gau}!",
+   "text": "الشيخ: …ابن؟{line}{Sabin}: صحيح.{line}الحقيقة أنه حي!{line}تعال يا {Gau}!"
+  },
+  {
+   "id": "gau-father.2827",
+   "context": "Message 2827 of the dialogue: {Gau}: Fffatherrr…",
+   "text": "{Gau}: أأأبي…"
+  },
+  {
+   "id": "gau-father.2828",
+   "context": "Message 2828 of the dialogue: AGED MAN: What is this?!{line}What's with this “son” business? I never had a son!",
+   "text": "الشيخ: ما هذا؟!{line}ما قصة «الابن» هذه؟ لم يكن لي ابن قط!"
+  },
+  {
+   "id": "gau-father.2829",
+   "context": "Message 2829 of the dialogue: AGED MAN: But now that you mention it, I once had a terrible dream. {Wait} In it, a demon-child was born!{page}I grabbed the creature, and rushed off to the Veldt with it…{line}{Wait}It was crying like crazy when I arrived on the Veldt.{page}{Sabin}: But, Sir…!",
+   "text": "الشيخ: لكن بما أنك ذكرت الأمر، رأيت يوما حلما فظيعا. {Wait} فيه ولد طفل شيطاني!\nأمسكت بالمخلوق، وهرعت به إلى الفيلدت…{line}{Wait}كان يبكي بجنون حين وصلت إلى الفيلدت.\n{Sabin}: لكن يا سيدي…!"
+  },
+  {
+   "id": "gau-father.2830",
+   "context": "Message 2830 of the dialogue: AGED MAN: I left the child there… {Wait}{line}And without looking back,{line}I turned and started to run.{page}{Sabin}: I'm trying to tell you…",
+   "text": "الشيخ: تركت الطفل هناك… {Wait}{line}ودون أن أنظر خلفي،{line}استدرت وبدأت أركض.\n{Sabin}: أحاول أن أقول لك…"
+  },
+  {
+   "id": "gau-father.2831",
+   "context": "Message 2831 of the dialogue: AGED MAN: Suddenly the crying stopped. I turned around and saw a frightful monster…{page}Hideous! Still gives me the shakes.{line}{Sabin}: I give up…",
+   "text": "الشيخ: فجأة توقف البكاء. استدرت فرأيت وحشا مخيفا…\nبشع! ما زال يصيبني بالرعدة.{line}{Sabin}: أستسلم…"
+  },
+  {
+   "id": "gau-father.2832",
+   "context": "Message 2832 of the dialogue: AGED MAN: But you, young man, your parents must be proud of you! I still have dreams of that demon child…{page}Frightening…",
+   "text": "الشيخ: لكن أنت يا شاب، لا بد أن والديك فخوران بك! ما زلت أحلم بذلك الطفل الشيطاني…\nمرعب…"
+  },
+  {
+   "id": "gau-father.2833",
+   "context": "Message 2833 of the dialogue: {Sabin}: Why! You old…{line}He's completely lost his mind!{line}{Gau}, I'm gonna clobber him!!",
+   "text": "{Sabin}: يا لك من… أيها العجوز…{line}لقد فقد عقله تماما!{line}{Gau}، سألكمه!!"
+  },
+  {
+   "id": "gau-father.2834",
+   "context": "Message 2834 of the dialogue: {Gau}: Uwaooo…ooooo…",
+   "text": "{Gau}: أوااووو… ووووو…"
+  },
+  {
+   "id": "gau-father.2835",
+   "context": "Message 2835 of the dialogue: AGED MAN: Eh?{line}Say, is everything fixed yet?",
+   "text": "الشيخ: إيه؟{line}قل، هل أصلح كل شيء؟"
+  },
+  {
+   "id": "gau-father.2836",
+   "context": "Message 2836 of the dialogue: AGED MAN: The repairman,{line}at last!{page}“Uh, no.{line}I was wondering if you knew anything about Emperor Gestahl's map…”{page}AGED MAN: Map…?! {Wait}{line}Everyone's askin' 'bout that map!{page}Pardon?!{page}AGED MAN: Little while ago, some guy wearin' a bandana asked for the map.{line}So I told him!{page}W…where is it?",
+   "text": "الشيخ: المصلح،{line}أخيرا!\n«آه، لا.{line}كنت أتساءل إن كنت تعرف شيئا عن خريطة الإمبراطور غشتال…»\nالشيخ: خريطة…؟! {Wait}{line}الجميع يسألون عن تلك الخريطة!\nعفوا؟!\nالشيخ: قبل قليل، سألني رجل يضع عصابة رأس عن الخريطة.{line}فأخبرته!\nأ… أين هي؟"
+  },
+  {
+   "id": "gau-father.2837",
+   "context": "Message 2837 of the dialogue: AGED MAN: It's where the mountains form a star-shape!{page}You should have just come out and asked me.{line}No need to be shy!",
+   "text": "الشيخ: حيث تشكل الجبال نجمة!\nكان عليك أن تسألني مباشرة.{line}لا داعي للخجل!"
+  },
+  {
+   "id": "gau-father.2838",
+   "context": "Message 2838 of the dialogue: AGED MAN: Got it?!{line}Where the mountains form the shape of a star!",
+   "text": "الشيخ: فهمت؟!{line}حيث تشكل الجبال نجمة!"
+  },
+  {
+   "id": "gau-father.2839",
+   "context": "Message 2839 of the dialogue: {Sabin}: I…I'm sorry…",
+   "text": "{Sabin}: أنا… آسف…"
+  },
+  {
+   "id": "gau-father.2840",
+   "context": "Message 2840 of the dialogue: {Gau}: Fffatherrr…alive…{line}H… {Wait}a… {Wait}p… {Wait}p… {Wait}y…",
+   "text": "{Gau}: أأأبي… حي…{line}س… {Wait}ع… {Wait}ي… {Wait}د… {Wait}"
+  },
+  {
+   "id": "gau-father.2841",
+   "context": "Message 2841 of the dialogue: ……Not enough money.",
+   "text": "……المال لا يكفي."
+  },
+  {
+   "id": "thamasa-ruin.2842",
+   "context": "Message 2842 of the dialogue: HP and MP recovered,{line}and status ailments, like Poison,{line}cured!",
+   "text": "استعيدت نقاط الحياة والسحر،{line}وشفيت الحالات المرضية،{line}كالتسمم!"
+  },
+  {
+   "id": "thamasa-ruin.2843",
+   "context": "Message 2843 of the dialogue: First time I've been back in a while, and the village looks trashed.{line}What on earth happened?",
+   "text": "أول مرة أعود منذ فترة، والقرية تبدو محطمة.{line}ماذا حدث بحق السماء؟"
+  },
+  {
+   "id": "thamasa-ruin.2844",
+   "context": "Message 2844 of the dialogue: I am Gungho.{line}Warrior extraordinaire from the town of Thamasa.",
+   "text": "أنا غونغهو.{line}محارب استثنائي من بلدة ثماسا."
+  },
+  {
+   "id": "thamasa-ruin.2845",
+   "context": "Message 2845 of the dialogue: {Strago}: G…Gungho?!",
+   "text": "{Strago}: غ… غونغهو؟!"
+  },
+  {
+   "id": "thamasa-ruin.2846",
+   "context": "Message 2846 of the dialogue: If you're looking for the man dressed all in black, he left for the colosseum.",
+   "text": "إن كنت تبحث عن الرجل الذي يرتدي الأسود كله، فقد غادر إلى الكولوسيوم."
+  },
+  {
+   "id": "thamasa-ruin.2847",
+   "context": "Message 2847 of the dialogue: One day, a man working for an aristocrat in Jidoor came and took that young woman back with him!",
+   "text": "ذات يوم جاء رجل يعمل عند أرستقراطي في جيدور وأخذ تلك الشابة معه!"
+  },
+  {
+   "id": "thamasa-ruin.2848",
+   "context": "Message 2848 of the dialogue: I saw a monster floating in the sky! It looked just like a fish.",
+   "text": "رأيت وحشا يطفو في السماء! بدا تماما مثل سمكة."
+  },
+  {
+   "id": "thamasa-ruin.2849",
+   "context": "Message 2849 of the dialogue: All the fun places are gone now.",
+   "text": "كل الأماكن الممتعة اختفت الآن."
+  },
+  {
+   "id": "thamasa-ruin.2850",
+   "context": "Message 2850 of the dialogue: For the first time in 50 years, Ebot's Rock is above water!{line}Head north of town if you want to see it.",
+   "text": "لأول مرة منذ 50 عاما، صخرة إيبوت فوق الماء!{line}اتجه شمال البلدة إن أردت رؤيتها."
+  },
+  {
+   "id": "thamasa-ruin.2851",
+   "context": "Message 2851 of the dialogue: GUNGHO: Is that you,{line}{Strago}?{line}Have you come back to hunt Hidon?",
+   "text": "غونغهو: أهذا أنت،{line}يا {Strago}؟{line}هل عدت لتصطاد هيدون؟"
+  },
+  {
+   "id": "thamasa-ruin.2852",
+   "context": "Message 2852 of the dialogue: I've got {Strago} on my side now, but what a monumental bag of hot air!",
+   "text": "{Strago} في صفي الآن، لكن يا له من كيس هواء ساخن ضخم!"
+  },
+  {
+   "id": "thamasa-ruin.2853",
+   "context": "Message 2853 of the dialogue: GUNGHO: He'll never change.{line}That's who he is!",
+   "text": "غونغهو: لن يتغير أبدا.{line}هذا هو!"
+  },
+  {
+   "id": "thamasa-ruin.2854",
+   "context": "Message 2854 of the dialogue: When you were younger you hunted Hidon, the legendary monster. But you quit before you found it…",
+   "text": "حين كنت أصغر سنا طاردت هيدون، الوحش الأسطوري. لكنك استسلمت قبل أن تجده…"
+  },
+  {
+   "id": "thamasa-ruin.2855",
+   "context": "Message 2855 of the dialogue: {Strago}: I didn't really quit!{page}It's just that, well, the monster lives only on Ebot's Rock, which has been submerged for some time.{page}GUNGHO: You never could give me an honest answer.",
+   "text": "{Strago}: لم أستسلم حقا!\nالأمر فقط أن، حسنا، الوحش لا يعيش إلا على صخرة إيبوت، وقد كانت غارقة منذ مدة.\nغونغهو: لم تستطع يوما أن تعطيني جوابا صادقا."
+  },
+  {
+   "id": "thamasa-ruin.2856",
+   "context": "Message 2856 of the dialogue: GUNGHO: What a buffoon!!",
+   "text": "غونغهو: يا له من مهرج!!"
+  },
+  {
+   "id": "thamasa-ruin.2857",
+   "context": "Message 2857 of the dialogue: MAYOR: It's only been a year{line}since the world changed…{line}But it feels like forever.",
+   "text": "العمدة: لم تمض سوى سنة{line}منذ تغير العالم…{line}لكنها تبدو دهرا."
+  },
+  {
+   "id": "thamasa-ruin.2858",
+   "context": "Message 2858 of the dialogue: {Relm}: Yea!! We're back!{page}It's like old times!",
+   "text": "{Relm}: مرحى!! عدنا!\nكأنها الأيام الخوالي!"
+  },
+  {
+   "id": "thamasa-ruin.2859",
+   "context": "Message 2859 of the dialogue: {Strago}: Time to relax!{line}{Wait}Home sweet home!",
+   "text": "{Strago}: وقت الاسترخاء!{line}{Wait}البيت الحبيب!"
+  },
+  {
+   "id": "thamasa-ruin.2860",
+   "context": "Message 2860 of the dialogue: {Relm}: This is terrible!{line}Gungho's hurt!",
+   "text": "{Relm}: هذا فظيع!{line}غونغهو مصاب!"
+  },
+  {
+   "id": "thamasa-ruin.2861",
+   "context": "Message 2861 of the dialogue: {Strago}: Gungho, wake up!",
+   "text": "{Strago}: غونغهو، استيقظ!"
+  },
+  {
+   "id": "thamasa-ruin.2862",
+   "context": "Message 2862 of the dialogue: {Strago}: Who did this to you?{page}GUNGHO: It was…Hidon, the beast you and I used to hunt.{line}I almost had it…",
+   "text": "{Strago}: من فعل هذا بك؟\nغونغهو: كان… هيدون، الوحش الذي كنا نصطاده أنا وأنت.{line}كدت أنال منه…"
+  },
+  {
+   "id": "thamasa-ruin.2863",
+   "context": "Message 2863 of the dialogue: GUNGHO: Oooh…cough, cough…",
+   "text": "غونغهو: أووه… كح، كح…"
+  },
+  {
+   "id": "thamasa-ruin.2864",
+   "context": "Message 2864 of the dialogue: GUNGHO: {Strago}…{line}Please…you must avenge me…",
+   "text": "غونغهو: {Strago}…{line}أرجوك… عليك أن تثأر لي…"
+  },
+  {
+   "id": "thamasa-ruin.2865",
+   "context": "Message 2865 of the dialogue: {Strago}: You took on Hidon…?",
+   "text": "{Strago}: واجهت هيدون…؟"
+  },
+  {
+   "id": "thamasa-ruin.2866",
+   "context": "Message 2866 of the dialogue: {Relm}: Gramps!{line}Why are you hesitating!",
+   "text": "{Relm}: جدو!{line}لماذا تتردد!"
+  },
+  {
+   "id": "thamasa-ruin.2867",
+   "context": "Message 2867 of the dialogue: {Strago}: Well… {Wait}I spent my{line}youth chasing that creature.{line}To do it again at this age is more than I bargained for.",
+   "text": "{Strago}: حسنا… {Wait}قضيت{line}شبابي في مطاردة ذلك المخلوق.{line}أن أفعلها مجددا في هذه السن أكثر مما توقعت."
+  },
+  {
+   "id": "thamasa-ruin.2868",
+   "context": "Message 2868 of the dialogue: {Strago}: Gungho…{line}rest easy, I'll do it for you!",
+   "text": "{Strago}: غونغهو…{line}ارتح، سأفعلها من أجلك!"
+  },
+  {
+   "id": "thamasa-ruin.2869",
+   "context": "Message 2869 of the dialogue: {Relm}: Just a minute!{line}You don't think you're going alone, do you?",
+   "text": "{Relm}: لحظة!{line}لا تظن أنك ذاهب وحدك، أليس كذلك؟"
+  },
+  {
+   "id": "thamasa-ruin.2870",
+   "context": "Message 2870 of the dialogue: {Strago}: I spent too many years of my life hunting that thing. It is my obsession, not yours.",
+   "text": "{Strago}: قضيت سنوات كثيرة من حياتي في مطاردة ذلك الشيء. إنه هوسي، لا هوسك."
+  },
+  {
+   "id": "thamasa-ruin.2871",
+   "context": "Message 2871 of the dialogue: {Relm}: But Grandpa!{line}This “obsession” of yours could easily slay you!{page}You're my Grandfather.{line}I can't just sit idly by and watch you go.",
+   "text": "{Relm}: لكن يا جدي!{line}«هوسك» هذا قد يقتلك بسهولة!\nأنت جدي.{line}لا أستطيع أن أجلس مكتوفة اليدين وأراك تذهب."
+  },
+  {
+   "id": "thamasa-ruin.2872",
+   "context": "Message 2872 of the dialogue: {Strago}: Sorry, {Relm}.{line}I'm so grateful that you care!{page}But as its name implies, the Hidon is extremely difficult to find.{page}Unless I go alone, it will not show itself.",
+   "text": "{Strago}: آسف يا {Relm}.{line}أنا ممتن جدا لاهتمامك!\nلكن كما يوحي اسمه، هيدون صعب الإيجاد للغاية.\nما لم أذهب وحدي، فلن يظهر نفسه."
+  },
+  {
+   "id": "thamasa-ruin.2873",
+   "context": "Message 2873 of the dialogue: {Strago}: Next stop,{line}Ebot's Rock.",
+   "text": "{Strago}: المحطة التالية،{line}صخرة إيبوت."
+  },
+  {
+   "id": "thamasa-ruin.2874",
+   "context": "Message 2874 of the dialogue: {Relm}: Phew…",
+   "text": "{Relm}: أوف…"
+  },
+  {
+   "id": "thamasa-ruin.2875",
+   "context": "Message 2875 of the dialogue: TREASURE: I'm hungry!{page}Hungry hungry hungry{line}hungry hungry hungry{line}hungry hungry hungry{line}hungry hungry hungry!!{page}Feed me! {Wait}{line}Otherwise, I won't let you by!",
+   "text": "الكنز: أنا جائع!\nجائع جائع جائع{line}جائع جائع جائع{line}جائع جائع جائع{line}جائع جائع جائع!!\nأطعموني! {Wait}{line}وإلا لن أدعكم تمرون!"
+  },
+  {
+   "id": "thamasa-ruin.2876",
+   "context": "Message 2876 of the dialogue: Skinflint!{line}Git outta here!",
+   "text": "بخيل!{line}اغرب من هنا!"
+  },
+  {
+   "id": "thamasa-ruin.2877",
+   "context": "Message 2877 of the dialogue: You must have more than one of those!",
+   "text": "لا بد أن عندك أكثر من واحدة من تلك!"
+  },
+  {
+   "id": "thamasa-ruin.2878",
+   "context": "Message 2878 of the dialogue: I'm not happy unless I have plenty to eat!",
+   "text": "لا أسعد ما لم يكن عندي الكثير لآكله!"
+  },
+  {
+   "id": "thamasa-ruin.2879",
+   "context": "Message 2879 of the dialogue: Munch {Wait}munch {Wait}munch {Wait}{line}Muurp…that was great. {Wait}{line}Bring me some more!!",
+   "text": "قرمش {Wait}قرمش {Wait}قرمش {Wait}{line}تجشؤ… كان ذلك رائعا. {Wait}{line}أحضروا لي المزيد!!"
+  },
+  {
+   "id": "thamasa-ruin.2880",
+   "context": "Message 2880 of the dialogue: Munch {Wait}munch {Wait}munch {Wait}{line}G'nnnaa! What a feast!{line}I'm stuffed. Completely full!",
+   "text": "قرمش {Wait}قرمش {Wait}قرمش {Wait}{line}غنننااا! يا لها من وليمة!{line}شبعت. امتلأت تماما!"
+  },
+  {
+   "id": "thamasa-ruin.2881",
+   "context": "Message 2881 of the dialogue: I like to eat “Coral”!{line}Have any?{page}Hand over some “Coral”?{line}{Choice}(Sure.){line}{Choice}(I don't think so.)",
+   "text": "أحب أن آكل «مرجان»!{line}عندكم منه؟\nتسلمون بعض «المرجان»؟{line}{Choice} (طبعا.){line}{Choice} (لا أظن ذلك.)"
+  },
+  {
+   "id": "thamasa-ruin.2882",
+   "context": "Message 2882 of the dialogue: {line}  Received a piece of “Coral.”",
+   "text": "{center}{line}حصلت على قطعة «مرجان»."
+  },
+  {
+   "id": "thamasa-ruin.2883",
+   "context": "Message 2883 of the dialogue: {line}  Received 2 pieces of “Coral.”",
+   "text": "{center}{line}حصلت على قطعتي «مرجان»."
+  },
+  {
+   "id": "thamasa-ruin.2884",
+   "context": "Message 2884 of the dialogue: {line}  Received 3 pieces of “Coral.”",
+   "text": "{center}{line}حصلت على 3 قطع «مرجان»."
+  },
+  {
+   "id": "thamasa-ruin.2885",
+   "context": "Message 2885 of the dialogue: {line}  Received 5 pieces of “Coral.”",
+   "text": "{center}{line}حصلت على 5 قطع «مرجان»."
+  },
+  {
+   "id": "thamasa-ruin.2886",
+   "context": "Message 2886 of the dialogue: TREASURE: Bluuurp! Whew!",
+   "text": "الكنز: بلوووورب! أوف!"
+  },
+  {
+   "id": "thamasa-ruin.2887",
+   "context": "Message 2887 of the dialogue: TREASURE: Oh, yeah,{line}you wanna pass through here, right?",
+   "text": "الكنز: أوه، نعم،{line}تريدون المرور من هنا، صحيح؟"
+  },
+  {
+   "id": "thamasa-ruin.2888",
+   "context": "Message 2888 of the dialogue: TREASURE: Eh!!{line}What the…!",
+   "text": "الكنز: إيه!!{line}ما هذا…!"
+  },
+  {
+   "id": "thamasa-ruin.2889",
+   "context": "Message 2889 of the dialogue: {Strago}: That's Hidon!",
+   "text": "{Strago}: ذاك هيدون!"
+  },
+  {
+   "id": "thamasa-ruin.2890",
+   "context": "Message 2890 of the dialogue: {Strago}: I did it!{line}I…I…{line}{Wait}I actually beat Hidon!",
+   "text": "{Strago}: فعلتها!{line}أنا… أنا…{line}{Wait}هزمت هيدون فعلا!"
+  },
+  {
+   "id": "thamasa-ruin.2891",
+   "context": "Message 2891 of the dialogue: {Strago}: I have to tell Gungho he is avenged!",
+   "text": "{Strago}: علي أن أخبر غونغهو أنني ثأرت له!"
+  },
+  {
+   "id": "thamasa-ruin.2892",
+   "context": "Message 2892 of the dialogue: {Strago}: Gungho…!",
+   "text": "{Strago}: غونغهو…!"
+  },
+  {
+   "id": "thamasa-ruin.2893",
+   "context": "Message 2893 of the dialogue: GUNGHO: What's all the hullabaloo?!{page}{Strago}: Listen to me!{line}I DEFEATED Hidon!",
+   "text": "غونغهو: ما كل هذه الجلبة؟!\n{Strago}: اسمعني!{line}لقد هزمت هيدون!"
+  },
+  {
+   "id": "thamasa-ruin.2894",
+   "context": "Message 2894 of the dialogue: GUNGHO: You WHAT?!{line}You b…beat Hidon?!{line}{Wait}You're lying! LYING!",
+   "text": "غونغهو: ماذا؟!{line}ه… هزمت هيدون؟!{line}{Wait}أنت تكذب! تكذب!"
+  },
+  {
+   "id": "thamasa-ruin.2895",
+   "context": "Message 2895 of the dialogue: {Relm}: No, he's not!{line}He really defeated Hidon.",
+   "text": "{Relm}: لا، لا يكذب!{line}لقد هزم هيدون فعلا."
+  },
+  {
+   "id": "thamasa-ruin.2896",
+   "context": "Message 2896 of the dialogue: {Strago}: Ho, ho, ho!{line}If I didn't know better, I'd say that Hidon wasn't my only enemy!",
+   "text": "{Strago}: هو، هو، هو!{line}لولا أنني أعرف الحقيقة، لقلت إن هيدون لم يكن عدوي الوحيد!"
+  },
+  {
+   "id": "thamasa-ruin.2897",
+   "context": "Message 2897 of the dialogue: GUNGHO: I don't believe this.{line}This has to be a joke!{line}{Strago}: Ho, ho, ho!!{page}{Strago}: …by the way, how are your wounds healing, Gungho?",
+   "text": "غونغهو: لا أصدق هذا.{line}لا بد أنها مزحة!{line}{Strago}: هو، هو، هو!!\n{Strago}: …بالمناسبة، كيف تلتئم جراحك يا غونغهو؟"
+  },
+  {
+   "id": "thamasa-ruin.2898",
+   "context": "Message 2898 of the dialogue: GUNGHO: Eh?{line}{Wait}Oh, they're fine…",
+   "text": "غونغهو: إيه؟{line}{Wait}أوه، إنها بخير…"
+  },
+  {
+   "id": "thamasa-ruin.2899",
+   "context": "Message 2899 of the dialogue: {line}{line}{Spaces 08}That evening……",
+   "text": "{center}{line}{line}في ذلك المساء……"
+  },
+  {
+   "id": "thamasa-ruin.2900",
+   "context": "Message 2900 of the dialogue: {Strago}: There I was, in a cave that seemed endless. Then, before I knew it, Hidon appeared!",
+   "text": "{Strago}: كنت هناك، في كهف بدا بلا نهاية. ثم، قبل أن أدرك، ظهر هيدون!"
+  },
+  {
+   "id": "thamasa-ruin.2901",
+   "context": "Message 2901 of the dialogue: {Strago}: I stared Hidon straight in the eye, lifted my staff, and let him have it!{page}{line}   G'Pow!!{page}{line}   Thwack!!{page}{line}   Crash!!",
+   "text": "{Strago}: حدقت في عيني هيدون مباشرة، ورفعت عصاي، وأشبعته ضربا!\n{center}{line}بام!!\n{center}{line}طراخ!!\n{center}{line}كراش!!"
+  },
+  {
+   "id": "thamasa-ruin.2902",
+   "context": "Message 2902 of the dialogue: {Strago}: I wanted to show my enemy the true meaning of the word, “hero”!",
+   "text": "{Strago}: أردت أن أري عدوي المعنى الحقيقي لكلمة «بطل»!"
+  },
+  {
+   "id": "thamasa-ruin.2903",
+   "context": "Message 2903 of the dialogue: {Strago}: And then…… {Pause 08}{Key}",
+   "text": "{Strago}: ثم…… {Pause 08}{Key}"
+  },
+  {
+   "id": "thamasa-ruin.2904",
+   "context": "Message 2904 of the dialogue: {Relm}: What happened to Grandpa?{page}GUNGHO: Huh?{line}Finally! He nodded off.",
+   "text": "{Relm}: ماذا حدث لجدي؟\nغونغهو: هاه؟{line}أخيرا! غفا."
+  },
+  {
+   "id": "thamasa-ruin.2905",
+   "context": "Message 2905 of the dialogue: GUNGHO: However… {Wait}{line}Let's let him be!{line}He's nice and…quiet…{line}Now, about my “wounds”…",
+   "text": "غونغهو: لكن… {Wait}{line}لندعه وشأنه!{line}إنه لطيف و… هادئ…{line}والآن، بخصوص «جراحي»…"
+  },
+  {
+   "id": "thamasa-ruin.2906",
+   "context": "Message 2906 of the dialogue: {Relm}: Wait!{line}First let me thank you.{page}You gave Grandpa a reason to go and defeat something that had tormented him for decades!{page}Even if YOU were faking, that creature meant business!",
+   "text": "{Relm}: انتظر!{line}أولا دعني أشكرك.\nأعطيت جدي سببا ليذهب ويهزم شيئا عذبه عقودا!\nحتى لو كنت أنت تتظاهر، فذلك المخلوق كان جادا!"
+  },
+  {
+   "id": "thamasa-ruin.2907",
+   "context": "Message 2907 of the dialogue: GUNGHO: What a granddaughter he's raised! Amazing!{page}{Relm}: And what a terrible actor you are!",
+   "text": "غونغهو: يا لها من حفيدة رباها! مذهل!\n{Relm}: ويا لك من ممثل فظيع!"
+  },
+  {
+   "id": "thamasa-ruin.2908",
+   "context": "Message 2908 of the dialogue: {Relm}: Only {Strago} could have been taken in by that performance!",
+   "text": "{Relm}: {Strago} وحده من يمكن أن ينخدع بذلك الأداء!"
+  },
+  {
+   "id": "thamasa-ruin.2909",
+   "context": "Message 2909 of the dialogue: GUNGHO: Everything okay?",
+   "text": "غونغهو: كل شيء بخير؟"
+  },
+  {
+   "id": "thamasa-ruin.2910",
+   "context": "Message 2910 of the dialogue: GUNGHO: Hidon's appeared at Ebot's Rock again!",
+   "text": "غونغهو: هيدون ظهر عند صخرة إيبوت مجددا!"
+  },
+  {
+   "id": "thamasa-ruin.2911",
+   "context": "Message 2911 of the dialogue: During the past year I've traveled the world over.{page}Wanna hear some of my stories?{line}{Choice} Yes{line}{Choice} No",
+   "text": "خلال السنة الماضية جبت العالم كله.\nتريدون سماع بعض قصصي؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "thamasa-ruin.2912",
+   "context": "Message 2912 of the dialogue: North of the Veldt is a small, triangular island.",
+   "text": "شمال الفيلدت جزيرة صغيرة مثلثة."
+  },
+  {
+   "id": "thamasa-ruin.2913",
+   "context": "Message 2913 of the dialogue: The island is home to a monster that could suck up an entire ocean.{page}What do you suppose might happen if it sucked you inside? That much I don't know!",
+   "text": "الجزيرة موطن لوحش يستطيع ابتلاع محيط بأكمله.\nماذا تظنون قد يحدث لو ابتلعكم إلى داخله؟ هذا ما لا أعرفه!"
+  },
+  {
+   "id": "scattered.2914",
+   "context": "Message 2914 of the dialogue: GUNGHO: What the…!",
+   "text": "غونغهو: ما هذا…!"
+  },
+  {
+   "id": "scattered.2915",
+   "context": "Message 2915 of the dialogue: This is Figaro, the desert castle.",
+   "text": "هذه فيغارو، قلعة الصحراء."
+  },
+  {
+   "id": "scattered.2916",
+   "context": "Message 2916 of the dialogue: Wait!",
+   "text": "انتظر!"
+  },
+  {
+   "id": "scattered.2917",
+   "context": "Message 2917 of the dialogue: Hey! Oh, it's you.{line}Proceed.",
+   "text": "هيه! أوه، هذا أنت.{line}تفضل."
+  },
+  {
+   "id": "scattered.2918",
+   "context": "Message 2918 of the dialogue: Figaro and the Empire are allies!",
+   "text": "فيغارو والإمبراطورية حليفتان!"
+  },
+  {
+   "id": "scattered.2919",
+   "context": "Message 2919 of the dialogue: Figaro Castle is the most modern structure in the world!",
+   "text": "قلعة فيغارو أحدث بناء في العالم!"
+  },
+  {
+   "id": "scattered.2920",
+   "context": "Message 2920 of the dialogue: It doesn't look like it, but this castle incorporates some of the most high-tech devices in existence. For example, …",
+   "text": "لا تبدو كذلك، لكن هذه القلعة تضم بعضا من أرقى الأجهزة التقنية الموجودة. مثلا، …"
+  },
+  {
+   "id": "scattered.2921",
+   "context": "Message 2921 of the dialogue: Oops…they're all top-secret!",
+   "text": "أوبس… كلها سرية للغاية!"
+  },
+  {
+   "id": "scattered.2922",
+   "context": "Message 2922 of the dialogue: You've seen it, haven't you?",
+   "text": "رأيتها، أليس كذلك؟"
+  },
+  {
+   "id": "scattered.2923",
+   "context": "Message 2923 of the dialogue: Eh?……{line}Who {Pause 01}might {Pause 01}you {Pause 01}be?",
+   "text": "إيه؟……{line}من {Pause 01}عساك {Pause 01}أن {Pause 01}تكون؟"
+  },
+  {
+   "id": "scattered.2924",
+   "context": "Message 2924 of the dialogue: {Locke}: This is the pits.{line}We'd better hightail it southward, to Figaro.",
+   "text": "{Locke}: هذا أسوأ ما يكون.{line}من الأفضل أن نسرع جنوبا، إلى فيغارو."
+  },
+  {
+   "id": "scattered.2925",
+   "context": "Message 2925 of the dialogue: This is the frozen Esper…",
+   "text": "هذا الإسبر المتجمد…"
+  },
+  {
+   "id": "scattered.2926",
+   "context": "Message 2926 of the dialogue: GUARD: We won't hand over the Esper!!",
+   "text": "الحارس: لن نسلم الإسبر!!"
+  },
+  {
+   "id": "scattered.2927",
+   "context": "Message 2927 of the dialogue: GUARD: Whelk! Get them!",
+   "text": "الحارس: ويلك! نل منهم!"
+  },
+  {
+   "id": "scattered.2928",
+   "context": "Message 2928 of the dialogue: Scram, you blockhead.",
+   "text": "اغرب، أيها الأبله."
+  },
+  {
+   "id": "scattered.2929",
+   "context": "Message 2929 of the dialogue: Back to your post.",
+   "text": "عد إلى موقعك."
+  },
+  {
+   "id": "scattered.2930",
+   "context": "Message 2930 of the dialogue: Time's up?{line}Good! I'll take a break!",
+   "text": "انتهى الوقت؟{line}جيد! سآخذ استراحة!"
+  },
+  {
+   "id": "scattered.2931",
+   "context": "Message 2931 of the dialogue: I'm not buying anything!",
+   "text": "لن أشتري شيئا!"
+  },
+  {
+   "id": "scattered.2932",
+   "context": "Message 2932 of the dialogue: The Empire has taken possession here.",
+   "text": "الإمبراطورية استولت على هذا المكان."
+  },
+  {
+   "id": "scattered.2933",
+   "context": "Message 2933 of the dialogue: A detached force is making its way toward Narshe.{line}We'll link up with them soon.",
+   "text": "قوة منفصلة في طريقها إلى نارشي.{line}سننضم إليها قريبا."
+  },
+  {
+   "id": "scattered.2934",
+   "context": "Message 2934 of the dialogue: That clown, Kefka, is on the verge of invading Narshe.",
+   "text": "ذلك المهرج، كيفكا، على وشك غزو نارشي."
+  },
+  {
+   "id": "scattered.2935",
+   "context": "Message 2935 of the dialogue: DUNCAN'S WIFE: I'm sure there's a hidden passage under the rich man's house. Find the room that's drafty.",
+   "text": "زوجة دنكان: أنا واثقة أن هناك ممرا خفيا تحت بيت الرجل الثري. ابحثوا عن الغرفة التي فيها تيار هواء."
+  },
+  {
+   "id": "scattered.2936",
+   "context": "Message 2936 of the dialogue: MERCHANT: You're that thief,{line}{Locke}, aren't you?{page}{Locke}: Hey!{line}Call me a treasure hunter,{line}or I'll rip your lungs out!",
+   "text": "التاجر: أنت ذلك اللص،{line}{Locke}، أليس كذلك؟\n{Locke}: هيه!{line}نادني صائد كنوز،{line}وإلا انتزعت رئتيك!"
+  },
+  {
+   "id": "scattered.2937",
+   "context": "Message 2937 of the dialogue: MERCHANT: Sorry!",
+   "text": "التاجر: آسف!"
+  },
+  {
+   "id": "scattered.2938",
+   "context": "Message 2938 of the dialogue: MERCHANT: Look!{line}As luck would have it, I'm fresh out of merchandise!{page}{Choice}(I'm gonna pound your face!){line}{Choice}(Guess I'm out of luck!)",
+   "text": "التاجر: انظر!{line}لحسن الحظ، نفدت بضاعتي للتو!\n{Choice} (سأهشم وجهك!){line}{Choice} (يبدو أن حظي عاثر!)"
+  },
+  {
+   "id": "scattered.2939",
+   "context": "Message 2939 of the dialogue: MERCHANT: Thanks to the Empire, my business is up!",
+   "text": "التاجر: بفضل الإمبراطورية، تجارتي رائجة!"
+  },
+  {
+   "id": "scattered.2940",
+   "context": "Message 2940 of the dialogue: Peace has been restored, but my husband never returned.",
+   "text": "عاد السلام، لكن زوجي لم يعد أبدا."
+  },
+  {
+   "id": "scattered.2941",
+   "context": "Message 2941 of the dialogue: You say peace is really here to stay?",
+   "text": "أتقول إن السلام هنا ليبقى حقا؟"
+  },
+  {
+   "id": "scattered.2942",
+   "context": "Message 2942 of the dialogue: There's nothing like being free!",
+   "text": "لا شيء يضاهي أن تكون حرا!"
+  },
+  {
+   "id": "scattered.2943",
+   "context": "Message 2943 of the dialogue: Now I can relax and drink my cider.",
+   "text": "الآن أستطيع أن أسترخي وأشرب عصير التفاح."
+  },
+  {
+   "id": "scattered.2944",
+   "context": "Message 2944 of the dialogue: Need a rest?{line}{Choice}(Yes){line}{Choice}(No)",
+   "text": "تحتاج إلى راحة؟{line}{Choice} (نعم){line}{Choice} (لا)"
+  },
+  {
+   "id": "scattered.2945",
+   "context": "Message 2945 of the dialogue: Kue!!",
+   "text": "كويه!!"
+  },
+  {
+   "id": "scattered.2946",
+   "context": "Message 2946 of the dialogue: {Choice}(Ride a chocobo?){line}{Choice}(Not yet.)",
+   "text": "{Choice} (نركب تشوكوبو؟){line}{Choice} (ليس بعد.)"
+  },
+  {
+   "id": "scattered.2947",
+   "context": "Message 2947 of the dialogue: Recovery spring",
+   "text": "نبع الشفاء"
+  },
+  {
+   "id": "system.2948",
+   "context": "Message 2948 of the dialogue: {line}The three have reached Narshe,{line}and a decisive battle is about to{line}take place…",
+   "text": "{line}وصل الثلاثة إلى نارشي،{line}ومعركة حاسمة على وشك{line}أن تقع…"
+  },
+  {
+   "id": "system.2952",
+   "context": "Message 2952 of the dialogue: {line}{Spaces 0D}Empty!",
+   "text": "{center}{line}فارغ!"
+  },
+  {
+   "id": "system.2953",
+   "context": "Message 2953 of the dialogue: 80 GP per night!{line}Well?{line}{Choice} Yes{line}{Choice} No",
+   "text": "80 غيل لليلة!{line}حسنا؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "system.2954",
+   "context": "Message 2954 of the dialogue: Good mattress for 150 GP!{line}Stay a while?{line}{Choice} Yes{line}{Choice} No",
+   "text": "فراش جيد مقابل 150 غيل!{line}تبقى قليلا؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "system.2955",
+   "context": "Message 2955 of the dialogue: You can stay for 250 GP.{line}Well?{line}{Choice} Yes{line}{Choice} No",
+   "text": "يمكنك المبيت مقابل 250 غيل.{line}حسنا؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "system.2956",
+   "context": "Message 2956 of the dialogue: {line}   Choose a scenario…kupo!",
+   "text": "{center}{line}اختر سيناريو… كوبو!"
+  },
+  {
+   "id": "system.2957",
+   "context": "Message 2957 of the dialogue: Right.{line}We're going in!",
+   "text": "حسنا.{line}سندخل!"
+  },
+  {
+   "id": "system.2958",
+   "context": "Message 2958 of the dialogue: Chocobo ride for 80 GP.{line}Hop aboard?{line}{Choice} Yes{line}{Choice} No",
+   "text": "ركوب التشوكوبو مقابل 80 غيل.{line}تركب؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "system.2959",
+   "context": "Message 2959 of the dialogue: Chocobo ride for 150 GP.{line}Hop aboard?{line}{Choice} Yes{line}{Choice} No",
+   "text": "ركوب التشوكوبو مقابل 150 غيل.{line}تركب؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "system.2960",
+   "context": "Message 2960 of the dialogue: {line}{Spaces 05}Monster-in-a-box! {KeyAfter 04}{Key}",
+   "text": "{center}{line}وحش في صندوق! {KeyAfter 04}{Key}"
+  },
+  {
+   "id": "system.2961",
+   "context": "Message 2961 of the dialogue: Use the crane to go down?{line}{Choice} Yes{line}{Choice} No",
+   "text": "تستعمل الرافعة للنزول؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "system.2962",
+   "context": "Message 2962 of the dialogue: The Statues are up ahead…",
+   "text": "التماثيل أمامنا…"
+  },
+  {
+   "id": "system.2963",
+   "context": "Message 2963 of the dialogue:    Divide into 3 groups.{line}   Use the Y Button to switch{line}   between them.",
+   "text": "انقسموا إلى 3 مجموعات.{line}استعمل زر واي للتبديل{line}بينها."
+  },
+  {
+   "id": "tower.2964",
+   "context": "Message 2964 of the dialogue: {Terra}: General Leo…{line}I believe I understand what you're trying to say.",
+   "text": "{Terra}: أيها الجنرال ليو…{line}أظن أنني أفهم ما كنت تحاول قوله."
+  },
+  {
+   "id": "tower.2965",
+   "context": "Message 2965 of the dialogue: {Locke}: As long as there're people who need to be protected, I'll fight!",
+   "text": "{Locke}: ما دام هناك من يحتاجون إلى الحماية، فسأقاتل!"
+  },
+  {
+   "id": "tower.2966",
+   "context": "Message 2966 of the dialogue: {Cyan}: What an amazing device!",
+   "text": "{Cyan}: يا له من جهاز مذهل!"
+  },
+  {
+   "id": "tower.2967",
+   "context": "Message 2967 of the dialogue: {Shadow}: ……",
+   "text": "{Shadow}: ……"
+  },
+  {
+   "id": "tower.2968",
+   "context": "Message 2968 of the dialogue: {Edgar}: If something happens to me, all the world's women will grieve!",
+   "text": "{Edgar}: إن أصابني مكروه، فستحزن نساء العالم كلهن!"
+  },
+  {
+   "id": "tower.2969",
+   "context": "Message 2969 of the dialogue: {Sabin}: Riiiiiight!",
+   "text": "{Sabin}: طبعاااا!"
+  },
+  {
+   "id": "tower.2970",
+   "context": "Message 2970 of the dialogue: {Celes}: I'm glad I made it this far…I feel I have a lot to live for…",
+   "text": "{Celes}: أنا سعيدة أنني وصلت إلى هنا… أشعر أن أمامي الكثير لأعيش من أجله…"
+  },
+  {
+   "id": "tower.2971",
+   "context": "Message 2971 of the dialogue: {Strago}: Hey everyone!{line}Let me see the light in your eyes! The old man, here, hasn't given up yet!",
+   "text": "{Strago}: هيه يا جماعة!{line}دعوني أرى البريق في عيونكم! العجوز هنا لم يستسلم بعد!"
+  },
+  {
+   "id": "tower.2972",
+   "context": "Message 2972 of the dialogue: {Relm}: Let's do it!{line}Let's go get that madman!",
+   "text": "{Relm}: لنفعلها!{line}لننل من ذلك المجنون!"
+  },
+  {
+   "id": "tower.2973",
+   "context": "Message 2973 of the dialogue: {Setzer}: Something good will come of it all!",
+   "text": "{Setzer}: شيء جيد سيأتي من كل هذا!"
+  },
+  {
+   "id": "tower.2974",
+   "context": "Message 2974 of the dialogue: A piece of Magicite popped out of Doom Gaze's mouth!",
+   "text": "قطعة ماجيسايت خرجت من فم دوم غيز!"
+  },
+  {
+   "id": "tower.2975",
+   "context": "Message 2975 of the dialogue: {line}{Spaces 05}Received the Magicite{line}{Spaces 0E}“Bahamut.”",
+   "text": "{center}{line}حصلت على الماجيسايت{line}«باهاموت»."
+  },
+  {
+   "id": "tower.2976",
+   "context": "Message 2976 of the dialogue: {Edgar}: It's time to break into Kefka's domain!",
+   "text": "{Edgar}: حان وقت اقتحام مملكة كيفكا!"
+  },
+  {
+   "id": "tower.2977",
+   "context": "Message 2977 of the dialogue: {Setzer}: What's wrong?{line}{Celes}……",
+   "text": "{Setzer}: ما الأمر؟{line}{Celes}……"
+  },
+  {
+   "id": "tower.2978",
+   "context": "Message 2978 of the dialogue: {Celes}: The Statues give the Espers the magical energy they need to live.{line}If we destroy the Statues…",
+   "text": "{Celes}: التماثيل تمنح الإسبرات الطاقة السحرية التي يحتاجون إليها ليعيشوا.{line}إن دمرنا التماثيل…"
+  },
+  {
+   "id": "tower.2979",
+   "context": "Message 2979 of the dialogue: {Edgar}: What'll happen?",
+   "text": "{Edgar}: ماذا سيحدث؟"
+  },
+  {
+   "id": "tower.2980",
+   "context": "Message 2980 of the dialogue: {Celes}: I'm really not sure,{line}but…",
+   "text": "{Celes}: لست متأكدة حقا،{line}لكن…"
+  },
+  {
+   "id": "tower.2981",
+   "context": "Message 2981 of the dialogue: {Celes}: The Espers, and magic, too, will cease to exist.",
+   "text": "{Celes}: الإسبرات، والسحر أيضا، سيزولان من الوجود."
+  },
+  {
+   "id": "tower.2982",
+   "context": "Message 2982 of the dialogue: {Strago}: The Espers…and magic, too, will most definitely disappear from this world.",
+   "text": "{Strago}: الإسبرات… والسحر أيضا، سيختفيان حتما من هذا العالم."
+  },
+  {
+   "id": "tower.2983",
+   "context": "Message 2983 of the dialogue: {Edgar}: And then…",
+   "text": "{Edgar}: وبعدها…"
+  },
+  {
+   "id": "tower.2984",
+   "context": "Message 2984 of the dialogue: {Celes}: What will happen to …{line}{Terra}…?",
+   "text": "{Celes}: ماذا سيحل بها…{line}{Terra}…؟"
+  },
+  {
+   "id": "kefka.2985",
+   "context": "Message 2985 of the dialogue: {line}{line}{line}{Spaces 05}Welcome, friends!",
+   "text": "{center}{line}{line}{line}أهلا يا أصدقاء!"
+  },
+  {
+   "id": "kefka.2986",
+   "context": "Message 2986 of the dialogue: I knew you'd make it here, so{line}I've prepared some suitable{line}entertainment for you!",
+   "text": "كنت أعرف أنكم ستصلون إلى هنا،{line}لذا أعددت لكم بعض{line}الترفيه المناسب!"
+  },
+  {
+   "id": "kefka.2987",
+   "context": "Message 2987 of the dialogue: How long are you going to let the destruction continue?{page}KEFKA: I've tapped into the ultimate power. Observe…!",
+   "text": "إلى متى ستدع الدمار يستمر؟\nكيفكا: لقد بلغت القوة المطلقة. راقبوا…!"
+  },
+  {
+   "id": "kefka.2988",
+   "context": "Message 2988 of the dialogue: KEFKA: Such magnificent power!{line}You are like insects to me!",
+   "text": "كيفكا: يا لها من قوة عظيمة!{line}أنتم كالحشرات عندي!"
+  },
+  {
+   "id": "kefka.2989",
+   "context": "Message 2989 of the dialogue: KEFKA: I will exterminate everyone, and everything!",
+   "text": "كيفكا: سأبيد الجميع، وكل شيء!"
+  },
+  {
+   "id": "kefka.2990",
+   "context": "Message 2990 of the dialogue: People will keep rebuilding the things you take from them!",
+   "text": "الناس سيواصلون إعادة بناء ما تأخذه منهم!"
+  },
+  {
+   "id": "kefka.2991",
+   "context": "Message 2991 of the dialogue: KEFKA: Then I'll destroy those too. Why do people rebuild things they know are going to be destroyed?{page}Why do people cling to life when they know they can't live forever?{page}Think how meaningless each of your lives is!",
+   "text": "كيفكا: إذن سأدمر ذلك أيضا. لماذا يعيد الناس بناء أشياء يعرفون أنها ستدمر؟\nلماذا يتشبث الناس بالحياة وهم يعرفون أنهم لا يستطيعون العيش إلى الأبد؟\nفكروا كم هي بلا معنى كل حياة من حيواتكم!"
+  },
+  {
+   "id": "kefka.2992",
+   "context": "Message 2992 of the dialogue: It's not the net result of one's life that's important!{page}It's the day-to-day concerns, the personal victories, and the celebration of life…and love!",
+   "text": "ليس المحصلة النهائية لحياة المرء هي المهمة!\nبل هموم كل يوم، والانتصارات الشخصية، والاحتفاء بالحياة… والحب!"
+  },
+  {
+   "id": "kefka.2993",
+   "context": "Message 2993 of the dialogue: It's enough if people are able to experience the joy that each day can bring!",
+   "text": "يكفي أن يستطيع الناس تذوق الفرح الذي قد يجلبه كل يوم!"
+  },
+  {
+   "id": "kefka.2994",
+   "context": "Message 2994 of the dialogue: KEFKA: And have you found your “joy”, in this nearly dead world of ours?",
+   "text": "كيفكا: وهل وجدتم «فرحكم» في عالمنا هذا شبه الميت؟"
+  },
+  {
+   "id": "kefka.2995",
+   "context": "Message 2995 of the dialogue: Yes!",
+   "text": "نعم!"
+  },
+  {
+   "id": "kefka.2996",
+   "context": "Message 2996 of the dialogue: {Terra}: I know what love is…!",
+   "text": "{Terra}: أعرف ما الحب…!"
+  },
+  {
+   "id": "kefka.2997",
+   "context": "Message 2997 of the dialogue: {Locke}: And I have learned to celebrate life…and the living.",
+   "text": "{Locke}: وأنا تعلمت أن أحتفي بالحياة… والأحياء."
+  },
+  {
+   "id": "kefka.2998",
+   "context": "Message 2998 of the dialogue: {Cyan}: My family lives on inside of me.",
+   "text": "{Cyan}: عائلتي تعيش في داخلي."
+  },
+  {
+   "id": "kefka.2999",
+   "context": "Message 2999 of the dialogue: {Shadow}: I know what friendship is… and family…",
+   "text": "{Shadow}: أعرف ما الصداقة… والعائلة…"
+  },
+  {
+   "id": "kefka.3000",
+   "context": "Message 3000 of the dialogue: {Edgar}: It is my dream to build a kingdom in which I can guarantee freedom, and dignity.",
+   "text": "{Edgar}: حلمي أن أبني مملكة أضمن فيها الحرية والكرامة."
+  },
+  {
+   "id": "kefka.3001",
+   "context": "Message 3001 of the dialogue: {Sabin}: I have come to experience anew the love of my brother!",
+   "text": "{Sabin}: صرت أعيش من جديد حب أخي!"
+  },
+  {
+   "id": "kefka.3002",
+   "context": "Message 3002 of the dialogue: {Celes}: I've met someone who can accept me for what I am.",
+   "text": "{Celes}: قابلت من يستطيع أن يقبلني كما أنا."
+  },
+  {
+   "id": "kefka.3003",
+   "context": "Message 3003 of the dialogue: {Strago}: I have a special little Granddaughter!",
+   "text": "{Strago}: عندي حفيدة صغيرة مميزة!"
+  },
+  {
+   "id": "kefka.3004",
+   "context": "Message 3004 of the dialogue: {Relm}: And I have a brave Grandpa who'll stand by me through it all.",
+   "text": "{Relm}: وعندي جد شجاع سيقف إلى جانبي في كل شيء."
+  },
+  {
+   "id": "kefka.3005",
+   "context": "Message 3005 of the dialogue: {Setzer}: My friend's airship…{line}and her love!",
+   "text": "{Setzer}: سفينة صديقتي…{line}وحبها!"
+  },
+  {
+   "id": "kefka.3006",
+   "context": "Message 3006 of the dialogue: {Mog}: I have my friends here!",
+   "text": "{Mog}: أصدقائي هنا!"
+  },
+  {
+   "id": "kefka.3007",
+   "context": "Message 3007 of the dialogue: {Gau}: You my friends!{line}Me uwaooo all of you!",
+   "text": "{Gau}: أنتم أصدقائي!{line}أنا أوااووو كلكم!"
+  },
+  {
+   "id": "kefka.3008",
+   "context": "Message 3008 of the dialogue: KEFKA: This is sickening…{line}You sound like chapters from a self-help booklet!{line}Prepare yourselves!",
+   "text": "كيفكا: هذا مقزز…{line}تبدون كفصول من كتيب للمساعدة الذاتية!{line}استعدوا!"
+  },
+  {
+   "id": "kefka.3009",
+   "context": "Message 3009 of the dialogue: KEFKA: Now, for my next trick, I will make you all…disappear!",
+   "text": "كيفكا: والآن، في خدعتي التالية، سأجعلكم جميعا… تختفون!"
+  },
+  {
+   "id": "kefka.3010",
+   "context": "Message 3010 of the dialogue: Kefka, you don't know what you're doing! Stop!",
+   "text": "كيفكا، أنت لا تعرف ما تفعل! توقف!"
+  },
+  {
+   "id": "kefka.3011",
+   "context": "Message 3011 of the dialogue: KEFKA: I command the greatest{line}power in the universe!{line}You are all helpless before me!",
+   "text": "كيفكا: أنا أمتلك أعظم{line}قوة في الكون!{line}أنتم كلكم عاجزون أمامي!"
+  },
+  {
+   "id": "kefka.3012",
+   "context": "Message 3012 of the dialogue: KEFKA: I will destroy everything…{line}I will create a monument to non-existence!",
+   "text": "كيفكا: سأدمر كل شيء…{line}سأقيم نصبا للعدم!"
+  },
+  {
+   "id": "kefka.3013",
+   "context": "Message 3013 of the dialogue: Life will go on!{line}There will always be people,{line}and dreams!",
+   "text": "الحياة ستستمر!{line}سيكون هناك دائما أناس،{line}وأحلام!"
+  },
+  {
+   "id": "kefka.3014",
+   "context": "Message 3014 of the dialogue: KEFKA: No!{line}I will hunt them down.{line}I will destroy it all!{line}Destroy! Destroy! Destroy!!",
+   "text": "كيفكا: لا!{line}سأطاردهم.{line}سأدمر كل شيء!{line}دمار! دمار! دمار!!"
+  },
+  {
+   "id": "kefka.3015",
+   "context": "Message 3015 of the dialogue: We will not allow you to harm another living thing.",
+   "text": "لن ندعك تؤذي كائنا حيا آخر."
+  },
+  {
+   "id": "kefka.3016",
+   "context": "Message 3016 of the dialogue: KEFKA: Hee, hee, hee!!{line}But what fun is destruction if no “precious” lives are lost!",
+   "text": "كيفكا: هي، هي، هي!!{line}لكن ما متعة الدمار إن لم تزهق أرواح «غالية»!"
+  },
+  {
+   "id": "kefka.3017",
+   "context": "Message 3017 of the dialogue: It's over, Kefka!",
+   "text": "انتهى الأمر يا كيفكا!"
+  },
+  {
+   "id": "kefka.3018",
+   "context": "Message 3018 of the dialogue: KEFKA: Oh!{line}But it hasn't yet begun!{line}And I'm giving you a front-row seat!",
+   "text": "كيفكا: أوه!{line}لكنه لم يبدأ بعد!{line}وأنا أمنحكم مقعدا في الصف الأول!"
+  },
+  {
+   "id": "kefka.3019",
+   "context": "Message 3019 of the dialogue: It's breaking up!",
+   "text": "إنه ينهار!"
+  },
+  {
+   "id": "ending.3020",
+   "context": "Message 3020 of the dialogue: There's no time to lose!{line}Airship's just ahead.",
+   "text": "لا وقت نضيعه!{line}السفينة الطائرة أمامنا مباشرة."
+  },
+  {
+   "id": "ending.3021",
+   "context": "Message 3021 of the dialogue: {Celes}: {Terra}!{line}What's wrong?",
+   "text": "{Celes}: {Terra}!{line}ما بك؟"
+  },
+  {
+   "id": "ending.3022",
+   "context": "Message 3022 of the dialogue: {Edgar}: The Espers…{line}They no longer exist…",
+   "text": "{Edgar}: الإسبرات…{line}لم يعودوا موجودين…"
+  },
+  {
+   "id": "ending.3023",
+   "context": "Message 3023 of the dialogue: {Terra}: Come with me.{line}I can lead you out with my last ounce of strength.",
+   "text": "{Terra}: تعالوا معي.{line}أستطيع أن أقودكم إلى الخارج بآخر ما بقي لي من قوة."
+  },
+  {
+   "id": "ending.3024",
+   "context": "Message 3024 of the dialogue: {Celes}: Come on, everybody!{line}We have to work together!",
+   "text": "{Celes}: هيا يا جماعة!{line}علينا أن نعمل معا!"
+  },
+  {
+   "id": "ending.3025",
+   "context": "Message 3025 of the dialogue: The Magicite…{page}Magic is disappearing from this world…",
+   "text": "الماجيسايت…\nالسحر يختفي من هذا العالم…"
+  },
+  {
+   "id": "ending.3026",
+   "context": "Message 3026 of the dialogue: {Celes}: You mean {Terra} too?",
+   "text": "{Celes}: أتقصد {Terra} أيضا؟"
+  },
+  {
+   "id": "ending.3027",
+   "context": "Message 3027 of the dialogue: {Terra}!!!!",
+   "text": "{Terra}!!!!"
+  },
+  {
+   "id": "ending.3028",
+   "context": "Message 3028 of the dialogue: {Terra}: Everyone's calling me.",
+   "text": "{Terra}: الجميع ينادونني."
+  },
+  {
+   "id": "ending.3029",
+   "context": "Message 3029 of the dialogue: {Celes}: {Terra}!{line}You're back!",
+   "text": "{Celes}: {Terra}!{line}لقد عدت!"
+  },
+  {
+   "id": "ending.3030",
+   "context": "Message 3030 of the dialogue: {Terra}: Come with me! {Pause 03}{Key}",
+   "text": "{Terra}: تعالوا معي! {Pause 03}{Key}"
+  },
+  {
+   "id": "ending.3031",
+   "context": "Message 3031 of the dialogue: {Edgar}: The last piece of Magicite! {Pause 04}{Key}",
+   "text": "{Edgar}: آخر قطعة ماجيسايت! {Pause 04}{Key}"
+  },
+  {
+   "id": "ending.3032",
+   "context": "Message 3032 of the dialogue: {Celes}: {Terra}!{line}It's okay!{line}Your power! It's fading… {Pause 06}{Key}",
+   "text": "{Celes}: {Terra}!{line}لا بأس!{line}قوتك! إنها تتلاشى… {Pause 06}{Key}"
+  },
+  {
+   "id": "ending.3033",
+   "context": "Message 3033 of the dialogue: {Celes}: {Terra},{line}your strength is going! {Pause 08}{Key}",
+   "text": "{Celes}: {Terra}،{line}قوتك تذهب! {Pause 08}{Key}"
+  },
+  {
+   "id": "ending.3034",
+   "context": "Message 3034 of the dialogue: {Edgar}: Follow her! {Pause 02}{Key}",
+   "text": "{Edgar}: اتبعوها! {Pause 02}{Key}"
+  },
+  {
+   "id": "ending.3035",
+   "context": "Message 3035 of the dialogue: {Setzer}: Leave it to me! {Pause 02}{Key}",
+   "text": "{Setzer}: دعوا الأمر لي! {Pause 02}{Key}"
+  },
+  {
+   "id": "ending.3036",
+   "context": "Message 3036 of the dialogue: {line}{line}{Spaces 05}Do it right, Katarin…! {Pause 0A}{Key}",
+   "text": "{center}{line}{line}أحسني يا كاتارين…! {Pause 0A}{Key}"
+  },
+  {
+   "id": "ending.3037",
+   "context": "Message 3037 of the dialogue: {line}{line}{Spaces 05}Gotta hang in there… {Pause 08}{Key}",
+   "text": "{center}{line}{line}علي أن أصمد… {Pause 08}{Key}"
+  },
+  {
+   "id": "ending.3038",
+   "context": "Message 3038 of the dialogue: {line}{Spaces 05}…for a while longer… {Pause 08}{Key}",
+   "text": "{center}{line}…قليلا بعد… {Pause 08}{Key}"
+  },
+  {
+   "id": "ending.3039",
+   "context": "Message 3039 of the dialogue: Just a little longer… {Pause 08}{Key}",
+   "text": "قليلا بعد فقط… {Pause 08}{Key}"
+  },
+  {
+   "id": "ending.3040",
+   "context": "Message 3040 of the dialogue: Where's {Terra}!? {Pause 04}{Key}",
+   "text": "أين {Terra}!؟ {Pause 04}{Key}"
+  },
+  {
+   "id": "ending.3041",
+   "context": "Message 3041 of the dialogue: {Celes}: {Terra}! {Pause 04}{Key}",
+   "text": "{Celes}: {Terra}! {Pause 04}{Key}"
+  },
+  {
+   "id": "ending.3042",
+   "context": "Message 3042 of the dialogue: {Terra}: Thank you, {line}{Setzer}! {Pause 06}{Key}",
+   "text": "{Terra}: شكرا لك،{line}{Setzer}! {Pause 06}{Key}"
+  },
+  {
+   "id": "ending.3043",
+   "context": "Message 3043 of the dialogue: {Setzer}: Didn't I say it before?! This is the world's fastest ship! {Pause 08}{Key}",
+   "text": "{Setzer}: ألم أقلها من قبل؟! هذه أسرع سفينة في العالم! {Pause 08}{Key}"
+  },
+  {
+   "id": "ending.3044",
+   "context": "Message 3044 of the dialogue: {line}{Edgar}: {Cyan}!{line}Think you can handle that switch?! {Pause 0A}{Key}{page}{line}{Cyan}: Machines…{line}I HATE machines! {Pause 0A}{Key}",
+   "text": "{line}{Edgar}: {Cyan}!{line}أتظن أنك تستطيع التعامل مع ذلك المفتاح؟! {Pause 0A}{Key}\n{line}{Cyan}: الآلات…{line}أكره الآلات! {Pause 0A}{Key}"
+  },
+  {
+   "id": "ending.3045",
+   "context": "Message 3045 of the dialogue: {Cyan}: You just have to show technology who's boss!! {Pause 0A}{Key}",
+   "text": "{Cyan}: عليك فقط أن تري التقنية من السيد!! {Pause 0A}{Key}"
+  },
+  {
+   "id": "ending.3046",
+   "context": "Message 3046 of the dialogue: {Setzer}: Wait! {Pause 08}{Key}",
+   "text": "{Setzer}: انتظروا! {Pause 08}{Key}"
+  },
+  {
+   "id": "ending.3047",
+   "context": "Message 3047 of the dialogue: {Setzer}: Let's go that way!! {Pause 0C}{Key}{page}{line}Sometimes in life you just have to FEEL your way through a situation! {Pause 0C}{Key}",
+   "text": "{Setzer}: لنذهب من هناك!! {Pause 0C}{Key}\n{line}أحيانا في الحياة عليك أن تتحسس طريقك عبر الموقف! {Pause 0C}{Key}"
+  },
+  {
+   "id": "ending.3048",
+   "context": "Message 3048 of the dialogue: {line}{Setzer}: Daryl…I'm starting to sound just like you! {Pause 0A}{Key}",
+   "text": "{line}{Setzer}: داريل… بدأت أبدو مثلك تماما! {Pause 0A}{Key}"
+  },
+  {
+   "id": "ending.3049",
+   "context": "Message 3049 of the dialogue: {line}{Mog}: Heeeeelp! Save me! {Pause 0C}{Key}",
+   "text": "{line}{Mog}: النجدة! أنقذوني! {Pause 0C}{Key}"
+  },
+  {
+   "id": "ending.3050",
+   "context": "Message 3050 of the dialogue: {line}{Mog}: The hair!!{line}Watch the hair!!! {Pause 0C}{Key}",
+   "text": "{line}{Mog}: الشعر!!{line}انتبهوا للشعر!!! {Pause 0C}{Key}"
+  },
+  {
+   "id": "ending.3051",
+   "context": "Message 3051 of the dialogue: {line}{Celes}: It won't open! {Pause 0C}{Key}",
+   "text": "{line}{Celes}: لا يفتح! {Pause 0C}{Key}"
+  },
+  {
+   "id": "ending.3052",
+   "context": "Message 3052 of the dialogue: {line}{Umaro}: U'ghaaaa! {Pause 0A}{Key}",
+   "text": "{line}{Umaro}: أوغهااا! {Pause 0A}{Key}"
+  },
+  {
+   "id": "ending.3053",
+   "context": "Message 3053 of the dialogue: {Edgar}: Where's {Sabin} when you need him…? {Pause 10}{Key}",
+   "text": "{Edgar}: أين {Sabin} حين تحتاج إليه…؟ {Pause 10}{Key}"
+  },
+  {
+   "id": "ending.3054",
+   "context": "Message 3054 of the dialogue: {Sabin}: I didn't turn my back on the kingdom, big brother… {Pause 06}{Key}{page}I knew you'd be a better king.{line}I trained hard knowing I might have to help you one day… {Pause 0A}{Key}{page}Now I know why I have these stupid muscles! {Pause 06}{Key}",
+   "text": "{Sabin}: لم أدر ظهري للمملكة يا أخي الأكبر… {Pause 06}{Key}\nكنت أعرف أنك ستكون ملكا أفضل.{line}تدربت بجد وأنا أعرف أنني قد أضطر إلى مساعدتك يوما… {Pause 0A}{Key}\nالآن عرفت لماذا عندي هذه العضلات الغبية! {Pause 06}{Key}"
+  },
+  {
+   "id": "ending.3055",
+   "context": "Message 3055 of the dialogue: {line}{Edgar}: Ladies first! {Pause 08}{Key}",
+   "text": "{line}{Edgar}: السيدات أولا! {Pause 08}{Key}"
+  },
+  {
+   "id": "ending.3056",
+   "context": "Message 3056 of the dialogue: {Gau}: {Gau} find short cut! {Pause 08}{Key}",
+   "text": "{Gau}: {Gau} يجد طريقا مختصرا! {Pause 08}{Key}"
+  },
+  {
+   "id": "ending.3057",
+   "context": "Message 3057 of the dialogue: {Celes}: Both buttons have to be pressed simultaneously… {Pause 0A}{Key}",
+   "text": "{Celes}: يجب ضغط الزرين معا في الوقت نفسه… {Pause 0A}{Key}"
+  },
+  {
+   "id": "ending.3058",
+   "context": "Message 3058 of the dialogue: {line}{Setzer}: {Gogo}!{line}Watch {Celes} and do exactly what she does! {Pause 0C}{Key}",
+   "text": "{line}{Setzer}: {Gogo}!{line}راقب {Celes} وافعل تماما ما تفعله! {Pause 0C}{Key}"
+  },
+  {
+   "id": "ending.3059",
+   "context": "Message 3059 of the dialogue: {line}Come on!{line}This floor's about to break apart! {Pause 0A}{Key}",
+   "text": "{line}هيا!{line}هذه الأرضية على وشك أن تتفكك! {Pause 0A}{Key}"
+  },
+  {
+   "id": "ending.3060",
+   "context": "Message 3060 of the dialogue: {line}{Celes}: {Locke}!! {Pause 0A}{Key}",
+   "text": "{line}{Celes}: {Locke}!! {Pause 0A}{Key}"
+  },
+  {
+   "id": "ending.3061",
+   "context": "Message 3061 of the dialogue: {line}{Locke}: I will not let go…{line}{Wait}…I promise! {Pause 0A}{Key}",
+   "text": "{line}{Locke}: لن أفلتك…{line}{Wait}…أعدك! {Pause 0A}{Key}"
+  },
+  {
+   "id": "ending.3062",
+   "context": "Message 3062 of the dialogue: {Setzer}: Don't fall!{line}Remember, you promised me you'd do your “Maria” act again! {Pause 08}{Key}",
+   "text": "{Setzer}: لا تسقطي!{line}تذكري، وعدتني أن تؤدي دور «ماريا» مجددا! {Pause 08}{Key}"
+  },
+  {
+   "id": "ending.3063",
+   "context": "Message 3063 of the dialogue: {line}You almost ate it trying to pick up that silly trinket! {Pause 0C}{Key}",
+   "text": "{line}كدت تهلكين وأنت تحاولين التقاط تلك الحلية السخيفة! {Pause 0C}{Key}"
+  },
+  {
+   "id": "ending.3064",
+   "context": "Message 3064 of the dialogue: {line}{Setzer}: What a woman!{line}Your life is hanging by a bandana! {Pause 0A}{Key}",
+   "text": "{line}{Setzer}: يا لها من امرأة!{line}حياتك معلقة بعصابة رأس! {Pause 0A}{Key}"
+  },
+  {
+   "id": "ending.3065",
+   "context": "Message 3065 of the dialogue: {Celes}: This is my good luck charm… {Wait}When I found this, my life took a turn for the better… {Pause 0C}{Key}",
+   "text": "{Celes}: هذه تميمة حظي… {Wait}حين وجدتها، أخذت حياتي منعطفا نحو الأفضل… {Pause 0C}{Key}"
+  },
+  {
+   "id": "ending.3066",
+   "context": "Message 3066 of the dialogue: {Celes}: {Locke}…{line}Promise me someday you'll look after me again?! {Pause 0C}{Key}",
+   "text": "{Celes}: {Locke}…{line}عدني أنك ستعتني بي مجددا يوما ما؟! {Pause 0C}{Key}"
+  },
+  {
+   "id": "ending.3067",
+   "context": "Message 3067 of the dialogue: {line}{Terra}: Father……? {Pause 0A}{Key}",
+   "text": "{line}{Terra}: أبي……؟ {Pause 0A}{Key}"
+  },
+  {
+   "id": "ending.3068",
+   "context": "Message 3068 of the dialogue: MADUIN: {Terra}…we must part now. We Espers will disappear from this world…{line}forever. {Pause 10}{Key}",
+   "text": "مادوين: {Terra}… علينا أن نفترق الآن. نحن الإسبرات سنختفي من هذا العالم…{line}إلى الأبد. {Pause 10}{Key}"
+  },
+  {
+   "id": "ending.3069",
+   "context": "Message 3069 of the dialogue: MADUIN: But if the human part of you is very strongly attached to something or someone… {Pause 10}{Key}{page}{line}You will probably be able to remain in this world as a human being… {Pause 10}{Key}",
+   "text": "مادوين: لكن إن كان الجزء البشري فيك متعلقا بشدة بشيء أو بأحد… {Pause 10}{Key}\n{line}فعلى الأرجح ستستطيعين البقاء في هذا العالم إنسانة… {Pause 10}{Key}"
+  },
+  {
+   "id": "ending.3070",
+   "context": "Message 3070 of the dialogue: {line}{Relm}: Grandpa!{line}Stop goofing around!! {Pause 0A}{Key}",
+   "text": "{line}{Relm}: جدي!{line}كف عن العبث!! {Pause 0A}{Key}"
+  },
+  {
+   "id": "ending.3071",
+   "context": "Message 3071 of the dialogue: {Strago}: Sorry, dear…{line}{Relm}: If I hear even a peep out of you, I'm gonna draw your portrait! {Pause 0A}{Key}",
+   "text": "{Strago}: آسف يا عزيزتي…{line}{Relm}: إن سمعت منك ولو همسة، فسأرسم صورتك! {Pause 0A}{Key}"
+  },
+  {
+   "id": "ending.3072",
+   "context": "Message 3072 of the dialogue: {line}{Strago}: No!{line}Anything but that! {Pause 08}{Key}",
+   "text": "{line}{Strago}: لا!{line}أي شيء إلا ذلك! {Pause 08}{Key}"
+  },
+  {
+   "id": "ending.3073",
+   "context": "Message 3073 of the dialogue: {Relm}: … {Wait} …but you know…{line}Just once I'd really like to do a portrait of you…on canvas, of course! {Pause 0A}{Key}",
+   "text": "{Relm}: … {Wait} …لكن أتعرف…{line}مرة واحدة فقط أود حقا أن أرسم صورتك… على قماش، طبعا! {Pause 0A}{Key}"
+  },
+  {
+   "id": "ending.3074",
+   "context": "Message 3074 of the dialogue: {line}{Strago}: {Relm}!{line}How can you be thinking about pictures at a time like this?! {Pause 08}{Key}",
+   "text": "{line}{Strago}: {Relm}!{line}كيف تفكرين في الصور في وقت كهذا؟! {Pause 08}{Key}"
+  },
+  {
+   "id": "ending.3075",
+   "context": "Message 3075 of the dialogue: {line}{Shadow}: Interceptor!{line}Get going! {Pause 08}{Key}",
+   "text": "{line}{Shadow}: إنترسبتور!{line}انطلق! {Pause 08}{Key}"
+  },
+  {
+   "id": "ending.3076",
+   "context": "Message 3076 of the dialogue: {Shadow}: Baram!{line}I'm going to stop running.{line}I'm going to begin all over again… {Pause 0C}{Key}",
+   "text": "{Shadow}: بارام!{line}سأتوقف عن الهرب.{line}سأبدأ من جديد تماما… {Pause 0C}{Key}"
+  },
+  {
+   "id": "ending.3077",
+   "context": "Message 3077 of the dialogue: {line}{Shadow}: Stay well… {Pause 08}{Key}",
+   "text": "{line}{Shadow}: ابق بخير… {Pause 08}{Key}"
+  },
+  {
+   "id": "ending.3078",
+   "context": "Message 3078 of the dialogue: {line}{Strago}: No…NO!!!!{line}A “kid” like me doesn't know the meaning of defeat! {Pause 0A}{Key}",
+   "text": "{line}{Strago}: لا… لا!!!!{line}«فتى» مثلي لا يعرف معنى الهزيمة! {Pause 0A}{Key}"
+  },
+  {
+   "id": "ending.3079",
+   "context": "Message 3079 of the dialogue: {line}{Strago}: Gotcha!! {Pause 08}{Key}",
+   "text": "{line}{Strago}: أمسكتك!! {Pause 08}{Key}"
+  },
+  {
+   "id": "ending.3080",
+   "context": "Message 3080 of the dialogue: {line}{Relm}: I won't be done in by an older woman! {Pause 08}{Key}",
+   "text": "{line}{Relm}: لن تقضي علي امرأة أكبر مني! {Pause 08}{Key}"
+  },
+  {
+   "id": "ending.3081",
+   "context": "Message 3081 of the dialogue: {line}{Relm}: Wait a minute,{line}lover boy! {Pause 08}{Key}",
+   "text": "{line}{Relm}: لحظة،{line}يا فتى الغرام! {Pause 08}{Key}"
+  },
+  {
+   "id": "ending.3082",
+   "context": "Message 3082 of the dialogue: {line}{Relm}: You can't just throw me aside! {Pause 08}{Key}",
+   "text": "{line}{Relm}: لا يمكنك أن ترميني جانبا هكذا! {Pause 08}{Key}"
+  },
+  {
+   "id": "ending.3083",
+   "context": "Message 3083 of the dialogue: {line}{Relm}: How about a nice portrait for you, hmm?! {Pause 08}{Key}",
+   "text": "{line}{Relm}: ما رأيك في صورة جميلة لك، همم؟! {Pause 08}{Key}"
   }
  ]
 }

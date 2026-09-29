@@ -129,7 +129,7 @@ variants, shifted right by 0 to 8 pixels into three bytes a row (45 bytes a vari
 glyph), and the shadow of a glyph at pixel `s` of its tile is the variant `s + 1`. The
 glyphs take codes `20` to `FF` in the font's order (the space, the punctuation, the digits,
 then the repertoire by code point), 224 at most, and their variants take two banks, no glyph
-across one (161 a bank); the first ten chapters use 139. The quotes `«` `»` and the brackets
+across one (161 a bank); the whole dialogue uses 139. The quotes `«` `»` and the brackets
 `(` `)` are drawn by hand as their mirror images, since a right-to-left run shows them
 mirrored and the painter does not mirror; the opera's note `♪`, which the English writes
 with the font's note icon, is drawn by hand too.
@@ -196,7 +196,7 @@ address to its end within its bank.
 
 ## Translations
 
-`rom/ff6_arabic_script.py` pins the 2796 messages of the first ten chapters by their
+`rom/ff6_arabic_script.py` pins the whole dialogue, 3077 messages in eleven chapters, by their
 numbers, with the SHA-256 of each and its command skeleton. The Narshe chapter (`narshe`,
 0 to 63; 0 shares 1's text and pointer): the cliffs above Narshe (1-5, their
 `{KeyAfter 18}{Key}` pacing kept), the narration (6-9, centred with `{center}`,
@@ -272,7 +272,16 @@ order is untouched. The tenth chapter, 2614-2799: Narshe with Tritoch, Mog and U
 the lots and the bids centred), the Emperor's letter, Owzer's house, his diary, Relm and
 Chadarnook (`owzer`, 2700-2757) and Cyan's dream in Doma with the three stooges, his
 family's timed lines and Wrexsoul (`dream`, 2758-2799). Its text is the first past bank
-`$F4`: 73 of its messages sit in bank `$F5`. The Arabic is in
+`$F4`: 73 of its messages sit in bank `$F5`. The eleventh chapter, the last, 2800-3083 but
+2949, 2950 and 2951: Gau's father and the clothes in Jidoor (`gau-father`, 2800-2841),
+Thamasa after the fall, Gungho, Hidon and Strago's tale with its centred sound effects
+(`thamasa-ruin`, 2842-2913), the scattered lines of the first chapters' places that sit
+here (`scattered`, 2914-2947), the system messages of inns, chocobos, chests and the crane
+(`system`, 2948-2963), Kefka's tower and the friends' resolve (`tower`, 2964-2984), Kefka's
+speech and the friends' answers (`kefka`, 2985-3019) and the escape from the tower, the
+ending's timed lines (`ending`, 3020-3083). The three messages left out write an item, a
+spell or a sum with `{Item}`, `{Spell}` and `{Gil}`, which the Arabic draw cannot show,
+and stay English with the four empty messages. The Arabic is in
 `translations/final-fantasy-iii.json`, a line a page, `{line}` where a line must end. The names are `name.terra` to `name.umaro`, the fourteen characters
 the name commands write, in the game's order, one word each, 64 pixels at most. A
 translation keeps its original's commands but the layout (`{line}`, `{page}`, the spaces):
@@ -318,14 +327,20 @@ Colosseum's three bracketed choices and the traveller's four. The tenth, the las
 messages from bank `$F5`: Tritoch's three pages, the auction's bracketed choices, a lot
 centred over its bid, the bid's choices, the Emperor's letter over three pages, Owzer's
 story over its pages, Starlet's centred Magicite, Owzer's farewell, Cyan's timed family
-lines with their waits, Wrexsoul's boast and Alexandr's centred Magicite. The messages
-that follow the scope show the game's English as before. The RetroPad's
+lines with their waits, Wrexsoul's boast and Alexandr's centred Magicite. The eleventh: Gau's
+recognition over three pages, his happiness with its waits, the chest's hunger, its
+bracketed choices, Strago's tale with its centred sound effects, the merchant's choices,
+the scenario prompt and the chest's monster centred, Kefka's welcome and his speech over
+its pages, the ending's centred timed lines, Sabin's three timed pages and Maduin's
+farewell with its pauses. The three messages left English show the game's own text as
+before; the messages that follow the scope show the game's English as before. The RetroPad's
 A is the Super NES's A.
 
 ## Limits
 
-- The first ten chapters' 2796 messages and the characters' names are in Arabic; every
-  other message stays English, and the menus and the battles are other text engines,
+- The whole dialogue's 3077 messages and the characters' names are in Arabic; the three
+  messages that write an item, a spell or a sum with `{Item}`, `{Spell}` and `{Gil}` stay
+  English, as do the four empty ones, and the menus and the battles are other text engines,
   untouched, so the classroom's lessons name menu entries and statuses in Arabic that the
   menus still show in English.
 - A message holds no Latin letters; `{Gil}`, `{Item}` and `{Spell}` are refused: the game
