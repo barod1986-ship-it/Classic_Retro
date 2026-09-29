@@ -129,7 +129,7 @@ variants, shifted right by 0 to 8 pixels into three bytes a row (45 bytes a vari
 glyph), and the shadow of a glyph at pixel `s` of its tile is the variant `s + 1`. The
 glyphs take codes `20` to `FF` in the font's order (the space, the punctuation, the digits,
 then the repertoire by code point), 224 at most, and their variants take two banks, no glyph
-across one (161 a bank); the first nine chapters use 139. The quotes `«` `»` and the brackets
+across one (161 a bank); the first ten chapters use 139. The quotes `«` `»` and the brackets
 `(` `)` are drawn by hand as their mirror images, since a right-to-left run shows them
 mirrored and the painter does not mirror; the opera's note `♪`, which the English writes
 with the font's note icon, is drawn by hand too.
@@ -196,7 +196,7 @@ address to its end within its bank.
 
 ## Translations
 
-`rom/ff6_arabic_script.py` pins the 2610 messages of the first nine chapters by their
+`rom/ff6_arabic_script.py` pins the 2796 messages of the first ten chapters by their
 numbers, with the SHA-256 of each and its command skeleton. The Narshe chapter (`narshe`,
 0 to 63; 0 shares 1's text and pointer): the cliffs above Narshe (1-5, their
 `{KeyAfter 18}{Key}` pacing kept), the narration (6-9, centred with `{center}`,
@@ -267,7 +267,12 @@ centred a page each). The tombstone puzzle (2483-2530) is the one place the Engl
 writes Latin letters the Arabic cannot draw: its four reversed groups, which spell «THE
 WORLD IS SQUARE» backwards in the right order, become the four words of «إن هذا العالم
 مربع», so the player orders words instead of letters and the game's own check of the
-order is untouched. The Arabic is in
+order is untouched. The tenth chapter, 2614-2799: Narshe with Tritoch, Mog and Umaro
+(`narshe-ruin`, 2614-2622), Jidoor's auction house with its bids (`auction`, 2623-2699;
+the lots and the bids centred), the Emperor's letter, Owzer's house, his diary, Relm and
+Chadarnook (`owzer`, 2700-2757) and Cyan's dream in Doma with the three stooges, his
+family's timed lines and Wrexsoul (`dream`, 2758-2799). Its text is the first past bank
+`$F4`: 73 of its messages sit in bank `$F5`. The Arabic is in
 `translations/final-fantasy-iii.json`, a line a page, `{line}` where a line must end. The names are `name.terra` to `name.umaro`, the fourteen characters
 the name commands write, in the game's order, one word each, 64 pixels at most. A
 translation keeps its original's commands but the layout (`{line}`, `{page}`, the spaces):
@@ -309,12 +314,17 @@ level-up over two pages and his attack's centred name. The ninth: the tombstone'
 words as choices with the cursor moving among them, the carved sentence, the carving
 prompt, the egg's centred hint, Cyan's centred poem, his letter over its pages, Kohlingen's
 centred title, Rachel's farewell over five pages, the cave's six centred treasures, the
-Colosseum's three bracketed choices and the traveller's four. The messages that follow the scope show the game's English as before. The RetroPad's
+Colosseum's three bracketed choices and the traveller's four. The tenth, the last
+messages from bank `$F5`: Tritoch's three pages, the auction's bracketed choices, a lot
+centred over its bid, the bid's choices, the Emperor's letter over three pages, Owzer's
+story over its pages, Starlet's centred Magicite, Owzer's farewell, Cyan's timed family
+lines with their waits, Wrexsoul's boast and Alexandr's centred Magicite. The messages
+that follow the scope show the game's English as before. The RetroPad's
 A is the Super NES's A.
 
 ## Limits
 
-- The first nine chapters' 2610 messages and the characters' names are in Arabic; every
+- The first ten chapters' 2796 messages and the characters' names are in Arabic; every
   other message stays English, and the menus and the battles are other text engines,
   untouched, so the classroom's lessons name menu entries and statuses in Arabic that the
   menus still show in English.

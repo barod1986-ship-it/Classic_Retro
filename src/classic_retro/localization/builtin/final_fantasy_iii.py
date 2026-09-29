@@ -75,7 +75,7 @@ TARGET = LocalizationTarget(
     kind="rom-overlay",
     strategies=("glyph-font",),
     scope=(
-        "The first nine chapters, the opening to the gathering of the friends: the 2610 messages "
+        "The first ten chapters, the opening to Cyan's dream: the 2796 messages "
         "of Narshe, Figaro Castle, South Figaro, Mt. Kolts, the Returners' hideout and "
         "the raft, the three scenarios (Locke and Celes, Banon's party, Sabin's road "
         "through Doma, the Phantom Train, the Veldt and Nikeah), the classroom, the "
@@ -84,7 +84,8 @@ TARGET = LocalizationTarget(
         "the escape and Maduin's story, then the sealed gate, the Espers' rush on Vector, "
         "the banquet and Albrook, then Thamasa, the Espers, Leo's death and the Floating "
         "Continent, then Celes's island, Mobliz, Nikeah, Figaro Castle and the Ancient "
-        "Castle, the Colosseum, Daryl's tomb, Cyan's letters, Gogo and the Phoenix, and the "
+        "Castle, the Colosseum, Daryl's tomb, Cyan's letters, Gogo and the Phoenix, Tritoch, "
+        "Jidoor's auction, Owzer and Cyan's dream, and the "
         "characters' names in them; the "
         "others stay in English"
     ),
@@ -96,5 +97,5 @@ TARGET = LocalizationTarget(
     build=build,
     extract=extract,
     previews=PREVIEWS,
-    reference_patch_sha256="2fda76a2ff483c2a09a503be91fec2d4495fddbd45947f4a206d0319688f64c0",
+    reference_patch_sha256="654339011be377f07d80b94953e3e349755d851eddd9f2a9074da8cb928f08fa",
 )

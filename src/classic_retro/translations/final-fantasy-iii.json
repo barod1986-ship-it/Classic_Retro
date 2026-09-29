@@ -13145,6 +13145,936 @@
    "id": "phoenix.2613",
    "context": "Message 2613 of the dialogue: {Locke}: Right, let's move out! We have an appointment with Kefka!",
    "text": "{Locke}: حسنا، لننطلق! لدينا موعد مع كيفكا!"
+  },
+  {
+   "id": "narshe-ruin.2614",
+   "context": "Message 2614 of the dialogue: Have you heard of something called the Exp. Egg?{line}Huh? Have ya?{page}Long ago it was buried in a tomb to the west.",
+   "text": "هل سمعت بشيء يدعى بيضة الخبرة؟{line}هاه؟ سمعت؟\nمنذ زمن بعيد دفنت في قبر إلى الغرب."
+  },
+  {
+   "id": "narshe-ruin.2615",
+   "context": "Message 2615 of the dialogue: Split up into 2 parties.{line}Use the Y Button to switch between groups.",
+   "text": "انقسموا إلى مجموعتين.{line}استعمل زر واي للتبديل بين المجموعتين."
+  },
+  {
+   "id": "narshe-ruin.2616",
+   "context": "Message 2616 of the dialogue: PICKPOCKET: Eh!?{line}What're you doing here? {Wait}{line}Doesn't matter, really…{line}nothing left anyway…{page}There's only one Moogle still around, and only a treasure hunter could pick that lock…",
+   "text": "النشال: إيه!؟{line}ماذا تفعلون هنا؟ {Wait}{line}لا يهم، حقا…{line}لم يبق شيء على أي حال…\nلم يبق سوى موغل واحد هنا، ولا يستطيع فتح ذلك القفل إلا صائد كنوز…"
+  },
+  {
+   "id": "narshe-ruin.2617",
+   "context": "Message 2617 of the dialogue: ESPER: You HUMANS freed me from that prison of ice?{line}You possess Magicite?!{line}Who are you?!{page}I sense war and destruction…{line}Could that stupid war possibly have lasted a thousand years?{page}I can tell that you want to put a stop to the madness…{line}Let's see if you are worthy!",
+   "text": "الإسبر: أنتم البشر حررتموني من سجن الجليد ذاك؟{line}تملكون ماجيسايت؟!{line}من أنتم؟!\nأشعر بحرب ودمار…{line}أيمكن أن تلك الحرب الغبية استمرت ألف عام؟\nأستطيع أن أرى أنكم تريدون وضع حد لهذا الجنون…{line}لنر إن كنتم جديرين!"
+  },
+  {
+   "id": "narshe-ruin.2618",
+   "context": "Message 2618 of the dialogue: {line}{Spaces 05}Received the Magicite{line}{Spaces 0E}“Tritoch!”",
+   "text": "{center}{line}حصلت على الماجيسايت{line}«تريتوك»!"
+  },
+  {
+   "id": "narshe-ruin.2619",
+   "context": "Message 2619 of the dialogue: There's an opening in the cliff. Hop into it?{line}{Choice} Yes{line}{Choice} No",
+   "text": "هناك فتحة في الجرف. تقفز فيها؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "narshe-ruin.2620",
+   "context": "Message 2620 of the dialogue: MOG: Kupoppo! You're alive!{line}I thought you were all feeding the worms, kupo!{line}Kupohoho! Let's go!",
+   "text": "موغ: كوبوبو! أنتم أحياء!{line}ظننتكم كلكم طعاما للديدان، كوبو!{line}كوبوهوهو! لننطلق!"
+  },
+  {
+   "id": "narshe-ruin.2621",
+   "context": "Message 2621 of the dialogue: MOG: Say, we could use some sasquatch muscle!!{line}Besides, he'd be helpless here without me!{page}He's somewhere in the mines. Once we find him, I'll order him to join us!",
+   "text": "موغ: اسمعوا، نحتاج إلى بعض عضلات الساسكواتش!!{line}ثم إنه سيكون عاجزا هنا من دوني!\nإنه في مكان ما في المناجم. ما إن نجده، سآمره بالانضمام إلينا!"
+  },
+  {
+   "id": "narshe-ruin.2622",
+   "context": "Message 2622 of the dialogue: Kupo!!!{line}Don't scare me like that!",
+   "text": "كوبو!!!{line}لا تخفني هكذا!"
+  },
+  {
+   "id": "auction.2623",
+   "context": "Message 2623 of the dialogue: Art that evokes the end of the world is popular now.",
+   "text": "الفن الذي يستحضر نهاية العالم رائج الآن."
+  },
+  {
+   "id": "auction.2624",
+   "context": "Message 2624 of the dialogue: Say…you look like…{line}…aren't you…Maria?! {Wait}{line}Sorry, my mistake…",
+   "text": "قل… تبدين مثل…{line}…ألست… ماريا؟! {Wait}{line}آسف، أخطأت…"
+  },
+  {
+   "id": "auction.2625",
+   "context": "Message 2625 of the dialogue: See anything you want?{line}The auction's about to start!{page}{Choice} (Bid on items!){line}{Choice} (Another time.)",
+   "text": "أترى شيئا تريده؟{line}المزاد على وشك أن يبدأ!\n{Choice} (نزايد على الأدوات!){line}{Choice} (في وقت آخر.)"
+  },
+  {
+   "id": "auction.2626",
+   "context": "Message 2626 of the dialogue: If you want to participate in the bidding, talk to the man near the entrance.",
+   "text": "إن أردت المشاركة في المزايدة، فكلم الرجل قرب المدخل."
+  },
+  {
+   "id": "auction.2627",
+   "context": "Message 2627 of the dialogue: Didn't get anything today, eh?!",
+   "text": "لم تحصل على شيء اليوم، ها؟!"
+  },
+  {
+   "id": "auction.2628",
+   "context": "Message 2628 of the dialogue: Here's a splendid chest.{line}Inside is…",
+   "text": "ها هو صندوق رائع.{line}في داخله…"
+  },
+  {
+   "id": "auction.2629",
+   "context": "Message 2629 of the dialogue: {line}    Some “Cherub Down”!{page}{line}Do I hear 500 GP?!",
+   "text": "{center}{line}بعض «ريشة الملاك»!\n{line}هل أسمع 500 غيل؟!"
+  },
+  {
+   "id": "auction.2630",
+   "context": "Message 2630 of the dialogue: {line} Bought some “Cherub Down”!",
+   "text": "{line}اشتريت بعض «ريشة الملاك»!"
+  },
+  {
+   "id": "auction.2631",
+   "context": "Message 2631 of the dialogue: {line}{Spaces 08}A “Cure Ring”!{page}{line}Do I hear 1500 GP?!",
+   "text": "{center}{line}«خاتم الشفاء»!\n{line}هل أسمع 1500 غيل؟!"
+  },
+  {
+   "id": "auction.2632",
+   "context": "Message 2632 of the dialogue: {line}    Bought a “Cure Ring”!",
+   "text": "{line}اشتريت «خاتم الشفاء»!"
+  },
+  {
+   "id": "auction.2633",
+   "context": "Message 2633 of the dialogue: {line}{Spaces 08}A “Hero Ring”!{page}{line}Do I hear 3000 GP?!",
+   "text": "{center}{line}«خاتم البطل»!\n{line}هل أسمع 3000 غيل؟!"
+  },
+  {
+   "id": "auction.2634",
+   "context": "Message 2634 of the dialogue: {line}    Bought a “Hero Ring”!",
+   "text": "{line}اشتريت «خاتم البطل»!"
+  },
+  {
+   "id": "auction.2635",
+   "context": "Message 2635 of the dialogue: {line}{Spaces 08}A “Zephyr Cape”!{page}{line}Do I hear 3000 GP?!",
+   "text": "{center}{line}«عباءة النسيم»!\n{line}هل أسمع 3000 غيل؟!"
+  },
+  {
+   "id": "auction.2636",
+   "context": "Message 2636 of the dialogue: Bought a “Zephyr Cape”!",
+   "text": "اشتريت «عباءة النسيم»!"
+  },
+  {
+   "id": "auction.2637",
+   "context": "Message 2637 of the dialogue: Today's auction is over.",
+   "text": "انتهى مزاد اليوم."
+  },
+  {
+   "id": "auction.2638",
+   "context": "Message 2638 of the dialogue: Well, how 'bout it?",
+   "text": "حسنا، ما رأيك؟"
+  },
+  {
+   "id": "auction.2639",
+   "context": "Message 2639 of the dialogue: {Choice} Buy it for 3000 GP.{line}{Choice} I'll pass…",
+   "text": "{Choice} نشتريها مقابل 3000 غيل.{line}{Choice} أمرر…"
+  },
+  {
+   "id": "auction.2640",
+   "context": "Message 2640 of the dialogue: Ho, ho, ho…{line}There's nothing I can't buy!",
+   "text": "هو، هو، هو…{line}لا شيء لا أستطيع شراءه!"
+  },
+  {
+   "id": "auction.2641",
+   "context": "Message 2641 of the dialogue: {Choice} Buy it for 5000 GP.{line}{Choice} I'll pass…",
+   "text": "{Choice} نشتريها مقابل 5000 غيل.{line}{Choice} أمرر…"
+  },
+  {
+   "id": "auction.2642",
+   "context": "Message 2642 of the dialogue: {Choice} Buy it for 30000 GP.{line}{Choice} I'll pass…",
+   "text": "{Choice} نشتريها مقابل 30000 غيل.{line}{Choice} أمرر…"
+  },
+  {
+   "id": "auction.2643",
+   "context": "Message 2643 of the dialogue: {Choice} Buy it for 40000 GP.{line}{Choice} I'll pass…",
+   "text": "{Choice} نشتريها مقابل 40000 غيل.{line}{Choice} أمرر…"
+  },
+  {
+   "id": "auction.2644",
+   "context": "Message 2644 of the dialogue: {Choice} Buy it for 60000 GP.{line}{Choice} I'll pass…",
+   "text": "{Choice} نشتريها مقابل 60000 غيل.{line}{Choice} أمرر…"
+  },
+  {
+   "id": "auction.2645",
+   "context": "Message 2645 of the dialogue: {Choice} Buy it for 7000 GP.{line}{Choice} I'll pass…",
+   "text": "{Choice} نشتريها مقابل 7000 غيل.{line}{Choice} أمرر…"
+  },
+  {
+   "id": "auction.2646",
+   "context": "Message 2646 of the dialogue: {Choice} Buy it for 8000 GP.{line}{Choice} I'll pass…",
+   "text": "{Choice} نشتريها مقابل 8000 غيل.{line}{Choice} أمرر…"
+  },
+  {
+   "id": "auction.2647",
+   "context": "Message 2647 of the dialogue: {Choice} Buy it for 12000 GP.{line}{Choice} I'll pass…",
+   "text": "{Choice} نشتريها مقابل 12000 غيل.{line}{Choice} أمرر…"
+  },
+  {
+   "id": "auction.2648",
+   "context": "Message 2648 of the dialogue: {Choice} Buy it for 15000 GP.{line}{Choice} I'll pass…",
+   "text": "{Choice} نشتريها مقابل 15000 غيل.{line}{Choice} أمرر…"
+  },
+  {
+   "id": "auction.2649",
+   "context": "Message 2649 of the dialogue: {Choice} Buy it for 18000 GP.{line}{Choice} I'll pass…",
+   "text": "{Choice} نشتريها مقابل 18000 غيل.{line}{Choice} أمرر…"
+  },
+  {
+   "id": "auction.2650",
+   "context": "Message 2650 of the dialogue: Arrrgh!{line}I HATE it when that happens!",
+   "text": "أرررغ!{line}أكره حين يحدث هذا!"
+  },
+  {
+   "id": "auction.2651",
+   "context": "Message 2651 of the dialogue: {Choice} Buy it for 10000 GP.{line}{Choice} I'll pass…",
+   "text": "{Choice} نشتريها مقابل 10000 غيل.{line}{Choice} أمرر…"
+  },
+  {
+   "id": "auction.2652",
+   "context": "Message 2652 of the dialogue: {Choice} Buy it for 50000 GP.{line}{Choice} I'll pass…",
+   "text": "{Choice} نشتريها مقابل 50000 غيل.{line}{Choice} أمرر…"
+  },
+  {
+   "id": "auction.2653",
+   "context": "Message 2653 of the dialogue: Are there any more bids?",
+   "text": "هل من مزايدات أخرى؟"
+  },
+  {
+   "id": "auction.2654",
+   "context": "Message 2654 of the dialogue: {Choice} Buy it for 20000 GP.{line}{Choice} I'll pass…",
+   "text": "{Choice} نشتريها مقابل 20000 غيل.{line}{Choice} أمرر…"
+  },
+  {
+   "id": "auction.2655",
+   "context": "Message 2655 of the dialogue: {line}{Spaces 08}8000 GP!",
+   "text": "{center}{line}8000 غيل!"
+  },
+  {
+   "id": "auction.2656",
+   "context": "Message 2656 of the dialogue: {line}{Spaces 08}12000 GP!",
+   "text": "{center}{line}12000 غيل!"
+  },
+  {
+   "id": "auction.2657",
+   "context": "Message 2657 of the dialogue: {line}{Spaces 08}15000 GP!",
+   "text": "{center}{line}15000 غيل!"
+  },
+  {
+   "id": "auction.2658",
+   "context": "Message 2658 of the dialogue: {line}{Spaces 08}18000 GP!",
+   "text": "{center}{line}18000 غيل!"
+  },
+  {
+   "id": "auction.2659",
+   "context": "Message 2659 of the dialogue: {line}{Spaces 08}10000 GP!",
+   "text": "{center}{line}10000 غيل!"
+  },
+  {
+   "id": "auction.2660",
+   "context": "Message 2660 of the dialogue: {line}{Spaces 08}30000 GP!",
+   "text": "{center}{line}30000 غيل!"
+  },
+  {
+   "id": "auction.2661",
+   "context": "Message 2661 of the dialogue: {line}{Spaces 08}40000 GP!",
+   "text": "{center}{line}40000 غيل!"
+  },
+  {
+   "id": "auction.2662",
+   "context": "Message 2662 of the dialogue: {line}{Spaces 08}60000 GP!",
+   "text": "{center}{line}60000 غيل!"
+  },
+  {
+   "id": "auction.2663",
+   "context": "Message 2663 of the dialogue: {line}{Spaces 08}20000 GP!",
+   "text": "{center}{line}20000 غيل!"
+  },
+  {
+   "id": "auction.2664",
+   "context": "Message 2664 of the dialogue: {line}{Spaces 08}50000 GP!",
+   "text": "{center}{line}50000 غيل!"
+  },
+  {
+   "id": "auction.2665",
+   "context": "Message 2665 of the dialogue: {line}{Spaces 08}70000 GP!",
+   "text": "{center}{line}70000 غيل!"
+  },
+  {
+   "id": "auction.2666",
+   "context": "Message 2666 of the dialogue: {line}    How about 100000 GP?!",
+   "text": "{center}{line}ما رأيكم في 100000 غيل؟!"
+  },
+  {
+   "id": "auction.2667",
+   "context": "Message 2667 of the dialogue: {line}{Spaces 08}10 GP!",
+   "text": "{center}{line}10 غيل!"
+  },
+  {
+   "id": "auction.2668",
+   "context": "Message 2668 of the dialogue: {line}{Spaces 08}50 GP!",
+   "text": "{center}{line}50 غيل!"
+  },
+  {
+   "id": "auction.2669",
+   "context": "Message 2669 of the dialogue: {line}{Spaces 08}100 GP!",
+   "text": "{center}{line}100 غيل!"
+  },
+  {
+   "id": "auction.2670",
+   "context": "Message 2670 of the dialogue: {line}{Spaces 08}500 GP!",
+   "text": "{center}{line}500 غيل!"
+  },
+  {
+   "id": "auction.2671",
+   "context": "Message 2671 of the dialogue: {line}{Spaces 08}1000 GP!",
+   "text": "{center}{line}1000 غيل!"
+  },
+  {
+   "id": "auction.2672",
+   "context": "Message 2672 of the dialogue: {line}{Spaces 08}1500 GP!",
+   "text": "{center}{line}1500 غيل!"
+  },
+  {
+   "id": "auction.2673",
+   "context": "Message 2673 of the dialogue: {line}{Spaces 08}2000 GP!",
+   "text": "{center}{line}2000 غيل!"
+  },
+  {
+   "id": "auction.2674",
+   "context": "Message 2674 of the dialogue: {line}{Spaces 08}3000 GP!",
+   "text": "{center}{line}3000 غيل!"
+  },
+  {
+   "id": "auction.2675",
+   "context": "Message 2675 of the dialogue: {line}{Spaces 08}4000 GP!",
+   "text": "{center}{line}4000 غيل!"
+  },
+  {
+   "id": "auction.2676",
+   "context": "Message 2676 of the dialogue: {line}{Spaces 08}5000 GP!",
+   "text": "{center}{line}5000 غيل!"
+  },
+  {
+   "id": "auction.2677",
+   "context": "Message 2677 of the dialogue: {line}{Spaces 08}7000 GP!",
+   "text": "{center}{line}7000 غيل!"
+  },
+  {
+   "id": "auction.2678",
+   "context": "Message 2678 of the dialogue: In a world like this you have to keep an open mind.",
+   "text": "في عالم كهذا عليك أن تبقي عقلك منفتحا."
+  },
+  {
+   "id": "auction.2679",
+   "context": "Message 2679 of the dialogue: This is the Auction House.{line}Bunch of rich yokels inside…",
+   "text": "هذه دار المزاد.{line}حفنة من الأثرياء الريفيين في الداخل…"
+  },
+  {
+   "id": "auction.2680",
+   "context": "Message 2680 of the dialogue: Yes!{line}Now I'll be able to go play at the art-lover's house again!",
+   "text": "نعم!{line}الآن سأستطيع الذهاب للعب في بيت عاشق الفن مجددا!"
+  },
+  {
+   "id": "auction.2681",
+   "context": "Message 2681 of the dialogue: Every once in a while something very rare is sold here…",
+   "text": "بين الحين والآخر يباع هنا شيء نادر جدا…"
+  },
+  {
+   "id": "auction.2682",
+   "context": "Message 2682 of the dialogue: The house to the north belongs to Owzer. He's a collector of fine paintings.",
+   "text": "البيت الذي في الشمال ملك لأوزر. إنه جامع للوحات الفاخرة."
+  },
+  {
+   "id": "auction.2683",
+   "context": "Message 2683 of the dialogue: {line}    A still-life of flowers.{page}{line}    They almost look alive…",
+   "text": "{center}{line}طبيعة صامتة لزهور.\n{center}{line}تكاد تبدو حية…"
+  },
+  {
+   "id": "auction.2684",
+   "context": "Message 2684 of the dialogue: {line}    Picture of an old urn.",
+   "text": "{center}{line}صورة لجرة قديمة."
+  },
+  {
+   "id": "auction.2685",
+   "context": "Message 2685 of the dialogue: {line}  Looks like a treasure chest.",
+   "text": "{center}{line}تبدو كصندوق كنز."
+  },
+  {
+   "id": "auction.2686",
+   "context": "Message 2686 of the dialogue: {line}{Spaces 08}A lamp, maybe?",
+   "text": "{center}{line}مصباح، ربما؟"
+  },
+  {
+   "id": "auction.2687",
+   "context": "Message 2687 of the dialogue: {line}{Spaces 05}This looks ancient…",
+   "text": "{center}{line}هذا يبدو عتيقا…"
+  },
+  {
+   "id": "auction.2688",
+   "context": "Message 2688 of the dialogue: {line}{Spaces 06}Ah! Some armor.",
+   "text": "{center}{line}آه! بعض الدروع."
+  },
+  {
+   "id": "auction.2689",
+   "context": "Message 2689 of the dialogue: {line}  Emperor Gestahl's portrait.",
+   "text": "{center}{line}صورة الإمبراطور غشتال."
+  },
+  {
+   "id": "auction.2690",
+   "context": "Message 2690 of the dialogue: {line}   Picture of a lovely lady.",
+   "text": "{center}{line}صورة لسيدة جميلة."
+  },
+  {
+   "id": "auction.2691",
+   "context": "Message 2691 of the dialogue: Owzer sought out a highly skilled artist to come and paint for him.",
+   "text": "أوزر بحث عن فنان بارع جدا ليأتي ويرسم له."
+  },
+  {
+   "id": "auction.2692",
+   "context": "Message 2692 of the dialogue: I saw the Emperor recently! {Wait}{line}A painting of him, that is…{line}It's in Owzer's house.",
+   "text": "رأيت الإمبراطور مؤخرا! {Wait}{line}لوحة له، أقصد…{line}إنها في بيت أوزر."
+  },
+  {
+   "id": "auction.2693",
+   "context": "Message 2693 of the dialogue: The people here love the opera!",
+   "text": "الناس هنا يعشقون الأوبرا!"
+  },
+  {
+   "id": "auction.2694",
+   "context": "Message 2694 of the dialogue: Lately I've seen a lot of carrier pigeons flying towards Maranda. Who can be sending all the letters?",
+   "text": "مؤخرا رأيت حمائم زاجل كثيرة تطير نحو ماراندا. من يرسل كل هذه الرسائل يا ترى؟"
+  },
+  {
+   "id": "auction.2695",
+   "context": "Message 2695 of the dialogue: The other day I read Owzer's diary. It was just laying there!",
+   "text": "قرأت يوميات أوزر قبل أيام. كانت ملقاة هناك ببساطة!"
+  },
+  {
+   "id": "auction.2696",
+   "context": "Message 2696 of the dialogue: A while ago a little girl entered the art-collector's house…",
+   "text": "قبل فترة دخلت فتاة صغيرة بيت جامع اللوحات…"
+  },
+  {
+   "id": "auction.2697",
+   "context": "Message 2697 of the dialogue: T…that was a spirit!",
+   "text": "ك… كان ذلك شبحا!"
+  },
+  {
+   "id": "auction.2698",
+   "context": "Message 2698 of the dialogue: I went up to talk to Owzer,{line}but he's nowhere to be found.",
+   "text": "صعدت لأكلم أوزر،{line}لكنه ليس في أي مكان."
+  },
+  {
+   "id": "auction.2699",
+   "context": "Message 2699 of the dialogue: The world's so different now…",
+   "text": "العالم مختلف جدا الآن…"
+  },
+  {
+   "id": "owzer.2700",
+   "context": "Message 2700 of the dialogue: {line}{Spaces 0A}Received the{line}{Spaces 06}“Emperor's Letter.”{page}{line}The letter reads as follows:{page}{line}The treasure is hidden where the mountains form a star…",
+   "text": "{center}{line}حصلت على{line}«رسالة الإمبراطور».\n{line}نص الرسالة كما يلي:\n{line}الكنز مخبأ حيث تشكل الجبال نجمة…"
+  },
+  {
+   "id": "owzer.2701",
+   "context": "Message 2701 of the dialogue: {Relm}: The stone…!{line}Won't you take the stone?!",
+   "text": "{Relm}: الحجر…!{line}ألا تأخذون الحجر؟!"
+  },
+  {
+   "id": "owzer.2702",
+   "context": "Message 2702 of the dialogue: {line}   Looks awfully familiar…",
+   "text": "{center}{line}تبدو مألوفة جدا…"
+  },
+  {
+   "id": "owzer.2703",
+   "context": "Message 2703 of the dialogue: {line}{line}{Spaces 07}Stay…away…{line}{KeyAfter 06}{Key}",
+   "text": "{center}{line}{line}ابتعدوا… عني…{line}{KeyAfter 06}{Key}"
+  },
+  {
+   "id": "owzer.2704",
+   "context": "Message 2704 of the dialogue: {line}  Emperor Gestahl's portrait.",
+   "text": "{center}{line}صورة الإمبراطور غشتال."
+  },
+  {
+   "id": "owzer.2705",
+   "context": "Message 2705 of the dialogue: It's Owzer's diary…{page}Read it?{line}{Choice} Yes{line}{Choice} No",
+   "text": "إنها يوميات أوزر…\nتقرؤها؟{line}{Choice} نعم{line}{Choice} لا"
+  },
+  {
+   "id": "owzer.2706",
+   "context": "Message 2706 of the dialogue: {Choice} (Read the next page.){line}{Choice} (Read it later.)",
+   "text": "{Choice} (نقرأ الصفحة التالية.){line}{Choice} (نقرؤها لاحقا.)"
+  },
+  {
+   "id": "owzer.2707",
+   "context": "Message 2707 of the dialogue: Just spent an absolute fortune. It's my largest painting yet,{line}so I won't be able to put it with the others.{page}I'll decide later where to display it.",
+   "text": "أنفقت للتو ثروة طائلة. إنها أكبر لوحاتي حتى الآن،{line}لذا لن أستطيع وضعها مع الأخريات.\nسأقرر لاحقا أين أعرضها."
+  },
+  {
+   "id": "owzer.2708",
+   "context": "Message 2708 of the dialogue: An artist came from Zozo today. He wanted me to see his work. What a waste of time.",
+   "text": "جاء اليوم فنان من زوزو. أراد أن أرى أعماله. يا لها من مضيعة للوقت."
+  },
+  {
+   "id": "owzer.2709",
+   "context": "Message 2709 of the dialogue: Bought a new stairway lamp at the Item Shop. Expensive, but one flip of the switch and everything's bright and cheery.",
+   "text": "اشتريت مصباحا جديدا للدرج من متجر الأدوات. غال، لكن بضغطة زر يصير كل شيء مضيئا ومبهجا."
+  },
+  {
+   "id": "owzer.2710",
+   "context": "Message 2710 of the dialogue: I invited over an artist from Kohlingen. About as talented as a bucket…",
+   "text": "دعوت فنانا من كولينغن. موهبته كموهبة دلو…"
+  },
+  {
+   "id": "owzer.2711",
+   "context": "Message 2711 of the dialogue: Something's happening to me.{line}It started when I had that picture painted…{page}And I've started hearing odd noises coming from downstairs.",
+   "text": "شيء ما يحدث لي.{line}بدأ حين رسمت تلك اللوحة…\nوبدأت أسمع أصواتا غريبة تأتي من الطابق السفلي."
+  },
+  {
+   "id": "owzer.2712",
+   "context": "Message 2712 of the dialogue: {line}    The diary ends here…",
+   "text": "{center}{line}تنتهي اليوميات هنا…"
+  },
+  {
+   "id": "owzer.2713",
+   "context": "Message 2713 of the dialogue: OWZER: {Relm}…{line}Please, come back soon…{line}cough…wheeze.",
+   "text": "أوزر: {Relm}…{line}أرجوك، عودي قريبا…{line}كح… أح."
+  },
+  {
+   "id": "owzer.2714",
+   "context": "Message 2714 of the dialogue: OWZER: P…please… {Wait}{line}Help that painting!!{page}“The painting!?”{page}OWZER: It's…there's a monster hiding in my prized painting of a goddess…{line}“A monster?!”{page}OWZER: Yes…{line}And now it's nearly impossible to get it to show itself…",
+   "text": "أوزر: أ… أرجوكم… {Wait}{line}أنقذوا تلك اللوحة!!\n«اللوحة!؟»\nأوزر: إنها… هناك وحش مختبئ في لوحتي الثمينة للإلهة…{line}«وحش؟!»\nأوزر: نعم…{line}والآن صار من شبه المستحيل جعله يظهر…"
+  },
+  {
+   "id": "owzer.2715",
+   "context": "Message 2715 of the dialogue: CHADARNOOK: G'fu, fu, fu… {Wait}{line}Who're these numbskulls?{page}No one…NO ONE…is going to remove me from this fine new painting!!",
+   "text": "تشادارنوك: غفو، فو، فو… {Wait}{line}من هؤلاء الأغبياء؟\nلا أحد… لا أحد… سيخرجني من هذه اللوحة الجديدة الجميلة!!"
+  },
+  {
+   "id": "owzer.2716",
+   "context": "Message 2716 of the dialogue: OWZER: No! Noooo!{line}You can't ruin this painting of my revered goddess!{line}Aim only for the monster!!",
+   "text": "أوزر: لا! لااا!{line}لا يمكنكم إفساد هذه اللوحة لإلهتي الموقرة!{line}صوبوا على الوحش وحده!!"
+  },
+  {
+   "id": "owzer.2717",
+   "context": "Message 2717 of the dialogue: {Relm}: Ahhhhh!!{page}OWZER: {Relm}!{line}We can't attack this masterpiece! It would be inexcusable!",
+   "text": "{Relm}: آههههه!!\nأوزر: {Relm}!{line}لا يمكننا مهاجمة هذه التحفة! سيكون ذلك لا يغتفر!"
+  },
+  {
+   "id": "owzer.2718",
+   "context": "Message 2718 of the dialogue: {Relm}: Hey!{line}Relax! The monster croaked!",
+   "text": "{Relm}: هيه!{line}اهدأ! الوحش نفق!"
+  },
+  {
+   "id": "owzer.2719",
+   "context": "Message 2719 of the dialogue: OWZER: Thanks for saving the day! This picture's more precious to me than my own life!{page}{Relm}: Huh?!{line}What are you talking about?",
+   "text": "أوزر: شكرا لإنقاذ الموقف! هذه اللوحة أثمن عندي من حياتي نفسها!\n{Relm}: هاه؟!{line}عم تتكلم؟"
+  },
+  {
+   "id": "owzer.2720",
+   "context": "Message 2720 of the dialogue: “Now…what was a monster doing in that picture?!”{page}OWZER: It all started when I bought a stone at the Auction House.{page}I took one look at it and suddenly felt I needed a portrait of Starlet.{page}I asked several artists, but none could muster enough skill.{page}It was then that I heard about {Relm}'s amazing ability.{line}I brought her here, and put her to work.{page}But while she was painting, that thing came along… {Wait}{line}It must have been enticed here by that stone.",
+   "text": "«والآن… ماذا كان وحش يفعل في تلك اللوحة؟!»\nأوزر: بدأ كل شيء حين اشتريت حجرا من دار المزاد.\nنظرت إليه نظرة واحدة فشعرت فجأة أنني أحتاج إلى صورة لستارلت.\nسألت عدة فنانين، لكن لم يكن لأحدهم ما يكفي من المهارة.\nحينها سمعت عن موهبة {Relm} المذهلة.{line}فأحضرتها إلى هنا، وشغلتها.\nلكن بينما كانت ترسم، جاء ذلك الشيء… {Wait}{line}لا بد أن ذلك الحجر استدرجه إلى هنا."
+  },
+  {
+   "id": "owzer.2721",
+   "context": "Message 2721 of the dialogue: Where is the stone…?{page}OWZER: The stone? {Wait}{line}Over on that bookshelf.",
+   "text": "أين الحجر…؟\nأوزر: الحجر؟ {Wait}{line}هناك على رف الكتب."
+  },
+  {
+   "id": "owzer.2722",
+   "context": "Message 2722 of the dialogue: OWZER: Hey, not that.{line}That's priceless!!{page}But…seeing as you saved my hide, I'll give it to you as well.",
+   "text": "أوزر: هيه، ليس ذاك.{line}ذاك لا يقدر بثمن!!\nلكن… بما أنكم أنقذتم جلدي، فسأعطيكم إياه أيضا."
+  },
+  {
+   "id": "owzer.2723",
+   "context": "Message 2723 of the dialogue: “This is Magicite…”{page}OWZER: Phew. I don't need any more bad luck. Just take it and go!",
+   "text": "«هذا ماجيسايت…»\nأوزر: أوف. لا أحتاج إلى مزيد من سوء الحظ. خذوه فحسب وارحلوا!"
+  },
+  {
+   "id": "owzer.2724",
+   "context": "Message 2724 of the dialogue: OWZER: The stone in question is in the middle of the shelf.",
+   "text": "أوزر: الحجر المقصود في وسط الرف."
+  },
+  {
+   "id": "owzer.2725",
+   "context": "Message 2725 of the dialogue: You're gonna love this!{page}Doom Gaze can't restore his HP after battle!{line}Just keep fighting him, and in time you'll defeat him!",
+   "text": "ستعجبكم هذه!\nدوم غيز لا يستطيع استعادة نقاط حياته بعد المعركة!{line}واصلوا قتاله فحسب، ومع الوقت ستهزمونه!"
+  },
+  {
+   "id": "owzer.2726",
+   "context": "Message 2726 of the dialogue: First time I've been here…{line}This ain't the kinda place a poor person usually comes!",
+   "text": "أول مرة آتي إلى هنا…{line}هذا ليس المكان الذي يأتيه الفقراء عادة!"
+  },
+  {
+   "id": "owzer.2727",
+   "context": "Message 2727 of the dialogue: Okay! {Wait}{line}Here's our next item!",
+   "text": "حسنا! {Wait}{line}إليكم القطعة التالية!"
+  },
+  {
+   "id": "owzer.2728",
+   "context": "Message 2728 of the dialogue: {line}   The Magicite, “ZoneSeek”!{page}{line}Who'll give me 500 GP?",
+   "text": "{center}{line}الماجيسايت «زون سيك»!\n{line}من يعطيني 500 غيل؟"
+  },
+  {
+   "id": "owzer.2729",
+   "context": "Message 2729 of the dialogue: {line}    The Magicite, “Golem”!{page}{line}Who'll give me 1000 GP?",
+   "text": "{center}{line}الماجيسايت «غوليم»!\n{line}من يعطيني 1000 غيل؟"
+  },
+  {
+   "id": "owzer.2730",
+   "context": "Message 2730 of the dialogue: This is astounding!{line}A real, talking Chocobo!!{page}{line}Do I hear 1000 GP?",
+   "text": "هذا مذهل!{line}تشوكوبو حقيقي يتكلم!!\n{line}هل أسمع 1000 غيل؟"
+  },
+  {
+   "id": "owzer.2731",
+   "context": "Message 2731 of the dialogue: {line}    1/1200 of an airship!{page}{line}Do I hear 5000 GP?",
+   "text": "{center}{line}جزء من 1200 من سفينة طائرة!\n{line}هل أسمع 5000 غيل؟"
+  },
+  {
+   "id": "owzer.2732",
+   "context": "Message 2732 of the dialogue: You're not gonna believe this! Quality, high-tech merchandise!{line}An “Imp Robot”!!{page}{line}Do I hear 5 GP?",
+   "text": "لن تصدقوا هذا! بضاعة عالية التقنية وممتازة الجودة!{line}«روبوت عفريت»!!\n{line}هل أسمع 5 غيل؟"
+  },
+  {
+   "id": "owzer.2733",
+   "context": "Message 2733 of the dialogue: {line}{Spaces 05}Received the Magicite{line}{Spaces 0E}“Starlet.”",
+   "text": "{center}{line}حصلت على الماجيسايت{line}«ستارلت»."
+  },
+  {
+   "id": "owzer.2734",
+   "context": "Message 2734 of the dialogue: CHILD: Papa!!{line}I want that! Please!",
+   "text": "الطفل: بابا!!{line}أريد ذاك! أرجوك!"
+  },
+  {
+   "id": "owzer.2735",
+   "context": "Message 2735 of the dialogue: PAPA: No, you don't!{line}Now, pipe down!",
+   "text": "بابا: لا، لا تريده!{line}والآن اصمت!"
+  },
+  {
+   "id": "owzer.2736",
+   "context": "Message 2736 of the dialogue: CHILD: I want it…I want it!{line}Buy it! {Wait}Pretty please!!",
+   "text": "الطفل: أريده… أريده!{line}اشتره! {Wait}أرجوك أرجوك!!"
+  },
+  {
+   "id": "owzer.2737",
+   "context": "Message 2737 of the dialogue: PAPA: Ho, ho, ho…All right!{line}But just this once! And… {Wait}… {Wait}{line}Keep it a secret from Mama!",
+   "text": "بابا: هو، هو، هو… حسنا!{line}لكن هذه المرة فقط! و… {Wait}… {Wait}{line}لا تخبر ماما!"
+  },
+  {
+   "id": "owzer.2738",
+   "context": "Message 2738 of the dialogue: CHILD: Yahoo!!!{line}Thanks, Papa! Yahoo!",
+   "text": "الطفل: ياهوو!!!{line}شكرا يا بابا! ياهوو!"
+  },
+  {
+   "id": "owzer.2739",
+   "context": "Message 2739 of the dialogue: PAPA: 500000 GP!",
+   "text": "بابا: 500000 غيل!"
+  },
+  {
+   "id": "owzer.2740",
+   "context": "Message 2740 of the dialogue: G'huh?! 500000 GP?!",
+   "text": "غهاه؟! 500000 غيل؟!"
+  },
+  {
+   "id": "owzer.2741",
+   "context": "Message 2741 of the dialogue: PAPA: 1000000 GP!",
+   "text": "بابا: 1000000 غيل!"
+  },
+  {
+   "id": "owzer.2742",
+   "context": "Message 2742 of the dialogue: WHAT?! 1000000 GP?!",
+   "text": "ماذا؟! 1000000 غيل؟!"
+  },
+  {
+   "id": "owzer.2743",
+   "context": "Message 2743 of the dialogue: Sold, to this lucky person.{line}Take it away, please!",
+   "text": "بيعت لهذا الشخص المحظوظ.{line}خذوها من فضلكم!"
+  },
+  {
+   "id": "owzer.2744",
+   "context": "Message 2744 of the dialogue: PAPA: Well, we have our treat for the day. Let's go home!{page}CHILD: Yahoo! Yippy!!!!",
+   "text": "بابا: حسنا، حصلنا على متعتنا لهذا اليوم. لنعد إلى البيت!\nالطفل: ياهوو! مرحى!!!!"
+  },
+  {
+   "id": "owzer.2745",
+   "context": "Message 2745 of the dialogue: Well, that's all for today!{line}Come back again real soon!",
+   "text": "حسنا، هذا كل شيء لليوم!{line}عودوا قريبا جدا!"
+  },
+  {
+   "id": "owzer.2746",
+   "context": "Message 2746 of the dialogue: Papa!{line}Let's buy lot's of stuff today, too!",
+   "text": "بابا!{line}لنشتر أشياء كثيرة اليوم أيضا!"
+  },
+  {
+   "id": "owzer.2747",
+   "context": "Message 2747 of the dialogue: Oh, how could I refuse those cute little eyes?! Ho, ho, ho…",
+   "text": "أوه، كيف أرفض هاتين العينين الصغيرتين اللطيفتين؟! هو، هو، هو…"
+  },
+  {
+   "id": "owzer.2748",
+   "context": "Message 2748 of the dialogue: {line}    Not enough money…",
+   "text": "{center}{line}المال لا يكفي…"
+  },
+  {
+   "id": "owzer.2749",
+   "context": "Message 2749 of the dialogue: OWZER: {line}What a tremendous gift!{page}This young lady's pictures just might help salvage this rotting world of ours!{page}“We need to take {Relm} with us!”{page}She might just be our only chance to restore the sunny days of our not-too-distant past!",
+   "text": "أوزر:{line}يا لها من هدية عظيمة!\nصور هذه الشابة قد تساعد في إنقاذ عالمنا المتعفن هذا!\n«علينا أن نأخذ {Relm} معنا!»\nقد تكون فرصتنا الوحيدة لاستعادة الأيام المشرقة من ماضينا القريب!"
+  },
+  {
+   "id": "owzer.2750",
+   "context": "Message 2750 of the dialogue: OWZER: Cough…hack…{line}{Relm}: Old man! {Wait}{line}Are you all right?!{page}OWZER: You think things will ever be as they were?{page}“…We don't know…”{line}but if we don't try…{line}OWZER: We'll lose everything…{page}“We haven't much time.{line}We need {Relm}'s help now…”",
+   "text": "أوزر: كح… كح…{line}{Relm}: أيها العجوز! {Wait}{line}أأنت بخير؟!\nأوزر: أتظنون أن الأمور ستعود يوما كما كانت؟\n«…لا نعرف…»{line}لكن إن لم نحاول…{line}أوزر: فسنخسر كل شيء…\n«ليس لدينا وقت طويل.{line}نحتاج إلى مساعدة {Relm} الآن…»"
+  },
+  {
+   "id": "owzer.2751",
+   "context": "Message 2751 of the dialogue: OWZER: Let me at least hug her{line}{Wait}one last time…",
+   "text": "أوزر: دعوني على الأقل أعانقها{line}{Wait}مرة أخيرة…"
+  },
+  {
+   "id": "owzer.2752",
+   "context": "Message 2752 of the dialogue: OWZER: {Relm}…{line}{Wait}Cough…Hackack…{line}Will you come back some day?{page}And paint me another of your masterpieces?",
+   "text": "أوزر: {Relm}…{line}{Wait}كح… كح كح…{line}هل ستعودين يوما؟\nوترسمين لي تحفة أخرى من تحفك؟"
+  },
+  {
+   "id": "owzer.2753",
+   "context": "Message 2753 of the dialogue: {Relm}: I'll come back.{line}OWZER: Thank you…{line}Such a nice girl!",
+   "text": "{Relm}: سأعود.{line}أوزر: شكرا لك…{line}يا لها من فتاة لطيفة!"
+  },
+  {
+   "id": "owzer.2754",
+   "context": "Message 2754 of the dialogue: {Relm}: I have to go!{line}But fear not, I'll be back to finish this painting!{page}OWZER: I'll be waiting for you!",
+   "text": "{Relm}: علي أن أذهب!{line}لكن لا تخف، سأعود لأنهي هذه اللوحة!\nأوزر: سأكون في انتظارك!"
+  },
+  {
+   "id": "owzer.2755",
+   "context": "Message 2755 of the dialogue: {line}{Spaces 05}Received the Magicite{line}{Spaces 0E}“ZoneSeek.”",
+   "text": "{center}{line}حصلت على الماجيسايت{line}«زون سيك»."
+  },
+  {
+   "id": "owzer.2756",
+   "context": "Message 2756 of the dialogue: {line}{Spaces 05}Received the Magicite{line}{Spaces 0E}“Golem.”",
+   "text": "{center}{line}حصلت على الماجيسايت{line}«غوليم»."
+  },
+  {
+   "id": "owzer.2757",
+   "context": "Message 2757 of the dialogue: {line}My beloved…{line}{Wait}We'll always be together… {Pause 08}{Key}",
+   "text": "{line}حبيبي…{line}{Wait}سنبقى معا دائما… {Pause 08}{Key}"
+  },
+  {
+   "id": "dream.2758",
+   "context": "Message 2758 of the dialogue: I'm Curley!",
+   "text": "أنا كيرلي!"
+  },
+  {
+   "id": "dream.2759",
+   "context": "Message 2759 of the dialogue: I'm Larry.",
+   "text": "أنا لاري."
+  },
+  {
+   "id": "dream.2760",
+   "context": "Message 2760 of the dialogue: I'm Moe!",
+   "text": "أنا مو!"
+  },
+  {
+   "id": "dream.2761",
+   "context": "Message 2761 of the dialogue: We're the 3 Dream Stooges!",
+   "text": "نحن أغبياء الحلم الثلاثة!"
+  },
+  {
+   "id": "dream.2762",
+   "context": "Message 2762 of the dialogue: This man's soul is ours!",
+   "text": "روح هذا الرجل لنا!"
+  },
+  {
+   "id": "dream.2763",
+   "context": "Message 2763 of the dialogue: Today we dine well!!!",
+   "text": "اليوم نأكل جيدا!!!"
+  },
+  {
+   "id": "dream.2764",
+   "context": "Message 2764 of the dialogue: “WAIT!!!”",
+   "text": "«انتظروا!!!»"
+  },
+  {
+   "id": "dream.2765",
+   "context": "Message 2765 of the dialogue: Back off!{line}I'm not gonna mess with ya unless my brothers are here!{line}See ya!",
+   "text": "تراجعوا!{line}لن أتورط معكم ما لم يكن أخواي هنا!{line}إلى اللقاء!"
+  },
+  {
+   "id": "dream.2766",
+   "context": "Message 2766 of the dialogue: Good, everyone's here!{line}Let's rumble!",
+   "text": "جيد، الجميع هنا!{line}لنتعارك!"
+  },
+  {
+   "id": "dream.2767",
+   "context": "Message 2767 of the dialogue: {line}Please…{line}{Wait}Save my husband…{line}{Wait}Save {Cyan}…",
+   "text": "{line}أرجوكم…{line}{Wait}أنقذوا زوجي…{line}{Wait}أنقذوا {Cyan}…"
+  },
+  {
+   "id": "dream.2768",
+   "context": "Message 2768 of the dialogue: Where are we?!",
+   "text": "أين نحن؟!"
+  },
+  {
+   "id": "dream.2769",
+   "context": "Message 2769 of the dialogue: {line}We're inside…{line}{Wait}{Cyan}'s soul…",
+   "text": "{line}نحن داخل…{line}{Wait}روح {Cyan}…"
+  },
+  {
+   "id": "dream.2770",
+   "context": "Message 2770 of the dialogue: {line}My husband… {Wait}{Cyan} continues to torture himself…{page}{line}He failed to defend Doma…{line}{Wait}The world's slowly dying…{line}{Wait}and then there's his family…",
+   "text": "{line}زوجي… {Wait}{Cyan} يواصل تعذيب نفسه…\n{line}فشل في الدفاع عن دوما…{line}{Wait}والعالم يموت ببطء…{line}{Wait}ثم هناك عائلته…"
+  },
+  {
+   "id": "dream.2771",
+   "context": "Message 2771 of the dialogue: {line}A beast known as Wrexsoul is taking advantage of him.",
+   "text": "{line}وحش يدعى ريكسول يستغله."
+  },
+  {
+   "id": "dream.2772",
+   "context": "Message 2772 of the dialogue: Wrexsoul is a composite monster, made up of wretched spirits who were dispatched in meaningless wars.",
+   "text": "ريكسول وحش مركب، مكون من أرواح بائسة أزهقت في حروب لا معنى لها."
+  },
+  {
+   "id": "dream.2773",
+   "context": "Message 2773 of the dialogue: {line}They're wreaking havoc on Papa!{line}Please help him!!",
+   "text": "{line}إنهم يعيثون فسادا في بابا!{line}أرجوكم ساعدوه!!"
+  },
+  {
+   "id": "dream.2774",
+   "context": "Message 2774 of the dialogue: {line}Please… {Wait}help {Cyan}…{page}{line}Papa doesn't deserve this…!",
+   "text": "{line}أرجوكم… {Wait}ساعدوا {Cyan}…\n{line}بابا لا يستحق هذا…!"
+  },
+  {
+   "id": "dream.2775",
+   "context": "Message 2775 of the dialogue: Papa…fishing is boring! {Pause 09}{Key}",
+   "text": "بابا… الصيد ممل! {Pause 09}{Key}"
+  },
+  {
+   "id": "dream.2776",
+   "context": "Message 2776 of the dialogue: This is part of your training. We must all learn patience. {Pause 09}{Key}",
+   "text": "هذا جزء من تدريبك. علينا جميعا أن نتعلم الصبر. {Pause 09}{Key}"
+  },
+  {
+   "id": "dream.2777",
+   "context": "Message 2777 of the dialogue: I love fishing! {Pause 09}{Key}",
+   "text": "أحب الصيد! {Pause 09}{Key}"
+  },
+  {
+   "id": "dream.2778",
+   "context": "Message 2778 of the dialogue: Excellent concentration!{line}{Wait}With a little more practice,{line}you'll be Doma's best fencer! {Pause 09}{Key}",
+   "text": "تركيز ممتاز!{line}{Wait}بقليل من التمرين الإضافي،{line}ستصير أفضل مبارز في دوما! {Pause 09}{Key}"
+  },
+  {
+   "id": "dream.2779",
+   "context": "Message 2779 of the dialogue: Yippee! Papa praised me!{line}{Wait}I'm gonna go tell Mama! {Pause 09}{Key}",
+   "text": "مرحى! بابا مدحني!{line}{Wait}سأذهب لأخبر ماما! {Pause 09}{Key}"
+  },
+  {
+   "id": "dream.2780",
+   "context": "Message 2780 of the dialogue: Sweetheart……{line}{Wait}Do you love me? {Pause 06}{Key}",
+   "text": "حبيبي……{line}{Wait}هل تحبني؟ {Pause 06}{Key}"
+  },
+  {
+   "id": "dream.2781",
+   "context": "Message 2781 of the dialogue: What do you want from me?{line}{Wait}A soldier doesn't say things like that! {Pause 09}{Key}",
+   "text": "ماذا تريدين مني؟{line}{Wait}الجندي لا يقول أشياء كهذه! {Pause 09}{Key}"
+  },
+  {
+   "id": "dream.2782",
+   "context": "Message 2782 of the dialogue: I……I…loveth {Wait}you.{line}{Wait}…More than anything… {Pause 06}{Key}",
+   "text": "أنا…… أنا… أحبك {Wait}حقا.{line}{Wait}…أكثر من أي شيء… {Pause 06}{Key}"
+  },
+  {
+   "id": "dream.2783",
+   "context": "Message 2783 of the dialogue: I heard that! Yipee!{line}{Wait}“I loveth you…I loveth you…”{line}{Wait}Papa loves Mama! {Pause 06}{Key}",
+   "text": "سمعت ذلك! مرحى!{line}{Wait}«أحبك… أحبك…»{line}{Wait}بابا يحب ماما! {Pause 06}{Key}"
+  },
+  {
+   "id": "dream.2784",
+   "context": "Message 2784 of the dialogue: Owain!! Hush!! {Pause 05}{Key}",
+   "text": "أوين!! اصمت!! {Pause 05}{Key}"
+  },
+  {
+   "id": "dream.2785",
+   "context": "Message 2785 of the dialogue: You must be Wrexsoul!{line}{Wait}We want {Cyan} back!!",
+   "text": "لا بد أنك ريكسول!{line}{Wait}نريد استعادة {Cyan}!!"
+  },
+  {
+   "id": "dream.2786",
+   "context": "Message 2786 of the dialogue: I heard that! {Pause 05}{Key}",
+   "text": "سمعت ذلك! {Pause 05}{Key}"
+  },
+  {
+   "id": "dream.2787",
+   "context": "Message 2787 of the dialogue: You're too late! {Wait}{line}His pain has reached critical mass! Nothing can stop his feelings of rage and despair!{page}I grow stronger now, with his anger, {Wait}hatred {Wait}and guilt!{line}And I hunger for… {Wait}you!",
+   "text": "فات الأوان! {Wait}{line}ألمه بلغ حدا حرجا! لا شيء يوقف مشاعر الغضب واليأس فيه!\nأنا أزداد قوة الآن، بغضبه، {Wait}وكراهيته {Wait}وذنبه!{line}وأتوق إلى… {Wait}أنتم!"
+  },
+  {
+   "id": "dream.2788",
+   "context": "Message 2788 of the dialogue: {Cyan}: Thanks be to you.",
+   "text": "{Cyan}: شكرا لكم."
+  },
+  {
+   "id": "dream.2789",
+   "context": "Message 2789 of the dialogue: {Cyan}: I heard my wife and children calling out to me!{page}Their voices finally gave me the strength and courage to come to grips with my own suffering.",
+   "text": "{Cyan}: سمعت زوجتي وأطفالي ينادونني!\nأصواتهم أعطتني أخيرا القوة والشجاعة لأواجه معاناتي."
+  },
+  {
+   "id": "dream.2790",
+   "context": "Message 2790 of the dialogue: {line}Thank you, my love… {Pause 09}{Key}",
+   "text": "{line}شكرا لك يا حبيبي… {Pause 09}{Key}"
+  },
+  {
+   "id": "dream.2791",
+   "context": "Message 2791 of the dialogue: {line}Papa's strong!!! {Pause 09}{Key}",
+   "text": "{line}بابا قوي!!! {Pause 09}{Key}"
+  },
+  {
+   "id": "dream.2792",
+   "context": "Message 2792 of the dialogue: {Cyan}: No…{line}{Wait}I didn't do anything…{line}{Wait}then… {Wait}and I can't now… {Wait}{line}{Wait}I'm a man with no honor…",
+   "text": "{Cyan}: لا…{line}{Wait}لم أفعل شيئا…{line}{Wait}حينها… {Wait}ولا أستطيع الآن… {Wait}{line}{Wait}أنا رجل بلا شرف…"
+  },
+  {
+   "id": "dream.2793",
+   "context": "Message 2793 of the dialogue: {line}No!{line}{Wait}You have entirely too much… {Pause 08}{Key}",
+   "text": "{line}لا!{line}{Wait}عندك منه أكثر من اللازم… {Pause 08}{Key}"
+  },
+  {
+   "id": "dream.2794",
+   "context": "Message 2794 of the dialogue: {line}Papa…{line}{Wait}We love you! {Pause 08}{Key}",
+   "text": "{line}بابا…{line}{Wait}نحن نحبك! {Pause 08}{Key}"
+  },
+  {
+   "id": "dream.2795",
+   "context": "Message 2795 of the dialogue: {line}We'll always be {Wait}at your side… {Pause 05}{Key}",
+   "text": "{line}سنكون دائما {Wait}إلى جانبك… {Pause 05}{Key}"
+  },
+  {
+   "id": "dream.2796",
+   "context": "Message 2796 of the dialogue: {Cyan}: Elayne and Owain live on in my heart.{page}I must leave the past behind.{line}{Wait}I have much to live for…",
+   "text": "{Cyan}: إيلين وأوين يعيشان في قلبي.\nعلي أن أترك الماضي ورائي.{line}{Wait}أمامي الكثير لأعيش من أجله…"
+  },
+  {
+   "id": "dream.2797",
+   "context": "Message 2797 of the dialogue: {line}{Cyan}'s soul cleared itself of all doubt and confusion.",
+   "text": "{line}تطهرت روح {Cyan} من كل شك وارتباك."
+  },
+  {
+   "id": "dream.2798",
+   "context": "Message 2798 of the dialogue: {line}{Cyan}'s swordsmanship attained its peak level of skill.",
+   "text": "{line}بلغت مهارة {Cyan} في المبارزة ذروتها."
+  },
+  {
+   "id": "dream.2799",
+   "context": "Message 2799 of the dialogue: {line}{Spaces 05}Received the Magicite{line}{Spaces 0E}“Alexandr.”",
+   "text": "{center}{line}حصلت على الماجيسايت{line}«ألكسندر»."
   }
  ]
 }
