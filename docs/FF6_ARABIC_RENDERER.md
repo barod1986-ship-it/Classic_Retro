@@ -301,9 +301,9 @@ from classic_retro.engines.ff6 import hirom_offset
 from classic_retro.rom import ff6_arabic as overlay
 
 rom = bytearray(Path("Final Fantasy III (USA) (Arabic).sfc").read_bytes())
-table = overlay.read_message_table(rom)          # message number -> Arabic address
+table = overlay.read_message_table(rom)  # message number -> Arabic address
 entry = hirom_offset(overlay.MESSAGES + 6 * overlay.MESSAGE_ENTRY)
-rom[entry : entry + 3] = table[2483].to_bytes(3, "little")   # show 2483 first
+rom[entry : entry + 3] = table[2483].to_bytes(3, "little")  # show 2483 first
 overlay.set_checksum(rom)
 Path("variant.sfc").write_bytes(rom)
 ```
