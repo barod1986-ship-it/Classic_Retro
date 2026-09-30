@@ -401,15 +401,21 @@ program keeps its size and its sectors and the patch is under 4 KB. See
 The nineteenth reference target, and the first on the Super NES, is **Chrono Trigger (USA)**.
 Its text engine was read from the ROM, its 65C816 code and the game running, then checked
 against the [dscotton/ct_disassembly](https://github.com/dscotton/ct_disassembly) disassembly,
-which names the same routines and tables. Three messages of the opening are in Arabic, chosen
-to be unlike: two lines under the speaker's name, a long line wrapped over two lines and a
-second box, and a line that writes a name the player gives. The game draws its dialogue with a
-variable-width font of 12x12 pixels into a buffer of tiles, so the Arabic takes the
-`glyph-font` strategy with a font of its own, white with the game's shadow, 9 pixels. Three
-65C816 hooks, assembled with cc65, send a translated message to its Arabic text in a free bank,
-draw each Arabic glyph at the mirror of the pen and a name the game writes as a block left to
-right; the English messages stay as they were, and the patch is about 2 KB. The research tools
-run the game in snes9x. See
+which names the same routines and tables. The game keeps its dialogue in fifteen string
+tables, one for a run of its locations, and the translation takes them table by table: the
+first two are in Arabic, 855 messages of Crono's house and Truce in both eras, Truce Canyon,
+Lab 32, the Proto Dome, the Sun Keep, the Geno Dome, Leene Square with the Millennial Fair,
+the trial, the castle's cellars, Melchior's hut, the Tyrano Lair, the Lavos crater, Zeal and
+Death Peak, with their choices, pauses and the boxes that go on without the button. The game
+draws its dialogue with a variable-width font of 12x12 pixels into a buffer of tiles, so the
+Arabic takes the `glyph-font` strategy with a font of its own, white with the game's shadow,
+9 pixels. The ROM's 4 MiB are full, so the overlay grows it to a 6 MiB ExHiROM, the upper
+half of each added bank mirroring the ROM's first banks as the console read them before, and
+keeps its font, its tables and the Arabic in the lower halves. Four 65C816 hooks, assembled
+with cc65, send a translated message to its Arabic through a list of the translated tables,
+draw each Arabic glyph at the mirror of the pen and a name the game writes as a block left
+to right, and put the choice cursor at the box's right; the English messages stay as they
+were. The research tools run the game in snes9x. See
 [the Chrono Trigger testing guide](docs/CHRONO_TRIGGER_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/CHRONO_TRIGGER_ARABIC_RENDERER.md).
 

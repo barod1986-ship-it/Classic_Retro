@@ -459,7 +459,8 @@ order, without the layout the Arabic encoder writes itself. Which targets check 
   the original decoded from the image (`engines.alttp.command_skeleton`: every command
   but the line, scroll and wait-for-button commands;
   `engines.chrono_trigger.command_skeleton`: every code but the new-line and new-box
-  codes and the two-byte characters; `engines.sf2.command_skeleton`: every tag but
+  codes after the button, the two-byte characters and the word "Nadia", a box at once kept
+  plain; `engines.sf2.command_skeleton`: every tag but
   `{N}`), and again when the built image is read back, message by message through the
   hooks' list. Their scripts may pin each original's skeleton as well
   (`source_skeleton`, None until a maintainer records it from the build report's

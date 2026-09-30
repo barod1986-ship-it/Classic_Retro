@@ -276,10 +276,12 @@ sector rather than by name:
   width from an atlas it uploads once (`LoadImage`) to a corner of VRAM no texture
   takes; compare that corner in savestates from the title, the menus and after a race
   to be sure the game never writes there.
-- A translated message need not fit its English's place. Chrono Trigger's hook reads a
-  message whose address is in the overlay's list from its Arabic text in a free bank
-  instead, so the English stays where it was, as it was, and strings that share bytes
-  (its opening's first string runs on through the next five) keep working.
+- A translated message need not fit its English's place. Chrono Trigger's hook looks the
+  string's pointer in its table up in the overlay's list of translated tables and reads
+  the message from its Arabic text in the banks the overlay adds instead, so the English
+  stays where it was, as it was, strings that share bytes (its opening's first string
+  runs on through the next five) keep working, and an event that names a table from its
+  middle finds the same entries.
 - A hook in another bank than the code it hooks enters with a long call or jump and
   leaves the same way: to the engine's code, or to one of the engine's own `RTS` where
   the engine called the routine the hook replaces (Chrono Trigger, whose text engine's
@@ -287,6 +289,14 @@ sector rather than by name:
 - A hook needs no memory of its own when it can tell its state from the engine's: Chrono
   Trigger's knows an Arabic message by its text pointer's bank, and draws a name the
   engine expands whole, then tells the engine the name's last character is done.
+- A HiROM game of 4 MiB grows past the map's end only as an ExHiROM (map mode `35`, size
+  code `0D`, banks `$40` to `$7D` past the first 4 MiB), and under that mapping the
+  console reads banks `$00` to `$3F`'s upper halves from the added banks, where the HiROM
+  mapping read the ROM's first banks; a game reads tables and runs its vectors' stubs
+  there (Chrono Trigger's `$00:F800`, `$00:FF00`). So the overlay copies the upper half of
+  each first bank into the added bank of the same number, the header among them, and
+  keeps its own data in the lower halves; the checksum is a 48 Mbit cartridge's, the last
+  2 MiB counted twice, in the header and in its copy, and snes9x reads the copy.
 - When the ROM is full, add to it. A Link to the Past's 1 MiB has no room for a font of
   16x16 glyphs: the overlay adds a second MiB (the header's size byte from `0A` to `0B`,
   `FF` where it writes nothing) for the font and the messages, and keeps its hooks in free
