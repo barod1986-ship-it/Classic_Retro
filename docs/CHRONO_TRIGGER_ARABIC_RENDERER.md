@@ -264,7 +264,9 @@ from classic_retro.rom.chrono_trigger_arabic_script import TABLES
 rom = bytearray(Path("Chrono Trigger (USA) (Arabic).sfc").read_bytes())
 redirects = overlay.read_redirects(bytes(rom))  # (table, number) -> Arabic address
 low, bank, doubled, entries_low, entries_bank = struct.unpack_from(
-    "<HBHHB", rom, overlay.rom_offset(overlay.TABLE_LIST)  # the first table: truce
+    "<HBHHB",
+    rom,
+    overlay.rom_offset(overlay.TABLE_LIST),  # the first table: truce
 )
 entry = overlay.rom_offset((entries_bank << 16 | entries_low) + 3 * 6)
 rom[entry : entry + 3] = redirects[TABLES["fair"].address, 41].to_bytes(3, "little")
