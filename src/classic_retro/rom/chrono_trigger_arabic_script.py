@@ -22,7 +22,8 @@ report carries every original's, for pinning.
 The Arabic lives in ``classic_retro/translations/chrono-trigger.json``: logical
 Unicode Arabic in the engine's notation (``engines.chrono_trigger_arabic``): a
 line for each box, ``{line}`` where a line of the box must end, ``{choice}``
-at a choice's line, ``{box auto}`` for a box that does not wait, the
+at a choice's line (on the lines the event makes choices, ``DECISIONS``),
+``{box auto}`` for a box that does not wait, the
 English's pauses and codes as tokens, and a ``{name}`` token for a name the
 game writes.
 """
@@ -75,10 +76,71 @@ class ChronoTriggerMessage:
     source_sha256: str
     notation: str
     source_skeleton: tuple[str, ...] | None = None
+    # A decision's choices: the first and the last line of the message's last box
+    # the player chooses between (``DECISIONS``); None for a message without.
+    choices: tuple[int, int] | None = None
 
     @property
     def table_key(self) -> str:
         return self.key.rsplit(".", 1)[0]
+
+
+# The messages a decision box shows (the events' command $C0, Dialog_OpenDecisionBox
+# at $C0:3674): the first and the last line of the message's last box that the
+# player chooses between, as the command's operand names them, read from the
+# location events of the ROM. The cursor goes on these lines and the event takes
+# the answer by its line, whatever the text says: a translation must put its
+# {choice} lines there, and no {choice} line in another message.
+DECISIONS: dict[str, tuple[int, int]] = {
+    "truce.014": (1, 2),
+    "truce.073": (2, 3),
+    "truce.074": (1, 2),
+    "truce.075": (1, 2),
+    "truce.078": (1, 2),
+    "truce.079": (2, 3),
+    "truce.087": (2, 3),
+    "truce.091": (2, 3),
+    "truce.095": (1, 2),
+    "truce.097": (2, 3),
+    "truce.101": (2, 3),
+    "truce.102": (2, 3),
+    "truce.113": (1, 2),
+    "truce.138": (1, 2),
+    "truce.147": (1, 2),
+    "truce.152": (2, 3),
+    "truce.209": (2, 3),
+    "truce.229": (2, 3),
+    "truce.230": (1, 2),
+    "truce.294": (1, 2),
+    "truce.297": (2, 3),
+    "truce.298": (2, 3),
+    "truce.319": (1, 2),
+    "truce.322": (1, 2),
+    "truce.325": (1, 2),
+    "truce.326": (0, 1),
+    "truce.334": (1, 2),
+    "truce.387": (0, 3),
+    "truce.388": (1, 2),
+    "truce.396": (1, 2),
+    "fair.010": (1, 2),
+    "fair.016": (0, 3),
+    "fair.028": (0, 1),
+    "fair.029": (2, 3),
+    "fair.041": (1, 2),
+    "fair.043": (2, 3),
+    "fair.044": (2, 3),
+    "fair.073": (2, 3),
+    "fair.076": (2, 3),
+    "fair.141": (2, 3),
+    "fair.159": (2, 3),
+    "fair.165": (2, 3),
+    "fair.168": (2, 3),
+    "fair.208": (0, 1),
+    "fair.257": (1, 2),
+    "fair.258": (2, 3),
+    "fair.259": (2, 3),
+    "fair.267": (0, 3),
+}
 
 
 # key (the table's key and the message's number): (the number, SHA-256 of its
@@ -956,6 +1018,8 @@ def chrono_trigger_arabic_messages(
     for key, (index, digest, skeleton) in _SOURCES.items():
         table = TABLES[key.rsplit(".", 1)[0]]
         messages.append(
-            ChronoTriggerMessage(key, table.address, index, digest, texts[key], skeleton)
+            ChronoTriggerMessage(
+                key, table.address, index, digest, texts[key], skeleton, DECISIONS.get(key)
+            )
         )
     return tuple(messages)

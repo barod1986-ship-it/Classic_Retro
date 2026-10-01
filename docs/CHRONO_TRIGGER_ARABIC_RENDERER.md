@@ -38,8 +38,8 @@ its name there is given in brackets.
   a byte: a pause of fifteen frames that many times; `03 00` closes the box where it
   stands. `05` a new line, `06` a new line indented under a speaker's name; `0B` a new
   box, `0C` a new box indented, each after the player's button; `09` and `0A` a new box
-  at once, without the button (after a pause, in a timed scene); `07` and `08` the
-  line's kind of those, never used. `0D`-`0F` a number and `11` a character's name,
+  at once, without the button (after a pause, in a timed scene); `07` and `08` a new
+  line after the player's button, the box kept, never used. `0D`-`0F` a number and `11` a character's name,
   from the event's values; `12` and a byte: a technique's or an enemy's name, or a word.
   `13`-`19` the party's names, `1A` Crono's again (from his name's own address),
   `1B`-`1D` the party in battle order, `1E` the word "Nadia", `1F` an item's name, `20`
@@ -105,7 +105,7 @@ in the header and in its copy.
 
 | Address | Content |
 |---------|---------|
-| `$40:0000` | the hooks: `setup_hook` at `+0`, `reader_hook` at `+$74`, `glyph_hook` at `+$10C`, `choice_hook` at `+$2EC` |
+| `$40:0000` | the hooks: `setup_hook` at `+0`, `reader_hook` at `+$75`, `glyph_hook` at `+$10D`, `choice_hook` at `+$2EE` |
 | `$40:0800` | the bank index: a word a bank from `$C0`, the offset in bank `$40` of its first entry in the list, 0 for none |
 | `$40:0900` | the list of translated tables: 8 bytes each: the table's address (3), its strings times two (2), its entries' address (3); a zero bank ends it |
 | `$40:2000` | a width a glyph, from code `21` |
@@ -117,7 +117,7 @@ Everything else in the lower halves is `FF`.
 
 ## Right-to-left text
 
-The hooks (`rom/chrono_trigger_arabic_hooks.s`, 908 bytes) live at `$40:0000`: bank
+The hooks (`rom/chrono_trigger_arabic_hooks.s`, 910 bytes) live at `$40:0000`: bank
 `$C2` has no room, so they are reached with long calls and jumps and leave through the
 engine's own code and returns.
 
@@ -169,7 +169,12 @@ other lines and boxes indented, as the English does (`06`, `0C`). A name counts 
 pixels, the widest five letters of the name screen; an item's name 80, the widest of the
 game's; a number 8 a digit. A choice's line (`{choice}`) starts with the spaces that
 take the pen on to 28, and a line the layout breaks starts where the engine starts it,
-indented under a speaker. `{box auto}`
+indented under a speaker. Which lines are choices is the event's to say: its decision
+command (`C0`, `Dialog_OpenDecisionBox` at `$C0:3674`) names the first and the last line
+of the message's last box, and takes the answer by its line. The script pins those
+lines for the 48 decisions of the two tables (`DECISIONS`, read from the location
+events), and the build refuses a translation whose `{choice}` lines are elsewhere, or a
+`{choice}` in another message. `{box auto}`
 starts a box at once (`09`, `0A`), `{pause xx}` passes to the game, and `{pause 00}`
 starts the message over: what follows is laid out as a message of its own, as the game
 shows it, so the tail messages of a chain encode to the tail of the chain's Arabic and
@@ -245,7 +250,7 @@ run 150
 tap A
 run 150
 tap A
-run 240
+run 360
 shot mother.png
 ```
 

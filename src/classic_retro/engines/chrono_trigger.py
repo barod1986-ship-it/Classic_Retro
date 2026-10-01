@@ -15,8 +15,9 @@ bytes are:
 - ``05`` a new line, ``06`` a new line indented under a speaker's name;
   ``0B`` a new box, ``0C`` a new box indented, each after the player's
   button; ``09`` and ``0A`` a new box at once, without the button (after a
-  pause, in a timed scene); ``07`` and ``08`` the line's kind of those,
-  which the dialogue never uses;
+  pause, in a timed scene); ``07`` and ``08`` a new line, plain or
+  indented, after the player's button, the box kept, which the dialogue
+  never uses;
 - ``0D``-``0F`` a number and ``11`` a character's name, from the event's own
   values; ``12`` then a byte: a technique's or an enemy's name, or a word;
 - ``13``-``19`` the party's names (Crono, Marle, Lucca, Robo, Frog, Ayla,
@@ -40,12 +41,13 @@ codes (``LAYOUT_CODES``): the new line and the new box after the button,
 plain or indented, which the Arabic encoder writes itself as it lays its
 own lines and boxes out; nor the characters of two bytes
 (``WIDE_CHARACTERS``) and the word "Nadia" (``WORD_CODES``), which are text.
-A box or line without the button (``AUTO_CODES``) is kept, plain: the
-encoder decides its indent as it does the others'. A translation must keep
-the rest: the pauses, the names, the numbers, the words and any code it
-cannot write. The skeleton skips every byte from the dictionary on, so it
-reads an Arabic string (``engines.chrono_trigger_arabic``), whose glyph codes
-replace the characters and dictionary words, as it reads an English one.
+A box without the button and a line after it (``KEPT_CODES``) are kept,
+plain: the encoder decides their indent as it does the others'. A
+translation must keep the rest: the pauses, the names, the numbers, the
+words and any code it cannot write. The skeleton skips every byte from the
+dictionary on, so it reads an Arabic string (``engines.chrono_trigger_arabic``),
+whose glyph codes replace the characters and dictionary words, as it reads an
+English one.
 
 A table's strings are named by their number in it (``table_count``: how
 many, from its first pointer, which points just past the table).
@@ -72,8 +74,8 @@ END = 0x00
 PAUSE = 0x03
 LINE = 0x05
 LINE_INDENTED = 0x06
-LINE_AUTO = 0x07
-LINE_AUTO_INDENTED = 0x08
+LINE_WAIT = 0x07
+LINE_WAIT_INDENTED = 0x08
 BOX_AUTO = 0x09
 BOX_AUTO_INDENTED = 0x0A
 BOX = 0x0B
@@ -91,8 +93,8 @@ NAMES = {
 TOKENS = {
     LINE: "line",
     LINE_INDENTED: "line+",
-    LINE_AUTO: "line auto",
-    LINE_AUTO_INDENTED: "line+ auto",
+    LINE_WAIT: "line wait",
+    LINE_WAIT_INDENTED: "line+ wait",
     BOX_AUTO: "box auto",
     BOX_AUTO_INDENTED: "box+ auto",
     BOX: "box",
@@ -113,11 +115,12 @@ WIDE_CHARACTERS = frozenset((0x01, 0x02))
 # The codes the Arabic encoder writes itself, laying its own lines and boxes
 # out; a translation keeps every other code (``command_skeleton``).
 LAYOUT_CODES = frozenset((LINE, LINE_INDENTED, BOX, BOX_INDENTED))
-# A line or box without the button, and the plain code the skeleton writes it
-# as: the encoder chooses the indent.
-AUTO_CODES = {
-    LINE_AUTO: LINE_AUTO,
-    LINE_AUTO_INDENTED: LINE_AUTO,
+# A box without the button and a new line after the button (the box kept),
+# which a translation keeps, and the plain code the skeleton writes each as:
+# the encoder chooses the indent.
+KEPT_CODES = {
+    LINE_WAIT: LINE_WAIT,
+    LINE_WAIT_INDENTED: LINE_WAIT,
     BOX_AUTO: BOX_AUTO,
     BOX_AUTO_INDENTED: BOX_AUTO,
 }
@@ -202,7 +205,7 @@ def command_skeleton(data: bytes) -> tuple[str, ...]:
             continue
         code, argument, length = _code_at(data, at)
         if code not in LAYOUT_CODES and code not in WIDE_CHARACTERS and code not in WORD_CODES:
-            skeleton.append(code_notation(AUTO_CODES.get(code, code), argument))
+            skeleton.append(code_notation(KEPT_CODES.get(code, code), argument))
         at += length
     return tuple(skeleton)
 

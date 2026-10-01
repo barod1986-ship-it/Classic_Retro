@@ -11,7 +11,6 @@ from fontTools.pens.ttGlyphPen import TTGlyphPen
 from classic_retro.arabic.glyph_codes import GlyphCodes
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.chrono_trigger import (
-    AUTO_CODES,
     BOX,
     BOX_AUTO,
     BOX_AUTO_INDENTED,
@@ -19,6 +18,7 @@ from classic_retro.engines.chrono_trigger import (
     CHARACTERS,
     DICTIONARY_BANK,
     DICTIONARY_TABLE,
+    KEPT_CODES,
     LAYOUT_CODES,
     LINE,
     LINE_INDENTED,
@@ -132,7 +132,7 @@ def test_the_notation_writes_words_names_and_codes(rom):
     )
     assert string_notation(bytes([0xF1, 0xEE, LINE]), words) == "…♪{line}"
     assert string_notation(bytes([0x09, 0x0A, 0x07, 0x08, 0x1E]), words) == (
-        "{box auto}{box+ auto}{line auto}{line+ auto}{Nadia}"
+        "{box auto}{box+ auto}{line wait}{line+ wait}{Nadia}"
     )
     # 1A reads Crono's name from its own address, as 13 does through the table.
     assert string_notation(bytes([0x1A, 0x12, 0x01, 0x1F, 0x20]), words) == (
@@ -149,7 +149,7 @@ def test_the_notation_writes_words_names_and_codes(rom):
 def test_the_command_skeleton_keeps_every_code_but_the_layout_and_the_words():
     assert LAYOUT_CODES == {LINE, LINE_INDENTED, BOX, BOX_INDENTED}
     assert WIDE_CHARACTERS == {0x01, 0x02} and WORD_CODES == {0x1E}
-    assert AUTO_CODES == {0x07: 0x07, 0x08: 0x07, 0x09: 0x09, 0x0A: 0x09}
+    assert KEPT_CODES == {0x07: 0x07, 0x08: 0x07, 0x09: 0x09, 0x0A: 0x09}
     data = _code("MOM: ") + bytes(
         [0x21, LINE_INDENTED, 0x15, 0x03, 0x0F, 0xDE, 0x09, 0x1B, 0x10, 0x01, 0x40, 0x1A, 0x1E]
     )
@@ -159,8 +159,8 @@ def test_the_command_skeleton_keeps_every_code_but_the_layout_and_the_words():
     assert command_skeleton(bytes([0x0A, 0x09, 0x08, 0x07, 0x03, 0x00])) == (
         "{box auto}",
         "{box auto}",
-        "{line auto}",
-        "{line auto}",
+        "{line wait}",
+        "{line wait}",
         "{pause 00}",
     )
     # Arabic glyph codes, from $21, are text; the codes below keep their meaning.

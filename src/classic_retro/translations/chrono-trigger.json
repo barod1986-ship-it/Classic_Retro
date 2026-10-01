@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "target": "chrono-trigger",
   "language": "ar",
-  "notation": "Logical Arabic in the engine notation (engines.chrono_trigger_arabic): a line for each box of the message (the box waits for the button between them), {line} where a line of the box must end; the encoder breaks the other lines itself, a box holding four lines of 232 pixels. {choice} at a line's start makes it a choice's line, which leaves the game's cursor its place at the line's right. {box auto} starts a box that does not wait for the button, as the English's timed scenes do after a pause; {pause 0F} and the other pauses pass to the game as the English has them, and {pause 00}, which closes the box, ends the message where it stands (the text after it is the next message of the chain, laid out as a message of its own). A message that starts with the speaker's name and a colon (الأم: or {Marle}: ) has its other lines and boxes indented under the name, as the English does. {Crono}, {Marle}, {Lucca}, {Robo}, {Frog}, {Ayla}, {Magus}, {member 1} to {member 3}, {Epoch} and {code 11} write a name as the player gave it, in Latin letters, and a line counts 55 pixels for it; {item} and {code 12 xx} an item's or a technique's name (80 pixels); {code 0D}, {code 0E} and {code 0F} a number. The English's {Nadia} is the word Nadia, written ناديا. A translation keeps its original's commands in order. A message holds Arabic letters, spaces, Western or Arabic-Indic digits and the signs . , : ! - … ، ؛ ؟ « » ( ) ♪ only (the quotes and the brackets are drawn mirrored, as a right-to-left run shows them). No vowel marks: the font has none.",
+  "notation": "Logical Arabic in the engine notation (engines.chrono_trigger_arabic): a line for each box of the message (the box waits for the button between them), {line} where a line of the box must end; the encoder breaks the other lines itself, a box holding four lines of 232 pixels. {choice} at a line's start leaves the game's cursor its place at the line's right; the game's event decides which lines are choices (the English's indented option lines), so the {choice} lines must stay on the same lines of the message's last box as the English's, which the build checks. {box auto} starts a box that does not wait for the button, as the English's timed scenes do after a pause; {pause 0F} and the other pauses pass to the game as the English has them, and {pause 00}, which closes the box, ends the message where it stands (the text after it is the next message of the chain, laid out as a message of its own). A message that starts with the speaker's name and a colon (الأم: or {Marle}: ) has its other lines and boxes indented under the name, as the English does. {Crono}, {Marle}, {Lucca}, {Robo}, {Frog}, {Ayla}, {Magus}, {member 1} to {member 3}, {Epoch} and {code 11} write a name as the player gave it, in Latin letters, and a line counts 55 pixels for it; {item} and {code 12 xx} an item's or a technique's name (80 pixels); {code 0D}, {code 0E} and {code 0F} a number. The English's {Nadia} is the word Nadia, written ناديا. A translation keeps its original's commands in order. A message holds Arabic letters, spaces, Western or Arabic-Indic digits and the signs . , : ! - … ، ؛ ؟ « » ( ) ♪ only (the quotes and the brackets are drawn mirrored, as a right-to-left run shows them). No vowel marks: the font has none.",
   "glossary": [
     {
       "term": "MOM",
@@ -1045,7 +1045,7 @@
     {
       "id": "truce.079",
       "context": "Message 79 of the truce table (Crono's house and Truce in 1000 and in 600...): Remember the earthquake we just{line}had?{line+}   Yes.{line+}   No.",
-      "text": "هل تذكر الزلزال الذي وقع للتو؟{line}{choice}نعم.{line}{choice}لا."
+      "text": "هل تذكر الزلزال{line}الذي وقع للتو؟{line}{choice}نعم.{line}{choice}لا."
     },
     {
       "id": "truce.080",
@@ -1105,7 +1105,7 @@
     {
       "id": "truce.091",
       "context": "Message 91 of the truce table (Crono's house and Truce in 1000 and in 600...): Need a brief Weapons and Items{line}seminar?{line+}   Yes.{line+}   No.",
-      "text": "أتريد درسا سريعا عن الأسلحة والأدوات؟{line}{choice}نعم.{line}{choice}لا."
+      "text": "أتريد درسا سريعا عن{line}الأسلحة والأدوات؟{line}{choice}نعم.{line}{choice}لا."
     },
     {
       "id": "truce.092",
@@ -1155,7 +1155,7 @@
     {
       "id": "truce.101",
       "context": "Message 101 of the truce table (Crono's house and Truce in 1000 and in 600...): Want to learn about damage in{line}battle?{line+}   Yes.{line+}   No.",
-      "text": "أتريد أن تتعلم عن الضرر في المعركة؟{line}{choice}نعم.{line}{choice}لا."
+      "text": "أتريد أن تتعلم عن الضرر{line}في المعركة؟{line}{choice}نعم.{line}{choice}لا."
     },
     {
       "id": "truce.102",
@@ -3070,12 +3070,12 @@
     {
       "id": "fair.028",
       "context": "Message 28 of the fair table (Leene Square and the Millennial Fair...): Buy something from Melchior,{line}the swordsmith?{box+}   Sure.{line+}   No thanks.",
-      "text": "أتشتري شيئا من ملكيور صانع السيوف؟{line}{choice}بالتأكيد.{line}{choice}لا، شكرا."
+      "text": "أتشتري شيئا من ملكيور صانع السيوف؟\n{choice}بالتأكيد.{line}{choice}لا، شكرا."
     },
     {
       "id": "fair.029",
       "context": "Message 29 of the fair table (Leene Square and the Millennial Fair...): By the way…{box}Could you talk that young lady into{line}selling her pendant?{line+}   I'll try.{line+}   No.",
-      "text": "بالمناسبة…\nهل يمكنك إقناع تلك الشابة ببيع قلادتها؟{line}{choice}سأحاول.{line}{choice}لا."
+      "text": "بالمناسبة…\nهل يمكنك إقناع تلك الشابة{line}ببيع قلادتها؟{line}{choice}سأحاول.{line}{choice}لا."
     },
     {
       "id": "fair.030",
@@ -3145,12 +3145,12 @@
     {
       "id": "fair.043",
       "context": "Message 43 of the fair table (Leene Square and the Millennial Fair...):    I came to see the Festival!{line+}You…live in this town, don't you?!{line+}I feel a little out of place here.{box+}Would you mind if I walked around{line+}with you for a while?{line+}   Sure.{line+}   Sorry.",
-      "text": "جئت لأرى المهرجان!{line}أنت… تعيش في هذه البلدة، أليس كذلك؟!{line}أشعر ببعض الغربة هنا.\nهل تسمح لي أن أتجول معك قليلا؟{line}{choice}بالتأكيد.{line}{choice}آسف."
+      "text": "جئت لأرى المهرجان!{line}أنت… تعيش في هذه البلدة، أليس كذلك؟!{line}أشعر ببعض الغربة هنا.\nهل تسمح لي أن أتجول{line}معك قليلا؟{line}{choice}بالتأكيد.{line}{choice}آسف."
     },
     {
       "id": "fair.044",
       "context": "Message 44 of the fair table (Leene Square and the Millennial Fair...): GIRL: Oh, come on! I don't know anyone{line+}around here! Please!{line+}   Ok.{line+}   No.",
-      "text": "الفتاة: أوه، هيا! لا أعرف أحدا هنا! أرجوك!{line}{choice}حسنا.{line}{choice}لا."
+      "text": "الفتاة: أوه، هيا! لا أعرف أحدا هنا!{line}أرجوك!{line}{choice}حسنا.{line}{choice}لا."
     },
     {
       "id": "fair.045",
@@ -3725,7 +3725,7 @@
     {
       "id": "fair.159",
       "context": "Message 159 of the fair table (Leene Square and the Millennial Fair...): CHANCELLOR: Have you ever stolen{line+}anything?{line+}   Well…yes.{line+}   No! I've never been a thief.",
-      "text": "المستشار: هل سبق أن سرقت شيئا؟{line}{choice}في الواقع… نعم.{line}{choice}لا! لم أكن لصا قط."
+      "text": "المستشار: هل سبق أن سرقت{line}شيئا؟{line}{choice}في الواقع… نعم.{line}{choice}لا! لم أكن لصا قط."
     },
     {
       "id": "fair.160",

@@ -104,7 +104,7 @@ ROM_SIZE_BYTE = HEADER + 0x17  # 2 ** n KiB: $0C for 4 MiB, $0D for the 6 of a 4
 CHECKSUM = HEADER + 0x1C  # the complement, then the checksum
 MAP_MODES = {ROM_SIZE: 0x31}
 ROM_SIZE_CODES = {ROM_SIZE: 0x0C}
-# The added MiB: banks $40-$5F, whose file offset is their address; 0xFF where
+# The added 2 MiB: banks $40-$5F, whose file offset is their address; 0xFF where
 # the overlay writes nothing but the mirrors.
 EXPANDED_SIZE = 6 * 1024 * 1024
 EXPANSION_FILL = 0xFF
@@ -141,35 +141,35 @@ HOOK_SOURCE = Path(__file__).with_name("chrono_trigger_arabic_hooks.s")
 
 # ca65 --cpu 65816 chrono_trigger_arabic_hooks.s; ld65 at $40:0000
 HOOK_CODE = bytes.fromhex(
-    "a50f853338e9c09063c22029ff000aaabf000840f054aa9818650d8560e220bf020040c50fd045c2"
+    "a50f853338e9c09064c22029ff000aaabf000840f055aa9818650d8560e220bf020040c50fd046c2"
     "20a56038ff0000409031df030040b02b4a85600a186560187f0500408560e220bf0700408562a002"
-    "00b760f017a8c220a7608531e22098853380098a186908aa80b3e220c220a90000e2206ba731c220"
-    "e631e22048a533c9429004c960900d68c9a090045cbe58c25cd058c268c921b0045cfd58c220a800"
-    "c613d0d05ccb58c2c22029ff0038e92100aa856ebf00204029ff0048066e066e066e066ea56e0a18"
-    "656e186900218560186918008563e220a940856285656466c220a53429ff00856ea9000138e56e38"
-    "e3013005e220203302e22068186534853468e617c220a90000e22060a533c9429008c960b004a530"
-    "d008c220a5355cc85dc2c220a9000048a53520c6011863018301a00000a201008ae220c53ab01020"
-    "9a01c22020c6011863018301e880e9c220a53429ff00856ea9000138e56e38e30148a53520e301a0"
-    "0000a201008ae220c53ab00b209a01c22020e301e880eee2208a1865178517a901853ac2206868e2"
-    "2018653485345c325ec2c220b73729ff00c8e220c903b00bc9019007c220a90001c860eba530c902"
-    "d005eb1869d4ebebc22029ff0060c9a0009014c90001b00fda38e9a000aabfe660c2fa29ff0060a9"
-    "000060da5a4820c601f03ca3010a0a0a856e0a18656e186960208560a3014a0a0a0a856e0a18656e"
-    "186960388563e220a9ff8562a9ff8565a3014aa9006a8566a309203302c2206820c6011863078307"
-    "7afa608b48a9c248aba3012907856864696829f84a4ac23029ff00aaa514290f00d014bde65f8570"
-    "bde85f8576bdea5f8578a9f0008012bd66608570bd68608576bd6a608578a9f001857aa510186908"
-    "008573e220a5128575c220646aa46ae220b760ebb763246610060a0a0a0a800229f0c220646ca668"
-    "f0064a666ccad0fa856ee220a470a56f17739773a476a56e17739773a478a56d17739773c220e673"
-    "a56a1a856ac90800d009a57318657a8573a56ac91800d0a5e220ab600bc220a900215be220a98085"
-    "15a2021ca00229af33027ec942900ac960b006a21d1ca02d29c220da5aaf63017e29ff0048a90000"
-    "48a307aa8616a301c303f01da305a88418c884188a18692000aa86169818690f00a88418c8841880"
-    "16a0fc288418c884188a18692000aa8616c88418c88418a307186940008307a305186940008305a3"
-    "011a8301c90400d0a86868fafac90400e220b0045ccef0c05c85f0c0"
+    "00b760f018a8c220a7608531e220988533800a8a18690800aa80b2e220c220a90000e2206ba731c2"
+    "20e631e22048a533c9429004c960900d68c9a090045cbe58c25cd058c268c921b0045cfd58c220a9"
+    "00c613d0d05ccb58c2c22029ff0038e92100aa856ebf00204029ff0048066e066e066e066ea56e0a"
+    "18656e186900218560186918008563e220a940856285656466c220a53429ff00856ea9000138e56e"
+    "38e3013005e220203502e22068186534853468e617c220a90000e22060a533c9429008c960b004a5"
+    "30d008c220a5355cc85dc2c220a9000048a53520c8011863018301a00000a201008ae220c53ab010"
+    "209b01c22020c8011863018301e880e9c220a53429ff00856ea9000138e56e38e30148a53520e501"
+    "a00000a201008ae220c53ab00b209b01c22020e501e880eee2208a1865178517a901853ac2206868"
+    "e22018653485345c325ec2c220b73729ff00c8e220eba530c902d006eb1869d48010ebc903b00bc9"
+    "019007c220a90001c860c22029ff0060c9a0009014c90001b00fda38e9a000aabfe660c2fa29ff00"
+    "60a9000060da5a4820c801f03ca3010a0a0a856e0a18656e186960208560a3014a0a0a0a856e0a18"
+    "656e186960388563e220a9ff8562a9ff8565a3014aa9006a8566a309203502c2206820c801186307"
+    "83077afa608b48a9c248aba3012907856864696829f84a4ac23029ff00aaa514290f00d014bde65f"
+    "8570bde85f8576bdea5f8578a9f0008012bd66608570bd68608576bd6a608578a9f001857aa51018"
+    "6908008573e220a5128575c220646aa46ae220b760ebb763246610060a0a0a0a800229f0c220646c"
+    "a668f0064a666ccad0fa856ee220a470a56f17739773a476a56e17739773a478a56d17739773c220"
+    "e673a56a1a856ac90800d009a57318657a8573a56ac91800d0a5e220ab600bc220a900215be220a9"
+    "808515a2021ca00229af33027ec942900ac960b006a21d1ca02d29c220da5aaf63017e29ff0048a9"
+    "000048a307aa8616a301c303f01da305a88418c884188a18692000aa86169818690f00a88418c884"
+    "188016a0fc288418c884188a18692000aa8616c88418c88418a307186940008307a3051869400083"
+    "05a3011a8301c90400d0a86868fafac90400e220b0045ccef0c05c85f0c0"
 )
 HOOK_SYMBOLS = {
     "setup_hook": 0x000,
-    "reader_hook": 0x074,
-    "glyph_hook": 0x10C,
-    "choice_hook": 0x2EC,
+    "reader_hook": 0x075,
+    "glyph_hook": 0x10D,
+    "choice_hook": 0x2EE,
 }
 HOOKS = HookProgram(
     "Chrono Trigger hooks", HOOK_SOURCE, HOOK_ADDRESS, HOOK_CODE, HOOK_SYMBOLS, cpu="65816"
@@ -397,10 +397,46 @@ def encode_messages(
         if skeleton is not None:
             validate_command_skeleton(skeleton, message.notation)
         encoded[message.key] = encoder.encode(message.notation)
+        check_choices(message, encoded[message.key])
     places = [(message.table, message.index) for message in messages]
     if len(set(places)) != len(places):
         raise ClassicRetroError(ErrorCode.DUPLICATE_ENTRY_ID, "Two entries translate one message")
     return encoded
+
+
+def check_choices(message: ChronoTriggerMessage, encoded: EncodedMessage) -> None:
+    """A decision's ``{choice}`` lines on the lines its event makes choices.
+
+    The event names the first and the last line of the message's last box the
+    player chooses between (``message.choices``), and takes the answer by its line:
+    a choice the layout puts on another line points the cursor at the wrong answer.
+    A message the game asks no choice of has no ``{choice}`` line. Only a laid-out
+    message (with the font) has its lines to check."""
+    if encoded.boxes is None:
+        return
+    found = [
+        (box, number)
+        for box, lines in enumerate(encoded.boxes)
+        for number, line in enumerate(lines)
+        if line.choice
+    ]
+    if message.choices is None:
+        if found:
+            raise ClassicRetroError(
+                ErrorCode.INVALID_TRANSLATION_DOCUMENT,
+                f"Message {message.key} has a {{choice}} line, but the game asks no choice",
+            )
+        return
+    first, last = message.choices
+    final = len(encoded.boxes) - 1
+    expected = [(final, number) for number in range(first, last + 1)]
+    if found != expected:
+        laid = ", ".join(f"box {box + 1} line {number + 1}" for box, number in found) or "none"
+        raise ClassicRetroError(
+            ErrorCode.INVALID_TRANSLATION_DOCUMENT,
+            f"Message {message.key}: the game's choices are lines {first + 1} to {last + 1} "
+            f"of its last box ({final + 1}); the translation's {{choice}} lines are {laid}",
+        )
 
 
 @dataclass(frozen=True, slots=True)
@@ -541,7 +577,7 @@ def mirror_ranges() -> list[tuple[int, int]]:
 
 
 def expanded(rom: bytes) -> bytearray:
-    """The ROM with its two added banks: the header an ExHiROM's of 6 MiB, the upper
+    """The ROM with its 32 added banks ($40-$5F): the header an ExHiROM's of 6 MiB, the upper
     halves mirrored; nothing else yet."""
     output = bytearray(rom) + bytes((EXPANSION_FILL,)) * (EXPANDED_SIZE - len(rom))
     output[MAP_MODE_BYTE] = MAP_MODES[EXPANDED_SIZE]

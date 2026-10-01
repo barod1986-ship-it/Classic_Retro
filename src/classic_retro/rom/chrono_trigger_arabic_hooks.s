@@ -188,6 +188,7 @@ setup_hook:
     tya
     sta TEXT+2
     bra @done
+    .a16                            ; from the tests above, A is 16 bits
 @skip:
     txa
     clc
@@ -402,7 +403,8 @@ island:
     jml GLYPH_RTS
 
 ; next_char: A (16-bit) = the character at SOURCE + Y, Y moved past it. A
-; number's digits (state 2) are the font's digit codes.
+; number's digits (state 2) are raw digits, 0 to 9, which become the font's
+; digit codes; only in a name or an item do $01 and $02 lead a two-byte code.
     .a8
 next_char:
     rep #$20
@@ -412,6 +414,16 @@ next_char:
     iny
     sep #$20
     .a8
+    xba                             ; B = the byte
+    lda STATE
+    cmp #$02
+    bne @text
+    xba
+    clc
+    adc #$D4                        ; a digit: the font's code for it
+    bra @one
+@text:
+    xba
     cmp #$03
     bcs @one
     cmp #$01                        ; $01 and $02: a two-byte code
@@ -423,16 +435,6 @@ next_char:
     rts
     .a8
 @one:
-    xba
-    lda STATE
-    cmp #$02
-    bne @plain
-    xba
-    clc
-    adc #$D4
-    xba
-@plain:
-    xba
     rep #$20
     .a16
     and #$00FF

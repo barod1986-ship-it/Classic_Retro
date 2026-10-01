@@ -27,7 +27,8 @@ lays each box out itself, a word at a time, in the lines of a box
 ``LAST_PEN``). ``{line}`` ends a line where it stands; ``{box auto}`` starts
 a box that does not wait for the button, as the game's timed scenes do after
 a pause; ``{choice}`` at a line's start leaves the choice cursor its room at
-the line's right (``CHOICE_PEN``); ``{pause 00}``, which closes the box,
+the line's right (``CHOICE_PEN``), on the lines the game's event makes the
+choices (the build checks them); ``{pause 00}``, which closes the box,
 starts the message over: the text after it is laid out as a message of its
 own, as the game shows it. A message that starts with a speaker's name and a
 colon has its other lines and boxes indented, as the game's English does. A
@@ -534,11 +535,13 @@ def message_characters(notation: str) -> set[str]:
 
 @dataclass(frozen=True, slots=True)
 class LaidLine:
-    """A line: its bytes, where its pen starts and where it ends."""
+    """A line: its bytes, where its pen starts and where it ends, and whether it is a
+    choice's line (``{choice}``)."""
 
     data: bytes
     start: int
     end: int
+    choice: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -628,7 +631,7 @@ class ChronoTriggerArabicEncoder:
                 codes, width = self.word(word)
                 gap = space_width if written else 0
                 if written and self.font is not None and pen + gap + width > LAST_PEN:
-                    lines.append(LaidLine(bytes(line), start, pen))
+                    lines.append(LaidLine(bytes(line), start, pen, parsed.choice))
                     # The engine starts the next line at the indent, as after a {line}.
                     start = indent
                     lead = _choice_lead(start, space_width) if parsed.choice else 0
@@ -645,7 +648,7 @@ class ChronoTriggerArabicEncoder:
                         ErrorCode.TEXT_BOX_OVERFLOW,
                         f"A word needs {width}px; a line holds {LAST_PEN - origin}px",
                     )
-            lines.append(LaidLine(bytes(line), start, pen))
+            lines.append(LaidLine(bytes(line), start, pen, parsed.choice))
         return lines
 
 

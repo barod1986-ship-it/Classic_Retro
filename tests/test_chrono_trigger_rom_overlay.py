@@ -145,7 +145,16 @@ def _messages(rom: bytes | None = None) -> tuple[ChronoTriggerMessage, ...]:
         index = int(key.rsplit(".", 1)[1])
         (pointer,) = struct.unpack_from("<H", rom, table.address + 2 * index)
         data = string_bytes(rom, (table.address & ~0xFFFF) + pointer)
-        out.append(ChronoTriggerMessage(key, table.address, index, _digest(data), ARABIC[key]))
+        out.append(
+            ChronoTriggerMessage(
+                key,
+                table.address,
+                index,
+                _digest(data),
+                ARABIC[key],
+                choices=script.DECISIONS.get(key),
+            )
+        )
     return tuple(out)
 
 
@@ -517,22 +526,31 @@ def test_the_output_is_read_back_before_it_is_accepted(built):
             overlay._verify_output(bytes(tampered), rom, writes, messages, encoded)
         assert caught.value.code is ErrorCode.BUILD_VALIDATION_FAILED, what
         assert what in str(caught.value), what
-    # A wrong checksum in either header is caught.
+    # The header's copy is a mirror: a checksum changed in one header alone is caught
+    # there; changed the same in both, by the checksum's own check.
     for at in (overlay.CHECKSUM, overlay.HEADER_COPY + 0x1C):
         wrong = bytearray(result.rom)
         wrong[at] ^= 0x01
         with pytest.raises(ClassicRetroError) as caught:
             overlay._verify_output(bytes(wrong), rom, writes, messages, encoded)
-        assert "checksum" in str(caught.value) or "added banks" in str(caught.value)
-    # A list of tables that has no end, or is out of order, is caught through the reader.
+        assert "added banks differ" in str(caught.value)
+    wrong = bytearray(result.rom)
+    for at in (overlay.CHECKSUM, overlay.HEADER_COPY + 0x1C):
+        wrong[at] ^= 0x01
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay._verify_output(bytes(wrong), rom, writes, messages, encoded)
+    assert "checksum is wrong" in str(caught.value)
+    # A list of tables that has no end, or is out of order, is caught through the reader:
+    # the list's room filled with tables of no strings, each a good entry, in order.
     unended = bytearray(result.rom)
     at = overlay.rom_offset(overlay.TABLE_LIST)
-    unended[at : overlay.rom_offset(overlay.TABLE_LIST_END)] = b"\x01" * (
-        overlay.TABLE_LIST_END - overlay.TABLE_LIST
-    )
+    end = overlay.rom_offset(overlay.TABLE_LIST_END)
+    for number, spot in enumerate(range(at + 2 * overlay.TABLE_ENTRY, end, overlay.TABLE_ENTRY)):
+        struct.pack_into("<HBHHB", unended, spot, 0xBA02 + 2 * number, 0xFC, 0, 0, 0x41)
     with pytest.raises(ClassicRetroError) as caught:
         overlay.read_redirects(bytes(unended))
     assert caught.value.code is ErrorCode.BUILD_VALIDATION_FAILED
+    assert "no end" in str(caught.value)
     swapped = bytearray(result.rom)
     swapped[at : at + 16] = result.rom[at + 8 : at + 16] + result.rom[at : at + 8]
     with pytest.raises(ClassicRetroError) as caught:
@@ -549,6 +567,35 @@ def test_the_checksum_counts_the_added_banks_twice():
     for at in (overlay.CHECKSUM, overlay.HEADER_COPY + 0x1C):
         assert struct.unpack_from("<HH", rom, at) == (checksum ^ 0xFFFF, checksum)
     assert overlay.checksum_of(bytes(rom)) == checksum
+
+
+def test_a_decisions_choices_stay_on_the_lines_its_event_names(font_path):
+    """The bed's question (truce.014) is a decision box whose event makes lines 2 and 3
+    of its last box the choices; the cursor and the answer follow those lines."""
+    rom = _rom()
+    by_key = {message.key: message for message in _messages()}
+    nap = by_key["truce.014"]
+    assert nap.choices == script.DECISIONS["truce.014"] == (1, 2)
+    assert _build(rom, font_path, messages=(nap,)).rom
+    for notation in (
+        "غفوة؟{line}…{line}{choice}نعم.{line}{choice}لا.",  # a line late
+        "{choice}نعم.{line}{choice}لا.",  # a line early
+        "غفوة؟\n{choice}نعم.{line}{choice}لا.",  # the box's first lines
+        "غفوة؟{line}{choice}نعم.{line}{choice}لا.\nحسنا.",  # not in the last box
+        "غفوة؟{line}{choice}نعم.{line}لا.",  # a choice's line unmarked
+    ):
+        with pytest.raises(ClassicRetroError) as caught:
+            _build(rom, font_path, messages=(dataclasses.replace(nap, notation=notation),))
+        assert caught.value.code is ErrorCode.INVALID_TRANSLATION_DOCUMENT, notation
+        assert "lines 2 to 3 of its last box" in str(caught.value), notation
+    # No {choice} where the game asks nothing.
+    mother = dataclasses.replace(by_key["truce.006"], notation="الأم: انهض!{line}{choice}نعم.")
+    with pytest.raises(ClassicRetroError) as caught:
+        _build(rom, font_path, messages=(mother,))
+    assert "the game asks no choice" in str(caught.value)
+    # Every decision pinned is a message of the two tables, its lines in a box of four.
+    for key, (first, last) in script.DECISIONS.items():
+        assert key.rsplit(".", 1)[0] in TABLES and 0 <= first < last <= 3, key
 
 
 def test_a_translation_keeps_the_originals_commands(font_path):
