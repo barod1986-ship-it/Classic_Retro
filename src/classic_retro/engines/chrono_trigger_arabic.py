@@ -24,17 +24,29 @@ punctuation the reference font lacks or draws too small is drawn by hand
 A translation's notation is a line for each box of the message: the encoder
 lays each box out itself, a word at a time, in the lines of a box
 (``MAX_LINES``) as wide as the game's (from the pen at ``LINE_START`` to
-``LAST_PEN``). A message that starts with a speaker's name and a colon has
-its other lines and boxes indented, as the game's English does. A ``{name}``
-token writes that member's name: its width is reckoned as the widest name
-the game lets the player give (``NAME_WIDTH``).
+``LAST_PEN``). ``{line}`` ends a line where it stands; ``{box auto}`` starts
+a box that does not wait for the button, as the game's timed scenes do after
+a pause; ``{choice}`` at a line's start leaves the choice cursor its room at
+the line's right (``CHOICE_PEN``), on the lines the game's event makes the
+choices (the build checks them); ``{pause 00}``, which closes the box,
+starts the message over: the text after it is laid out as a message of its
+own, as the game shows it. A message that starts with a speaker's name and a
+colon has its other lines and boxes indented, as the game's English does. A
+``{name}`` token writes that member's name: its width is reckoned as the
+widest name the game lets the player give (``NAME_WIDTH``); ``{member 1}``,
+``{Epoch}`` and ``{code 11}`` write a name the same way, ``{item}`` and
+``{code 12 xx}`` an item's or a technique's name (``ITEM_WIDTH``),
+``{code 0D}``, ``{code 0E}`` and ``{code 0F}`` a number of three, five or
+eight digits (``DIGIT_WIDTH``), and ``{pause xx}`` passes to the game
+(``command_piece``).
 
 A translation keeps the original's commands: its skeleton
-(``notation_skeleton``: every token but ``{line}``, in order, as the notation
-writes it) must equal the original's
+(``notation_skeleton``: every command it writes, in order, as the engine's
+skeleton reads them) must equal the original's
 (``engines.chrono_trigger.command_skeleton``), which leaves out the same
-layout the encoder writes itself: the new lines and the new boxes, plain or
-indented, waiting for the button or not (``engines.chrono_trigger.LAYOUT_CODES``).
+layout the encoder writes itself: the new lines and the new boxes after the
+button, plain or indented (``engines.chrono_trigger.LAYOUT_CODES``), and the
+word "Nadia", which the translation writes in Arabic.
 ``validate_command_skeleton`` refuses a translation that drops, adds or moves
 any other code; ``{Crono}`` stands for both codes that write his name.
 """
@@ -50,16 +62,24 @@ from PIL import Image, ImageFont
 
 from classic_retro.arabic.glyph_codes import GlyphCodes, assign_glyph_codes
 from classic_retro.arabic.logical import check_logical_arabic, no_glyph
-from classic_retro.arabic.paint import reject_combining_marks, reject_mirrored, rtl_paint_order
+from classic_retro.arabic.paint import (
+    MIRRORED_BRACKETS,
+    reject_combining_marks,
+    reject_mirrored,
+    rtl_paint_order,
+)
 from classic_retro.arabic.repertoire import arabic_presentation_repertoire, legacy_renderer_pipeline
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.chrono_trigger import (
     BOX,
+    BOX_AUTO,
+    BOX_AUTO_INDENTED,
     BOX_INDENTED,
     END,
     LINE,
     LINE_INDENTED,
     NAMES,
+    PAUSE,
     command_skeleton,
 )
 from classic_retro.font.arabic_outline import (
@@ -113,7 +133,19 @@ PUNCTUATION: dict[str, tuple[tuple[str, ...], int]] = {
     "،": ((".#", "##", "##"), 5),
     "؛": ((".#", "##", "##", "..", "##", "##"), 2),
     "؟": ((".###.", "#...#", "#....", ".##..", "..#..", ".....", "..#.."), 0),
+    # The quotes and the brackets: a right-to-left run shows each mirrored, and
+    # the painter does not mirror, so each is drawn as its mirror image.
+    "«": (("#.#..", ".#.#.", "..#.#", ".#.#.", "#.#.."), 3),
+    "»": (("..#.#", ".#.#.", "#.#..", ".#.#.", "..#.#"), 3),
+    "(": (("#..", ".#.", "..#", "..#", "..#", "..#", "..#", "..#", ".#.", "#.."), 0),
+    ")": (("..#", ".#.", "#..", "#..", "#..", "#..", "#..", "#..", ".#.", "..#"), 0),
+    # The note the game's font has, for a song.
+    "♪": (
+        ("...#..", "...##.", "...#.#", "...#..", "...#..", "...#..", ".###..", "####..", ".##..."),
+        0,
+    ),
 }
+MIRRORED_SIGNS = frozenset("()«»")
 # Hamza above alef reaches above the cell: the font's alef, cut below a hamza
 # drawn on the top rows. The tail and dots of final and isolated yeh reach
 # below it: those forms are raised a row, the final keeping its joining pixel.
@@ -126,15 +158,38 @@ RAISED_FORMS = frozenset("ﻱﻲ")
 MIRROR = 256
 LINE_START = 8
 LINE_INDENT = 20
+# A choice's line: the cursor's two tiles and a gap, at the line's right.
+CHOICE_PEN = 28
 LAST_PEN = 240
 MAX_LINES = 4
 # A name the player gives: five letters, the widest of the name screen's 11
-# pixels each.
+# pixels each; an item's or a technique's name, the widest of the game's; a
+# digit of the game's font, the widest.
 NAME_WIDTH = 5 * 11
+ITEM_WIDTH = 80
+DIGIT_WIDTH = 8
 NAME_CODES = {name: code for code, name in NAMES.items()}
+MEMBER_CODES = {"member 1": 0x1B, "member 2": 0x1C, "member 3": 0x1D, "Epoch": 0x20, "item": 0x1F}
+# The codes a translation writes with ``{code xx}``, and the width the layout
+# reckons for what the game draws there; ``{code 12 xx}`` takes its byte.
+CODE_WIDTHS = {
+    0x0D: 3 * DIGIT_WIDTH,
+    0x0E: 5 * DIGIT_WIDTH,
+    0x0F: 8 * DIGIT_WIDTH,
+    0x10: 0,
+    0x11: NAME_WIDTH,
+    0x12: ITEM_WIDTH,
+}
 LINE_BREAK = "{line}"
+BOX_AUTO_TOKEN = "{box auto}"
+CHOICE_TOKEN = "{choice}"
+MESSAGE_END_TOKEN = "{pause 00}"
 _TOKEN = re.compile(r"\{([^{}]*)\}")
-_SPEAKER = re.compile(r"^[^:{}]{1,24}: ")
+_PAUSE_TOKEN = re.compile(r"^pause ([0-9A-F]{2})$")
+_CODE_TOKEN = re.compile(r"^code ([0-9A-F]{2})(?: ([0-9A-F]{2}))?$")
+_BOX_SPLIT = re.compile(r"(\n|\{box auto\})")
+# A speaker's name and a colon at a message's start: a name the game writes counts.
+_SPEAKER = re.compile(r"^(?:\{[^{}]*\}|[^:{}\n]){1,30}: ")
 _AROUND = ((1, 0), (0, 1))
 
 
@@ -305,10 +360,18 @@ def paint_text(text: str) -> str:
     """Logical text in the order it is painted from the right, its letters shaped."""
     check_logical_arabic(text, PROFILE)
     stream = TokenStream((TextToken(text),))
-    reject_mirrored(stream, PROFILE)
+    reject_mirrored(stream, PROFILE, MIRRORED_BRACKETS - MIRRORED_SIGNS)
     reject_combining_marks(stream, PROFILE)
     painted = rtl_paint_order(legacy_renderer_pipeline(), stream)
     return "".join(token.text for token in painted.tokens if isinstance(token, TextToken))
+
+
+@dataclass(frozen=True, slots=True)
+class Command:
+    """A code a translation writes: its bytes and the width the layout reckons."""
+
+    data: bytes
+    width: int
 
 
 def name_code(token: str) -> int:
@@ -318,38 +381,138 @@ def name_code(token: str) -> int:
     return NAME_CODES[token]
 
 
-def _pieces(word: str) -> list[str | int]:
-    """A word's text runs and names, in reading order."""
-    out: list[str | int] = []
+def command_piece(token: str) -> Command:
+    """The command a token of the notation writes, or the error for one it cannot."""
+    if token in NAME_CODES:
+        return Command(bytes((NAME_CODES[token],)), NAME_WIDTH)
+    if token in MEMBER_CODES:
+        code = MEMBER_CODES[token]
+        return Command(bytes((code,)), ITEM_WIDTH if token == "item" else NAME_WIDTH)
+    pause = _PAUSE_TOKEN.match(token)
+    if pause:
+        return Command(bytes((PAUSE, int(pause.group(1), 16))), 0)
+    code_token = _CODE_TOKEN.match(token)
+    if code_token:
+        code = int(code_token.group(1), 16)
+        argument = code_token.group(2)
+        if code in CODE_WIDTHS and (argument is None) == (code != 0x12):
+            data = bytes((code,)) if argument is None else bytes((code, int(argument, 16)))
+            return Command(data, CODE_WIDTHS[code])
+    raise ClassicRetroError(ErrorCode.UNSUPPORTED_CONTROL_CODE, f"No token {{{token}}}")
+
+
+def _pieces(word: str) -> list[str | Command]:
+    """A word's text runs and commands, in reading order."""
+    out: list[str | Command] = []
     at = 0
     for match in _TOKEN.finditer(word):
         if match.start() > at:
             out.append(word[at : match.start()])
-        out.append(name_code(match.group(1)))
+        out.append(command_piece(match.group(1)))
         at = match.end()
     if at < len(word):
         out.append(word[at:])
     return out
 
 
-def _words(segment: str) -> list[str]:
-    words = segment.strip().split(" ")
+def _words(segment: str) -> list[list[str | Command]]:
+    """A line's words, split at the spaces outside its tokens (``{pause 0F}`` holds
+    one), each its pieces; an empty line has none, and an empty word (two spaces, a
+    space at an end) is refused."""
+    if not segment:
+        return []
+    words: list[list[str | Command]] = [[]]
+
+    def text(run: str) -> None:
+        for number, part in enumerate(run.split(" ")):
+            if number:
+                words.append([])
+            if part:
+                words[-1].append(part)
+
+    at = 0
+    for match in _TOKEN.finditer(segment):
+        text(segment[at : match.start()])
+        words[-1].append(command_piece(match.group(1)))
+        at = match.end()
+    text(segment[at:])
     if not all(words):
         raise ClassicRetroError(
-            ErrorCode.UNENCODABLE_TEXT, "A line of the message is empty or has two spaces"
+            ErrorCode.UNENCODABLE_TEXT, "A line of the message has two spaces, or one at an end"
         )
     return words
 
 
+@dataclass(frozen=True, slots=True)
+class ParsedLine:
+    """A line of the notation: whether it is a choice's, and its words' pieces."""
+
+    choice: bool
+    words: tuple[tuple[str | Command, ...], ...]
+
+
+@dataclass(frozen=True, slots=True)
+class ParsedBox:
+    """A box of the notation: whether it follows without the button, and its lines."""
+
+    auto: bool
+    lines: tuple[ParsedLine, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class ParsedMessage:
+    """A message of the notation, as the game shows one: its boxes, the first of
+    which decides whether a speaker's name indents the rest."""
+
+    speaker: bool
+    boxes: tuple[ParsedBox, ...]
+
+
+def _parse_line(text: str) -> ParsedLine:
+    choice = text.startswith(CHOICE_TOKEN)
+    if choice:
+        text = text[len(CHOICE_TOKEN) :]
+    if CHOICE_TOKEN in text:
+        raise ClassicRetroError(
+            ErrorCode.UNENCODABLE_TEXT, f"{CHOICE_TOKEN} goes at the start of a line"
+        )
+    return ParsedLine(choice, tuple(tuple(word) for word in _words(text)))
+
+
+def parse_notation(notation: str) -> tuple[ParsedMessage, ...]:
+    """The notation's messages (one after each ``{pause 00}``), their boxes and lines."""
+    messages = []
+    for text in notation.split(MESSAGE_END_TOKEN):
+        parts = _BOX_SPLIT.split(text)
+        boxes = []
+        separator = ""
+        for number, part in enumerate(parts):
+            if number % 2:
+                separator = part
+                continue
+            lines = tuple(_parse_line(line) for line in part.split(LINE_BREAK))
+            boxes.append(ParsedBox(separator == BOX_AUTO_TOKEN, lines))
+        messages.append(ParsedMessage(bool(_SPEAKER.match(parts[0])), tuple(boxes)))
+    return tuple(messages)
+
+
 def notation_skeleton(notation: str) -> tuple[str, ...]:
-    """A translation's names in order, in the notation, ``{line}`` left out: what
-    ``engines.chrono_trigger.command_skeleton`` gives for the bytes the encoder writes."""
-    return tuple(
-        part
-        for match in _TOKEN.finditer(notation)
-        if f"{{{match.group(1)}}}" != LINE_BREAK
-        for part in command_skeleton(bytes((name_code(match.group(1)),)))
-    )
+    """A translation's commands in order, in the notation, the layout left out: what
+    ``engines.chrono_trigger.command_skeleton`` gives for the bytes the encoder
+    writes."""
+    stream = bytearray()
+    for number, message in enumerate(parse_notation(notation)):
+        if number:
+            stream += bytes((PAUSE, 0x00))
+        for box in message.boxes:
+            if box.auto:
+                stream.append(BOX_AUTO)
+            for line in box.lines:
+                for word in line.words:
+                    for piece in word:
+                        if isinstance(piece, Command):
+                            stream += piece.data
+    return command_skeleton(bytes(stream))
 
 
 def validate_command_skeleton(source_skeleton: Sequence[str], notation: str) -> None:
@@ -360,22 +523,25 @@ def validate_command_skeleton(source_skeleton: Sequence[str], notation: str) -> 
 def message_characters(notation: str) -> set[str]:
     """The characters a message paints."""
     used = {" "}
-    for box in notation.split("\n"):
-        for segment in box.split(LINE_BREAK):
-            for word in _words(segment):
-                for piece in _pieces(word):
-                    if isinstance(piece, str):
-                        used |= set(paint_text(piece))
+    for message in parse_notation(notation):
+        for box in message.boxes:
+            for line in box.lines:
+                for word in line.words:
+                    for piece in word:
+                        if isinstance(piece, str):
+                            used |= set(paint_text(piece))
     return used
 
 
 @dataclass(frozen=True, slots=True)
 class LaidLine:
-    """A line: its bytes, where its pen starts and where it ends."""
+    """A line: its bytes, where its pen starts and where it ends, and whether it is a
+    choice's line (``{choice}``)."""
 
     data: bytes
     start: int
     end: int
+    choice: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -402,14 +568,14 @@ class ChronoTriggerArabicEncoder:
             output.append(code)
         return bytes(output)
 
-    def word(self, word: str) -> tuple[bytes, int]:
+    def word(self, word: str | Sequence[str | Command]) -> tuple[bytes, int]:
         """A word's bytes, in the order they are painted from the right, and its width."""
         data = bytearray()
         width = 0
-        for piece in _pieces(word):
-            if isinstance(piece, int):
-                data.append(piece)
-                width += NAME_WIDTH
+        for piece in _pieces(word) if isinstance(word, str) else word:
+            if isinstance(piece, Command):
+                data += piece.data
+                width += piece.width
             else:
                 codes = self.codes(paint_text(piece))
                 data += codes
@@ -418,59 +584,79 @@ class ChronoTriggerArabicEncoder:
         return bytes(data), width
 
     def encode(self, notation: str) -> EncodedMessage:
-        boxes = notation.split("\n")
-        speaker = bool(_SPEAKER.match(boxes[0]))
         data = bytearray()
         laid: list[tuple[LaidLine, ...]] = []
-        for number, box in enumerate(boxes):
+        for number, message in enumerate(parse_notation(notation)):
             if number:
-                data.append(BOX_INDENTED if speaker else BOX)
-            lines = self.box(box, first=not number, speaker=speaker)
-            for index, line in enumerate(lines):
-                if index:
-                    data.append(LINE_INDENTED if speaker else LINE)
-                data += line.data
-            if self.font is not None and len(lines) > MAX_LINES:
-                raise ClassicRetroError(
-                    ErrorCode.TEXT_BOX_OVERFLOW,
-                    f"Box {number + 1} needs {len(lines)} lines; the box shows {MAX_LINES}",
-                )
-            laid.append(tuple(lines))
+                data += bytes((PAUSE, 0x00))
+            speaker = message.speaker
+            for box_number, box in enumerate(message.boxes):
+                if box_number:
+                    if box.auto:
+                        data.append(BOX_AUTO_INDENTED if speaker else BOX_AUTO)
+                    else:
+                        data.append(BOX_INDENTED if speaker else BOX)
+                lines = self.box(box, first=not box_number, speaker=speaker)
+                for index, line in enumerate(lines):
+                    if index:
+                        data.append(LINE_INDENTED if speaker else LINE)
+                    data += line.data
+                if self.font is not None and len(lines) > MAX_LINES:
+                    raise ClassicRetroError(
+                        ErrorCode.TEXT_BOX_OVERFLOW,
+                        f"Box {len(laid) + 1} needs {len(lines)} lines; the box shows {MAX_LINES}",
+                    )
+                laid.append(tuple(lines))
         data.append(END)
         return EncodedMessage(bytes(data), tuple(laid) if self.font is not None else None)
 
-    def box(self, box: str, *, first: bool, speaker: bool) -> list[LaidLine]:
+    def box(self, box: ParsedBox | str, *, first: bool, speaker: bool) -> list[LaidLine]:
         """A box's lines, a word at a time: a line breaks where the next word would pass
         ``LAST_PEN``, and at each ``{line}``. Under a speaker's name every line but the
-        message's first is indented."""
+        message's first is indented, a line the layout breaks too; a choice's line starts
+        with spaces that take the pen on to ``CHOICE_PEN``."""
+        if isinstance(box, str):
+            box = ParsedBox(False, tuple(_parse_line(line) for line in box.split(LINE_BREAK)))
         space = self.codes(" ")
         space_width = self.font.width(space[0]) if self.font is not None else SPACE_WIDTH
         indent = LINE_INDENT if speaker else LINE_START
         lines: list[LaidLine] = []
-        start = LINE_START if first else indent
-        for number, segment in enumerate(box.split(LINE_BREAK)):
-            if number:
-                start = indent
-            line = bytearray()
-            pen = start
-            for word in _words(segment):
+        for number, parsed in enumerate(box.lines):
+            start = LINE_START if first and not number else indent
+            lead = _choice_lead(start, space_width) if parsed.choice else 0
+            line = bytearray(space * lead)
+            pen = origin = start + lead * space_width
+            written = False
+            for word in parsed.words:
                 codes, width = self.word(word)
-                gap = space_width if line else 0
-                if line and self.font is not None and pen + gap + width > LAST_PEN:
-                    lines.append(LaidLine(bytes(line), start, pen))
+                gap = space_width if written else 0
+                if written and self.font is not None and pen + gap + width > LAST_PEN:
+                    lines.append(LaidLine(bytes(line), start, pen, parsed.choice))
+                    # The engine starts the next line at the indent, as after a {line}.
                     start = indent
-                    line, pen, gap = bytearray(), start, 0
+                    lead = _choice_lead(start, space_width) if parsed.choice else 0
+                    line = bytearray(space * lead)
+                    pen = origin = start + lead * space_width
+                    gap = 0
                 if gap:
                     line += space
                 line += codes
                 pen += gap + width
+                written = True
                 if self.font is not None and pen > LAST_PEN:
                     raise ClassicRetroError(
                         ErrorCode.TEXT_BOX_OVERFLOW,
-                        f"A word needs {width}px; a line holds {LAST_PEN - start}px",
+                        f"A word needs {width}px; a line holds {LAST_PEN - origin}px",
                     )
-            lines.append(LaidLine(bytes(line), start, pen))
+            lines.append(LaidLine(bytes(line), start, pen, parsed.choice))
         return lines
+
+
+def _choice_lead(start: int, space_width: int) -> int:
+    """The spaces a choice's line starts with: the engine starts the line's pen at
+    ``start``, and the spaces take it on to ``CHOICE_PEN``, as the English indents its
+    choices, so the cursor's tiles on the line's right hold none of the text."""
+    return max(0, -(-(CHOICE_PEN - start) // space_width))
 
 
 # ---------------------------------------------------------------------------
@@ -505,7 +691,8 @@ def _draw(image: Image.Image, glyph: CtGlyph, x: int, top: int) -> None:
 
 def message_preview(encoded: EncodedMessage, font: CtFont) -> Image.Image:
     """Each box as the game shows it: 256 pixels, a line every 16 rows, the glyphs at
-    the mirror of the pen; a name is a grey block as wide as ``NAME_WIDTH``."""
+    the mirror of the pen; a name, a number or an item is a grey block as wide as the
+    layout reckons it."""
     if encoded.boxes is None:
         raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, "A preview needs the font")
     height = MAX_LINES * LINE_HEIGHT + 2 * PREVIEW_MARGIN
@@ -518,16 +705,35 @@ def message_preview(encoded: EncodedMessage, font: CtFont) -> Image.Image:
         for row, line in enumerate(box):
             pen = line.start
             y = top + PREVIEW_MARGIN + row * LINE_HEIGHT
-            for code in line.data:
-                if code in NAMES:
-                    for dx in range(NAME_WIDTH):
-                        image.putpixel((MIRROR - pen - NAME_WIDTH + dx, y + 6), (150, 150, 150))
-                    pen += NAME_WIDTH
+            at = 0
+            while at < len(line.data):
+                code = line.data[at]
+                if code < ARABIC_CODES[0]:
+                    width, length = _command_width(line.data, at)
+                    for dx in range(width):
+                        image.putpixel((MIRROR - pen - width + dx, y + 6), (150, 150, 150))
+                    pen += width
+                    at += length
                     continue
                 glyph = font.glyphs[code]
                 _draw(image, glyph, MIRROR - pen - glyph.width, y)
                 pen += glyph.width
+                at += 1
     return image
+
+
+def _command_width(data: bytes, at: int) -> tuple[int, int]:
+    """The width the layout reckons for the command at ``at``, and its length."""
+    code = data[at]
+    if code in NAMES or code in (0x1B, 0x1C, 0x1D, 0x20, 0x11):
+        return NAME_WIDTH, 1
+    if code == 0x1F:
+        return ITEM_WIDTH, 1
+    if code == 0x12:
+        return ITEM_WIDTH, 2
+    if code == PAUSE:
+        return 0, 2
+    return CODE_WIDTHS.get(code, 0), 1
 
 
 def messages_sheet(images: list[tuple[str, Image.Image]]) -> Image.Image:

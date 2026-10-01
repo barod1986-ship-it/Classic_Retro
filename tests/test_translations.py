@@ -145,7 +145,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "sotn": 8,
         "gran-turismo": 3,
         "ridge-racer": 3,
-        "chrono-trigger": 3,
+        "chrono-trigger": 855,
         "link-to-the-past": 3,
         "shining-force-2": 3,
     }
@@ -392,13 +392,17 @@ def test_ridge_racer_strings_are_one_line_with_buttons_only_in_the_small_font():
 
 def test_chrono_trigger_messages_are_boxes_of_arabic_with_their_names():
     messages = chrono_trigger_arabic_messages()
-    assert [message.index for message in messages] == [6, 8, 11]
+    by_key = {message.key: message for message in messages}
+    assert {"truce.006", "truce.008", "truce.011"} <= set(by_key)
     for message in messages:
-        # The mother speaks: her name, a colon, then the message; a line a box.
-        assert message.notation.startswith("الأم: "), message.key
+        assert message.key == f"{message.table_key}.{message.index:03d}", message.key
+        # A line a box, none empty.
         assert all(box.strip() for box in message.notation.split("\n")), message.key
-    assert "{Lucca}" in messages[2].notation
-    assert messages[1].notation.count("\n") == 1
+    # The mother speaks: her name, a colon, then the message.
+    for key in ("truce.006", "truce.008", "truce.011"):
+        assert by_key[key].notation.startswith("الأم: "), key
+    assert "{Lucca}" in by_key["truce.011"].notation
+    assert by_key["truce.008"].notation.count("\n") == 1
 
 
 def test_link_to_the_past_messages_are_pages_of_arabic_with_the_name():

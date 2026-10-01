@@ -11,27 +11,37 @@ from fontTools.pens.ttGlyphPen import TTGlyphPen
 from classic_retro.arabic.glyph_codes import GlyphCodes
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.chrono_trigger import (
+    BOX,
+    BOX_AUTO,
+    BOX_AUTO_INDENTED,
     BOX_INDENTED,
     CHARACTERS,
     DICTIONARY_BANK,
     DICTIONARY_TABLE,
+    KEPT_CODES,
     LAYOUT_CODES,
     LINE,
     LINE_INDENTED,
+    PAUSE,
     WIDE_CHARACTERS,
+    WORD_CODES,
     code_notation,
     command_skeleton,
     dictionary,
     string_bytes,
     string_notation,
+    table_count,
     table_string,
 )
 from classic_retro.engines.chrono_trigger_arabic import (
     ARABIC_CODES,
     CELL,
+    CHOICE_PEN,
     CLEAR,
     CORNER,
+    DIGIT_WIDTH,
     INK,
+    ITEM_WIDTH,
     LAST_PEN,
     LINE_INDENT,
     LINE_START,
@@ -45,11 +55,13 @@ from classic_retro.engines.chrono_trigger_arabic import (
     SPACE_WIDTH,
     WIDEST,
     ChronoTriggerArabicEncoder,
+    Command,
     CtFont,
     CtGlyph,
     EncodedMessage,
     build_chrono_trigger_font,
     chrono_trigger_glyph_codes,
+    command_piece,
     font_preview,
     form_glyph,
     glyph_characters,
@@ -58,6 +70,7 @@ from classic_retro.engines.chrono_trigger_arabic import (
     message_preview,
     notation_skeleton,
     paint_text,
+    parse_notation,
     shaded_glyph,
     validate_command_skeleton,
 )
@@ -118,6 +131,9 @@ def test_the_notation_writes_words_names_and_codes(rom):
         "MOM: the bou{line+}{Lucca}{pause 0F}!{box+}{member 1}{code 10}"
     )
     assert string_notation(bytes([0xF1, 0xEE, LINE]), words) == "…♪{line}"
+    assert string_notation(bytes([0x09, 0x0A, 0x07, 0x08, 0x1E]), words) == (
+        "{box auto}{box+ auto}{line wait}{line+ wait}{Nadia}"
+    )
     # 1A reads Crono's name from its own address, as 13 does through the table.
     assert string_notation(bytes([0x1A, 0x12, 0x01, 0x1F, 0x20]), words) == (
         "{Crono}{code 12 01}{item}{Epoch}"
@@ -130,13 +146,23 @@ def test_the_notation_writes_words_names_and_codes(rom):
     assert caught.value.code is ErrorCode.MISSING_TERMINATOR
 
 
-def test_the_command_skeleton_keeps_every_code_but_the_layout_and_the_characters():
-    assert LAYOUT_CODES == set(range(0x05, 0x0D)) and WIDE_CHARACTERS == {0x01, 0x02}
+def test_the_command_skeleton_keeps_every_code_but_the_layout_and_the_words():
+    assert LAYOUT_CODES == {LINE, LINE_INDENTED, BOX, BOX_INDENTED}
+    assert WIDE_CHARACTERS == {0x01, 0x02} and WORD_CODES == {0x1E}
+    assert KEPT_CODES == {0x07: 0x07, 0x08: 0x07, 0x09: 0x09, 0x0A: 0x09}
     data = _code("MOM: ") + bytes(
-        [0x21, LINE_INDENTED, 0x15, 0x03, 0x0F, 0xDE, 0x09, 0x1B, 0x10, 0x01, 0x40, 0x1A]
+        [0x21, LINE_INDENTED, 0x15, 0x03, 0x0F, 0xDE, 0x09, 0x1B, 0x10, 0x01, 0x40, 0x1A, 0x1E]
     )
-    skeleton = ("{Lucca}", "{pause 0F}", "{member 1}", "{code 10}", "{Crono}")
+    skeleton = ("{Lucca}", "{pause 0F}", "{box auto}", "{member 1}", "{code 10}", "{Crono}")
     assert command_skeleton(data) == command_skeleton(data + bytes([0x00, 0x13])) == skeleton
+    # A box or line without the button is kept, its indent left to the encoder.
+    assert command_skeleton(bytes([0x0A, 0x09, 0x08, 0x07, 0x03, 0x00])) == (
+        "{box auto}",
+        "{box auto}",
+        "{line wait}",
+        "{line wait}",
+        "{pause 00}",
+    )
     # Arabic glyph codes, from $21, are text; the codes below keep their meaning.
     assert command_skeleton(bytes([0x21, 0xFF, 0x0C, 0x15, 0x00])) == ("{Lucca}",)
     assert command_skeleton(_code("Go!") + b"\x00") == ()
@@ -151,33 +177,65 @@ def test_the_command_skeleton_keeps_every_code_but_the_layout_and_the_characters
     assert caught.value.code is ErrorCode.MISSING_TERMINATOR
 
 
-def test_a_translations_skeleton_is_its_names_but_the_line_ends():
-    notation = "ب: {Lucca} ب{line}ب\n{Crono} ب"
-    assert notation_skeleton(notation) == ("{Lucca}", "{Crono}")
+def test_a_translations_skeleton_is_its_commands_but_the_layout():
+    notation = "ب: {Lucca} ب{line}ب\n{Crono} ب{pause 0F}{box auto}ب{pause 00}{choice}ب {code 0E}"
+    assert notation_skeleton(notation) == (
+        "{Lucca}",
+        "{Crono}",
+        "{pause 0F}",
+        "{box auto}",
+        "{pause 00}",
+        "{code 0E}",
+    )
     assert notation_skeleton("ب{line}ب\nب") == ()
     # What the encoder writes has the same skeleton, whatever its layout.
     glyph_map = _map(notation)
     encoded = ChronoTriggerArabicEncoder(glyph_map, _font(glyph_map)).encode(notation)
     assert command_skeleton(encoded.data) == notation_skeleton(notation)
     validate_command_skeleton(("{Lucca}",), "ب {Lucca}")
+    validate_command_skeleton(("{box auto}",), "ب{box auto}ب")
     for source, translation in (
         (("{Lucca}",), "ب"),
         ((), "ب {Lucca}"),
         (("{Lucca}", "{Crono}"), "{Crono} ب {Lucca}"),
         (("{pause 0F}",), "ب"),
+        (("{box auto}",), "ب\nب"),
     ):
         with pytest.raises(ClassicRetroError) as caught:
             validate_command_skeleton(source, translation)
         assert caught.value.code is ErrorCode.TOKEN_ORDER_VIOLATION
-    with pytest.raises(ClassicRetroError) as caught:
-        notation_skeleton("{pause 0F}")
-    assert caught.value.code is ErrorCode.UNSUPPORTED_CONTROL_CODE
+    for token in ("{Nadia}", "{code 0C}", "{code 12}", "{code 0D 01}", "{pause 0}", "{Chrono}"):
+        with pytest.raises(ClassicRetroError) as caught:
+            notation_skeleton(token)
+        assert caught.value.code is ErrorCode.UNSUPPORTED_CONTROL_CODE, token
+
+
+def test_the_notations_commands_carry_the_widths_the_layout_reckons():
+    assert command_piece("Lucca") == Command(b"\x15", NAME_WIDTH)
+    assert command_piece("member 2") == Command(b"\x1c", NAME_WIDTH)
+    assert command_piece("Epoch") == Command(b"\x20", NAME_WIDTH)
+    assert command_piece("item") == Command(b"\x1f", ITEM_WIDTH)
+    assert command_piece("pause 0F") == Command(b"\x03\x0f", 0)
+    assert command_piece("code 0D") == Command(b"\x0d", 3 * DIGIT_WIDTH)
+    assert command_piece("code 12 01") == Command(b"\x12\x01", ITEM_WIDTH)
+    assert command_piece("code 11") == Command(b"\x11", NAME_WIDTH)
+    # A message after {pause 00} is laid out as a message of its own: its first box
+    # decides the indent again.
+    messages = parse_notation("ب{pause 00}الأم: ب\nب{box auto}ب")
+    assert [message.speaker for message in messages] == [False, True]
+    assert [box.auto for box in messages[1].boxes] == [False, False, True]
+    assert parse_notation("{Marle}: ب")[0].speaker and parse_notation("أم {Crono}: ب")[0].speaker
 
 
 def test_a_table_points_into_its_own_bank():
     data = bytearray(0x20000)
     struct.pack_into("<3H", data, 0x10000, 0x0006, 0x0010, 0x0020)
     assert table_string(bytes(data), 0x10000, 2) == 0x10020
+    assert table_count(bytes(data), 0x10000) == 3
+    struct.pack_into("<H", data, 0x10100, 0x0100)
+    with pytest.raises(ClassicRetroError) as caught:
+        table_count(bytes(data), 0x10100)
+    assert caught.value.code is ErrorCode.INVALID_TEXT_TABLE
 
 
 # ---------------------------------------------------------------------------
@@ -238,6 +296,46 @@ def test_a_speakers_lines_and_boxes_are_indented():
     plain = encoder.encode("ب{line}ب\nب")
     assert plain.data.count(LINE) == 1 and plain.data.count(0x0B) == 1
     assert [line.start for box in plain.boxes or () for line in box] == [LINE_START] * 3
+    # A box without the button, plain or under a speaker; a choice's line, whose
+    # spaces take the pen on to CHOICE_PEN; an empty line; a pause of nothing
+    # between two messages.
+    auto = encoder.encode("ب{box auto}ب\n{choice}ب{line}ب{pause 00}ب: ب{box auto}ب")
+    assert auto.data.count(BOX_AUTO) == 1 and auto.data.count(BOX_AUTO_INDENTED) == 1
+    assert auto.data.count(bytes((PAUSE, 0x00))) == 1
+    assert auto.boxes is not None
+    assert [line.start for box in auto.boxes[:2] for line in box] == [LINE_START, LINE_START]
+    choice, after = auto.boxes[2]
+    spaces = -(-(CHOICE_PEN - LINE_START) // SPACE_WIDTH)
+    assert (choice.start, after.start) == (LINE_START, LINE_START)
+    assert choice.data == bytes([glyph_map.code(" ")] * spaces + [glyph_map.code(BEH["ISOLATED"])])
+    assert choice.end == LINE_START + spaces * SPACE_WIDTH + 10 >= CHOICE_PEN + 10
+    assert after.data == bytes([glyph_map.code(BEH["ISOLATED"])])
+    assert [line.start for box in auto.boxes[3:] for line in box] == [LINE_START, LINE_INDENT]
+    empty = encoder.encode("{line}ب")
+    assert empty.boxes is not None and [line.data for line in empty.boxes[0]][0] == b""
+    assert empty.data[0] == LINE
+
+
+def test_a_line_the_layout_breaks_starts_where_the_engine_starts_it():
+    words = " ".join(["ببب"] * 12)  # 30 pixels a word, 34 with its space
+    glyph_map = _map("ب: " + words)
+    encoder = ChronoTriggerArabicEncoder(glyph_map, _font(glyph_map))
+    # Under a speaker the engine indents the line after a break.
+    spoken = encoder.encode("ب: " + words)
+    assert spoken.boxes is not None
+    first, second = spoken.boxes[0]
+    assert (first.start, second.start) == (LINE_START, LINE_INDENT)
+    assert spoken.data.count(LINE_INDENTED) == 1
+    assert second.end == LINE_INDENT + 6 * 30 + 5 * SPACE_WIDTH <= LAST_PEN
+    # A choice's line broken in two: each line starts with the spaces.
+    choice = encoder.encode("{choice}" + words)
+    assert choice.boxes is not None
+    spaces = -(-(CHOICE_PEN - LINE_START) // SPACE_WIDTH)
+    lead = bytes([glyph_map.code(" ")] * spaces)
+    assert [line.data[:spaces] for line in choice.boxes[0]] == [lead, lead]
+    assert [line.end for line in choice.boxes[0]] == [
+        LINE_START + spaces * SPACE_WIDTH + 6 * 30 + 5 * SPACE_WIDTH
+    ] * 2
 
 
 def test_lines_break_before_the_word_that_would_pass_the_last_pen():
@@ -267,8 +365,10 @@ def test_a_box_holds_four_lines_and_a_word_a_line():
     assert caught.value.code is ErrorCode.TEXT_BOX_OVERFLOW
     for bad, error in (
         ("ب  ب", ErrorCode.UNENCODABLE_TEXT),
-        ("ب\n", ErrorCode.UNENCODABLE_TEXT),
+        ("ب ", ErrorCode.UNENCODABLE_TEXT),
+        ("ب{choice}ب", ErrorCode.UNENCODABLE_TEXT),
         ("{Chrono}", ErrorCode.UNSUPPORTED_CONTROL_CODE),
+        ("(ب)", ErrorCode.UNENCODABLE_TEXT) if False else ("ب[ب]", ErrorCode.UNENCODABLE_TEXT),
     ):
         with pytest.raises(ClassicRetroError) as caught:
             encoder.encode(bad)
@@ -364,7 +464,7 @@ def test_the_font_is_drawn_at_the_largest_size_its_cell_holds(beh_font):
 def test_previews_show_the_glyphs_at_the_mirror_of_the_pen():
     glyph_map = _map("بب {Crono}")
     font = _font(glyph_map)
-    encoded = ChronoTriggerArabicEncoder(glyph_map, font).encode("بب {Crono}")
+    encoded = ChronoTriggerArabicEncoder(glyph_map, font).encode("بب {Crono}{pause 0F} {code 0D}")
     image = message_preview(encoded, font)
     assert image.width == MIRROR
     y = PREVIEW_MARGIN + 5
@@ -373,6 +473,8 @@ def test_previews_show_the_glyphs_at_the_mirror_of_the_pen():
     # The name, a grey bar left of the word and its space.
     name_x = MIRROR - LINE_START - 20 - SPACE_WIDTH - NAME_WIDTH
     assert image.getpixel((name_x + 1, PREVIEW_MARGIN + 6)) == (150, 150, 150)
+    number_x = name_x - SPACE_WIDTH - 3 * DIGIT_WIDTH
+    assert image.getpixel((number_x + 1, PREVIEW_MARGIN + 6)) == (150, 150, 150)
     atlas = font_preview(font)
     assert atlas.width > 0 and atlas.height > 0
     with pytest.raises(ClassicRetroError):

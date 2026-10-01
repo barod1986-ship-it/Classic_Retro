@@ -20,11 +20,12 @@ ALTTP_SITES = {
     0x0ECAD5: "20e7ee",
     0x0ED313: "20adefeaeaeaeaeaeaea",
 }
-# Chrono Trigger: JSL $DB:8000, JML $DB:803D, JML $DB:80D1.
+# Chrono Trigger: JSL $40:0000, JML $40:0074, JML $40:010C, JML $40:02EC + NOP NOP.
 CHRONO_TRIGGER_SITES = {
-    0xC257F7: "220080db",
-    0xC258B2: "5c3d80db",
-    0xC25DC4: "5cd180db",
+    0xC257F7: "22000040",
+    0xC258B2: "5c750040",
+    0xC25DC4: "5c0d0140",
+    0xC0F05E: "5cee0240eaea",
 }
 # Shining Force II: JMP $042600.L, JMP $042632.L + NOP, JMP $04268A.L + NOP, JSR $04278E.L.
 SF2_SITES = {
@@ -58,9 +59,12 @@ def test_65816_absolute_jumps_reproduce_the_link_to_the_past_sites():
 
 def test_65816_long_jumps_reproduce_the_chrono_trigger_sites():
     hooks = chrono_trigger_arabic.HOOKS
-    assert m65816.jsl_long(hooks.symbol_address("setup_hook")).hex() == "220080db"
-    assert m65816.jml_long(hooks.symbol_address("reader_hook")).hex() == "5c3d80db"
-    assert m65816.jml_long(hooks.symbol_address("glyph_hook")).hex() == "5cd180db"
+    assert m65816.jsl_long(hooks.symbol_address("setup_hook")).hex() == "22000040"
+    assert m65816.jml_long(hooks.symbol_address("reader_hook")).hex() == "5c750040"
+    assert m65816.jml_long(hooks.symbol_address("glyph_hook")).hex() == "5c0d0140"
+    assert m65816.nop_fill(m65816.jml_long(hooks.symbol_address("choice_hook")), 6).hex() == (
+        "5cee0240eaea"
+    )
     assert _patched(chrono_trigger_arabic.SITES) == CHRONO_TRIGGER_SITES
 
 
