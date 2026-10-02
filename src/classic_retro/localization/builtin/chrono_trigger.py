@@ -81,12 +81,14 @@ TARGET = LocalizationTarget(
     kind="rom-overlay",
     strategies=("glyph-font",),
     scope=(
-        "The dialogue table by table: the first two of the game's fifteen string tables, "
-        "855 messages of Crono's house and Truce in 1000 and in 600, Truce Canyon, the "
-        "prison's cell, Lab 32, the Proto Dome, the Sun Keep and the Geno Dome, and of "
+        "The dialogue table by table: three of the game's fifteen string tables, 2058 "
+        "messages of Crono's house and Truce in 1000 and in 600, Truce Canyon, the "
+        "prison's cell, Lab 32, the Proto Dome, the Sun Keep and the Geno Dome; of "
         "Leene Square with the Millennial Fair, the trial, the castle's cellars, Melchior's "
         "hut, Norstein Bekkler's tent, the Tyrano Lair's cells, the Lavos crater, Zeal's "
-        "sealed palace and Death Peak; the other thirteen tables stay English"
+        "sealed palace and Death Peak; and of Castle Guardia in 600 and 1000, the domes of "
+        "2300 A.D., Medina, the End of Time with Gaspar and Spekkio, Ozzie's and Magus's "
+        "scenes, the Blackbird and the Reptites' land; the other twelve tables stay English"
     ),
     guide="docs/CHRONO_TRIGGER_ARABIC_TEST_AR.md",
     notes="docs/CHRONO_TRIGGER_ARABIC_RENDERER.md",
@@ -96,5 +98,5 @@ TARGET = LocalizationTarget(
     build=build,
     extract=extract,
     previews=PREVIEWS,
-    reference_patch_sha256="bee67d1d3fe3d6aad4fb67f8be56951676687d148b1b0996695a5b9e77748231",
+    reference_patch_sha256="62f470a07da507b410d0fa2c258f0f7576bf6da89cae4944f19c8e724212fd53",
 )

@@ -172,7 +172,7 @@ take the pen on to 28, and a line the layout breaks starts where the engine star
 indented under a speaker. Which lines are choices is the event's to say: its decision
 command (`C0`, `Dialog_OpenDecisionBox` at `$C0:3674`) names the first and the last line
 of the message's last box, and takes the answer by its line. The script pins those
-lines for the 48 decisions of the two tables (`DECISIONS`, read from the location
+lines for the 100 decisions of the three tables (`DECISIONS`, read from the location
 events), and the build refuses a translation whose `{choice}` lines are elsewhere, or a
 `{choice}` in another message. `{box auto}`
 starts a box at once (`09`, `0A`), `{pause xx}` passes to the game, and `{pause 00}`
@@ -201,7 +201,7 @@ mirrors, the overlay's data and the fill and nothing else.
 
 ## Translations
 
-`rom/chrono_trigger_arabic_script.py` pins the messages of two whole string tables, by
+`rom/chrono_trigger_arabic_script.py` pins the messages of three whole string tables, by
 their table, their number and the SHA-256 of each with its command skeleton; each entry's
 id is the table's key and the message number.
 
@@ -209,6 +209,7 @@ id is the table's key and the message number.
 |-------|-----|----------|------|
 | `$F7:0000` | `truce` | 0-455 (0 runs on through 5, 63 through 66, 198 and 199, 214 through 217) | Crono's house and Truce in 1000 and in 600, Truce Canyon with the Gate, the prison's cell, Lab 32 with Johnny's race, the Proto Dome with Robo's awakening, the Sun Keep and the Geno Dome |
 | `$FC:BA00` | `fair` | 0-398 | Leene Square with the Millennial Fair and Lucca's Telepod, the trial, the castle's cellars with the Rainbow Shell, Melchior's hut, Norstein Bekkler's tent, the Tyrano Lair's cells, the Lavos crater, Zeal's sealed palace and Death Peak |
+| `$F7:4900` | `guardia` | 0-1202 (330 runs on through 333, 355 through 375, 535 through 547) | Castle Guardia in 600 and 1000 with the King, Queen Leene, the Chancellor and Yakra, the knights and the kitchen; the domes of 2300 A.D. with Doan and the Info center; Medina; the End of Time with Gaspar and Spekkio; Ozzie, Slash, Flea and Magus; the Blackbird and Dalton; the Reptites' land |
 
 The Arabic is in `translations/chrono-trigger.json`, a line a box, `{line}` where a line
 must end, `{choice}` at a choice's line, `{box auto}` for a box at once; its `glossary`
@@ -288,7 +289,7 @@ on the unpatched ROM; `targets extract` writes them all into a workspace.
 
 ## Limits
 
-- Two of the fifteen dialogue tables are in Arabic; every other message, the menus, the
+- Three of the fifteen dialogue tables are in Arabic; every other message, the menus, the
   battles and the rest of the game stay English.
 - 223 glyph codes for all the Arabic; a message holds no Latin letters, and a name is the
   player's, in Latin letters, as an item's name is the game's.

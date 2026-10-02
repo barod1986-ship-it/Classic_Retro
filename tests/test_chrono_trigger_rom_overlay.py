@@ -593,7 +593,7 @@ def test_a_decisions_choices_stay_on_the_lines_its_event_names(font_path):
     with pytest.raises(ClassicRetroError) as caught:
         _build(rom, font_path, messages=(mother,))
     assert "the game asks no choice" in str(caught.value)
-    # Every decision pinned is a message of the two tables, its lines in a box of four.
+    # Every decision pinned is a message of a translated table, its lines in a box of four.
     for key, (first, last) in script.DECISIONS.items():
         assert key.rsplit(".", 1)[0] in TABLES and 0 <= first < last <= 3, key
 

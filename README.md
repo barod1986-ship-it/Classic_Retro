@@ -402,11 +402,13 @@ The nineteenth reference target, and the first on the Super NES, is **Chrono Tri
 Its text engine was read from the ROM, its 65C816 code and the game running, then checked
 against the [dscotton/ct_disassembly](https://github.com/dscotton/ct_disassembly) disassembly,
 which names the same routines and tables. The game keeps its dialogue in fifteen string
-tables, one for a run of its locations, and the translation takes them table by table: the
-first two are in Arabic, 855 messages of Crono's house and Truce in both eras, Truce Canyon,
+tables, one for a run of its locations, and the translation takes them table by table:
+three are in Arabic, 2058 messages of Crono's house and Truce in both eras, Truce Canyon,
 Lab 32, the Proto Dome, the Sun Keep, the Geno Dome, Leene Square with the Millennial Fair,
-the trial, the castle's cellars, Melchior's hut, the Tyrano Lair, the Lavos crater, Zeal and
-Death Peak, with their choices, pauses and the boxes that go on without the button. The game
+the trial, the castle's cellars, Melchior's hut, the Tyrano Lair, the Lavos crater, Zeal,
+Death Peak, Castle Guardia in 600 and 1000, the domes of 2300 A.D., Medina, the End of Time,
+Ozzie's and Magus's scenes and the Blackbird, with their choices, pauses and the boxes that
+go on without the button. The game
 draws its dialogue with a variable-width font of 12x12 pixels into a buffer of tiles, so the
 Arabic takes the `glyph-font` strategy with a font of its own, white with the game's shadow,
 9 pixels. The ROM's 4 MiB are full, so the overlay grows it to a 6 MiB ExHiROM, the upper
