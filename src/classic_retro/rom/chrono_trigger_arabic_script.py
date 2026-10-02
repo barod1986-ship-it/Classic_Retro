@@ -62,6 +62,13 @@ TABLES = {
         "hut, Norstein Bekkler's tent, the Tyrano Lair's cells, the Lavos crater, Zeal's "
         "sealed palace and Death Peak",
     ),
+    "guardia": StringTable(
+        "guardia",
+        0x374900,
+        1203,
+        "Castle Guardia in 600 and 1000, the domes of 2300 A.D., Medina, the End of Time with "
+        "Gaspar and Spekkio, Ozzie's and Magus's scenes, the Blackbird and the Reptites' land",
+    ),
 }
 
 
@@ -88,9 +95,10 @@ class ChronoTriggerMessage:
 # The messages a decision box shows (the events' command $C0, Dialog_OpenDecisionBox
 # at $C0:3674): the first and the last line of the message's last box that the
 # player chooses between, as the command's operand names them, read from the
-# location events of the ROM. The cursor goes on these lines and the event takes
-# the answer by its line, whatever the text says: a translation must put its
-# {choice} lines there, and no {choice} line in another message.
+# location events of the ROM (guardia.659 and guardia.1201, whose events the scan
+# does not reach, from the English's option lines). The cursor goes on these lines
+# and the event takes the answer by its line, whatever the text says: a translation
+# must put its {choice} lines there, and no {choice} line in another message.
 DECISIONS: dict[str, tuple[int, int]] = {
     "truce.014": (1, 2),
     "truce.073": (2, 3),
@@ -140,6 +148,58 @@ DECISIONS: dict[str, tuple[int, int]] = {
     "fair.258": (2, 3),
     "fair.259": (2, 3),
     "fair.267": (0, 3),
+    "guardia.021": (1, 2),
+    "guardia.044": (2, 3),
+    "guardia.078": (1, 2),
+    "guardia.128": (1, 2),
+    "guardia.129": (1, 2),
+    "guardia.132": (2, 3),
+    "guardia.135": (1, 2),
+    "guardia.138": (2, 3),
+    "guardia.141": (2, 3),
+    "guardia.145": (1, 2),
+    "guardia.148": (2, 3),
+    "guardia.149": (2, 3),
+    "guardia.150": (2, 3),
+    "guardia.151": (2, 3),
+    "guardia.152": (2, 3),
+    "guardia.153": (2, 3),
+    "guardia.154": (2, 3),
+    "guardia.155": (2, 3),
+    "guardia.156": (2, 3),
+    "guardia.157": (2, 3),
+    "guardia.158": (0, 1),
+    "guardia.165": (1, 2),
+    "guardia.166": (1, 2),
+    "guardia.170": (1, 2),
+    "guardia.253": (1, 2),
+    "guardia.376": (1, 2),
+    "guardia.392": (2, 3),
+    "guardia.394": (2, 3),
+    "guardia.437": (1, 2),
+    "guardia.438": (1, 2),
+    "guardia.439": (1, 2),
+    "guardia.440": (1, 2),
+    "guardia.441": (1, 2),
+    "guardia.442": (1, 2),
+    "guardia.659": (2, 3),
+    "guardia.660": (1, 2),
+    "guardia.661": (1, 2),
+    "guardia.662": (1, 2),
+    "guardia.663": (1, 2),
+    "guardia.695": (2, 3),
+    "guardia.696": (2, 3),
+    "guardia.697": (2, 3),
+    "guardia.698": (1, 2),
+    "guardia.820": (2, 3),
+    "guardia.824": (1, 2),
+    "guardia.855": (1, 2),
+    "guardia.858": (1, 2),
+    "guardia.894": (2, 3),
+    "guardia.988": (1, 3),
+    "guardia.1027": (2, 3),
+    "guardia.1181": (1, 3),
+    "guardia.1201": (2, 3),
 }
 
 
