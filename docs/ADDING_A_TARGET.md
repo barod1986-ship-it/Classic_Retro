@@ -392,7 +392,16 @@ running its `check_translations` many times, without a preview folder, each time
 the translator's text in some entries and a passing baseline's in the rest. So
 `check_translations` must depend on nothing but its font and translations, write
 nothing when `preview_dir` is None, and refuse a text with a `ClassicRetroError`.
-Checks it does not run (a byte budget only the build holds) are not in that report.
+
+A budget the text alone decides (a bank, a room, a message list, a name table) belongs
+in `check_translations` as well as in the build, with the build's own error code and
+message: lay the space out in one function that both call (`lay_out_messages`,
+`lay_out_room`, `message_bank`, `pack_messages` in the built-in targets), so the two
+cannot drift apart. Without a font, reckon the text so that it never comes out longer
+than the build's: exact where a line break the layout writes takes a space's byte,
+otherwise an undercount (the bytes only the font measures left out), so the check
+never refuses what the build accepts. Only what is compared with the user's image (its
+identity, its original bytes, the size of what it already holds) is left to the build.
 
 `targets build` reports `matches_reference`, which is true when the patch equals the
 recorded `reference_patch_sha256`. A target that accepts more than one image (dumps that
