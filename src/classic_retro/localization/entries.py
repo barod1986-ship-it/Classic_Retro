@@ -14,7 +14,7 @@ The checked file may hold only some of the target's entries, a *batch*: every
 entry it lacks takes the baseline's text, so batches are checked one at a time
 by different translators. An entry that passes alone but is refused together
 with some of the other changes (two briefings that each fit a glyph budget but
-overflow it together) is reported with the fewest of them.
+overflow it together) is reported with them, none of which can be left out.
 
 The run is checked first without the font (parse, commands, glyphs, line counts),
 which is fast, then with it (pixel widths) for the entries that passed. Next to
@@ -30,7 +30,7 @@ import json
 import re
 import time
 from collections import Counter
-from collections.abc import Iterable, Sequence
+from collections.abc import Iterable, Iterator, Sequence
 from dataclasses import dataclass, replace
 from fnmatch import fnmatchcase
 from pathlib import Path
@@ -50,6 +50,8 @@ from classic_retro.localization.translations import (
 TOKEN = re.compile(r"\{[^{}\n]*\}|\[[^\[\]\n]*\]|\\[A-Za-z]")
 _LATIN = re.compile(r"[A-Za-z]+")
 _DIGITS = re.compile(r"[0-9]+")
+# A thousands separator between digits (1,000 or ١٬٠٠٠): one number, not two.
+_GROUP_SEPARATOR = re.compile(r"(?<=\d)[,٬](?=\d{3}(?!\d))")
 # Arabic-Indic and Eastern Arabic-Indic digits, read as the digits they write.
 _ARABIC_DIGITS = str.maketrans("٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹", "01234567890123456789")
 # Fathatan to sukun, the further marks, and the superscript alef.
@@ -244,11 +246,13 @@ class _Search:
             self._add(accepted, part[half:], font, refused)
 
     def partners(self, fixed: list[str], pool: list[str], font: Path | None) -> list[str]:
-        """The fewest entries of ``pool`` that ``fixed`` is refused with; none if alone.
+        """Entries of ``pool`` that ``fixed`` is refused with, none of them needless.
 
-        ``fixed`` with all of ``pool`` is refused. The pool is halved: the part
-        found in one half is kept while the other half is searched
-        (QuickXplain), so a few runs find two partners among thousands.
+        ``fixed`` with all of ``pool`` is refused; with none it is refused alone,
+        and the answer is empty. The pool is halved: the part found in one half
+        is kept while the other half is searched (QuickXplain), so a few runs
+        find two partners among thousands. The set is minimal (no entry of it
+        can be left out), not always the smallest there is.
         """
         if not pool or self.run(fixed, font) is not None:
             return []
@@ -284,7 +288,7 @@ def locate_failures(
     ``texts`` holds the translator's text by id. The search keeps the changes
     that pass together and judges every other one with them: an entry refused
     even with no other change is an error; one refused only with some of the
-    passing changes is reported with the fewest of them. It checks without the
+    passing changes is reported with them, none of which can be left out. It checks without the
     font first, then with it the changes that passed. An error's ``font`` says
     the entry is refused only when laid out with the font.
     """
@@ -297,8 +301,8 @@ def locate_failures(
     cleared: list[str] = []
     try:
         for phase in (None,) if font is None else (None, font):
-            if not candidates:
-                break
+            if not candidates and phase is None:
+                continue
             if search.run(candidates, phase) is None:
                 continue
             error = search.run((), phase)
@@ -389,19 +393,36 @@ def notation_warnings(
         if added:
             parts.append("added " + " ".join(added))
         warn("commands_differ", "; ".join(parts))
-    missing = Counter(_DIGITS.findall(TOKEN.sub(" ", source))) - Counter(
-        _DIGITS.findall(plain.translate(_ARABIC_DIGITS))
+    missing = Counter(_numbers(TOKEN.sub(" ", source))) - Counter(
+        _numbers(plain.translate(_ARABIC_DIGITS))
     )
     if missing:
         warn("numbers_missing", "the original's " + ", ".join(sorted(missing.elements())))
     return warnings
 
 
+def _numbers(text: str) -> list[str]:
+    return _DIGITS.findall(_GROUP_SEPARATOR.sub("", text))
+
+
+def _commands(text: str, tolerated: frozenset[str]) -> Iterator[str]:
+    """The commands of ``text`` one by one: a brace may hold several ({PAUSE 154 PAGE}).
+
+    A brace that starts with "+" is one the notation lets the translation add
+    (FF6 Advance's page splits), never the original's.
+    """
+    for token in TOKEN.findall(text):
+        if token.startswith("{+"):
+            continue
+        words = [f"{{{word}}}" for word in token[1:-1].split()] if token[0] == "{" else [token]
+        yield from (word for word in words if word not in tolerated)
+
+
 def _token_difference(
     source: str, text: str, tolerated: frozenset[str]
 ) -> tuple[list[str], list[str]]:
-    before = Counter(token for token in TOKEN.findall(source) if token not in tolerated)
-    after = Counter(token for token in TOKEN.findall(text) if token not in tolerated)
+    before = Counter(_commands(source, tolerated))
+    after = Counter(_commands(text, tolerated))
     return sorted((before - after).elements()), sorted((after - before).elements())
 
 

@@ -103,7 +103,7 @@ def merge_translations(
     for entry in translations.entries:
         if entry.id in merged:
             text, notes = merged[entry.id]
-            new = replace(entry, text=text, notes=entry.notes if notes is None else notes)
+            new = replace(entry, text=text, notes=notes)
             if new != entry:
                 changed.append(entry.id)
             entries.append(new)

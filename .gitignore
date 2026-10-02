@@ -41,3 +41,5 @@ artifacts/
 
 # Translator workspaces hold text from the user's own copy of a game: never commit them
 *.workspace.json
+# nor their batches (targets split), which hold the same originals
+*.batch-*.json

@@ -85,6 +85,14 @@ def test_merge_puts_text_and_notes_back_and_adds_new_terms():
     assert [e.id for e in merged.entries] == [e.id for e in workspace.entries]
     assert merged.is_workspace and [t.term for t in merged.glossary] == ["Mila", "Tom", "Rex"]
 
+    # A note the batch no longer has is gone from the merged file too.
+    noted = TranslationSet(
+        "demo", "plain text", (Translation("line.0", "سطر", notes="shorter"),), workspace_from="x"
+    )
+    unnoted = TranslationSet("demo", "plain text", (Translation("line.0", "سطر"),))
+    cleared, report = merge_translations(noted, [unnoted])
+    assert cleared.entries[0].notes is None and report["changed"] == ["line.0"]
+
 
 def test_merge_refuses_unknown_repeated_and_conflicting_entries():
     workspace = _workspace()

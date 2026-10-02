@@ -417,7 +417,8 @@ baseline that passes (the shipped file, or `--baseline`) it gathers the translat
 changes that pass the target's check together, halving the ones refused, and judges
 every other change with them in place (`localization/entries.py`), without the font
 first and then with it. An entry that passes alone but is refused with some of the
-other changes (a shared glyph budget) is reported with the fewest of them. The file
+other changes (a shared glyph budget) is reported with them, none of which can be
+left out (`with`). The file
 checked may be a batch: an entry it lacks takes
 the baseline's text. `targets split` cuts a file or workspace into batches and `targets
 merge` puts their text back (`localization/batches.py`). The report adds warnings read

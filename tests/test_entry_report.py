@@ -95,7 +95,7 @@ def test_the_font_phase_finds_what_only_the_layout_refuses():
     ]
 
 
-def test_an_entry_refused_only_with_others_names_the_fewest_of_them():
+def test_an_entry_refused_only_with_others_names_them_all_and_no_more():
     located = _locate(_baseline(), {f"line.{n}": "ق" for n in range(5)})
 
     # line.0 and line.1 fill the budget of two; each later one overflows it with them.
@@ -149,6 +149,12 @@ def test_an_entry_that_passes_without_the_font_is_laid_out_with_its_partners():
         ("greeting", "TEXT_BOX_OVERFLOW", True),
         ("line.0", "UNENCODABLE_TEXT", False),
     ]
+
+
+def test_a_font_the_baseline_fails_with_is_said_even_with_nothing_changed():
+    located = _locate(_with(_baseline(), "line.7", "نص طويل جدا جدا"), {}, font="f")
+    assert located.baseline_error is not None and located.baseline_error["font"] is True
+    assert _locate(_baseline(), {}, font="f").baseline_error is None
 
 
 def test_a_baseline_that_fails_is_said_and_blames_no_entry():
@@ -302,6 +308,15 @@ def test_notation_warnings_read_only_the_notation():
     }
     assert kinds("مرحبا{line}{x}", "Hi{x}", tolerated_tokens([("A{line}", "ب")])) == {}
     assert kinds("خذ ١٠ وخذ 5", "Take 10, 5 and 3") == {"numbers_missing": "the original's 3"}
+    # A thousands separator does not split a number, on either side.
+    assert kinds("خذ 60000", "Take 60,000") == {}
+    assert kinds("خذ ٦٠٬٠٠٠", "Take 60000") == {}
+    assert kinds("خذ 6000", "Take 60,000") == {"numbers_missing": "the original's 60000"}
+    # A brace may hold several commands, and a "+" brace is the translation's own.
+    assert kinds("نص{PAUSE 154 PAGE}نص{+KEY_PAGE}", "Hi{PAUSE 154}{PAGE}Yo") == {}
+    assert kinds("نص{PAUSE 150}", "Hi{PAUSE 154}") == {
+        "commands_differ": "dropped {154}; added {150}"
+    }
 
 
 def _cli(argv, capsys) -> tuple[int, dict]:
