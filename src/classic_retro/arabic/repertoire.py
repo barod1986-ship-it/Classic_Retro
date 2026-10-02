@@ -12,8 +12,14 @@ STANDARD_ARABIC_LETTERS = "ءآأؤإئابتثجحخدذرزسشصضطظعغف�
 ARABIC_STATIC_CHARACTERS = "،؛؟ـ٠١٢٣٤٥٦٧٨٩"
 
 
+@lru_cache(maxsize=1)
 def legacy_renderer_pipeline() -> ArabicPipeline:
-    """Shaping profile for fixed-glyph game fonts: no ligatures, nothing silently dropped."""
+    """Shaping profile for fixed-glyph game fonts: no ligatures, nothing silently dropped.
+
+    One pipeline serves every call: it holds its configuration and its reshaper,
+    and ``process`` changes neither, while building the reshaper is most of the
+    time a large script's check takes.
+    """
     return ArabicPipeline(
         ArabicPipelineConfig(
             support_ligatures=False,

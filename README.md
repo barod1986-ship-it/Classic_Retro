@@ -104,9 +104,12 @@ classic-retro targets list                          # every target, its document
 classic-retro targets strategies                    # the ways of drawing Arabic, and who uses them
 classic-retro targets check-hooks [TARGET ...]      # re-assemble hook code, compare with stored bytes
 classic-retro targets check-translations TARGET [--font FONT] [--preview-dir DIR] [--check-digests | --update-digests]
+classic-retro targets check-entries TARGET FILE [--font FONT] [--baseline FILE]   # every refused entry, and why
 classic-retro targets build TARGET ROM --font FONT --out-dir DIR [--write-rom NAME]
 classic-retro targets prepare TARGET SOURCE --font FONT      # source overlays: patch a checkout
 classic-retro targets extract TARGET INPUT [--out FILE]      # a translator's workspace
+classic-retro targets split FILE --out-dir DIR [--size N]   # batches of a file or workspace
+classic-retro targets merge FILE BATCH... --out FILE         # the batches' text, put back
 classic-retro targets strip WORKSPACE [--out FILE]           # the workspace, ready to commit
 ```
 
@@ -135,7 +138,21 @@ classic-retro targets strip fomt.workspace.json --out fomt.json
 ```
 
 Every check and build holds a translations file against the originals pinned in the
-target's code. See [the translator's guide](docs/TRANSLATING_AR.md) (in Arabic).
+target's code. `check-translations` stops at the first refused entry; `check-entries`
+lists every one with the target's own reason, for any target and with no code of its
+own: against a baseline that passes (the shipped file) it gathers the translator's
+changes that pass the target's check together, halving the rest, and judges each other
+change with them in place. It checks a batch too: a large
+script is cut into batches with `split`, each translated and checked alone, and put
+back with `merge`:
+
+```text
+classic-retro targets split fomt.workspace.json --size 20 --out-dir batches
+classic-retro targets check-entries fomt batches/fomt.batch-001.json --font FONT
+classic-retro targets merge fomt.workspace.json batches/*.json --out fomt.workspace.json --force
+```
+
+See [the translator's guide](docs/TRANSLATING_AR.md) (in Arabic).
 
 The four rendering strategies are what the twenty-three targets proved, not the only ones
 possible. Games on other platforms will need other methods, and the strategy and
