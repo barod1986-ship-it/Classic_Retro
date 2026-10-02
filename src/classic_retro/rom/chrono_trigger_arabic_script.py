@@ -9,7 +9,10 @@ Robo's awakening, the Sun Keep and the Geno Dome; the second, at $FC:BA00,
 holds Leene Square with the Millennial Fair and Lucca's Telepod, the trial,
 the castle's cellars with the Rainbow Shell, Melchior's hut, Norstein
 Bekkler's tent, the Tyrano Lair's cells, the Lavos crater, Zeal's sealed
-palace and Death Peak. Each entry's id is its table's key and its number.
+palace and Death Peak; the third, at $F7:4900, holds Castle Guardia in 600
+and 1000, the domes of 2300 A.D., Medina, the End of Time with Gaspar and
+Spekkio, Ozzie's and Magus's scenes, the Blackbird and the Reptites' land.
+Each entry's id is its table's key and its number.
 
 Each original is pinned by its table, its number there and the SHA-256 of
 its bytes (its zero included), so the translation can be checked without the
