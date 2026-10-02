@@ -307,6 +307,16 @@ def hand_drawn_glyph(name: str, character: str) -> RrGlyph:
     return large_glyph(ink, cell, joins_left=False, joins_right=False)
 
 
+def check_font_characters(name: str, used: Collection[str]) -> None:
+    """The ``name`` font draws every character of ``used``: the space, the repertoire and the
+    digits, and its own hand-drawn glyphs (the pad's buttons are the small font's only).
+    No font file is needed."""
+    drawable = {*arabic_presentation_repertoire(), *DIGITS, *HAND_DRAWN[name]}
+    unknown = sorted({character for character in used if character != " "} - drawable)
+    if unknown:
+        raise no_glyph(unknown[0], f"{PROFILE} ({name} font)")
+
+
 def build_ridge_racer_fonts(
     font_path: Path,
     glyph_map: GlyphCodes,
@@ -327,10 +337,8 @@ def build_ridge_racer_fonts(
     for name, used in ((SMALL, small), (LARGE, large)):
         cell = CELLS[name]
         hand_drawn = HAND_DRAWN[name]
+        check_font_characters(name, used)
         wanted = {character for character in used if character != " "}
-        unknown = sorted(wanted - drawable - set(hand_drawn))
-        if unknown:
-            raise no_glyph(unknown[0], f"{PROFILE} ({name} font)")
         drawn_set = set(drawable if sizing is None else sizing) | (wanted - set(hand_drawn))
         drawn = tuple(sorted(drawn_set - set(hand_drawn) - {" "}, key=ord))
         _, size, rendered = largest_fitting_size(

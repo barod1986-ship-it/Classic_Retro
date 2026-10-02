@@ -28,6 +28,7 @@ from classic_retro.engines.ridge_racer_arabic import (
     RrGlyph,
     visual_text,
 )
+from classic_retro.localization.translations import TranslationSet, builtin_translation_set
 from classic_retro.patching.cdrom import (
     DATA_SIZE,
     SECTOR_SIZE,
@@ -316,6 +317,44 @@ def test_the_glyphs_keep_to_the_room_after_the_hook():
     with pytest.raises(ClassicRetroError) as caught:
         overlay.hook_data(Atlas(bytes(room + 1), 1, tables, {}))
     assert caught.value.code is ErrorCode.ARABIC_GLYPH_CAPACITY_EXCEEDED
+
+
+def test_the_check_puts_the_glyphs_in_the_room_after_the_hook(font_path, monkeypatch):
+    # The fullest atlas fits the room, so the atlas's own limit (the same error) comes first.
+    assert engine.ATLAS_ROWS * engine.ATLAS_ROW_BYTES <= overlay.FREE_END - overlay.PIXELS
+    monkeypatch.setattr(overlay, "build_ridge_racer_fonts", _fake_fonts)
+    report = overlay.check_ridge_racer_translations(font_path)
+    rows = report["atlas_rows"]
+    monkeypatch.setattr(overlay, "FREE_END", overlay.PIXELS + rows * engine.ATLAS_ROW_BYTES - 1)
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.check_ridge_racer_translations(font_path)
+    assert caught.value.code is ErrorCode.ARABIC_GLYPH_CAPACITY_EXCEEDED
+    assert "the room holds" in str(caught.value)
+
+
+def _shipped_with(texts: dict[str, str]) -> TranslationSet:
+    """The shipped translations with ``texts`` in place of theirs."""
+    shipped = builtin_translation_set("ridge-racer")
+    entries = tuple(
+        dataclasses.replace(entry, text=texts.get(entry.id, entry.text))
+        for entry in shipped.entries
+    )
+    return dataclasses.replace(shipped, entries=entries)
+
+
+@pytest.mark.parametrize("character", ["△", "□", "Ⅱ", "○"])
+def test_the_check_keeps_the_buttons_to_the_small_font_without_a_font(character):
+    # The large font's string may not use what only the small font draws.
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.check_ridge_racer_translations(
+            translations=_shipped_with({"card.load_title": f"تحميل {character}"})
+        )
+    assert caught.value.code is ErrorCode.UNENCODABLE_TEXT
+    assert "(large font)" in str(caught.value)
+    report = overlay.check_ridge_racer_translations(
+        translations=_shipped_with({"title.start": f"ابدأ {character}"})
+    )
+    assert report["measured"] is False
 
 
 def test_the_sites_anchors_and_calls_lie_apart_and_off_the_hook():

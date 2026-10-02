@@ -424,6 +424,40 @@ class ArabicBlock:
     addresses: dict[str, int]
 
 
+def block_offset(index: int, where: int) -> int:
+    """Message ``index`` at ``where`` as the copied block's table holds it: a 16-bit offset
+    from the block area, below the table's end."""
+    offset = where - BLOCK_AREA
+    if not 0 <= offset < TABLE_END:
+        raise ClassicRetroError(
+            ErrorCode.RELOCATION_OVERFLOW,
+            f"Message {index} is out of the block's 16-bit reach: it starts {offset} bytes "
+            f"after the block at {BLOCK_AREA:#x}, whose offsets end at {TABLE_END - 1}",
+        )
+    return offset
+
+
+def arabic_bank(
+    messages: Sequence[ToArabicMessage], encoded: Mapping[str, ToEncodedMessage]
+) -> tuple[bytes, dict[str, int]]:
+    """Every translated message in the bank in the block's order, and its address; each in
+    reach of the block's table, all of them in the bank. No byte of the image is needed."""
+    arabic = bytearray()
+    addresses: dict[str, int] = {}
+    for message in sorted(messages, key=lambda item: item.index):
+        where = ARABIC_TEXT_ADDRESS + len(arabic)
+        block_offset(message.index, where)
+        arabic += encoded[message.key].stored
+        addresses[message.key] = where
+    if ARABIC_TEXT_ADDRESS + len(arabic) > ARABIC_TEXT_END:
+        raise ClassicRetroError(
+            ErrorCode.RELOCATION_OVERFLOW,
+            f"The Arabic texts need {len(arabic)} bytes; the bank holds "
+            f"{ARABIC_TEXT_END - ARABIC_TEXT_ADDRESS}",
+        )
+    return bytes(arabic), addresses
+
+
 def arabic_block(
     rom: bytes,
     offsets: Sequence[int],
@@ -431,12 +465,11 @@ def arabic_block(
     encoded: Mapping[str, ToEncodedMessage],
 ) -> ArabicBlock:
     """The block with every translated message in the bank and the others copied as they are."""
+    arabic, addresses = arabic_bank(messages, encoded)
     translated = {message.index: message for message in messages}
     address = BLOCK_AREA
     head = bytearray(struct.pack(f"<{len(offsets) + 1}H", *([0] * len(offsets)), TABLE_END))
-    arabic = bytearray()
     new_offsets: list[int] = []
-    addresses: dict[str, int] = {}
     for index, offset in enumerate(offsets):
         message = translated.get(index)
         if message is None:
@@ -444,21 +477,14 @@ def arabic_block(
             where = address + len(head)
             head += stored_message(header, original)
         else:
-            where = ARABIC_TEXT_ADDRESS + len(arabic)
-            arabic += encoded[message.key].stored
-            addresses[message.key] = where
-        if not 0 <= where - address < TABLE_END:
-            raise ClassicRetroError(
-                ErrorCode.RELOCATION_OVERFLOW,
-                f"Message {index} is out of the block's 16-bit reach",
-            )
-        new_offsets.append(where - address)
+            where = addresses[message.key]
+        new_offsets.append(block_offset(index, where))
     head[: 2 * len(new_offsets)] = struct.pack(f"<{len(new_offsets)}H", *new_offsets)
+    # The English copies are the image's, so only the build sees their size; they are
+    # never more than the pinned block, far smaller than the area.
     if address + len(head) > ARABIC_TEXT_ADDRESS:
         raise ClassicRetroError(ErrorCode.RELOCATION_OVERFLOW, "The block exceeds its area")
-    if ARABIC_TEXT_ADDRESS + len(arabic) > ARABIC_TEXT_END:
-        raise ClassicRetroError(ErrorCode.RELOCATION_OVERFLOW, "Arabic texts exceed the bank")
-    return ArabicBlock(address, bytes(head), bytes(arabic), tuple(new_offsets), addresses)
+    return ArabicBlock(address, bytes(head), arabic, tuple(new_offsets), addresses)
 
 
 def build_tactics_ogre_arabic_rom(
@@ -624,6 +650,7 @@ def check_tactics_ogre_translations(
     if font is not None and preview_path is not None:
         font_preview(font).save(preview_path)
     encoded = encode_messages(ToArabicEncoder(glyph_map, font), messages, arabic_names)
+    arabic_bank(messages, encoded)
     if font is not None and text_preview_path is not None:
         messages_sheet(
             [
