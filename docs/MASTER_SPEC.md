@@ -178,8 +178,9 @@ Kinds:
   writes into the checkout (FireRed's atlas `arabic_normal.png`, Minish Cap's
   `arabic_font_preview.png`).
 
-`classic-retro targets list | strategies | check-hooks | check-translations | build |
-prepare | extract | strip` is the one way to run these for any target, by id, and CI
+`classic-retro targets list | strategies | check-hooks | check-translations |
+check-entries | build | prepare | extract | split | merge | strip` is the one way to run
+these for any target, by id, and CI
 builds its target jobs from `targets list`. A target's own command group holds only its
 engine's tools: `encode-arabic` (one line in the game's encoding) and, for a source
 overlay, `source-check` (its anchors in a checkout, patching nothing). A rom-overlay target
@@ -409,6 +410,19 @@ translator sees what every entry translates. A workspace stays on the user's mac
 originals. `--translations` gives a file or a workspace to `check-translations`, `build`
 and `prepare`. With a workspace, `check-translations` also lists the entries whose
 original names a glossary term that their Arabic does not use.
+
+`check-translations` stops at the first refused entry. `targets check-entries` lists
+them all, each with the target's own error, with no code of the target's: against a
+baseline that passes (the shipped file, or `--baseline`) it runs the target's check with
+the translator's text in fewer and fewer entries until each failure has its entry
+(`localization/entries.py`). Entries refused only together, over a shared glyph budget,
+are reported as the smallest such group; an entry refused only against the baseline's
+text of another is a warning. The file checked may be a batch: an entry it lacks takes
+the baseline's text. `targets split` cuts a file or workspace into batches and `targets
+merge` puts their text back (`localization/batches.py`). The report adds warnings read
+from the notation alone, the same for every target (Latin letters, vowel marks,
+presentation forms, unbalanced brackets, empty text and, with originals, untranslated
+text, commands and numbers of the original dropped or added, glossary terms not used).
 [TRANSLATING_AR.md](TRANSLATING_AR.md) is the translator's guide.
 
 These files are the toolkit's one translation format. The text of an entry is in its

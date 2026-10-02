@@ -386,6 +386,14 @@ These are the only commands for what every target does: a target's own command g
 (`register_cli`) holds just the tools of its engine, such as `encode-arabic` (one line in
 the game's encoding) or `source-check` (a source overlay's anchors, without patching).
 
+`targets check-entries`, `split` and `merge` need nothing more from a target.
+`check-entries` lists every entry a translations file has that the target refuses by
+running its `check_translations` many times, without a preview folder, each time with
+the translator's text in some entries and a passing baseline's in the rest. So
+`check_translations` must depend on nothing but its font and translations, write
+nothing when `preview_dir` is None, and refuse a text with a `ClassicRetroError`.
+Checks it does not run (a byte budget only the build holds) are not in that report.
+
 `targets build` reports `matches_reference`, which is true when the patch equals the
 recorded `reference_patch_sha256`. A target that accepts more than one image (dumps that
 differ only in bytes the game never reads) records the patch from each in

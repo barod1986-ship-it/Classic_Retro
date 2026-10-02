@@ -243,5 +243,10 @@ def glossary_report(translations: TranslationSet) -> list[dict[str, str]]:
     return report
 
 
+def names_term(text: str, term: str) -> bool:
+    """Whether ``text`` (an original) names the glossary term ``term``, as a whole word."""
+    return next(_occurrences(text, term), None) is not None
+
+
 def _occurrences(text: str, term: str) -> Iterator[re.Match[str]]:
     return re.finditer(rf"(?<![A-Za-z]){re.escape(term)}(?![A-Za-z])", text)
