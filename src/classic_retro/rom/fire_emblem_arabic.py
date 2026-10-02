@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import hashlib
 import struct
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -313,16 +314,39 @@ def encode_translations(
     return encoded
 
 
-def build_legend(
-    font_path: Path, subtitles: tuple[FireEmblemArabicSubtitle, ...] | None = None
-) -> BuiltLegend:
-    """Render and encode every legend image with the user's font."""
-    subtitles = subtitles or fire_emblem_arabic_legend()
+def pack_messages(encoded: Mapping[int, tuple[bytes, list[int]]]) -> tuple[bytes, dict[int, int]]:
+    """Every translated message by index from ``ARABIC_TEXT_ADDRESS``, each 4-byte aligned,
+    and its address; the messages must fit before the legend."""
+    texts = bytearray()
+    pointers: dict[int, int] = {}
+    for index in sorted(encoded):
+        pointers[index] = ARABIC_TEXT_ADDRESS + len(texts)
+        texts += encoded[index][0]
+        texts += bytes(-len(texts) % 4)
+    if ARABIC_TEXT_ADDRESS + len(texts) > ARABIC_LEGEND_ADDRESS:
+        raise ClassicRetroError(
+            ErrorCode.RELOCATION_OVERFLOW,
+            f"The Arabic messages need {len(texts)} bytes; their region holds "
+            f"{ARABIC_LEGEND_ADDRESS - ARABIC_TEXT_ADDRESS}",
+        )
+    return bytes(texts), pointers
+
+
+def validate_legend_set(subtitles: Sequence[FireEmblemArabicSubtitle]) -> None:
+    """One subtitle per legend image, no more and no fewer."""
     if sorted(subtitle.index for subtitle in subtitles) != list(range(len(LEGEND_ORIGINAL))):
         raise ClassicRetroError(
             ErrorCode.RESOURCE_SET_MISMATCH,
             f"The legend needs one entry per image (0..{len(LEGEND_ORIGINAL) - 1})",
         )
+
+
+def build_legend(
+    font_path: Path, subtitles: tuple[FireEmblemArabicSubtitle, ...] | None = None
+) -> BuiltLegend:
+    """Render and encode every legend image with the user's font."""
+    subtitles = subtitles or fire_emblem_arabic_legend()
+    validate_legend_set(subtitles)
     size = legend_font_size(font_path)
     renderer = ShapedLineRenderer(font_path, size)
     built = []
@@ -331,6 +355,26 @@ def build_legend(
         encoded = encode_legend_image(image, legend_budget(subtitle.index))
         built.append(BuiltSubtitle(subtitle=subtitle, image=image, encoded=encoded))
     return BuiltLegend(font_size=size, items=tuple(built))
+
+
+def pack_legend(items: Sequence[BuiltSubtitle]) -> tuple[bytes, list[tuple[int, int]]]:
+    """Each image's LZ77 tiles, then its LZ77 tile map, from ``ARABIC_LEGEND_ADDRESS``, and
+    their addresses; the images must fit the rest of the region."""
+    blobs = bytearray()
+    pointers: list[tuple[int, int]] = []
+    for item in items:
+        gfx = ARABIC_LEGEND_ADDRESS + len(blobs)
+        blobs += compress_lz77(item.encoded.tiles)
+        tile_map = ARABIC_LEGEND_ADDRESS + len(blobs)
+        blobs += compress_lz77(item.encoded.tile_map)
+        pointers.append((gfx, tile_map))
+    if ARABIC_LEGEND_ADDRESS + len(blobs) > REGION_END:
+        raise ClassicRetroError(
+            ErrorCode.RELOCATION_OVERFLOW,
+            f"The legend images need {len(blobs)} bytes; their region holds "
+            f"{REGION_END - ARABIC_LEGEND_ADDRESS}",
+        )
+    return bytes(blobs), pointers
 
 
 def build_fire_emblem_arabic_rom(
@@ -360,26 +404,10 @@ def build_fire_emblem_arabic_rom(
         raise ClassicRetroError(ErrorCode.RELOCATION_OVERFLOW, "Hook code exceeds its region")
 
     encoded = encode_translations(FireEmblemArabicEncoder(advances=font.advances()), messages)
-    texts = bytearray()
-    pointers: dict[int, int] = {}
-    for index in sorted(encoded):
-        pointers[index] = ARABIC_TEXT_ADDRESS + len(texts)
-        texts += encoded[index][0]
-        texts += bytes(-len(texts) % 4)
-    if ARABIC_TEXT_ADDRESS + len(texts) > ARABIC_LEGEND_ADDRESS:
-        raise ClassicRetroError(ErrorCode.RELOCATION_OVERFLOW, "Arabic messages exceed the region")
+    texts, pointers = pack_messages(encoded)
 
     legend = build_legend(font_path, fire_emblem_arabic_legend(translations))
-    blobs = bytearray()
-    legend_pointers: list[tuple[int, int]] = []
-    for item in legend.items:
-        gfx = ARABIC_LEGEND_ADDRESS + len(blobs)
-        blobs += compress_lz77(item.encoded.tiles)
-        tile_map = ARABIC_LEGEND_ADDRESS + len(blobs)
-        blobs += compress_lz77(item.encoded.tile_map)
-        legend_pointers.append((gfx, tile_map))
-    if ARABIC_LEGEND_ADDRESS + len(blobs) > REGION_END:
-        raise ClassicRetroError(ErrorCode.RELOCATION_OVERFLOW, "Legend images exceed the region")
+    blobs, legend_pointers = pack_legend(legend.items)
 
     target = bytearray(rom)
 
@@ -389,7 +417,7 @@ def build_fire_emblem_arabic_rom(
 
     write(HOOK_CODE_ADDRESS, HOOK_CODE)
     write(RTL_FONT_ADDRESS, font_data)
-    write(ARABIC_TEXT_ADDRESS, bytes(texts))
+    write(ARABIC_TEXT_ADDRESS, texts)
     write(DECODER_ADDRESS, decoder_jump(HOOK_CODE_ADDRESS + HOOK_SYMBOLS["hook_decomp"]))
     for number, site in enumerate(HOOK_SITES):
         stub = VENEER_ADDRESS + number * VENEER_BYTES
@@ -397,7 +425,7 @@ def build_fire_emblem_arabic_rom(
         write(site.address, bl_instruction(site.address, stub))
     for index, address in pointers.items():
         write(MESSAGE_TABLE_ADDRESS + 4 * index, struct.pack("<I", address | RAW_POINTER_FLAG))
-    write(ARABIC_LEGEND_ADDRESS, bytes(blobs))
+    write(ARABIC_LEGEND_ADDRESS, blobs)
     for item, (gfx, tile_map) in zip(legend.items, legend_pointers, strict=True):
         entry = LEGEND_TABLE_ADDRESS + item.subtitle.index * LEGEND_ENTRY_BYTES
         write(entry, struct.pack("<II", gfx, tile_map))
@@ -548,6 +576,7 @@ def check_fire_emblem_translations(
     """Validate the translations without the ROM; with a font, measure and draw everything."""
     glyph_map = build_fire_emblem_arabic_glyph_map()
     subtitles = fire_emblem_arabic_legend(translations)
+    validate_legend_set(subtitles)
     for subtitle in subtitles:
         validate_legend_lines(subtitle.lines)
     font = build_fire_emblem_rtl_font(font_path) if font_path is not None else None
@@ -560,6 +589,7 @@ def check_fire_emblem_translations(
         FireEmblemArabicEncoder(advances=advances, glyph_map=glyph_map),
         fire_emblem_arabic_messages(translations),
     )
+    pack_messages(encoded)
     report: dict[str, object] = {
         "messages": [f"{index:#x}" for index in sorted(encoded)],
         "arabic_glyphs": len(glyph_map.characters),
@@ -576,6 +606,7 @@ def check_fire_emblem_translations(
             f"{index:#x}": max(widths) for index, (_, widths) in sorted(encoded.items())
         }
         legend = build_legend(font_path, subtitles)
+        pack_legend(legend.items)
         report["legend_font_size"] = legend.font_size
         report["legend_tiles"] = [item.encoded.tile_count for item in legend.items]
         report["legend_widest_line"] = [max(item.image.widths) for item in legend.items]

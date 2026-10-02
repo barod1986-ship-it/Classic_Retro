@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import shutil
 import struct
+from dataclasses import replace
 
 import pytest
 
@@ -32,6 +34,7 @@ from classic_retro.engines.advance_wars_arabic import (
     AwRtlGlyph,
     build_advance_wars_arabic_glyph_map,
 )
+from classic_retro.localization.translations import builtin_translation_set
 from classic_retro.rebuild.bps import apply_bps
 from classic_retro.rom import advance_wars_arabic as overlay
 from classic_retro.rom.advance_wars_arabic_script import (
@@ -310,6 +313,34 @@ def test_shipped_translations_check_without_the_rom():
     report = overlay.check_advance_wars_translations()
     assert report["messages"] == len(advance_wars_arabic_messages()) == 14
     assert report["lines_measured"] is False
+
+
+def test_messages_over_their_shared_region_are_refused_without_the_rom():
+    shipped = builtin_translation_set("advance-wars")
+    # Every run of text becomes invented words; the control codes and line ends stay.
+    words = " ".join(["بلمار", "تونسيك", "دربان", "فلكوت"] * 30)
+    oversized = replace(
+        shipped,
+        entries=tuple(
+            replace(entry, text=re.sub(r"(\{[^}]*\})|[^{\n]+", lambda m: m[1] or words, entry.text))
+            for entry in shipped.entries
+        ),
+    )
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.check_advance_wars_translations(translations=oversized)
+    assert caught.value.code is ErrorCode.RELOCATION_OVERFLOW
+    assert f"holds {overlay.REGION_END - overlay.ARABIC_TEXT_ADDRESS}" in str(caught.value)
+    assert overlay.check_advance_wars_translations(translations=shipped)["messages"] == 14
+
+
+def test_a_font_over_its_region_is_refused_without_the_rom(tmp_path, monkeypatch):
+    blank = AwRtlGlyph(1, tuple((0,) * GLYPH_COLUMNS for _ in range(GLYPH_ROWS)))
+    every_code = AwRtlFont(glyphs=dict.fromkeys(range(256), blank), sequences={}, font_size=10)
+    monkeypatch.setattr(overlay, "build_advance_wars_rtl_font", lambda path: every_code)
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.check_advance_wars_translations(tmp_path / "f.ttf")
+    assert caught.value.code is ErrorCode.RELOCATION_OVERFLOW
+    assert "The font needs" in str(caught.value)
 
 
 def test_translations_are_measured_and_previewed_with_a_font(synthetic, tmp_path, monkeypatch):

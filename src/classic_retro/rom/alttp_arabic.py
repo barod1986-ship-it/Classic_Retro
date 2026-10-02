@@ -314,15 +314,32 @@ def encode_messages(
     return encoded
 
 
-def data_writes(
-    translated: Sequence[AlttpMessage], encoded: Mapping[str, EncodedMessage], font: AlttpFont
-) -> dict[int, bytes]:
-    """What the overlay writes into the added banks, by address."""
+@dataclass(frozen=True, slots=True)
+class MessageLayout:
+    """The list of translated messages, and the Arabic messages by address."""
+
+    redirects: bytes
+    texts: dict[int, bytes]
+
+
+def lay_out_messages(
+    translated: Sequence[AlttpMessage], encoded: Mapping[str, EncodedMessage]
+) -> MessageLayout:
+    """The list and the Arabic messages in the added banks: one after another from
+    ``MESSAGES``, one that would cross a bank's end from the next bank's $8000;
+    refused where a message is longer than a bank, or the banks or the list cannot
+    hold them. It needs only the text, so the check without the ROM refuses what the
+    build would."""
     texts: dict[int, bytes] = {}
     redirects = bytearray()
     address = MESSAGES
     for message in translated:
         data = encoded[message.key].data
+        if len(data) > 0x8000:
+            raise ClassicRetroError(
+                ErrorCode.RELOCATION_OVERFLOW,
+                f"{message.key}: the Arabic message needs {len(data)} bytes; a bank holds {0x8000}",
+            )
         if (address & 0xFFFF) + len(data) > 0x10000:
             address = (address & ~0xFFFF) + 0x10000 + 0x8000
         if address + len(data) > MESSAGES_END:
@@ -337,16 +354,24 @@ def data_writes(
         raise ClassicRetroError(
             ErrorCode.RELOCATION_OVERFLOW, f"{len(translated)} messages do not fit the list"
         )
+    return MessageLayout(bytes(redirects), texts)
+
+
+def data_writes(
+    translated: Sequence[AlttpMessage], encoded: Mapping[str, EncodedMessage], font: AlttpFont
+) -> dict[int, bytes]:
+    """What the overlay writes into the added banks, by address."""
+    layout = lay_out_messages(translated, encoded)
     widths = bytearray(CODES)
     glyphs = bytearray(CODES * GLYPH_BYTES)
     for code, glyph in font.glyphs.items():
         widths[code] = glyph.width
         glyphs[code * GLYPH_BYTES : (code + 1) * GLYPH_BYTES] = glyph.data()
     return {
-        REDIRECTS: bytes(redirects),
+        REDIRECTS: layout.redirects,
         ARABIC_WIDTHS: bytes(widths),
         ARABIC_FONT: bytes(glyphs),
-        **texts,
+        **layout.texts,
     }
 
 
@@ -545,6 +570,9 @@ def check_alttp_translations(
     glyph_map = alttp_glyph_codes(used)
     font = build_alttp_font(font_path, glyph_map, used) if font_path else None
     encoded = encode_messages(translated, AlttpArabicEncoder(glyph_map, font))
+    # The added banks as the build fills them: a line change the layout writes takes a
+    # space's byte, so the messages are as long without the font.
+    lay_out_messages(translated, encoded)
     if font is not None and preview_path is not None:
         font_preview(font).save(preview_path)
     if font is not None and text_preview_path is not None:

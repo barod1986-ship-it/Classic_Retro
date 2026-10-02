@@ -306,6 +306,52 @@ def encode_messages(
     return encoded
 
 
+def font_tables(font: AwRtlFont) -> bytes:
+    """The font as written at ``FONT_ADDRESS``; it must end where the messages start.
+
+    The game's Latin glyphs only replace the stand-ins' pixels, so a check with
+    a font measures the same tables as the build.
+    """
+    data = font.tables(FONT_ADDRESS)
+    if FONT_ADDRESS + len(data) > ARABIC_TEXT_ADDRESS:
+        raise ClassicRetroError(
+            ErrorCode.RELOCATION_OVERFLOW,
+            f"The font needs {len(data)} bytes; its region at {FONT_ADDRESS:#x} holds "
+            f"{ARABIC_TEXT_ADDRESS - FONT_ADDRESS}",
+        )
+    return data
+
+
+@dataclass(frozen=True, slots=True)
+class AwMessageBank:
+    """The stored messages one after another, and the address of each by key."""
+
+    data: bytes
+    addresses: dict[str, int]
+
+
+def message_bank(
+    messages: tuple[AwArabicMessage, ...], encoded: dict[str, tuple[bytes, tuple[int, ...]]]
+) -> AwMessageBank:
+    """Every stored message, one after another from ``ARABIC_TEXT_ADDRESS`` to ``REGION_END``.
+
+    It needs only the encoded translations, so the check without the ROM
+    refuses a bank the build would.
+    """
+    texts = bytearray()
+    addresses: dict[str, int] = {}
+    for message in messages:
+        addresses[message.key] = ARABIC_TEXT_ADDRESS + len(texts)
+        texts += encoded[message.key][0]
+    if ARABIC_TEXT_ADDRESS + len(texts) > REGION_END:
+        raise ClassicRetroError(
+            ErrorCode.RELOCATION_OVERFLOW,
+            f"The Arabic messages need {len(texts)} bytes; their region at "
+            f"{ARABIC_TEXT_ADDRESS:#x} holds {REGION_END - ARABIC_TEXT_ADDRESS}",
+        )
+    return AwMessageBank(bytes(texts), addresses)
+
+
 def build_advance_wars_arabic_rom(
     rom: bytes,
     font_path: Path,
@@ -326,20 +372,12 @@ def build_advance_wars_arabic_rom(
     for message in messages:
         _verify_source(rom, message)
     font = build_advance_wars_rtl_font(font_path, latin_rtl_glyphs(game_font))
-    font_data = font.tables(FONT_ADDRESS)
     if HOOK_CODE_ADDRESS + len(HOOK_CODE) > FONT_ADDRESS:
         raise ClassicRetroError(ErrorCode.RELOCATION_OVERFLOW, "Hook code exceeds its region")
-    if FONT_ADDRESS + len(font_data) > ARABIC_TEXT_ADDRESS:
-        raise ClassicRetroError(ErrorCode.RELOCATION_OVERFLOW, "The font exceeds its region")
+    font_data = font_tables(font)
 
     encoded = encode_messages(AwArabicEncoder(font), messages)
-    texts = bytearray()
-    addresses: dict[str, int] = {}
-    for message in messages:
-        addresses[message.key] = ARABIC_TEXT_ADDRESS + len(texts)
-        texts += encoded[message.key][0]
-    if ARABIC_TEXT_ADDRESS + len(texts) > REGION_END:
-        raise ClassicRetroError(ErrorCode.RELOCATION_OVERFLOW, "Arabic messages exceed the region")
+    bank = message_bank(messages, encoded)
 
     target = bytearray(rom)
 
@@ -349,14 +387,14 @@ def build_advance_wars_arabic_rom(
 
     write(HOOK_CODE_ADDRESS, HOOK_CODE)
     write(FONT_ADDRESS, font_data)
-    write(ARABIC_TEXT_ADDRESS, bytes(texts))
+    write(ARABIC_TEXT_ADDRESS, bank.data)
     for site in SITES:
         write(site.address, site.patch())
     for message in messages:
-        write(message.pointer, struct.pack("<I", addresses[message.key]))
+        write(message.pointer, struct.pack("<I", bank.addresses[message.key]))
 
     output = bytes(target)
-    _verify_output(output, rom, font_data, messages, encoded, addresses)
+    _verify_output(output, rom, font_data, messages, encoded, bank.addresses)
     patch = create_bps(rom, output)
     report: dict[str, object] = {
         **base_report(IMAGE.title, rom, output, patch),
@@ -372,7 +410,7 @@ def build_advance_wars_arabic_rom(
         "hook_code_address": f"{HOOK_CODE_ADDRESS:#x}",
         "font_address": f"{FONT_ADDRESS:#x}",
         "arabic_text_address": f"{ARABIC_TEXT_ADDRESS:#x}",
-        "arabic_text_bytes": len(texts),
+        "arabic_text_bytes": len(bank.data),
     }
     return AwArabicBuild(rom=output, patch=patch, font=font, report=report)
 
@@ -433,14 +471,22 @@ def check_advance_wars_translations(
     *,
     translations: TranslationSet | None = None,
 ) -> dict[str, object]:
-    """Validate the translations without the ROM; with a font, measure and draw every message."""
+    """Validate the translations without the ROM; with a font, measure and draw every message.
+
+    The messages must fit their shared region, as in the build, and with a font
+    the font must fit its own. Without a font the blank before each answer of a
+    question cannot be measured, so the bank's size may be a few bytes off.
+    """
     font = build_advance_wars_rtl_font(font_path) if font_path is not None else None
     if font is None and (preview_path is not None or text_preview_path is not None):
         raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, "A preview needs --font")
+    if font is not None:
+        font_tables(font)
     if font is not None and preview_path is not None:
         font_preview(font).save(preview_path)
     messages = advance_wars_arabic_messages(translations)
     encoded = encode_messages(AwArabicEncoder(font), messages)
+    message_bank(messages, encoded)
     if font is not None and text_preview_path is not None:
         messages_sheet(
             [(message.key, stored_preview(font, encoded[message.key][0])) for message in messages]

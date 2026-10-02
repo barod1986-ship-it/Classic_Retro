@@ -400,23 +400,36 @@ def encode_messages(
     return encoded
 
 
-def data_writes(
-    translated: Sequence[Ff6Message],
-    encoded: Mapping[str, EncodedMessage],
-    names: Mapping[str, tuple[bytes, int]],
-    font: Ff6Font,
-) -> dict[int, bytes]:
-    """What the overlay writes into the added banks, by address.
+@dataclass(frozen=True, slots=True)
+class MessageLayout:
+    """The table of messages, and the Arabic text of their banks from ``ARABIC_TEXT``."""
+
+    entries: bytes
+    text: bytes
+
+
+def lay_out_messages(
+    translated: Sequence[Ff6Message], encoded: Mapping[str, EncodedMessage]
+) -> MessageLayout:
+    """The table and the Arabic messages in their banks.
 
     The Arabic messages follow each other from ``ARABIC_TEXT``; one that would
     cross a bank, or end on a bank's last byte (so that no message's address has
     ``ENGLISH``'s low word), starts the next bank. The table has an entry a
-    message number: the Arabic's address, or ``ENGLISH``.
+    message number: the Arabic's address, or ``ENGLISH``. A message longer than
+    a bank, or more than the banks hold, is refused. It needs only the text, so
+    the check without the ROM refuses what the build would.
     """
     entries = bytearray(ENGLISH.to_bytes(MESSAGE_ENTRY, "little") * DLG_COUNT)
     text = bytearray()
     for message in translated:
         data = encoded[message.key].data
+        if len(data) >= BANK:
+            raise ClassicRetroError(
+                ErrorCode.RELOCATION_OVERFLOW,
+                f"{message.key}: the Arabic message needs {len(data)} bytes; a bank holds "
+                f"{BANK - 1}",
+            )
         if len(text) % BANK + len(data) >= BANK:
             text += bytes((EXPANSION_FILL,)) * (BANK - len(text) % BANK)
         address = ARABIC_TEXT + len(text)
@@ -427,6 +440,18 @@ def data_writes(
         at = message.number * MESSAGE_ENTRY
         entries[at : at + MESSAGE_ENTRY] = address.to_bytes(MESSAGE_ENTRY, "little")
         text += data
+    return MessageLayout(bytes(entries), bytes(text))
+
+
+def data_writes(
+    translated: Sequence[Ff6Message],
+    encoded: Mapping[str, EncodedMessage],
+    names: Mapping[str, tuple[bytes, int]],
+    font: Ff6Font,
+) -> dict[int, bytes]:
+    """What the overlay writes into the added banks, by address: the table and the
+    Arabic messages as ``lay_out_messages`` places them."""
+    layout = lay_out_messages(translated, encoded)
     table = bytearray()
     for key in NAME_KEYS:
         entry, _ = names[key]
@@ -438,9 +463,9 @@ def data_writes(
         WIDTHS: widths,
         GLYPH_ADDRESSES: addresses,
         NAMES: bytes(table),
-        MESSAGES: bytes(entries),
+        MESSAGES: layout.entries,
         GLYPHS: glyphs,
-        ARABIC_TEXT: bytes(text),
+        ARABIC_TEXT: layout.text,
     }
 
 
@@ -650,6 +675,11 @@ def check_ff6_translations(
         encoder = Ff6ArabicEncoder(ff6_glyph_codes(messages_characters(translated, names)))
         encoded_names = encode_names(names, encoder)
     encoded = encode_messages(translated, encoder)
+    # The banks as the build fills them: with the font, its own bytes and glyphs;
+    # without, the messages but the centring the font measures, which only adds.
+    lay_out_messages(translated, encoded)
+    if font is not None:
+        glyph_table(font, GLYPHS, GLYPHS_END - GLYPHS)
     if font is not None and preview_path is not None:
         font_preview(font).save(preview_path)
     if font is not None and text_preview_path is not None:

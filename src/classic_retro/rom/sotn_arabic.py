@@ -550,10 +550,19 @@ def names_table(names: Mapping[int, bytes]) -> bytes:
     return bytes(table)
 
 
+def check_script_size(script: bytes) -> None:
+    """The Arabic script must end before the glyphs."""
+    room = GLYPHS_ADDRESS - ARABIC_SCRIPT_ADDRESS
+    if len(script) > room:
+        raise ClassicRetroError(
+            ErrorCode.RELOCATION_OVERFLOW,
+            f"The Arabic script needs {len(script)} bytes; its room holds {room}",
+        )
+
+
 def build_st0(st0: bytes, widths: bytes, glyphs: bytes, names: bytes, script: bytes) -> bytes:
     """The new ST0.BIN: the original, its sites patched, then the overlay's part."""
-    if len(script) > GLYPHS_ADDRESS - ARABIC_SCRIPT_ADDRESS:
-        raise ClassicRetroError(ErrorCode.RELOCATION_OVERFLOW, "The Arabic script is too long")
+    check_script_size(script)
     if GLYPHS_ADDRESS + len(glyphs) > GLYPHS_END:
         raise ClassicRetroError(ErrorCode.RELOCATION_OVERFLOW, "The glyphs exceed their region")
     if HOOK_CODE_ADDRESS + len(HOOK_CODE) > WIDTHS_ADDRESS:
@@ -738,21 +747,21 @@ def check_sotn_translations(
     font = build_sotn_font(font_path, glyph_map) if font_path is not None else None
     if font is not None and preview_path is not None:
         font_preview(font).save(preview_path)
-    encoder = SotnArabicEncoder(glyph_map, font)
-    encoded: dict[str, bytes] = {}
-    widths: dict[str, tuple[int, ...]] = {}
-    for message in messages:
-        validate_command_skeleton(message.source_skeleton, message.pieces)
-        result = encoder.encode(message.pieces)
-        encoded[message.key] = result.data
-        widths[message.key] = result.line_widths or ()
-    name_codes = {name.speaker: encoder.encode_name(name.text) for name in names}
+    # The original script is the disc's, but its length is pinned (SCRIPT_ADDRESS to
+    # SCRIPT_END, by its SHA-256): zeros in its place make an Arabic script as long as the
+    # build's, with the same messages, names and checks.
+    encoded = encode_script(
+        bytes(SCRIPT_END - SCRIPT_ADDRESS), SotnArabicEncoder(glyph_map, font), messages, names
+    )
+    check_script_size(encoded.script)
     if font is not None and text_preview_path is not None:
         messages_sheet(
             [
                 (
                     message.key,
-                    message_preview(font, name_codes[message.speaker].data, encoded[message.key]),
+                    message_preview(
+                        font, encoded.names[message.speaker], encoded.messages[message.key]
+                    ),
                 )
                 for message in messages
             ]
@@ -761,13 +770,13 @@ def check_sotn_translations(
         "messages": len(messages),
         "names": len(names),
         "lines_measured": font is not None,
-        "encoded_bytes": sum(len(data) for data in encoded.values()),
+        "encoded_bytes": sum(len(data) for data in encoded.messages.values()),
         "arabic_glyphs": len(glyph_map.characters),
     }
     if font is not None:
         report["font_size"] = font.font_size
         report["font_baseline"] = BASELINE
-        report["widest_line"] = max(max(line) for line in widths.values())
+        report["widest_line"] = max(max(line) for line in encoded.line_widths.values())
         report["line_width_limit"] = LINE_WIDTH
     return report
 

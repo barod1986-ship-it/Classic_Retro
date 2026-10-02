@@ -40,6 +40,7 @@ from classic_retro.engines.ff4_arabic import (
     Ff4Font,
     Ff4Glyph,
 )
+from classic_retro.localization.translations import Translation, TranslationSet
 from classic_retro.rebuild.bps import apply_bps
 from classic_retro.rom import ff4_arabic as overlay
 from classic_retro.rom import ff4_arabic_script as script
@@ -303,6 +304,43 @@ def test_a_font_tile_that_is_not_blank_is_refused():
 def _map_all():
     used = overlay.messages_characters(_messages(), NAMES)
     return engine.ff4_glyph_codes(used)
+
+
+def _translations(texts: dict[str, str]) -> TranslationSet:
+    """A translation set of these texts and ``NAMES``, by entry id."""
+    entries = tuple(Translation(key, text) for key, text in {**texts, **NAMES}.items())
+    return TranslationSet(script.TARGET, "invented", entries)
+
+
+def test_the_check_refuses_without_the_rom_what_the_bank_cannot_hold(font_path):
+    """The list, the bank and the names are reckoned from the text alone, as the build
+    reckons them: the check refuses a translation the bank cannot hold, as the build does."""
+    page = "{line}".join(["سلام" * 6 + "سل"] * 4)  # four rows of 26 letters
+    long = {**ARABIC, "deck.monsters": "\n".join([page] * 310)}
+    with pytest.raises(ClassicRetroError) as checked:
+        overlay.check_ff4_translations(translations=_translations(long))
+    assert checked.value.code is ErrorCode.RELOCATION_OVERFLOW
+    translated = tuple(
+        dataclasses.replace(message, notation=long[message.key]) for message in _messages()
+    )
+    with pytest.raises(ClassicRetroError) as refused:
+        _build(_rom(), font_path, translated=translated)
+    assert (refused.value.code, str(refused.value)) == (checked.value.code, str(checked.value))
+    # The list holds 153 messages and its end.
+    beh = engine.Ff4ArabicEncoder(engine.ff4_glyph_codes(engine.message_characters("ب")))
+    many = [Ff4Message(f"m.{number}", 1, number, "", "ب") for number in range(154)]
+    encoded = {message.key: beh.encode(message.notation) for message in many}
+    assert len(overlay.lay_out_messages(many[:153], encoded).redirects) == 153 * 5 + 1
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.lay_out_messages(many, encoded)
+    assert caught.value.code is ErrorCode.RELOCATION_OVERFLOW
+    # A name leaves a byte for its end.
+    names = {key: bytes(overlay.NAME_STRIDE - 1) for key in NAME_KEYS}
+    assert len(overlay.name_table(names)) == overlay.NAME_STRIDE * len(NAME_KEYS)
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.name_table({**names, "name.00": bytes(overlay.NAME_STRIDE)})
+    assert caught.value.code is ErrorCode.TEXT_BOX_OVERFLOW
+    assert overlay.check_ff4_translations()["messages"] == 6  # the shipped translations fit
 
 
 def test_the_sites_and_anchors_lie_apart_and_the_parts_are_in_order():

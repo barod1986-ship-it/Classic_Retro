@@ -30,12 +30,14 @@ from classic_retro.engines.fomt_arabic import (
     TAG_LEAD,
     code_cell,
 )
+from classic_retro.localization.translations import TranslationSet, builtin_translation_set
 from classic_retro.rebuild.bps import apply_bps
 from classic_retro.rom import fomt_arabic as overlay
 from classic_retro.rom.fomt_arabic_script import (
     OPENING_SCRIPT,
     OPENING_SCRIPT_ADDRESS,
     SCRIPT_TABLE,
+    TARGET,
     FomtArabicName,
     FomtArabicString,
     fomt_arabic_names,
@@ -422,6 +424,68 @@ def test_cli_checks_translations_without_rom(capsys):
     report = json.loads(capsys.readouterr().out)
     assert report.pop("raster") == library_versions()
     assert report == {"laid_out": False, "speaker_names": 5, "strings": 33}
+
+
+def _retranslated(key: str, text: str) -> TranslationSet:
+    """The shipped translations, with ``key``'s text replaced by ``text``."""
+    shipped = builtin_translation_set(TARGET)
+    entries = tuple(
+        dataclasses.replace(entry, text=text) if entry.id == key else entry
+        for entry in shipped.entries
+    )
+    return dataclasses.replace(shipped, entries=entries)
+
+
+HELLO = "\u0645\u0631\u062d\u0628\u0627"
+FRIEND = "\u064a\u0627 \u0635\u062f\u064a\u0642\u064a"
+# Invented texts that keep their string's commands ("{clear}{wait}", and
+# "{clear}{wait}{clear}{wait}" for old_man_farm) and break one check that needs no font.
+REFUSED_WITHOUT_A_FONT = (
+    ("father_fishing", "{clear}" + HELLO + " Sam{wait}", ErrorCode.UNENCODABLE_TEXT),
+    (
+        "father_fishing",
+        "{clear}\ufee3\ufeae\ufea3\ufe92\ufe8e{wait}",
+        ErrorCode.PRE_SHAPED_ARABIC_INPUT,
+    ),
+    (
+        "father_fishing",
+        "{clear}\u0645\u064e\u0631\u062d\u0628\u0627{wait}",
+        ErrorCode.UNSUPPORTED_ARABIC_MARK,
+    ),
+    ("father_fishing", "{clear}" + HELLO + " \u0667{wait}", ErrorCode.UNENCODABLE_TEXT),
+    # A fourth line scrolls the first away unread, a clear empties the box
+    # unread, and the last text is never shown by a {wait}.
+    ("father_fishing", "{clear}" + "\n".join([HELLO] * 4) + "{wait}", ErrorCode.TEXT_BOX_OVERFLOW),
+    ("father_fishing", "{clear}" + HELLO + "{wait}" + FRIEND, ErrorCode.TEXT_BOX_OVERFLOW),
+    (
+        "old_man_farm",
+        "{clear}" + HELLO + "{wait}" + FRIEND + "{clear}" + HELLO + "{wait}",
+        ErrorCode.TEXT_BOX_OVERFLOW,
+    ),
+    ("name.mother", "Mom", ErrorCode.UNENCODABLE_TEXT),
+    ("name.mother", "\u0623\u0645\u0651", ErrorCode.UNSUPPORTED_ARABIC_MARK),
+)
+
+
+@pytest.mark.parametrize(("key", "text", "code"), REFUSED_WITHOUT_A_FONT)
+def test_check_without_a_font_refuses_what_needs_no_pixels(key, text, code):
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.check_fomt_translations(translations=_retranslated(key, text))
+    assert caught.value.code is code
+
+
+@pytest.mark.parametrize(("key", "text", "code"), REFUSED_WITHOUT_A_FONT)
+def test_check_with_the_reference_font_gives_the_same_errors(reference_font, key, text, code):
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.check_fomt_translations(reference_font, translations=_retranslated(key, text))
+    assert caught.value.code is code
+
+
+def test_check_without_a_font_refuses_a_string_twice():
+    strings = _strings()
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.check_strings((*strings, strings[0]))
+    assert caught.value.code is ErrorCode.DUPLICATE_ENTRY_ID
 
 
 def test_cli_encodes_a_string(arabic_font, capsys):

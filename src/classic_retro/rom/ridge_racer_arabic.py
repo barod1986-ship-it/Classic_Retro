@@ -59,6 +59,7 @@ from classic_retro.engines.ridge_racer_arabic import (
     RrFont,
     build_atlas,
     build_ridge_racer_fonts,
+    check_font_characters,
     font_preview,
     ridge_racer_glyph_codes,
     string_preview,
@@ -550,6 +551,10 @@ def check_ridge_racer_translations(
     entries = ridge_racer_arabic_strings(translations)
     used = string_characters(entries)
     glyph_map = ridge_racer_glyph_codes(used[SMALL] | used[LARGE])
+    # What each font draws is known without a font file: the pad's buttons are the small
+    # font's only.
+    for name in FONTS:
+        check_font_characters(name, used[name])
     fonts = (
         build_ridge_racer_fonts(font_path, glyph_map, small=used[SMALL], large=used[LARGE])
         if font_path is not None
@@ -573,9 +578,11 @@ def check_ridge_racer_translations(
         "arabic_glyphs": len(glyph_map.characters),
     }
     if fonts is not None:
+        atlas = build_atlas(fonts)
+        hook_data(atlas)
         report["font_sizes"] = {name: font.font_size for name, font in fonts.items()}
         report["widths"] = {key: result.width for key, result in encoded.items()}
-        report["atlas_rows"] = build_atlas(fonts).rows
+        report["atlas_rows"] = atlas.rows
     return report
 
 

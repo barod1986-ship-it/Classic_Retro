@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import dataclasses
 import hashlib
 import json
 import shutil
@@ -31,6 +32,7 @@ from classic_retro.engines.tactics_ogre_arabic import (
     ToRtlFont,
     rtl_glyph,
 )
+from classic_retro.localization.translations import TranslationSet, builtin_translation_set
 from classic_retro.rebuild.bps import apply_bps
 from classic_retro.rom import tactics_ogre_arabic as overlay
 from classic_retro.rom.tactics_ogre_arabic_script import (
@@ -358,6 +360,41 @@ def test_shipped_translations_check_without_the_rom():
     ]  # fmt: skip
     assert {message.lines_per_page for message in messages} == {2, 3}
     assert all(message.source_address > BLOCK_ADDRESS for message in messages)
+
+
+def _lengthened(key: str, words: int) -> TranslationSet:
+    """The shipped translations, the first line of ``key`` lengthened by invented words."""
+    shipped = builtin_translation_set("tactics-ogre")
+    longer = " " + "كلام " * words + "\n"
+    entries = tuple(
+        dataclasses.replace(entry, text=entry.text.replace("\n", longer, 1))
+        if entry.id == key
+        else entry
+        for entry in shipped.entries
+    )
+    return dataclasses.replace(shipped, entries=entries)
+
+
+def test_the_check_keeps_every_message_in_reach_of_the_block():
+    # The bank starts 16 KiB after the block, whose offsets end at TABLE_END - 1.
+    reach = TABLE_END - (overlay.ARABIC_TEXT_ADDRESS - overlay.BLOCK_AREA)
+    assert reach == 49151
+    # Without a font a line is not measured, so the first message in the bank can hold
+    # 50000 bytes: the next one starts out of reach.
+    first = min(tactics_ogre_arabic_messages(), key=lambda message: message.index)
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.check_tactics_ogre_translations(translations=_lengthened(first.key, 10000))
+    assert caught.value.code is ErrorCode.RELOCATION_OVERFLOW
+    assert "16-bit reach" in str(caught.value)
+
+
+def test_the_check_keeps_the_arabic_in_its_bank(monkeypatch):
+    encoded = overlay.check_tactics_ogre_translations()["encoded_bytes"]
+    monkeypatch.setattr(overlay, "ARABIC_TEXT_END", overlay.ARABIC_TEXT_ADDRESS + encoded)
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.check_tactics_ogre_translations()
+    assert caught.value.code is ErrorCode.RELOCATION_OVERFLOW
+    assert "the bank holds" in str(caught.value)
 
 
 def test_translations_are_measured_and_previewed_with_a_font(tmp_path):

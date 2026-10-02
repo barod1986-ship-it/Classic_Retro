@@ -480,6 +480,36 @@ def encode_messages(
     return encoded
 
 
+@dataclass(frozen=True, slots=True)
+class MfTextBank:
+    """The stored texts one after another, and the address of each by key."""
+
+    data: bytes
+    addresses: dict[str, int]
+
+
+def text_bank(
+    messages: tuple[MfArabicMessage, ...], encoded: dict[str, MfEncodedText]
+) -> MfTextBank:
+    """Every stored text, one after another from ``ARABIC_TEXT_ADDRESS`` to ``ARABIC_TEXT_END``.
+
+    The bank needs only the encoded translations, so the check without the ROM
+    refuses a bank the build would.
+    """
+    texts = bytearray()
+    addresses: dict[str, int] = {}
+    for message in messages:
+        addresses[message.key] = ARABIC_TEXT_ADDRESS + len(texts)
+        texts += encoded[message.key].stored
+    if ARABIC_TEXT_ADDRESS + len(texts) > ARABIC_TEXT_END:
+        raise ClassicRetroError(
+            ErrorCode.RELOCATION_OVERFLOW,
+            f"The Arabic texts need {len(texts)} bytes; their region at "
+            f"{ARABIC_TEXT_ADDRESS:#x} holds {ARABIC_TEXT_END - ARABIC_TEXT_ADDRESS}",
+        )
+    return MfTextBank(bytes(texts), addresses)
+
+
 def question_patches(
     font: MfRtlFont, messages: Sequence[MfArabicMessage], encoded: dict[str, MfEncodedText]
 ) -> dict[int, bytes]:
@@ -543,13 +573,7 @@ def build_metroid_fusion_arabic_rom(
         raise ClassicRetroError(ErrorCode.RELOCATION_OVERFLOW, "The glyphs exceed their region")
 
     encoded = encode_messages(MfArabicEncoder(font), messages)
-    texts = bytearray()
-    addresses: dict[str, int] = {}
-    for message in messages:
-        addresses[message.key] = ARABIC_TEXT_ADDRESS + len(texts)
-        texts += encoded[message.key].stored
-    if ARABIC_TEXT_ADDRESS + len(texts) > ARABIC_TEXT_END:
-        raise ClassicRetroError(ErrorCode.RELOCATION_OVERFLOW, "Arabic texts exceed the region")
+    bank = text_bank(messages, encoded)
     questions = question_patches(font, messages, encoded)
 
     target = bytearray(rom)
@@ -561,7 +585,7 @@ def build_metroid_fusion_arabic_rom(
     write(HOOK_CODE_ADDRESS, HOOK_CODE)
     write(RTL_WIDTHS_ADDRESS, widths)
     write(FONT_ADDRESS, sheet)
-    write(ARABIC_TEXT_ADDRESS, bytes(texts))
+    write(ARABIC_TEXT_ADDRESS, bank.data)
     for veneer in VENEERS.values():
         write(veneer.address, veneer.code())
     write(GET_CHARACTER_WIDTH, _width_jump())
@@ -570,10 +594,10 @@ def build_metroid_fusion_arabic_rom(
     for address, code in questions.items():
         write(address, code)
     for message in messages:
-        write(message.pointer, struct.pack("<I", addresses[message.key]))
+        write(message.pointer, struct.pack("<I", bank.addresses[message.key]))
 
     output = bytes(target)
-    _verify_output(output, rom, widths, sheet, messages, encoded, addresses, questions)
+    _verify_output(output, rom, widths, sheet, messages, encoded, bank.addresses, questions)
     patch = create_bps(rom, output)
     report: dict[str, object] = {
         **base_report(IMAGE.title, rom, output, patch),
@@ -593,7 +617,7 @@ def build_metroid_fusion_arabic_rom(
         "hook_code_address": f"{HOOK_CODE_ADDRESS:#x}",
         "font_address": f"{FONT_ADDRESS:#x}",
         "arabic_text_address": f"{ARABIC_TEXT_ADDRESS:#x}",
-        "arabic_text_bytes": len(texts),
+        "arabic_text_bytes": len(bank.data),
     }
     return MfArabicBuild(rom=output, patch=patch, font=font, report=report)
 
@@ -671,7 +695,10 @@ def check_metroid_fusion_translations(
     *,
     translations: TranslationSet | None = None,
 ) -> dict[str, object]:
-    """Validate the translations without the ROM; with a font, measure and draw every text."""
+    """Validate the translations without the ROM; with a font, measure and draw every text.
+
+    The stored texts must fit their shared region, as in the build.
+    """
     font = build_metroid_fusion_rtl_font(font_path) if font_path is not None else None
     if font is None and (preview_path is not None or text_preview_path is not None):
         raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, "A preview needs --font")
@@ -679,6 +706,7 @@ def check_metroid_fusion_translations(
         font_preview(font).save(preview_path)
     messages = metroid_fusion_arabic_messages(translations)
     encoded = encode_messages(MfArabicEncoder(font), messages)
+    text_bank(messages, encoded)
     if font is not None and text_preview_path is not None:
         messages_sheet(
             [

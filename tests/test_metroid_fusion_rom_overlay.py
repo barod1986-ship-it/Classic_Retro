@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import shutil
 import struct
+from dataclasses import replace
 
 import pytest
 
@@ -32,6 +34,7 @@ from classic_retro.engines.metroid_fusion_arabic import (
     build_metroid_fusion_arabic_glyph_map,
     outlined_glyph,
 )
+from classic_retro.localization.translations import builtin_translation_set
 from classic_retro.rebuild.bps import apply_bps
 from classic_retro.rom import metroid_fusion_arabic as overlay
 from classic_retro.rom.metroid_fusion_arabic_script import (
@@ -398,6 +401,24 @@ def test_shipped_translations_check_without_the_rom():
     lists = {message.key: message.text_list for message in metroid_fusion_arabic_messages()}
     assert lists["first_briefing"] == NAVIGATION_LIST
     assert lists["objective_clear"] == lists["confirm_objective"] == MESSAGE_LIST
+
+
+def test_texts_over_their_shared_region_are_refused_without_the_rom():
+    shipped = builtin_translation_set("metroid-fusion")
+    # Every run of text becomes invented words; the commands and line ends stay.
+    words = " ".join(["بلمار", "تونسيك", "دربان", "فلكوت"] * 50)
+    oversized = replace(
+        shipped,
+        entries=tuple(
+            replace(entry, text=re.sub(r"(\{[^}]*\})|[^{\n]+", lambda m: m[1] or words, entry.text))
+            for entry in shipped.entries
+        ),
+    )
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.check_metroid_fusion_translations(translations=oversized)
+    assert caught.value.code is ErrorCode.RELOCATION_OVERFLOW
+    assert f"holds {overlay.ARABIC_TEXT_END - overlay.ARABIC_TEXT_ADDRESS}" in str(caught.value)
+    assert overlay.check_metroid_fusion_translations(translations=shipped)["messages"] == 18
 
 
 def test_translations_are_measured_and_previewed_with_a_font(tmp_path, monkeypatch):

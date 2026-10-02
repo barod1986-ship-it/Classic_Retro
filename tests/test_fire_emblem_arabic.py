@@ -177,6 +177,34 @@ def test_shipped_opening_script_validates_without_the_rom():
         validate_command_skeleton(message.source_skeleton, message.stream)
 
 
+def test_the_messages_region_is_checked_without_the_rom(monkeypatch):
+    region = overlay.ARABIC_LEGEND_ADDRESS - overlay.ARABIC_TEXT_ADDRESS
+    # Five messages of at most a buffer each (and their alignment) cannot fill it...
+    assert len(fire_emblem_arabic_messages()) * (overlay.MESSAGE_BUFFER_BYTES + 3) < region
+    texts, pointers = overlay.pack_messages({0x10: (b"\x1e\x82\x00", [6]), 0x02: (b"\x1e\x00", [])})
+    assert texts == b"\x1e\x00\x00\x00\x1e\x82\x00\x00"
+    assert pointers == {0x02: overlay.ARABIC_TEXT_ADDRESS, 0x10: overlay.ARABIC_TEXT_ADDRESS + 4}
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.pack_messages(
+            {index: (bytes(overlay.MESSAGE_BUFFER_BYTES), [0]) for index in range(9)}
+        )
+    assert caught.value.code is ErrorCode.RELOCATION_OVERFLOW
+    # ...and the check packs them as the build does.
+    monkeypatch.setattr(overlay, "ARABIC_LEGEND_ADDRESS", overlay.ARABIC_TEXT_ADDRESS + 1024)
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.check_fire_emblem_translations()
+    assert caught.value.code is ErrorCode.RELOCATION_OVERFLOW
+    assert "1024" in str(caught.value)
+
+
+def test_the_check_needs_one_legend_entry_per_image(monkeypatch):
+    six = overlay.fire_emblem_arabic_legend()[:-1]
+    monkeypatch.setattr(overlay, "fire_emblem_arabic_legend", lambda translations=None: six)
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.check_fire_emblem_translations()
+    assert caught.value.code is ErrorCode.RESOURCE_SET_MISMATCH
+
+
 @pytest.fixture
 def contextual_font(tmp_path):
     """Original test outlines: logical Arabic cmap + OpenType forms, no FE8x cmap."""

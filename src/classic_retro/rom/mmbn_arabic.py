@@ -64,6 +64,7 @@ from classic_retro.engines.mmbn_arabic import (
     MmbnArabicEncoder,
     MmbnArabicScript,
     MmbnLineRenderer,
+    check_pieces,
     game_latin_cells,
     pages_sheet,
     validate_command_skeleton,
@@ -587,14 +588,17 @@ def check_mmbn_translations(
     *,
     translations: TranslationSet | None = None,
 ) -> dict[str, object]:
-    """Validate the translations without the ROM; with a font, draw and measure every page."""
+    """Validate the translations without the ROM: their commands, their text and the
+    lines of every page; with a font, draw and measure every page."""
     if font_path is None and text_preview_path is not None:
         raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, "A preview needs --font")
     archives = mmbn_script_archives()
     sections = mmbn_arabic_sections(translations)
     check_script_layout(archives, sections)
     for section in sections:
-        validate_command_skeleton(section.source_skeleton, section.pieces)
+        pieces = section.pieces
+        validate_command_skeleton(section.source_skeleton, pieces)
+        check_pieces(pieces)
     report: dict[str, object] = {
         "archives": len(archives),
         "sections": len(sections),

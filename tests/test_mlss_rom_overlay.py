@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import shutil
 import struct
+from dataclasses import replace
 
 import pytest
 
@@ -36,6 +38,7 @@ from classic_retro.engines.mlss_arabic import (
     character_codes,
     validate_command_skeleton,
 )
+from classic_retro.localization.translations import builtin_translation_set
 from classic_retro.rebuild.bps import apply_bps
 from classic_retro.rom import mlss_arabic as overlay
 from classic_retro.rom.mlss_arabic_script import (
@@ -417,6 +420,24 @@ def test_cli_checks_translations_without_rom(capsys):
     assert main(["targets", "check-translations", "mlss"]) == 0
     report = json.loads(capsys.readouterr().out)
     assert report["messages"] == 12 and report["lines_measured"] is False
+
+
+def test_messages_over_their_shared_region_are_refused_without_the_rom():
+    shipped = builtin_translation_set("mlss")
+    # Every run of text becomes invented words; the commands and line ends stay.
+    words = " ".join(["بلمار", "تونسيك", "دربان", "فلكوت"] * 70)
+    oversized = replace(
+        shipped,
+        entries=tuple(
+            replace(entry, text=re.sub(r"(\{[^}]*\})|[^{\n]+", lambda m: m[1] or words, entry.text))
+            for entry in shipped.entries
+        ),
+    )
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.check_mlss_translations(translations=oversized)
+    assert caught.value.code is ErrorCode.RELOCATION_OVERFLOW
+    assert f"holds {overlay.REGION_END - overlay.ARABIC_TEXT_ADDRESS}" in str(caught.value)
+    assert overlay.check_mlss_translations(translations=shipped)["messages"] == 12
 
 
 def test_cli_encodes_a_message(capsys):

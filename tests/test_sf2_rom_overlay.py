@@ -34,6 +34,7 @@ from classic_retro.engines.sf2_arabic import (
     Sf2Font,
     Sf2Glyph,
 )
+from classic_retro.localization.translations import Translation, TranslationSet
 from classic_retro.rebuild.bps import apply_bps
 from classic_retro.rom import sf2_arabic as overlay
 from classic_retro.rom import sf2_arabic_script as script
@@ -300,6 +301,38 @@ def test_the_arabic_keeps_to_the_room(font_path, monkeypatch):
         with pytest.raises(ClassicRetroError) as caught:
             overlay.encode_strings(twice, encoder)
         assert caught.value.code is ErrorCode.DUPLICATE_ENTRY_ID
+
+
+def _translations(texts: dict[str, str]) -> TranslationSet:
+    """A translation set of these texts, by entry id."""
+    entries = tuple(Translation(key, text) for key, text in texts.items())
+    return TranslationSet(script.TARGET, "invented", entries)
+
+
+def test_the_check_refuses_without_the_rom_what_the_room_cannot_hold(font_path):
+    """The list and the room are reckoned from the text alone, as the build reckons them:
+    the check refuses a translation the room cannot hold, as the build does."""
+    filler = " ".join(["سطر آخر"] * 250)
+    long = {key: text.replace("{W2}", f" {filler}{{W2}}") for key, text in ARABIC.items()}
+    with pytest.raises(ClassicRetroError) as checked:
+        overlay.check_sf2_translations(translations=_translations(long))
+    assert checked.value.code is ErrorCode.RELOCATION_OVERFLOW
+    assert str(checked.value).endswith(f"the room holds {overlay.ROOM_END - overlay.ARABIC_FONT}")
+    strings = tuple(dataclasses.replace(string, notation=long[string.key]) for string in _strings())
+    with pytest.raises(ClassicRetroError) as refused:
+        _build(_rom(), font_path, translated=strings)
+    assert (refused.value.code, str(refused.value)) == (checked.value.code, str(checked.value))
+    # The list holds 42 strings and its end.
+    beh = engine.Sf2ArabicEncoder(engine.sf2_glyph_codes(engine.message_characters("ب")))
+    many = [Sf2String(f"s.{number}", number, "", "ب") for number in range(43)]
+    encoded = {string.key: beh.encode(string.notation) for string in many}
+    assert (
+        overlay.lay_out_room(many[:42], encoded, 3).start == overlay.ARABIC_FONT + 3 * GLYPH_BYTES
+    )
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.lay_out_room(many, encoded, 3)
+    assert caught.value.code is ErrorCode.RELOCATION_OVERFLOW
+    assert overlay.check_sf2_translations()["strings"] == 3  # the shipped translations fit
 
 
 def test_the_sites_and_anchors_lie_apart_and_the_room_in_order():

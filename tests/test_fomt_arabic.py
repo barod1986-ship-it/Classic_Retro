@@ -11,6 +11,7 @@ from classic_retro.engines.fomt import (
     CELL_WIDTH,
     INK,
     SHADOW,
+    WAIT_COMMAND,
     FomtCommand,
     PlaceholderStyle,
     parse_notation,
@@ -36,6 +37,7 @@ from classic_retro.engines.fomt_arabic import (
     cell_pixels,
     check_text,
     code_cell,
+    lay_out,
     page_preview,
     render_tag,
     text_pages,
@@ -243,6 +245,32 @@ def test_encoder_rejects_overflowing_or_unread_text(arabic_font):
     with pytest.raises(ClassicRetroError) as error:
         encoder.encode((ALEF, FomtCommand(b"\x01", "{01}")))
     assert error.value.code is ErrorCode.UNSUPPORTED_CONTROL_CODE
+
+
+def test_lay_out_without_a_font_checks_all_but_the_cells():
+    def lay(notation: str):
+        return lay_out(parse_notation(notation, PlaceholderStyle.SCRIPT))
+
+    lines, pages = lay(ALEF + "{wait}{clear}" + BEH + "\n" + ALEF + " {name}{wait}")
+    # The text is not drawn: only the name counts its cells.
+    assert [line.cells for line in lines] == [0, 0, NAME_CELLS] and pages == [[0], [1, 2]]
+    # A line too wide for the box needs the font to be found.
+    lay(BEH * 50 + "{wait}")
+    for notation in (
+        ALEF + "\n" + ALEF + "\n" + ALEF + "\n" + ALEF + "{wait}",
+        ALEF + "{clear}" + ALEF + "{wait}",
+        ALEF,
+    ):
+        with pytest.raises(ClassicRetroError) as error:
+            lay(notation)
+        assert error.value.code is ErrorCode.TEXT_BOX_OVERFLOW
+    for pieces, code in (
+        ((ALEF + " Sam", WAIT_COMMAND), ErrorCode.UNENCODABLE_TEXT),
+        ((ALEF, FomtCommand(b"\x01", "{01}")), ErrorCode.UNSUPPORTED_CONTROL_CODE),
+    ):
+        with pytest.raises(ClassicRetroError) as error:
+            lay_out(pieces)
+        assert error.value.code is code
 
 
 def test_cell_codes_span_eleven_lead_bytes():

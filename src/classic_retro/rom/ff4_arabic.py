@@ -362,13 +362,21 @@ def encode_names(names: Mapping[str, str], encoder: Ff4ArabicEncoder) -> dict[st
     return {key: encode_name(encoder, key, names[key]) for key in NAME_KEYS}
 
 
-def data_writes(
-    translated: Sequence[Ff4Message],
-    encoded: Mapping[str, EncodedMessage],
-    names: Mapping[str, bytes],
-    tiles: TileSet,
-) -> dict[int, bytes]:
-    """What the overlay writes into the added banks and the font, by address."""
+@dataclass(frozen=True, slots=True)
+class MessageLayout:
+    """The list of translated messages, and the Arabic text of their bank."""
+
+    redirects: bytes
+    text: bytes
+
+
+def lay_out_messages(
+    translated: Sequence[Ff4Message], encoded: Mapping[str, EncodedMessage]
+) -> MessageLayout:
+    """The list and the Arabic messages in their bank: one after another from
+    ``ARABIC_TEXT``, each by its offset there; refused where the bank or the list
+    cannot hold them. It needs only the text, so the check without the ROM refuses
+    what the build would."""
     redirects = bytearray()
     text = bytearray()
     for message in translated:
@@ -385,13 +393,31 @@ def data_writes(
         raise ClassicRetroError(
             ErrorCode.RELOCATION_OVERFLOW, f"{len(translated)} messages do not fit the list"
         )
-    letters = b"".join(tiles.tiles.get(code, SPACE_TILE) for code in LETTER_CODES)
+    return MessageLayout(bytes(redirects), bytes(text))
+
+
+def name_table(names: Mapping[str, bytes]) -> bytes:
+    """The names in the game's order, ``NAME_STRIDE`` bytes each, filled with $FF;
+    refused where a name leaves no room for its end."""
     table = bytearray()
     for key in NAME_KEYS:
         entry = names[key]
         if len(entry) >= NAME_STRIDE:
             raise ClassicRetroError(ErrorCode.TEXT_BOX_OVERFLOW, f"{key}: the name is too long")
         table += entry + b"\xff" * (NAME_STRIDE - len(entry))
+    return bytes(table)
+
+
+def data_writes(
+    translated: Sequence[Ff4Message],
+    encoded: Mapping[str, EncodedMessage],
+    names: Mapping[str, bytes],
+    tiles: TileSet,
+) -> dict[int, bytes]:
+    """What the overlay writes into the added banks and the font, by address."""
+    layout = lay_out_messages(translated, encoded)
+    letters = b"".join(tiles.tiles.get(code, SPACE_TILE) for code in LETTER_CODES)
+    table = name_table(names)
     font = {
         FONT + code * FONT_TILE_BYTES: tile
         for code, tile in sorted(tiles.tiles.items())
@@ -399,10 +425,10 @@ def data_writes(
     }
     return {
         TOP_FIRST: bytes((tiles.top_first,)),
-        REDIRECTS: bytes(redirects),
+        REDIRECTS: layout.redirects,
         LETTER_TILES: letters,
-        NAMES: bytes(table),
-        ARABIC_TEXT: bytes(text),
+        NAMES: table,
+        ARABIC_TEXT: layout.text,
         **font,
     }
 
@@ -606,6 +632,10 @@ def check_ff4_translations(
     encoder = Ff4ArabicEncoder(tiles.codes if tiles else ff4_glyph_codes(used), tiles)
     encoded = encode_messages(translated, encoder)
     encoded_names = encode_names(names, encoder)
+    # The bank, the list and the names as the build fills them: with the tiles, the
+    # build's own bytes; without, a code a letter, as the rest of the check reckons.
+    lay_out_messages(translated, encoded)
+    name_table(encoded_names)
     if tiles is not None and preview_path is not None:
         font_preview(tiles).save(preview_path)
     if tiles is not None and text_preview_path is not None:

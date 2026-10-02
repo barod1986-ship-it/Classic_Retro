@@ -192,8 +192,10 @@ class FomtCellRenderer:
         return self._anchors[key]
 
     def ink(self, text: str, width: int, right: float) -> list[list[bool]]:
-        """1bpp ink of ``text`` with its right end at ``right`` on a ``width``-pixel line."""
-        check_text(text)
+        """1bpp ink of ``text`` with its right end at ``right`` on a ``width``-pixel line.
+
+        The text was checked where it came in (``lay_out``, ``render_tag``).
+        """
         glyphs = self.shaper.shape(text)
         base_text = "".join(HAMZA_CARRIERS.get(character, (character,))[0] for character in text)
         bases = self.shaper.shape(base_text) if base_text != text else glyphs
@@ -366,6 +368,86 @@ def validate_command_skeleton(source: tuple[str, ...], pieces: Sequence[Piece]) 
     require_same_commands("FoMT", source, command_skeleton(pieces), "".join)
 
 
+def lay_out(
+    pieces: Sequence[Piece], renderer: FomtCellRenderer | None = None
+) -> tuple[list[FomtLine], list[list[int]]]:
+    """Lines of a translation, and the lines of each page (between clears).
+
+    The box shows three lines; a line feed on the third scrolls it, and a
+    clear empties it. Neither may remove text the player has not seen at a
+    ``{wait}``, and a translation ends with one.
+
+    The characters, the commands and these rules need no font: without a
+    renderer they are all checked, but the text is not drawn, so a line's
+    cells count only the name's.
+    """
+    lines: list[FomtLine] = []
+    pages: list[list[int]] = [[]]
+    items: list[FomtRun | FomtCommand] = []
+    cells = 0
+    # The lines in the box, oldest first: whether they hold unread text.
+    unread = [False]
+
+    def end_line() -> None:
+        nonlocal items, cells
+        if cells > BOX_COLUMNS:
+            raise ClassicRetroError(
+                ErrorCode.TEXT_BOX_OVERFLOW,
+                f"A line needs {cells} cells (the name counts {NAME_CELLS}); "
+                f"the box holds {BOX_COLUMNS}",
+            )
+        pages[-1].append(len(lines))
+        lines.append(FomtLine(tuple(items), cells))
+        items, cells = [], 0
+
+    def check_read(flags: list[bool]) -> None:
+        if any(flags):
+            raise ClassicRetroError(
+                ErrorCode.TEXT_BOX_OVERFLOW,
+                "Text leaves the box before a {wait} shows it (a fourth line or a clear)",
+            )
+
+    for number, piece in enumerate(pieces):
+        if isinstance(piece, str):
+            if not piece:
+                continue
+            check_text(piece)
+            if renderer is not None:
+                follows = pieces[number + 1] if number + 1 < len(pieces) else None
+                named = isinstance(follows, FomtCommand) and follows.notation == "{name}"
+                run = renderer.run(piece, left_gap=NAME_GAP if named else None)
+                items.append(run)
+                cells += len(run.cells)
+            unread[-1] = True
+        elif piece.is_newline:
+            end_line()
+            if len(unread) == BOX_LINES:
+                check_read(unread[:1])
+                unread.pop(0)
+            unread.append(False)
+        elif piece.notation == CLEAR_COMMAND.notation:
+            check_read(unread)
+            items.append(piece)
+            end_line()
+            pages.append([])
+            unread = [False]
+        elif piece.notation == WAIT_COMMAND.notation:
+            items.append(piece)
+            unread = [False] * len(unread)
+        elif piece.notation == "{name}":
+            items.append(piece)
+            cells += NAME_CELLS
+            unread[-1] = True
+        else:
+            raise ClassicRetroError(
+                ErrorCode.UNSUPPORTED_CONTROL_CODE,
+                f"FoMT Arabic v1 does not support {piece.notation!r}",
+            )
+    end_line()
+    check_read(unread)
+    return lines, pages
+
+
 class FomtArabicEncoder:
     """Encode translations into cell codes, sharing one bank of cells."""
 
@@ -373,79 +455,8 @@ class FomtArabicEncoder:
         self.renderer = renderer
         self.bank = bank if bank is not None else CellBank()
 
-    def lay_out(self, pieces: Sequence[Piece]) -> tuple[list[FomtLine], list[list[int]]]:
-        """Lines of a translation, and the lines of each page (between clears).
-
-        The box shows three lines; a line feed on the third scrolls it, and a
-        clear empties it. Neither may remove text the player has not seen at a
-        ``{wait}``, and a translation ends with one.
-        """
-        lines: list[FomtLine] = []
-        pages: list[list[int]] = [[]]
-        items: list[FomtRun | FomtCommand] = []
-        cells = 0
-        # The lines in the box, oldest first: whether they hold unread text.
-        unread = [False]
-
-        def end_line() -> None:
-            nonlocal items, cells
-            if cells > BOX_COLUMNS:
-                raise ClassicRetroError(
-                    ErrorCode.TEXT_BOX_OVERFLOW,
-                    f"A line needs {cells} cells (the name counts {NAME_CELLS}); "
-                    f"the box holds {BOX_COLUMNS}",
-                )
-            pages[-1].append(len(lines))
-            lines.append(FomtLine(tuple(items), cells))
-            items, cells = [], 0
-
-        def check_read(flags: list[bool]) -> None:
-            if any(flags):
-                raise ClassicRetroError(
-                    ErrorCode.TEXT_BOX_OVERFLOW,
-                    "Text leaves the box before a {wait} shows it (a fourth line or a clear)",
-                )
-
-        for number, piece in enumerate(pieces):
-            if isinstance(piece, str):
-                if not piece:
-                    continue
-                follows = pieces[number + 1] if number + 1 < len(pieces) else None
-                named = isinstance(follows, FomtCommand) and follows.notation == "{name}"
-                run = self.renderer.run(piece, left_gap=NAME_GAP if named else None)
-                items.append(run)
-                cells += len(run.cells)
-                unread[-1] = True
-            elif piece.is_newline:
-                end_line()
-                if len(unread) == BOX_LINES:
-                    check_read(unread[:1])
-                    unread.pop(0)
-                unread.append(False)
-            elif piece.notation == CLEAR_COMMAND.notation:
-                check_read(unread)
-                items.append(piece)
-                end_line()
-                pages.append([])
-                unread = [False]
-            elif piece.notation == WAIT_COMMAND.notation:
-                items.append(piece)
-                unread = [False] * len(unread)
-            elif piece.notation == "{name}":
-                items.append(piece)
-                cells += NAME_CELLS
-                unread[-1] = True
-            else:
-                raise ClassicRetroError(
-                    ErrorCode.UNSUPPORTED_CONTROL_CODE,
-                    f"FoMT Arabic v1 does not support {piece.notation!r}",
-                )
-        end_line()
-        check_read(unread)
-        return lines, pages
-
     def encode(self, pieces: Sequence[Piece]) -> FomtArabicText:
-        lines, pages = self.lay_out(pieces)
+        lines, pages = lay_out(pieces, self.renderer)
         data = bytearray()
         for number, line in enumerate(lines):
             if number and not (line_ends_page(lines[number - 1])):
@@ -473,6 +484,7 @@ def line_ends_page(line: FomtLine) -> bool:
 
 def render_tag(renderer: FomtCellRenderer, name: str, bank: TagBank) -> bytes:
     """A speaker name for the name tag: codes in left-to-right order, right-aligned."""
+    check_text(name)
     run = renderer.run(name, cell_width=TAG_CELL_WIDTH, min_cells=TAG_CELLS)
     if len(run.cells) > TAG_CELLS:
         raise ClassicRetroError(

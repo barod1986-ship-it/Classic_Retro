@@ -38,8 +38,10 @@ from classic_retro.engines.ff6_arabic import (
     Ff6Font,
     Ff6Glyph,
 )
+from classic_retro.localization.translations import Translation, TranslationSet
 from classic_retro.rebuild.bps import apply_bps
 from classic_retro.rom import ff6_arabic as overlay
+from classic_retro.rom import ff6_arabic_script as script
 from classic_retro.rom.ff6_arabic_script import NAME_KEYS, Ff6Message
 
 # Invented English for four messages, with the commands the Arabic keeps; the
@@ -268,6 +270,49 @@ def test_the_arabic_keeps_to_its_banks(font_path, monkeypatch):
         assert (address % 64) + len(data) < 64
     assert table[0] == overlay.ARABIC_TEXT
     assert any(address % 64 == 0 for number, address in table.items() if number)
+
+
+def _translations(texts: dict[str, str]) -> TranslationSet:
+    """A translation set of these texts and ``NAMES``, by entry id."""
+    entries = tuple(Translation(key, text) for key, text in {**texts, **NAMES}.items())
+    return TranslationSet(script.TARGET, "invented", entries)
+
+
+def test_the_check_refuses_without_the_rom_what_the_banks_cannot_hold(font_path, monkeypatch):
+    """The table, the banks and the glyphs are reckoned from the text alone, as the build
+    reckons them: the check refuses a translation the banks cannot hold, as the build
+    does. The script's messages are the four invented ones here."""
+    sources = {
+        message.key: (message.number, message.source_sha256, None) for message in _messages()
+    }
+    monkeypatch.setattr(script, "_SOURCES", sources)
+    page = "{line}".join(["سلام" * 8] * 4)  # four lines of 32 letters
+    long = {**ARABIC, "narshe.late": "\n".join([page] * 520)}
+    with pytest.raises(ClassicRetroError) as checked:
+        overlay.check_ff6_translations(translations=_translations(long))
+    assert checked.value.code is ErrorCode.RELOCATION_OVERFLOW
+    assert str(checked.value).startswith("narshe.late: the Arabic message needs")
+    translated = tuple(
+        dataclasses.replace(message, notation=long[message.key]) for message in _messages()
+    )
+    with pytest.raises(ClassicRetroError) as refused:
+        _build(_rom(), font_path, translated=translated)
+    assert (refused.value.code, str(refused.value)) == (checked.value.code, str(checked.value))
+    # Banks made small: messages they cannot hold together, glyphs theirs cannot hold.
+    assert overlay.check_ff6_translations(translations=_translations(ARABIC))["messages"] == 4
+    for name, end, code in (
+        ("ARABIC_TEXT_END", overlay.ARABIC_TEXT + 8, ErrorCode.RELOCATION_OVERFLOW),
+        ("GLYPHS_END", overlay.GLYPHS + GLYPH_BYTES, ErrorCode.ARABIC_GLYPH_CAPACITY_EXCEEDED),
+    ):
+        with monkeypatch.context() as patch:
+            patch.setattr(overlay, name, end)
+            patch.setattr(overlay, "build_ff6_font", _fake_font)
+            with pytest.raises(ClassicRetroError) as checked:
+                overlay.check_ff6_translations(font_path, translations=_translations(ARABIC))
+            assert checked.value.code is code, name
+            with pytest.raises(ClassicRetroError) as refused:
+                _build(_rom(), font_path)
+            assert str(refused.value) == str(checked.value), name
 
 
 def test_originals_are_extracted_and_verified():

@@ -35,6 +35,7 @@ from classic_retro.engines.sotn_arabic import (
     SotnFont,
     sotn_glyph,
 )
+from classic_retro.localization.translations import TranslationSet, builtin_translation_set
 from classic_retro.patching.cdrom import (
     DATA_SIZE,
     SECTOR_SIZE,
@@ -448,6 +449,63 @@ def test_names_and_lines_must_fit(font_path):
     with pytest.raises(ClassicRetroError) as caught:
         _build(track, layout, font_path, messages=(wide,))
     assert caught.value.code is ErrorCode.TEXT_BOX_OVERFLOW
+
+
+def _shipped_with(texts: dict[str, str]) -> TranslationSet:
+    """The shipped translations with ``texts`` in place of theirs."""
+    shipped = builtin_translation_set("sotn")
+    entries = tuple(
+        dataclasses.replace(entry, text=texts.get(entry.id, entry.text))
+        for entry in shipped.entries
+    )
+    return dataclasses.replace(shipped, entries=entries)
+
+
+def test_the_check_holds_the_script_to_its_room():
+    shipped = overlay.check_sotn_translations()
+    tribute = {entry.id: entry.text for entry in builtin_translation_set("sotn").entries}["tribute"]
+    # The box scrolls, so a message holds any number of lines: ten bytes each here.
+    longer = {
+        lines: _shipped_with({"tribute": tribute.replace("\n", "\n" + "كلام جديد\n" * lines, 1)})
+        for lines in (150, 200)
+    }
+    report = overlay.check_sotn_translations(translations=longer[150])
+    assert report["encoded_bytes"] == shipped["encoded_bytes"] + 1500
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.check_sotn_translations(translations=longer[200])
+    assert caught.value.code is ErrorCode.RELOCATION_OVERFLOW
+    room = overlay.GLYPHS_ADDRESS - overlay.ARABIC_SCRIPT_ADDRESS
+    assert f"its room holds {room}" in str(caught.value)
+
+
+def test_the_check_holds_each_name_to_its_slot():
+    # 18 codes: a slot holds a count and 15.
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.check_sotn_translations(
+            translations=_shipped_with({"name.richter": "اسم المتكلم الطويل"})
+        )
+    assert caught.value.code is ErrorCode.TEXT_OVERFLOW
+    assert "name.richter" in str(caught.value)
+
+
+def test_the_check_refuses_overlapping_messages_and_shared_speakers(monkeypatch):
+    messages = overlay.sotn_arabic_messages()
+    names = overlay.sotn_arabic_names()
+    overlapping = dataclasses.replace(messages[1], source_address=messages[0].source_end - 1)
+    monkeypatch.setattr(
+        overlay, "sotn_arabic_messages", lambda translations=None: (messages[0], overlapping)
+    )
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.check_sotn_translations()
+    assert caught.value.code is ErrorCode.DUPLICATE_ENTRY_ID
+    assert "overlaps" in str(caught.value)
+    shared = dataclasses.replace(names[1], speaker=names[0].speaker)
+    monkeypatch.setattr(overlay, "sotn_arabic_messages", lambda translations=None: messages)
+    monkeypatch.setattr(overlay, "sotn_arabic_names", lambda translations=None: (names[0], shared))
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.check_sotn_translations()
+    assert caught.value.code is ErrorCode.DUPLICATE_ENTRY_ID
+    assert "Speaker" in str(caught.value)
 
 
 def test_the_hooks_may_only_call_the_game_routines_they_name(monkeypatch):

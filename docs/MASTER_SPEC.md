@@ -622,6 +622,13 @@ Supported relocation strategies may include:
 
 Every relocation must be validated.
 
+A target lays out the space it adds (its banks, its room, its message lists and name
+tables) with one function that the build and `check_translations` both call, so
+`targets check-translations` refuses without the image, with the build's own error, every
+budget the text alone decides. Without a font it never counts the text longer than the
+build would, so it never refuses what the build accepts. What is left to the build is
+what it compares with the user's image.
+
 ## 12. Compression and containers
 
 Compression/container handling is plugin/adapter behavior.
