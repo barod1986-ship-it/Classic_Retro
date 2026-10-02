@@ -229,9 +229,9 @@ Zozo's clocks put two choices on a line; the arias keep the English's pauses and
 waits between their words, the note written with `♪`; the classroom's status names are in
 guillemets and the buttons written out. The tombstone puzzle (2483-2530) is the one place
 the English writes Latin letters the Arabic cannot draw: its four reversed groups, which
-spell «THE WORLD IS SQUARE» backwards in the right order, become the four words of «إن هذا
-العالم مربع», so the player orders words instead of letters and the game's own check of
-the order (the choice indices) is untouched.
+spell a sentence backwards in the right order, become the four words of an Arabic
+sentence, so the player orders words instead of letters and the game's own check of the
+order (the choice indices) is untouched.
 
 The Arabic is in `translations/final-fantasy-iii.json`, a line a page, `{line}` where a
 line must end; its `glossary` fixes how every place, character, Esper and term is written,

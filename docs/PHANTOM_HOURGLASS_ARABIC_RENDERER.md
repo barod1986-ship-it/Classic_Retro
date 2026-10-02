@@ -170,7 +170,7 @@ run 1800
 tap START 4 120
 touch 128 288 6 120
 run 300
-# "A file has been created."
+# The game says it has created a save file.
 run 900
 touch 128 350 6 120
 run 200
