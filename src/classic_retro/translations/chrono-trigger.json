@@ -5963,7 +5963,7 @@
     {
       "id": "guardia.064",
       "context": "Message 64 of the guardia table (Castle Guardia in 600 and 1000...): {Marle}: Wh, what…IS that?",
-      "text": "{Marle}: ما… ما هذا الشيء؟"
+      "text": "{Marle}: م… ما هذا الشيء؟"
     },
     {
       "id": "guardia.065",
@@ -6598,7 +6598,7 @@
     {
       "id": "guardia.191",
       "context": "Message 191 of the guardia table (Castle Guardia in 600 and 1000...): {Ayla}: Egg!{line+}{Ayla} hungry, want eat!",
-      "text": "{Ayla}: بيضة!{line}{Ayla} جائعة، تريد أكل!"
+      "text": "{Ayla}: بيضة!{line}{Ayla} جائعة، تريد تأكل!"
     },
     {
       "id": "guardia.192",
@@ -6813,7 +6813,7 @@
     {
       "id": "guardia.234",
       "context": "Message 234 of the guardia table (Castle Guardia in 600 and 1000...): {Magus}: ……{box+}Cretins!{line+}And they're still alive!?{box+}By the way, Ozzie had a hideout{line+}much like my castle…",
-      "text": "{Magus}: ……\nأولئك الحمقى!{line}أما زالوا على قيد الحياة!؟\nبالمناسبة، كان لأوزي مخبأ يشبه قلعتي كثيرا…"
+      "text": "{Magus}: ……\nأولئك الحمقى!{line}أما زالوا على قيد الحياة؟!\nبالمناسبة، كان لأوزي مخبأ يشبه قلعتي كثيرا…"
     },
     {
       "id": "guardia.235",
@@ -6968,17 +6968,17 @@
     {
       "id": "guardia.265",
       "context": "Message 265 of the guardia table (Castle Guardia in 600 and 1000...): {Frog}: The magician, Flea, I{line+}presume?",
-      "text": "{Frog}: أأنت فلي الساحر، على ما أحسب؟"
+      "text": "{Frog}: أأنت فلي الساحرة، على ما أحسب؟"
     },
     {
       "id": "guardia.266",
       "context": "Message 266 of the guardia table (Castle Guardia in 600 and 1000...): {Frog}: Wait!{line+}That isn't Flea…{line+}Where's the REAL Flea?!",
-      "text": "{Frog}: مهلا!{line}ما هذا بفلي…{line}أين فلي الحقيقي؟!"
+      "text": "{Frog}: مهلا!{line}ما هذا بفلي…{line}أين فلي الحقيقية؟!"
     },
     {
       "id": "guardia.267",
       "context": "Message 267 of the guardia table (Castle Guardia in 600 and 1000...): Mwa ha…{line}Here, over here…",
-      "text": "مواها…{line}هنا، أنا هنا…"
+      "text": "مواها ها…{line}هنا، أنا هنا…"
     },
     {
       "id": "guardia.268",
@@ -7678,7 +7678,7 @@
     {
       "id": "guardia.407",
       "context": "Message 407 of the guardia table (Castle Guardia in 600 and 1000...): SPEKKIO: …Phew…!!{box+}You hauled in a marlin here, kids!{box+}He can use “Shadow”…{line+}And he could probably teach me a{line+}thing or two!",
-      "text": "سبيكيو: …ياه…!!\nلقد ظفرتم بصيد ثمين هنا يا أولاد!\nإنه يستطيع استخدام «الظل»…{line}بل ربما علمني أنا بعض الحيل!"
+      "text": "سبيكيو: …ياه…!!\nلقد ظفرتم بصيد ثمين هنا يا أولاد!\nإنه يستطيع استخدام «الظل»…{line}بل ربما يعلمني أنا بعض الحيل!"
     },
     {
       "id": "guardia.408",
@@ -7853,7 +7853,7 @@
     {
       "id": "guardia.442",
       "context": "Message 442 of the guardia table (Castle Guardia in 600 and 1000...): {Magus}: Hm, how frightened are we?{line+}   Fight!{line+}   Run away for now!",
-      "text": "{Magus}: همم، هل دب الخوف في قلوبنا؟{line}{choice}لنقاتل!{line}{choice}لنهرب مؤقتا!"
+      "text": "{Magus}: همم، هل دب الخوف في قلوبكم؟{line}{choice}لنقاتل!{line}{choice}لنهرب مؤقتا!"
     },
     {
       "id": "guardia.443",
@@ -7983,7 +7983,7 @@
     {
       "id": "guardia.468",
       "context": "Message 468 of the guardia table (Castle Guardia in 600 and 1000...): {Marle}: L…let's go inside!",
-      "text": "{Marle}: ل…لندخل إليه!"
+      "text": "{Marle}: ل… لندخل إليه!"
     },
     {
       "id": "guardia.469",
@@ -8138,7 +8138,7 @@
     {
       "id": "guardia.499",
       "context": "Message 499 of the guardia table (Castle Guardia in 600 and 1000...): {Ayla}: Find {Crono}!{line+}{Crono} still alive!!",
-      "text": "{Ayla}: نبحث عن {Crono}!{line}{Crono} ما زال حي!!"
+      "text": "{Ayla}: نبحث عن {Crono}!{line}{Crono} ما زال حيا!!"
     },
     {
       "id": "guardia.500",
@@ -8148,7 +8148,7 @@
     {
       "id": "guardia.501",
       "context": "Message 501 of the guardia table (Castle Guardia in 600 and 1000...): {Lucca}: We're getting some{line+}interference from an enormous{line+}Gate!{line+}It can't be! Lavos!!??",
-      "text": "{Lucca}: هناك تشويش يصلنا من بوابة هائلة!{line}مستحيل! أهو لافوس!!؟؟"
+      "text": "{Lucca}: هناك تشويش يصلنا من بوابة هائلة!{line}مستحيل! أهو لافوس؟؟!!"
     },
     {
       "id": "guardia.502",
@@ -8158,7 +8158,7 @@
     {
       "id": "guardia.503",
       "context": "Message 503 of the guardia table (Castle Guardia in 600 and 1000...): {Frog}: !?",
-      "text": "{Frog}: !؟"
+      "text": "{Frog}: ؟!"
     },
     {
       "id": "guardia.504",
@@ -8188,7 +8188,7 @@
     {
       "id": "guardia.509",
       "context": "Message 509 of the guardia table (Castle Guardia in 600 and 1000...): {Ayla}: Me hate!{line+}{Ayla} not like boat!!",
-      "text": "{Ayla}: أنا أكره!{line}{Ayla} لا تحب قارب!!"
+      "text": "{Ayla}: أنا أكره!{line}{Ayla} لا تحب القارب!!"
     },
     {
       "id": "guardia.510",
@@ -8733,7 +8733,7 @@
     {
       "id": "guardia.618",
       "context": "Message 618 of the guardia table (Castle Guardia in 600 and 1000...): {member 3}: !?",
-      "text": "{member 3}: !؟"
+      "text": "{member 3}: ؟!"
     },
     {
       "id": "guardia.619",
@@ -8843,7 +8843,7 @@
     {
       "id": "guardia.640",
       "context": "Message 640 of the guardia table (Castle Guardia in 600 and 1000...): {Lucca}: Wh, what!",
-      "text": "{Lucca}: ما، ما هذا!"
+      "text": "{Lucca}: م، ما هذا؟!"
     },
     {
       "id": "guardia.641",
@@ -8898,7 +8898,7 @@
     {
       "id": "guardia.651",
       "context": "Message 651 of the guardia table (Castle Guardia in 600 and 1000...): {Lucca}: !?",
-      "text": "{Lucca}: !؟"
+      "text": "{Lucca}: ؟!"
     },
     {
       "id": "guardia.652",
@@ -8973,7 +8973,7 @@
     {
       "id": "guardia.666",
       "context": "Message 666 of the guardia table (Castle Guardia in 600 and 1000...): Hey you!?",
-      "text": "هيه، أنت!؟"
+      "text": "هيه، أنت؟!"
     },
     {
       "id": "guardia.667",
@@ -9088,7 +9088,7 @@
     {
       "id": "guardia.689",
       "context": "Message 689 of the guardia table (Castle Guardia in 600 and 1000...): DALTON: Mwa, ha, hahahaha!",
-      "text": "دالتون: موا، ها، هاهاهاها!"
+      "text": "دالتون: مواها ها هاهاهاها!"
     },
     {
       "id": "guardia.690",
@@ -9223,7 +9223,7 @@
     {
       "id": "guardia.716",
       "context": "Message 716 of the guardia table (Castle Guardia in 600 and 1000...): {Robo}: Th, that's!",
-      "text": "{Robo}: ه، هذا…!"
+      "text": "{Robo}: هـ، هذا…!"
     },
     {
       "id": "guardia.717",
@@ -9253,7 +9253,7 @@
     {
       "id": "guardia.722",
       "context": "Message 722 of the guardia table (Castle Guardia in 600 and 1000...): DALTON: Mwa, ha, haha!!{line+}You are excess baggage!",
-      "text": "دالتون: موا، ها، هاها!!{line}أنتم حمولة زائدة!"
+      "text": "دالتون: مواها ها هاها!!{line}أنتم حمولة زائدة!"
     },
     {
       "id": "guardia.723",
@@ -9283,7 +9283,7 @@
     {
       "id": "guardia.728",
       "context": "Message 728 of the guardia table (Castle Guardia in 600 and 1000...): DALTON: Mwa ha!{line+}You are like insects to me!",
-      "text": "دالتون: موا ها!{line}ما أنتم في نظري إلا حشرات!"
+      "text": "دالتون: مواها ها!{line}ما أنتم في نظري إلا حشرات!"
     },
     {
       "id": "guardia.729",
@@ -9338,7 +9338,7 @@
     {
       "id": "guardia.739",
       "context": "Message 739 of the guardia table (Castle Guardia in 600 and 1000...): {Marle}: Pant…wheeze…",
-      "text": "{Marle}: هاه…هاه…"
+      "text": "{Marle}: هاه… هاه…"
     },
     {
       "id": "guardia.740",
@@ -9603,7 +9603,7 @@
     {
       "id": "guardia.792",
       "context": "Message 792 of the guardia table (Castle Guardia in 600 and 1000...): QUEEN: Giggle…",
-      "text": "الملكة: هي هي…"
+      "text": "الملكة: هيهي…"
     },
     {
       "id": "guardia.793",
@@ -9693,7 +9693,7 @@
     {
       "id": "guardia.810",
       "context": "Message 810 of the guardia table (Castle Guardia in 600 and 1000...): QUEEN: Giggle…",
-      "text": "الملكة: هي هي…"
+      "text": "الملكة: هيهي…"
     },
     {
       "id": "guardia.811",
@@ -9723,7 +9723,7 @@
     {
       "id": "guardia.816",
       "context": "Message 816 of the guardia table (Castle Guardia in 600 and 1000...): {Marle}: S, something's wrong!!!",
-      "text": "{Marle}: ه، هناك خطب ما!!!"
+      "text": "{Marle}: هـ، هناك خطب ما!!!"
     },
     {
       "id": "guardia.817",
@@ -10903,7 +10903,7 @@
     {
       "id": "guardia.1052",
       "context": "Message 1052 of the guardia table (Castle Guardia in 600 and 1000...): CHANCELLOR: Do as King Guardia XXXIII{line+}says!",
-      "text": "المستشار: نفذوا ما يأمر به جلالة الملك غارديا الثالث والثلاثون!"
+      "text": "المستشار: نفذوا ما يأمر به جلالة الملك غارديا الثالث والثلاثين!"
     },
     {
       "id": "guardia.1053",
