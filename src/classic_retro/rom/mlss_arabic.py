@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import hashlib
 import struct
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -256,6 +257,37 @@ def encode_messages(
     return encoded
 
 
+@dataclass(frozen=True, slots=True)
+class MlssMessageBank:
+    """The stored messages one after another, and the address of each by key."""
+
+    data: bytes
+    addresses: dict[str, int]
+
+
+def message_bank(
+    messages: tuple[MlssArabicMessage, ...], stored: Mapping[str, bytes]
+) -> MlssMessageBank:
+    """Every stored message, one after another from ``ARABIC_TEXT_ADDRESS`` to ``REGION_END``.
+
+    A stored message is its header, its text and zeros up to a word
+    (``MlssMessage.stored``). The bank needs only the encoded translations, so
+    the check without the ROM refuses a bank the build would.
+    """
+    texts = bytearray()
+    addresses: dict[str, int] = {}
+    for message in messages:
+        addresses[message.key] = ARABIC_TEXT_ADDRESS + len(texts)
+        texts += stored[message.key]
+    if ARABIC_TEXT_ADDRESS + len(texts) > REGION_END:
+        raise ClassicRetroError(
+            ErrorCode.RELOCATION_OVERFLOW,
+            f"The Arabic messages need {len(texts)} bytes; their region at "
+            f"{ARABIC_TEXT_ADDRESS:#x} holds {REGION_END - ARABIC_TEXT_ADDRESS}",
+        )
+    return MlssMessageBank(bytes(texts), addresses)
+
+
 def build_mlss_arabic_rom(
     rom: bytes,
     font_path: Path,
@@ -283,13 +315,7 @@ def build_mlss_arabic_rom(
         raise ClassicRetroError(ErrorCode.RELOCATION_OVERFLOW, "The font exceeds its region")
 
     encoded = encode_messages(MlssArabicEncoder(font, base_font=game_font), messages)
-    texts = bytearray()
-    addresses: dict[str, int] = {}
-    for message in messages:
-        addresses[message.key] = ARABIC_TEXT_ADDRESS + len(texts)
-        texts += encoded[message.key][0]
-    if ARABIC_TEXT_ADDRESS + len(texts) > REGION_END:
-        raise ClassicRetroError(ErrorCode.RELOCATION_OVERFLOW, "Arabic messages exceed the region")
+    bank = message_bank(messages, {key: stored for key, (stored, _) in encoded.items()})
 
     target = bytearray(rom)
 
@@ -299,15 +325,15 @@ def build_mlss_arabic_rom(
 
     write(HOOK_CODE_ADDRESS, HOOK_CODE)
     write(FONT_ADDRESS, font_data)
-    write(ARABIC_TEXT_ADDRESS, bytes(texts))
+    write(ARABIC_TEXT_ADDRESS, bank.data)
     write(PEN_SITE, pen_site_patch())
     for font_list in FONT_LISTS:
         write(font_list + 4 * ARABIC_FONT_INDEX, struct.pack("<I", FONT_ADDRESS))
     for message in messages:
-        write(message.group, struct.pack("<I", addresses[message.key]))
+        write(message.group, struct.pack("<I", bank.addresses[message.key]))
 
     output = bytes(target)
-    _verify_output(output, rom, font, messages, encoded, addresses)
+    _verify_output(output, rom, font, messages, encoded, bank.addresses)
     patch = create_bps(rom, output)
     report: dict[str, object] = {
         **base_report(IMAGE.title, rom, output, patch),
@@ -324,7 +350,7 @@ def build_mlss_arabic_rom(
         "hook_code_address": f"{HOOK_CODE_ADDRESS:#x}",
         "font_address": f"{FONT_ADDRESS:#x}",
         "arabic_text_address": f"{ARABIC_TEXT_ADDRESS:#x}",
-        "arabic_text_bytes": len(texts),
+        "arabic_text_bytes": len(bank.data),
     }
     return MlssArabicBuild(rom=output, patch=patch, font=font, report=report)
 
@@ -411,7 +437,10 @@ def check_mlss_translations(
     *,
     translations: TranslationSet | None = None,
 ) -> dict[str, object]:
-    """Validate the translations without the ROM; with a font, measure and draw every message."""
+    """Validate the translations without the ROM; with a font, measure and draw every message.
+
+    The stored messages must fit their shared region, as in the build.
+    """
     font = build_mlss_rtl_font(font_path) if font_path is not None else None
     if font is None and (preview_path is not None or text_preview_path is not None):
         raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, "A preview needs --font")
@@ -419,6 +448,12 @@ def check_mlss_translations(
         font_preview(font).save(preview_path)
     messages = mlss_arabic_messages(translations)
     encoded = encode_messages(MlssArabicEncoder(font), messages)
+    # Without a font the headers are unknown, but a header is two bytes all the same.
+    stored = {
+        key: data if font is not None else MlssMessage(0, 0, data).stored()
+        for key, (data, _) in encoded.items()
+    }
+    message_bank(messages, stored)
     if font is not None and text_preview_path is not None:
         messages_sheet(
             [(message.key, stored_preview(font, encoded[message.key][0])) for message in messages]

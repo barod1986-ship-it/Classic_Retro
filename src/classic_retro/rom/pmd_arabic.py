@@ -268,6 +268,37 @@ def encode_strings(
     return encoded
 
 
+@dataclass(frozen=True, slots=True)
+class PmdStringBank:
+    """The encoded strings one after another, and the address of each by key."""
+
+    data: bytes
+    addresses: dict[str, int]
+
+
+def string_bank(
+    strings: tuple[PmdArabicString, ...], encoded: dict[str, tuple[bytes, tuple[int, ...]]]
+) -> PmdStringBank:
+    """Every encoded string, each padded to a word, from ``ARABIC_TEXT_ADDRESS`` to ``REGION_END``.
+
+    The bank needs only the encoded translations, so the check without the ROM
+    refuses a bank the build would.
+    """
+    texts = bytearray()
+    addresses: dict[str, int] = {}
+    for string in strings:
+        addresses[string.key] = ARABIC_TEXT_ADDRESS + len(texts)
+        texts += encoded[string.key][0]
+        texts += bytes(-len(texts) % 4)
+    if ARABIC_TEXT_ADDRESS + len(texts) > REGION_END:
+        raise ClassicRetroError(
+            ErrorCode.RELOCATION_OVERFLOW,
+            f"The Arabic strings need {len(texts)} bytes; their region at "
+            f"{ARABIC_TEXT_ADDRESS:#x} holds {REGION_END - ARABIC_TEXT_ADDRESS}",
+        )
+    return PmdStringBank(bytes(texts), addresses)
+
+
 def charmap_data(
     charmap: PmdCharmap, font: PmdRtlFont, address: int
 ) -> tuple[bytes, tuple[PmdGlyphEntry, ...]]:
@@ -322,14 +353,7 @@ def build_pmd_arabic_rom(
         raise ClassicRetroError(ErrorCode.RELOCATION_OVERFLOW, "Hook code exceeds its region")
 
     encoded = encode_strings(PmdArabicEncoder(font), strings)
-    texts = bytearray()
-    addresses: dict[str, int] = {}
-    for string in strings:
-        addresses[string.key] = ARABIC_TEXT_ADDRESS + len(texts)
-        texts += encoded[string.key][0]
-        texts += bytes(-len(texts) % 4)
-    if ARABIC_TEXT_ADDRESS + len(texts) > REGION_END:
-        raise ClassicRetroError(ErrorCode.RELOCATION_OVERFLOW, "Arabic strings exceed the region")
+    bank = string_bank(strings, encoded)
 
     target = bytearray(rom)
 
@@ -339,16 +363,16 @@ def build_pmd_arabic_rom(
 
     write(HOOK_CODE_ADDRESS, HOOK_CODE)
     write(CHARMAP_ADDRESS, table)
-    write(ARABIC_TEXT_ADDRESS, bytes(texts))
+    write(ARABIC_TEXT_ADDRESS, bank.data)
     write(SIRO_POINTER_ADDRESS, struct.pack("<I", CHARMAP_ADDRESS))
     for site in HOOK_SITES:
         write(site.address, site_patch(site))
     for string in strings:
         for reference in string.references:
-            write(reference, struct.pack("<I", addresses[string.key]))
+            write(reference, struct.pack("<I", bank.addresses[string.key]))
 
     output = bytes(target)
-    _verify_output(output, rom, charmap, entries, strings, encoded, addresses)
+    _verify_output(output, rom, charmap, entries, strings, encoded, bank.addresses)
     patch = create_bps(rom, output)
     report: dict[str, object] = {
         **base_report(IMAGE.title, rom, output, patch),
@@ -366,7 +390,7 @@ def build_pmd_arabic_rom(
         "hook_code_address": f"{HOOK_CODE_ADDRESS:#x}",
         "charmap_address": f"{CHARMAP_ADDRESS:#x}",
         "arabic_text_address": f"{ARABIC_TEXT_ADDRESS:#x}",
-        "arabic_text_bytes": len(texts),
+        "arabic_text_bytes": len(bank.data),
     }
     return PmdArabicBuild(rom=output, patch=patch, font=font, report=report)
 
@@ -433,7 +457,12 @@ def check_pmd_translations(
     *,
     translations: TranslationSet | None = None,
 ) -> dict[str, object]:
-    """Validate the translations without the ROM; with a font, measure and draw every line."""
+    """Validate the translations without the ROM; with a font, measure and draw every line.
+
+    The strings must fit their shared region, as in the build. Without a font a
+    form that may split takes one code, so the bank can only come out smaller
+    than the build's; with the font it is the build's.
+    """
     font = build_pmd_rtl_font(font_path) if font_path is not None else None
     if font is None and (preview_path is not None or text_preview_path is not None):
         raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, "A preview needs --font")
@@ -441,6 +470,7 @@ def check_pmd_translations(
         font_preview(font).save(preview_path)
     strings = pmd_arabic_strings(translations)
     encoded = encode_strings(PmdArabicEncoder(font), strings)
+    string_bank(strings, encoded)
     if font is not None and text_preview_path is not None:
         strings_sheet(
             [
