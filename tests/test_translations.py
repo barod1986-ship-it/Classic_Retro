@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 
 import pytest
 
@@ -183,6 +184,21 @@ def test_entries_are_unique_and_hold_no_direction_controls():
     with pytest.raises(ClassicRetroError) as error:
         _set(Translation("a", "ألف", source="an original" + chr(0x200F)))
     assert error.value.code is ErrorCode.EXPLICIT_BIDI_CONTROL
+
+
+# How the contexts of the two largest scripts are written: where the entry is, and
+# for a name what it names. A committed file holds no text of the game, so the
+# original is never in a context: a workspace (targets extract) holds it, locally.
+CONTEXTS = {
+    "chrono-trigger": re.compile(r"Message \d+ of the \w+ table \([^():{}]*\.\.\.\)"),
+    "final-fantasy-iii": re.compile(r"Message \d+ of the dialogue|The name of [^:{}]+"),
+}
+
+
+@pytest.mark.parametrize("target", sorted(CONTEXTS))
+def test_committed_contexts_hold_no_text_of_the_game(target):
+    for entry in builtin_translation_set(target).entries:
+        assert entry.context is not None and CONTEXTS[target].fullmatch(entry.context), entry.id
 
 
 def test_files_follow_the_schema(tmp_path):
