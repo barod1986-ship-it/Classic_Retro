@@ -183,7 +183,9 @@ check-entries | build | prepare | extract | split | merge | strip` is the one wa
 these for any target, by id, and CI
 builds its target jobs from `targets list`. A target's own command group holds only its
 engine's tools: `encode-arabic` (one line in the game's encoding) and, for a source
-overlay, `source-check` (its anchors in a checkout, patching nothing). A rom-overlay target
+overlay, `source-check` (its anchors in a checkout, patching nothing); Chrono Trigger's adds
+the tools that add a string table to its translation (`tables`, `new-table`,
+`check-table`, `adopt-table`, `rom/chrono_trigger_tables.py`). A rom-overlay target
 records `reference_patch_sha256`, the hash of the patch built from its pinned image
 with the reference font. A target that accepts several images (dumps that differ only
 in bytes the game never reads) records one patch for each in `reference_patches`, by the

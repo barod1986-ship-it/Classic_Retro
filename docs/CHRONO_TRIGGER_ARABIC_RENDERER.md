@@ -211,6 +211,25 @@ id is the table's key and the message number.
 | `$FC:BA00` | `fair` | 0-398 | Leene Square with the Millennial Fair and Lucca's Telepod, the trial, the castle's cellars with the Rainbow Shell, Melchior's hut, Norstein Bekkler's tent, the Tyrano Lair's cells, the Lavos crater, Zeal's sealed palace and Death Peak |
 | `$F7:4900` | `guardia` | 0-1202 (330 runs on through 333, 355 through 375, 535 through 547) | Castle Guardia in 600 and 1000 with the King, Queen Leene, the Chancellor and Yakra, the knights and the kitchen; the domes of 2300 A.D. with Doan and the Info center; Medina; the End of Time with Gaspar and Spekkio; Ozzie, Slash, Flea and Magus; the Blackbird and Dalton; the Reptites' land |
 
+Another table is added from the user's own ROM by four commands of the
+`chrono-trigger` group (`rom/chrono_trigger_tables.py`). `tables` lists the fifteen with
+their counts and which are translated. `new-table ROM ADDRESS KEY` writes two local
+files: a workspace of the table's originals, and a plan that holds none of the game's
+text: each message's pin (its number, SHA-256 and commands), the messages that run on
+inside another (a string that starts just after another's `{pause 00}`), the decision
+boxes and what is left to review. The decisions come from the location events (a table
+of three-byte pointers at `$FC:F9F0`, one compressed script a location): a scan takes a
+`B8` with the table's address, then a `C0`, `C3` or `C4` with a string's number and the
+lines of its choices, and keeps a decision only when those lines are the original's
+indented option lines; anything else is for a person to decide. On the three tables
+translated so far the scan gives every pinned decision but `guardia.659` and
+`guardia.1201`, which it lists for review, and every pin and chain. `check-table` checks a
+translated workspace, or a batch of it, message by message as the build does, chains
+included, and `adopt-table` writes the table into `TABLES`, `DECISIONS` and the pins and
+its Arabic into the shipped file, whose contexts say only where each message is; the
+digests, the reference patch and the overlay's pins are then regenerated as for any
+change of the translation.
+
 The Arabic is in `translations/chrono-trigger.json`, a line a box, `{line}` where a line
 must end, `{choice}` at a choice's line, `{box auto}` for a box at once; its `glossary`
 fixes how every place, character, item and term is written. A translation keeps its
