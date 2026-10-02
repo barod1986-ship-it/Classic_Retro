@@ -6,8 +6,7 @@
   "glossary": [
     {
       "term": "MOM",
-      "text": "الأم",
-      "notes": "speaker label of Crono's mother; «{Crono}'s Mom:» → «أم {Crono}:»"
+      "text": "الأم"
     },
     {
       "term": "Millennial Fair",
@@ -126,8 +125,7 @@
     },
     {
       "term": "The Man",
-      "text": "الرجل",
-      "notes": "Johnny's title «THE MAN» → «الرجل»"
+      "text": "الرجل"
     },
     {
       "term": "Rx-xR",
@@ -647,8 +645,7 @@
     },
     {
       "term": "Toad",
-      "text": "علجوم",
-      "notes": "the mother's misnomer for Frog («Mr. Toad» → «سيد علجوم»): the toad word, not ضفدع, so Frog's objection makes sense"
+      "text": "علجوم"
     },
     {
       "term": "Dactyl",
@@ -673,8 +670,7 @@
     },
     {
       "term": "pendant",
-      "text": "القلادة",
-      "notes": "Marle's pendant; «my pendant» → «قلادتي»"
+      "text": "القلادة"
     },
     {
       "term": "Fuga",
@@ -683,8 +679,7 @@
     },
     {
       "term": "1000th Anniversary",
-      "text": "الذكرى الألفية",
-      "notes": "«our 1000th Anniversary» (1108) → «ذكرانا الألفية»; split by {line} in 1174"
+      "text": "الذكرى الألفية"
     },
     {
       "term": "Aero-Dalton Imperial",
@@ -698,8 +693,7 @@
     },
     {
       "term": "ATTENDANTS",
-      "text": "الوصيفات",
-      "notes": "speaker label: the queen's ladies-in-waiting (808, «Certainly, your Highness» → «أمرك يا صاحبة السمو»)"
+      "text": "الوصيفات"
     },
     {
       "term": "B. C.",
@@ -712,8 +706,7 @@
     },
     {
       "term": "black wind",
-      "text": "الريح السوداء",
-      "notes": "Magus's omen «The black wind begins to blow» (330, 331) → «بدأت الريح السوداء تهب»"
+      "text": "الريح السوداء"
     },
     {
       "term": "Blackbird",
@@ -732,8 +725,7 @@
     },
     {
       "term": "Chef",
-      "text": "الطاهي",
-      "notes": "«Chef, hurry…» (954) → «أسرع أيها الطاهي…»; the lower-case «the chef» (830, 849) → الطاهي too"
+      "text": "الطاهي"
     },
     {
       "term": "Choras",
@@ -742,8 +734,7 @@
     },
     {
       "term": "Chrono Trigger",
-      "text": "كرونو تريغر",
-      "notes": "Gaspar's name for the egg (195), the game's title: transliterated. Fixed text, not the {Crono} token; split «Chrono{line+}Trigger» once"
+      "text": "كرونو تريغر"
     },
     {
       "term": "Commander of the Knights",
@@ -752,8 +743,7 @@
     },
     {
       "term": "Conservation of Time",
-      "text": "حفظ الزمن",
-      "notes": "«the Conservation{line+}of Time theorem» (109) → «نظرية حفظ الزمن»"
+      "text": "حفظ الزمن"
     },
     {
       "term": "coral pin",
@@ -767,8 +757,7 @@
     },
     {
       "term": "Day of Lavos",
-      "text": "يوم لافوس",
-      "notes": "«The Day of Lavos» → «يوم لافوس», in «» where the English quotes it (216)"
+      "text": "يوم لافوس"
     },
     {
       "term": "DIRECTOR",
@@ -777,8 +766,7 @@
     },
     {
       "term": "Director",
-      "text": "المدير",
-      "notes": "«the Director of this Info center» (031) → «مدير مركز المعلومات»; «Director!» (478, 480) → «أيها المدير!»"
+      "text": "المدير"
     },
     {
       "term": "DNA",
@@ -792,8 +780,7 @@
     },
     {
       "term": "Doan",
-      "text": "دوان",
-      "notes": "«Leene's and Doan's» (582) → «للين ولدوان»"
+      "text": "دوان"
     },
     {
       "term": "Dragon Tank",
@@ -812,8 +799,7 @@
     },
     {
       "term": "Elixirs",
-      "text": "إكسيرات",
-      "notes": "plural of the item Elixir → إكسير: «10 Elixirs» (413) → «10 إكسيرات»"
+      "text": "إكسيرات"
     },
     {
       "term": "Ethers",
@@ -822,33 +808,27 @@
     },
     {
       "term": "Eyes Cream",
-      "text": "كريمة العيون",
-      "notes": "the 600 A.D. kitchen's garbling of the ice cream Marle (taken for the queen) asked for: literal and in «», so the chef's «Yuck!» lands (841, 976)"
+      "text": "كريمة العيون"
     },
     {
       "term": "Festival",
-      "text": "المهرجان",
-      "notes": "short name of the Millennial Fair (282); the lower-case «festival» (1030) and «fair» (893, 894, 1096) → المهرجان too"
+      "text": "المهرجان"
     },
     {
       "term": "Fire",
-      "text": "النار",
-      "notes": "magic element (378, 381). The ordinary «Fire, perhaps?» (fair.136, burn him) is not this term: «نحرقه، ربما؟» stays"
+      "text": "النار"
     },
     {
       "term": "FLEA",
-      "text": "فلي",
-      "notes": "speaker label (Flea is pronounced «flee»)"
+      "text": "فلي"
     },
     {
       "term": "Flea",
-      "text": "فلي",
-      "notes": "«Flea, the magician» (245) → «فلي الساحر»"
+      "text": "فلي"
     },
     {
       "term": "frog",
-      "text": "ضفدع",
-      "notes": "the common noun («that stupid frog» 327, «Being a frog» 403, «frog-thing» 867, 985) → ضفدع, plural ضفادع. Froggy and Froggie → ضفيدع; علجوم stays only for the mother's Toad"
+      "text": "ضفدع"
     },
     {
       "term": "Froggie",
@@ -867,13 +847,11 @@
     },
     {
       "term": "Future",
-      "text": "المستقبل",
-      "notes": "the era «the Future» (219)"
+      "text": "المستقبل"
     },
     {
       "term": "Gaspar",
-      "text": "غاسبار",
-      "notes": "the Guru of Time; «Mr. Gaspar» (199) → «السيد غاسبار» (Mr. before a name → السيد, as «Mr. Pierre» → «السيد بيير», «Mr. Melchior» → «السيد ملكيور»)"
+      "text": "غاسبار"
     },
     {
       "term": "Guardia Forest",
@@ -901,13 +879,11 @@
     },
     {
       "term": "Highness",
-      "text": "صاحبة السمو",
-      "notes": "«your Highness» → «يا صاحبة السمو», as the first chapter wrote (truce.165)"
+      "text": "صاحبة السمو"
     },
     {
       "term": "Houston",
-      "text": "هيوستن",
-      "notes": "Dalton's «We have lift-off, Houston!!» (714)"
+      "text": "هيوستن"
     },
     {
       "term": "Hyper Kabob",
@@ -925,8 +901,7 @@
     },
     {
       "term": "Ipso facto, meeny moe",
-      "text": "إبسو فاكتو، ميني مو",
-      "notes": "Spekkio's spell (387), transliterated gibberish; the «MAGICO!» that follows → «ماجيكو!»"
+      "text": "إبسو فاكتو، ميني مو"
     },
     {
       "term": "Jerky",
@@ -945,8 +920,7 @@
     },
     {
       "term": "King Guardia",
-      "text": "الملك غارديا",
-      "notes": "«King Guardia the XXI» (795) → «الملك غارديا الحادي والعشرون»; «King Guardia (the) XXXIII» (893, 1052) → «الملك غارديا الثالث والثلاثون»; the trial that is «King Guardia's» (1151) → «محاكمة الملك غارديا»"
+      "text": "الملك غارديا"
     },
     {
       "term": "Kingdom of Guardia",
@@ -955,8 +929,7 @@
     },
     {
       "term": "Knight",
-      "text": "فارس",
-      "notes": "the title given to Frog: «You deserve the title, Knight!» (1023) → «تستحق لقب فارس!». The checker also matches it in Knight Captain and Knight's quarters, whose Arabic has فرسان"
+      "text": "فارس"
     },
     {
       "term": "KNIGHT CAPTAIN",
@@ -965,13 +938,11 @@
     },
     {
       "term": "Knight Captain",
-      "text": "قائد الفرسان",
-      "notes": "a title used as a name; «making you “Knight Captain!”» (1006) → «أن أجعلك «قائد الفرسان»!»; the bare «Captain!» (843) → «أيها القائد!»"
+      "text": "قائد الفرسان"
     },
     {
       "term": "Knights",
-      "text": "الفرسان",
-      "notes": "«Knights quarters», «Knights' quarters» (797, 801) and «Knight's quarters» (828) → «مهجع الفرسان»"
+      "text": "الفرسان"
     },
     {
       "term": "Lab 16",
@@ -980,8 +951,7 @@
     },
     {
       "term": "Laboratory 32",
-      "text": "المختبر 32",
-      "notes": "the glossary's Lab 32 (097); «lab{line+}32» (098) → المختبر 32 too"
+      "text": "المختبر 32"
     },
     {
       "term": "Land of Magic",
@@ -990,13 +960,11 @@
     },
     {
       "term": "Lavos Energy",
-      "text": "طاقة لافوس",
-      "notes": "split «Lavos{line+}Energy» (239)"
+      "text": "طاقة لافوس"
     },
     {
       "term": "Liege",
-      "text": "مولاي",
-      "notes": "Frog's «my Liege» (1008) → «مولاي», as Sire"
+      "text": "مولاي"
     },
     {
       "term": "Lightning",
@@ -1010,18 +978,15 @@
     },
     {
       "term": "MAID",
-      "text": "الخادمة",
-      "notes": "speaker label of the castle maid; «the maid» (854) → الخادمة"
+      "text": "الخادمة"
     },
     {
       "term": "Majesty",
-      "text": "صاحب الجلالة",
-      "notes": "«Yes, Majesty!» (923) → «أمرك يا صاحب الجلالة!»; «your Majesty» (926) → «يا صاحب الجلالة»"
+      "text": "صاحب الجلالة"
     },
     {
       "term": "MAN",
-      "text": "الرجل",
-      "notes": "speaker label of a hungry man in Trann Dome (087). Same Arabic as the glossary's The Man (Johnny's title): another person, but the word is plainly «the man» in both languages."
+      "text": "الرجل"
     },
     {
       "term": "Master of War",
@@ -1034,8 +999,7 @@
     },
     {
       "term": "MegaElixirs",
-      "text": "إكسيرات فائقة",
-      "notes": "plural of the item MegaElixir → إكسير فائق: «10 MegaElixirs» (414) → «10 إكسيرات فائقة»"
+      "text": "إكسيرات فائقة"
     },
     {
       "term": "Memories of {Crono}",
@@ -1054,8 +1018,7 @@
     },
     {
       "term": "Moonlight Parade",
-      "text": "موكب ضوء القمر",
-      "notes": "split «Moonlight{line+}Parade» (1159); «the parade» → «الموكب»"
+      "text": "موكب ضوء القمر"
     },
     {
       "term": "moonlight parade",
@@ -1092,8 +1055,7 @@
     },
     {
       "term": "OPERATOR",
-      "text": "المراقب",
-      "notes": "speaker label of the control-room operator watching the attack in the 1999 A.D. record (474-482). Not المشغل, which without vowel marks also reads as «workshop»"
+      "text": "المراقب"
     },
     {
       "term": "OZZIE",
@@ -1102,13 +1064,11 @@
     },
     {
       "term": "Ozzie",
-      "text": "أوزي",
-      "notes": "his stutter «Oz…» (305) → «أوز…»"
+      "text": "أوزي"
     },
     {
       "term": "pillar of light",
-      "text": "عمود الضوء",
-      "notes": "the Gates at the End of Time (225); «pillars of{line+}light» (121) → «أعمدة الضوء», where «step into the light» → «ادخل في الضوء»"
+      "text": "عمود الضوء"
     },
     {
       "term": "Power roast",
@@ -1171,8 +1131,7 @@
     },
     {
       "term": "Shadow",
-      "text": "الظل",
-      "notes": "magic element (378, 382, 407); «Shadow type damage» → «ضرر من نوع الظل»"
+      "text": "الظل"
     },
     {
       "term": "ShelterDome",
@@ -1186,8 +1145,7 @@
     },
     {
       "term": "Sir Dalton",
-      "text": "سيدي دالتون",
-      "notes": "a soldier addressing his master (608, split «Sir{line+}Dalton»): as Sir {Magus} → سيدي"
+      "text": "سيدي دالتون"
     },
     {
       "term": "Sir Froggy",
@@ -1196,8 +1154,7 @@
     },
     {
       "term": "Sir Slush",
-      "text": "السير سلوش",
-      "notes": "Frog's deliberate misnaming of Slash (257), one letter off سلاش, so Slash's «That's SLASH!» (258) → «اسمي سلاش!» makes sense"
+      "text": "السير سلوش"
     },
     {
       "term": "Sir {Crono}",
@@ -1221,13 +1178,11 @@
     },
     {
       "term": "Slash",
-      "text": "سلاش",
-      "notes": "«the swordsman, Slash» (245) → «سلاش السياف» (swordsman → سياف, as truce.048)"
+      "text": "سلاش"
     },
     {
       "term": "space-time",
-      "text": "الزمكان",
-      "notes": "«space-time coordinates» → «إحداثيات الزمكان», «space-time continuum» → «نسيج الزمكان» (109); «the {Epoch}'s space-time compass» (502) → «بوصلة الزمكان في {Epoch}», an instrument of the {Epoch}, not Robo's Time Gyro (بوصلة الزمن)"
+      "text": "الزمكان"
     },
     {
       "term": "Speed Tabs",
@@ -1241,8 +1196,7 @@
     },
     {
       "term": "Spekkio",
-      "text": "سبيكيو",
-      "notes": "the Master of War; «Spekkio's praise» (414) → «ثناء سبيكيو»"
+      "text": "سبيكيو"
     },
     {
       "term": "SPEKKIO Cheerful set",
@@ -1276,8 +1230,7 @@
     },
     {
       "term": "time warp",
-      "text": "صدع زمني",
-      "notes": "as the first chapter wrote (truce.285, and «warp» → الصدع in fair.322)"
+      "text": "صدع زمني"
     },
     {
       "term": "Trann Dome",
@@ -1286,8 +1239,7 @@
     },
     {
       "term": "Truce Canyon",
-      "text": "وادي تروس",
-      "notes": "«the canyon» (900) → «الوادي»"
+      "text": "وادي تروس"
     },
     {
       "term": "Truce Dome",
@@ -1295,8 +1247,7 @@
     },
     {
       "term": "Tyran Fortress",
-      "text": "حصن تايران",
-      "notes": "Tyran → تايران (the «ai» sound as in سايرس). Fortress → حصن, as Keep (حصن الشمس), while castle stays قلعة (قلعة غارديا، قلعة {Magus})"
+      "text": "حصن تايران"
     },
     {
       "term": "Undersea Palace",
@@ -1305,8 +1256,7 @@
     },
     {
       "term": "WAITRESS",
-      "text": "النادلة",
-      "notes": "speaker label (843); her «Oh, Captain!» → «أيها القائد!»"
+      "text": "النادلة"
     },
     {
       "term": "Water",
@@ -1315,13 +1265,11 @@
     },
     {
       "term": "Wings of Time",
-      "text": "أجنحة الزمن",
-      "notes": "Gaspar's name for the {Epoch}. A non-human plural takes feminine singular agreement: «the Wings of Time has come» (215) → «جاءت أجنحة الزمن»"
+      "text": "أجنحة الزمن"
     },
     {
       "term": "Wizards",
-      "text": "السحرة",
-      "notes": "Magus's «We Wizards and humans» (355 and its chained tails) and Spekkio's lower-case «except wizards» (378); the first chapter wrote Wizard → ساحر (fair.058)"
+      "text": "السحرة"
     },
     {
       "term": "X Button",
@@ -1340,13 +1288,11 @@
     },
     {
       "term": "Zeal",
-      "text": "زيل",
-      "notes": "«Zeal's culture» (605) → «حضارة زيل»"
+      "text": "زيل"
     },
     {
       "term": "Zenan",
-      "text": "زينان",
-      "notes": "the bare name («saved at Zenan», 1017); Zenan Bridge → جسر زينان (glossary), split by {line} in 942 and 1013"
+      "text": "زينان"
     },
     {
       "term": "{Crono} special",
@@ -1360,8 +1306,7 @@
     },
     {
       "term": "{Magus}'s troops",
-      "text": "جيش {Magus}",
-      "notes": "the enemy army; the first chapter wrote «{Magus}'s army» → «جيش {Magus}» (truce.137, 141, 159)"
+      "text": "جيش {Magus}"
     }
   ],
   "entries": [

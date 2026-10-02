@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import json
 import re
+from pathlib import Path
 
 import pytest
 
+import classic_retro
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.engines.ff6a import CENTER, KEY_PAGE, NEWLINE, PAGE, PAUSE
 from classic_retro.engines.ff6a_arabic import (
@@ -186,6 +188,8 @@ def test_entries_are_unique_and_hold_no_direction_controls():
     assert error.value.code is ErrorCode.EXPLICIT_BIDI_CONTROL
 
 
+TRANSLATIONS_DIR = Path(classic_retro.__file__).parent / "translations"
+
 # How the contexts of the two largest scripts are written: where the entry is, and
 # for a name what it names. A committed file holds no text of the game, so the
 # original is never in a context: a workspace (targets extract) holds it, locally.
@@ -199,6 +203,16 @@ CONTEXTS = {
 def test_committed_contexts_hold_no_text_of_the_game(target):
     for entry in builtin_translation_set(target).entries:
         assert entry.context is not None and CONTEXTS[target].fullmatch(entry.context), entry.id
+
+
+def test_glossary_notes_quote_no_original():
+    for path in sorted(TRANSLATIONS_DIR.glob("*.json")):
+        translations = load_translation_set(path)
+        for term in translations.glossary:
+            assert not re.search(r"«[^»]*[A-Za-z]{2,}[^»]*»", term.notes or ""), (
+                translations.target,
+                term.term,
+            )
 
 
 def test_files_follow_the_schema(tmp_path):
