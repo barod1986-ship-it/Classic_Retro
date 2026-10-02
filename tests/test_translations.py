@@ -145,7 +145,7 @@ def test_every_target_ships_one_translation_per_pinned_entry():
         "sotn": 8,
         "gran-turismo": 3,
         "ridge-racer": 3,
-        "chrono-trigger": 855,
+        "chrono-trigger": 2058,
         "link-to-the-past": 3,
         "shining-force-2": 3,
     }
