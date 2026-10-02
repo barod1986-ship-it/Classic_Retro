@@ -119,8 +119,9 @@ with `--check-digests` it holds the report and the previews to the digests recor
 in `src/classic_retro/localization/digests.json`, as CI does for each target. A
 game's own command group holds only its engine's tools:
 `encode-arabic` (a line in the game's encoding, for example
-`classic-retro fomt encode-arabic TEXT --font FONT`) and `source-check` for the source
-overlays.
+`classic-retro fomt encode-arabic TEXT --font FONT`), `source-check` for the source
+overlays, and Chrono Trigger's tools that add a string table to its translation
+(`tables`, `new-table`, `check-table`, `adopt-table`).
 
 ### Translating
 

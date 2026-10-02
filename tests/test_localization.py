@@ -628,7 +628,10 @@ def test_game_groups_hold_only_their_engine_tools(capsys):
         "final-fantasy-iii",
     ):
         tools = ["encode-arabic", "source-check"] if group in sources else ["encode-arabic"]
-        assert sorted(_subcommands(groups[group])) == tools, group
+        if group == "chrono-trigger":
+            # Its string tables, added to the translation a whole one at a time.
+            tools += ["adopt-table", "check-table", "new-table", "tables"]
+        assert sorted(_subcommands(groups[group])) == sorted(tools), group
     for group in ("pokemon-gen3", "phantom-hourglass", "targets"):
         with pytest.raises(SystemExit) as exit_:
             main([group, "--help"])

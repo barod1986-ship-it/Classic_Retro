@@ -150,6 +150,28 @@ classic-retro rebuild bps-apply chrono-trigger-usa-arabic.bps "Chrono Trigger (U
 - **الإيقاع**: الافتتاحية الآلية تنتقل بين صناديقها بالوقت، ورسائل الأم بالزر.
 - **الإنجليزية**: شاشة نمط القتال وإدخال الاسم وبقية الجداول كما في النسخة الأصلية تمامًا.
 
+## إضافة جدول
+
+تُترجم اللعبة جدولًا كاملًا بعد جدول. الأوامر الأربعة تقرأ الجدول الجديد من نسختك أنت:
+
+```text
+classic-retro chrono-trigger tables "path/to/Chrono Trigger (USA).sfc"
+classic-retro chrono-trigger new-table "path/to/Chrono Trigger (USA).sfc" '$F8:4650' medina --out-dir work
+classic-retro chrono-trigger check-table work/medina.plan.json work/medina.workspace.json --font reference-font.ttf
+classic-retro chrono-trigger adopt-table work/medina.plan.json work/medina.workspace.json --font reference-font.ttf --what "..."
+```
+
+- `tables` يسرد الجداول الخمسة عشر بعدد رسائلها ومفتاح ما تُرجم منها.
+- `new-table` يكتب ملفين في `work`: مساحة عمل فيها أصل كل رسالة (نص اللعبة، فتبقى على جهازك، وهي مستثناة في git)،
+  وخطة لا نص فيها من اللعبة: بصمة كل رسالة وأوامرها، والرسائل التي تكمل غيرها بعد `{pause 00}`، وصناديق الاختيار
+  التي تفتحها أحداث اللعبة على الرسائل، وما يحتاج قرارك في `review`. صندوق اختيار تجده هناك ولم يجده البحث تضيفه إلى
+  `decisions` في الخطة بيدك.
+- تُترجم مساحة العمل كما في [دليل المترجم](TRANSLATING_AR.md)، ويمكن تقسيمها بـ `targets split` ودمجها بـ `targets merge`.
+- `check-table` يفحص الرسائل المترجمة، أو دفعة منها، رسالة رسالة كما يفحصها البناء: الأوامر والحروف والصناديق
+  والاختيارات والرسائل المتصلة.
+- `adopt-table` يُدخل الجدول في الكود وترجمته في الملف المشحون حين تُترجم كل رسائله وتنجح، ولا يكتب أصل أي رسالة في
+  ملف مرفوع. ثم تُحدَّث البصمات والرقعة المرجعية كما يذكر الأمر في `next`.
+
 ## الحدود الحالية
 
 - ثلاثة جداول من خمسة عشر بالعربية؛ بقية الجداول والقوائم والمعارك وبقية اللعبة بالإنجليزية.
