@@ -279,11 +279,18 @@ def _check_entries(registry: TargetRegistry, args: argparse.Namespace) -> int:
         raise _unsupported(target.id, "check-entries")
     if args.max_runs < 1:
         raise ClassicRetroError(ErrorCode.INVALID_REFERENCE, "--max-runs must be at least 1")
-    baseline = (
-        builtin_translation_set(target.id)
-        if args.baseline is None
-        else load_translation_set(args.baseline, target.id)
-    )
+    if args.baseline is None:
+        baseline = builtin_translation_set(target.id)
+    else:
+        # Every entry is blamed against the baseline, so it must be complete and pass.
+        baseline = load_translation_set(args.baseline, target.id)
+        try:
+            target.check_translations(None, None, baseline)
+        except ClassicRetroError as exc:
+            raise ClassicRetroError(
+                ErrorCode.INVALID_TRANSLATION_DOCUMENT,
+                f"--baseline {args.baseline} does not pass {target.id}'s check: {exc}",
+            ) from exc
     batch = load_batch(args.translations, target.id, baseline, args.entries)
     report = entry_report(target.check_translations, batch, args.font, max_runs=args.max_runs)
     print_json(
@@ -391,6 +398,16 @@ def _split(registry: TargetRegistry, args: argparse.Namespace) -> int:
         _writable(args.out_dir / f"{target.id}.batch-{number:0{width}d}.json", args.force)
         for number in range(1, len(batches) + 1)
     ]
+    # Batches of an earlier split would be merged with these ones: replace them all.
+    stale = sorted(set(args.out_dir.glob(f"{target.id}.batch-*.json")) - set(paths))
+    if stale and not args.force:
+        raise ClassicRetroError(
+            ErrorCode.OUTPUT_EXISTS,
+            f"{args.out_dir} holds batches of an earlier split ({', '.join(p.name for p in stale)}); "
+            "pass --force to replace them",
+        )
+    for path in stale:
+        path.unlink()
     args.out_dir.mkdir(parents=True, exist_ok=True)
     for path, batch in zip(paths, batches, strict=True):
         path.write_text(batch.dumps(), encoding="utf-8")

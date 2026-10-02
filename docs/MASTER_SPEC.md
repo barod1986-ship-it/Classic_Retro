@@ -413,11 +413,12 @@ original names a glossary term that their Arabic does not use.
 
 `check-translations` stops at the first refused entry. `targets check-entries` lists
 them all, each with the target's own error, with no code of the target's: against a
-baseline that passes (the shipped file, or `--baseline`) it runs the target's check with
-the translator's text in fewer and fewer entries until each failure has its entry
-(`localization/entries.py`). Entries refused only together, over a shared glyph budget,
-are reported as the smallest such group; an entry refused only against the baseline's
-text of another is a warning. The file checked may be a batch: an entry it lacks takes
+baseline that passes (the shipped file, or `--baseline`) it gathers the translator's
+changes that pass the target's check together, halving the ones refused, and judges
+every other change with them in place (`localization/entries.py`), without the font
+first and then with it. An entry that passes alone but is refused with some of the
+other changes (a shared glyph budget) is reported with the fewest of them. The file
+checked may be a batch: an entry it lacks takes
 the baseline's text. `targets split` cuts a file or workspace into batches and `targets
 merge` puts their text back (`localization/batches.py`). The report adds warnings read
 from the notation alone, the same for every target (Latin letters, vowel marks,

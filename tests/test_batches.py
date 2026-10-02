@@ -77,7 +77,7 @@ def test_merge_puts_text_and_notes_back_and_adds_new_terms():
     )
     merged, report = merge_translations(workspace, [first, third])
 
-    assert report == {"merged": 3, "changed": 1, "glossary_added": ["Rex"]}
+    assert report == {"merged": 3, "changed": ["line.0"], "glossary_added": ["Rex"]}
     by_id = {entry.id: entry for entry in merged.entries}
     assert by_id["line.0"].text == "سطر" and by_id["line.0"].notes == "shorter"
     # The workspace keeps its originals, contexts and order.
@@ -130,9 +130,28 @@ def test_split_and_merge_commands_round_trip_a_file(tmp_path, capsys):
     merged = tmp_path / "merged.json"
     assert main(["targets", "merge", str(source), *files, "--out", str(merged)]) == 0
     report = json.loads(capsys.readouterr().out)
-    assert report["merged"] == len(shipped.entries) and report["changed"] == 1
+    assert report["merged"] == len(shipped.entries) and report["changed"] == [shipped.entries[0].id]
     entries = load_translation_set(merged, "advance-wars").entries
     assert entries[0].text == "نص جديد" and entries[1:] == shipped.entries[1:]
 
     assert main(["targets", "merge", str(source), *files, "--out", str(merged)]) == 2
     assert "OUTPUT_EXISTS" in capsys.readouterr().err
+
+
+def test_a_forced_split_leaves_no_batch_of_an_earlier_one(tmp_path, capsys):
+    source = tmp_path / "advance-wars.json"
+    source.write_text(builtin_translation_set("advance-wars").dumps(), encoding="utf-8")
+    out_dir = tmp_path / "batches"
+    assert main(["targets", "split", str(source), "--size", "2", "--out-dir", str(out_dir)]) == 0
+    earlier = sorted(path.name for path in out_dir.iterdir())
+    capsys.readouterr()
+
+    # Fewer batches now: the earlier ones past them would be merged back too.
+    argv = ["targets", "split", str(source), "--size", "5", "--out-dir", str(out_dir)]
+    assert main(argv) == 2
+    assert "OUTPUT_EXISTS" in capsys.readouterr().err
+    assert sorted(path.name for path in out_dir.iterdir()) == earlier
+
+    assert main([*argv, "--force"]) == 0
+    files = [batch["file"] for batch in json.loads(capsys.readouterr().out)["batches"]]
+    assert sorted(str(path) for path in out_dir.iterdir()) == sorted(files)

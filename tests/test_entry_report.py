@@ -59,6 +59,13 @@ def _locate(baseline: TranslationSet, changes: dict[str, str], font=None, max_ru
     return locate_failures(_check, baseline, texts, list(changes), font, max_runs=max_runs)
 
 
+def _with(baseline: TranslationSet, entry_id: str, text: str) -> TranslationSet:
+    return replace(
+        baseline,
+        entries=tuple(replace(e, text=text) if e.id == entry_id else e for e in baseline.entries),
+    )
+
+
 def test_every_failing_entry_is_found_with_its_own_error():
     located = _locate(_baseline(), {"line.1": "نص!", "line.5": "سطر", "line.6": "%"})
 
@@ -67,8 +74,8 @@ def test_every_failing_entry_is_found_with_its_own_error():
         ("line.6", "INTERNAL_ERROR", False),
     ]
     assert located.errors[1]["message"] == "ValueError: the encoder fell over"
-    assert located.groups == () and located.together == ()
-    assert located.baseline_error is None and not located.stopped
+    assert located.groups == () and located.undecided == ()
+    assert located.baseline_error is None
 
 
 def test_nothing_changed_runs_nothing_and_a_passing_set_runs_once():
@@ -88,51 +95,99 @@ def test_the_font_phase_finds_what_only_the_layout_refuses():
     ]
 
 
-def test_entries_refused_only_together_are_a_group_of_the_fewest():
+def test_an_entry_refused_only_with_others_names_the_fewest_of_them():
     located = _locate(_baseline(), {f"line.{n}": "ق" for n in range(5)})
 
+    # line.0 and line.1 fill the budget of two; each later one overflows it with them.
     assert located.errors == ()
-    # Each passes alone and any two pass: three are the fewest the budget refuses,
-    # and with them back the other two pass.
-    (group,) = located.groups
-    assert group["ids"] == ["line.2", "line.3", "line.4"]
-    assert group["code"] == "ARABIC_GLYPH_CAPACITY_EXCEEDED"
-    assert located.together == ()
+    assert [(g["id"], g["with"], g["code"]) for g in located.groups] == [
+        ("line.2", ["line.0", "line.1"], "ARABIC_GLYPH_CAPACITY_EXCEEDED"),
+        ("line.3", ["line.0", "line.1"], "ARABIC_GLYPH_CAPACITY_EXCEEDED"),
+        ("line.4", ["line.0", "line.1"], "ARABIC_GLYPH_CAPACITY_EXCEEDED"),
+    ]
 
 
 def test_an_entry_that_passes_with_the_other_changes_is_not_an_error():
     # The greeting grows with a longer name: refused against the baseline's name,
     # and not with the translator's.
-    changes = {"name": "سامي سالم", "greeting": "أهلا أهلا أهلا", "line.0": "!"}
+    changes = {"greeting": "أهلا أهلا أهلا", "name": "سامي سالم", "line.0": "!"}
     located = _locate(_baseline(), changes)
 
     assert [e["id"] for e in located.errors] == ["line.0"] and located.groups == ()
-    assert located.together == ("greeting",)
     # Alone, the same changes pass: nothing is searched.
     del changes["line.0"]
     assert _locate(_baseline(), changes).runs == 1
 
 
+def test_changes_are_judged_together_so_a_freed_budget_is_not_spent_twice():
+    # The baseline's line.7 holds two ق; the batch frees it and gives three
+    # entries one each: two fit, the third is refused with the others in place.
+    baseline = _with(_baseline(), "line.7", "قق")
+    located = _locate(baseline, {"line.3": "ق", "line.4": "ق", "line.5": "ق", "line.7": "نص"})
+
+    assert [(e["id"], e["code"]) for e in located.errors] == [
+        ("line.4", "ARABIC_GLYPH_CAPACITY_EXCEEDED")
+    ]
+    assert located.groups == ()
+
+
+def test_a_budget_the_other_changes_free_is_no_error():
+    baseline = _with(_baseline(), "line.7", "ق")
+    changes = {f"line.{n}": "سطر" for n in (0, 3, 4, 6)}
+    changes |= {"line.1": "ق", "line.2": "ق", "line.5": "!", "line.7": "نص"}
+    located = _locate(baseline, changes)
+
+    assert [e["id"] for e in located.errors] == ["line.5"] and located.groups == ()
+
+
+def test_an_entry_that_passes_without_the_font_is_laid_out_with_its_partners():
+    # With the longer name the greeting passes the name rule, but not the font's 12.
+    changes = {"name": "سامي سالم", "greeting": "أهلا أهلا أهلا", "line.0": "!"}
+    located = _locate(_baseline(), changes, font="f")
+
+    assert [(e["id"], e["code"], e["font"]) for e in located.errors] == [
+        ("greeting", "TEXT_BOX_OVERFLOW", True),
+        ("line.0", "UNENCODABLE_TEXT", False),
+    ]
+
+
 def test_a_baseline_that_fails_is_said_and_blames_no_entry():
-    baseline = _baseline()
-    broken = replace(
-        baseline,
-        entries=tuple(replace(e, text="خطأ!") if e.id == "line.7" else e for e in baseline.entries),
-    )
-    located = _locate(broken, {"line.0": "!"})
+    located = _locate(_with(_baseline(), "line.7", "خطأ!"), {"line.0": "!"})
 
     assert located.baseline_error == {
         "code": "UNENCODABLE_TEXT",
         "message": "no glyph for '!'",
         "font": False,
     }
-    assert located.errors == ()
+    assert located.errors == () and located.undecided == ()
 
 
-def test_the_run_limit_stops_the_search_and_says_so():
-    located = _locate(_baseline(), {f"line.{n}": "!" for n in range(8)}, max_runs=3)
+def test_a_baseline_refused_only_with_the_font_keeps_the_errors_found_without_it():
+    located = _locate(
+        _with(_baseline(), "line.7", "نص طويل جدا جدا"), {"line.0": "!", "line.1": "سطر"}, font="f"
+    )
 
-    assert located.stopped and located.runs == 3
+    assert [e["id"] for e in located.errors] == ["line.0"]
+    assert located.baseline_error == {
+        "code": "TEXT_BOX_OVERFLOW",
+        "message": "15 > 12",
+        "font": True,
+    }
+
+
+def test_the_run_limit_leaves_entries_undecided_and_says_so():
+    changes = {f"line.{n}": "!" if n == 2 else "سطر" for n in range(8)}
+    complete = _locate(_baseline(), changes)
+    assert [e["id"] for e in complete.errors] == ["line.2"] and complete.undecided == ()
+
+    stopped = _locate(_baseline(), changes, max_runs=3)
+    assert stopped.runs == 3 and stopped.errors == ()
+    assert "line.2" in stopped.undecided
+    # What is decided is never undecided too.
+    for limit in range(1, complete.runs):
+        located = _locate(_baseline(), changes, max_runs=limit)
+        decided = {e["id"] for e in located.errors}
+        assert decided.isdisjoint(located.undecided) and located.undecided
 
 
 def _write(tmp_path, entries, *, target="demo", glossary=()) -> object:
@@ -175,6 +230,19 @@ def test_a_batch_takes_every_entry_it_lacks_from_the_baseline(tmp_path):
 
     narrowed = load_batch(path, "demo", _baseline(), ["line.[45]"])
     assert narrowed.ids == ("line.4", "line.5") and narrowed.problems[0]["id"] == "line.4"
+    with pytest.raises(ClassicRetroError, match="matches typo"):
+        load_batch(path, "demo", _baseline(), ["typo.*"])
+
+
+def test_an_id_given_twice_is_checked_with_its_first_text(tmp_path):
+    path = _write(tmp_path, [{"id": "line.3", "text": "Hi!"}, {"id": "line.3", "text": "سطر"}])
+    report = entry_report(_check, load_batch(path, "demo", _baseline()), None, max_runs=10)
+
+    assert [(e["id"], e["code"]) for e in report["errors"]] == [
+        ("line.3", "DUPLICATE_ENTRY_ID"),
+        ("line.3", "UNENCODABLE_TEXT"),
+    ]
+    assert [w["kind"] for w in report["warnings"]] == ["latin_letters"]
 
 
 def test_a_batch_of_another_target_or_not_json_is_refused(tmp_path):
@@ -207,7 +275,7 @@ def test_the_report_puts_errors_groups_and_warnings_in_the_baselines_order(tmp_p
         ("ghost", "INVALID_TRANSLATION_DOCUMENT"),
         ("line.2", "UNENCODABLE_TEXT"),
     ]
-    assert [g["ids"] for g in report["group_errors"]] == [["line.5", "line.6"]]
+    assert [(g["id"], g["with"]) for g in report["group_errors"]] == [("line.6", ["line.5"])]
     assert [(w["id"], w["kind"]) for w in report["warnings"]] == [
         ("line.2", "latin_letters"),
         ("line.2", "no_arabic"),
@@ -298,7 +366,7 @@ def test_check_entries_reports_entries_that_overflow_a_shared_budget_together(tm
 
     assert code == 1 and report["errors"] == []
     (group,) = report["group_errors"]
-    assert group["ids"] == [a.id, b.id]
+    assert (group["id"], group["with"]) == (b.id, [a.id])
     assert group["code"] == "ARABIC_GLYPH_CAPACITY_EXCEEDED"
 
 
@@ -313,6 +381,12 @@ def test_check_entries_takes_a_baseline_and_refuses_what_it_cannot_do(tmp_path, 
         capsys,
     )
     assert code == 0 and report["baseline"] == str(baseline) and report["changed"] == 0
+
+    # A baseline is complete and passes: one batch of the file is not one.
+    partial = _shipped_batch(tmp_path / "..", "advance-wars", {entry.id: entry.text})
+    argv = ["targets", "check-entries", "advance-wars", str(path), "--baseline", str(partial)]
+    assert main(argv) == 2
+    assert "does not pass advance-wars's check" in capsys.readouterr().err
 
     assert main(["targets", "check-entries", "advance-wars", str(path), "--max-runs", "0"]) == 2
     assert "--max-runs" in capsys.readouterr().err

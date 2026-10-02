@@ -98,13 +98,14 @@ def merge_translations(
         problems.append("glossary terms written two ways: " + ", ".join(conflicts))
     if problems:
         raise ClassicRetroError(ErrorCode.INVALID_TRANSLATION_DOCUMENT, "; ".join(problems))
-    changed = 0
+    changed = []
     entries = []
     for entry in translations.entries:
         if entry.id in merged:
             text, notes = merged[entry.id]
             new = replace(entry, text=text, notes=entry.notes if notes is None else notes)
-            changed += new != entry
+            if new != entry:
+                changed.append(entry.id)
             entries.append(new)
         else:
             entries.append(entry)

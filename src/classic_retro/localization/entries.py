@@ -5,17 +5,16 @@ say what is wrong ("Line 2 needs 230px") without naming the entry. A translator
 who changed a hundred entries needs them all at once. This module finds them
 with no code of the target's own: against a *baseline* that passes (the shipped
 translations, or ``--baseline``), it runs the target's ``check_translations``
-with the translator's text in some entries and the baseline's in the rest, and
-halves the entries that fail until each failure has its entry. Every message in
-the report is the target's own, from a run where only that entry was changed.
+with the translator's text in some entries and the baseline's in the rest. It
+gathers the changes that pass together, halving the ones refused, and judges
+every other change with them, so an entry is reported only if it is refused
+with the translator's other changes in place. Every message is the target's own.
 
 The checked file may hold only some of the target's entries, a *batch*: every
 entry it lacks takes the baseline's text, so batches are checked one at a time
-by different translators. An entry that is refused only together with others
-(two briefings that each fit a glyph budget but overflow it together) is reported
-as a group, never blamed on one of them. An entry that is refused against the
-baseline but passes with the translator's other changes (a message re-fitted to
-a shortened name) is a warning.
+by different translators. An entry that passes alone but is refused together
+with some of the other changes (two briefings that each fit a glyph budget but
+overflow it together) is reported with the fewest of them.
 
 The run is checked first without the font (parse, commands, glyphs, line counts),
 which is fast, then with it (pixel widths) for the entries that passed. Next to
@@ -32,7 +31,7 @@ import re
 import time
 from collections import Counter
 from collections.abc import Iterable, Sequence
-from dataclasses import dataclass, field, replace
+from dataclasses import dataclass, replace
 from fnmatch import fnmatchcase
 from pathlib import Path
 
@@ -55,8 +54,6 @@ _DIGITS = re.compile(r"[0-9]+")
 _ARABIC_DIGITS = str.maketrans("٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹", "01234567890123456789")
 # Fathatan to sukun, the further marks, and the superscript alef.
 _ARABIC_MARKS = frozenset(chr(code) for code in (*range(0x064B, 0x0660), 0x0670))
-# Fewer entries than this are tried one at a time instead of halved.
-_ONE_BY_ONE = 4
 
 
 @dataclass(frozen=True, slots=True)
@@ -66,8 +63,8 @@ class Batch:
     ``translations`` is the baseline with the file's text in its entries: the
     complete set a target's check takes. ``ids`` are the file's entries the run
     looks at, in the baseline's order. ``problems`` are the file's own errors by
-    entry (an unknown or duplicate id, direction controls), whose entries keep
-    the baseline's text in the search.
+    entry: an unknown id, an id again (its first text is checked), and direction
+    controls, whose entry keeps the baseline's text in the search.
     """
 
     translations: TranslationSet
@@ -84,8 +81,9 @@ def load_batch(
     """The file at ``path`` over ``baseline``; ``only`` narrows it to matching ids.
 
     A file that is not JSON, breaks the schema or holds another target's
-    translations is refused outright. Anything wrong with one entry is a problem
-    of that entry, and the rest is still checked.
+    translations is refused outright, and so are patterns ``only`` that match no
+    entry of it. Anything wrong with one entry is a problem of that entry, and
+    the rest is still checked.
     """
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
@@ -104,10 +102,12 @@ def load_batch(
     sources = {entry.id: entry.source for entry in baseline.entries if entry.source is not None}
     problems: list[dict[str, object]] = []
     seen: set[str] = set()
+    matched = 0
     for item in data["entries"]:
         entry_id = item["id"]
         if only and not any(fnmatchcase(entry_id, pattern) for pattern in only):
             continue
+        matched += 1
         if entry_id not in known:
             problems.append(
                 _problem(
@@ -141,6 +141,10 @@ def load_batch(
         source = item.get("source")
         if source is not None and not _direction_controls(source):
             sources[entry_id] = source
+    if only and not matched:
+        raise ClassicRetroError(
+            ErrorCode.INVALID_REFERENCE, f"No entry of {path} matches {' '.join(only)}"
+        )
     entries = tuple(
         replace(entry, text=texts[entry.id]) if entry.id in texts else entry
         for entry in baseline.entries
@@ -183,8 +187,6 @@ class _Search:
     texts: dict[str, str]
     max_runs: int
     runs: int = 0
-    errors: dict[str, dict[str, object]] = field(default_factory=dict)
-    groups: list[dict[str, object]] = field(default_factory=list)
 
     def run(self, ids: Iterable[str], font: Path | None) -> tuple[str, str] | None:
         """The check's error with ``ids`` changed, or None when it passes."""
@@ -204,78 +206,67 @@ class _Search:
             return "INTERNAL_ERROR", f"{type(exc).__name__}: {exc}"
         return None
 
-    def placed(self) -> set[str]:
-        return set(self.errors) | {i for group in self.groups for i in group["ids"]}
+    def grow(
+        self, accepted: list[str], ids: Sequence[str], font: Path | None
+    ) -> dict[str, tuple[str, str]]:
+        """Add to ``accepted`` every entry of ``ids`` that passes with it; the others' errors.
 
-    def find(self, ids: list[str], font: Path | None) -> tuple[str, str] | None:
-        """Place every failing entry of ``ids``; the baseline's error if it fails alone."""
-        error = self.run(ids, font)
+        A part of ``ids`` that passes with the accepted entries joins them, and a
+        part refused is halved. An entry refused before more were accepted is
+        tried again, as it may have been refused only against the baseline's
+        text of one of them (a message re-fitted to a renamed name), so every
+        error returned is from a run with the final accepted entries.
+        """
+        pending = list(ids)
+        while True:
+            refused: dict[str, tuple[str, str]] = {}
+            size = len(accepted)
+            self._add(accepted, pending, font, refused)
+            if not refused or len(accepted) == size:
+                return refused
+            pending = list(refused)
+
+    def _add(
+        self,
+        accepted: list[str],
+        part: list[str],
+        font: Path | None,
+        refused: dict[str, tuple[str, str]],
+    ) -> None:
+        error = self.run([*accepted, *part], font)
         if error is None:
-            return None
-        baseline_error = self.run((), font)
-        if baseline_error is not None:
-            return baseline_error
-        pending = ids
-        while error is not None and pending:
-            self._split(pending, error, font)
-            placed = self.placed()
-            pending = [entry_id for entry_id in pending if entry_id not in placed]
-            error = self.run(pending, font) if pending else None
-        return None
-
-    def _split(self, ids: list[str], error: tuple[str, str], font: Path | None) -> None:
-        if len(ids) == 1:
-            self.errors[ids[0]] = {
-                "id": ids[0],
-                "code": error[0],
-                "message": error[1],
-                "font": font is not None,
-            }
-            return
-        if len(ids) <= _ONE_BY_ONE:
-            parts = [[entry_id] for entry_id in ids]
+            accepted.extend(part)
+        elif len(part) == 1:
+            refused[part[0]] = error
         else:
-            half = len(ids) // 2
-            parts = [ids[:half], ids[half:]]
-        found = False
-        for part in parts:
-            part_error = self.run(part, font)
-            if part_error is not None:
-                found = True
-                self._split(part, part_error, font)
-        if not found:
-            group, error = self._smallest(ids, error, font)
-            self.groups.append(
-                {
-                    "ids": group,
-                    "code": error[0],
-                    "message": error[1],
-                    "font": font is not None,
-                    "note": "each passes alone; together they are refused",
-                }
-            )
+            half = len(part) // 2
+            self._add(accepted, part[:half], font, refused)
+            self._add(accepted, part[half:], font, refused)
 
-    def _smallest(
-        self, ids: list[str], error: tuple[str, str], font: Path | None
-    ) -> tuple[list[str], tuple[str, str]]:
-        """A subset of ``ids`` still refused that is refused no more without any one of them."""
-        group = list(ids)
-        for entry_id in ids:
-            trial = [other for other in group if other != entry_id]
-            trial_error = self.run(trial, font)
-            if trial_error is not None:
-                group, error = trial, trial_error
-        return group, error
+    def partners(self, fixed: list[str], pool: list[str], font: Path | None) -> list[str]:
+        """The fewest entries of ``pool`` that ``fixed`` is refused with; none if alone.
+
+        ``fixed`` with all of ``pool`` is refused. The pool is halved: the part
+        found in one half is kept while the other half is searched
+        (QuickXplain), so a few runs find two partners among thousands.
+        """
+        if not pool or self.run(fixed, font) is not None:
+            return []
+        if len(pool) == 1:
+            return list(pool)
+        half = len(pool) // 2
+        found = self.partners([*fixed, *pool[half:]], pool[:half], font)
+        return found + self.partners([*fixed, *found], pool[half:], font)
 
 
 @dataclass(frozen=True, slots=True)
 class Located:
     errors: tuple[dict[str, object], ...]
+    # Entries refused only together with others of the changes ("with").
     groups: tuple[dict[str, object], ...]
-    # Entries refused against the baseline that pass with the other changes.
-    together: tuple[str, ...]
     baseline_error: dict[str, object] | None
-    stopped: bool
+    # Changed entries the run limit left undecided.
+    undecided: tuple[str, ...]
     runs: int
 
 
@@ -290,41 +281,57 @@ def locate_failures(
 ) -> Located:
     """Every entry of ``changed`` whose text ``check`` refuses, by group testing.
 
-    ``texts`` holds the translator's text by id. The check runs without the
-    font first, then with it for the entries that passed.
+    ``texts`` holds the translator's text by id. The search keeps the changes
+    that pass together and judges every other one with them: an entry refused
+    even with no other change is an error; one refused only with some of the
+    passing changes is reported with the fewest of them. It checks without the
+    font first, then with it the changes that passed. An error's ``font`` says
+    the entry is refused only when laid out with the font.
     """
+    order = {entry.id: index for index, entry in enumerate(baseline.entries)}
     search = _Search(check, baseline, texts, max_runs)
+    errors: dict[str, dict[str, object]] = {}
+    groups: list[dict[str, object]] = []
     baseline_error = None
-    stopped = False
-    together: list[str] = []
+    candidates = list(changed)
+    cleared: list[str] = []
     try:
-        for phase_font in (None, font) if font is not None else (None,):
-            pending = [entry_id for entry_id in changed if entry_id not in search.placed()]
-            error = search.find(pending, phase_font) if pending else None
+        for phase in (None,) if font is None else (None, font):
+            if not candidates:
+                break
+            if search.run(candidates, phase) is None:
+                continue
+            error = search.run((), phase)
             if error is not None:
                 baseline_error = {
                     "code": error[0],
                     "message": error[1],
-                    "font": phase_font is not None,
+                    "font": phase is not None and search.run((), None) is None,
                 }
+                candidates = []
                 break
-        if baseline_error is None:
-            # The rest passes now. An entry that passes with it is refused only
-            # against the baseline's text of an entry it depends on.
-            rest = [entry_id for entry_id in changed if entry_id not in search.placed()]
-            for entry_id, error in list(search.errors.items()):
-                if search.run([*rest, entry_id], font if error["font"] else None) is None:
-                    together.append(entry_id)
-                    del search.errors[entry_id]
+            accepted: list[str] = []
+            refused = search.grow(accepted, candidates, phase)
+            for entry_id, error in refused.items():
+                partners = search.partners([entry_id], accepted, phase)
+                only_font = phase is not None and search.run([*accepted, entry_id], None) is None
+                found = {"id": entry_id, "code": error[0], "message": error[1], "font": only_font}
+                if partners:
+                    groups.append({**found, "with": sorted(partners, key=order.__getitem__)})
+                else:
+                    errors[entry_id] = found
+            candidates = accepted
+        cleared = candidates
     except _Stopped:
-        stopped = True
-    order = {entry.id: index for index, entry in enumerate(baseline.entries)}
+        pass
+    placed = {*errors, *(str(group["id"]) for group in groups), *cleared}
+    if baseline_error is not None:
+        placed.update(changed)
     return Located(
-        errors=tuple(sorted(search.errors.values(), key=lambda error: order[str(error["id"])])),
-        groups=tuple(search.groups),
-        together=tuple(sorted(together, key=order.__getitem__)),
+        errors=tuple(sorted(errors.values(), key=lambda error: order[str(error["id"])])),
+        groups=tuple(sorted(groups, key=lambda group: order[str(group["id"])])),
         baseline_error=baseline_error,
-        stopped=stopped,
+        undecided=tuple(entry_id for entry_id in changed if entry_id not in placed),
         runs=search.runs,
     )
 
@@ -426,7 +433,12 @@ def entry_report(
     started = time.perf_counter()
     texts = {entry.id: entry.text for entry in batch.translations.entries}
     base = {entry.id: entry.text for entry in batch.baseline.entries}
-    problem_ids = {str(problem["id"]) for problem in batch.problems}
+    # An id given twice is checked with its first text.
+    problem_ids = {
+        str(problem["id"])
+        for problem in batch.problems
+        if problem["code"] != ErrorCode.DUPLICATE_ENTRY_ID.value
+    }
     changed = [
         entry_id
         for entry_id in batch.ids
@@ -446,14 +458,6 @@ def entry_report(
             continue
         warnings.extend(
             notation_warnings(entry_id, texts[entry_id], batch.sources.get(entry_id), tolerated)
-        )
-    for entry_id in located.together:
-        warnings.append(
-            {
-                "id": entry_id,
-                "kind": "passes_with_your_other_changes",
-                "detail": "refused with the baseline's text in the other entries",
-            }
         )
     scoped = replace(
         batch.translations,
@@ -477,27 +481,16 @@ def entry_report(
 
     errors = [*batch.problems, *located.errors]
     errors.sort(key=lambda error: order.get(str(error["id"]), -1))
-    groups = list(located.groups)
-    if located.stopped:
-        placed = {str(error["id"]) for error in errors} | {
-            entry_id for group in groups for entry_id in group["ids"]
-        }
-        groups.append(
-            {
-                "ids": [entry_id for entry_id in changed if entry_id not in placed],
-                "code": "SEARCH_STOPPED",
-                "message": f"stopped after {max_runs} runs (--max-runs) before these were placed",
-                "font": font is not None,
-                "note": "not checked one by one",
-            }
-        )
     report: dict[str, object] = {
         "entries": len(batch.ids),
         "from_baseline": len(batch.baseline.entries) - len(batch.ids),
         "changed": len(changed),
-        "ok": not errors and not groups and located.baseline_error is None,
+        "ok": not errors
+        and not located.groups
+        and located.baseline_error is None
+        and not located.undecided,
         "errors": errors,
-        "group_errors": groups,
+        "group_errors": list(located.groups),
         "warnings": warnings,
         "runs": located.runs,
         "seconds": round(time.perf_counter() - started, 2),
@@ -505,4 +498,7 @@ def entry_report(
     }
     if located.baseline_error is not None:
         report["baseline_error"] = located.baseline_error
+    if located.undecided:
+        # The run limit (--max-runs) came first: these are neither passed nor refused.
+        report["undecided"] = list(located.undecided)
     return report

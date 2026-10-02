@@ -140,8 +140,9 @@ classic-retro targets strip fomt.workspace.json --out fomt.json
 Every check and build holds a translations file against the originals pinned in the
 target's code. `check-translations` stops at the first refused entry; `check-entries`
 lists every one with the target's own reason, for any target and with no code of its
-own, by running the target's check against a baseline that passes (the shipped file)
-with the translator's text in fewer and fewer entries. It checks a batch too: a large
+own: against a baseline that passes (the shipped file) it gathers the translator's
+changes that pass the target's check together, halving the rest, and judges each other
+change with them in place. It checks a batch too: a large
 script is cut into batches with `split`, each translated and checked alone, and put
 back with `merge`:
 
