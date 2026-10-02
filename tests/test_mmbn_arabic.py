@@ -21,8 +21,10 @@ from classic_retro.engines.mmbn_arabic import (
     BOX_COLUMNS,
     LATIN_CHARACTERS,
     PREVIEW_COLOURS,
+    ZERO_WIDTH,
     MmbnArabicEncoder,
     MmbnLineRenderer,
+    check_pieces,
     check_text,
     page_preview,
     pages_sheet,
@@ -197,6 +199,19 @@ def test_encoder_rejects_what_it_cannot_draw(arabic_font):
     with pytest.raises(ClassicRetroError) as caught:
         check_text("ب\u200fب")
     assert caught.value.code is ErrorCode.EXPLICIT_BIDI_CONTROL
+
+
+def test_a_page_holds_three_lines_of_text_without_a_font(arabic_font):
+    # A line past the third may hold spaces and zero-width characters (they take
+    # no cells), and a box clear starts a new page of three lines.
+    blank = " " + "".join(sorted(ZERO_WIDTH))
+    pieces = parse_notation("{dialog_up}ب\nب\nب\n" + blank + "\\p{cls 0}ب\nب\nب\\p{end 0}")
+    check_pieces(pieces)
+    script = MmbnArabicEncoder(MmbnLineRenderer(arabic_font)).encode(pieces)
+    assert script.pages[0].line_cells[3] == 0
+    with pytest.raises(ClassicRetroError) as caught:
+        check_pieces(parse_notation("{dialog_up}ب\n\n\nب\\p{end 0}"))
+    assert caught.value.code is ErrorCode.TEXT_BOX_OVERFLOW
 
 
 def test_a_full_page_fits_the_tile_buffer(arabic_font):

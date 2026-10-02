@@ -61,7 +61,9 @@ from classic_retro.engines.fomt_arabic import (
     FomtArabicText,
     FomtCellRenderer,
     TagBank,
+    check_text,
     code_cell,
+    lay_out,
     page_preview,
     previews_sheet,
     render_tag,
@@ -296,18 +298,25 @@ def _verify_story(
             )
 
 
+def check_strings(strings: tuple[FomtArabicString, ...]) -> None:
+    """What needs no font: every string once, with its original's commands, and its
+    characters and box rules (``lay_out`` without a renderer)."""
+    keys: set[str] = set()
+    for string in strings:
+        if string.key in keys:
+            raise ClassicRetroError(ErrorCode.DUPLICATE_ENTRY_ID, f"String {string.key} twice")
+        keys.add(string.key)
+        pieces = string.pieces
+        validate_command_skeleton(string.source_skeleton, pieces)
+        lay_out(pieces)
+
+
 def encode_strings(
     encoder: FomtArabicEncoder, strings: tuple[FomtArabicString, ...]
 ) -> dict[str, FomtArabicText]:
-    """Validate every translation against its original commands and encode it."""
-    encoded: dict[str, FomtArabicText] = {}
-    for string in strings:
-        if string.key in encoded:
-            raise ClassicRetroError(ErrorCode.DUPLICATE_ENTRY_ID, f"String {string.key} twice")
-        pieces = string.pieces
-        validate_command_skeleton(string.source_skeleton, pieces)
-        encoded[string.key] = encoder.encode(pieces)
-    return encoded
+    """Check every translation (``check_strings``), then encode it."""
+    check_strings(strings)
+    return {string.key: encoder.encode(string.pieces) for string in strings}
 
 
 def encode_names(
@@ -567,11 +576,13 @@ def check_fomt_translations(
     *,
     translations: TranslationSet | None = None,
 ) -> dict[str, object]:
-    """Validate the translations without the ROM; with a font, draw and lay out every one."""
+    """Validate the translations without the ROM: their commands, characters and box
+    rules; with a font, draw and lay out every one."""
     strings = fomt_arabic_strings(translations)
     names = fomt_arabic_names(translations)
-    for string in strings:
-        validate_command_skeleton(string.source_skeleton, string.pieces)
+    check_strings(strings)
+    for name in names:
+        check_text(name.arabic)
     report: dict[str, object] = {
         "strings": len(strings),
         "speaker_names": len(names),

@@ -83,6 +83,9 @@ ALLOWED_COMMANDS = frozenset(
     {0xE7, 0xE8, 0xE9, 0xEA, 0xEB, 0xEC, 0xED, 0xEE, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7}
     | {0xF9, 0xFA, 0xFC}
 )
+# Characters HarfBuzz shapes without ink (soft hyphen, zero-width space and
+# joiners, word joiner): like spaces, a line of only these takes no cells.
+ZERO_WIDTH = frozenset("\u00ad\u200b\u200c\u200d\u2060")
 
 
 def placeholder_latin_cells() -> dict[str, tuple[tuple[int, ...], ...]]:
@@ -300,7 +303,14 @@ def validate_command_skeleton(source: tuple[str, ...], pieces: tuple[Piece, ...]
     require_same_commands("MMBN", source, notation_skeleton(pieces), "".join)
 
 
+def _draws(text: str) -> bool:
+    """Whether ``text`` puts ink in its line: anything but spaces and zero-width characters."""
+    return any(not character.isspace() and character not in ZERO_WIDTH for character in text)
+
+
 def check_pieces(pieces: tuple[Piece, ...]) -> None:
+    """What a section may hold, checked without a font: its text and commands,
+    and text on no more than ``BOX_LINES`` lines of a page."""
     for piece in pieces:
         if isinstance(piece, str):
             if "{char " in piece:
@@ -313,6 +323,12 @@ def check_pieces(pieces: tuple[Piece, ...]) -> None:
                 ErrorCode.UNSUPPORTED_CONTROL_CODE,
                 f"MMBN Arabic v1 does not support {piece.notation!r} (write item names as text)",
             )
+    for page in split_pages(pieces):
+        for line in split_lines(page)[BOX_LINES:]:
+            if any(isinstance(piece, str) and _draws(piece) for piece in line):
+                raise ClassicRetroError(
+                    ErrorCode.TEXT_BOX_OVERFLOW, f"A MMBN box holds {BOX_LINES} lines"
+                )
 
 
 def split_pages(pieces: tuple[Piece, ...]) -> list[list[Piece]]:
@@ -351,11 +367,6 @@ class MmbnArabicEncoder:
             start = len(data)
             lines = split_lines(page_pieces)
             drawn = [self.renderer.render(line) for line in lines]
-            for number, line in enumerate(drawn):
-                if line.cells and number >= BOX_LINES:
-                    raise ClassicRetroError(
-                        ErrorCode.TEXT_BOX_OVERFLOW, f"A MMBN box holds {BOX_LINES} lines"
-                    )
             total = sum(len(line.cells) for line in drawn)
             if total > PAGE_CELLS:
                 raise ClassicRetroError(

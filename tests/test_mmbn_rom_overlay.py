@@ -4,6 +4,7 @@ import hashlib
 import json
 import shutil
 import struct
+from dataclasses import replace
 
 import pytest
 from fontTools.feaLib.builder import addOpenTypeFeaturesFromString
@@ -25,9 +26,10 @@ from classic_retro.engines.mmbn import (
     parse_notation,
     script_bytes,
 )
+from classic_retro.localization.translations import TranslationSet, builtin_translation_set
 from classic_retro.rebuild.bps import apply_bps
 from classic_retro.rom import mmbn_arabic as overlay
-from classic_retro.rom.mmbn_arabic_script import MmbnArabicSection, MmbnScriptArchive
+from classic_retro.rom.mmbn_arabic_script import TARGET, MmbnArabicSection, MmbnScriptArchive
 
 BASE = overlay.ROM_BASE
 SCENE_ADDRESS = 0x08700000
@@ -295,6 +297,45 @@ def test_real_script_checks_without_the_rom(capsys):
     report = json.loads(capsys.readouterr().out)
     assert report["archives"] == 6 and report["sections"] >= 40
     assert report["pages_drawn"] is False
+
+
+def _retranslated(key: str, text: str) -> TranslationSet:
+    """The shipped translations, with ``key``'s text replaced by ``text``."""
+    shipped = builtin_translation_set(TARGET)
+    entries = tuple(
+        replace(entry, text=text) if entry.id == key else entry for entry in shipped.entries
+    )
+    return replace(shipped, entries=entries)
+
+
+# Invented texts that keep their section's commands ("{dialog_up}\p{end 5}" and
+# "{dialog_up}<>\p{cls 5}{jump 1}") and break one check that needs no font.
+REFUSED_WITHOUT_A_FONT = (
+    ("lan-room.01", "{dialog_up}صباح الخير{char 93}\\p{end 5}", ErrorCode.UNENCODABLE_TEXT),
+    ("lan-room.01", "{dialog_up}خذ {key 0} معك\\p{end 5}", ErrorCode.UNSUPPORTED_CONTROL_CODE),
+    ("lan-room.01", "{dialog_up}ﺻﺒﺎح الخير\\p{end 5}", ErrorCode.PRE_SHAPED_ARABIC_INPUT),
+    ("lan-room.01", "{dialog_up}صَباح الخير\\p{end 5}", ErrorCode.UNSUPPORTED_ARABIC_MARK),
+    ("lan-room.01", "{dialog_up}الساعة ٧\\p{end 5}", ErrorCode.UNENCODABLE_TEXT),
+    (
+        "wake-up.0",
+        "{dialog_up}<صباح\nالخير\nيا\nصديقي>\\p{cls 5}{jump 1}",
+        ErrorCode.TEXT_BOX_OVERFLOW,
+    ),
+)
+
+
+@pytest.mark.parametrize(("key", "text", "code"), REFUSED_WITHOUT_A_FONT)
+def test_check_without_a_font_refuses_what_needs_no_pixels(key, text, code):
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.check_mmbn_translations(translations=_retranslated(key, text))
+    assert caught.value.code is code
+
+
+@pytest.mark.parametrize(("key", "text", "code"), REFUSED_WITHOUT_A_FONT)
+def test_check_with_the_reference_font_gives_the_same_errors(reference_font, key, text, code):
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.check_mmbn_translations(reference_font, translations=_retranslated(key, text))
+    assert caught.value.code is code
 
 
 @pytest.mark.skipif(shutil.which("arm-none-eabi-as") is None, reason="needs GNU ARM binutils")
