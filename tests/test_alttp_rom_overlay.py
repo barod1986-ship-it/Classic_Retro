@@ -35,6 +35,7 @@ from classic_retro.engines.alttp_arabic import (
     AlttpFont,
     AlttpGlyph,
 )
+from classic_retro.localization.translations import Translation, TranslationSet
 from classic_retro.rebuild.bps import apply_bps
 from classic_retro.rom import alttp_arabic as overlay
 from classic_retro.rom import alttp_arabic_script as script
@@ -283,6 +284,38 @@ def test_the_arabic_keeps_to_the_added_banks(font_path, monkeypatch):
 
 def _map_all():
     return engine.alttp_glyph_codes(overlay.messages_characters(_messages()))
+
+
+def _translations(texts: dict[str, str]) -> TranslationSet:
+    """A translation set of these texts, by entry id."""
+    entries = tuple(Translation(key, text) for key, text in texts.items())
+    return TranslationSet(script.TARGET, "invented", entries)
+
+
+def test_the_check_refuses_without_the_rom_what_the_added_banks_cannot_hold(font_path):
+    """The list and the added banks are reckoned from the text alone, as the build
+    reckons them: the check refuses a message longer than a bank, as the build does."""
+    page = "{line}".join(["سلام" * 7] * 3)  # three lines of 28 letters
+    long = {**ARABIC, "house.zelda_calls": "{Window 02}{Speed 03}" + "\n".join([page] * 400)}
+    with pytest.raises(ClassicRetroError) as checked:
+        overlay.check_alttp_translations(translations=_translations(long))
+    assert checked.value.code is ErrorCode.RELOCATION_OVERFLOW
+    assert str(checked.value).startswith("house.zelda_calls: the Arabic message needs")
+    translated = tuple(
+        dataclasses.replace(message, notation=long[message.key]) for message in _messages()
+    )
+    with pytest.raises(ClassicRetroError) as refused:
+        _build(_rom(), font_path, translated=translated)
+    assert (refused.value.code, str(refused.value)) == (checked.value.code, str(checked.value))
+    # The list holds 409 messages and its end.
+    beh = engine.AlttpArabicEncoder(engine.alttp_glyph_codes(engine.message_characters("ب")))
+    many = [AlttpMessage(f"m.{number}", number, "", "ب") for number in range(410)]
+    encoded = {message.key: beh.encode(message.notation) for message in many}
+    assert len(overlay.lay_out_messages(many[:409], encoded).texts) == 409
+    with pytest.raises(ClassicRetroError) as caught:
+        overlay.lay_out_messages(many, encoded)
+    assert caught.value.code is ErrorCode.RELOCATION_OVERFLOW
+    assert overlay.check_alttp_translations()["messages"] == 3  # the shipped translations fit
 
 
 def test_the_sites_and_anchors_lie_apart_and_the_parts_are_in_order():

@@ -305,16 +305,30 @@ def encode_strings(
     return encoded
 
 
-def room_data(
-    translated: Sequence[Sf2String], encoded: Mapping[str, EncodedString], font: Sf2Font
-) -> dict[int, bytes]:
-    """What the overlay writes into its room, by address."""
-    codes = max(font.glyphs) + 1
-    glyphs = bytearray(codes * GLYPH_BYTES)
-    for code, glyph in font.glyphs.items():
-        glyphs[code * GLYPH_BYTES : (code + 1) * GLYPH_BYTES] = glyph.data()
+def font_codes(glyph_map: GlyphCodes) -> int:
+    """How many codes the font table holds: to the highest the translation uses (the
+    font draws a glyph for each code of its map)."""
+    return max(glyph_map.all_codes()) + 1
+
+
+@dataclass(frozen=True, slots=True)
+class RoomLayout:
+    """The list of translated strings, and the Arabic strings from ``start``."""
+
+    redirects: bytes
+    start: int
+    texts: bytes
+
+
+def lay_out_room(
+    translated: Sequence[Sf2String], encoded: Mapping[str, EncodedString], codes: int
+) -> RoomLayout:
+    """The list and the Arabic strings in the room, after a font table of ``codes``
+    glyphs: each string a length byte then its symbols, from a word; refused where
+    the list or the room cannot hold them. It needs only the text, so the check
+    without the ROM refuses what the build would."""
     texts = bytearray()
-    start = ARABIC_FONT + len(glyphs)
+    start = ARABIC_FONT + codes * GLYPH_BYTES
     redirects = bytearray()
     for string in translated:
         symbols = encoded[string.key].data
@@ -333,11 +347,23 @@ def room_data(
             f"The font and the Arabic need {start + len(texts) - ARABIC_FONT} bytes; the room "
             f"holds {ROOM_END - ARABIC_FONT}",
         )
+    return RoomLayout(bytes(redirects), start, bytes(texts))
+
+
+def room_data(
+    translated: Sequence[Sf2String], encoded: Mapping[str, EncodedString], font: Sf2Font
+) -> dict[int, bytes]:
+    """What the overlay writes into its room, by address."""
+    codes = max(font.glyphs) + 1
+    glyphs = bytearray(codes * GLYPH_BYTES)
+    for code, glyph in font.glyphs.items():
+        glyphs[code * GLYPH_BYTES : (code + 1) * GLYPH_BYTES] = glyph.data()
+    layout = lay_out_room(translated, encoded, codes)
     return {
         HOOK_ADDRESS: HOOK_CODE,
-        REDIRECTS: bytes(redirects),
+        REDIRECTS: layout.redirects,
         ARABIC_FONT: bytes(glyphs),
-        start: bytes(texts),
+        layout.start: layout.texts,
     }
 
 
@@ -530,6 +556,9 @@ def check_sf2_translations(
     glyph_map = sf2_glyph_codes(used)
     font = build_sf2_font(font_path, glyph_map, used) if font_path else None
     encoded = encode_strings(translated, Sf2ArabicEncoder(glyph_map, font))
+    # The room as the build fills it: a new line the layout writes takes a space's byte,
+    # so the strings are as long without the font.
+    lay_out_room(translated, encoded, font_codes(glyph_map))
     if font is not None and preview_path is not None:
         font_preview(font).save(preview_path)
     if font is not None and text_preview_path is not None:
