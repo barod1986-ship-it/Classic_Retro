@@ -91,6 +91,9 @@ def free_space(
     """Runs of one fill byte, at least ``min_size`` long once aligned to ``align``."""
     first, stop = _span(data, start, end)
     runs = []
+    # No run outlasts the span; re also refuses a repeat count of 2**32 or more.
+    if min_size > stop - first:
+        return runs
     for fill in fills:
         pattern = re.compile(re.escape(bytes([fill])) + b"{%d,}" % max(min_size, 1))
         for match in pattern.finditer(data, first, stop):
@@ -166,7 +169,8 @@ def pointer_tables(
     low, high = target
     slots = step // align
     tables = []
-    for phase in range(slots):
+    # A phase past the last value holds no entries.
+    for phase in range(min(slots, len(values))):
         run: list[int] = []
         first_index = phase
         # One slot past the end closes the last run.
@@ -176,7 +180,7 @@ def pointer_tables(
                     first_index = index
                 run.append(values[index])
                 continue
-            if len(run) >= min_count:
+            if len(run) >= max(min_count, 1):
                 tables.append(
                     PointerTable(
                         offset=base + first_index * align,
@@ -197,6 +201,8 @@ def ascii_strings(
 ) -> list[TextRun]:
     """Runs of printable ASCII."""
     first, stop = _span(data, start, end)
+    if min_length > stop - first:
+        return []
     pattern = re.compile(rb"[\x20-\x7e]{%d,}" % max(min_length, 1))
     return [
         TextRun(
@@ -222,7 +228,13 @@ def table_strings(
     Strings are read greedily from the left: a run that starts inside another is
     not reported again.
     """
+    if not set(table.entries) - table.ends:
+        raise ClassicRetroError(
+            ErrorCode.INVALID_TEXT_TABLE, "the table defines no characters, only end codes"
+        )
     offset, stop = _span(data, start, end)
+    if min_length > stop - offset:
+        return
     view = data[:stop]
     if table.longest == 1:
         yield from _byte_table_strings(view, table, min_length, offset)
