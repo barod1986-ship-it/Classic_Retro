@@ -3,7 +3,9 @@
 Every command prints JSON, except ``disasm``, which prints the listing.
 Addresses on the command line and in reports include the image's base: a Game
 Boy Advance image is detected and starts at ``0x08000000``; any other starts at
-0 unless ``--base`` says otherwise.
+0 unless ``--base`` says otherwise. A Nintendo 64 image is detected too: its
+pointers are read big-endian when it is stored in the z64 order, unless
+``--byteorder`` says otherwise.
 """
 
 from __future__ import annotations
@@ -19,7 +21,10 @@ from pathlib import Path
 from classic_retro.adapters.base import ProbeSource
 from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.patching.image import GBA_ROM_BASE
+from classic_retro.patching.n64 import MAGIC_Z64
 from classic_retro.platforms.gba import GBAPlatformAdapter
+from classic_retro.platforms.n64 import N64PlatformAdapter
+from classic_retro.rebuild.mio0 import Mio0Block, decompress_mio0, find_mio0, mio0_packed_size
 from classic_retro.research.disasm import MODES, disassemble
 from classic_retro.research.emulator import Emulator
 from classic_retro.research.libretro import LibretroEmulator
@@ -77,6 +82,8 @@ class _Image:
     data: bytes
     base: int
     platform: str | None
+    # How the image stores its pointers, unless --byteorder says otherwise.
+    byteorder: str
     # The scanned offsets.
     start: int
     end: int
@@ -106,15 +113,26 @@ def _offset(address: int, base: int, size: int, option: str) -> int:
     return address - base
 
 
+def _platform(path: Path) -> str | None:
+    """The platform whose probe recognises the image, of the ones the scanners tell apart."""
+    source = ProbeSource(path)
+    for adapter in (GBAPlatformAdapter(), N64PlatformAdapter()):
+        if adapter.probe(source).confidence > 0:
+            return adapter.id
+    return None
+
+
 def _open(args: argparse.Namespace) -> _Image:
     data = args.image.read_bytes()
-    gba = GBAPlatformAdapter().probe(ProbeSource(args.image)).confidence > 0
-    base = args.base if args.base is not None else (GBA_ROM_BASE if gba else 0)
+    platform = _platform(args.image)
+    base = args.base if args.base is not None else (GBA_ROM_BASE if platform == "gba" else 0)
+    # An N64 image is big-endian words; only the z64 order stores them as they are.
+    byteorder = "big" if platform == "n64" and data[:4] == MAGIC_Z64 else "little"
     start = 0 if args.start is None else _offset(args.start, base, len(data), "--start")
     end = len(data) if args.end is None else _offset(args.end, base, len(data), "--end")
     if end < start:
         raise ClassicRetroError(ErrorCode.INVALID_BYTE_RANGE, "--end is before --start")
-    return _Image(args.image, data, base, "gba" if gba else None, start, end)
+    return _Image(args.image, data, base, platform, byteorder, start, end)
 
 
 def _image_arguments(parser: argparse.ArgumentParser, *, limit: bool = True) -> None:
@@ -137,7 +155,12 @@ def _image_arguments(parser: argparse.ArgumentParser, *, limit: bool = True) -> 
 
 def _pointer_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--width", type=int, choices=(2, 3, 4), default=4, help="Bytes a pointer")
-    parser.add_argument("--byteorder", choices=("little", "big"), default="little")
+    parser.add_argument(
+        "--byteorder",
+        choices=("little", "big"),
+        help="How pointers are stored (default: big for a Nintendo 64 image in z64 order, "
+        "else little)",
+    )
     parser.add_argument(
         "--align", type=_integer, default=None, help="Pointer alignment (default: the width)"
     )
@@ -242,6 +265,20 @@ def register_cli(subcommands: argparse._SubParsersAction) -> None:
         help="Entries must point into this range (default: the whole image)",
     )
     tables.set_defaults(handler=_pointer_tables)
+
+    mio0 = commands.add_parser(
+        "mio0", help="Every MIO0-compressed block of a Nintendo 64 image, or one block unpacked"
+    )
+    _image_arguments(mio0)
+    mio0.add_argument(
+        "--extract",
+        type=_integer,
+        metavar="ADDRESS",
+        help="Write the block that starts at this address, decompressed, to --out",
+    )
+    mio0.add_argument("--out", type=Path, help="The file --extract writes")
+    mio0.add_argument("--force", action="store_true", help="Replace an existing --out")
+    mio0.set_defaults(handler=_mio0)
 
     text = commands.add_parser(
         "text", help="Strings: printable ASCII, or the game's own codes with a .tbl table"
@@ -359,13 +396,13 @@ def _free_space(args: argparse.Namespace) -> int:
     )
 
 
-def _pointer_options(args: argparse.Namespace) -> tuple[int, str, int]:
-    return args.width, args.byteorder, args.align or args.width
+def _pointer_options(args: argparse.Namespace, image: _Image) -> tuple[int, str, int]:
+    return args.width, args.byteorder or image.byteorder, args.align or args.width
 
 
 def _pointers(args: argparse.Namespace) -> int:
     image = _open(args)
-    width, byteorder, align = _pointer_options(args)
+    width, byteorder, align = _pointer_options(args, image)
     found = find_references(
         image.data,
         args.to,
@@ -397,7 +434,7 @@ def _pointers(args: argparse.Namespace) -> int:
 
 def _pointer_tables(args: argparse.Namespace) -> int:
     image = _open(args)
-    width, byteorder, align = _pointer_options(args)
+    width, byteorder, align = _pointer_options(args, image)
     target = args.into or (image.base, image.base + len(image.data))
     found = pointer_tables(
         image.data,
@@ -432,6 +469,58 @@ def _pointer_tables(args: argparse.Namespace) -> int:
                 }
                 for table in shown
             ],
+        }
+    )
+
+
+def _mio0(args: argparse.Namespace) -> int:
+    if (args.extract is None) != (args.out is None):
+        raise ClassicRetroError(
+            ErrorCode.INVALID_BYTE_RANGE,
+            "--extract and --out go together: the block's address, and the file to write it to",
+        )
+    image = _open(args)
+    if args.extract is not None:
+        return _extract_mio0(args, image)
+    # The blocks of the scanned part, each at its offset in the whole image.
+    blocks = [
+        Mio0Block(image.start + block.offset, block.packed_size, block.size)
+        for block in find_mio0(image.data[image.start : image.end])
+    ]
+    shown, listing = _listed(blocks, args.limit)
+    return _print(
+        {
+            **image.header(),
+            "packed_bytes": sum(block.packed_size for block in blocks),
+            "unpacked_bytes": sum(block.size for block in blocks),
+            **listing,
+            "blocks": [
+                {**image.where(block.offset), "packed_size": block.packed_size, "size": block.size}
+                for block in shown
+            ],
+        }
+    )
+
+
+def _extract_mio0(args: argparse.Namespace, image: _Image) -> int:
+    if args.out.exists() and not args.force:
+        raise ClassicRetroError(
+            ErrorCode.OUTPUT_EXISTS, f"{args.out} exists; pass --force to replace it"
+        )
+    offset = image.offset(args.extract, "--extract")
+    try:
+        output = decompress_mio0(image.data, offset)
+        packed_size = mio0_packed_size(image.data, offset)
+    except ClassicRetroError as error:
+        raise ClassicRetroError(
+            error.code, f"No MIO0 block decodes at {_address(args.extract)}: {error}"
+        ) from None
+    args.out.write_bytes(output)
+    return _print(
+        {
+            **image.header(),
+            "block": {**image.where(offset), "packed_size": packed_size, "size": len(output)},
+            "out": str(args.out),
         }
     )
 

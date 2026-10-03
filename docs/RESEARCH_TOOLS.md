@@ -7,16 +7,19 @@ using your own copy of a game. There are three kinds:
 
 - an emulator you run from a script: keys, frames, screenshots, savestates,
   memory, breakpoints and watchpoints;
-- scanners for free space, pointers, pointer tables, text and byte patterns;
+- scanners for free space, pointers, pointer tables, compressed blocks, text and byte
+  patterns;
 - a disassembler.
 
-The tools only read the image; they never change it.
+The tools only read the image; they never change it. The scanners write nothing but the
+block `mio0 --extract` unpacks, where you tell it to.
 
 ```text
 classic-retro research run IMAGE SCRIPT          # an emulator session from a script
 classic-retro research free-space IMAGE          # padding big enough for code, fonts, text
 classic-retro research pointers IMAGE --to ADDR  # every pointer to an address or range
 classic-retro research pointer-tables IMAGE      # runs of entries pointing into the image
+classic-retro research mio0 IMAGE                # the MIO0 blocks of a Nintendo 64 image
 classic-retro research text IMAGE [--table T]    # ASCII strings, or the game's own codes
 classic-retro research relative-search IMAGE WORD
 classic-retro research find IMAGE "70 47 ?? B5"  # byte patterns, ?? for any byte
@@ -235,6 +238,11 @@ image's **base**:
 - A Game Boy Advance image is detected by its header, and its base is `0x08000000`.
 - Any other image starts at 0 unless `--base` sets the base.
 - A report gives each result's address and its offset in the file.
+- A Nintendo 64 image is detected by its first word, and the report says so (`platform`).
+  Its words are big-endian, so when the image is stored in the z64 order the pointer
+  scanners read pointers big-endian unless `--byteorder` says otherwise. An image in the
+  byte-swapped (v64) or little-endian (n64) order is not converted: convert the dump
+  first, or the scanners read it as any other file.
 
 Every scanner also takes these options:
 
@@ -272,10 +280,36 @@ classic-retro research pointer-tables IMAGE [--min-count 8] [--stride 8] [--into
   - the lowest and highest target;
   - whether the targets ascend, as a table of strings stored in order does;
   - how many are odd, which on ARM means pointers to Thumb code.
-- `--width` (2, 3 or 4 bytes) and `--byteorder` fit other consoles.
+- `--width` (2, 3 or 4 bytes) and `--byteorder` fit other consoles. The byte order is
+  `little` unless the image is a Nintendo 64 image in z64 order, which is read `big`.
 - `--align` defaults to the width.
 - Pointers are read as linear addresses (base + offset). That fits the GBA and any flat
   mapping. Banked mappings, such as the SNES LoROM, are not modelled yet.
+
+### Compressed blocks
+
+```text
+classic-retro research mio0 IMAGE
+classic-retro research mio0 IMAGE --extract ADDRESS --out FILE [--force]
+```
+
+- Nintendo's own Nintendo 64 games (Super Mario 64, Mario Kart 64) store segments of
+  their data as MIO0 blocks (`rebuild/mio0.py` describes the format). What a block holds,
+  text and fonts included, is invisible to the other scanners until it is unpacked: Super
+  Mario 64 keeps its dialogue, its names and its fonts in one block among 79.
+- `mio0` reports every block: how many, the bytes they occupy (`packed_bytes`) and the
+  bytes they hold (`unpacked_bytes`), and for each block its address, its offset, its
+  packed size and its size. A block is any `MIO0` magic that decodes without error, so
+  a false magic in other data is left out.
+- `--extract ADDRESS --out FILE` writes the block that starts at `ADDRESS` (as the report
+  gives it), decompressed, to `FILE`, and reports the block and the file. The two options
+  go together. An existing `FILE` is kept unless `--force` replaces it, and an address
+  without a block is refused with the decoder's reason.
+- Run the other scanners on the extracted file. A segment is addressed by its own base
+  at run time, so give them the base the game loads it at, and the console's byte order:
+  `research pointer-tables FILE --base 0x02000000 --byteorder big` lists the tables of a
+  segment loaded at `0x02000000`.
+- The extracted file is game data: keep it on your machine like a screenshot.
 
 ### Text
 
@@ -332,7 +366,7 @@ classic-retro research disasm IMAGE 0x08012345 [--length 64] [--mode thumb|arm] 
 
 | Question in §2 of [adding a target](ADDING_A_TARGET.md) | Tools |
 |---|---|
-| Storage: where the strings live and what points to them | `text`, `relative-search`, `pointers`, `pointer-tables` |
+| Storage: where the strings live and what points to them | `text`, `relative-search`, `pointers`, `pointer-tables`; on a Nintendo 64 image, `mio0` first, then the others on the extracted block |
 | Encoding: characters and control codes | `relative-search`, then `text --table` with a growing table |
 | Font: where the glyphs are and how they are drawn | `watch read` on the glyph data, `peek` and `dump` of VRAM |
 | Renderer: the one place that draws a glyph | `watch write` on the tile buffer, `break` with a memory probe, `disasm` |

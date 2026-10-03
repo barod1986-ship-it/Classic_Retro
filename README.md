@@ -174,6 +174,7 @@ classic-retro research run game.cue script.txt --core mednafen_psx_libretro.so -
 classic-retro research free-space game.gba
 classic-retro research pointers game.gba --to 0x08123456
 classic-retro research pointer-tables game.gba
+classic-retro research mio0 game.z64 [--extract ADDRESS --out FILE]
 classic-retro research text game.gba --table game.tbl
 classic-retro research relative-search game.gba WORD
 classic-retro research disasm game.gba 0x08012345
@@ -191,7 +192,8 @@ Mega Drive.**
 
 Every target translates one scene or a few strings chosen to prove its renderer, not
 a whole game; the paragraphs below say what each covers. The Game Boy and Game Boy
-Color, the NES and the Nintendo 64 are detected but have no target yet.
+Color, the NES and the Nintendo 64 are detected but have no target yet. What a Nintendo 64
+target would build on is recorded in [the Super Mario 64 research notes](docs/SM64_RESEARCH_NOTES.md).
 
 Install with `python -m pip install -e ".[dev]" -c constraints.txt` (the pinned
 raster stack: the reference patch hashes are reproducible only with it), run `pytest`,
