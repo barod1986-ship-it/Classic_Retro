@@ -65,7 +65,12 @@ Built-in identification probes currently cover:
 - NES/Famicom in iNES/NES 2.0 containers
 - SNES/Super Famicom through internal-header heuristics
 - Mega Drive/Genesis
-- Nintendo 64 common ROM byte orders
+- Nintendo 64, by the first word in any of the three common byte orders (z64,
+  v64, n64); when the header is complete the probe reads it in big-endian order
+  and reports the title, game code and revision, the two check code words, which
+  boot code the image carries (CIC-NUS-6102 by the CRC-32 of 0x40..0x1000, else
+  "unknown") and, for a known boot code with the whole first megabyte present,
+  whether the check code matches it (`platforms/n64.py`, `patching/n64.py`)
 - PlayStation: standalone PS-X EXE files, and CUE/BIN disc sets through the media
   layer (see the PlayStation note below)
 
@@ -93,8 +98,20 @@ SNES header locations and verification heuristics:
 Mega Drive ROM header:
 - https://www.plutiedev.com/rom-header
 
-Nintendo 64 byte order:
-- MiSTer N64 implementation and established z64/v64/n64 magic conventions.
+Nintendo 64 byte order, header and boot checksum:
+- https://n64brew.dev/wiki/ROM_Header (the header's fields; the check code
+  "calculated on 1 Mbyte of ROM contents starting from offset 0x1000")
+- established z64/v64/n64 magic conventions (`80 37 12 40` as the console reads
+  it, byte-swapped pairs, little-endian words); the probe converts what it reads
+  to big-endian, so the same game reports the same header in all three orders.
+- The CIC-NUS-6102 check code is the widely published "n64crc" computation,
+  written from its description and confirmed against a real 6102 image. Only
+  that boot code is implemented; images with another one report it as "unknown"
+  and get no checksum verdict.
+- The limit that stays: a game's identity is the SHA-256 of the file as given, so
+  the same game in another byte order has another identity and matches no game
+  adapter. A future N64 game adapter pins the big-endian (z64) image;
+  `patching.n64.to_big_endian` gets there from the other two orders.
 
 PlayStation executable header:
 - https://psx-spx.consoledev.net/cdromfileformats/

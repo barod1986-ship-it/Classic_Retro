@@ -13,7 +13,9 @@ package holds the parts that do not depend on the game:
 - ``overlay``: the checks of an overlay's input and output: pinned originals,
   an empty region, and that nothing changed outside the overlay's places;
 - ``nitro``: Nintendo DS images: the header, NitroFS, NARC archives and the
-  ARM9 binary, rebuilt with a file replaced or moved.
+  ARM9 binary, rebuilt with a file replaced or moved;
+- ``n64``: Nintendo 64 images: the three byte orders, the header, which boot
+  code an image carries and the boot checksum the console verifies.
 
 CPU-specific encoders live in ``classic_retro.cpu``.
 """
