@@ -110,6 +110,31 @@ def test_pointer_tables():
     assert error.value.code is ErrorCode.INVALID_SEARCH_PATTERN
 
 
+def test_pointer_tables_with_a_count_below_one_never_reports_an_empty_run():
+    data = bytearray(64)
+    struct.pack_into("<II", data, 8, 0x08000010, 0x08000020)
+    image = (0x08000000, 0x08000040)
+    # The words that are not pointers must not become empty tables.
+    tables = pointer_tables(data, target=image, min_count=0)
+    assert tables == pointer_tables(data, target=image, min_count=1)
+    assert [(table.offset, table.count) for table in tables] == [(8, 2)]
+    assert pointer_tables(data, target=image, min_count=0, start=0, end=0) == []
+
+
+def test_pointer_tables_with_a_stride_past_the_image_finish():
+    data = bytearray(64)
+    struct.pack_into("<II", data, 8, 0x08000010, 0x08000020)
+    image = (0x08000000, 0x08000040)
+    # Phases past the last word hold no entries, so a stride of any size
+    # costs no more than the image does.
+    single = [(8, 1), (12, 1)]
+    for stride in (64, 2**32, 2**40, 2**64):
+        found = pointer_tables(data, target=image, stride=stride, min_count=1)
+        assert [(table.offset, table.count, table.stride) for table in found] == [
+            (offset, count, stride) for offset, count in single
+        ]
+
+
 def test_ascii_strings():
     data = b"\x01\x02Hello, research!\x00\xffshort\x00\x80Another string here\xff"
     assert ascii_strings(data) == [
@@ -135,6 +160,7 @@ def test_parse_table():
         ("01=a\n01=b", "defined twice"),
         ("$E0", "expected HEX=TEXT"),
         ("# nothing\n", "has no entries"),
+        ("/FF=<end>", "defines no characters"),
     ):
         with pytest.raises(ClassicRetroError) as error:
             parse_table(text)
@@ -170,6 +196,29 @@ def test_one_byte_tables_find_the_same_strings_faster():
     assert list(table_strings(data, table, min_length=15))[0] == TextRun(
         768, 16, "abc" * 5 + "<end>", True
     )
+
+
+def test_table_strings_refuse_a_table_of_only_end_codes():
+    # parse_table refuses such a table by name; one built by hand is caught here.
+    for ends in ((b"\xff",), (b"\xff", b"\xfe\xfe")):
+        table = TextTable({code: "<end>" for code in ends}, frozenset(ends))
+        with pytest.raises(ClassicRetroError) as error:
+            list(table_strings(b"\x01\xff\x02\xfe\xfe", table))
+        assert error.value.code is ErrorCode.INVALID_TEXT_TABLE
+        assert "no characters" in str(error.value)
+
+
+def test_a_minimum_longer_than_the_span_finds_nothing():
+    # re refuses a repeat count of 2**32 - 1 or more; a run longer than the
+    # span is impossible anyway, so the scanners answer without asking it.
+    data = b"\xff" * 64 + b"An invented line.\x00" * 2
+    table = parse_table("\n".join(line for line in TABLE.splitlines() if "8140" not in line))
+    assert free_space(data, min_size=64) == [FreeRun(0, 64, 0xFF)]
+    assert free_space(data, min_size=len(data) + 1) == []
+    for minimum in (2**32 - 1, 2**64):
+        assert free_space(data, min_size=minimum) == []
+        assert ascii_strings(data, min_length=minimum) == []
+        assert list(table_strings(data, table, min_length=minimum)) == []
 
 
 def _encode(word: str, alphabet: int, letter: str = "A") -> bytes:
@@ -305,6 +354,48 @@ def test_cli_text_tables_relative_search_and_base(tmp_path: Path, capsys):
     ]
     assert main(["research", "free-space", str(image), "--start", "0x100"]) == 2
     assert "INVALID_BYTE_RANGE" in capsys.readouterr().err
+
+
+def test_cli_find_ascii_refuses_text_that_is_not_ascii(tmp_path: Path, capsys):
+    image = tmp_path / "game.bin"
+    image.write_bytes(bytes(64))
+    for word in ("é", "مرحبا"):
+        assert main(["research", "find", str(image), word, "--ascii"]) == 2
+        error = capsys.readouterr().err
+        assert error.startswith("INVALID_SEARCH_PATTERN:") and "ASCII" in error
+
+
+def test_cli_pointer_tables_refuse_a_count_below_one(tmp_path: Path, capsys):
+    image = tmp_path / "game.bin"
+    image.write_bytes(bytes(64))
+    with pytest.raises(SystemExit) as stop:
+        main(["research", "pointer-tables", str(image), "--min-count", "0"])
+    assert stop.value.code == 2
+    assert "--min-count" in capsys.readouterr().err
+
+
+def test_cli_text_refuses_a_table_of_only_end_codes(tmp_path: Path, capsys):
+    image = tmp_path / "game.bin"
+    image.write_bytes(bytes(64))
+    table = tmp_path / "ends.tbl"
+    table.write_text("/FF=<end>\n")
+    assert main(["research", "text", str(image), "--table", str(table)]) == 2
+    error = capsys.readouterr().err
+    assert error.startswith(f"INVALID_TEXT_TABLE: {table} ") and "no characters" in error
+
+
+def test_cli_scanners_take_a_minimum_or_stride_past_any_image(tmp_path: Path, capsys):
+    image = tmp_path / "game.bin"
+    image.write_bytes(bytes(64))
+    table = tmp_path / "game.tbl"
+    table.write_text("41=A\n/FF=<end>\n")
+    huge = str(2**32 - 1)
+    assert _run(capsys, "free-space", str(image), "--min-size", huge)["count"] == 0
+    assert _run(capsys, "text", str(image), "--min-length", huge)["count"] == 0
+    assert (
+        _run(capsys, "text", str(image), "--table", str(table), "--min-length", huge)["count"] == 0
+    )
+    assert _run(capsys, "pointer-tables", str(image), "--stride", str(2**32))["count"] == 0
 
 
 @pytest.mark.skipif(shutil.which("arm-none-eabi-objdump") is None, reason="needs GNU ARM binutils")

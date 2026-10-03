@@ -57,6 +57,13 @@ def _byte(text: str) -> int:
     return value
 
 
+def _positive(text: str) -> int:
+    value = _integer(text)
+    if value < 1:
+        raise argparse.ArgumentTypeError(f"{text} must be at least 1")
+    return value
+
+
 def _range(text: str) -> tuple[int, int]:
     """``ADDRESS`` or ``START:END`` (END exclusive)."""
     low, colon, high = text.partition(":")
@@ -233,7 +240,7 @@ def register_cli(subcommands: argparse._SubParsersAction) -> None:
         "--stride", type=_integer, help="Bytes from one entry to the next (default: the width)"
     )
     tables.add_argument(
-        "--min-count", type=_integer, default=8, help="Fewest entries a table (default 8)"
+        "--min-count", type=_positive, default=8, help="Fewest entries a table (default 8)"
     )
     tables.add_argument(
         "--into",
@@ -506,6 +513,11 @@ def _relative_search(args: argparse.Namespace) -> int:
 
 def _find(args: argparse.Namespace) -> int:
     image = _open(args)
+    if args.ascii and not args.pattern.isascii():
+        raise ClassicRetroError(
+            ErrorCode.INVALID_SEARCH_PATTERN,
+            "--ascii takes ASCII characters only; give other text as hex bytes",
+        )
     hex_pattern = args.pattern.encode("ascii").hex() if args.ascii else args.pattern
     found = find_pattern(image.data, parse_pattern(hex_pattern), start=image.start, end=image.end)
     shown, listing = _listed(found, args.limit)

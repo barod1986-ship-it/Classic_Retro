@@ -24,6 +24,7 @@ _SOURCE_READ, _TARGET_READ, _SOURCE_COPY, _TARGET_COPY = range(4)
 _BLOCK = 16
 _MIN_RUN = 32
 _MIN_SOURCE_READ = 4
+_NUMBER_BYTES = 10  # enough for 64 bits
 
 
 def _number(value: int) -> bytes:
@@ -42,11 +43,12 @@ def _signed(value: int) -> bytes:
     return _number(abs(value) << 1 | (value < 0))
 
 
-def _read_number(data: bytes, position: int) -> tuple[int, int]:
+def _read_number(data: bytes, position: int, end: int) -> tuple[int, int]:
+    """The number at ``position``, which must end before ``end`` (the footer)."""
     value = 0
     shift = 1
-    while True:
-        if position >= len(data):
+    for _ in range(_NUMBER_BYTES):
+        if position >= end:
             raise ClassicRetroError(ErrorCode.INVALID_REBUILD_PAYLOAD, "Truncated BPS number")
         byte = data[position]
         position += 1
@@ -55,6 +57,10 @@ def _read_number(data: bytes, position: int) -> tuple[int, int]:
             return value, position
         shift <<= 7
         value += shift
+    raise ClassicRetroError(
+        ErrorCode.INVALID_REBUILD_PAYLOAD,
+        f"Malformed BPS number: no end within {_NUMBER_BYTES} bytes",
+    )
 
 
 def _same_length(source: memoryview, target: memoryview, position: int) -> int:
@@ -183,9 +189,10 @@ def apply_bps(patch: bytes, source: bytes) -> bytes:
             ErrorCode.UNKNOWN_GAME_REVISION, "BPS patch was made for a different source image"
         )
     position = 4
-    source_size, position = _read_number(patch, position)
-    target_size, position = _read_number(patch, position)
-    metadata_size, position = _read_number(patch, position)
+    end = len(patch) - 12
+    source_size, position = _read_number(patch, position, end)
+    target_size, position = _read_number(patch, position, end)
+    metadata_size, position = _read_number(patch, position, end)
     position += metadata_size
     if source_size != len(source):
         raise ClassicRetroError(ErrorCode.UNKNOWN_GAME_REVISION, "BPS source size mismatch")
@@ -193,45 +200,50 @@ def apply_bps(patch: bytes, source: bytes) -> bytes:
     target = bytearray()
     source_relative = 0
     target_relative = 0
-    end = len(patch) - 12
-    while position < end:
-        action, position = _read_number(patch, position)
-        command, length = action & 3, (action >> 2) + 1
-        if command == _SOURCE_READ:
-            start = len(target)
-            if start + length > len(source):
-                raise ClassicRetroError(
-                    ErrorCode.INVALID_REBUILD_PAYLOAD, "BPS SourceRead past the source"
-                )
-            target += source[start : start + length]
-        elif command == _TARGET_READ:
-            target += patch[position : position + length]
-            position += length
-        else:
-            raw, position = _read_number(patch, position)
-            offset = -(raw >> 1) if raw & 1 else raw >> 1
-            if command == _SOURCE_COPY:
-                source_relative += offset
-                if not 0 <= source_relative <= len(source) - length:
+    try:
+        while position < end:
+            action, position = _read_number(patch, position, end)
+            command, length = action & 3, (action >> 2) + 1
+            if len(target) + length > target_size:
+                raise ClassicRetroError(ErrorCode.INVALID_REBUILD_PAYLOAD, "BPS output overflow")
+            if command == _SOURCE_READ:
+                start = len(target)
+                if start + length > len(source):
                     raise ClassicRetroError(
-                        ErrorCode.INVALID_REBUILD_PAYLOAD, "BPS SourceCopy outside the source"
+                        ErrorCode.INVALID_REBUILD_PAYLOAD, "BPS SourceRead past the source"
                     )
-                target += source[source_relative : source_relative + length]
-                source_relative += length
+                target += source[start : start + length]
+            elif command == _TARGET_READ:
+                target += patch[position : position + length]
+                position += length
             else:
-                target_relative += offset
-                if not 0 <= target_relative < len(target):
-                    raise ClassicRetroError(
-                        ErrorCode.INVALID_REBUILD_PAYLOAD, "BPS TargetCopy outside the output"
-                    )
-                # An overlapping copy repeats the bytes between the start and the end.
-                period = len(target) - target_relative
-                chunk = bytes(target[target_relative : target_relative + min(length, period)])
-                repeated = (chunk * (length // len(chunk) + 1))[:length]
-                target += repeated
-                target_relative += length
-        if len(target) > target_size:
-            raise ClassicRetroError(ErrorCode.INVALID_REBUILD_PAYLOAD, "BPS output overflow")
+                raw, position = _read_number(patch, position, end)
+                offset = -(raw >> 1) if raw & 1 else raw >> 1
+                if command == _SOURCE_COPY:
+                    source_relative += offset
+                    if not 0 <= source_relative <= len(source) - length:
+                        raise ClassicRetroError(
+                            ErrorCode.INVALID_REBUILD_PAYLOAD, "BPS SourceCopy outside the source"
+                        )
+                    target += source[source_relative : source_relative + length]
+                    source_relative += length
+                else:
+                    target_relative += offset
+                    if not 0 <= target_relative < len(target):
+                        raise ClassicRetroError(
+                            ErrorCode.INVALID_REBUILD_PAYLOAD, "BPS TargetCopy outside the output"
+                        )
+                    # An overlapping copy repeats the bytes between the start and the end.
+                    period = len(target) - target_relative
+                    chunk = bytes(target[target_relative : target_relative + min(length, period)])
+                    target += chunk * (length // len(chunk)) + chunk[: length % len(chunk)]
+                    target_relative += length
+    except (MemoryError, OverflowError):
+        # The declared target fits the format but not this machine.
+        raise ClassicRetroError(
+            ErrorCode.INVALID_REBUILD_PAYLOAD,
+            f"BPS target of {target_size} bytes cannot be held in memory",
+        ) from None
     if len(target) != target_size:
         raise ClassicRetroError(ErrorCode.INVALID_REBUILD_PAYLOAD, "BPS output size mismatch")
     if zlib.crc32(target) != int.from_bytes(patch[-8:-4], "little"):
