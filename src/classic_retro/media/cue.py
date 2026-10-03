@@ -88,19 +88,28 @@ def _decode_cue(path: Path) -> str:
     try:
         return raw.decode("utf-8-sig")
     except UnicodeDecodeError:
+        pass
+    try:
         return raw.decode("cp1252")
+    except UnicodeDecodeError:
+        # No further guessing: a .cue is read as UTF-8 or Windows-1252 text, nothing else.
+        raise ClassicRetroError(
+            ErrorCode.INVALID_CUE_SHEET,
+            f"CUE sheet must be UTF-8 or Windows-1252 text: {path}",
+        ) from None
 
 
 def _frames(minutes: str, seconds: str, frames: str, *, line_number: int) -> int:
-    minute = int(minutes)
     second = int(seconds)
     frame = int(frames)
-    if second >= 60 or frame >= 75:
+    # Minutes may pass 99 on a long disc, but thousands of digits are not a
+    # time: int() refuses them, and the frame count could not be printed.
+    if len(minutes) > 6 or second >= 60 or frame >= 75:
         raise ClassicRetroError(
             ErrorCode.INVALID_CUE_SHEET,
             f"Invalid MM:SS:FF at line {line_number}",
         )
-    return ((minute * 60) + second) * 75 + frame
+    return ((int(minutes) * 60) + second) * 75 + frame
 
 
 def parse_cue(path: Path) -> CueSheet:

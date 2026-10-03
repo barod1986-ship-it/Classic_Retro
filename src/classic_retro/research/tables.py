@@ -95,6 +95,10 @@ def parse_table(text: str, source: str = "table") -> TextTable:
             ends.add(code)
     if not entries:
         raise ClassicRetroError(ErrorCode.INVALID_TEXT_TABLE, f"{source} has no entries")
+    if not set(entries) - ends:
+        raise ClassicRetroError(
+            ErrorCode.INVALID_TEXT_TABLE, f"{source} defines no characters, only end codes"
+        )
     return TextTable(entries, frozenset(ends))
 
 

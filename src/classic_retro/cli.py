@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import argparse
+import codecs
 import json
+import os
 import sys
 from collections.abc import Sequence
 from pathlib import Path
@@ -9,12 +11,12 @@ from pathlib import Path
 from classic_retro import __version__
 from classic_retro.adapters.discovery import detect_input
 from classic_retro.adapters.registry import build_registry
-from classic_retro.core.errors import ClassicRetroError
+from classic_retro.core.errors import ClassicRetroError, ErrorCode
 from classic_retro.core.identity import fingerprint_file
 from classic_retro.localization.commands import register_cli as register_target_cli
 from classic_retro.localization.targets import build_target_registry
 from classic_retro.media.resolve import resolve_media
-from classic_retro.rebuild.bps import apply_bps, create_bps
+from classic_retro.rebuild.bps import BPS_MAGIC, apply_bps, create_bps
 from classic_retro.research.commands import register_cli as register_research_cli
 
 
@@ -64,6 +66,9 @@ def _build_parser() -> argparse.ArgumentParser:
     bps_create.add_argument("source", type=Path)
     bps_create.add_argument("target", type=Path)
     bps_create.add_argument("patch", type=Path)
+    bps_create.add_argument(
+        "--force", action="store_true", help="Replace an existing file that is not a BPS patch"
+    )
     bps_create.set_defaults(handler=_cmd_rebuild_bps_create)
 
     bps_apply = rebuild_commands.add_parser(
@@ -108,9 +113,32 @@ def _cmd_media_inspect(args: argparse.Namespace) -> int:
     return 0
 
 
+def _not_an_input(out: Path, inputs: Sequence[Path]) -> Path:
+    """``out`` unless it is one of the inputs, which writing it would destroy."""
+    for path in inputs:
+        same = out.resolve() == path.resolve()
+        if not same and out.exists() and path.exists():
+            same = os.path.samefile(out, path)
+        if same:
+            raise ClassicRetroError(ErrorCode.OUTPUT_EXISTS, f"output {out} is one of the inputs")
+    return out
+
+
+def _is_bps(path: Path) -> bool:
+    with path.open("rb") as stream:
+        return stream.read(len(BPS_MAGIC)) == BPS_MAGIC
+
+
 def _cmd_rebuild_bps_create(args: argparse.Namespace) -> int:
+    out = _not_an_input(args.patch, (args.source, args.target))
+    # A patch may replace an earlier patch; anything else needs --force.
+    if out.exists() and not args.force and not _is_bps(out):
+        raise ClassicRetroError(
+            ErrorCode.OUTPUT_EXISTS,
+            f"{out} exists and is not a BPS patch; pass --force to replace it",
+        )
     patch = create_bps(args.source.read_bytes(), args.target.read_bytes())
-    args.patch.write_bytes(patch.data)
+    out.write_bytes(patch.data)
     payload = {
         "patch_bytes": len(patch.data),
         "source_bytes": patch.source_size,
@@ -123,8 +151,10 @@ def _cmd_rebuild_bps_create(args: argparse.Namespace) -> int:
 
 
 def _cmd_rebuild_bps_apply(args: argparse.Namespace) -> int:
+    # The applied image is regenerable, so an existing one is replaced.
+    out = _not_an_input(args.output, (args.patch, args.source))
     output = apply_bps(args.patch.read_bytes(), args.source.read_bytes())
-    args.output.write_bytes(output)
+    out.write_bytes(output)
     print(json.dumps({"output_bytes": len(output)}, indent=2, sort_keys=True))
     return 0
 
@@ -140,9 +170,32 @@ def _cmd_adapters(_: argparse.Namespace) -> int:
     return 0
 
 
+def _json_escape(error: UnicodeError) -> tuple[str, int]:
+    """The \\uXXXX escapes JSON uses for what a console cannot encode.
+
+    Unlike ``backslashreplace``, a character beyond the BMP becomes its
+    surrogate pair (``\\ud83c\\udfae``), which is what JSON readers accept.
+    """
+    if not isinstance(error, UnicodeEncodeError):
+        raise error
+    units = error.object[error.start : error.end].encode("utf-16-be")
+    escapes = "".join(f"\\u{units[i] << 8 | units[i + 1]:04x}" for i in range(0, len(units), 2))
+    return escapes, error.end
+
+
+codecs.register_error("classic_retro_json", _json_escape)
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
+
+    # A legacy console code page cannot show every file name this toolkit
+    # prints (JSON is written with ensure_ascii=False): escape those characters
+    # as \uXXXX, which JSON readers decode back, instead of failing the command.
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(errors="classic_retro_json")
 
     try:
         return int(args.handler(args))
