@@ -255,7 +255,8 @@ def register_cli(subcommands: argparse._SubParsersAction) -> None:
     elm_sequence.add_argument("--font", type=Path, required=True)
     elm_sequence.add_argument("--preview", type=Path)
     elm_sequence.add_argument(
-        "--dynamic-player", action="store_true",
+        "--dynamic-player",
+        action="store_true",
         help="Also translate the last Elm speech while preserving the live player name",
     )
     elm_sequence.set_defaults(handler=_polished_crystal_elm_sequence)
