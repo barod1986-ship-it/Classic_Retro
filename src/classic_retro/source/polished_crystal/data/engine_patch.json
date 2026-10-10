@@ -1,0 +1,2188 @@
+{
+  "format": "polished-crystal-engine-patch/1",
+  "base": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "engine": "35d78b350bf2ed5ac92c34d1f59031ec0fcb0a39",
+  "files": [
+    {"path": "constants/gfx_constants.asm",
+     "hunks": [
+       [44, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tconst VWF_RTL_F ; right to left: c is the right edge, the pen moves left"
+       ]],
+       [48, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "DEF VWF_RTL    EQU 1 << VWF_RTL_F"
+       ]]
+     ]},
+    {"path": "constants/ram_constants.asm",
+     "hunks": [
+       [88, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic has one regular style: the typefaces are Normal, Bold (emboldened",
+         "; Normal) and Unown (Ruins of Alph texts and the Unown dex)."
+       ]],
+       [90, 7, "5d166e2fff0e2579fc93ef45d77d8964b96d216409042da8e86e29b89a1e6e59", [
+         "\tconst BOLD_FONT    ; %001",
+         "\tconst UNOWN_FONT   ; %010"
+       ]]
+     ]},
+    {"path": "constants/text_constants.asm",
+     "hunks": [
+       [24, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; item/move/ability descriptions: lines of up to 18 cells, placed right to",
+         "; left with their right edge DESCRIPTION_WIDTH - 1 cells right of the start",
+         "DEF DESCRIPTION_WIDTH EQU TEXTBOX_INNERW",
+         ""
+       ]],
+       [32, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; hRTLFlags::",
+         "\tconst_def",
+         "\tconst RTL_OWNER_F   ; 0: a line owner reverses its line's tiles when the line ends",
+         "\tconst RTL_BOXDRAW_F ; 1: characters are drawn leftward (speech box text)",
+         "\tconst RTL_BOXTEXT_F ; 2: the text being printed is in the speech box",
+         "\tconst RTL_DIGITS_F  ; 3: a run of digits drawn leftward is waiting to be put back in order",
+         "\tconst RTL_SKIP_F    ; 4: inside the gender alternative that does not apply",
+         ""
+       ]]
+     ]},
+    {"path": "data/options/default_options.asm",
+     "hunks": [
+       [15, 1, "81d60704aaa8997fa9909969e8c37507f12278a0f2912caece885560786726ae", [
+         "\tdb 1 << POKEDEX_UNITS ; Arabic: metric Pokédex units by default"
+       ]]
+     ]},
+    {"path": "engine/battle/ability_gfx.asm",
+     "hunks": [
+       [28, 9, "a63737987b38cd9f7dc7ec88c1cbfe2210830439114d9ae204a651fd60d77752", [
+         "\t; (Arabic: no possessive suffix is appended to the name)"
+       ]],
+       [406, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic mirrors the layout: the name is drawn right to left from the",
+         "\t; right edge c, and the ability name ends at the left edge b."
+       ]],
+       [409, 2, "71debb8d1120389675c6f38ced33de723f441b6cb92b130470a7e854d3639cb6", [
+         "\tld b, VWF_SINGLE | VWF_INVERT | VWF_OPAQUE | VWF_RTL"
+       ]],
+       [415, 4, "dc299453d2fb813dcea1274ccb310dbe15abd401d217de44d7af8e56e4b382ac", [
+         "\t; Left-align the ability name: it starts (on the right) at b + its width",
+         "\tadd b"
+       ]],
+       [420, 1, "7061489ae2cc05bb13fdf8da5d9424870ffae2c888fcf5d1bfd2e102d4de3d6a", [
+         "\tld b, VWF_SINGLE | VWF_INVERT | VWF_OPAQUE | VWF_RTL"
+       ]]
+     ]},
+    {"path": "engine/battle/endturn.asm",
+     "hunks": [
+       [974, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Copies the side's noun phrase to wStringBuffer1 for BattleText_MistFaded,",
+         "; _SafeguardFaded, _LightScreenFell and _ReflectFaded (text_ram).",
+         "; Arabic: .Your/.Foe hold the whole subject (\"بوكيمونك\" your #mon, \"بوكيمون",
+         "; الخصم\" the foe's #mon), since the side word follows the noun (the",
+         "; possessive is even a suffix of it); those texts place the phrase where the",
+         "; sentence needs it and no longer add \"#mon's\" after it."
+       ]]
+     ]},
+    {"path": "engine/battle/menu.asm",
+     "hunks": [
+       [38, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: the battle menus are wider than the English ones, so that both",
+         "; columns hold 7-glyph words (\"بوكيمون\"): main menu columns 5 and 7 cells",
+         "; (x 6-10, 12-18), Contest 7 and 7 (x 4-10, 12-18), Safari 7 and 5",
+         "; (x 6-12, 14-18). The ball count is drawn 5 cells right of its label's start",
+         "; (it is read first, then the label of up to 5 glyphs)."
+       ]],
+       [40, 1, "1f5186206f74c0c3f8dd3acc424c634778944cff1500a603a21577a155931777", [
+         "\tmenu_coords 4, 12, 19, 17"
+       ]],
+       [59, 1, "eefeac71caa1e70efdde8126fffcdeb9abd885a3fc63af161154ee0322be91ca", [
+         "\tmenu_coords 2, 12, 19, 17"
+       ]],
+       [77, 1, "9548377561f7492a18e6dbf50b0c02c96cf3973643b6af8b6d2d9da3e5d041f9", [
+         "\thlcoord 4 + 5, 16"
+       ]]
+     ]},
+    {"path": "engine/battle/trainer_huds.asm",
+     "hunks": [
+       [224, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: \"ضد\" (\"against\") between the two names, for the Latin \"VS\""
+       ]],
+       [225, 3, "8501ac314164b4e8cfb9f7c63bff752447d541de54a92c76054f204db17339e3", [
+         "\tld de, .VersusString",
+         "\trst PlaceString"
+       ]],
+       [235, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "",
+         ".VersusString:",
+         "\tdb \"ﺿﺪ@\" ; ضد"
+       ]]
+     ]},
+    {"path": "engine/events/bug_contest/display_stats.asm",
+     "hunks": [
+       [42, 1, "475c50efa8a57e77365b88ae9bf4ad52eddc32a579fb01c8607e87511d696b38", [
+         "\t; Arabic: the level is read after the name, so it goes on its left (the",
+         "\t; 3 cells x 1-3) and the name follows it (x 4-13)"
+       ]],
+       [44, 4, "47a91ecb59dd97b4a5addaced586e8b29dc4672f4630cc461fe2457e278bd4ab", [
+       ]],
+       [51, 3, "19f8000ab5532cff28065d78ae50edec1ab0ae1f060ed3c8c3b5c7da0308abe3", [
+         "\tld de, wStringBuffer1",
+         "\thlcoord 4, 2"
+       ]],
+       [56, 2, "facd4723021656f8ee2af7ae5588ec415148acefffc11cd6c985760ecc86ad53", [
+         "\thlcoord 1, 8"
+       ]],
+       [61, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tld de, wEnemyMonNickname",
+         "\thlcoord 4, 8",
+         "\trst PlaceString"
+       ]]
+     ]},
+    {"path": "engine/events/diploma.asm",
+     "hunks": [
+       [25, 2, "079c2a74383d2b6ec9401f1bdb4db1a862a6124d0368c2d8bb0c2f4ea3a1dd5f", [
+         "\t; Arabic: the lines are flush right, inside the same margins (x 2 to 17)",
+         "\thlcoord 17, 8",
+         "\tcall PlaceStringRight"
+       ]]
+     ]},
+    {"path": "engine/events/magikarp.asm",
+     "hunks": [
+       [97, 1, "84ae73c98f2686433bd02d5984a491a2847bda15a77cfcf1dc661b4a6e192295", [
+         "\t; Arabic: \"<length> سم\" (cm), the unit after a space",
+         "\tld a, ' '"
+       ]],
+       [99, 1, "5c45f61211d2aa5901cd60bea102fc5ff6a40c65f8d0c9b698a28620d7b43440", [
+         "\tld a, 'ﺳ'",
+         "\tld [hli], a",
+         "\tld a, 'ﻢ'"
+       ]]
+     ]},
+    {"path": "engine/events/map_name_sign.asm",
+     "hunks": [
+       [254, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: put the logical-order name in visual order (reversed, with runs",
+         "\t; of digits kept left to right), so it is still copied left to right and",
+         "\t; centred below.",
+         "\tdec hl ; the end of the name (its \"@\")",
+         "\tld a, LOW(wStringBuffer1)",
+         "\tldh [hRTLLineStart], a",
+         "\tld a, HIGH(wStringBuffer1)",
+         "\tldh [hRTLLineStart + 1], a",
+         "\tld a, [wTextboxFlags]",
+         "\tpush af",
+         "\tset USE_BG_MAP_WIDTH_F, a ; lets _RTLReverseLine work on a RAM buffer",
+         "\tld [wTextboxFlags], a",
+         "\tfarcall _RTLReverseLine",
+         "\tpop af",
+         "\tld [wTextboxFlags], a"
+       ]]
+     ]},
+    {"path": "engine/events/specials.asm",
+     "hunks": [
+       [323, 1, "36fa5376182ffa4108283aef3fe87993a91b8e4c69265869ef285c8b74321562", [
+         "\tld d, .KeyPhraseEnd - .KeyPhrase"
+       ]],
+       [338, 1, "ac35aece1db586006bfbc702dae68127ddc29a683811ebae29e972b8f579dc5a", [
+         "; shaped as the naming screen stores it (generated by gen_arabic_input.py)",
+         "INCLUDE \"data/text/lucky_key_phrase.asm\"",
+         ".KeyPhraseEnd:"
+       ]]
+     ]},
+    {"path": "engine/events/treemons.asm",
+     "hunks": [
+       [49, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; (Arabic: no plural suffix is added to the wing's name; the text words",
+         "\t; the count itself)"
+       ]],
+       [50, 14, "de0726a43b5c2e66318be898af3c3d90c01578ac20a41721ea8a8d5c8153043e", [
+       ]]
+     ]},
+    {"path": "engine/games/slot_machine.asm",
+     "hunks": [
+       [1599, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: the symbol that lined up starts the line at its right end (the",
+         "\t; pen), the text goes on to its left, and the arrow waits at the left",
+         "\t; corner like LoadBlinkingCursor's"
+       ]],
+       [1601, 1, "4be994c6f980a401b2037b7f48edc85902df84c6b3b0a2c574d708ef947f2628", [
+         "\tldcoord_a 16, 13"
+       ]],
+       [1603, 1, "728412c4d3996aa007e15cc26709fcd9e00811dda3f7f47848d86a1d779c27b0", [
+         "\tldcoord_a 16, 14"
+       ]],
+       [1605, 1, "0f5355e17dc44ad7b0459785564b1ce9dc9a267488bfe0f79c829a6f3e9ab1b2", [
+         "\tldcoord_a 17, 13"
+       ]],
+       [1607, 2, "81fe9c36af47c1410fd77e36453611c7f503dd59cade24939ac9f17a51738643", [
+         "\tldcoord_a 17, 14",
+         "\thlcoord 1, 17"
+       ]],
+       [1612, 1, "ba97e682db187d2d2be0d35c029b661f33ebc8e9a03d5ef5375916560ed262a4", [
+         "\tdec bc"
+       ]]
+     ]},
+    {"path": "engine/gfx/load_font.asm",
+     "hunks": [
+       [46, 1, "658d492a809a33f570efcea7d40f0a3bae254a92dc0285e8bf0e31a52249959e", [
+       ]],
+       [48, 4, "950f6bc705f809c0a0b240c75b5b1e7d3b164d3518e3230a4ba2524fe00d7c45", [
+       ]]
+     ]},
+    {"path": "engine/gfx/rtl_box.asm",
+     "new": [
+       "SECTION \"RTL Box Text\", ROMX",
+       "",
+       "; Characters drawn leftward (speech box text, PlaceStringRight). A number",
+       "; must still read left to right, so a run of numerals is drawn leftward like",
+       "; the rest and put back in order when it ends. A . , : / between two numerals",
+       "; belongs to the run (\"1/2\", \"20,000\", \"10:30\"); one that ends the run stays on",
+       "; its left, where a sentence goes on. A foot or inch mark belongs to the run",
+       "; only right after a digit (\"5′07″\"); elsewhere it is an ordinary character.",
+       "; (The naming screen and the mail composer draw their entry lines with ′ ″, at",
+       "; explicit coordinates: see _RTLReverseLine.)",
+       "",
+       "_RTLBoxChar::",
+       "; Draw character b (also in a) at hl and move hl left.",
+       "\tcall RTLIsDigit",
+       "\tjr c, .numeral",
+       "\tcall RTLIsMark",
+       "\tjr c, .mark",
+       "\tcall RTLIsConnector",
+       "\tjr nc, .end_run",
+       "\t; a connector right after a numeral may join the run",
+       "\tldh a, [hRTLFlags]",
+       "\tbit RTL_DIGITS_F, a",
+       "\tjr z, .put",
+       "\tinc hl",
+       "\tld a, [hld]",
+       "\tcall RTLIsNumeral",
+       "\tjr c, .put",
+       ".end_run",
+       "\tcall _RTLFlushDigits",
+       "\tjr .put",
+       "",
+       ".mark",
+       "\t; a foot or inch mark right after a digit joins the run",
+       "\tldh a, [hRTLFlags]",
+       "\tbit RTL_DIGITS_F, a",
+       "\tjr z, .put",
+       "\tinc hl",
+       "\tld a, [hld]",
+       "\tcall RTLIsDigit",
+       "\tjr nc, .end_run",
+       "\tjr .put",
+       "",
+       ".numeral",
+       "\tldh a, [hRTLFlags]",
+       "\tbit RTL_DIGITS_F, a",
+       "\tjr nz, .put",
+       "\tset RTL_DIGITS_F, a",
+       "\tldh [hRTLFlags], a",
+       "\tld a, l",
+       "\tldh [hRTLDigitStart], a",
+       "\tld a, h",
+       "\tldh [hRTLDigitStart + 1], a",
+       ".put",
+       "\tld a, b",
+       "\tld [hld], a",
+       "\tret",
+       "",
+       "_RTLFlushDigits::",
+       "; The run of numerals drawn leftward ended right of hl: put it back left to",
+       "; right. Preserves bc, de and hl.",
+       "\tldh a, [hRTLFlags]",
+       "\tbit RTL_DIGITS_F, a",
+       "\tret z",
+       "\tres RTL_DIGITS_F, a",
+       "\tldh [hRTLFlags], a",
+       "\tpush bc",
+       "\tpush de",
+       "\tpush hl",
+       "\tinc hl",
+       "\tld a, [hl]",
+       "\tcall RTLIsNumeral",
+       "\tjr c, .got_left",
+       "\t; the connector that ended the run stays where it is",
+       "\tinc hl",
+       ".got_left",
+       "\tldh a, [hRTLDigitStart]",
+       "\tld e, a",
+       "\tldh a, [hRTLDigitStart + 1]",
+       "\tld d, a",
+       ".loop",
+       "\tld a, l",
+       "\tsub e",
+       "\tld a, h",
+       "\tsbc d",
+       "\tjr nc, .done",
+       "\tld a, [de]",
+       "\tld b, [hl]",
+       "\tld [hli], a",
+       "\tld a, b",
+       "\tld [de], a",
+       "\tdec de",
+       "\tjr .loop",
+       "",
+       ".done",
+       "\tpop hl",
+       "\tpop de",
+       "\tpop bc",
+       "\tret",
+       "",
+       "RTLIsNumeral::",
+       "; carry if a reads left to right with digits: 0-9, ¥, ′ and ″. Preserves a.",
+       "\tcall RTLIsDigit",
+       "\tret c",
+       "\t; fallthrough",
+       "",
+       "RTLIsMark:",
+       "; carry if a is a foot or inch mark: ′ or ″. Preserves a.",
+       "\tassert '″' == '′' + 1",
+       "\tcp '′'",
+       "\tccf",
+       "\tret nc",
+       "\tcp '″' + 1",
+       "\tret",
+       "",
+       "RTLIsDigit:",
+       "; carry if a is a digit: 0-9 or ¥. Preserves a.",
+       "\tassert '¥' == '9' + 1",
+       "\tcp '0'",
+       "\tccf",
+       "\tret nc",
+       "\tcp '¥' + 1",
+       "\tret",
+       "",
+       "RTLIsConnector::",
+       "; carry if a may join two numerals. Preserves a.",
+       "\tcp '.'",
+       "\tjr z, .yes",
+       "\tcp ','",
+       "\tjr z, .yes",
+       "\tcp ':'",
+       "\tjr z, .yes",
+       "\tcp '/'",
+       "\tjr z, .yes",
+       "\tand a",
+       "\tret",
+       "",
+       ".yes",
+       "\tscf",
+       "\tret"
+     ]},
+    {"path": "engine/gfx/rtl_reverse.asm",
+     "new": [
+       "SECTION \"RTL Text\", ROMX",
+       "",
+       "_RTLBeginText::",
+       "; A text starts at bc (a = the flags before it). Text that starts at the",
+       "; speech box's origin is drawn leftward from its right edge; other text owns",
+       "; its line, unless it continues one.",
+       "\tbit RTL_BOXTEXT_F, a",
+       "\tret nz",
+       "\tld a, c",
+       "\tcp LOW(TEXTBOX_INNERY * SCREEN_WIDTH + TEXTBOX_INNERX + wTilemap)",
+       "\tjr nz, .not_line1",
+       "\tld a, b",
+       "\tcp HIGH(TEXTBOX_INNERY * SCREEN_WIDTH + TEXTBOX_INNERX + wTilemap)",
+       "\tjr nz, .not_line1",
+       "\tbccoord TEXTBOX_INNERX + TEXTBOX_INNERW - 1, TEXTBOX_INNERY",
+       "\tjr .box",
+       "",
+       ".not_line1",
+       "\tld a, c",
+       "\tcp LOW((TEXTBOX_INNERY + 2) * SCREEN_WIDTH + TEXTBOX_INNERX + wTilemap)",
+       "\tjr nz, .not_box",
+       "\tld a, b",
+       "\tcp HIGH((TEXTBOX_INNERY + 2) * SCREEN_WIDTH + TEXTBOX_INNERX + wTilemap)",
+       "\tjr nz, .not_box",
+       "\tbccoord TEXTBOX_INNERX + TEXTBOX_INNERW - 1, TEXTBOX_INNERY + 2",
+       ".box",
+       "\tldh a, [hRTLFlags]",
+       "\tset RTL_BOXTEXT_F, a",
+       "\tldh [hRTLFlags], a",
+       "\tret",
+       "",
+       ".not_box",
+       "\tldh a, [hRTLFlags]",
+       "\tbit RTL_OWNER_F, a",
+       "\tret nz",
+       "\tpush hl",
+       "\tld h, b",
+       "\tld l, c",
+       "\tcall RTLTakeLine",
+       "\tpop hl",
+       "\tret",
+       "",
+       "_RTLEndText::",
+       "; The text started with flags a ended at bc: end the line it owned, and give",
+       "; back the speech box and owner flags it found. Preserves bc and hl.",
+       "\tld d, a",
+       "\tbit RTL_OWNER_F, d",
+       "\tjr nz, .restore",
+       "\tldh a, [hRTLFlags]",
+       "\tbit RTL_OWNER_F, a",
+       "\tjr z, .restore",
+       "\tpush hl",
+       "\tld h, b",
+       "\tld l, c",
+       "\tcall RTLEndLine",
+       "\tpop hl",
+       ".restore",
+       "\tldh a, [hRTLFlags]",
+       "\tand ~((1 << RTL_OWNER_F) | (1 << RTL_BOXTEXT_F))",
+       "\tld e, a",
+       "\tld a, d",
+       "\tand (1 << RTL_OWNER_F) | (1 << RTL_BOXTEXT_F)",
+       "\tor e",
+       "\tldh [hRTLFlags], a",
+       "\tret",
+       "",
+       "",
+       "_RTLReverseLine::",
+       "; Reverse in place the line from [hRTLLineStart] to hl (exclusive), so that it",
+       "; reads right to left in the same tiles. Text between runs of two or more",
+       "; spaces is reversed on its own, so columns keep their places, and runs of",
+       "; digits (with . : / , between two digits, and a foot or inch mark after a",
+       "; digit) still read left to right.",
+       "; Only lines in a tilemap buffer are reversed. Preserves all registers.",
+       "\tpush af",
+       "\tpush bc",
+       "\tpush de",
+       "\tpush hl",
+       "\tld d, h",
+       "\tld e, l",
+       "\tldh a, [hRTLLineStart]",
+       "\tld l, a",
+       "\tldh a, [hRTLLineStart + 1]",
+       "\tld h, a",
+       "\t; c = length, 1 to TILEMAP_WIDTH",
+       "\tld a, e",
+       "\tsub l",
+       "\tld c, a",
+       "\tld a, d",
+       "\tsbc h",
+       "\tjp nz, .done",
+       "\tld a, c",
+       "\tand a",
+       "\tjp z, .done",
+       "\tcp TILEMAP_WIDTH + 1",
+       "\tjp nc, .done",
+       "\tcall .InTilemap",
+       "\tjp nc, .done",
+       "",
+       "\t; pass 1: reverse each segment",
+       "\tcall .Load",
+       "\tld b, 0",
+       ".p1_loop",
+       "\tld a, b",
+       "\tcp c",
+       "\tjr nc, .pass2",
+       "\tcall .Src",
+       "\tcp ' '",
+       "\tjr nz, .p1_segment",
+       "\tinc b",
+       "\tjr .p1_loop",
+       "",
+       ".p1_segment",
+       "\t; e = the segment's end: two spaces in a row, or the line's end",
+       "\tld e, b",
+       ".p1_end",
+       "\tinc e",
+       "\tld a, e",
+       "\tcp c",
+       "\tjr nc, .p1_trim",
+       "\tcall .Src",
+       "\tcp ' '",
+       "\tjr nz, .p1_end",
+       "\tld a, e",
+       "\tinc a",
+       "\tcp c",
+       "\tjr nc, .p1_trim",
+       "\tcall .Src",
+       "\tcp ' '",
+       "\tjr nz, .p1_end",
+       ".p1_trim",
+       "\t; trailing spaces stay where they are",
+       "\tld a, e",
+       "\tdec a",
+       "\tcall .Src",
+       "\tcp ' '",
+       "\tjr nz, .p1_write",
+       "\tdec e",
+       "\tjr .p1_trim",
+       "",
+       ".p1_write",
+       "\t; tiles b to e-1 get L[e-1] down to L[b]",
+       "\tld d, e",
+       ".p1_write_loop",
+       "\tld a, b",
+       "\tcp e",
+       "\tjr nc, .p1_loop",
+       "\tdec d",
+       "\tld a, b",
+       "\tcall .DestPtr",
+       "\tld a, d",
+       "\tcall .Src",
+       "\tld [hl], a",
+       "\tinc b",
+       "\tjr .p1_write_loop",
+       "",
+       ".pass2",
+       "\t; pass 2: runs of numerals read left to right again",
+       "\tcall .Load",
+       "\tld b, 0",
+       ".p2_loop",
+       "\tld a, b",
+       "\tcp c",
+       "\tjr nc, .done",
+       "\tcall .IsNumeralAt",
+       "\tjr c, .p2_run",
+       "\tinc b",
+       "\tjr .p2_loop",
+       "",
+       ".p2_run",
+       "\t; e = the run's last tile",
+       "\tld e, b",
+       ".p2_extend",
+       "\tld a, e",
+       "\tinc a",
+       "\tcp c",
+       "\tjr nc, .p2_write",
+       "\tcall .IsNumeralAt",
+       "\tjr c, .p2_next",
+       "\t; a . : / , between two numerals belongs to the run",
+       "\tld a, e",
+       "\tinc a",
+       "\tcall .Src",
+       "\tcall .IsConnector",
+       "\tjr nc, .p2_write",
+       "\tld a, e",
+       "\tadd 2",
+       "\tcp c",
+       "\tjr nc, .p2_write",
+       "\tcall .IsNumeralAt",
+       "\tjr nc, .p2_write",
+       "\tinc e",
+       ".p2_next",
+       "\tinc e",
+       "\tjr .p2_extend",
+       "",
+       ".p2_write",
+       "\t; tiles b to e get L[e] down to L[b]",
+       "\tld d, e",
+       ".p2_write_loop",
+       "\tld a, b",
+       "\tcall .DestPtr",
+       "\tld a, d",
+       "\tcall .Src",
+       "\tld [hl], a",
+       "\tdec d",
+       "\tld a, b",
+       "\tinc b",
+       "\tcp e",
+       "\tjr nz, .p2_write_loop",
+       "\tjr .p2_loop",
+       "",
+       ".done",
+       "\tpop hl",
+       "\tpop de",
+       "\tpop bc",
+       "\tpop af",
+       "\tret",
+       "",
+       ".InTilemap:",
+       "; carry if the line hl to de lies in a tilemap buffer",
+       "\tld a, [wTextboxFlags]",
+       "\tbit USE_BG_MAP_WIDTH_F, a",
+       "\tscf",
+       "\tret nz",
+       "\tld a, l",
+       "\tsub LOW(wTilemap)",
+       "\tld a, h",
+       "\tsbc HIGH(wTilemap)",
+       "\tccf",
+       "\tret nc",
+       "\tld a, LOW(wTilemapEnd)",
+       "\tsub e",
+       "\tld a, HIGH(wTilemapEnd)",
+       "\tsbc d",
+       "\tccf",
+       "\tret",
+       "",
+       ".Load:",
+       "; wRTLLine = the line's c tiles",
+       "\tldh a, [hRTLLineStart]",
+       "\tld l, a",
+       "\tldh a, [hRTLLineStart + 1]",
+       "\tld h, a",
+       "\tld de, wRTLLine",
+       "\tld b, c",
+       ".load_loop",
+       "\tld a, [hli]",
+       "\tld [de], a",
+       "\tinc de",
+       "\tdec b",
+       "\tjr nz, .load_loop",
+       "\tret",
+       "",
+       ".Src:",
+       "; a = wRTLLine[a]",
+       "\tpush hl",
+       "\tld hl, wRTLLine",
+       "\tadd l",
+       "\tld l, a",
+       "\tadc h",
+       "\tsub l",
+       "\tld h, a",
+       "\tld a, [hl]",
+       "\tpop hl",
+       "\tret",
+       "",
+       ".DestPtr:",
+       "; hl = the line's tile a",
+       "\tld l, a",
+       "\tldh a, [hRTLLineStart]",
+       "\tadd l",
+       "\tld l, a",
+       "\tldh a, [hRTLLineStart + 1]",
+       "\tadc 0",
+       "\tld h, a",
+       "\tret",
+       "",
+       ".IsNumeralAt:",
+       "; carry if tile a of the reversed line reads left to right with digits: a",
+       "; digit (0-9, ¥), or a foot or inch mark that follows a digit, as in \"5′07″\"",
+       "; (here the digit is on its right) and does not come before another mark (on",
+       "; its left here). The naming screen and the mail composer draw their entry",
+       "; lines with ′ ″, a row of marks after the typed text, which must not join a",
+       "; number. Preserves bc, de and hl.",
+       "\tpush de",
+       "\tld d, a",
+       "\tcall .Src",
+       "\tcall .IsDigit",
+       "\tjr c, .numeral_at_done",
+       "\tcall .IsMark",
+       "\tjr nc, .numeral_at_done",
+       "\tld a, d",
+       "\tinc a",
+       "\tcp c",
+       "\tjr nc, .numeral_at_done",
+       "\tcall .Src",
+       "\tcall .IsDigit",
+       "\tjr nc, .numeral_at_done",
+       "\tld a, d",
+       "\tand a",
+       "\tscf",
+       "\tjr z, .numeral_at_done",
+       "\tdec a",
+       "\tcall .Src",
+       "\tcall .IsMark",
+       "\tccf",
+       ".numeral_at_done",
+       "\tpop de",
+       "\tret",
+       "",
+       ".IsMark:",
+       "; carry if a is a foot or inch mark (′ ″); preserves a",
+       "\tassert '″' == '′' + 1",
+       "\tcp '′'",
+       "\tccf",
+       "\tret nc",
+       "\tcp '″' + 1",
+       "\tret",
+       "",
+       ".IsDigit:",
+       "; carry if a is a digit (0-9, ¥); preserves a",
+       "\tassert '¥' == '9' + 1",
+       "\tcp '0'",
+       "\tccf",
+       "\tret nc",
+       "\tcp '¥' + 1",
+       "\tret",
+       "",
+       ".IsConnector:",
+       "; carry if a may join two digits; preserves a",
+       "\tcp '.'",
+       "\tjr z, .yes",
+       "\tcp ':'",
+       "\tjr z, .yes",
+       "\tcp '/'",
+       "\tjr z, .yes",
+       "\tcp ','",
+       "\tjr z, .yes",
+       "\tand a",
+       "\tret",
+       ".yes",
+       "\tscf",
+       "\tret"
+     ]},
+    {"path": "engine/gfx/vwf.asm",
+     "hunks": [
+       [36, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; With VWF_RTL (Arabic), c is the glyph's right edge: the pen moves left by",
+         "; the glyph's width before it is drawn, so a logical-order string is laid out",
+         "; right to left; returns z (stops) if the glyph would cross the left edge."
+       ]],
+       [53, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tbit VWF_RTL_F, b"
+       ]],
+       [54, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tjr z, .got_pen",
+         "\tld a, c",
+         "\tsub b",
+         "\tjr c, .underflow",
+         "\tld c, a",
+         "\tld b, 0 ; the pen does not advance after drawing",
+         ".got_pen"
+       ]],
+       [129, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         ".underflow",
+         "\tpop hl",
+         "\tpop de",
+         "\tpop bc",
+         "\txor a ; z: stop",
+         "\tret",
+         ""
+       ]]
+     ]},
+    {"path": "engine/init.asm",
+     "hunks": [
+       [95, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; (The bytes spelled \"RNG!\" in the English charmap; they are numbers here so",
+         "; that the seed stays the same whatever the letters' codes are.)"
+       ]],
+       [96, 1, "e9d39132a436bbd362ba367b3029a1c9cc82c5a5ff042c3263b66e270352c7bf", [
+         "\tld a, $91 ; \"R\""
+       ]],
+       [98, 1, "cf9d594893d4a9f5194f93672a34b95d1f27d348d4a2a4b385b005cda8b3e3c4", [
+         "\tld a, $8d ; \"N\""
+       ]],
+       [100, 1, "2081d3cd598ee6038c06bc2e6d00c0588265ba8c52f5400447f43cdc7f232256", [
+         "\tld a, $86 ; \"G\""
+       ]],
+       [102, 1, "5bb0d73b71ce5a3d3f143a3ca79320f5cfe3d854229ec5b5fa8df043d63dc180", [
+         "\tld [hl], $9f ; \"!\""
+       ]]
+     ]},
+    {"path": "engine/items/pack.asm",
+     "hunks": [
+       [280, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: the item submenus are 6 cells wide (x 13-18; \"استخدم\" is 6 glyphs),",
+         "; the English ones 4."
+       ]],
+       [282, 1, "7ac8bd995df1c55721967ef922799b469e8c2e05afff306593e5e4e795d6eeff", [
+         "\tmenu_coords 11, 3, 19, 11"
+       ]],
+       [302, 1, "820ad9c6692d251bd3e2820c427f4b2f389e1a43fe6d21c7031a834f57246199", [
+         "\tmenu_coords 11, 7, 19, 11"
+       ]],
+       [314, 1, "9b637cf4ee5a05345a46f098bd1665f81f8705e5e7ee42a2cfa12e26dbad6d11", [
+         "\tmenu_coords 11, 9, 19, 11"
+       ]],
+       [333, 1, "0e3a6d547b3c65af02f9ffb09ed353c2d2b777116a1f77acc56b43c91e9ff0d9", [
+         "\tmenu_coords 11, 5, 19, 11"
+       ]],
+       [351, 1, "0e3a6d547b3c65af02f9ffb09ed353c2d2b777116a1f77acc56b43c91e9ff0d9", [
+         "\tmenu_coords 11, 5, 19, 11"
+       ]]
+     ]},
+    {"path": "engine/items/print_item_description.asm",
+     "hunks": [
+       [21, 2, "8f234ced07c643d2f3abce032cbb4f633a63e6f60d0e7053ec18ee85232adfb9", [
+         "\t; Arabic: the lines are flush with the right edge of the description box",
+         "\tld bc, DESCRIPTION_WIDTH - 1",
+         "\tadd hl, bc",
+         "\tjmp PlaceStringRight"
+       ]]
+     ]},
+    {"path": "engine/items/tmhm2.asm",
+     "hunks": [
+       [208, 2, "5be842df9797d942bc1af158080b92e71d2d4ef1908dc6d9da1057d15c902b8e", [
+         "\t; Arabic: \"خ\" (for آلة خفية, the HM name) is read first, so it goes right",
+         "\t; of the number (the English put an \"H\" left of it)",
+         "\tassert NUM_HMS < 10"
+       ]],
+       [213, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tld [hl], 'ﺥ'"
+       ]],
+       [352, 2, "8f234ced07c643d2f3abce032cbb4f633a63e6f60d0e7053ec18ee85232adfb9", [
+         "\t; Arabic: the lines are flush with the right edge of the description box",
+         "\tld bc, DESCRIPTION_WIDTH - 1",
+         "\tadd hl, bc",
+         "\tjmp PlaceStringRight"
+       ]],
+       [519, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: a space between the name and its number (\"تقنية 01\"); the number",
+         "\t; reads left to right and, coming last, ends up on the left",
+         "\tld a, ' '",
+         "\tld [de], a",
+         "\tinc de"
+       ]]
+     ]},
+    {"path": "engine/menus/arabic_shaping.asm",
+     "new": [
+       "; Runtime Arabic shaping for typed text (names, nicknames, box names, mail).",
+       "; The tables come from gen_arabic_input.py, which builds them from the same",
+       "; letter table as the build-time shaper and checks that ShapeArabicName gives",
+       "; the same bytes as pc_arabic.shape(text, ligatures=False).",
+       "",
+       "INCLUDE \"data/text/arabic_shaping.asm\"",
+       "",
+       "ShapeArabicName::",
+       "; Give each Arabic letter of the \"@\"-terminated string at hl the form its",
+       "; neighbours call for, in place, in logical order. A letter may come in any of",
+       "; its forms (the keyboard types isolated ones), so shaping again changes",
+       "; nothing. Joining never crosses a character that is not a letter: a space,",
+       "; digits, punctuation, \"<NEXT>\", the entry field's lines. No lam-alef ligature.",
+       "; Preserves bc, de and hl.",
+       "\tpush hl",
+       "\tpush de",
+       "\tpush bc",
+       "\tld c, 0 ; ARABIC_FORM_FINAL if the previous character joins this one",
+       ".loop",
+       "\tld a, [hl]",
+       "\tcp '@'",
+       "\tjr z, .done",
+       "\tcall ArabicLetterIndex",
+       "\tjr c, .not_letter",
+       "\tld b, a",
+       "\t; + ARABIC_FORM_INITIAL if the next character is a letter that joins it",
+       "\tld e, c",
+       "\tinc hl",
+       "\tld a, [hld]",
+       "\tcall ArabicLetterIndex",
+       "\tjr c, .got_form",
+       "\tcp NUM_ARABIC_JOINABLE",
+       "\tjr nc, .got_form",
+       "\tset 1, e ; ARABIC_FORM_INITIAL",
+       ".got_form",
+       "\tassert ARABIC_FORM_FINAL == 1 && ARABIC_FORM_INITIAL == 2",
+       "\tassert NUM_ARABIC_LETTERS * 4 <= $100",
+       "\tpush hl",
+       "\tld a, b",
+       "\tadd a",
+       "\tadd a",
+       "\tadd e",
+       "\tld hl, ArabicForms",
+       "\tadd l",
+       "\tld l, a",
+       "\tadc h",
+       "\tsub l",
+       "\tld h, a",
+       "\tld a, [hl]",
+       "\tpop hl",
+       "\tld [hli], a",
+       "\t; the next letter joins this one if this one is dual-joining",
+       "\tld a, b",
+       "\tcp NUM_ARABIC_DUAL_JOINING",
+       "\tsbc a",
+       "\tand ARABIC_FORM_FINAL",
+       "\tld c, a",
+       "\tjr .loop",
+       "",
+       ".not_letter",
+       "\tld c, 0",
+       "\tinc hl",
+       "\tjr .loop",
+       "",
+       ".done",
+       "\tpop bc",
+       "\tpop de",
+       "\tpop hl",
+       "\tret",
+       "",
+       "ArabicLetterIndex:",
+       "; Return a = the letter (row of ArabicForms) of glyph a, or carry if glyph a",
+       "; is not an Arabic letter. Preserves bc, de and hl.",
+       "\tsub ARABIC_FIRST_GLYPH",
+       "\tcp ARABIC_GLYPH_RANGE",
+       "\tccf",
+       "\tret c",
+       "\tpush hl",
+       "\tld hl, ArabicLetterOfGlyph",
+       "\tadd l",
+       "\tld l, a",
+       "\tadc h",
+       "\tsub l",
+       "\tld h, a",
+       "\tld a, [hl]",
+       "\tpop hl",
+       "\tcp NUM_ARABIC_LETTERS",
+       "\tccf",
+       "\tret"
+     ]},
+    {"path": "engine/menus/main_menu.asm",
+     "hunks": [
+       [177, 1, "20a227a71d65956633e06a4dc1a5bf6495981796c2cf6490a799a22a82a58dd8", [
+         "\t; Arabic: the box is mirrored; the weekday ends at the right edge and the",
+         "\t; time (\"<h:mm> <time of day>\") is indented from it",
+         "\tldh a, [hRTLFlags]",
+         "\tpush af",
+         "\tset RTL_BOXDRAW_F, a",
+         "\tldh [hRTLFlags], a",
+         "\tbccoord 18, 15"
+       ]],
+       [179, 1, "59d9119d0a8cf02a3e61a634c748c72b6f1d1174e02a959be4fa65bc20f7cb0f", [
+         "\tpop af",
+         "\tldh [hRTLFlags], a",
+         "\thlcoord 15, 16"
+       ]],
+       [181, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tld b, a",
+         "\tldh a, [hMinutes]"
+       ]],
+       [182, 6, "27c00a3fc0e60bc9a7019be3632ffc60663f3b2b83489dcaf2745fc93771154d", [
+         "\tfarjp PlaceTimeAndTimeOfDayRight"
+       ]]
+     ]},
+    {"path": "engine/menus/menu_2.asm",
+     "hunks": [
+       [250, 1, "a5e008a748141e66cb1470db171c35a41c6c6ec17eac13502a4cd5705e553194", [
+         "\t; Arabic: \"<Level> <number>\" is placed as one string, so that the number",
+         "\t; is read after the label (on its left)",
+         "\tld hl, wRTLTextBuffer"
+       ]],
+       [253, 1, "bfa8ddf9194942322122783505010ec89ed669fe3a2d4721f2002f3d5d9230e8", [
+       ]],
+       [256, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tld [hl], ' '"
+       ]],
+       [257, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tld a, [wContestMonLevel]"
+       ]],
+       [259, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tld [hl], '@'",
+         "\tld de, wRTLTextBuffer",
+         "\thlcoord 1, 3",
+         "\trst PlaceString"
+       ]]
+     ]},
+    {"path": "engine/menus/naming_screen.asm",
+     "hunks": [
+       [9, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic layout: the title and the entry field end at the box's right inner",
+         "; edge, the keyboards (data/text/input_chars.asm) start in the top right",
+         "; corner, and the bottom row is mirrored: End on the left, Del in the middle,",
+         "; the page switch on the right.",
+         "DEF NAMINGSCREEN_RIGHT_EDGE EQU SCREEN_WIDTH - 2",
+         ""
+       ]],
+       [79, 3, "ec26b1a4a1162df439aa29c6e49ecaacc9943a688a31ee422ea391432460269f", [
+         "\thlcoord NAMINGSCREEN_RIGHT_EDGE, 2",
+         "\tcall PlaceStringRight",
+         "\thlcoord NAMINGSCREEN_RIGHT_EDGE - (MON_NAME_LENGTH - 1) - 1, 4 ; left of the entry field"
+       ]],
+       [112, 1, "b1b56157c58659f8115bb514e30962c8f285802b39156a46bc87b16bee4b1417", [
+         "\thlcoord NAMINGSCREEN_RIGHT_EDGE, 2"
+       ]],
+       [114, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [118, 1, "09f408326fa5ce64592b697aad0c455f5d3bd235e08096066317d8603bc9f7ee", [
+         "\tdb \"ﻣﺎ ﺍﺳﻤﻚ?@\" ; placeholder: ما اسمك؟"
+       ]],
+       [124, 1, "b1b56157c58659f8115bb514e30962c8f285802b39156a46bc87b16bee4b1417", [
+         "\thlcoord NAMINGSCREEN_RIGHT_EDGE, 2"
+       ]],
+       [126, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [130, 1, "6a1c65a2044e68c831179f1c2a9daf8f414ba73c48630af12f48c280820f725d", [
+         "\tdb \"ﺍﺳﻢ ﻣﻨﺎﻓﺴﻚ?@\" ; placeholder: اسم منافسك؟"
+       ]],
+       [136, 1, "b1b56157c58659f8115bb514e30962c8f285802b39156a46bc87b16bee4b1417", [
+         "\thlcoord NAMINGSCREEN_RIGHT_EDGE, 2"
+       ]],
+       [138, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [142, 1, "2d021b262f0e671ef26479a56a9f2e68c3ec62b487467acfad0ef04ffc0a16d1", [
+         "\tdb \"ﻣﺎ ﺍﻟﺮﺍﺋﺞ?@\" ; placeholder: ما الرائج؟"
+       ]],
+       [159, 1, "b1b56157c58659f8115bb514e30962c8f285802b39156a46bc87b16bee4b1417", [
+         "\thlcoord NAMINGSCREEN_RIGHT_EDGE, 2"
+       ]],
+       [161, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [165, 1, "b71d24fce7a5c719561fd49620d984f07b5e1014d3cf21b09ad327eebda0d272", [
+         "\tdb \"ﺍﺳﻢ ﺍﻟﺼﻨﺪﻭﻕ?@\" ; placeholder: اسم الصندوق؟"
+       ]],
+       [187, 1, "ec3955a72c420924224a0b32e553182de67a3df75ec85b2a8e7ff5da18c3ea5c", [
+         "\thlcoord NAMINGSCREEN_RIGHT_EDGE + 1 - (MON_NAME_LENGTH - 1), 4"
+       ]],
+       [192, 1, "d64d5147d976aba4c6469fafd5026473c1e2b32ba00de58c658f341061de1193", [
+         "\thlcoord NAMINGSCREEN_RIGHT_EDGE + 1 - (PLAYER_NAME_LENGTH - 1), 4"
+       ]],
+       [198, 1, "d64d5147d976aba4c6469fafd5026473c1e2b32ba00de58c658f341061de1193", [
+         "\thlcoord NAMINGSCREEN_RIGHT_EDGE + 1 - BOX_NAME_LENGTH, 4"
+       ]],
+       [211, 5, "de77e759fa89f7cd809a557e781769a0a8e91619e782a1a85e8598facc1b2c3b", [
+         "\tld de, NameInputLetters"
+       ]],
+       [223, 1, "aa72fc39e6f27271be6afb8ac58bd788fd87584dfb01b6e07ccf4ab6d7510742", [
+         "\tld b, NAME_INPUT_ROWS"
+       ]],
+       [225, 1, "bec2ba788bf1ca138ba2b3ef7dc00ae8371d8b2626f74d9f12eb7fa7557e51c8", [
+         "\tld c, NAME_INPUT_COLUMNS"
+       ]],
+       [234, 1, "257cd414c8b12ac520ffe288bd64231d259a9cbf7684903059ab26b2ee935617", [
+         "\tld de, (SCREEN_WIDTH - NAME_INPUT_COLUMNS) * 2"
+       ]],
+       [272, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; the typed letters join as they are typed",
+         "\tld h, d",
+         "\tld l, e",
+         "\tcall ShapeArabicName"
+       ]],
+       [308, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tld hl, SPRITEANIMSTRUCT_VAR1",
+         "\tadd hl, bc",
+         "\tld [hl], NAME_INPUT_COLUMNS - 1 ; top right: alef"
+       ]],
+       [348, 8, "a3f81d23d6f62a8dee2c975743b9fb61439e983ed16232ac6148f7d5730e7e91", [
+         "\tret nc",
+         "\t; fallthrough"
+       ]],
+       [364, 1, "8a7d0b2a385482ff55849fcfa4f617a57161b88d6cc8b99436b17a856b050694", [
+         "\tld [hl], 0 ; End is on the left"
+       ]],
+       [371, 8, "f476daa3c3e915fb322bc3bc98ac01d3aa81a7f2ecc3b5ed4a60197c09216818", [
+         "\tjmp NamingScreen_DeleteCharacter"
+       ]],
+       [381, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; letters (page 0) or digits and symbols (page 1)"
+       ]],
+       [385, 4, "a103a78cf2e456b0f97977be487f7601319b3b6340015122918507bba7f1d3ae", [
+         "\tld de, NameInputLetters"
+       ]],
+       [390, 2, "8d298048b46321676f5969c3e05e1d5df3156c8fa33d31b39c7c137ed8c0cc01", [
+         "\tld de, NameInputSymbols",
+         ".ready",
+         "\tjmp NamingScreen_ApplyTextInputMode"
+       ]],
+       [399, 9, "9ae2a124cd3a73f84451e1a0a52a7fd4321bf7a5e76c884d8d756c28a91e700c", [
+       ]],
+       [409, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Return 1 (page switch), 2 (Del), 3 (End) or 0 (a character)."
+       ]],
+       [413, 1, "58afb9954af6e84f1af270640e81e043592389220b85ed49298d9303a0343292", [
+         "\tcall NamingScreen_GetCursorPosition",
+         "\tand a",
+         "\tret z",
+         "\t; the bottom row is mirrored: zone 1 (left) is End, zone 3 (right) the page switch",
+         "\tcpl",
+         "\tadd 5 ; 4 - a",
+         "\tret",
+         ""
+       ]],
+       [415, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Return the bottom-row zone under the cursor from left to right (1-3), or 0."
+       ]],
+       [700, 1, "18c486bc99db345b3eef211b152727d75f563506c0b4026d02ee372db8d457d9", [
+         "\t; store the letters joined",
+         "\tld hl, wNamingScreenDestinationPointer",
+         "\tld a, [hli]",
+         "\tld h, [hl]",
+         "\tld l, a",
+         "\tjmp ShapeArabicName"
+       ]],
+       [801, 2, "c143a27585efff60537f99a245270380c946cbb17bd7159461ad128ef1329c82", [
+       ]],
+       [880, 5, "28c793ef2a9c9186c989f0829e594aeb4fe642ec870708f59e4448357a9d2f95", [
+         "\tld de, MailInputLetters"
+       ]],
+       [888, 1, "aa72fc39e6f27271be6afb8ac58bd788fd87584dfb01b6e07ccf4ab6d7510742", [
+         "\tld b, MAIL_INPUT_ROWS"
+       ]],
+       [890, 1, "61c29b4675192ebafc9c9906b19053f424048eece1200bc42a1cd8e32654d008", [
+         "\tld c, MAIL_INPUT_COLUMNS"
+       ]],
+       [899, 1, "a5806a0dfb98bf284eef9a4935cc8151d1b5e3b706104bc55a488f0259d30bad", [
+         "\tld de, (SCREEN_WIDTH - MAIL_INPUT_COLUMNS) * 2"
+       ]],
+       [937, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; the typed letters join as they are typed",
+         "\tld h, d",
+         "\tld l, e",
+         "\tcall ShapeArabicName"
+       ]],
+       [962, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tld hl, SPRITEANIMSTRUCT_VAR1",
+         "\tadd hl, bc",
+         "\tld [hl], MAIL_INPUT_COLUMNS - 1 ; top right: alef"
+       ]],
+       [1021, 1, "ab6f2a1624a02a7d3690d33ff39a062e0cd8e30317234edc1ef8d4555f736423", [
+         "\tld [hl], 0 ; End is on the left"
+       ]],
+       [1047, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; letters (page 0) or digits and symbols (page 1)"
+       ]],
+       [1051, 12, "15c38220c9c08d8ddf0bb7d2a9ca028bc4700b3e2501d23576f455607df0e00a", [
+         "\tld de, MailInputLetters"
+       ]],
+       [1064, 1, "9ab5807575b961539efcaeec3ecdb75aecdfe4fce0a1be68eae12d701069dea6", [
+         "\tld de, MailInputSymbols"
+       ]],
+       [1080, 1, "407d020a3e4deccd608ec7c7fd33b99f4eb724d445fa7ba61d4c1a2e2429e790", [
+         "\t; End/Del/page switch, from left to right (mirrored for Arabic); each",
+         "\t; label ends at the right edge of its cursor zone"
+       ]],
+       [1084, 4, "c30c640b119b1d7c140c3aa58d2486f692067acfdc41c610ed8f260efb7f8095", [
+         "\thlcoord 6, SCREEN_HEIGHT - 2",
+         "\tld de, .EndString",
+         "\tcall PlaceStringRight",
+         "\thlcoord 12, SCREEN_HEIGHT - 2",
+         "\tld de, .DelString",
+         "\tcall PlaceStringRight",
+         "\thlcoord 18, SCREEN_HEIGHT - 2",
+         "\tld de, .PageString",
+         "\tjmp PlaceStringRight"
+       ]],
+       [1104, 2, "3da54e334342a2b1f92092f21a3291a480755ff2cc89ca5e3f5ff9f3d7cc767c", [
+         "; each label is at most 5 tiles wide (placeholders, translated elsewhere)",
+         ".EndString:",
+         "\tdb \"ﺗﻢ@\" ; تم",
+         ".DelString:",
+         "\tdb \"ﺣﺬﻑ@\" ; حذف",
+         ".PageString:",
+         "\tdb \"ﺭﻣﻮﺯ@\" ; رموز (the other page)"
+       ]]
+     ]},
+    {"path": "engine/menus/options_menu.asm",
+     "hunks": [
+       [559, 1, "e11b2f716a5fbb7dd980961c224d3460184a3a10f99547c4d1a4d8cc27ec06d6", [
+       ]],
+       [561, 4, "bc7b451434c72566b900e06dad9687865ef9d86b621a14e8f85ed81dfff9b8c7", [
+       ]],
+       [567, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; placeholder Arabic (the translation replaces these), 7 cells each"
+       ]],
+       [568, 3, "da453e78e110af93b644fc5a722ab4d7d834620c8d1e678dc4532af5d4e9d23b", [
+         "\tdb \"ﻋﺎﺩﻱ   @\""
+       ]],
+       [572, 9, "43de1caa66df7e46932d86e92a3adcaa6141d1942dba85b16fb70cda92527582", [
+         "\tdb \"ﻋﺮﻳﺾ   @\""
+       ]],
+       [582, 1, "ff74544da9870f5ee35fbb46fe90ae8d619fd267cd25f02692674f01b9a6058e", [
+         "\tdb \"ﺃﻧﻮﻥ   @\""
+       ]]
+     ]},
+    {"path": "engine/menus/start_menu.asm",
+     "hunks": [
+       [143, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: the menu is 8 cells wide (x 11-18; \"بوكيديكس\" is 8 glyphs), the",
+         "; English one 7 (ClearSpritesUnderStartMenu follows its left edge)."
+       ]],
+       [145, 1, "d8988d0af178bb2efecd6967a41d1906f17c4fa48132cd3be28d1bae0eee1fad", [
+         "\tmenu_coords 9, 0, 19, 17"
+       ]],
+       [151, 1, "b9aeafa795b6d81bff3770c9b5f7669765f4d12118b64460a673546fc6b51e04", [
+         "\tmenu_coords 9, 2, 19, 17"
+       ]],
+       [448, 1, "5dc2e255a5afd49034d34de41077655fa30962ec1c7961cf5e5a5488193dc3b2", [
+         "\t; Check if XCoord >= 9 * TILE_WIDTH,"
+       ]],
+       [451, 1, "470c004a9cf4e8338d55f7fe461439034adedde864bf89212bc1c175c2bbc3aa", [
+         "\tcp 9 * TILE_WIDTH"
+       ]]
+     ]},
+    {"path": "engine/movie/trade_animation.asm",
+     "hunks": [
+       [942, 1, "ec3955a72c420924224a0b32e553182de67a3df75ec85b2a8e7ff5da18c3ea5c", [
+         "\t; Arabic: the gender symbol is read after the name, so it goes on its",
+         "\t; left; the name starts 2 cells right of where it did (same right end)",
+         "\thlcoord 7 + 2, 4"
+       ]],
+       [944, 1, "ba97e682db187d2d2be0d35c029b661f33ebc8e9a03d5ef5375916560ed262a4", [
+       ]],
+       [951, 1, "8321b3ead652de8ddcbef72689d116f0c55ad50f21eefdd1ccde08e6ff5877d5", [
+         "\tldcoord_a 7, 4"
+       ]]
+     ]},
+    {"path": "engine/overworld/decorations.asm",
+     "hunks": [
+       [540, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic puts the noun first and its modifier after it, with a space the",
+         "; code adds: \"سرير وردي\" (bed + pink), \"دمية بيكاتشو\" (doll + Pikachu),",
+         "; \"<mon> كبير\" (Snorlax + big). The names in data/decorations/names.asm",
+         "; (\" Bed\", \"Big \" ...) are therefore written without spaces."
+       ]],
+       [545, 1, "1aec4b3dd7adc1fa85b0ff0ac61931886e6e6453bd01e74fb1e0be5edef9a51b", [
+       ]],
+       [547, 1, "13d6e39df0dc6a8496f85771a5083d69e36551ee293288a4723aa3673cdd6123", [
+         "\tjr .noun_then_deco"
+       ]],
+       [550, 1, "1aec4b3dd7adc1fa85b0ff0ac61931886e6e6453bd01e74fb1e0be5edef9a51b", [
+       ]],
+       [552, 1, "13d6e39df0dc6a8496f85771a5083d69e36551ee293288a4723aa3673cdd6123", [
+         ".noun_then_deco",
+         "\tpush de",
+         "\tcall .getdeconame",
+         "\tcall .space",
+         "\tpop de",
+         "\tjr .plant"
+       ]],
+       [555, 2, "19b3d08d2035eddad994bb02a41253bd39bf7ce40948d28fb7ef8bc4a1519c88", [
+       ]],
+       [558, 1, "13d6e39df0dc6a8496f85771a5083d69e36551ee293288a4723aa3673cdd6123", [
+         "\tjr .noun_then_mon"
+       ]],
+       [561, 2, "19b3d08d2035eddad994bb02a41253bd39bf7ce40948d28fb7ef8bc4a1519c88", [
+       ]],
+       [564, 3, "b5811b3b77cdaf24a810074aafb5d61ba862709c37368a0548b4e164d2ec0656", [
+         ".noun_then_mon"
+       ]],
+       [568, 1, "ec866966be42185f3056bca10fe44aa02cfed92bd0ab37b55fb24d85df685fe3", [
+       ]],
+       [570, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tcall .space"
+       ]],
+       [572, 1, "58afb9954af6e84f1af270640e81e043592389220b85ed49298d9303a0343292", [
+         "\tjr .getpokename",
+         "",
+         ".bigdoll:",
+         "\tld a, e",
+         "\tcall .getpokename",
+         "\tcall .space",
+         "\tld a, BIG_",
+         "\tjr .getdeconame",
+         "",
+         ".space:",
+         "\tld a, ' '",
+         "\tld [bc], a",
+         "\tinc bc",
+         "\tret",
+         ""
+       ]]
+     ]},
+    {"path": "engine/pc/bills_pc_ui.asm",
+     "hunks": [
+       [1052, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tlb bc, VWF_RTL, 10 * TILE_WIDTH ; Arabic: right-aligned, right to left"
+       ]],
+       [2283, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tlb bc, VWF_RTL, 10 * TILE_WIDTH ; Arabic: right-aligned, right to left"
+       ]],
+       [2687, 3, "6f12b4b7a80d722db7d602526f2778d3efdc9a6c6dec505e3016127f231bbae2", [
+         "\t; Allow release of Bad Eggs. A Bad Egg is made as an Unown egg (see",
+         "\t; data/pc/bad_egg.asm), which cannot hatch from breeding; its name is",
+         "\t; translated, so it is not tested (\"Bad Egg\" and \"Egg\" may start alike).",
+         "\tassert !HIGH(UNOWN)",
+         "\tbit MON_EXTSPECIES_F, a",
+         "\tjr nz, .egg",
+         "\tld a, [wTempMonSpecies]",
+         "\tcp LOW(UNOWN)",
+         "\tjr z, .not_egg",
+         ".egg"
+       ]],
+       [2691, 1, "c5bc66638118bd1cb6dc8902240483f4e93e3e64463d5a226ecfa79c996ad1a7", [
+         "\tjr .done"
+       ]]
+     ]},
+    {"path": "engine/phone/phone.asm",
+     "hunks": [
+       [392, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: the colon ends the name, so it goes on its left: drawing it",
+         "\t; first and the name after it gives what reversing \"<name>:\" would",
+         "\tld [hl], ':'",
+         "\tinc hl"
+       ]],
+       [393, 2, "5f6498f701999a26d694d875c059838e457f87da4e5453d2f6c1e2aa5b645e7e", [
+       ]]
+     ]},
+    {"path": "engine/pokedex/area.asm",
+     "hunks": [
+       [459, 6, "dbdcc44c988fab52b81c2e892736309c19001316d734067918779d64d969712d", [
+         "\t; Right-justified: Arabic is drawn right to left from the right edge.",
+         "\tlb bc, VWF_RTL, $35"
+       ]]
+     ]},
+    {"path": "engine/pokedex/pokedex.asm",
+     "hunks": [
+       [1087, 1, "199775488036e900d001ac7aa74c27c4efd7281d50d74879c2438534caa271fa", [
+         "; (Arabic: copied as is, at x=10..15, so it is not reversed like a string)",
+         "\tdb \"??′??″\"",
+         "PokedexStr_FeetEnd:",
+         "",
+         "Pokedex_FarStringRight:",
+         "; Arabic: FarString a:de with each line ending at hl (its right edge), drawn",
+         "; right to left like PlaceStringRight.",
+         "\tld b, a",
+         "\tldh a, [hRTLFlags]",
+         "\tpush af",
+         "\tset RTL_BOXDRAW_F, a",
+         "\tldh [hRTLFlags], a",
+         "\tld a, b",
+         "\tcall FarString",
+         "\tpush hl",
+         "\tld h, b",
+         "\tld l, c",
+         "\tcall RTLEndLine ; drawing leftward: puts a last run of digits in order",
+         "\tpop hl",
+         "\tpop af",
+         "\tldh [hRTLFlags], a",
+         "\tret"
+       ]],
+       [1128, 5, "8801a2780b147e798ba90753fe9ed787f7a29d43cbaf08eaf7e4750e673b8388", [
+         "\t; Arabic: the tilemap holds the metric units (م, كغ) left of the numbers;",
+         "\t; feet and inches replace the metres, and pounds have no unit word.",
+         "\tld hl, PokedexStr_Feet",
+         "\tdecoord 10, 7",
+         "\tld bc, PokedexStr_FeetEnd - PokedexStr_Feet",
+         "\trst CopyBytes",
+         "\thlcoord 9, 9",
+         "\tld a, ' '"
+       ]],
+       [1134, 1, "882c2fb25bb5ecc679aefc3a251b75a60032a23d5d9061d0c2742c6370d06a1f", [
+         "\tld [hl], a"
+       ]],
+       [1141, 1, "c05fd2ccd7536cf43194946d33e1e6ce97d899c035e5fa07fff0fbd15f50059f", [
+         "\thlcoord 15, 5 ; flush right, like the category"
+       ]],
+       [1216, 1, "9b92ab7bd2921e77d5954354ad46346b2220c283cb98ba349ce648902e4e425c", [
+         "\thlcoord 10, 7"
+       ]],
+       [1222, 1, "dc3155717085dce5dd53da04abab7485a18ff45e161a93fd0dc532a562ccb5fe", [
+         "\thlcoord 13, 7"
+       ]],
+       [1229, 2, "869a184fdb78ec8120a700b5420e202e09960eae712010b6e5c51477c5571daf", [
+         "\thlcoord 11, 7",
+         "\tln bc, 0, 2, 3, 4"
+       ]],
+       [1283, 1, "8c66ea07065cda0bbefe7bbd332e2aa17df85eda3691f1323f443d207fe1b64f", [
+         "\thlcoord 10, 9"
+       ]],
+       [1291, 2, "3ec7640098c52f02c10c4c10b62b4f8fcb6aea1e17281cdadd6e28c0e2c0317d", [
+         "\thlcoord 11, 9",
+         "\tln bc, 0, 2, 3, 4"
+       ]],
+       [1298, 1, "836f16ac12e7d8a646ec524216dba4f54d9b05ed5ac7de7b3580901fc4f1476e", [
+         "\t; Category (Arabic: flush right)"
+       ]],
+       [1300, 1, "c05fd2ccd7536cf43194946d33e1e6ce97d899c035e5fa07fff0fbd15f50059f", [
+         "\thlcoord 19, 5"
+       ]],
+       [1302, 2, "0ba41a9e83316d78706002a7881e9dd9638df29350d23bb8d6ab93ede2924cf8", [
+         "\tcall Pokedex_FarStringRight",
+         "\t; Dex entry (Arabic: flush right)"
+       ]],
+       [1308, 2, "a7b79bb6e2a01d51e52ff8aaffd123e1c6fab9333fdd95decba83733bfa67925", [
+         "\thlcoord 19, 12",
+         "\tcall Pokedex_FarStringRight"
+       ]],
+       [1460, 2, "a7b79bb6e2a01d51e52ff8aaffd123e1c6fab9333fdd95decba83733bfa67925", [
+         "\thlcoord 19, 12",
+         "\tcall Pokedex_FarStringRight"
+       ]],
+       [1596, 1, "47ed060163c115bdb48b3ad27b19a89b59be104f6c33727681e31e0512ab9502", [
+         "\t; Arabic: Seen is the right-hand counter, Own the left-hand one",
+         "\thlcoord 17, 7"
+       ]],
+       [1600, 1, "c60c2d224f79635b8d3275254b1c14a7f00cdc44699be64cdd1c23ff5d3328ab", [
+         "\thlcoord 11, 7"
+       ]],
+       [1726, 4, "d4839303266a31b4c7e585462e054552a4e8e063b2c7c743422344a43735495b", [
+         "\thlcoord 8, 12 ; (Arabic: the label takes no plural 's')"
+       ]],
+       [1925, 1, "3df27ee7a2a54fa526c3f0c8992140d635f134380fe4fafcbd08b88bebc7b3e9", [
+       ]],
+       [2038, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: the ability name and its description are flush right."
+       ]],
+       [2039, 1, "32837415d39022afe241df1b867d434a235a80a0ccec0410966c49e56eb33c75", [
+         "\thlcoord 19, 13",
+         "\tfarcall PrintAbilityRight"
+       ]],
+       [2045, 1, "58ea787d2ae9ef2cb571f9549d7ba3ed0de6d3a744234096df96e9617db5f9fb", [
+         "\tfarcall PrintAbilityDescriptionRight"
+       ]],
+       [2133, 2, "daf887770f40ef094cf2b1328e42f0ed60aee85f7885b537533954e4df4f8ce0", [
+         "\thlcoord 18, 14 ; Arabic: flush right",
+         "\tcall PlaceStringRight"
+       ]]
+     ]},
+    {"path": "engine/pokedex/unown_dex.asm",
+     "hunks": [
+       [47, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: the word is Unown script (Latin letters, no n-grams), so it is",
+         "\t; copied left to right as is; PlaceString would reverse the line."
+       ]],
+       [48, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         ".copy_word",
+         "\tld a, [de]",
+         "\tcp '@'",
+         "\tjr z, .copied_word",
+         "\tld [hli], a",
+         "\tinc de",
+         "\tjr .copy_word",
+         ".copied_word"
+       ]]
+     ]},
+    {"path": "engine/pokegear/pokegear.asm",
+     "hunks": [
+       [460, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: the clock's lines are mirrored, they end at x 13 (where the",
+         "\t; English ones started at x 6)"
+       ]],
+       [464, 1, "dafcdca42e925caa08ed6099cd718031c6b9c80c7e3663a3e94c787145165575", [
+         "\tdecoord 9, 9"
+       ]],
+       [476, 9, "c13bd41c07fee647418bd59849c57204fa29c2d8886173952b24037c6611af0c", [
+         "\thlcoord 13, 7",
+         "\tcall PlaceStringRight",
+         "\tldh a, [hRTLFlags]",
+         "\tpush af",
+         "\tset RTL_BOXDRAW_F, a",
+         "\tldh [hRTLFlags], a",
+         "\tbccoord 13, 5",
+         "\tcall TextCommand_DAY",
+         "\tpop af",
+         "\tldh [hRTLFlags], a",
+         "\tret"
+       ]],
+       [1452, 1, "9a363628b9660e1bff15fa785c9be4e3c3d4f1b7ec431fc26c4665f5bf76fc23", [
+         "\t; the font has one neutral double quote (the line reads right to left)",
+         "\tld [hl], '“'"
+       ]]
+     ]},
+    {"path": "engine/pokemon/abilities.asm",
+     "hunks": [
+       [47, 3, "ceca79041e9f393545d50dbf08abe3a3d42ec3f82653a7e6999ee8bae4984b77", [
+         "\t; Arabic: the lines are flush with the right edge of the description box",
+         "\thlcoord 1 + DESCRIPTION_WIDTH - 1, 15",
+         "\tjmp PlaceStringRight",
+         "",
+         "PrintAbilityRight:",
+         "; Arabic, for the Pokédex: PrintAbility with the name's right edge at hl.",
+         "\tpush hl",
+         "\tld l, b",
+         "\tld h, 0",
+         "\tld bc, AbilityNames",
+         "\tadd hl, hl",
+         "\tadd hl, bc",
+         "\tld a, [hli]",
+         "\tld d, [hl]",
+         "\tld e, a",
+         "\tpop hl",
+         "\tjmp PlaceStringRight",
+         "",
+         "PrintAbilityDescriptionRight:",
+         "; Arabic, for the Pokédex: PrintAbilityDescription, flush right.",
+         "\tld l, b",
+         "\tld h, 0",
+         "\tld bc, AbilityDescriptions",
+         "\tadd hl, hl",
+         "\tadd hl, bc",
+         "\tld a, [hli]",
+         "\tld d, [hl]",
+         "\tld e, a",
+         "\thlcoord 19, 15",
+         "\tjmp PlaceStringRight"
+       ]]
+     ]},
+    {"path": "engine/pokemon/mail_2.asm",
+     "hunks": [
+       [626, 2, "0d82590eee33b3cfbae3d4382bb3757078e075a66e56befcf9c9c0a60c70e42c", [
+         "\t; Arabic: each line ends at the right edge of its MAIL_LINE_LENGTH cells",
+         "\thlcoord 2 + MAIL_LINE_LENGTH - 1, 7",
+         "\tcall PlaceStringRight"
+       ]],
+       [632, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: the author's name ends where a full-length name did"
+       ]],
+       [633, 1, "db7857a41bb5406959069be5bda91808acfbd5743c2e22e2e096e8b20fbcb15e", [
+         "\thlcoord 8 + PLAYER_NAME_LENGTH - 2, 14"
+       ]],
+       [636, 1, "a41f14ee9d2b62f5584e03a8a2b42860446360ce8eccdca026152afc9bf16c29", [
+         "\thlcoord 6 + PLAYER_NAME_LENGTH - 2, 14"
+       ]],
+       [639, 1, "fc47fe5a158dce23252fbb8679fa30a9f8eaefdec027a9ff5a24c4a3569e3d89", [
+         "\thlcoord 5 + PLAYER_NAME_LENGTH - 2, 14"
+       ]],
+       [642, 2, "8f234ced07c643d2f3abce032cbb4f633a63e6f60d0e7053ec18ee85232adfb9", [
+         "\tjmp PlaceStringRight"
+       ]]
+     ]},
+    {"path": "engine/pokemon/mon_menu.asm",
+     "hunks": [
+       [600, 1, "db18eb0cdcd538f62491583024aeba8b8be1af4ffb31e6e706c4974ca2e20605", [
+         "\tfarcall _ComposeMailMessage"
+       ]]
+     ]},
+    {"path": "engine/pokemon/party_menu.asm",
+     "hunks": [
+       [334, 1, "71fbef80fafd9a7ff38cf0bab313729e8d8ffdfc29a872946b7086ef489fb580", [
+         "\t; Arabic: the prompt ends left of the Yes/No box (x 14-19)",
+         "\thlcoord 13, 16"
+       ]],
+       [336, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [1284, 2, "0a5f928017d417ec43d05d56a02bbb2418e95e0bbf058c49e5bb524a2246b2a2", [
+         "\t; Arabic: the prompt ends at the box's right edge",
+         "\thlcoord 18, 16",
+         "\tcall PlaceStringRight"
+       ]]
+     ]},
+    {"path": "engine/pokemon/summary/egg_page.asm",
+     "hunks": [
+       [46, 2, "1f5baa3a72f3cab74bc4fa65acbd1f4f1fe85de1572d9801dc64ccc216cddd8f", [
+         "\t; Arabic: the hint's lines are flush with the right edge of its 18 cells",
+         "\thlcoord 18, 13",
+         "\tcall PlaceStringRight"
+       ]]
+     ]},
+    {"path": "engine/pokemon/summary/orange_page.asm",
+     "hunks": [
+       [4, 2, "3e2c3849f2c21fa70880a7c874b8a5d881780ee859b408597e97b8250310815d", [
+         "\tcall .TN_PrintToDAndLV"
+       ]],
+       [60, 2, "677196e875ed0358423c27ec4d8ffa5f3e6646dcb5ffdcb276349aa2e77815ae", [
+         ".TN_PrintToDAndLV:",
+         "; Arabic: \"<time of day> <at <LV>N | from Egg | by trade>\" is composed as one",
+         "; string and placed at (1,14), so that it reads right to left as a whole (the",
+         "; English placed the parts one after the other).",
+         "\tld hl, wRTLTextBuffer"
+       ]],
+       [63, 1, "000c12d74ba5dcacdb3a2dcc3efbe5c662af902454197c8733f961a7ab36897d", [
+         "\tfarcall PlaceCaughtTimeOfDayString",
+         "\tld h, b",
+         "\tld l, c",
+         "\tld [hl], ' '",
+         "\tinc hl",
+         "\tld a, [wTempMonCaughtLevel]",
+         "\tinc a",
+         "\tjr z, .hatched",
+         "\tdec a",
+         "\tjr z, .traded",
+         "\tld [wBuffer2], a",
+         "\tld de, .str_level",
+         "\trst PlaceString",
+         "\tld h, b",
+         "\tld l, c",
+         "\tld de, wBuffer2",
+         "\tlb bc, PRINTNUM_LEFTALIGN | 1, 3",
+         "\tcall PrintNum",
+         "\tjr .place_caught",
+         ".hatched",
+         "\tld de, .str_hatched",
+         "\tjr .caught_how",
+         ".traded",
+         "\tld de, .str_traded",
+         ".caught_how",
+         "\trst PlaceString",
+         "\tld h, b",
+         "\tld l, c",
+         ".place_caught",
+         "\tld [hl], '@'",
+         "\tld de, wRTLTextBuffer",
+         "\thlcoord 1, 14",
+         "\trst PlaceString",
+         "\tret"
+       ]],
+       [89, 29, "13c4926f5075a640b6925674346e4fb8309d24d25abfb46dd3aa5c9cd4f6bc6d", [
+       ]]
+     ]},
+    {"path": "engine/rtc/restart_clock.asm",
+     "hunks": [
+       [214, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tpush af"
+       ]],
+       [215, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tpop af",
+         "\t; Arabic: on a 12-hour clock the time ends at x 18 (AM/PM is on its left,",
+         "\t; see PrintHoursMins), so its digits are 3 cells right of the English ones",
+         "\tdec a",
+         "\tjr z, .got_column",
+         "\tld a, [wOptions2]",
+         "\tbit CLOCK_FORMAT, a",
+         "\tjr nz, .got_column",
+         "\tinc c",
+         "\tinc c",
+         "\tinc c",
+         ".got_column"
+       ]]
+     ]},
+    {"path": "engine/rtc/timeset.asm",
+     "hunks": [
+       [212, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: \"<minutes> <min.>\" is placed as one string, so that it reads right",
+         "; to left (the number first)."
+       ]],
+       [215, 1, "2d0bb9fc4c636e3853ad3451c398cef28061fff23c8b5896bf645553b22bb8da", [
+         "\tpush hl",
+         "\tld hl, wRTLTextBuffer",
+         "\tlb bc, PRINTNUM_LEFTALIGN | 1, 2",
+         "\tcall PrintNum",
+         "\tld [hl], ' '"
+       ]],
+       [218, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tcall CopyName2",
+         "\tpop hl",
+         "\tld de, wRTLTextBuffer"
+       ]],
+       [255, 2, "1eb4bd90e1ee6d30a457044493eb62a66f5627361c6b0660c09aa6b4d7e73558", [
+         "\t; Arabic: the time is drawn right to left on the second line",
+         "\thlcoord TEXTBOX_INNERX + TEXTBOX_INNERW - 1, TEXTBOX_INNERY + 2",
+         "\tcall PlaceInitTimeRight"
+       ]],
+       [267, 2, "77846a342ae19701d7a157b2468ce3a7a2e873d1a607272fb0290ad6b9bdc3ae", [
+         "\t; Arabic: the time is drawn right to left from the pen",
+         "\tld h, b",
+         "\tld l, c",
+         "\tcall PlaceInitTimeRight"
+       ]],
+       [409, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Place the weekday name (PrintDayOfWeek's) centered in the 9 cells at hl."
+       ]],
+       [411, 8, "1f109075d3d44494e5d1d8fd6ddb048088a7fcf8b3714dfb8ec892796edf4cb2", [
+         "\tld bc, wRTLTextBuffer",
+         "\tcall PrintDayOfWeek",
+         "\tld a, '@'",
+         "\tld [bc], a",
+         "\tld a, c",
+         "\tsub LOW(wRTLTextBuffer)",
+         "\tld c, a",
+         "\tld a, 9",
+         "\tsub c",
+         "\tjr nc, .fits",
+         "\txor a",
+         ".fits",
+         "\tsrl a",
+         "\tld c, a",
+         "\tld b, 0"
+       ]],
+       [420, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tadd hl, bc",
+         "\tld de, wRTLTextBuffer"
+       ]],
+       [423, 18, "c7ba3921a49c693e4ec2318beb637c7a12fc94e3bcc944221c6aacf16030d62c", [
+       ]],
+       [448, 2, "c5bb7706e2cf5c69178de3bbd92aa70b72e05f9a3e21e10ac3de069eca96cf7c", [
+         "\t; Arabic: the weekday is drawn right to left from the pen",
+         "\tldh a, [hRTLFlags]",
+         "\tset RTL_BOXDRAW_F, a",
+         "\tldh [hRTLFlags], a",
+         "\tld a, [wTempDayOfWeek]",
+         "\tcall PrintDayOfWeek",
+         "\tldh a, [hRTLFlags]",
+         "\tres RTL_BOXDRAW_F, a",
+         "\tldh [hRTLFlags], a"
+       ]],
+       [464, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; the text starts in the speech box (the English left bc unset, and its",
+         "\t; text_asm drew at a fixed place)",
+         "\tbccoord TEXTBOX_INNERX, TEXTBOX_INNERY"
+       ]],
+       [468, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tpush bc"
+       ]],
+       [469, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: the time is drawn right to left from the pen",
+         "\tpop de"
+       ]],
+       [473, 1, "3228db53c30efb503fbabc0440791d0fac7cef0436d8c7b0eea0528e96d93d9c", [
+       ]],
+       [489, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; the text starts in the speech box (the English left bc unset, and its",
+         "\t; text_asm drew at a fixed place)",
+         "\tbccoord TEXTBOX_INNERX, TEXTBOX_INNERY"
+       ]],
+       [493, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tpush bc"
+       ]],
+       [494, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: the time is drawn right to left from the pen",
+         "\tpop de"
+       ]],
+       [498, 1, "3228db53c30efb503fbabc0440791d0fac7cef0436d8c7b0eea0528e96d93d9c", [
+       ]],
+       [523, 1, "2872e911df0f223c66732a8836872db38079ffb9831e3e5ea6dac5d488387f6f", [
+         "PlaceInitTimeRight:",
+         "; Place the time being set right to left, ending at hl."
+       ]],
+       [525, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tld b, a",
+         "\tld a, [wInitMinuteBuffer]"
+       ]],
+       [526, 5, "d027d3c83e464ccd43a154c684dde62148ac56cf888084066a22fdff5ceb78c0", [
+         "\t; fallthrough",
+         "",
+         "PlaceTimeAndTimeOfDayRight::",
+         "; Arabic: place \"<h:mm> <time of day>\" (b = hours 0-23, c = minutes) right to",
+         "; left, ending at hl: the time on the right, the time of day on its left.",
+         "; Returns bc = the cell left of it.",
+         "\tpush hl",
+         "\tld hl, wRTLTextBuffer",
+         "\tpush bc",
+         "\tcall BufferHourColonMinutes",
+         "\tld [hl], ' '",
+         "\tinc hl",
+         "\tpop bc",
+         "\tpush hl",
+         "\tld c, b",
+         "\tcall GetTimeOfDayString",
+         "\tpop hl",
+         "\tcall CopyName2",
+         "\tpop hl",
+         "\tld de, wRTLTextBuffer",
+         "\tjmp PlaceStringRight",
+         "",
+         "BufferHourColonMinutes:",
+         "; Write hours b (0-23, shown as the clock option says) \":\" minutes c at hl,",
+         "; left to right. Returns hl after them.",
+         "\tpush bc",
+         "\tld c, b",
+         "\tcall AdjustHourForAMorPM",
+         "\tld [wTextDecimalByte], a",
+         "\tld de, wTextDecimalByte",
+         "\tlb bc, PRINTNUM_LEFTALIGN | 1, 2"
+       ]],
+       [532, 3, "f642fd3b51194bf6b44eec34bcf34254c2aa9012ac79ad77705c23418583464c", [
+         "\tld [hl], ':'",
+         "\tinc hl",
+         "\tpop bc",
+         "\tld a, c",
+         "\tld [wTextDecimalByte], a",
+         "\tld de, wTextDecimalByte",
+         "\tlb bc, PRINTNUM_LEADINGZEROS | 1, 2",
+         "\tjmp PrintNum"
+       ]],
+       [602, 21, "431a6ef39adc7f2a1a68581d2beee67db04d3eaa3b571be74facfbe80f3d0561", [
+         "; Hours in b, minutes in c, at de: \"hh:mm\", and \"AM\"/\"PM\" on a 12-hour clock.",
+         "; Arabic: one string, the time on the right and AM/PM on its left. It ends",
+         "; where the English \" h:mm AM\" or \" h:mm\" ended, or, at the pen of a speech",
+         "; box text, is drawn right to left from there. Returns bc = the cell left of",
+         "; it (the English returned the hours and minutes in 24-hour mode)."
+       ]],
+       [624, 17, "85c5544749bdc88b3198712c818dc089bdc5eb7aae5fae23c6bb08414f4824e4", [
+         "\tld hl, wRTLTextBuffer",
+         "\tpush bc",
+         "\tcall BufferHourColonMinutes"
+       ]],
+       [642, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tld de, EmptyString",
+         "\tld c, 5 - 1"
+       ]],
+       [644, 1, "c5bc66638118bd1cb6dc8902240483f4e93e3e64463d5a226ecfa79c996ad1a7", [
+         "\tjr nz, .got_suffix",
+         "\tld [hl], ' '",
+         "\tinc hl",
+         "\tld a, b",
+         "\tcp 12"
+       ]],
+       [646, 2, "7dea6c99bfb01a84f4407db554dc38a16d9d5c30368946f515079094990bb121", [
+         "\tjr c, .got_am_pm"
+       ]],
+       [649, 4, "6d2dc53d834d730bd8d6dd83687104cf7ef0586ceb25520c52035c749cac94f4", [
+         ".got_am_pm",
+         "\tld c, 8 - 1",
+         ".got_suffix",
+         "\tcall CopyName2",
+         "\tpop hl",
+         "\tldh a, [hRTLFlags]",
+         "\tbit RTL_BOXTEXT_F, a",
+         "\tjr nz, .place",
+         "\tld b, 0",
+         "\tadd hl, bc",
+         ".place",
+         "\tld de, wRTLTextBuffer",
+         "\tjmp PlaceStringRight"
+       ]]
+     ]},
+    {"path": "gfx/font.asm",
+     "hunks": [
+       [3, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; (Arabic: the Narrow, Italic, Serif, MICR and Chicago typefaces are dropped)"
+       ]],
+       [5, 2, "d4cb9394a5a3d8b36223e34ed8400a4385f9193fd995cbb0c74fcbf2ab4294ca", [
+       ]],
+       [9, 8, "396ebdabb25cf9bd7d240d2bfc131b7afd628ea040c53fbcca7132ea3c09cdac", [
+       ]]
+     ]},
+    {"path": "home.asm",
+     "hunks": [
+       [24, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "INCLUDE \"home/rtl.asm\""
+       ]]
+     ]},
+    {"path": "home/joypad.asm",
+     "hunks": [
+       [359, 1, "a8efa847c8b2b2e214386cb43546bc352c0b3f0ba6d77711d8bafad588bbd3bf", [
+         "\thlcoord 1, 17"
+       ]],
+       [427, 1, "38dd233ac202f5cd8f57fe78ab18abc097fa9c6c9985d113c2551c271f25e114", [
+         "\tld a, [wTilemap + 2 + 17 * SCREEN_WIDTH]"
+       ]],
+       [429, 1, "0fbd24564bb907b7a809836949fa38dfc896590f39690910d662f70954117451", [
+         "\tld [wTilemap + 1 + 17 * SCREEN_WIDTH], a"
+       ]]
+     ]},
+    {"path": "home/rtl.asm",
+     "new": [
+       "; Right-to-left text for the Arabic translation (see RTL_*_F).",
+       ";",
+       "; Text placed at explicit coordinates is drawn left to right, as the English",
+       "; was, by the outermost PlaceString (or DoTextUntilTerminator), which owns the",
+       "; line; when the line ends its tiles are reversed in place, so it reads right",
+       "; to left inside the same footprint. Text printed into the speech box is drawn",
+       "; leftward from the box's right inner edge instead, so it is typed from the",
+       "; right and its lines end on the left. Digits always read left to right",
+       "; (see engine/gfx/rtl_box.asm).",
+       "",
+       "RTLTakeLine:",
+       "; Own the line that starts at hl.",
+       "\tldh a, [hRTLFlags]",
+       "\tset RTL_OWNER_F, a",
+       "\tldh [hRTLFlags], a",
+       "RTLStartLine:",
+       "; A new line starts at hl.",
+       "\tld a, l",
+       "\tldh [hRTLLineStart], a",
+       "\tld a, h",
+       "\tldh [hRTLLineStart + 1], a",
+       "\tret",
+       "",
+       "RTLEndOwnedLine:",
+       "; The owner's string ended at bc: reverse its last line and give the line up.",
+       "\tpush hl",
+       "\tld h, b",
+       "\tld l, c",
+       "\tcall RTLEndLine",
+       "\tpop hl",
+       "\tldh a, [hRTLFlags]",
+       "\tres RTL_OWNER_F, a",
+       "\tldh [hRTLFlags], a",
+       "\tret",
+       "",
+       "RTLEndLine::",
+       "; The line ends at hl. Preserves bc, de and hl.",
+       "\tldh a, [hRTLFlags]",
+       "\tbit RTL_BOXDRAW_F, a",
+       "\tjr nz, RTLFlushDigits",
+       "\tbit RTL_OWNER_F, a",
+       "\tret z",
+       "\thomecall _RTLReverseLine",
+       "\tret",
+       "",
+       "RTLFlushDigits::",
+       "; Numerals drawn leftward ended right of hl: put them back left to right.",
+       "; Preserves bc, de and hl.",
+       "\tldh a, [hRTLFlags]",
+       "\tbit RTL_DIGITS_F, a",
+       "\tret z",
+       "\tfarcall _RTLFlushDigits",
+       "\tret",
+       "",
+       "RTLLine1:",
+       "; hl = where the speech box's first line starts",
+       "\tldh a, [hRTLFlags]",
+       "\tbit RTL_BOXDRAW_F, a",
+       "\thlcoord TEXTBOX_INNERX, TEXTBOX_INNERY",
+       "\tret z",
+       "\thlcoord TEXTBOX_INNERX + TEXTBOX_INNERW - 1, TEXTBOX_INNERY",
+       "\tret",
+       "",
+       "RTLLine2:",
+       "; hl = where the speech box's second line starts",
+       "\tldh a, [hRTLFlags]",
+       "\tbit RTL_BOXDRAW_F, a",
+       "\thlcoord TEXTBOX_INNERX, TEXTBOX_INNERY + 2",
+       "\tret z",
+       "\thlcoord TEXTBOX_INNERX + TEXTBOX_INNERW - 1, TEXTBOX_INNERY + 2",
+       "\tret",
+       "",
+       "PlaceStringRight::",
+       "; Place string de right to left with its lines ending at hl (their right edge).",
+       "; Like PlaceString, returns bc = the pen (left of the last line).",
+       "\tldh a, [hRTLFlags]",
+       "\tpush af",
+       "\tset RTL_BOXDRAW_F, a",
+       "\tldh [hRTLFlags], a",
+       "\trst PlaceString",
+       "\tpush hl",
+       "\tld h, b",
+       "\tld l, c",
+       "\tcall RTLFlushDigits",
+       "\tpop hl",
+       "\tpop af",
+       "\tldh [hRTLFlags], a",
+       "\tret",
+       "",
+       "RTLTextPlaceString::",
+       "; rst PlaceString for a text command; leftward in the speech box.",
+       "\tldh a, [hRTLFlags]",
+       "\tbit RTL_BOXTEXT_F, a",
+       "\tjp z, _PlaceString",
+       "\tset RTL_BOXDRAW_F, a",
+       "\tldh [hRTLFlags], a",
+       "\trst PlaceString",
+       "\tpush hl",
+       "\tld h, b",
+       "\tld l, c",
+       "\tcall RTLFlushDigits",
+       "\tpop hl",
+       "\tldh a, [hRTLFlags]",
+       "\tres RTL_BOXDRAW_F, a",
+       "\tldh [hRTLFlags], a",
+       "\tret"
+     ]},
+    {"path": "home/text.asm",
+     "hunks": [
+       [174, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; The outermost call owns the line: it is drawn left to right, then each line",
+         "; is reversed in place when it ends, so Arabic reads right to left inside the",
+         "; footprint the English had. Speech box text is drawn leftward instead.",
+         "\tldh a, [hRTLFlags]",
+         "\tand (1 << RTL_OWNER_F) | (1 << RTL_BOXDRAW_F)",
+         "\tjr nz, _PlaceStringNested",
+         "\tcall RTLTakeLine",
+         "\tcall _PlaceStringNested",
+         "\tjp RTLEndOwnedLine",
+         "",
+         "_PlaceStringNested:"
+       ]],
+       [180, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tld b, a",
+         "\tldh a, [hRTLFlags]",
+         "\tbit RTL_SKIP_F, a",
+         "\tjr nz, NextChar",
+         "\tbit RTL_BOXDRAW_F, a",
+         "\tld a, b",
+         "\tjr nz, .leftward"
+       ]],
+       [181, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tjr .placed",
+         ".leftward",
+         "\tfarcall _RTLBoxChar",
+         ".placed"
+       ]],
+       [198, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tcp '<GM>'",
+         "\tjr c, .ngram",
+         "\tcp '<GE>' + 1",
+         "\tjr c, _PlaceGenderChar",
+         ".ngram"
+       ]],
+       [219, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "_PlaceGenderChar:",
+         "; <GM>masculine<GF>feminine<GE>: the alternative that does not fit the player is skipped",
+         "\tcp '<GE>'",
+         "\tjr z, .show",
+         "\tld b, a",
+         "\tld a, [wPlayerGender]",
+         "\tcp PLAYER_FEMALE",
+         "\tld a, b",
+         "\tjr z, .female",
+         "\tcp '<GM>'",
+         "\tjr z, .show",
+         "\tjr .hide",
+         ".female",
+         "\tcp '<GF>'",
+         "\tjr z, .show",
+         ".hide",
+         "\tldh a, [hRTLFlags]",
+         "\tset RTL_SKIP_F, a",
+         "\tjr .set",
+         ".show",
+         "\tldh a, [hRTLFlags]",
+         "\tres RTL_SKIP_F, a",
+         ".set",
+         "\tldh [hRTLFlags], a",
+         "\tjp NextChar",
+         ""
+       ]],
+       [271, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tcall RTLEndLine"
+       ]],
+       [274, 1, "0063bb749f9ed1e5ad02674132d3f6e0c6b66608e5a22379f910b8bd14cbf026", [
+         "\tcall RTLStartLine",
+         "\tjp NextChar"
+       ]],
+       [277, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tcall RTLEndLine"
+       ]],
+       [278, 1, "7d96a791aaf1589f99e8d49ea0e59a969eb1c90a5b1532d079935d53a9ddf132", [
+         "\tcall RTLLine2"
+       ]],
+       [280, 1, "0063bb749f9ed1e5ad02674132d3f6e0c6b66608e5a22379f910b8bd14cbf026", [
+         "\tcall RTLStartLine",
+         "\tjp NextChar"
+       ]],
+       [283, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tcall RTLEndLine"
+       ]],
+       [294, 1, "7d96a791aaf1589f99e8d49ea0e59a969eb1c90a5b1532d079935d53a9ddf132", [
+         "\tcall RTLLine2",
+         "\tcall RTLStartLine"
+       ]],
+       [299, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tcall RTLEndLine"
+       ]],
+       [324, 1, "6d4107efa85c4f1a143a68fc6371c898a2d24e5f30aad3afa81c6d1b04082607", [
+         "\tcall RTLLine1",
+         "\tcall RTLStartLine"
+       ]],
+       [329, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; digits drawn leftward must read left to right while the arrow waits",
+         "\tcall RTLFlushDigits",
+         "\tpush hl"
+       ]],
+       [339, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tpop hl"
+       ]],
+       [342, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; bc = the pen, as FinishString returns it (the RTL code flushes digits",
+         "\t; and ends lines at bc)",
+         "\tld b, h",
+         "\tld c, l"
+       ]],
+       [360, 4, "f8f015764c59ca529f55d85b29c1049f7a21a2d3be38d3417d11ccd49d0fb30e", [
+         "\t; Arabic puts the word for the foe after the name"
+       ]],
+       [367, 1, "b2840e1da32bd810070be9a7523fed07090ba975f4cd8f1aeb0e99fc55fef206", [
+         "\tjr nz, .got_name"
+       ]],
+       [369, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         ".got_name",
+         "\trst PlaceString",
+         "\tld h, b",
+         "\tld l, c",
+         "\tld de, .EnemyText"
+       ]],
+       [372, 1, "7a4fe3a118d8d12c1f23a94f244fb27f065c08643090733c5cd96437489fad3a", [
+         ["\tdb \" ", [0, 0], "@\""]
+       ]],
+       [414, 47, "6139f8d9b49e2aac76fec1a57ec2873e30dba0ef8ffee3d644f3f7fc75fe3b40", [
+         "; Arabic has no plural suffix to add to the last word: the translation words",
+         "; its counts itself, so the command does nothing."
+       ]],
+       [463, 14, "793aad39ad3b4acd37ff219adb88a8aae1235f3e0ea0608779426ab2efcc24f8", [
+       ]],
+       [517, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic lines end on the left, so the arrow waits at the box's left corner."
+       ]],
+       [518, 1, "45d3d294794f1e734c9f1636f9133349837451855e9d347a81982e834479a5a0", [
+         "\tldcoord_a 1, 17"
+       ]],
+       [522, 2, "a3f09c2ca73cf593ad3ec101afbbf15cdcbd7684c4c59496e2f6658cc66dfbbf", [
+         "\tlda_coord 2, 17",
+         "\tldcoord_a 1, 17"
+       ]],
+       [538, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tldh a, [hRTLFlags]",
+         "\tpush af",
+         "\tfarcall _RTLBeginText",
+         "\tcall .Text",
+         "\tpop af",
+         "\tfarcall _RTLEndText",
+         "\tret",
+         "",
+         ".Text:"
+       ]],
+       [588, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall RTLTextPlaceString"
+       ]],
+       [603, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall RTLTextPlaceString"
+       ]],
+       [671, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tldh a, [hRTLFlags]",
+         "\tbit RTL_BOXTEXT_F, a",
+         "\tjr nz, .rtl",
+         "\tcall PrintNum",
+         "\tjr FinishString",
+         "",
+         ".rtl",
+         "; print the number into a buffer, then copy it left to right so that it ends",
+         "; at the speech box's leftward pen",
+         "\tres PRINTNUM_DELAY_F, b",
+         "\tpush hl",
+         "\tld hl, wRTLNumBuffer"
+       ]],
+       [672, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tld a, l",
+         "\tsub LOW(wRTLNumBuffer)",
+         "\tld c, a",
+         "\tld b, 0",
+         "\tpop hl",
+         "\tld a, l",
+         "\tsub c",
+         "\tld l, a",
+         "\tjr nc, .no_borrow",
+         "\tdec h",
+         ".no_borrow",
+         "\tpush hl",
+         "\tinc hl",
+         "\tld d, h",
+         "\tld e, l",
+         "\tld hl, wRTLNumBuffer",
+         "\tcall CopyBytes",
+         "\tpop hl"
+       ]],
+       [708, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tld d, a",
+         "\tldh a, [hRTLFlags]",
+         "\tbit RTL_BOXTEXT_F, a",
+         "\tld a, d",
+         "\tjr z, PrintDayOfWeek",
+         "\tldh a, [hRTLFlags]",
+         "\tset RTL_BOXDRAW_F, a",
+         "\tldh [hRTLFlags], a",
+         "\tld a, d",
+         "\tcall PrintDayOfWeek",
+         "\tldh a, [hRTLFlags]",
+         "\tres RTL_BOXDRAW_F, a",
+         "\tldh [hRTLFlags], a",
+         "\tret",
+         ""
+       ]],
+       [745, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: the seven names are whole day names (each is also centered in the",
+         "; clock-setting picker, 9 cells) and .Day is empty; dr offsets are one byte.",
+         "\tassert .Day - .Days < 256, \"PrintDayOfWeek names are too long for dr\""
+       ]]
+     ]},
+    {"path": "main.asm",
+     "hunks": [
+       [75, 1, "d6742a4e0208187bb0344339cb668edd738b440e8102b00d556fe2e6eb865b48", [
+       ]],
+       [89, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "SECTION \"Naming Screen\", ROMX",
+         "",
+         "INCLUDE \"engine/menus/arabic_shaping.asm\"",
+         "INCLUDE \"data/text/input_chars.asm\"",
+         "INCLUDE \"engine/menus/naming_screen.asm\"",
+         "",
+         ""
+       ]],
+       [739, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "INCLUDE \"engine/gfx/rtl_reverse.asm\"",
+         "INCLUDE \"engine/gfx/rtl_box.asm\""
+       ]]
+     ]},
+    {"path": "ram/hram.asm",
+     "hunks": [
+       [214, 1, "e2a38dbe716aa6333c0e2e0bd9a0ddd222ea145a301e3fe7057c575027ae4022", [
+         "hRTLFlags:: db ; see RTL_*_F in constants/text_constants.asm",
+         "hRTLLineStart:: dw ; first tile of the line a right-to-left owner draws",
+         "hRTLDigitStart:: dw ; rightmost tile of a run of digits drawn leftward",
+         "\tds 2 ; unused"
+       ]]
+     ]},
+    {"path": "ram/wram0.asm",
+     "hunks": [
+       [885, 1, "d1fcf94701c1e5a38a2abdd281e1ed83fefd8cd91f6d6fe52a25131937ffa65f", [
+         "wRTLNumBuffer:: ds 8 ; a number printed for a right-to-left text box",
+         "wRTLLine:: ds TILEMAP_WIDTH ; a line being reversed in place",
+         "wRTLTextBuffer:: ds 24 ; a string composed in logical order, then placed right to left",
+         "\tds 69 - 8 - TILEMAP_WIDTH - 24 ; it's free real estate"
+       ]]
+     ]},
+    {"path": "ram/wramx.asm",
+     "hunks": [
+       [1787, 1, "a63b6c7ba1a44139207b219828fa7690494d6f86c6d9b1e2138e973bd2f74249", [
+         "; + 1 to include the \"'s\" (English only; Arabic appends nothing)"
+       ]]
+     ]}
+  ]
+}

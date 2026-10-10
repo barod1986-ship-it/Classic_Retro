@@ -98,6 +98,7 @@ runs the same way for every target.
 | `shining-force-2` | Shining Force II (USA), Mega Drive | ROM overlay | `glyph-font` |
 | `final-fantasy-ii` | Final Fantasy II (USA, Rev 1), Super NES | ROM overlay | `glyph-font` |
 | `final-fantasy-iii` | Final Fantasy III (USA), Super NES | ROM overlay | `glyph-font` |
+| `polished-crystal` | Pokémon Polished Crystal 3.2.3, Game Boy Color | source overlay | `glyph-font` |
 
 ```text
 classic-retro targets list                          # every target, its documents and operations
@@ -120,8 +121,10 @@ in `src/classic_retro/localization/digests.json`, as CI does for each target. A
 game's own command group holds only its engine's tools:
 `encode-arabic` (a line in the game's encoding, for example
 `classic-retro fomt encode-arabic TEXT --font FONT`), `source-check` for the source
-overlays, and Chrono Trigger's tools that add a string table to its translation
-(`tables`, `new-table`, `check-table`, `adopt-table`).
+overlays, Chrono Trigger's tools that add a string table to its translation
+(`tables`, `new-table`, `check-table`, `adopt-table`), and Polished Crystal's `make-bps` (the
+patch from the ROM a prepared checkout builds) with the tools that rebuild its overlay's data
+(`make-manifest`, `make-engine-patch`).
 
 ### Translating
 
@@ -155,7 +158,7 @@ classic-retro targets merge fomt.workspace.json batches/*.json --out fomt.worksp
 
 See [the translator's guide](docs/TRANSLATING_AR.md) (in Arabic).
 
-The four rendering strategies are what the twenty-three targets proved, not the only ones
+The four rendering strategies are what the twenty-four targets proved, not the only ones
 possible. Games on other platforms will need other methods, and the strategy and
 target registries accept them from this repository or from other packages through
 entry points. See [the rendering strategies](docs/ARABIC_STRATEGIES.md) and
@@ -186,13 +189,13 @@ A script holds commands such as `run 300`, `tap START`, `touch 128 272`, `shot m
 
 ## Repository status
 
-**Localization platform with twenty-three reference targets: twelve on the Game Boy Advance,
-three on the Nintendo DS, three on the PlayStation, four on the Super NES and one on the
-Mega Drive.**
+**Localization platform with twenty-four reference targets: twelve on the Game Boy Advance,
+three on the Nintendo DS, three on the PlayStation, four on the Super NES, one on the
+Mega Drive and one on the Game Boy Color.**
 
-Every target translates one scene or a few strings chosen to prove its renderer, not
-a whole game; the paragraphs below say what each covers. The Game Boy and Game Boy
-Color, the NES and the Nintendo 64 are detected but have no target yet. What a Nintendo 64
+Every target but the last translates one scene or a few strings chosen to prove its renderer,
+not a whole game; the paragraphs below say what each covers. The Game Boy, the NES and the
+Nintendo 64 are detected but have no target yet. What a Nintendo 64
 target would build on is recorded in [the Super Mario 64 research notes](docs/SM64_RESEARCH_NOTES.md).
 
 Install with `python -m pip install -e ".[dev]" -c constraints.txt` (the pinned
@@ -530,5 +533,28 @@ share a line, and a character's name comes from the translation's own table. The
 messages stay as they were, and the patch is about 195 KB. See
 [the Final Fantasy III testing guide](docs/FF6_ARABIC_TEST_AR.md) and
 [the renderer notes](docs/FF6_ARABIC_RENDERER.md).
+
+The twenty-fourth reference target, and the first on the Game Boy Color, is **Pokémon Polished
+Crystal 3.2.3**, the hack of Pokémon Crystal whose source,
+[Rangi42/polishedcrystal](https://github.com/Rangi42/polishedcrystal) at its `v3.2.3` tag, builds
+the image byte for byte with rgbds 1.0.0. It is the first target translated as a whole game:
+the overlay's manifest holds every one of its 13,486 texts (the dialogue of every map, the
+phone calls, the battle and common texts, the menus, the names of the species, moves, items,
+places and trainers, the descriptions and the Pokédex), and the translation fills them in
+batches; an entry it does not hold yet stays English, and `check-translations` reports the
+coverage. A source overlay patches the user's pristine checkout: an engine patch, stored as
+hunks that keep the hash of the lines they replace and never the lines, makes the text engine
+right to left (the speech box drawn leftward from its right edge, every other string reversed
+in place once its line is drawn, digits kept left to right) and adds Arabic keyboards with a
+shaper that gives typed letters their forms at run time; every translated text then replaces
+the lines it owns, checked by their pin. The game draws a tile a character, and the reference
+font is illegible at 8x8 pixels, so the Arabic takes the `glyph-font` strategy with 70 glyphs
+drawn by hand, which take the codes of the English font's Latin letters; forms the cell cannot
+tell apart share a glyph. The player's gender picks between the masculine and feminine words
+of a text, and the Huffman codes and n-grams of the game's text compression are trained on the
+Arabic tree each time it is prepared. `make` builds the ROM and `classic-retro polished-crystal
+make-bps` the patch for the user's own image. See
+[the Polished Crystal guide](docs/POLISHED_CRYSTAL_ARABIC_TEST_AR.md) and
+[the renderer notes](docs/POLISHED_CRYSTAL_ARABIC_RENDERER.md).
 
 See [docs/MASTER_SPEC.md](docs/MASTER_SPEC.md).

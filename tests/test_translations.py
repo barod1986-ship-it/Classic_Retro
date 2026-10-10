@@ -454,3 +454,29 @@ def test_shining_force_2_strings_keep_the_english_tags_and_the_name():
         assert string.notation.count("{N}") == 1, string.key
     assert strings[0].notation.startswith("{CLEAR}")
     assert strings[2].notation.startswith("{NAME;0}")
+
+
+def test_polished_crystal_ships_entries_of_its_manifest_and_leaves_the_rest_english():
+    """A whole game translated in batches: every entry is a manifest's or one the engine needs.
+
+    The file holds no originals and gives every entry a context; the entries it does
+    not hold stay English, and its check reports the coverage
+    (tests/test_polished_crystal_source_overlay.py checks the encoding).
+    """
+    from classic_retro.source.polished_crystal.manifest import builtin_manifest
+    from classic_retro.source.polished_crystal_arabic import extra_entries
+
+    translations = builtin_translation_set("polished-crystal")
+    manifest = builtin_manifest()
+    extras = extra_entries()
+    assert not translations.is_workspace
+    assert all(entry.source is None and entry.context for entry in translations.entries)
+    ids = [entry.id for entry in translations.entries]
+    assert set(extras) <= set(ids)
+    assert all(entry_id in manifest.entries or entry_id in extras for entry_id in ids)
+    # In the manifest's order, the entries the engine needs last.
+    order = {entry_id: index for index, entry_id in enumerate(manifest.entries)}
+    known = [order[entry_id] for entry_id in ids if entry_id in order]
+    assert known == sorted(known)
+    for term in translations.glossary:
+        assert any(term.text in entry.text for entry in translations.entries), term

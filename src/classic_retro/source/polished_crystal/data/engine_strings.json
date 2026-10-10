@@ -1,0 +1,4007 @@
+[
+{
+"file": "audio/music_player.asm",
+"label": "_EmptyPitchOrTempo",
+"cls": "n",
+"w": "5",
+"scr": "Music player: pitch/tempo field blanker",
+"at": "(15,1),(15,2)",
+"dep": "5 spaces; erases a 5-cell numeric field"
+},
+{
+"file": "audio/music_player.asm",
+"label": "GetSongArtist.Composer",
+"cls": "a",
+"w": "20",
+"scr": "Music player: info page",
+"at": "(0,6); artist name at (0,7)",
+"dep": "label row above data row"
+},
+{
+"file": "audio/music_player.asm",
+"label": "GetSongArtist2.Arranger",
+"cls": "a",
+"w": "20",
+"scr": "Music player: info page",
+"at": "(0,9); name at (0,10); skipped when no …",
+"dep": "label row above data row"
+},
+{
+"file": "engine/battle/core.asm",
+"label": "MonFaintedAnimation.Spaces",
+"cls": "n",
+"w": "7",
+"scr": "Battle: faint slide (blank row)",
+"at": "caller hl",
+"dep": "7 spaces = blanker, not text"
+},
+{
+"file": "engine/battle/core.asm",
+"label": "BattleMenuPKMN_Loop.MenuData",
+"cls": "a",
+"w": "7",
+"scr": "Battle: PKMN submenu (…)",
+"at": "box (10,11)-(19,17), text (12,12) step 2",
+"dep": "cursor col x=11"
+},
+{
+"file": "engine/battle/core.asm",
+"label": "MoveInfoBox.PowAcc",
+"cls": "b",
+"w": "9",
+"scr": "Battle: move info box (power/accuracy template)",
+"at": "(1,10) in box (0,8)-(10,12)",
+"dep": "template …: numbers printed at (1,10) and (6,10) into the blanks"
+},
+{
+"file": "engine/battle/core.asm",
+"label": "MoveInfoBox.NA",
+"cls": "n",
+"w": "3",
+"scr": "Battle: move info box, … for no power/acc",
+"at": "(1,10)/(6,10)",
+"dep": "replaces a 3-digit number"
+},
+{
+"file": "engine/battle/core.asm",
+"label": "ShowLinkBattleResult.Win",
+"cls": "a",
+"w": "14",
+"scr": "Link battle: … banner",
+"at": "(6,8)",
+"dep": "… hand-centred with 2 leading spaces"
+},
+{
+"file": "engine/battle/core.asm",
+"label": "ShowLinkBattleResult.Lose",
+"cls": "a",
+"w": "14",
+"scr": "Link battle: … banner",
+"at": "(6,8)",
+"dep": "… hand-centred with 2 leading spaces"
+},
+{
+"file": "engine/battle/core.asm",
+"label": "ShowLinkBattleResult.Draw",
+"cls": "a",
+"w": "14",
+"scr": "Link battle: … banner",
+"at": "(6,8)",
+"dep": "… hand-centred with 2 leading spaces"
+},
+{
+"file": "engine/battle/core.asm",
+"label": "ReadAndPrintLinkBattleRecord.Scores",
+"cls": "b",
+"w": "14/20",
+"scr": "Link … table: zero/placeholder rows",
+"at": "(6,4) / … rows (0,8)+2n",
+"dep": "columns align with PrintNum at x=6,11,16 (4 digits each)"
+},
+{
+"file": "engine/battle/core.asm",
+"label": "ReadAndPrintLinkBattleRecord.Format",
+"cls": "b",
+"w": "14/20",
+"scr": "Link … table: zero/placeholder rows",
+"at": "(6,4) / … rows (0,8)+2n",
+"dep": "columns align with PrintNum at x=6,11,16 (4 digits each)"
+},
+{
+"file": "engine/battle/core.asm",
+"label": "ReadAndPrintLinkBattleRecord.Record",
+"cls": "a",
+"w": "19",
+"scr": "Link …: title",
+"at": "(1,0)",
+"dep": "contains <…> (up to 7)"
+},
+{
+"file": "engine/battle/core.asm",
+"label": "ReadAndPrintLinkBattleRecord.Result",
+"cls": "b",
+"w": "20",
+"scr": "Link …: column headers",
+"at": "(0,6) / (0,2)",
+"dep": "… words sit over number columns x=6..9, 11..14, 16..19"
+},
+{
+"file": "engine/battle/core.asm",
+"label": "ReadAndPrintLinkBattleRecord.Total",
+"cls": "b",
+"w": "20",
+"scr": "Link …: column headers",
+"at": "(0,6) / (0,2)",
+"dep": "… words sit over number columns x=6..9, 11..14, 16..19"
+},
+{
+"file": "engine/battle/endturn.asm",
+"label": "GetTurnAndPlacePrefix.Your",
+"cls": "c",
+"w": "n/a (<=18)",
+"scr": "Battle text prefix copied to wStringBuffer1 (…)",
+"at": "buffer",
+"dep": "English possessive prefix composed into data/text battle messages; Arabic needs suffix/post-noun order"
+},
+{
+"file": "engine/battle/endturn.asm",
+"label": "GetTurnAndPlacePrefix.Foe",
+"cls": "c",
+"w": "n/a (<=18)",
+"scr": "Battle text prefix copied to wStringBuffer1 (…)",
+"at": "buffer",
+"dep": "English possessive prefix composed into data/text battle messages; Arabic needs suffix/post-noun order"
+},
+{
+"file": "engine/battle/menu.asm",
+"label": "BattleMenuDataHeader.Strings",
+"cls": "b",
+"w": "col1 5 / col2 3",
+"scr": "Battle: main 2x2 menu (…/PKMN/…)",
+"at": "box (8,12)-(19,17); items (10,14),(16,14),(10,16),(16,16)",
+"dep": "2D menu spacing 6; cursor x=9 and 15; PKMN and … in the 3-cell column"
+},
+{
+"file": "engine/battle/menu.asm",
+"label": "ContestBattleMenuDataHeader.Strings",
+"cls": "b",
+"w": "col1 7 / col2 4",
+"scr": "Bug Contest battle 2x2 menu",
+"at": "box (5,12)-(19,17); items (7,14),(15,14),(7,16),(15,16)",
+"dep": "… label: … count printed at fixed (12,16) = label start+5"
+},
+{
+"file": "engine/battle/menu.asm",
+"label": "SafariBattleMenuDataHeader.Strings",
+"cls": "b",
+"w": "col1 7 / col2 5",
+"scr": "Safari battle 2x2 menu",
+"at": "box (4,12)-(19,17); items (6,14),(14,14),(6,16),(14,16)",
+"dep": "… label: count printed at fixed (11,14) = label start+5"
+},
+{
+"file": "engine/battle/trainer_huds.asm",
+"label": "DrawPlayerPartyIconHUDBorder.tiles",
+"cls": "n",
+"w": "n/a",
+"scr": "Battle HUD border tile codes",
+"at": "n/a",
+"dep": "not text: battle-extra gfx codes $6f-$71 (outside font range); do not translate"
+},
+{
+"file": "engine/battle/trainer_huds.asm",
+"label": "DrawEnemyPartyIconHUDBorder.tiles",
+"cls": "n",
+"w": "n/a",
+"scr": "Battle HUD border tile codes",
+"at": "n/a",
+"dep": "not text: battle-extra gfx codes; do not translate"
+},
+{
+"file": "engine/events/battle_tower/battle_tower.asm",
+"label": "Special_BattleTower_NextRentalBattle.NewRentalsText",
+"cls": "a",
+"w": "18",
+"scr": "… Factory: speech box",
+"at": "SB (1,14)",
+"dep": "plain speech text"
+},
+{
+"file": "engine/events/battle_tower/battle_tower.asm",
+"label": "Special_BattleTower_NextRentalBattle.TradeBeforeBattle",
+"cls": "a",
+"w": "18",
+"scr": "… Factory: speech box",
+"at": "SB (1,14)",
+"dep": "plain speech text"
+},
+{
+"file": "engine/events/battle_tower/battle_tower.asm",
+"label": "Special_BattleTower_NextRentalBattle.ExpectThese3",
+"cls": "c",
+"w": "18",
+"scr": "… Factory hint: speech box with text_ram mon/move/type names spliced mid-sentence",
+"at": "SB (1,14)",
+"dep": "English word order around text_ram (…); line breaks assume English lengths"
+},
+{
+"file": "engine/events/battle_tower/battle_tower.asm",
+"label": "Special_BattleTower_NextRentalBattle.ExpectThese2",
+"cls": "c",
+"w": "18",
+"scr": "… Factory hint: speech box with text_ram mon/move/type names spliced mid-sentence",
+"at": "SB (1,14)",
+"dep": "English word order around text_ram (…); line breaks assume English lengths"
+},
+{
+"file": "engine/events/battle_tower/battle_tower.asm",
+"label": "Special_BattleTower_NextRentalBattle.ExactMonUsingMove",
+"cls": "c",
+"w": "18",
+"scr": "… Factory hint: speech box with text_ram mon/move/type names spliced mid-sentence",
+"at": "SB (1,14)",
+"dep": "English word order around text_ram (…); line breaks assume English lengths"
+},
+{
+"file": "engine/events/battle_tower/battle_tower.asm",
+"label": "Special_BattleTower_NextRentalBattle.SomeMonUsingMove",
+"cls": "c",
+"w": "18",
+"scr": "… Factory hint: speech box with text_ram mon/move/type names spliced mid-sentence",
+"at": "SB (1,14)",
+"dep": "English word order around text_ram (…); line breaks assume English lengths"
+},
+{
+"file": "engine/events/battle_tower/battle_tower.asm",
+"label": "Special_BattleTower_NextRentalBattle.NoTypePreference",
+"cls": "a",
+"w": "18",
+"scr": "… Factory: speech box",
+"at": "SB (1,14)",
+"dep": "plain speech text"
+},
+{
+"file": "engine/events/battle_tower/battle_tower.asm",
+"label": "Special_BattleTower_NextRentalBattle.PrefersType",
+"cls": "c",
+"w": "18",
+"scr": "… Factory hint: speech box with text_ram mon/move/type names spliced mid-sentence",
+"at": "SB (1,14)",
+"dep": "English word order around text_ram (…); line breaks assume English lengths"
+},
+{
+"file": "engine/events/bug_contest/display_stats.asm",
+"label": "DisplayCaughtContestMonStats.Health",
+"cls": "b",
+"w": "6",
+"scr": "Bug Contest: compare caught mon",
+"at": "(5,4),(5,10); HP number at (11,y)",
+"dep": "label ends before number column x=11"
+},
+{
+"file": "engine/events/bug_contest/display_stats.asm",
+"label": "DisplayCaughtContestMonStats.Stock",
+"cls": "b",
+"w": "11",
+"scr": "Bug Contest: box titles on top frame",
+"at": "(2,0),(2,6) on frame of 13-wide boxes",
+"dep": "drawn over the box border; both padded to the same width (10)"
+},
+{
+"file": "engine/events/bug_contest/display_stats.asm",
+"label": "DisplayCaughtContestMonStats.This",
+"cls": "b",
+"w": "11",
+"scr": "Bug Contest: box titles on top frame",
+"at": "(2,0),(2,6) on frame of 13-wide boxes",
+"dep": "drawn over the box border; both padded to the same width (10)"
+},
+{
+"file": "engine/events/catch_tutorial.asm",
+"label": "CatchTutorial.Dude",
+"cls": "c",
+"w": "<=7",
+"scr": "Catch tutorial: copied over wPlayerName (NAME_LENGTH bytes)",
+"at": "buffer",
+"dep": "name buffer; plain db (n-gram charmap) - should be rawchar-safe"
+},
+{
+"file": "engine/events/daycare.asm",
+"label": "DayCare_GenerateEgg.String_EGG",
+"cls": "c",
+"w": "<=10",
+"scr": "… nickname (RAM)",
+"at": "buffer wTempMonNickname",
+"dep": "rawchar name buffer"
+},
+{
+"file": "engine/events/diploma.asm",
+"label": "PlaceDiplomaPage1OnScreen.PlayerString",
+"cls": "b",
+"w": "7",
+"scr": "Diploma p1: … label",
+"at": "(2,5); name at (9,5)",
+"dep": "label must end before x=9"
+},
+{
+"file": "engine/events/diploma.asm",
+"label": "PlaceDiplomaPage1OnScreen.DiplomaString",
+"cls": "a",
+"w": "17",
+"scr": "Diploma p1 body (5 lines, <NEXT>)",
+"at": "(2,8),(2,10)..(2,16); diploma border tiles at x=0 and x=19",
+"dep": "inside a graphic frame"
+},
+{
+"file": "engine/events/diploma.asm",
+"label": "PlaceDiplomaPage2OnScreen.PlayTime",
+"cls": "b",
+"w": "9",
+"scr": "Diploma p2: …",
+"at": "(3,15); … at (12,15)",
+"dep": "label must end before x=12"
+},
+{
+"file": "engine/events/diploma.asm",
+"label": "PlaceDiplomaPage2OnScreen.PolishedCrystal",
+"cls": "a",
+"w": "17",
+"scr": "Diploma p2: game title",
+"at": "(2,1)",
+"dep": "inside a graphic frame"
+},
+{
+"file": "engine/events/elevator.asm",
+"label": "Elevator_CurrentFloorText",
+"cls": "a",
+"w": "8",
+"scr": "Elevator: …",
+"at": "(1,2) in box (0,0)-(9,5); floor name at (4,4)",
+"dep": ""
+},
+{
+"file": "engine/events/halloffame.asm",
+"label": "AnimateHallOfFame.String_NewHallOfFamer",
+"cls": "a",
+"w": "18",
+"scr": "… of Fame: banner",
+"at": "(1,2)",
+"dep": ""
+},
+{
+"file": "engine/events/halloffame.asm",
+"label": "_HallOfFamePC.HOFMaster",
+"cls": "b",
+"w": "18",
+"scr": "… PC: banner",
+"at": "(1,2)",
+"dep": "4 leading spaces kept for symmetry with TimeFamer"
+},
+{
+"file": "engine/events/halloffame.asm",
+"label": "_HallOfFamePC.TimeFamer",
+"cls": "b",
+"w": "18",
+"scr": "… PC: …",
+"at": "(1,2); win count printed into (2,2)-(4,2)",
+"dep": "template: first 4 cells reserved for a number printed over them"
+},
+{
+"file": "engine/events/halloffame.asm",
+"label": "HOF_AnimatePlayerPic.PlayTime",
+"cls": "b",
+"w": "9",
+"scr": "…: player card …",
+"at": "(1,8) in box (0,2)-(10,11); … at (3,9)",
+"dep": "box inner width 9"
+},
+{
+"file": "engine/events/itemfinder.asm",
+"label": "ItemFinder.Script_FoundSomething",
+"cls": "a",
+"w": "18",
+"scr": "…: speech box",
+"at": "SB",
+"dep": ""
+},
+{
+"file": "engine/events/itemfinder.asm",
+"label": "ItemFinder.UnderfootText",
+"cls": "a",
+"w": "18",
+"scr": "…: speech box",
+"at": "SB",
+"dep": ""
+},
+{
+"file": "engine/events/itemfinder.asm",
+"label": "ItemFinder.Script_FoundNothingNearby",
+"cls": "a",
+"w": "18",
+"scr": "…: speech box",
+"at": "SB",
+"dep": ""
+},
+{
+"file": "engine/events/itemfinder.asm",
+"label": "ItemFinder.Script_FoundNothingAtAll",
+"cls": "a",
+"w": "18",
+"scr": "…: speech box",
+"at": "SB",
+"dep": ""
+},
+{
+"file": "engine/events/judge_machine.asm",
+"label": "NewsMachineOffText",
+"cls": "a",
+"w": "18",
+"scr": "…: speech box",
+"at": "SB",
+"dep": ""
+},
+{
+"file": "engine/events/judge_machine.asm",
+"label": "NewsMachineIntroText",
+"cls": "a",
+"w": "18",
+"scr": "…: speech box",
+"at": "SB",
+"dep": ""
+},
+{
+"file": "engine/events/judge_machine.asm",
+"label": "NewsMachineWhichMonText",
+"cls": "a",
+"w": "18",
+"scr": "…: speech box",
+"at": "SB",
+"dep": ""
+},
+{
+"file": "engine/events/judge_machine.asm",
+"label": "NewsMachinePrepText",
+"cls": "a",
+"w": "18",
+"scr": "…: speech box",
+"at": "SB",
+"dep": ""
+},
+{
+"file": "engine/events/judge_machine.asm",
+"label": "NewsMachineContinueText",
+"cls": "a",
+"w": "18",
+"scr": "…: speech box",
+"at": "SB",
+"dep": ""
+},
+{
+"file": "engine/events/judge_machine.asm",
+"label": "NewsMachineCancelText",
+"cls": "a",
+"w": "18",
+"scr": "…: speech box",
+"at": "SB",
+"dep": ""
+},
+{
+"file": "engine/events/judge_machine.asm",
+"label": "NewsMachineEggText",
+"cls": "a",
+"w": "18",
+"scr": "…: speech box",
+"at": "SB",
+"dep": ""
+},
+{
+"file": "engine/events/judge_machine.asm",
+"label": "JudgeSystem.EVHeading",
+"cls": "b",
+"w": "9",
+"scr": "… chart title",
+"at": "(1,2)",
+"dep": "both padded to 9 so either overwrites the other"
+},
+{
+"file": "engine/events/judge_machine.asm",
+"label": "JudgeSystem.IVHeading",
+"cls": "b",
+"w": "9",
+"scr": "… chart title",
+"at": "(1,2)",
+"dep": "both padded to 9 so either overwrites the other"
+},
+{
+"file": "engine/events/judge_machine.asm",
+"label": "JudgeSystem.HP",
+"cls": "b",
+"w": "3 (Atk/Def end at screen edge x=19)",
+"scr": "… hexagon stat labels",
+"at": "…(12,2) …(17,4) …(17,15) …(12,17) …(6,15) …(6,4)",
+"dep": "3-digit value printed one row below/above the label start; labels sit around the chart graphic"
+},
+{
+"file": "engine/events/judge_machine.asm",
+"label": "JudgeSystem.Atk",
+"cls": "b",
+"w": "3 (Atk/Def end at screen edge x=19)",
+"scr": "… hexagon stat labels",
+"at": "…(12,2) …(17,4) …(17,15) …(12,17) …(6,15) …(6,4)",
+"dep": "3-digit value printed one row below/above the label start; labels sit around the chart graphic"
+},
+{
+"file": "engine/events/judge_machine.asm",
+"label": "JudgeSystem.Def",
+"cls": "b",
+"w": "3 (Atk/Def end at screen edge x=19)",
+"scr": "… hexagon stat labels",
+"at": "…(12,2) …(17,4) …(17,15) …(12,17) …(6,15) …(6,4)",
+"dep": "3-digit value printed one row below/above the label start; labels sit around the chart graphic"
+},
+{
+"file": "engine/events/judge_machine.asm",
+"label": "JudgeSystem.Spe",
+"cls": "b",
+"w": "3 (Atk/Def end at screen edge x=19)",
+"scr": "… hexagon stat labels",
+"at": "…(12,2) …(17,4) …(17,15) …(12,17) …(6,15) …(6,4)",
+"dep": "3-digit value printed one row below/above the label start; labels sit around the chart graphic"
+},
+{
+"file": "engine/events/judge_machine.asm",
+"label": "JudgeSystem.SDf",
+"cls": "b",
+"w": "3 (Atk/Def end at screen edge x=19)",
+"scr": "… hexagon stat labels",
+"at": "…(12,2) …(17,4) …(17,15) …(12,17) …(6,15) …(6,4)",
+"dep": "3-digit value printed one row below/above the label start; labels sit around the chart graphic"
+},
+{
+"file": "engine/events/judge_machine.asm",
+"label": "JudgeSystem.SAt",
+"cls": "b",
+"w": "3 (Atk/Def end at screen edge x=19)",
+"scr": "… hexagon stat labels",
+"at": "…(12,2) …(17,4) …(17,15) …(12,17) …(6,15) …(6,4)",
+"dep": "3-digit value printed one row below/above the label start; labels sit around the chart graphic"
+},
+{
+"file": "engine/events/mom.asm",
+"label": "Mom_SavedString",
+"cls": "b",
+"w": "10",
+"scr": "Bank of Mom amount screen",
+"at": "(1,2),(1,4),(1,6) in box (0,0)-(19,7); money at (11,y)",
+"dep": "label ends before number column x=11"
+},
+{
+"file": "engine/events/mom.asm",
+"label": "Mom_WithdrawString",
+"cls": "b",
+"w": "10",
+"scr": "Bank of Mom amount screen",
+"at": "(1,2),(1,4),(1,6) in box (0,0)-(19,7); money at (11,y)",
+"dep": "label ends before number column x=11"
+},
+{
+"file": "engine/events/mom.asm",
+"label": "Mom_DepositString",
+"cls": "b",
+"w": "10",
+"scr": "Bank of Mom amount screen",
+"at": "(1,2),(1,4),(1,6) in box (0,0)-(19,7); money at (11,y)",
+"dep": "label ends before number column x=11"
+},
+{
+"file": "engine/events/mom.asm",
+"label": "Mom_HeldString",
+"cls": "b",
+"w": "10",
+"scr": "Bank of Mom amount screen",
+"at": "(1,2),(1,4),(1,6) in box (0,0)-(19,7); money at (11,y)",
+"dep": "label ends before number column x=11"
+},
+{
+"file": "engine/events/mom.asm",
+"label": "BankOfMom_MenuHeader.MenuData",
+"cls": "a",
+"w": "8",
+"scr": "Bank of Mom menu",
+"at": "box (0,0)-(10,10), text (2,2) step 2",
+"dep": "cursor x=1"
+},
+{
+"file": "engine/events/odd_egg.asm",
+"label": "GiveSpecialEgg.EggName",
+"cls": "c",
+"w": "<=10",
+"scr": "… nickname (RAM)",
+"at": "buffer",
+"dep": "rawchar name buffer"
+},
+{
+"file": "engine/events/pokecenter_pc.asm",
+"label": "PokemonCenterPC.String_PlayersPC",
+"cls": "a",
+"w": "13",
+"scr": "… top menu",
+"at": "… (0,0)-(15,12), text (2,2) step 2",
+"dep": "… is exactly 13"
+},
+{
+"file": "engine/events/pokecenter_pc.asm",
+"label": "PokemonCenterPC.String_BillsPC",
+"cls": "a",
+"w": "13",
+"scr": "… top menu",
+"at": "… (0,0)-(15,12), text (2,2) step 2",
+"dep": "… is exactly 13"
+},
+{
+"file": "engine/events/pokecenter_pc.asm",
+"label": "PokemonCenterPC.String_OaksPC",
+"cls": "a",
+"w": "13",
+"scr": "… top menu",
+"at": "… (0,0)-(15,12), text (2,2) step 2",
+"dep": "… is exactly 13"
+},
+{
+"file": "engine/events/pokecenter_pc.asm",
+"label": "PokemonCenterPC.String_HallOfFame",
+"cls": "a",
+"w": "13",
+"scr": "… top menu",
+"at": "… (0,0)-(15,12), text (2,2) step 2",
+"dep": "… is exactly 13"
+},
+{
+"file": "engine/events/pokecenter_pc.asm",
+"label": "PokemonCenterPC.String_TurnOff",
+"cls": "a",
+"w": "13",
+"scr": "… top menu",
+"at": "… (0,0)-(15,12), text (2,2) step 2",
+"dep": "… is exactly 13"
+},
+{
+"file": "engine/events/pokecenter_pc.asm",
+"label": "PlayersPCMenuData.WithdrawItem",
+"cls": "a",
+"w": "13",
+"scr": "Player's … menu",
+"at": "… (0,0)-(15,12), text (2,2) step 2",
+"dep": "… is exactly 13"
+},
+{
+"file": "engine/events/pokecenter_pc.asm",
+"label": "PlayersPCMenuData.DepositItem",
+"cls": "a",
+"w": "13",
+"scr": "Player's … menu",
+"at": "… (0,0)-(15,12), text (2,2) step 2",
+"dep": "… is exactly 13"
+},
+{
+"file": "engine/events/pokecenter_pc.asm",
+"label": "PlayersPCMenuData.TossItem",
+"cls": "a",
+"w": "13",
+"scr": "Player's … menu",
+"at": "… (0,0)-(15,12), text (2,2) step 2",
+"dep": "… is exactly 13"
+},
+{
+"file": "engine/events/pokecenter_pc.asm",
+"label": "PlayersPCMenuData.MailBox",
+"cls": "a",
+"w": "13",
+"scr": "Player's … menu",
+"at": "… (0,0)-(15,12), text (2,2) step 2",
+"dep": "… is exactly 13"
+},
+{
+"file": "engine/events/pokecenter_pc.asm",
+"label": "PlayersPCMenuData.Decoration",
+"cls": "a",
+"w": "13",
+"scr": "Player's … menu",
+"at": "… (0,0)-(15,12), text (2,2) step 2",
+"dep": "… is exactly 13"
+},
+{
+"file": "engine/events/pokecenter_pc.asm",
+"label": "PlayersPCMenuData.TurnOff",
+"cls": "a",
+"w": "13",
+"scr": "Player's … menu",
+"at": "… (0,0)-(15,12), text (2,2) step 2",
+"dep": "… is exactly 13"
+},
+{
+"file": "engine/events/pokecenter_pc.asm",
+"label": "PlayersPCMenuData.LogOff",
+"cls": "a",
+"w": "13",
+"scr": "Player's … menu",
+"at": "… (0,0)-(15,12), text (2,2) step 2",
+"dep": "… is exactly 13"
+},
+{
+"file": "engine/events/shiny_ditto.asm",
+"label": "SpecialGiveShinyDitto.OTAndExtra",
+"cls": "c",
+"w": "<=7",
+"scr": "Gift Ditto OT name (RAM, fixed 8+3 bytes copied)",
+"at": "buffer wTempMonOT",
+"dep": "CopyBytes PLAYER_NAME_LENGTH+3: string+@ padding must stay exactly 8 bytes, then 3 data bytes"
+},
+{
+"file": "engine/events/shiny_ditto.asm",
+"label": "SpecialGiveShinyDitto.Nickname",
+"cls": "c",
+"w": "<=10",
+"scr": "Gift Ditto nickname (RAM)",
+"at": "buffer",
+"dep": "rawchar name buffer"
+},
+{
+"file": "engine/events/shuckle.asm",
+"label": "SpecialShuckleOTAndExtra",
+"cls": "c",
+"w": "<=7",
+"scr": "Shuckle return: OT compared byte-by-byte with party OT",
+"at": "buffer compare",
+"dep": "must equal the OT given in maps/ManiasHouse.asm:97 (rawchar …)"
+},
+{
+"file": "engine/events/specials.asm",
+"label": "SpecialNameRival.DefaultRivalName",
+"cls": "c",
+"w": "<=7",
+"scr": "Default rival name (RAM)",
+"at": "buffer wRivalName",
+"dep": "rawchar; also referenced by data dialogue expectations"
+},
+{
+"file": "engine/events/specials.asm",
+"label": "SpecialTrendyPhrase.DefaultTrendyPhrase",
+"cls": "c",
+"w": "<=10",
+"scr": "Default trendy phrase (RAM)",
+"at": "buffer wTrendyPhrase",
+"dep": "rawchar name buffer"
+},
+{
+"file": "engine/events/specials.asm",
+"label": "CheckIfTrendyPhraseIsLucky.KeyPhrase",
+"cls": "c",
+"w": "n/a",
+"scr": "Trendy phrase == … check (6-byte compare, d=6)",
+"at": "compare",
+"dep": "string compared with player-typed phrase; compare length hard-coded 6; must match naming-screen keyboard codes"
+},
+{
+"file": "engine/events/std_scripts.asm",
+"label": "DayToTextScript.SundayText",
+"cls": "c",
+"w": "<=18",
+"scr": "Weekday names for script text (getstring -> STRING_BUFFER_3)",
+"at": "buffer",
+"dep": "copied via CopyName (19-byte buffer)"
+},
+{
+"file": "engine/events/std_scripts.asm",
+"label": "DayToTextScript.MondayText",
+"cls": "c",
+"w": "<=18",
+"scr": "Weekday names for script text (getstring -> STRING_BUFFER_3)",
+"at": "buffer",
+"dep": "copied via CopyName (19-byte buffer)"
+},
+{
+"file": "engine/events/std_scripts.asm",
+"label": "DayToTextScript.TuesdayText",
+"cls": "c",
+"w": "<=18",
+"scr": "Weekday names for script text (getstring -> STRING_BUFFER_3)",
+"at": "buffer",
+"dep": "copied via CopyName (19-byte buffer)"
+},
+{
+"file": "engine/events/std_scripts.asm",
+"label": "DayToTextScript.WednesdayText",
+"cls": "c",
+"w": "<=18",
+"scr": "Weekday names for script text (getstring -> STRING_BUFFER_3)",
+"at": "buffer",
+"dep": "copied via CopyName (19-byte buffer)"
+},
+{
+"file": "engine/events/std_scripts.asm",
+"label": "DayToTextScript.ThursdayText",
+"cls": "c",
+"w": "<=18",
+"scr": "Weekday names for script text (getstring -> STRING_BUFFER_3)",
+"at": "buffer",
+"dep": "copied via CopyName (19-byte buffer)"
+},
+{
+"file": "engine/events/std_scripts.asm",
+"label": "DayToTextScript.FridayText",
+"cls": "c",
+"w": "<=18",
+"scr": "Weekday names for script text (getstring -> STRING_BUFFER_3)",
+"at": "buffer",
+"dep": "copied via CopyName (19-byte buffer)"
+},
+{
+"file": "engine/events/std_scripts.asm",
+"label": "DayToTextScript.SaturdayText",
+"cls": "c",
+"w": "<=18",
+"scr": "Weekday names for script text (getstring -> STRING_BUFFER_3)",
+"at": "buffer",
+"dep": "copied via CopyName (19-byte buffer)"
+},
+{
+"file": "engine/events/std_scripts.asm",
+"label": "CoinVendor_IntroScript.MenuData2",
+"cls": "b",
+"w": "13",
+"scr": "Game Corner coin vendor menu",
+"at": "box (0,4)-(15,11), text (2,6) step 2",
+"dep": "columns inside string: quantity, …, price aligned by spaces"
+},
+{
+"file": "engine/events/std_scripts.asm",
+"label": "VendingMachineScript.MenuData2",
+"cls": "b",
+"w": "17",
+"scr": "Vending machine menu",
+"at": "box (0,2)-(19,11), text (2,4) step 2",
+"dep": "price column aligned by space padding inside each string"
+},
+{
+"file": "engine/events/wonder_trade.asm",
+"label": "DoWonderTrade.EggString",
+"cls": "c",
+"w": "<=10",
+"scr": "… nickname (RAM, MON_NAME_LENGTH copy)",
+"at": "buffer",
+"dep": "padded with @ to 11 bytes (CopyTradeName copies fixed length)"
+},
+{
+"file": "engine/games/card_flip.asm",
+"label": "CardFlip_DisplayCardFaceUp.Deck",
+"cls": "n",
+"w": "1",
+"scr": "Card Flip card faces (digit glyphs)",
+"at": "tile codes",
+"dep": "digits used as card ranks; keep digit codes"
+},
+{
+"file": "engine/games/card_flip.asm",
+"label": "CardFlip_PrintCoinBalance.CoinStr",
+"cls": "b",
+"w": "5",
+"scr": "Card Flip … box",
+"at": "(9,16) in box (8,15)-(19,17); number at (14,16)",
+"dep": "label ends before x=14"
+},
+{
+"file": "engine/games/memory_game.asm",
+"label": "MemoryGame_InitStrings.japstr1",
+"cls": "dead",
+"w": "-",
+"scr": "DEAD CODE (memory_game.asm is commented out in main.asm:521)",
+"at": "",
+"dep": "not in ROM"
+},
+{
+"file": "engine/games/memory_game.asm",
+"label": "MemoryGame_InitStrings.japstr2",
+"cls": "dead",
+"w": "-",
+"scr": "DEAD CODE (memory_game.asm is commented out in main.asm:521)",
+"at": "",
+"dep": "not in ROM"
+},
+{
+"file": "engine/games/slot_machine.asm",
+"label": "Slots_AskBet.MenuData2",
+"cls": "n",
+"w": "3",
+"scr": "Slots bet menu (numbers)",
+"at": "box (14,10)-(19,17), text (16,12)",
+"dep": "digits only"
+},
+{
+"file": "engine/games/slot_machine.asm",
+"label": "SlotPayoutText.PayoutStrings",
+"cls": "n",
+"w": "4",
+"scr": "Slots payout amount strings (copied into text)",
+"at": "buffer",
+"dep": "digits only"
+},
+{
+"file": "engine/items/buy_sell_toss.asm",
+"label": "BTDisplayPurchaseCost.BPString",
+"cls": "b",
+"w": "3",
+"scr": "… shop quantity box suffix",
+"at": "after 5-digit number in box (7,15)-(19,17)",
+"dep": "appended at bc after PrintNum"
+},
+{
+"file": "engine/items/item_effects.asm",
+"label": "WingCase_MonSelected.RaisesStat",
+"cls": "c",
+"w": "18",
+"scr": "Wing case description line",
+"at": "PlaceWholeStringInBoxAtOnce bc=(1,16)",
+"dep": "text_ram stat name spliced mid-sentence"
+},
+{
+"file": "engine/items/item_effects.asm",
+"label": "WingCase_MonSelected.CancelStr",
+"cls": "b",
+"w": "19",
+"scr": "Wing/Candy: row-16 blanker+label",
+"at": "(1,16)",
+"dep": "… + 9 spaces: padding erases the previous line"
+},
+{
+"file": "engine/items/item_effects.asm",
+"label": "WingCase_MonSelected.YouDontHaveAny",
+"cls": "b",
+"w": "19",
+"scr": "Wing/Candy: one-line prompt",
+"at": "(1,16)",
+"dep": "19 chars, no padding; prompt"
+},
+{
+"file": "engine/items/item_effects.asm",
+"label": "WingCase_MonSelected.UseHowManyText",
+"cls": "b",
+"w": "18",
+"scr": "Wing/Candy quantity prompt",
+"at": "(1,16); quantity box drawn to the right",
+"dep": "padded to 18 to erase previous text"
+},
+{
+"file": "engine/items/item_effects.asm",
+"label": "OnlyXWillBeAppliedText",
+"cls": "c",
+"w": "18",
+"scr": "… (db fallthrough into next label)",
+"at": "SB",
+"dep": "label falls through into XWillBeAppliedText; number spliced via text_decimal"
+},
+{
+"file": "engine/items/item_effects.asm",
+"label": "XWillBeAppliedText",
+"cls": "c",
+"w": "18",
+"scr": "…",
+"at": "SB",
+"dep": "starts with text_decimal; English word order"
+},
+{
+"file": "engine/items/item_effects.asm",
+"label": "CandyJar_MonSelected.CandyNames",
+"cls": "c",
+"w": "<=2",
+"scr": "…. Candy size letters (…) used in …",
+"at": "list -> text_ram",
+"dep": "li list; spliced into GivesExp"
+},
+{
+"file": "engine/items/item_effects.asm",
+"label": "CandyJar_MonSelected.GivesExp",
+"cls": "c",
+"w": "18",
+"scr": "Candy jar description line",
+"at": "PlaceWholeStringInBoxAtOnce bc=(1,16)",
+"dep": "text_ram spliced mid-sentence"
+},
+{
+"file": "engine/items/item_effects.asm",
+"label": "CandyJar_MonSelected.CancelStr",
+"cls": "b",
+"w": "19",
+"scr": "Wing/Candy: row-16 blanker+label",
+"at": "(1,16)",
+"dep": "… + 9 spaces: padding erases the previous line"
+},
+{
+"file": "engine/items/item_effects.asm",
+"label": "CandyJar_MonSelected.YouDontHaveAny",
+"cls": "b",
+"w": "19",
+"scr": "Wing/Candy: one-line prompt",
+"at": "(1,16)",
+"dep": "19 chars, no padding; prompt"
+},
+{
+"file": "engine/items/item_effects.asm",
+"label": "CandyJar_MonSelected.UseHowManyText",
+"cls": "b",
+"w": "18",
+"scr": "Wing/Candy quantity prompt",
+"at": "(1,16); quantity box drawn to the right",
+"dep": "padded to 18 to erase previous text"
+},
+{
+"file": "engine/items/item_effects.asm",
+"label": "ApricornBox.Text",
+"cls": "b",
+"w": "4 per cell",
+"scr": "Apricorn box table (7 colours, 2 columns)",
+"at": "(6,3) in frame (5,1)-(19,11); counts printed at (10|16, 4|6|8|10)",
+"dep": "color abbreviation at x=7 / x=13 (3 cells), … at x=9 / x=15, counts after; pure table layout"
+},
+{
+"file": "engine/items/item_effects.asm",
+"label": "BallReplacedText",
+"cls": "c",
+"w": "18",
+"scr": "…",
+"at": "SB",
+"dep": "two text_ram names spliced; English order"
+},
+{
+"file": "engine/items/item_effects.asm",
+"label": "ChangeAbilityToText",
+"cls": "c",
+"w": "18",
+"scr": "…",
+"at": "SB",
+"dep": "text_ram spliced"
+},
+{
+"file": "engine/items/item_effects.asm",
+"label": "AbilityChangedText",
+"cls": "a",
+"w": "18",
+"scr": "… changed",
+"at": "SB",
+"dep": ""
+},
+{
+"file": "engine/items/mart.asm",
+"label": "ExpCandyMart.Text_ExpCandyMart_Intro",
+"cls": "a",
+"w": "18",
+"scr": "Exp. … mart clerk",
+"at": "SB (MartTextbox)",
+"dep": ""
+},
+{
+"file": "engine/items/mart.asm",
+"label": "ExpCandyMart.Text_ExpCandyMart_ComeAgain",
+"cls": "a",
+"w": "18",
+"scr": "Exp. … mart clerk",
+"at": "SB (MartTextbox)",
+"dep": ""
+},
+{
+"file": "engine/items/mart.asm",
+"label": "BlueCardMenuDataHeader_Buy.PointsString",
+"cls": "b",
+"w": "4",
+"scr": "Blue Card shop list: price suffix",
+"at": "after 3-digit number at item row+1, x=right-? (hl+16)",
+"dep": "appended at bc after PrintNum; ends at box edge"
+},
+{
+"file": "engine/items/mart.asm",
+"label": "BTMenuDataHeader_Buy.PointsString",
+"cls": "b",
+"w": "3",
+"scr": "… shop list: price suffix",
+"at": "after 3-digit number (hl+17)",
+"dep": "appended at bc after PrintNum; ends at box edge"
+},
+{
+"file": "engine/items/mart.asm",
+"label": "MenuDataHeader_BuySell.menudata2",
+"cls": "b",
+"w": "5",
+"scr": "Mart … menu",
+"at": "box (0,0)-(7,8), text (2,2) step 2",
+"dep": "cursor x=1"
+},
+{
+"file": "engine/items/pack.asm",
+"label": "MenuDataHeader_SortTMs.MenuData2",
+"cls": "b",
+"w": "9",
+"scr": "Bag: sort TMs submenu",
+"at": "box (8,5)-(19,11), text (10,6) step 2",
+"dep": "… exactly 9"
+},
+{
+"file": "engine/items/pack.asm",
+"label": "MenuDataHeader_SortItems.MenuData2",
+"cls": "b",
+"w": "7",
+"scr": "Bag: sort items submenu",
+"at": "box (10,5)-(19,11), text (12,6) step 2",
+"dep": "… exactly 7"
+},
+{
+"file": "engine/items/pack.asm",
+"label": "MenuDataHeader_UseGiveToss.MenuData2",
+"cls": "b",
+"w": "4",
+"scr": "Bag: item action submenu",
+"at": "box (13,y)-(19,11), text (15,y+1) step 2",
+"dep": "very narrow (4 cells); cursor x=14"
+},
+{
+"file": "engine/items/pack.asm",
+"label": "MenuDataHeader_Use.MenuData2",
+"cls": "b",
+"w": "4",
+"scr": "Bag: item action submenu",
+"at": "box (13,y)-(19,11), text (15,y+1) step 2",
+"dep": "very narrow (4 cells); cursor x=14"
+},
+{
+"file": "engine/items/pack.asm",
+"label": "MenuDataHeader_Quit.MenuData2",
+"cls": "b",
+"w": "4",
+"scr": "Bag: item action submenu",
+"at": "box (13,y)-(19,11), text (15,y+1) step 2",
+"dep": "very narrow (4 cells); cursor x=14"
+},
+{
+"file": "engine/items/pack.asm",
+"label": "MenuDataHeader_UseSel.MenuData2",
+"cls": "b",
+"w": "4",
+"scr": "Bag: item action submenu",
+"at": "box (13,y)-(19,11), text (15,y+1) step 2",
+"dep": "very narrow (4 cells); cursor x=14"
+},
+{
+"file": "engine/items/pack.asm",
+"label": "MenuDataHeader_GiveToss.MenuData2",
+"cls": "b",
+"w": "4",
+"scr": "Bag: item action submenu",
+"at": "box (13,y)-(19,11), text (15,y+1) step 2",
+"dep": "very narrow (4 cells); cursor x=14"
+},
+{
+"file": "engine/items/pack.asm",
+"label": "Text_SortItemsHow",
+"cls": "a",
+"w": "18",
+"scr": "Bag: prompt",
+"at": "SB (Pack_PrintTextNoScroll)",
+"dep": ""
+},
+{
+"file": "engine/items/pack.asm",
+"label": "Text_NoEmptySlot",
+"cls": "a",
+"w": "18",
+"scr": "Bag: register error",
+"at": "SB",
+"dep": ""
+},
+{
+"file": "engine/items/tmhm2.asm",
+"label": "TMHM_String_Cancel",
+"cls": "a",
+"w": "10",
+"scr": "… list … row",
+"at": "(9,3)+row / list row",
+"dep": ""
+},
+{
+"file": "engine/items/tmhm2.asm",
+"label": "_GetTMHMName.TMText",
+"cls": "c",
+"w": "2 (+2 digits)",
+"scr": "… item name builder: … + 2 digits -> wStringBuffer1",
+"at": "buffer",
+"dep": "length taken from label difference (.TMTextEnd - .TMText); digits built with add …"
+},
+{
+"file": "engine/items/tmhm2.asm",
+"label": "_GetTMHMName.TMTextEnd",
+"cls": "c",
+"w": "2 (+2 digits)",
+"scr": "… item name builder: … + 2 digits -> wStringBuffer1",
+"at": "buffer",
+"dep": "length taken from label difference (.TMTextEnd - .TMText); digits built with add …"
+},
+{
+"file": "engine/items/tmhm2.asm",
+"label": "_GetTMHMName.HMText",
+"cls": "c",
+"w": "2 (+2 digits)",
+"scr": "… item name builder: … + 2 digits -> wStringBuffer1",
+"at": "buffer",
+"dep": "length taken from label difference (.TMTextEnd - .TMText); digits built with add …"
+},
+{
+"file": "engine/items/tmhm2.asm",
+"label": "_GetTMHMName.HMTextEnd",
+"cls": "c",
+"w": "2 (+2 digits)",
+"scr": "… item name builder: … + 2 digits -> wStringBuffer1",
+"at": "buffer",
+"dep": "length taken from label difference (.TMTextEnd - .TMText); digits built with add …"
+},
+{
+"file": "engine/items/update_item_description.asm",
+"label": "BagString",
+"cls": "b",
+"w": "4",
+"scr": "…/mart: … quantity line",
+"at": "(1,1) in cleared (1,1)-(8,1); number at (5,1); … at (4|5,1)",
+"dep": "label must fit x=1..3 (+space at x=4, which … may overwrite)"
+},
+{
+"file": "engine/items/update_item_description.asm",
+"label": "OwnedTMString",
+"cls": "b",
+"w": "8",
+"scr": "TM shop: ownership line",
+"at": "(1,1) in cleared 8-cell field",
+"dep": ""
+},
+{
+"file": "engine/items/update_item_description.asm",
+"label": "UnownedTMString",
+"cls": "b",
+"w": "8",
+"scr": "TM shop: ownership line",
+"at": "(1,1) in cleared 8-cell field",
+"dep": ""
+},
+{
+"file": "engine/link/link.asm",
+"label": "String_PleaseWait",
+"cls": "a",
+"w": "12",
+"scr": "Link: wait box",
+"at": "(4,10) in box (3,8)-(16,11)",
+"dep": ""
+},
+{
+"file": "engine/link/link.asm",
+"label": "InitTradeSpeciesList.Cancel",
+"cls": "b",
+"w": "9",
+"scr": "… party screen: …",
+"at": "(10,17); cursor … at (9,17)",
+"dep": "cursor fixed at x=9"
+},
+{
+"file": "engine/link/link.asm",
+"label": "LinkTrade_TradeSummaryMenu.String_Summary_Trade",
+"cls": "b",
+"w": "7 + 7",
+"scr": "…: … two options in one string",
+"at": "(2,16); cursors at (1,16) and (11,16)",
+"dep": "second word must start at x=12 (fixed cursor x=11)"
+},
+{
+"file": "engine/link/link.asm",
+"label": "LinkTrade.TradeCancel",
+"cls": "a",
+"w": "6",
+"scr": "… confirm: …",
+"at": "(12,8) in box (10,7)-(18,11); cursor x=11",
+"dep": ""
+},
+{
+"file": "engine/link/link.asm",
+"label": "LinkTrade.TradeCompleted",
+"cls": "a",
+"w": "18",
+"scr": "… done banner",
+"at": "(1,14) in speech-box-like LinkTextbox",
+"dep": ""
+},
+{
+"file": "engine/link/link.asm",
+"label": "String_TooBadTheTradeWasCanceled",
+"cls": "a",
+"w": "18",
+"scr": "… cancelled (2 lines)",
+"at": "(1,14),(1,16)",
+"dep": ""
+},
+{
+"file": "engine/link/link.asm",
+"label": "PlaceWaitingTextAndSyncAndExchangeNybble.Waiting",
+"cls": "b",
+"w": "9",
+"scr": "Link: … box",
+"at": "(6,11) in box (5,10)-(15,12)",
+"dep": "box is exactly 9 wide inside"
+},
+{
+"file": "engine/link/link.asm",
+"label": "PlaceWaitingText.Waiting",
+"cls": "b",
+"w": "9",
+"scr": "Link: … box",
+"at": "(6,11) in box (5,10)-(15,12)",
+"dep": "box is exactly 9 wide inside"
+},
+{
+"file": "engine/menus/init_options.asm",
+"label": "InitialOptionsString1",
+"cls": "b",
+"w": "17 (labels), ':' at x=14",
+"scr": "…-game initial options page (labels + … rows)",
+"at": "(2,1), one row per line (<LNBRK>); values at (15,row+1)",
+"dep": "… rows are 12 spaces + …; cursor … at x=1; edge tiles at x=0 and x=19"
+},
+{
+"file": "engine/menus/init_options.asm",
+"label": "InitialOptionsString2",
+"cls": "b",
+"w": "17 (labels), ':' at x=14",
+"scr": "…-game initial options page (labels + … rows)",
+"at": "(2,1), one row per line (<LNBRK>); values at (15,row+1)",
+"dep": "… rows are 12 spaces + …; cursor … at x=1; edge tiles at x=0 and x=19"
+},
+{
+"file": "engine/menus/init_options.asm",
+"label": "InitialOptions_ExpScaling.Old",
+"cls": "b",
+"w": "4",
+"scr": "Initial options value",
+"at": "(15,10)",
+"dep": "value field x=15..18; overwrites … value"
+},
+{
+"file": "engine/menus/init_options.asm",
+"label": "InitialOptions_ExpScaling.New",
+"cls": "b",
+"w": "4",
+"scr": "Initial options value",
+"at": "(15,10)",
+"dep": "value field x=15..18; overwrites … value"
+},
+{
+"file": "engine/menus/init_options.asm",
+"label": "NoString",
+"cls": "b",
+"w": "4",
+"scr": "Initial options values",
+"at": "(15,2..12)",
+"dep": "… padded to 3 to erase …; ModernString is a number"
+},
+{
+"file": "engine/menus/init_options.asm",
+"label": "YesString",
+"cls": "b",
+"w": "4",
+"scr": "Initial options values",
+"at": "(15,2..12)",
+"dep": "… padded to 3 to erase …; ModernString is a number"
+},
+{
+"file": "engine/menus/init_options.asm",
+"label": "AllString",
+"cls": "b",
+"w": "4",
+"scr": "Initial options values",
+"at": "(15,2..12)",
+"dep": "… padded to 3 to erase …; ModernString is a number"
+},
+{
+"file": "engine/menus/init_options.asm",
+"label": "ModernString",
+"cls": "b",
+"w": "4",
+"scr": "Initial options values",
+"at": "(15,2..12)",
+"dep": "… padded to 3 to erase …; ModernString is a number"
+},
+{
+"file": "engine/menus/intro_menu.asm",
+"label": "NewGamePlus.text",
+"cls": "a",
+"w": "18",
+"scr": "…+ confirmation",
+"at": "SB",
+"dep": ""
+},
+{
+"file": "engine/menus/intro_menu.asm",
+"label": "InitializeMagikarpHouse.Ralph",
+"cls": "c",
+"w": "<=10",
+"scr": "Default Magikarp record holder name (RAM)",
+"at": "buffer",
+"dep": "name buffer (plain db)"
+},
+{
+"file": "engine/menus/intro_menu.asm",
+"label": "InitializeNPCNames.Backup",
+"cls": "c",
+"w": "<=10",
+"scr": "Default rival/backup name … and trendy phrase (RAM)",
+"at": "buffer (NAME_LENGTH copy)",
+"dep": ".Rival and .Backup share bytes"
+},
+{
+"file": "engine/menus/intro_menu.asm",
+"label": "InitializeNPCNames.Trendy",
+"cls": "c",
+"w": "<=10",
+"scr": "Default rival/backup name … and trendy phrase (RAM)",
+"at": "buffer (NAME_LENGTH copy)",
+"dep": ".Rival and .Backup share bytes"
+},
+{
+"file": "engine/menus/intro_menu.asm",
+"label": "Continue_LoadMenuHeader.MenuData2_Dex",
+"cls": "b",
+"w": "Player 7 / Badges 12 / #dex 11 / Time 8",
+"scr": "Continue/Save info box labels",
+"at": "box (4,8)-(19,17) on Continue, (0,0)-(15,9) on Save; labels at box+(1,2) step 2",
+"dep": "values at box+(8,2) name, (13,4) …, (12,6) dex, (9,8) …"
+},
+{
+"file": "engine/menus/intro_menu.asm",
+"label": "Continue_LoadMenuHeader.MenuData2_NoDex",
+"cls": "b",
+"w": "Player 7 / Badges 12 / #dex 11 / Time 8",
+"scr": "Continue/Save info box labels",
+"at": "box (4,8)-(19,17) on Continue, (0,0)-(15,9) on Save; labels at box+(1,2) step 2",
+"dep": "values at box+(8,2) name, (13,4) …, (12,6) dex, (9,8) …"
+},
+{
+"file": "engine/menus/intro_menu.asm",
+"label": "Continue_DisplayBadgesDexPlayerName.Player",
+"cls": "a",
+"w": "7",
+"scr": "Continue box: … name",
+"at": "box+(8,2)",
+"dep": ""
+},
+{
+"file": "engine/menus/intro_menu.asm",
+"label": "Continue_UnknownGameTime.three_question_marks",
+"cls": "b",
+"w": "6",
+"scr": "Continue box: unknown …",
+"at": "box+(9,8)",
+"dep": "placeholder for …"
+},
+{
+"file": "engine/menus/intro_menu.asm",
+"label": "CopyrightString",
+"cls": "n",
+"w": "n/a",
+"scr": "Title copyright (raw tile codes $60-$7c)",
+"at": "(2,7)",
+"dep": "graphic tiles, not font text"
+},
+{
+"file": "engine/menus/lure_menu.asm",
+"label": "SetUpLureMenu.MenuStrings",
+"cls": "a",
+"w": "13",
+"scr": "… select menu",
+"at": "box (0,0)-(15,12), text (2,2) step 2",
+"dep": "first … is a dummy index-0 string"
+},
+{
+"file": "engine/menus/main_menu.asm",
+"label": "MainMenu.Strings",
+"cls": "a",
+"w": "14",
+"scr": "Title main menu (…)",
+"at": "box (0,0)-(16,2n+1), text (2,2) step 2",
+"dep": "cursor x=1"
+},
+{
+"file": "engine/menus/main_menu.asm",
+"label": "MainMenu_PrintCurrentTimeAndDay.TimeNotSet",
+"cls": "a",
+"w": "18",
+"scr": "Main menu clock box",
+"at": "(1,14) in box (0,12)-(19,17)",
+"dep": ""
+},
+{
+"file": "engine/menus/menu_2.asm",
+"label": "PlaceBlueCardPointsTopRight.PointsString",
+"cls": "b",
+"w": "4",
+"scr": "Blue Card balance box suffix",
+"at": "after 3-digit number at (12,1) in box (11,0)-(19,2)",
+"dep": "appended at bc after PrintNum; exactly fills to x=18"
+},
+{
+"file": "engine/menus/menu_2.asm",
+"label": "PlaceBattlePointsTopRight.BPString",
+"cls": "b",
+"w": "3",
+"scr": "… balance box suffix",
+"at": "after 5-digit number at (11,1) in box (10,0)-(19,2)",
+"dep": "appended at bc; exactly fills to x=18"
+},
+{
+"file": "engine/menus/menu_2.asm",
+"label": "MoneyString",
+"cls": "b",
+"w": "5",
+"scr": "… box label",
+"at": "(6,1) in box (5,0)-(19,4); … at (11,1)",
+"dep": "label ends before x=11"
+},
+{
+"file": "engine/menus/menu_2.asm",
+"label": "CoinString",
+"cls": "b",
+"w": "7 / 8",
+"scr": "… case box title / … label",
+"at": "(12,0) ON the top frame of box (11,0)-(19,2); or (6,3) with coins at (14,3)",
+"dep": "drawn over a box border"
+},
+{
+"file": "engine/menus/menu_2.asm",
+"label": "StartMenu_PrintBugContestStatus.Caught",
+"cls": "b",
+"w": "7 / 10",
+"scr": "Start menu during Bug Contest: status box",
+"at": "… (1,1), mon name / … at (8,1) in box (0,0)-(18,6)",
+"dep": "label must end before x=8"
+},
+{
+"file": "engine/menus/menu_2.asm",
+"label": "StartMenu_PrintBugContestStatus.Balls",
+"cls": "b",
+"w": "7",
+"scr": "Bug Contest status: … left",
+"at": "(1,5); count at (8,5)",
+"dep": "label must end before x=8"
+},
+{
+"file": "engine/menus/menu_2.asm",
+"label": "StartMenu_PrintBugContestStatus.None",
+"cls": "b",
+"w": "7 / 10",
+"scr": "Start menu during Bug Contest: status box",
+"at": "… (1,1), mon name / … at (8,1) in box (0,0)-(18,6)",
+"dep": "label must end before x=8"
+},
+{
+"file": "engine/menus/menu_2.asm",
+"label": "StartMenu_PrintBugContestStatus.Level",
+"cls": "b",
+"w": "-",
+"scr": "Bug Contest status: …",
+"at": "(1,3); … printed at bc+1 (right after the label)",
+"dep": "… number drawn at the returned pen (length dependent)"
+},
+{
+"file": "engine/menus/naming_screen.asm",
+"label": "NamingScreen.PlayerNameString",
+"cls": "a",
+"w": "14",
+"scr": "Naming screen title",
+"at": "(5,2) (sprite/icon at left)",
+"dep": ""
+},
+{
+"file": "engine/menus/naming_screen.asm",
+"label": "NamingScreen.RivalNameString",
+"cls": "a",
+"w": "14",
+"scr": "Naming screen title",
+"at": "(5,2) (sprite/icon at left)",
+"dep": ""
+},
+{
+"file": "engine/menus/naming_screen.asm",
+"label": "NamingScreen.TrendyPhraseString",
+"cls": "a",
+"w": "14",
+"scr": "Naming screen title",
+"at": "(5,2) (sprite/icon at left)",
+"dep": ""
+},
+{
+"file": "engine/menus/naming_screen.asm",
+"label": "NamingScreen.BoxNameString",
+"cls": "a",
+"w": "14",
+"scr": "Naming screen title",
+"at": "(5,2) (sprite/icon at left)",
+"dep": ""
+},
+{
+"file": "engine/menus/naming_screen.asm",
+"label": "NamingScreen_DrawBorders.Frame",
+"cls": "n",
+"w": "n/a",
+"scr": "Naming screen frame tile list",
+"at": "n/a",
+"dep": "… is a frame-fill tile, not text"
+},
+{
+"file": "engine/menus/naming_screen.asm",
+"label": "NamingScreen_DrawBorders.ShiftDelEnd",
+"cls": "b",
+"w": "5 / 5 / 3",
+"scr": "Naming screen bottom row: …",
+"at": "(2,16); words at x=2, 9, 15",
+"dep": "cursor sprite x offsets $00/$30/$60 (tiles 0/6/12 from the left) are hard-coded in NamingScreen_GetCursorPosition .CaseDelEnd"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "StringOptions1",
+"cls": "b",
+"w": "17 (labels); value 8",
+"scr": "Options page labels + … rows + …",
+"at": "(2,2) rows 2..16 via <LNBRK>; … at x=10; values at (11,row)",
+"dep": "cursor … at x=1, row = 2+2*index; … row has … with … number at (16..17,7)"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "StringOptions2",
+"cls": "b",
+"w": "17 (labels); value 8",
+"scr": "Options page labels + … rows + …",
+"at": "(2,2) rows 2..16 via <LNBRK>; … at x=10; values at (11,row)",
+"dep": "cursor … at x=1, row = 2+2*index; … row has … with … number at (16..17,7)"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_TextSpeed.Slow",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_TextSpeed.Medium",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_TextSpeed.Fast",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_TextSpeed.Instant",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_BattleStyle.Set",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_BattleStyle.Switch",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_BattleStyle.Predict",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "OffString",
+"cls": "b",
+"w": "8",
+"scr": "Options values …",
+"at": "(11,3),(11,7)",
+"dep": "… padded to erase …"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "OnString",
+"cls": "b",
+"w": "8",
+"scr": "Options values …",
+"at": "(11,3),(11,7)",
+"dep": "… padded to erase …"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_Sound.Mono",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_Sound.Stereo",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_ClockFormat.Twelve",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_ClockFormat.TwentyFour",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_PokedexUnits.Imperial",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_PokedexUnits.Metric",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_TextAutoscroll.None",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_TextAutoscroll.Start",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_TextAutoscroll.B",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_TextAutoscroll.AorB",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_TurningSpeed.Slow",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_TurningSpeed.Fast",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_Typeface.Normal",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_Typeface.Narrow",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_Typeface.Bold",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_Typeface.Italic",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_Typeface.Serif",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_Typeface.Chicago",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_Typeface.MICR",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_Typeface.Unown",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_Keyboard.ABC",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/options_menu.asm",
+"label": "Options_Keyboard.QWERTY",
+"cls": "b",
+"w": "8 (x=11..18)",
+"scr": "Options values",
+"at": "(11,3/5/7/9/11/13)",
+"dep": "each value padded with spaces to a fixed 6-8 chars so it overwrites the … value"
+},
+{
+"file": "engine/menus/save.asm",
+"label": "VerifyGameVersion.SaveUpgradeScreen",
+"cls": "b",
+"w": "20",
+"scr": "… version mismatch screen (fatal)",
+"at": "(0,0) full screen, one row per line",
+"dep": "… lines are followed by 5-digit numbers at (14,11)/(14,13)"
+},
+{
+"file": "engine/menus/scrolling_menu.asm",
+"label": "ScrollingMenu_CancelString",
+"cls": "a",
+"w": ">=8 (narrowest list)",
+"scr": "Every scrolling list's … row (bag, PC items, marts, ...)",
+"at": "item column of the list (left+1 or left+2)",
+"dep": "shared by all scrolling menus"
+},
+{
+"file": "engine/menus/start_menu.asm",
+"label": "StartMenu.PokedexString",
+"cls": "b",
+"w": "7",
+"scr": "Start menu",
+"at": "box (10,0)-(19,17) (contest: (10,2)), text (12,2) step 2",
+"dep": "cursor x=11; <…> up to 7"
+},
+{
+"file": "engine/menus/start_menu.asm",
+"label": "StartMenu.PartyString",
+"cls": "b",
+"w": "7",
+"scr": "Start menu",
+"at": "box (10,0)-(19,17) (contest: (10,2)), text (12,2) step 2",
+"dep": "cursor x=11; <…> up to 7"
+},
+{
+"file": "engine/menus/start_menu.asm",
+"label": "StartMenu.PackString",
+"cls": "b",
+"w": "7",
+"scr": "Start menu",
+"at": "box (10,0)-(19,17) (contest: (10,2)), text (12,2) step 2",
+"dep": "cursor x=11; <…> up to 7"
+},
+{
+"file": "engine/menus/start_menu.asm",
+"label": "StartMenu.StatusString",
+"cls": "b",
+"w": "7",
+"scr": "Start menu",
+"at": "box (10,0)-(19,17) (contest: (10,2)), text (12,2) step 2",
+"dep": "cursor x=11; <…> up to 7"
+},
+{
+"file": "engine/menus/start_menu.asm",
+"label": "StartMenu.SaveString",
+"cls": "b",
+"w": "7",
+"scr": "Start menu",
+"at": "box (10,0)-(19,17) (contest: (10,2)), text (12,2) step 2",
+"dep": "cursor x=11; <…> up to 7"
+},
+{
+"file": "engine/menus/start_menu.asm",
+"label": "StartMenu.OptionString",
+"cls": "b",
+"w": "7",
+"scr": "Start menu",
+"at": "box (10,0)-(19,17) (contest: (10,2)), text (12,2) step 2",
+"dep": "cursor x=11; <…> up to 7"
+},
+{
+"file": "engine/menus/start_menu.asm",
+"label": "StartMenu.ExitString",
+"cls": "b",
+"w": "7",
+"scr": "Start menu",
+"at": "box (10,0)-(19,17) (contest: (10,2)), text (12,2) step 2",
+"dep": "cursor x=11; <…> up to 7"
+},
+{
+"file": "engine/menus/start_menu.asm",
+"label": "StartMenu.PokegearString",
+"cls": "b",
+"w": "7",
+"scr": "Start menu",
+"at": "box (10,0)-(19,17) (contest: (10,2)), text (12,2) step 2",
+"dep": "cursor x=11; <…> up to 7"
+},
+{
+"file": "engine/menus/start_menu.asm",
+"label": "StartMenu.QuitString",
+"cls": "b",
+"w": "7",
+"scr": "Start menu",
+"at": "box (10,0)-(19,17) (contest: (10,2)), text (12,2) step 2",
+"dep": "cursor x=11; <…> up to 7"
+},
+{
+"file": "engine/menus/trainer_card.asm",
+"label": "TrainerCard_PrintTopHalfOfCard.Top_Headings",
+"cls": "b",
+"w": "5 / 3 / 5",
+"scr": "Trainer card top: …№. underline …",
+"at": "(1,2): x=1 is an edge tile, … x=2..6, … at (7,2); … number at (5,3); … row 6, … at (7,6)",
+"dep": "raw tile codes (…-4 etc.) embedded in the string for the card edge and underline"
+},
+{
+"file": "engine/menus/trainer_card.asm",
+"label": "TrainerCard_Page1_PrintDexCaught_GameTime.Dex_PlayTime_BP",
+"cls": "b",
+"w": "#dex 13 / Play Time 9 / Battle Pts 11 / Badges x=12..17",
+"scr": "Trainer card p1 labels",
+"at": "(2,10),(2,12),(2,14),(2,16); values at (15,10),(11,12),(13,14); stars at (2..,16); … at (18,16)",
+"dep": "… has 10 leading spaces that leave room for star tiles"
+},
+{
+"file": "engine/movie/bsod.asm",
+"label": "BSODMessage",
+"cls": "b",
+"w": "18",
+"scr": "… screen body",
+"at": "(1,1) full screen; error code at (8,12); error string at (1,14)",
+"dep": "hand-centred lines; … must end before x=8"
+},
+{
+"file": "engine/movie/bsod.asm",
+"label": "VBABSODMessage",
+"cls": "b",
+"w": "18",
+"scr": "… screen body",
+"at": "(1,1) full screen; error code at (8,12); error string at (1,14)",
+"dep": "hand-centred lines; … must end before x=8"
+},
+{
+"file": "engine/movie/bsod.asm",
+"label": "BSODErrorStrings.Rst0",
+"cls": "c",
+"w": "18",
+"scr": "… screen error names (dr table)",
+"at": "(1,14)",
+"dep": "… 1-byte relative offsets: whole block must stay < 256 bytes"
+},
+{
+"file": "engine/movie/bsod.asm",
+"label": "BSODErrorStrings.DivZero",
+"cls": "c",
+"w": "18",
+"scr": "… screen error names (dr table)",
+"at": "(1,14)",
+"dep": "… 1-byte relative offsets: whole block must stay < 256 bytes"
+},
+{
+"file": "engine/movie/bsod.asm",
+"label": "BSODErrorStrings.EggSpecies",
+"cls": "c",
+"w": "18",
+"scr": "… screen error names (dr table)",
+"at": "(1,14)",
+"dep": "… 1-byte relative offsets: whole block must stay < 256 bytes"
+},
+{
+"file": "engine/movie/bsod.asm",
+"label": "BSODErrorStrings.ExecutingRAM",
+"cls": "c",
+"w": "18",
+"scr": "… screen error names (dr table)",
+"at": "(1,14)",
+"dep": "… 1-byte relative offsets: whole block must stay < 256 bytes"
+},
+{
+"file": "engine/movie/bsod.asm",
+"label": "BSODErrorStrings.StackOverflow",
+"cls": "c",
+"w": "18",
+"scr": "… screen error names (dr table)",
+"at": "(1,14)",
+"dep": "… 1-byte relative offsets: whole block must stay < 256 bytes"
+},
+{
+"file": "engine/movie/bsod.asm",
+"label": "BSODErrorStrings.StackUnderflow",
+"cls": "c",
+"w": "18",
+"scr": "… screen error names (dr table)",
+"at": "(1,14)",
+"dep": "… 1-byte relative offsets: whole block must stay < 256 bytes"
+},
+{
+"file": "engine/movie/bsod.asm",
+"label": "BSODErrorStrings.OldBTState",
+"cls": "c",
+"w": "18",
+"scr": "… screen error names (dr table)",
+"at": "(1,14)",
+"dep": "… 1-byte relative offsets: whole block must stay < 256 bytes"
+},
+{
+"file": "engine/movie/bsod.asm",
+"label": "BSODErrorStrings.ChecksumMismatch",
+"cls": "c",
+"w": "18",
+"scr": "… screen error names (dr table)",
+"at": "(1,14)",
+"dep": "… 1-byte relative offsets: whole block must stay < 256 bytes"
+},
+{
+"file": "engine/movie/bsod.asm",
+"label": "BSODErrorStrings.OldBox",
+"cls": "c",
+"w": "18",
+"scr": "… screen error names (dr table)",
+"at": "(1,14)",
+"dep": "… 1-byte relative offsets: whole block must stay < 256 bytes"
+},
+{
+"file": "engine/movie/bsod.asm",
+"label": "BSODErrorStrings.NewBox",
+"cls": "c",
+"w": "18",
+"scr": "… screen error names (dr table)",
+"at": "(1,14)",
+"dep": "… 1-byte relative offsets: whole block must stay < 256 bytes"
+},
+{
+"file": "engine/movie/bsod.asm",
+"label": "BSODErrorStrings.WinStackOverflow",
+"cls": "c",
+"w": "18",
+"scr": "… screen error names (dr table)",
+"at": "(1,14)",
+"dep": "… 1-byte relative offsets: whole block must stay < 256 bytes"
+},
+{
+"file": "engine/movie/bsod.asm",
+"label": "BSODErrorStrings.SRAMMismatch",
+"cls": "c",
+"w": "18",
+"scr": "… screen error names (dr table)",
+"at": "(1,14)",
+"dep": "… 1-byte relative offsets: whole block must stay < 256 bytes"
+},
+{
+"file": "engine/movie/bsod.asm",
+"label": "BSODErrorStrings.UnknownError",
+"cls": "c",
+"w": "18",
+"scr": "… screen error names (dr table)",
+"at": "(1,14)",
+"dep": "… 1-byte relative offsets: whole block must stay < 256 bytes"
+},
+{
+"file": "engine/movie/trade_animation.asm",
+"label": "TrademonStats_OTMonData",
+"cls": "b",
+"w": "13 (labels 3)",
+"scr": "Trade animation stats card",
+"at": "(4,0) top frame row; …/ (4,4) name at (7,4); … at (4,6) number at (7,6)",
+"dep": "labels must end before x=7; gender glyph placed after name at bc+1; row-0 line … sits on the box top frame"
+},
+{
+"file": "engine/movie/trade_animation.asm",
+"label": "TrademonStats_EggData",
+"cls": "b",
+"w": "12",
+"scr": "Trade animation stats card (…)",
+"at": "(4,2),(4,4),(4,6)",
+"dep": ""
+},
+{
+"file": "engine/movie/trade_animation.asm",
+"label": "TrademonStats_PrintOTName.Gender",
+"cls": "n",
+"w": "1",
+"scr": "Gender glyph table",
+"at": "n/a",
+"dep": "symbols, keep"
+},
+{
+"file": "engine/overworld/decorations.asm",
+"label": "_PlayerDecorationMenu.bed",
+"cls": "a",
+"w": "12",
+"scr": "Decoration category menu",
+"at": "box (5,0)-(19,17), text (7,2) step 2",
+"dep": "… exactly 12"
+},
+{
+"file": "engine/overworld/decorations.asm",
+"label": "_PlayerDecorationMenu.carpet",
+"cls": "a",
+"w": "12",
+"scr": "Decoration category menu",
+"at": "box (5,0)-(19,17), text (7,2) step 2",
+"dep": "… exactly 12"
+},
+{
+"file": "engine/overworld/decorations.asm",
+"label": "_PlayerDecorationMenu.plant",
+"cls": "a",
+"w": "12",
+"scr": "Decoration category menu",
+"at": "box (5,0)-(19,17), text (7,2) step 2",
+"dep": "… exactly 12"
+},
+{
+"file": "engine/overworld/decorations.asm",
+"label": "_PlayerDecorationMenu.poster",
+"cls": "a",
+"w": "12",
+"scr": "Decoration category menu",
+"at": "box (5,0)-(19,17), text (7,2) step 2",
+"dep": "… exactly 12"
+},
+{
+"file": "engine/overworld/decorations.asm",
+"label": "_PlayerDecorationMenu.game",
+"cls": "a",
+"w": "12",
+"scr": "Decoration category menu",
+"at": "box (5,0)-(19,17), text (7,2) step 2",
+"dep": "… exactly 12"
+},
+{
+"file": "engine/overworld/decorations.asm",
+"label": "_PlayerDecorationMenu.ornament",
+"cls": "a",
+"w": "12",
+"scr": "Decoration category menu",
+"at": "box (5,0)-(19,17), text (7,2) step 2",
+"dep": "… exactly 12"
+},
+{
+"file": "engine/overworld/decorations.asm",
+"label": "_PlayerDecorationMenu.big_doll",
+"cls": "a",
+"w": "12",
+"scr": "Decoration category menu",
+"at": "box (5,0)-(19,17), text (7,2) step 2",
+"dep": "… exactly 12"
+},
+{
+"file": "engine/overworld/decorations.asm",
+"label": "_PlayerDecorationMenu.exit",
+"cls": "a",
+"w": "12",
+"scr": "Decoration category menu",
+"at": "box (5,0)-(19,17), text (7,2) step 2",
+"dep": "… exactly 12"
+},
+{
+"file": "engine/overworld/decorations.asm",
+"label": "WhichSideMenuData",
+"cls": "a",
+"w": "11",
+"scr": "Decoration … menu",
+"at": "box (0,0)-(13,7), text (2,2) step 2",
+"dep": ""
+},
+{
+"file": "engine/overworld/scripting.asm",
+"label": "KeyPocketName",
+"cls": "c",
+"w": "<=18",
+"scr": "… name copied to wStringBuffer3 for … text",
+"at": "buffer",
+"dep": "spliced into data/text messages"
+},
+{
+"file": "engine/overworld/scripting.asm",
+"label": "TMHMPocketName",
+"cls": "c",
+"w": "<=18",
+"scr": "… name copied to wStringBuffer3 for … text",
+"at": "buffer",
+"dep": "spliced into data/text messages"
+},
+{
+"file": "engine/overworld/select_menu.asm",
+"label": "GetRegisteredItem.RegisteredItemText",
+"cls": "b",
+"w": "3",
+"scr": "SELECT registered-items overlay: d-pad arrows + … placeholders",
+"at": "(0,0)..(0,3); item names at (2,row)",
+"dep": "arrows = physical d-pad directions; names overwrite the …"
+},
+{
+"file": "engine/pc/bills_pc.asm",
+"label": "InitializeBoxes.Box",
+"cls": "c",
+"w": "<=6 + 2 digits",
+"scr": "Default … names … (written to SRAM)",
+"at": "buffer (…_NAME_LENGTH 9)",
+"dep": "number appended with PrintNumFromReg after the string"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "ManageBoxes.ContinueBoxUse",
+"cls": "a",
+"w": "18",
+"scr": "Bill's PC messages",
+"at": "SB (MenuTextbox / PrintText)",
+"dep": "some splice text_ram names (MovedToPack, ItemIsSelected, ItCanHoldAnItem, ReleasedXMon, ReallyReleaseMon, WasReleasedOutside)"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "BillsPC_MenuStrings",
+"cls": "b",
+"w": "Withdraw 8; Deposit/Summary/Switch/Item/Release/Change/Rename/Theme 7; Cancel/Take/Read/Move/Bag/Give 6",
+"scr": "Bill's PC context menus (shared string table)",
+"at": "storage menu … (9,4)-(19,17) text x=11; party/… menus (10,y) text x=12; item/… menus (11,y)-(19,12) text x=13",
+"dep": "one table shared by menus of different widths"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "BillsPC_CantPutMailIntoPackText",
+"cls": "a",
+"w": "18",
+"scr": "Bill's PC messages",
+"at": "SB (MenuTextbox / PrintText)",
+"dep": "some splice text_ram names (MovedToPack, ItemIsSelected, ItCanHoldAnItem, ReleasedXMon, ReallyReleaseMon, WasReleasedOutside)"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "BillsPC_PackFullText",
+"cls": "a",
+"w": "18",
+"scr": "Bill's PC messages",
+"at": "SB (MenuTextbox / PrintText)",
+"dep": "some splice text_ram names (MovedToPack, ItemIsSelected, ItCanHoldAnItem, ReleasedXMon, ReallyReleaseMon, WasReleasedOutside)"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "BillsPC_MovedToPackText",
+"cls": "a",
+"w": "18",
+"scr": "Bill's PC messages",
+"at": "SB (MenuTextbox / PrintText)",
+"dep": "some splice text_ram names (MovedToPack, ItemIsSelected, ItCanHoldAnItem, ReleasedXMon, ReallyReleaseMon, WasReleasedOutside)"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "BillsPC_Item.ItemIsSelected",
+"cls": "a",
+"w": "18",
+"scr": "Bill's PC messages",
+"at": "SB (MenuTextbox / PrintText)",
+"dep": "some splice text_ram names (MovedToPack, ItemIsSelected, ItCanHoldAnItem, ReleasedXMon, ReallyReleaseMon, WasReleasedOutside)"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "BillsPC_Item.ItCanHoldAnItem",
+"cls": "a",
+"w": "18",
+"scr": "Bill's PC messages",
+"at": "SB (MenuTextbox / PrintText)",
+"dep": "some splice text_ram names (MovedToPack, ItemIsSelected, ItCanHoldAnItem, ReleasedXMon, ReallyReleaseMon, WasReleasedOutside)"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "BillsPC_EggsCantHoldItemsText",
+"cls": "a",
+"w": "18",
+"scr": "Bill's PC messages",
+"at": "SB (MenuTextbox / PrintText)",
+"dep": "some splice text_ram names (MovedToPack, ItemIsSelected, ItCanHoldAnItem, ReleasedXMon, ReallyReleaseMon, WasReleasedOutside)"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "BillsPC_ReleaseAll.ReallyReleaseBox",
+"cls": "a",
+"w": "18",
+"scr": "Bill's PC messages",
+"at": "SB (MenuTextbox / PrintText)",
+"dep": "some splice text_ram names (MovedToPack, ItemIsSelected, ItCanHoldAnItem, ReleasedXMon, ReallyReleaseMon, WasReleasedOutside)"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "BillsPC_ReleaseAll.CantRecallReleasedMons",
+"cls": "a",
+"w": "18",
+"scr": "Bill's PC messages",
+"at": "SB (MenuTextbox / PrintText)",
+"dep": "some splice text_ram names (MovedToPack, ItemIsSelected, ItCanHoldAnItem, ReleasedXMon, ReallyReleaseMon, WasReleasedOutside)"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "BillsPC_ReleaseAll.NothingThere",
+"cls": "a",
+"w": "18",
+"scr": "Bill's PC messages",
+"at": "SB (MenuTextbox / PrintText)",
+"dep": "some splice text_ram names (MovedToPack, ItemIsSelected, ItCanHoldAnItem, ReleasedXMon, ReallyReleaseMon, WasReleasedOutside)"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "BillsPC_ReleaseAll.NothingReleased",
+"cls": "a",
+"w": "18",
+"scr": "Bill's PC messages",
+"at": "SB (MenuTextbox / PrintText)",
+"dep": "some splice text_ram names (MovedToPack, ItemIsSelected, ItCanHoldAnItem, ReleasedXMon, ReallyReleaseMon, WasReleasedOutside)"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "BillsPC_ReleaseAll.ReleasedXMon",
+"cls": "a",
+"w": "18",
+"scr": "Bill's PC messages",
+"at": "SB (MenuTextbox / PrintText)",
+"dep": "some splice text_ram names (MovedToPack, ItemIsSelected, ItCanHoldAnItem, ReleasedXMon, ReallyReleaseMon, WasReleasedOutside)"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "BillsPC_ReleaseAll.TheRestWasnt",
+"cls": "a",
+"w": "18",
+"scr": "Bill's PC messages",
+"at": "SB (MenuTextbox / PrintText)",
+"dep": "some splice text_ram names (MovedToPack, ItemIsSelected, ItCanHoldAnItem, ReleasedXMon, ReallyReleaseMon, WasReleasedOutside)"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "BillsPC_Release.CantReleaseEgg",
+"cls": "a",
+"w": "18",
+"scr": "Bill's PC messages",
+"at": "SB (MenuTextbox / PrintText)",
+"dep": "some splice text_ram names (MovedToPack, ItemIsSelected, ItCanHoldAnItem, ReleasedXMon, ReallyReleaseMon, WasReleasedOutside)"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "BillsPC_Release.CantReleaseHMMons",
+"cls": "a",
+"w": "18",
+"scr": "Bill's PC messages",
+"at": "SB (MenuTextbox / PrintText)",
+"dep": "some splice text_ram names (MovedToPack, ItemIsSelected, ItCanHoldAnItem, ReleasedXMon, ReallyReleaseMon, WasReleasedOutside)"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "BillsPC_Release.ReallyReleaseMon",
+"cls": "a",
+"w": "18",
+"scr": "Bill's PC messages",
+"at": "SB (MenuTextbox / PrintText)",
+"dep": "some splice text_ram names (MovedToPack, ItemIsSelected, ItCanHoldAnItem, ReleasedXMon, ReallyReleaseMon, WasReleasedOutside)"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "BillsPC_Release.WasReleasedOutside",
+"cls": "a",
+"w": "18",
+"scr": "Bill's PC messages",
+"at": "SB (MenuTextbox / PrintText)",
+"dep": "some splice text_ram names (MovedToPack, ItemIsSelected, ItCanHoldAnItem, ReleasedXMon, ReallyReleaseMon, WasReleasedOutside)"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "BillsPC_Theme.PickAThemeText",
+"cls": "a",
+"w": "18",
+"scr": "Bill's PC messages",
+"at": "SB (MenuTextbox / PrintText)",
+"dep": "some splice text_ram names (MovedToPack, ItemIsSelected, ItCanHoldAnItem, ReleasedXMon, ReallyReleaseMon, WasReleasedOutside)"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "BillsPC_Change.PickABoxToChangeToText",
+"cls": "a",
+"w": "18",
+"scr": "Bill's PC messages",
+"at": "SB (MenuTextbox / PrintText)",
+"dep": "some splice text_ram names (MovedToPack, ItemIsSelected, ItCanHoldAnItem, ReleasedXMon, ReallyReleaseMon, WasReleasedOutside)"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "BillsPC_SwapStorage.PartyIsFull",
+"cls": "a",
+"w": "18",
+"scr": "Bill's PC messages",
+"at": "SB (MenuTextbox / PrintText)",
+"dep": "some splice text_ram names (MovedToPack, ItemIsSelected, ItCanHoldAnItem, ReleasedXMon, ReallyReleaseMon, WasReleasedOutside)"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "BillsPC_SwapStorage.BoxIsFull",
+"cls": "a",
+"w": "18",
+"scr": "Bill's PC messages",
+"at": "SB (MenuTextbox / PrintText)",
+"dep": "some splice text_ram names (MovedToPack, ItemIsSelected, ItCanHoldAnItem, ReleasedXMon, ReallyReleaseMon, WasReleasedOutside)"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "BillsPC_SwapStorage.IsHoldingMail",
+"cls": "a",
+"w": "18",
+"scr": "Bill's PC messages",
+"at": "SB (MenuTextbox / PrintText)",
+"dep": "some splice text_ram names (MovedToPack, ItemIsSelected, ItCanHoldAnItem, ReleasedXMon, ReallyReleaseMon, WasReleasedOutside)"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "BillsPC_SwapStorage.CantStoreMail",
+"cls": "a",
+"w": "18",
+"scr": "Bill's PC messages",
+"at": "SB (MenuTextbox / PrintText)",
+"dep": "some splice text_ram names (MovedToPack, ItemIsSelected, ItCanHoldAnItem, ReleasedXMon, ReallyReleaseMon, WasReleasedOutside)"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "BillsPC_LastPartyMon",
+"cls": "a",
+"w": "18",
+"scr": "Bill's PC messages",
+"at": "SB (MenuTextbox / PrintText)",
+"dep": "some splice text_ram names (MovedToPack, ItemIsSelected, ItCanHoldAnItem, ReleasedXMon, ReallyReleaseMon, WasReleasedOutside)"
+},
+{
+"file": "engine/pc/bills_pc_ui.asm",
+"label": "BillsPC_MustSaveToContinue",
+"cls": "a",
+"w": "18",
+"scr": "Bill's PC messages",
+"at": "SB (MenuTextbox / PrintText)",
+"dep": "some splice text_ram names (MovedToPack, ItemIsSelected, ItCanHoldAnItem, ReleasedXMon, ReallyReleaseMon, WasReleasedOutside)"
+},
+{
+"file": "engine/phone/phone.asm",
+"label": "GetCallerClassAndName.filler",
+"cls": "n",
+"w": "10",
+"scr": "Phone caller box: unknown caller dashes",
+"at": "(1,1)/(1,2) in box (0,0)-(19,3)",
+"dep": "placeholder dashes"
+},
+{
+"file": "engine/phone/scripts/generic_callee.asm",
+"label": "Phone_GrandmaString",
+"cls": "c",
+"w": "<=18",
+"scr": "Relative names for phone text (getstring -> STRING_BUFFER_4)",
+"at": "buffer",
+"dep": "spliced into phone dialogue"
+},
+{
+"file": "engine/phone/scripts/generic_callee.asm",
+"label": "Phone_GrandpaString",
+"cls": "c",
+"w": "<=18",
+"scr": "Relative names for phone text (getstring -> STRING_BUFFER_4)",
+"at": "buffer",
+"dep": "spliced into phone dialogue"
+},
+{
+"file": "engine/phone/scripts/generic_callee.asm",
+"label": "Phone_MomString",
+"cls": "c",
+"w": "<=18",
+"scr": "Relative names for phone text (getstring -> STRING_BUFFER_4)",
+"at": "buffer",
+"dep": "spliced into phone dialogue"
+},
+{
+"file": "engine/phone/scripts/generic_callee.asm",
+"label": "Phone_DadString",
+"cls": "c",
+"w": "<=18",
+"scr": "Relative names for phone text (getstring -> STRING_BUFFER_4)",
+"at": "buffer",
+"dep": "spliced into phone dialogue"
+},
+{
+"file": "engine/phone/scripts/generic_callee.asm",
+"label": "Phone_SisterString",
+"cls": "c",
+"w": "<=18",
+"scr": "Relative names for phone text (getstring -> STRING_BUFFER_4)",
+"at": "buffer",
+"dep": "spliced into phone dialogue"
+},
+{
+"file": "engine/phone/scripts/generic_callee.asm",
+"label": "Phone_BrotherString",
+"cls": "c",
+"w": "<=18",
+"scr": "Relative names for phone text (getstring -> STRING_BUFFER_4)",
+"at": "buffer",
+"dep": "spliced into phone dialogue"
+},
+{
+"file": "engine/phone/scripts/lyra.asm",
+"label": "LyraPhoneScript.CeladonUniversity",
+"cls": "c",
+"w": "<=18",
+"scr": "Place/person names for Lyra phone text (getstring)",
+"at": "buffer",
+"dep": "spliced into phone dialogue"
+},
+{
+"file": "engine/phone/scripts/lyra.asm",
+"label": "LyraPhoneScript.PokemonLeague",
+"cls": "c",
+"w": "<=18",
+"scr": "Place/person names for Lyra phone text (getstring)",
+"at": "buffer",
+"dep": "spliced into phone dialogue"
+},
+{
+"file": "engine/phone/scripts/lyra.asm",
+"label": "LyraPhoneScript2.Chicory",
+"cls": "c",
+"w": "<=18",
+"scr": "Place/person names for Lyra phone text (getstring)",
+"at": "buffer",
+"dep": "spliced into phone dialogue"
+},
+{
+"file": "engine/phone/scripts/lyra.asm",
+"label": "LyraPhoneScript2.Cinder",
+"cls": "c",
+"w": "<=18",
+"scr": "Place/person names for Lyra phone text (getstring)",
+"at": "buffer",
+"dep": "spliced into phone dialogue"
+},
+{
+"file": "engine/phone/scripts/lyra.asm",
+"label": "LyraPhoneScript2.Toto",
+"cls": "c",
+"w": "<=18",
+"scr": "Place/person names for Lyra phone text (getstring)",
+"at": "buffer",
+"dep": "spliced into phone dialogue"
+},
+{
+"file": "engine/pokedex/area.asm",
+"label": "Pokedex_AreaTypeLists",
+"cls": "b",
+"w": "~54 px proportional",
+"scr": "Dex area page: encounter type label (VWF, right-justified with GetVWFLength)",
+"at": "VWF field 7 tiles (vTiles0 $20..), right edge at pixel $36",
+"dep": "li list; rendered by the proportional VWF renderer, not tile font"
+},
+{
+"file": "engine/pokedex/pokedex.asm",
+"label": "PokedexStr_Feet",
+"cls": "b",
+"w": "4",
+"scr": "Dex description: imperial height overwrite",
+"at": "(15,7) over the tilemap's …",
+"dep": "overwrites baked tilemap text; … also written at (18,9)"
+},
+{
+"file": "engine/pokedex/pokedex.asm",
+"label": "Pokedex_Main.ResultString",
+"cls": "b",
+"w": "11",
+"scr": "Dex main: … replaces baked …",
+"at": "(9,6); count at (16,7)",
+"dep": "overwrites baked tilemap text"
+},
+{
+"file": "engine/pokedex/pokedex.asm",
+"label": "Pokedex_Bio.AllString",
+"cls": "n",
+"w": "4",
+"scr": "Dex bio: gender ratio …",
+"at": "(12,9)",
+"dep": "numeric"
+},
+{
+"file": "engine/pokedex/pokedex.asm",
+"label": "_Pokedex_Mode.UnownMode",
+"cls": "b",
+"w": "16",
+"scr": "Dex … menu: extra option",
+"at": "(2,8); other options are baked in ….tilemap",
+"dep": "cursor … at x=1"
+},
+{
+"file": "engine/pokedex/pokedex.asm",
+"label": "_Pokedex_Mode.MenuDescriptions",
+"cls": "a",
+"w": "16",
+"scr": "Dex … menu: 2-line description",
+"at": "(2,14),(2,16)",
+"dep": "GetNthString list"
+},
+{
+"file": "engine/pokedex/pokedex.asm",
+"label": "_Pokedex_Search.byNameString",
+"cls": "b",
+"w": "9",
+"scr": "Dex search: order value",
+"at": "(7,4) (search fields at (7,4)+2n; cursor (1,3)+2n)",
+"dep": "padded to 9 to cover …; … table"
+},
+{
+"file": "engine/pokedex/pokedex.asm",
+"label": "_Pokedex_Search.BlankDefaultString",
+"cls": "n",
+"w": "4",
+"scr": "Dex search: blank … placeholders",
+"at": "(7,16) etc.",
+"dep": "blanker"
+},
+{
+"file": "engine/pokegear/phone.asm",
+"label": "PokegearPhoneContactSubmenu.CallDeleteCancelStrings",
+"cls": "b",
+"w": "7",
+"scr": "Pokegear phone contact submenu",
+"at": "text at (11,6)/(11,8), box drawn from string header; cursor x=10",
+"dep": "first two bytes are dwcoord of the cursor; box width fixed c=8"
+},
+{
+"file": "engine/pokegear/phone.asm",
+"label": "PokegearPhoneContactSubmenu.CallCancelStrings",
+"cls": "b",
+"w": "7",
+"scr": "Pokegear phone contact submenu",
+"at": "text at (11,6)/(11,8), box drawn from string header; cursor x=10",
+"dep": "first two bytes are dwcoord of the cursor; box width fixed c=8"
+},
+{
+"file": "engine/pokegear/pokegear.asm",
+"label": "InitPokegearTilemap.switch",
+"cls": "b",
+"w": "8 (x=12..19)",
+"scr": "Pokegear clock: … hint",
+"at": "(12,1)",
+"dep": "… points at the next tab (direction semantics)"
+},
+{
+"file": "engine/pokegear/pokegear.asm",
+"label": "BuenasPasswordName",
+"cls": "a",
+"w": "17",
+"scr": "Pokegear radio: station name",
+"at": "(2,9) (area (1,8)-(18,10) cleared)",
+"dep": ""
+},
+{
+"file": "engine/pokegear/pokegear.asm",
+"label": "OaksPkmnTalkName",
+"cls": "a",
+"w": "17",
+"scr": "Pokegear radio: station name",
+"at": "(2,9) (area (1,8)-(18,10) cleared)",
+"dep": ""
+},
+{
+"file": "engine/pokegear/pokegear.asm",
+"label": "PokedexShowName",
+"cls": "a",
+"w": "17",
+"scr": "Pokegear radio: station name",
+"at": "(2,9) (area (1,8)-(18,10) cleared)",
+"dep": ""
+},
+{
+"file": "engine/pokegear/pokegear.asm",
+"label": "PokemonMusicName",
+"cls": "a",
+"w": "17",
+"scr": "Pokegear radio: station name",
+"at": "(2,9) (area (1,8)-(18,10) cleared)",
+"dep": ""
+},
+{
+"file": "engine/pokegear/pokegear.asm",
+"label": "LuckyChannelName",
+"cls": "a",
+"w": "17",
+"scr": "Pokegear radio: station name",
+"at": "(2,9) (area (1,8)-(18,10) cleared)",
+"dep": ""
+},
+{
+"file": "engine/pokegear/pokegear.asm",
+"label": "UnknownStationName",
+"cls": "a",
+"w": "17",
+"scr": "Pokegear radio: station name",
+"at": "(2,9) (area (1,8)-(18,10) cleared)",
+"dep": ""
+},
+{
+"file": "engine/pokegear/pokegear.asm",
+"label": "PlacesAndPeopleName",
+"cls": "a",
+"w": "17",
+"scr": "Pokegear radio: station name",
+"at": "(2,9) (area (1,8)-(18,10) cleared)",
+"dep": ""
+},
+{
+"file": "engine/pokegear/pokegear.asm",
+"label": "LetsAllSingName",
+"cls": "a",
+"w": "17",
+"scr": "Pokegear radio: station name",
+"at": "(2,9) (area (1,8)-(18,10) cleared)",
+"dep": ""
+},
+{
+"file": "engine/pokegear/pokegear.asm",
+"label": "PokeFluteStationName",
+"cls": "a",
+"w": "17",
+"scr": "Pokegear radio: station name",
+"at": "(2,9) (area (1,8)-(18,10) cleared)",
+"dep": ""
+},
+{
+"file": "engine/pokegear/pokegear.asm",
+"label": "TownMapBubble.Where",
+"cls": "a",
+"w": "16",
+"scr": "Town map (Fly) bubble title",
+"at": "(2,0); landmark name at (2,1); arrows tile at (18,1)",
+"dep": ""
+},
+{
+"file": "engine/pokegear/radio.asm",
+"label": "OaksPkmnTalk11.pokemon_string",
+"cls": "b",
+"w": "9",
+"scr": "Oak's PKMN Talk: staged word appended to the radio line",
+"at": "(9,14)",
+"dep": "assumes the preceding radio text ends at x=8 (data/text radio line)"
+},
+{
+"file": "engine/pokegear/radio.asm",
+"label": "OaksPkmnTalk12.pokemon_channel_string",
+"cls": "b",
+"w": "18",
+"scr": "Oak's PKMN Talk: staged second line",
+"at": "(1,16), then EmptyString at (12,16)",
+"dep": "staged reveal; columns tied to English text"
+},
+{
+"file": "engine/pokegear/radio.asm",
+"label": "BuenasPasswordChannelName",
+"cls": "a",
+"w": "17",
+"scr": "… station name",
+"at": "(2,9)",
+"dep": ""
+},
+{
+"file": "engine/pokemon/mail.asm",
+"label": "MailboxPC.SubMenuData2",
+"cls": "a",
+"w": "11",
+"scr": "Mailbox submenu",
+"at": "box (0,0)-(13,9), text (2,2) step 2",
+"dep": "… exactly 11"
+},
+{
+"file": "engine/pokemon/mon_menu.asm",
+"label": "GiveTakePartyMonItem.noItemString",
+"cls": "a",
+"w": "18",
+"scr": "Party item menu: held item line",
+"at": "(1,16)",
+"dep": ""
+},
+{
+"file": "engine/pokemon/mon_menu.asm",
+"label": "GiveTakeItemMenuData.Items",
+"cls": "b",
+"w": "4",
+"scr": "Party: … submenu",
+"at": "box (13,10)-(19,17), text (15,12) step 2",
+"dep": "narrow"
+},
+{
+"file": "engine/pokemon/mon_menu.asm",
+"label": "CantPlaceMailInStorageText",
+"cls": "a",
+"w": "18",
+"scr": "Party message",
+"at": "SB",
+"dep": ""
+},
+{
+"file": "engine/pokemon/mon_menu.asm",
+"label": "MonMailAction.MenuData2",
+"cls": "b",
+"w": "5",
+"scr": "Party: … submenu",
+"at": "box (12,10)-(19,17), text (14,12) step 2",
+"dep": "narrow"
+},
+{
+"file": "engine/pokemon/mon_menu.asm",
+"label": "MoveScreenLoop.MustSaveFirst",
+"cls": "a",
+"w": "18",
+"scr": "Move screen message",
+"at": "SB (PrintTextNoBox)",
+"dep": ""
+},
+{
+"file": "engine/pokemon/mon_menu.asm",
+"label": "String_MoveSwap",
+"cls": "a",
+"w": "18",
+"scr": "Move screen: …",
+"at": "(1,14)",
+"dep": ""
+},
+{
+"file": "engine/pokemon/mon_menu.asm",
+"label": "String_na",
+"cls": "n",
+"w": "3",
+"scr": "Move screen …",
+"at": "(10,12)/(15,12)",
+"dep": "replaces 3-digit number"
+},
+{
+"file": "engine/pokemon/mon_menu.asm",
+"label": "String_PowAcc",
+"cls": "b",
+"w": "9",
+"scr": "Move screen power/acc template",
+"at": "(10,12): power 10..12, <…> 13, … 14, acc 15..17, … 18",
+"dep": "numeric template"
+},
+{
+"file": "engine/pokemon/mon_stats.asm",
+"label": "AllStatNames",
+"cls": "b",
+"w": "8",
+"scr": "Level-up stat box (… + 5 stats)",
+"at": "box at (6-n,4), names at (7-n,5) one per row (NO_LINE_SPACING); values at name+9",
+"dep": "value column = name start + 9"
+},
+{
+"file": "engine/pokemon/mon_stats.asm",
+"label": "MostStatNames",
+"cls": "b",
+"w": "7",
+"scr": "Summary blue page stat list (window) and level-up box",
+"at": "window (0,2) = screen (8,4); values at +8, nature arrows at +8",
+"dep": "column offsets 8/9 hard-coded"
+},
+{
+"file": "engine/pokemon/mon_stats.asm",
+"label": "OKString",
+"cls": "b",
+"w": "3",
+"scr": "Status condition abbreviations (party menu only, (4,2+2n))",
+"at": "(4,2+2n)",
+"dep": "PlaceStatusString (mon_stats.asm:959-985) copies EXACTLY 3 bytes, no terminator check; … (index 0) is never drawn"
+},
+{
+"file": "engine/pokemon/mon_stats.asm",
+"label": "PsnString",
+"cls": "b",
+"w": "3",
+"scr": "Status condition abbreviations (party menu only, (4,2+2n))",
+"at": "(4,2+2n)",
+"dep": "PlaceStatusString (mon_stats.asm:959-985) copies EXACTLY 3 bytes, no terminator check; … (index 0) is never drawn"
+},
+{
+"file": "engine/pokemon/mon_stats.asm",
+"label": "ParString",
+"cls": "b",
+"w": "3",
+"scr": "Status condition abbreviations (party menu only, (4,2+2n))",
+"at": "(4,2+2n)",
+"dep": "PlaceStatusString (mon_stats.asm:959-985) copies EXACTLY 3 bytes, no terminator check; … (index 0) is never drawn"
+},
+{
+"file": "engine/pokemon/mon_stats.asm",
+"label": "SlpString",
+"cls": "b",
+"w": "3",
+"scr": "Status condition abbreviations (party menu only, (4,2+2n))",
+"at": "(4,2+2n)",
+"dep": "PlaceStatusString (mon_stats.asm:959-985) copies EXACTLY 3 bytes, no terminator check; … (index 0) is never drawn"
+},
+{
+"file": "engine/pokemon/mon_stats.asm",
+"label": "BrnString",
+"cls": "b",
+"w": "3",
+"scr": "Status condition abbreviations (party menu only, (4,2+2n))",
+"at": "(4,2+2n)",
+"dep": "PlaceStatusString (mon_stats.asm:959-985) copies EXACTLY 3 bytes, no terminator check; … (index 0) is never drawn"
+},
+{
+"file": "engine/pokemon/mon_stats.asm",
+"label": "FrzString",
+"cls": "b",
+"w": "3",
+"scr": "Status condition abbreviations (party menu only, (4,2+2n))",
+"at": "(4,2+2n)",
+"dep": "PlaceStatusString (mon_stats.asm:959-985) copies EXACTLY 3 bytes, no terminator check; … (index 0) is never drawn"
+},
+{
+"file": "engine/pokemon/mon_stats.asm",
+"label": "FntString",
+"cls": "b",
+"w": "3",
+"scr": "Status condition abbreviations (party menu only, (4,2+2n))",
+"at": "(4,2+2n)",
+"dep": "PlaceStatusString (mon_stats.asm:959-985) copies EXACTLY 3 bytes, no terminator check; … (index 0) is never drawn"
+},
+{
+"file": "engine/pokemon/mon_stats.asm",
+"label": "ToxString",
+"cls": "b",
+"w": "3",
+"scr": "Status condition abbreviations (party menu only, (4,2+2n))",
+"at": "(4,2+2n)",
+"dep": "PlaceStatusString (mon_stats.asm:959-985) copies EXACTLY 3 bytes, no terminator check; … (index 0) is never drawn"
+},
+{
+"file": "engine/pokemon/move_mon.asm",
+"label": "Special_HyperTrain.Strings",
+"cls": "b",
+"w": "col1 7 / col2 9",
+"scr": "Hyper Training stat choice (2D menu 3x2)",
+"at": "box (0,4)-(19,11); col1 x=2, col2 x=10, rows 6/8/10",
+"dep": "2D spacing 8; cursor x=1 and 9"
+},
+{
+"file": "engine/pokemon/move_mon.asm",
+"label": "Special_HyperTrain.TrainWhichStat",
+"cls": "c",
+"w": "18",
+"scr": "Hyper Training prompt …",
+"at": "SB",
+"dep": "English possessive around text_ram"
+},
+{
+"file": "engine/pokemon/move_mon.asm",
+"label": "Special_HyperTrain.TextCantTrainEgg",
+"cls": "c",
+"w": "18",
+"scr": "Hyper Training speech",
+"at": "SB",
+"dep": "some splice text_ram mon names (…)"
+},
+{
+"file": "engine/pokemon/move_mon.asm",
+"label": "Special_HyperTrain.TextNotEnoughLevels",
+"cls": "c",
+"w": "18",
+"scr": "Hyper Training speech",
+"at": "SB",
+"dep": "some splice text_ram mon names (…)"
+},
+{
+"file": "engine/pokemon/move_mon.asm",
+"label": "Special_HyperTrain.TextNotMaxEffort",
+"cls": "c",
+"w": "18",
+"scr": "Hyper Training speech",
+"at": "SB",
+"dep": "some splice text_ram mon names (…)"
+},
+{
+"file": "engine/pokemon/move_mon.asm",
+"label": "Special_HyperTrain.TextAlreadyHypedUp",
+"cls": "c",
+"w": "18",
+"scr": "Hyper Training speech",
+"at": "SB",
+"dep": "some splice text_ram mon names (…)"
+},
+{
+"file": "engine/pokemon/move_mon.asm",
+"label": "String_Egg",
+"cls": "c",
+"w": "<=10",
+"scr": "… nickname (…)",
+"at": "buffer",
+"dep": "rawchar name buffer"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "BT_SwapRentals.MustSwapBetweenTeams",
+"cls": "a",
+"w": "18",
+"scr": "Factory swap message",
+"at": "SB",
+"dep": ""
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "BT_SwapRentals.TradeWhichPKMN",
+"cls": "b",
+"w": "18",
+"scr": "Factory swap prompt",
+"at": "(1,16) in party prompt box (0,14)-(19,17)",
+"dep": "padded with spaces to erase previous prompt"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "BT_PartySelect.too_many_mons_text",
+"cls": "a",
+"w": "18",
+"scr": "… Tower party message",
+"at": "SB",
+"dep": ""
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "BT_PartySelect.MenuData",
+"cls": "a",
+"w": "7",
+"scr": "… Tower party submenu",
+"at": "box (10,11|13)-(19,17), text (12,y+1) step 2",
+"dep": "cursor x=11"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "BT_PartySelect.BannedMenuData",
+"cls": "a",
+"w": "7",
+"scr": "… Tower party submenu",
+"at": "box (10,11|13)-(19,17), text (12,y+1) step 2",
+"dep": "cursor x=11"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "BTText_EnterBattle",
+"cls": "b",
+"w": "13",
+"scr": "… Tower …",
+"at": "(1,16); … box (14,13)-(19,17) on the right",
+"dep": "must end before the … box at x=14"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "BTText_SameSpecies",
+"cls": "a",
+"w": "18",
+"scr": "… Tower messages",
+"at": "SB",
+"dep": ""
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "BTText_SameItem",
+"cls": "a",
+"w": "18",
+"scr": "… Tower messages",
+"at": "SB",
+"dep": ""
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "BT_ConfirmPartySelection.YesNoMenuData",
+"cls": "b",
+"w": "3",
+"scr": "… Tower …",
+"at": "box (14,13)-(19,17), text (16,14) step 2",
+"dep": ""
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "PlacePartyNicknames.Cancel",
+"cls": "a",
+"w": "10",
+"scr": "Party list … row",
+"at": "(1, 1+2n) (x = nickname x 3 - 2)",
+"dep": ""
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "PlacePartyMonTMHMCompatibility.string_able",
+"cls": "b",
+"w": "8 (x=12..19)",
+"scr": "Party list right column: ….../… foe",
+"at": "(12, 2+2n) replacing the HP bar",
+"dep": "… exactly 8 = to screen edge"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "PlacePartyMonTMHMCompatibility.string_not_able",
+"cls": "b",
+"w": "8 (x=12..19)",
+"scr": "Party list right column: ….../… foe",
+"at": "(12, 2+2n) replacing the HP bar",
+"dep": "… exactly 8 = to screen edge"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "PlacePartyMonTMHMCompatibility.string_learned",
+"cls": "b",
+"w": "8 (x=12..19)",
+"scr": "Party list right column: ….../… foe",
+"at": "(12, 2+2n) replacing the HP bar",
+"dep": "… exactly 8 = to screen edge"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "PlacePartyMonEvoStoneCompatibility.string_able",
+"cls": "b",
+"w": "8 (x=12..19)",
+"scr": "Party list right column: ….../… foe",
+"at": "(12, 2+2n) replacing the HP bar",
+"dep": "… exactly 8 = to screen edge"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "PlacePartyMonEvoStoneCompatibility.string_not_able",
+"cls": "b",
+"w": "8 (x=12..19)",
+"scr": "Party list right column: ….../… foe",
+"at": "(12, 2+2n) replacing the HP bar",
+"dep": "… exactly 8 = to screen edge"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "PlacePartyMonRemindable.string_able",
+"cls": "b",
+"w": "8 (x=12..19)",
+"scr": "Party list right column: ….../… foe",
+"at": "(12, 2+2n) replacing the HP bar",
+"dep": "… exactly 8 = to screen edge"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "PlacePartyMonRemindable.string_not_able",
+"cls": "b",
+"w": "8 (x=12..19)",
+"scr": "Party list right column: ….../… foe",
+"at": "(12, 2+2n) replacing the HP bar",
+"dep": "… exactly 8 = to screen edge"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "PlacePartyMonBattleTower.Banned",
+"cls": "b",
+"w": "8 (x=12..19)",
+"scr": "Party list right column: ….../… foe",
+"at": "(12, 2+2n) replacing the HP bar",
+"dep": "… exactly 8 = to screen edge"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "PlacePartyMonBattleTower.Able",
+"cls": "b",
+"w": "8 (x=12..19)",
+"scr": "Party list right column: ….../… foe",
+"at": "(12, 2+2n) replacing the HP bar",
+"dep": "… exactly 8 = to screen edge"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "PlacePartyMonBattleTower.First",
+"cls": "b",
+"w": "8 (x=12..19)",
+"scr": "Party list right column: ….../… foe",
+"at": "(12, 2+2n) replacing the HP bar",
+"dep": "… exactly 8 = to screen edge"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "PlacePartyMonBattleTower.Second",
+"cls": "b",
+"w": "8 (x=12..19)",
+"scr": "Party list right column: ….../… foe",
+"at": "(12, 2+2n) replacing the HP bar",
+"dep": "… exactly 8 = to screen edge"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "PlacePartyMonBattleTower.Third",
+"cls": "b",
+"w": "8 (x=12..19)",
+"scr": "Party list right column: ….../… foe",
+"at": "(12, 2+2n) replacing the HP bar",
+"dep": "… exactly 8 = to screen edge"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "PlacePartyMonBattleTower.LastFoe",
+"cls": "b",
+"w": "8 (x=12..19)",
+"scr": "Party list right column: ….../… foe",
+"at": "(12, 2+2n) replacing the HP bar",
+"dep": "… exactly 8 = to screen edge"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "ChooseAMonString",
+"cls": "b",
+"w": "18",
+"scr": "Party menu bottom prompt",
+"at": "(1,16) in box (0,14)-(19,17)",
+"dep": "single line, no wrap (…_TEXT_SCROLL)"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "UseOnWhichPKMNString",
+"cls": "b",
+"w": "18",
+"scr": "Party menu bottom prompt",
+"at": "(1,16) in box (0,14)-(19,17)",
+"dep": "single line, no wrap (…_TEXT_SCROLL)"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "WhichPKMNString",
+"cls": "b",
+"w": "18",
+"scr": "Party menu bottom prompt",
+"at": "(1,16) in box (0,14)-(19,17)",
+"dep": "single line, no wrap (…_TEXT_SCROLL)"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "TeachWhichPKMNString",
+"cls": "b",
+"w": "18",
+"scr": "Party menu bottom prompt",
+"at": "(1,16) in box (0,14)-(19,17)",
+"dep": "single line, no wrap (…_TEXT_SCROLL)"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "TutorWhichPKMNString",
+"cls": "b",
+"w": "18",
+"scr": "Party menu bottom prompt",
+"at": "(1,16) in box (0,14)-(19,17)",
+"dep": "single line, no wrap (…_TEXT_SCROLL)"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "Choose3MonString",
+"cls": "b",
+"w": "18",
+"scr": "Party menu bottom prompt",
+"at": "(1,16) in box (0,14)-(19,17)",
+"dep": "single line, no wrap (…_TEXT_SCROLL)"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "MoveToWhereString",
+"cls": "b",
+"w": "18",
+"scr": "Party menu bottom prompt",
+"at": "(1,16) in box (0,14)-(19,17)",
+"dep": "single line, no wrap (…_TEXT_SCROLL)"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "ToWhichPKMNString",
+"cls": "b",
+"w": "18",
+"scr": "Party menu bottom prompt",
+"at": "(1,16) in box (0,14)-(19,17)",
+"dep": "single line, no wrap (…_TEXT_SCROLL)"
+},
+{
+"file": "engine/pokemon/party_menu.asm",
+"label": "YouHaveNoPKMNString",
+"cls": "b",
+"w": "18",
+"scr": "Party menu bottom prompt",
+"at": "(1,16) in box (0,14)-(19,17)",
+"dep": "single line, no wrap (…_TEXT_SCROLL)"
+},
+{
+"file": "engine/pokemon/summary/blue_page.asm",
+"label": "SummaryScreen_BluePage.HPString",
+"cls": "b",
+"w": "3",
+"scr": "Summary stats page: … label",
+"at": "window (0,0) = screen (8,2); … numbers at window (3,1)..",
+"dep": ""
+},
+{
+"file": "engine/pokemon/summary/blue_page.asm",
+"label": "SummaryScreen_BluePage.AbilityTiles",
+"cls": "n",
+"w": "1",
+"scr": "Ability slot digit glyphs",
+"at": "tile codes",
+"dep": "digits"
+},
+{
+"file": "engine/pokemon/summary/egg_page.asm",
+"label": "SummaryScreen_Egg.NoString",
+"cls": "b",
+"w": "12",
+"scr": "Summary … page header",
+"at": "window (0,0),(0,1),(0,4),(2,5)",
+"dep": "window is 12 cells wide (screen x 8..19)"
+},
+{
+"file": "engine/pokemon/summary/egg_page.asm",
+"label": "SummaryScreen_Egg.EggString",
+"cls": "b",
+"w": "12",
+"scr": "Summary … page header",
+"at": "window (0,0),(0,1),(0,4),(2,5)",
+"dep": "window is 12 cells wide (screen x 8..19)"
+},
+{
+"file": "engine/pokemon/summary/egg_page.asm",
+"label": "SummaryScreen_Egg.OTString",
+"cls": "b",
+"w": "12",
+"scr": "Summary … page header",
+"at": "window (0,0),(0,1),(0,4),(2,5)",
+"dep": "window is 12 cells wide (screen x 8..19)"
+},
+{
+"file": "engine/pokemon/summary/egg_page.asm",
+"label": "SummaryScreen_Egg.IDString",
+"cls": "b",
+"w": "12",
+"scr": "Summary … page header",
+"at": "window (0,0),(0,1),(0,4),(2,5)",
+"dep": "window is 12 cells wide (screen x 8..19)"
+},
+{
+"file": "engine/pokemon/summary/egg_page.asm",
+"label": "SummaryScreen_Egg.SoonString",
+"cls": "a",
+"w": "18",
+"scr": "Summary … page: 3-line hatch hint",
+"at": "(1,13),(1,15),(1,17)",
+"dep": ""
+},
+{
+"file": "engine/pokemon/summary/egg_page.asm",
+"label": "SummaryScreen_Egg.CloseString",
+"cls": "a",
+"w": "18",
+"scr": "Summary … page: 3-line hatch hint",
+"at": "(1,13),(1,15),(1,17)",
+"dep": ""
+},
+{
+"file": "engine/pokemon/summary/egg_page.asm",
+"label": "SummaryScreen_Egg.MoreTimeString",
+"cls": "a",
+"w": "18",
+"scr": "Summary … page: 3-line hatch hint",
+"at": "(1,13),(1,15),(1,17)",
+"dep": ""
+},
+{
+"file": "engine/pokemon/summary/egg_page.asm",
+"label": "SummaryScreen_Egg.ALotMoreTimeString",
+"cls": "a",
+"w": "18",
+"scr": "Summary … page: 3-line hatch hint",
+"at": "(1,13),(1,15),(1,17)",
+"dep": ""
+},
+{
+"file": "engine/pokemon/summary/green_page.asm",
+"label": "SummaryScreen_GreenPage.NoHeldItemString",
+"cls": "a",
+"w": "18",
+"scr": "Summary moves page: held item",
+"at": "(1,13) in cleared rows 13..17",
+"dep": ""
+},
+{
+"file": "engine/pokemon/summary/green_page.asm",
+"label": "SummaryScreen_GreenPage.String_na",
+"cls": "n",
+"w": "3",
+"scr": "Summary moves page …",
+"at": "(3,13)/(8,13)",
+"dep": "replaces 3-digit number"
+},
+{
+"file": "engine/pokemon/summary/green_page.asm",
+"label": "SummaryScreen_GreenPage.String_PowAcc",
+"cls": "b",
+"w": "8",
+"scr": "Summary moves page power/acc template",
+"at": "(4,13) after category icon at (1..2,13)",
+"dep": "numeric template; numbers at (3,13) and (8,13)"
+},
+{
+"file": "engine/pokemon/summary/orange_page.asm",
+"label": "SummaryScreen_OrangePage.NatureString",
+"cls": "b",
+"w": "12",
+"scr": "Summary memo page labels",
+"at": "window (0,0),(0,2) = screen (8,2),(8,4); … name at window (1,1)",
+"dep": ""
+},
+{
+"file": "engine/pokemon/summary/orange_page.asm",
+"label": "SummaryScreen_OrangePage.CharacterString",
+"cls": "b",
+"w": "12",
+"scr": "Summary memo page labels",
+"at": "window (0,0),(0,2) = screen (8,2),(8,4); … name at window (1,1)",
+"dep": ""
+},
+{
+"file": "engine/pokemon/summary/orange_page.asm",
+"label": "SummaryScreen_OrangePage.battle_factory",
+"cls": "a",
+"w": "18",
+"scr": "Summary memo page: met location",
+"at": "(1,17)",
+"dep": ""
+},
+{
+"file": "engine/pokemon/summary/orange_page.asm",
+"label": "SummaryScreen_OrangePage.event",
+"cls": "a",
+"w": "18",
+"scr": "Summary memo page: met location",
+"at": "(1,17)",
+"dep": ""
+},
+{
+"file": "engine/pokemon/summary/orange_page.asm",
+"label": "SummaryScreen_OrangePage.str_level",
+"cls": "c",
+"w": "<=18 total",
+"scr": "Summary memo page: …",
+"at": "appended at bc+1 after the time-of-day word printed at (1,14)",
+"dep": "chained composition: time-of-day + suffix + level number, English order"
+},
+{
+"file": "engine/pokemon/summary/orange_page.asm",
+"label": "SummaryScreen_OrangePage.str_hatched",
+"cls": "c",
+"w": "<=18 total",
+"scr": "Summary memo page: …",
+"at": "appended at bc+1 after the time-of-day word printed at (1,14)",
+"dep": "chained composition: time-of-day + suffix + level number, English order"
+},
+{
+"file": "engine/pokemon/summary/orange_page.asm",
+"label": "SummaryScreen_OrangePage.str_traded",
+"cls": "c",
+"w": "<=18 total",
+"scr": "Summary memo page: …",
+"at": "appended at bc+1 after the time-of-day word printed at (1,14)",
+"dep": "chained composition: time-of-day + suffix + level number, English order"
+},
+{
+"file": "engine/pokemon/summary/pink_page.asm",
+"label": "SummaryScreen_PinkPage.OTStr",
+"cls": "b",
+"w": "3 (Rental 12)",
+"scr": "Summary info page … labels (…: 2-line … replaces … row)",
+"at": "window (0,4),(2,5); … number at window (5,5); … name at window (4,4)",
+"dep": "labels end at a fixed value column"
+},
+{
+"file": "engine/pokemon/summary/pink_page.asm",
+"label": "SummaryScreen_PinkPage.IDStr",
+"cls": "b",
+"w": "3 (Rental 12)",
+"scr": "Summary info page … labels (…: 2-line … replaces … row)",
+"at": "window (0,4),(2,5); … number at window (5,5); … name at window (4,4)",
+"dep": "labels end at a fixed value column"
+},
+{
+"file": "engine/pokemon/summary/pink_page.asm",
+"label": "SummaryScreen_PinkPage.Rental_OT",
+"cls": "b",
+"w": "3 (Rental 12)",
+"scr": "Summary info page … labels (…: 2-line … replaces … row)",
+"at": "window (0,4),(2,5); … number at window (5,5); … name at window (4,4)",
+"dep": "labels end at a fixed value column"
+},
+{
+"file": "engine/pokemon/summary/pink_page.asm",
+"label": "SummaryScreen_PinkPage.ExpPointStr",
+"cls": "b",
+"w": "11",
+"scr": "Summary info: …",
+"at": "(1,13); number at (12,13)",
+"dep": ""
+},
+{
+"file": "engine/pokemon/summary/pink_page.asm",
+"label": "SummaryScreen_PinkPage.LevelUpStr",
+"cls": "b",
+"w": "11",
+"scr": "Summary info: …",
+"at": "(1,15); number at (12,15)",
+"dep": ""
+},
+{
+"file": "engine/pokemon/summary/pink_page.asm",
+"label": "SummaryScreen_PinkPage.ToStr",
+"cls": "b",
+"w": "2",
+"scr": "Summary info: …",
+"at": "(13,17); next … at (16,17); XP bar at (1..9,17)",
+"dep": "between the XP bar and the … number"
+},
+{
+"file": "engine/printer/printer.asm",
+"label": "String_PressBToCancel",
+"cls": "a",
+"w": "17",
+"scr": "… status box footer",
+"at": "(2,15) in box (0,5)-(19,16)",
+"dep": ""
+},
+{
+"file": "engine/printer/printer.asm",
+"label": "GBPrinterString_Null",
+"cls": "a",
+"w": "18",
+"scr": "… status / error messages",
+"at": "(1,7) (leading <NEXT> moves to row 9)",
+"dep": "hand-centred with leading spaces"
+},
+{
+"file": "engine/printer/printer.asm",
+"label": "GBPrinterString_CheckingLink",
+"cls": "a",
+"w": "18",
+"scr": "… status / error messages",
+"at": "(1,7) (leading <NEXT> moves to row 9)",
+"dep": "hand-centred with leading spaces"
+},
+{
+"file": "engine/printer/printer.asm",
+"label": "GBPrinterString_Transmitting",
+"cls": "a",
+"w": "18",
+"scr": "… status / error messages",
+"at": "(1,7) (leading <NEXT> moves to row 9)",
+"dep": "hand-centred with leading spaces"
+},
+{
+"file": "engine/printer/printer.asm",
+"label": "GBPrinterString_Printing",
+"cls": "a",
+"w": "18",
+"scr": "… status / error messages",
+"at": "(1,7) (leading <NEXT> moves to row 9)",
+"dep": "hand-centred with leading spaces"
+},
+{
+"file": "engine/printer/printer.asm",
+"label": "GBPrinterString_PrinterError1",
+"cls": "a",
+"w": "18",
+"scr": "… status / error messages",
+"at": "(1,7) (leading <NEXT> moves to row 9)",
+"dep": "hand-centred with leading spaces"
+},
+{
+"file": "engine/printer/printer.asm",
+"label": "GBPrinterString_PrinterError2",
+"cls": "a",
+"w": "18",
+"scr": "… status / error messages",
+"at": "(1,7) (leading <NEXT> moves to row 9)",
+"dep": "hand-centred with leading spaces"
+},
+{
+"file": "engine/printer/printer.asm",
+"label": "GBPrinterString_PrinterError3",
+"cls": "a",
+"w": "18",
+"scr": "… status / error messages",
+"at": "(1,7) (leading <NEXT> moves to row 9)",
+"dep": "hand-centred with leading spaces"
+},
+{
+"file": "engine/printer/printer.asm",
+"label": "GBPrinterString_PrinterError4",
+"cls": "a",
+"w": "18",
+"scr": "… status / error messages",
+"at": "(1,7) (leading <NEXT> moves to row 9)",
+"dep": "hand-centred with leading spaces"
+},
+{
+"file": "engine/rtc/timeset.asm",
+"label": "String_oclock",
+"cls": "b",
+"w": "~14",
+"scr": "Clock setting: …",
+"at": "appended after hour at (1,9)+",
+"dep": "appended at returned pen; English order"
+},
+{
+"file": "engine/rtc/timeset.asm",
+"label": "String_min",
+"cls": "b",
+"w": "4",
+"scr": "Clock setting: …",
+"at": "after 2-digit minutes at (12,9); cleared field (12,9) 7 cells",
+"dep": "appended at pen; field clear width 7"
+},
+{
+"file": "engine/rtc/timeset.asm",
+"label": "Special_SetDayOfWeek.Sunday",
+"cls": "b",
+"w": "9",
+"scr": "Clock setting: weekday picker",
+"at": "(10,5) in cleared (10,4)-(18,5)",
+"dep": "hand-centred with a leading space; up/down arrows drawn around it"
+},
+{
+"file": "engine/rtc/timeset.asm",
+"label": "Special_SetDayOfWeek.Monday",
+"cls": "b",
+"w": "9",
+"scr": "Clock setting: weekday picker",
+"at": "(10,5) in cleared (10,4)-(18,5)",
+"dep": "hand-centred with a leading space; up/down arrows drawn around it"
+},
+{
+"file": "engine/rtc/timeset.asm",
+"label": "Special_SetDayOfWeek.Tuesday",
+"cls": "b",
+"w": "9",
+"scr": "Clock setting: weekday picker",
+"at": "(10,5) in cleared (10,4)-(18,5)",
+"dep": "hand-centred with a leading space; up/down arrows drawn around it"
+},
+{
+"file": "engine/rtc/timeset.asm",
+"label": "Special_SetDayOfWeek.Wednesday",
+"cls": "b",
+"w": "9",
+"scr": "Clock setting: weekday picker",
+"at": "(10,5) in cleared (10,4)-(18,5)",
+"dep": "hand-centred with a leading space; up/down arrows drawn around it"
+},
+{
+"file": "engine/rtc/timeset.asm",
+"label": "Special_SetDayOfWeek.Thursday",
+"cls": "b",
+"w": "9",
+"scr": "Clock setting: weekday picker",
+"at": "(10,5) in cleared (10,4)-(18,5)",
+"dep": "hand-centred with a leading space; up/down arrows drawn around it"
+},
+{
+"file": "engine/rtc/timeset.asm",
+"label": "Special_SetDayOfWeek.Friday",
+"cls": "b",
+"w": "9",
+"scr": "Clock setting: weekday picker",
+"at": "(10,5) in cleared (10,4)-(18,5)",
+"dep": "hand-centred with a leading space; up/down arrows drawn around it"
+},
+{
+"file": "engine/rtc/timeset.asm",
+"label": "Special_SetDayOfWeek.Saturday",
+"cls": "b",
+"w": "9",
+"scr": "Clock setting: weekday picker",
+"at": "(10,5) in cleared (10,4)-(18,5)",
+"dep": "hand-centred with a leading space; up/down arrows drawn around it"
+},
+{
+"file": "engine/rtc/timeset.asm",
+"label": "NITE_String",
+"cls": "c",
+"w": "7",
+"scr": "Time-of-… words (pokegear clock (6,7), caught-time on summary, timeset)",
+"at": "various",
+"dep": "also the head of the summary … chain"
+},
+{
+"file": "engine/rtc/timeset.asm",
+"label": "MORN_String",
+"cls": "c",
+"w": "7",
+"scr": "Time-of-… words (pokegear clock (6,7), caught-time on summary, timeset)",
+"at": "various",
+"dep": "also the head of the summary … chain"
+},
+{
+"file": "engine/rtc/timeset.asm",
+"label": "DAY_String",
+"cls": "c",
+"w": "7",
+"scr": "Time-of-… words (pokegear clock (6,7), caught-time on summary, timeset)",
+"at": "various",
+"dep": "also the head of the summary … chain"
+},
+{
+"file": "engine/rtc/timeset.asm",
+"label": "EVE_String",
+"cls": "c",
+"w": "7",
+"scr": "Time-of-… words (pokegear clock (6,7), caught-time on summary, timeset)",
+"at": "various",
+"dep": "also the head of the summary … chain"
+},
+{
+"file": "engine/rtc/timeset.asm",
+"label": "PrintHoursMins.String_AM",
+"cls": "b",
+"w": "2",
+"scr": "… after the time",
+"at": "pen after …",
+"dep": "appended at pen"
+},
+{
+"file": "engine/rtc/timeset.asm",
+"label": "PrintHoursMins.String_PM",
+"cls": "b",
+"w": "2",
+"scr": "… after the time",
+"at": "pen after …",
+"dep": "appended at pen"
+},
+{
+"file": "home/menu.asm",
+"label": "YesNoMenuDataHeader.MenuData2",
+"cls": "b",
+"w": "3",
+"scr": "Generic … (YesNoBox, 52 call sites) and … boxes",
+"at": "box (x,y)-(x+5,y+4), default x=14 y=7; text (x+2,y+1),(x+2,y+3)",
+"dep": "box width fixed (+5) in HandleYesNoMenu"
+},
+{
+"file": "home/menu.asm",
+"label": "NoYesMenuDataHeader.MenuData2",
+"cls": "b",
+"w": "3",
+"scr": "Generic … (YesNoBox, 52 call sites) and … boxes",
+"at": "box (x,y)-(x+5,y+4), default x=14 y=7; text (x+2,y+1),(x+2,y+3)",
+"dep": "box width fixed (+5) in HandleYesNoMenu"
+},
+{
+"file": "home/text.asm",
+"label": "_PlaceBattleNickname.EnemyText",
+"cls": "c",
+"w": "3",
+"scr": "… prefix before enemy nickname in all battle text (<USER>/<TARGET>)",
+"at": "inline",
+"dep": "falls through into SpaceText and EmptyString (shared bytes); English prefix order"
+},
+{
+"file": "home/text.asm",
+"label": "SpaceText",
+"cls": "c",
+"w": "1",
+"scr": "shared … fragment",
+"at": "inline",
+"dep": "used after trainer class name and by EnemyText"
+},
+{
+"file": "home/text.asm",
+"label": "EmptyString",
+"cls": "n",
+"w": "0",
+"scr": "shared …",
+"at": "",
+"dep": "referenced from many files"
+},
+{
+"file": "home/text.asm",
+"label": "GhostNicknameText",
+"cls": "a",
+"w": "10",
+"scr": "… nickname for unidentified …",
+"at": "inline",
+"dep": ""
+},
+{
+"file": "home/text.asm",
+"label": "ContChar",
+"cls": "n",
+"w": "0",
+"scr": "<…> used for word wrap after enemy class name",
+"at": "",
+"dep": "control"
+},
+{
+"file": "home/text.asm",
+"label": "PrintDayOfWeek.Sun",
+"cls": "c",
+"w": "9",
+"scr": "<…>/text_today: weekday stem + …",
+"at": "inline (speech box) / main menu (1,15) / pokegear (6,5)",
+"dep": "stem + … concatenation; … 1-byte offsets; ROM0"
+},
+{
+"file": "home/text.asm",
+"label": "PrintDayOfWeek.Mon",
+"cls": "c",
+"w": "9",
+"scr": "<…>/text_today: weekday stem + …",
+"at": "inline (speech box) / main menu (1,15) / pokegear (6,5)",
+"dep": "stem + … concatenation; … 1-byte offsets; ROM0"
+},
+{
+"file": "home/text.asm",
+"label": "PrintDayOfWeek.Tues",
+"cls": "c",
+"w": "9",
+"scr": "<…>/text_today: weekday stem + …",
+"at": "inline (speech box) / main menu (1,15) / pokegear (6,5)",
+"dep": "stem + … concatenation; … 1-byte offsets; ROM0"
+},
+{
+"file": "home/text.asm",
+"label": "PrintDayOfWeek.Wednes",
+"cls": "c",
+"w": "9",
+"scr": "<…>/text_today: weekday stem + …",
+"at": "inline (speech box) / main menu (1,15) / pokegear (6,5)",
+"dep": "stem + … concatenation; … 1-byte offsets; ROM0"
+},
+{
+"file": "home/text.asm",
+"label": "PrintDayOfWeek.Thurs",
+"cls": "c",
+"w": "9",
+"scr": "<…>/text_today: weekday stem + …",
+"at": "inline (speech box) / main menu (1,15) / pokegear (6,5)",
+"dep": "stem + … concatenation; … 1-byte offsets; ROM0"
+},
+{
+"file": "home/text.asm",
+"label": "PrintDayOfWeek.Fri",
+"cls": "c",
+"w": "9",
+"scr": "<…>/text_today: weekday stem + …",
+"at": "inline (speech box) / main menu (1,15) / pokegear (6,5)",
+"dep": "stem + … concatenation; … 1-byte offsets; ROM0"
+},
+{
+"file": "home/text.asm",
+"label": "PrintDayOfWeek.Satur",
+"cls": "c",
+"w": "9",
+"scr": "<…>/text_today: weekday stem + …",
+"at": "inline (speech box) / main menu (1,15) / pokegear (6,5)",
+"dep": "stem + … concatenation; … 1-byte offsets; ROM0"
+},
+{
+"file": "home/text.asm",
+"label": "PrintDayOfWeek.Day",
+"cls": "c",
+"w": "9",
+"scr": "<…>/text_today: weekday stem + …",
+"at": "inline (speech box) / main menu (1,15) / pokegear (6,5)",
+"dep": "stem + … concatenation; … 1-byte offsets; ROM0"
+}
+]

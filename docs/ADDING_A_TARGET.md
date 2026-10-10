@@ -3,13 +3,13 @@
 Version: 1
 
 A **localization target** is one supported game revision together with the way it
-is put into Arabic. Twenty-three targets are registered today:
+is put into Arabic. Twenty-four targets are registered today:
 
 ```text
 classic-retro targets list
 ```
 
-This guide collects what those twenty-three taught, in the order the work happens. It is a
+This guide collects what those twenty-four taught, in the order the work happens. It is a
 checklist, not a template: every game gets its own research, and a game that fits
 none of the existing methods gets a new one (see
 [ARABIC_STRATEGIES.md](ARABIC_STRATEGIES.md)).
@@ -37,7 +37,7 @@ and watchpoints, and scanners for free space, pointers and text.
 1. **Sources.** Is there a decompilation or disassembly? Does it build the image?
    Does it take its data from the original?
    - It builds with editable data: a `source-overlay` patches the source tree
-     (FireRed, Minish Cap).
+     (FireRed, Minish Cap, Polished Crystal).
    - Otherwise: a `rom-overlay` patches the user's image and ships a BPS patch.
      The sources still give addresses and names.
    - None (Gran Turismo): read the code where it runs. A packed program is unpacked in
@@ -370,8 +370,24 @@ patches the user's pristine checkout of the decompilation, which then builds the
 Both kinds have `check_translations`. A source overlay's checks the script without a
 checkout (FireRed's encodes every message and builds the atlas; Minish Cap's measures
 every line with the pinned Latin widths), and its preview is the font file `prepare`
-writes into the checkout (`arabic_normal.png`, `arabic_font_preview.png`). What the
+writes into the checkout (`arabic_normal.png`, `arabic_font_preview.png`), or, where the
+glyphs are drawn by hand, their atlas (Polished Crystal's `polished_crystal_glyphs.png`). What the
 original commands are is only known with a checkout, so `prepare` checks those.
+
+A whole game in a source overlay (Polished Crystal) adds what a scene does not need:
+
+- Pin every file the overlay reads or writes by its git blob (`data/pins.json`), and refuse the
+  checkout before writing anything when one differs.
+- Keep the engine work on a branch of the source and store it as hunks that hold the hash of the
+  lines they replace, never the lines (`patch.make_engine_patch`); an added line that repeats a
+  string of the game refers to the replaced line's string. Leave the files the overlay generates
+  (fonts, tilemaps, the charmap) out of the patch and write them from the pinned originals.
+- Let an extractor find every text of the patched tree once, as a manifest of ids, kinds, owned
+  lines, pins, placeholders and limits (`make-manifest`), and let the translation leave entries
+  out: they stay in the original language, and the report says the coverage.
+- Where the game compresses text with codes trained on its language (Huffman codes, n-grams),
+  train them again on the translated tree at each `prepare`; and where a jump over text stores
+  its distance in a byte, lengthen the jumps whose text grows.
 
 Every target then runs the same way:
 

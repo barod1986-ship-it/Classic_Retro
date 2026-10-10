@@ -2,7 +2,7 @@
 
 Version: 1
 
-The twenty-three reference targets put Arabic on screen with four rendering strategies.
+The twenty-four reference targets put Arabic on screen with four rendering strategies.
 They are a starting set, not a closed list. Engines on other platforms will need
 other methods, and the registry (`classic_retro.localization.strategies`) accepts
 them the same way it holds these four:
@@ -24,7 +24,7 @@ already worked.
 Used by: `firered`, `minish-cap`, `ff6a`, `golden-sun`, `fire-emblem` (dialogue),
 `pmd-red`, `mlss`, `advance-wars`, `metroid-fusion`, `tactics-ogre`, `nsmb`, `platinum`,
 `phantom-hourglass`, `gran-turismo`, `ridge-racer`, `chrono-trigger`, `link-to-the-past`,
-`shining-force-2`, `final-fantasy-ii`, `final-fantasy-iii`.
+`shining-force-2`, `final-fantasy-ii`, `final-fantasy-iii`, `polished-crystal`.
 
 Every contextual form of the letters (the 133 presentation forms of
 `arabic/repertoire.py`) is drawn from the reference font into the game's own font
@@ -32,7 +32,10 @@ format. Translated text is shaped, run through bidi, and stored as those glyphs 
 right-to-left paint order (`arabic/paint.py`): the first glyph of a line is its
 rightmost one. The renderer then places the glyphs from the right edge of the line.
 Where the game draws every line at once and centres it, the glyphs can instead be
-stored in visual order and drawn by the game unchanged (`nsmb`, below).
+stored in visual order and drawn by the game unchanged (`nsmb`, below). Where the cell is
+too small for the reference font (Polished Crystal's 8x8 tiles), the forms are drawn by
+hand, and forms the cell cannot tell apart share a glyph (70 glyphs for its 36 letters and
+the lam-alef ligatures).
 
 - The engine needs glyphs of their own width (a proportional font, or cells the
   forms fit), spare character codes or a way to add a font next to the game's, and
@@ -107,8 +110,9 @@ glyphs in right-to-left paint order, as with `glyph-font`.
 |-----|-----|---------|
 | Mirrored draw | The game's pen keeps advancing left to right. Only where a glyph (or cell) is drawn moves to the mirror of the pen inside the line: `draw_x = left + right - pen - width`, or column `27 - x` for 28-column cells | `minish-cap`, `ff6a`, `golden-sun`, `fire-emblem`, `pmd-red`, `mlss`, `mmbn`, `fomt`, `metroid-fusion`, `tactics-ogre`, `platinum`, `phantom-hourglass`, `chrono-trigger`, `link-to-the-past`, `shining-force-2`, `final-fantasy-ii` (each row mirrored whole, with its top tiles, when a page is decoded) |
 | Mirrored tilemap | The game draws the line left to right into its tiles as usual; each tile column goes into the tilemap at its mirror inside the text area, with the hardware's horizontal flip, and the glyphs are stored flipped | `advance-wars` |
-| Reversed pen | The pen starts at the line's right edge and subtracts each advance before drawing. Newline, page clear and scroll restore the right edge | `firered`, `sotn` (a pen of the hook's own), `final-fantasy-iii` (a pen of the hook's own: each line is laid out whole from the right edge into a buffer of tile columns the first time the engine reaches it, and sent in the vertical blank; the game's pen keeps walking the line's codes for its pauses, pages and choices) |
-| Visual order | No change to the renderer: every line is stored reversed, its glyphs from the leftmost to the rightmost, and the game draws it left to right as it is | `nsmb` |
+| Reversed pen | The pen starts at the line's right edge and subtracts each advance before drawing. Newline, page clear and scroll restore the right edge | `firered`, `polished-crystal` (the speech box: text that starts at the box's origin is drawn leftward from its right edge, a run of digits put back left to right when it ends), `sotn` (a pen of the hook's own), `final-fantasy-iii` (a pen of the hook's own: each line is laid out whole from the right edge into a buffer of tile columns the first time the engine reaches it, and sent in the vertical blank; the game's pen keeps walking the line's codes for its pauses, pages and choices) |
+| Reversed lines | The game draws a line left to right as it drew the English; when the line ends its tiles are reversed in place, so it reads right to left in the same footprint. Text between runs of two or more spaces is reversed on its own (columns keep their places) and digit runs stay left to right | `polished-crystal` (every string placed at explicit coordinates: menus, labels, the summary) |
+| Visual order | No change to the renderer: every line is stored reversed, its glyphs from the leftmost to the rightmost, and the game draws it left to right as it is | `nsmb`, `polished-crystal` (the Pokédex's labels, drawn into its tilemaps) |
 | Mirrored words | The game lays words out and justifies them from the left; each Arabic word is drawn at the mirror of its place, its glyphs stored in visual order | `gran-turismo` |
 | Placed strings | The hook draws a whole Arabic string from glyphs of its own: centred on the English it replaces, or ending at the mirror of the English's left edge; the glyphs are stored in visual order | `ridge-racer` |
 
@@ -183,6 +187,7 @@ left edge.
 | The glyph itself: a charmap flag, or a glyph of the right-to-left font | `pmd-red`, `mlss`, `metroid-fusion` (where a glyph is drawn), `platinum` (a line that holds one; a menu whose first entry does), `phantom-hourglass` (each glyph of its range), `sotn` (a code from `80`), `gran-turismo` (a word whose first glyph is `86` or above) |
 | The text's own codes or address: cell codes, a bank table sorted by text address, or the address range of the Arabic bank | `fomt`, `mmbn`, `advance-wars`, `metroid-fusion` (its cursors, arrow and fade), `tactics-ogre`, `chrono-trigger` (its string's pointer in its table, through a list of the translated tables: a translated message is read from its Arabic in the banks the overlay adds, `$42` to `$5F`, and the text pointer's bank tells the draw), `link-to-the-past` (its message's number: a translated message is parsed from its Arabic, and a byte of the engine's settings tells the draw), `shining-force-2` (its string's code address: a translated string is read from its Arabic in free bytes of the text's section), `final-fantasy-ii` (its bank and offset in the redirect list: a translated message is read from its Arabic in bank `$21`), `final-fantasy-iii` (its message's number in the redirect list: a translated message is read from its Arabic in bank `$F2`, and a flag in work RAM tells the draw) |
 | None: the renderer does not change, and a translated line is stored in visual order | `nsmb` |
+| None: the whole game is right to left, translated or not (the speech box by where its text starts, every other string by line) | `polished-crystal` |
 
 English text never carries the marker, so untranslated messages keep the original
 path. When a whole block of messages must move to reach the bank (Tactics Ogre finds a
@@ -192,6 +197,9 @@ messages in English outside the bank.
 ## Where Arabic glyphs get their codes
 
 - A free range of an existing code page: `F9 40..CF` in FireRed's extra-symbol page.
+- The Latin letters' own codes, the whole game being translated: Polished Crystal (`$80-$99`,
+  `$a0-$b9` and the contractions and accented letters `$c0-$d1`, 70 codes; the Latin glyphs are
+  drawn over, and the letters stay in the charmap as aliases so untranslated text assembles).
 - A font of its own, selected in right-to-left mode: FF6 Advance (a second `FONT`),
   Fire Emblem (a second glyph table), Minish Cap (a font page), Advance Wars (256 codes
   of its own, drawn by the overlay's routine for text of the Arabic bank).
@@ -253,6 +261,10 @@ right-to-left line.
   flips each of the game's letters for the mirrored tilemap).
 - Reverse the variable buffers once when a dialogue changes direction: Minish Cap.
 - Static Latin words as islands in the game's glyphs: Mega Man Battle Network.
+- Typed in Arabic: Polished Crystal's naming screen and mail composer have Arabic keyboards,
+  and a routine gives each typed letter its form in place from tables of the letters' forms
+  (runtime shaping, without lam-alef); a model of the routine is checked against the build's
+  shaper over every string of up to three letters.
 - Refused for now, with the reason in each target's notes: FF6 Advance, Fire Emblem,
   Pokémon Mystery Dungeon, Mario & Luigi, Phantom Hourglass, Symphony of the Night
   (their prologues name no one at run time), Gran Turismo (a briefing names no one) and
@@ -286,7 +298,10 @@ adds, right-aligned with the lines.
 
 ## Fitting the reference font to the game
 
-The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned.
+The reference font is Noto Kufi Arabic SemiBold, with its SHA-256 pinned. Polished Crystal
+draws no glyph from it: at 8x8 pixels the outline font is not legible, so its 70 glyphs are
+pixel art on a baseline at row 5, emboldened by a pixel for the bold typeface and cropped to
+their ink, with a pixel of the joining stroke kept, for the variable-width font.
 
 - Use the largest size whose forms fit the game's rows around its baseline:
   - 10 px for FF6 Advance, Golden Sun, Mario & Luigi, Harvest Moon, Advance Wars and
@@ -410,8 +425,9 @@ commands.
 
 ## Candidates for other platforms (not implemented)
 
-None of these has been built or tested. They are research notes for engines the
-twenty-three targets did not cover, and each becomes an `experimental` strategy together
+None of these has been built or tested as a strategy (runtime shaping only for the names
+Polished Crystal's players type). They are research notes for engines the
+twenty-four targets did not cover, and each becomes an `experimental` strategy together
 with its first target.
 
 - **Tile-composed variable-width text.** Many NES, Game Boy and SNES engines put
@@ -422,7 +438,8 @@ with its first target.
   video memory.
 - **Runtime shaping.** For text assembled at run time (names the player types,
   item lists), the game would choose the contextual form from the neighbouring
-  letters while it draws, instead of receiving pre-shaped glyphs.
+  letters while it draws, instead of receiving pre-shaped glyphs. Polished Crystal
+  does this for the names and mail the player types (`engines/pokemon_gen2_arabic/naming.py`).
 - **Texture or sprite fonts.** PlayStation and Nintendo 64 games often draw text
   from texture pages or sprites. The glyph set would go into the texture with the
   game's own format and palette limits. It would be `glyph-font` with another font

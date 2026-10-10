@@ -76,7 +76,7 @@ class _EntryPoint:
         return self._loaded
 
 
-def test_the_twenty_three_reference_targets_keep_their_order_and_strategies():
+def test_the_twenty_four_reference_targets_keep_their_order_and_strategies():
     registry = build_target_registry(load_external=False)
     described = {target.id: target for target in registry}
     assert list(described) == [
@@ -103,20 +103,29 @@ def test_the_twenty_three_reference_targets_keep_their_order_and_strategies():
         "shining-force-2",
         "final-fantasy-ii",
         "final-fantasy-iii",
+        "polished-crystal",
     ]
     assert registry.using("line-cells") == ["mmbn", "fomt"]
     assert registry.using("text-images") == ["fire-emblem"]
     assert described["fire-emblem"].strategies == ("glyph-font", "text-images")
     # The source overlays check their script without a checkout; their preview
     # is the font file prepare puts in the checkout.
-    for target_id in ("firered", "minish-cap"):
+    for target_id in ("firered", "minish-cap", "polished-crystal"):
         assert described[target_id].kind == "source-overlay"
         assert described[target_id].operations() == ["check-translations", "prepare", "extract"]
     assert described["firered"].previews == ("arabic_normal.png",)
     assert described["minish-cap"].previews == ("arabic_font_preview.png",)
+    # The first Game Boy Color target: hand-drawn 8x8 glyphs, so its previews are the
+    # glyphs and speech-box rows drawn with them, not a font file.
+    polished_crystal = described["polished-crystal"]
+    assert (polished_crystal.platform_id, polished_crystal.strategies) == ("gbc", ("glyph-font",))
+    assert polished_crystal.previews == (
+        "polished_crystal_glyphs.png",
+        "polished_crystal_specimen.png",
+    )
     # CI's arabic-overlay matrix is the targets with check-translations: every one.
     checked = [target.id for target in registry if target.check_translations is not None]
-    assert checked == list(described) and len(checked) == 23
+    assert checked == list(described) and len(checked) == 24
     for target_id in ROM_OVERLAYS:
         target = described[target_id]
         assert target.kind == "rom-overlay" and target.platform_id == "gba"
@@ -603,6 +612,16 @@ def test_game_groups_hold_only_their_engine_tools(capsys):
     """What every target runs goes through ``targets``; a game's group adds its own tools."""
     groups = _subcommands(_build_parser())
     sources = ("pokemon-gen3", "tmc")
+    # Polished Crystal's group adds the BPS of the built ROM and the overlay's developer tools.
+    tools_of = {
+        "polished-crystal": [
+            "encode-arabic",
+            "make-bps",
+            "make-engine-patch",
+            "make-manifest",
+            "source-check",
+        ]
+    }
     for group in (
         *sources,
         "ff6a",
@@ -626,8 +645,10 @@ def test_game_groups_hold_only_their_engine_tools(capsys):
         "shining-force-2",
         "final-fantasy-ii",
         "final-fantasy-iii",
+        "polished-crystal",
     ):
         tools = ["encode-arabic", "source-check"] if group in sources else ["encode-arabic"]
+        tools = tools_of.get(group, tools)
         if group == "chrono-trigger":
             # Its string tables, added to the translation a whole one at a time.
             tools += ["adopt-table", "check-table", "new-table", "tables"]
@@ -641,7 +662,7 @@ def test_game_groups_hold_only_their_engine_tools(capsys):
 
     assert main(["targets", "list"]) == 0
     listed = json.loads(capsys.readouterr().out)
-    assert [target["id"] for target in listed][-1] == "final-fantasy-iii"
+    assert [target["id"] for target in listed][-1] == "polished-crystal"
     assert main(["targets", "check-hooks", "not-a-target"]) == 2
     assert capsys.readouterr().err.startswith("INVALID_REFERENCE: Unknown localization target")
 

@@ -183,6 +183,124 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  polished-crystal-reference-patch:
+    # Rangi42/polishedcrystal holds every file of the game, so CI builds the pinned
+    # ROM, checks it against the image the target supports, prepares a second
+    # checkout with the Arabic overlay, builds it and makes the BPS patch from the two.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Classic Retro
+        uses: actions/checkout@v6
+        with:
+          path: toolkit
+
+      - name: Checkout pristine pinned polishedcrystal
+        uses: actions/checkout@v6
+        with:
+          repository: Rangi42/polishedcrystal
+          ref: 3fa43192379df5c3e7b09a08e4d5d79af4f02f42
+          path: upstream-base
+
+      - name: Checkout Arabic target polishedcrystal
+        uses: actions/checkout@v6
+        with:
+          repository: Rangi42/polishedcrystal
+          ref: 3fa43192379df5c3e7b09a08e4d5d79af4f02f42
+          path: upstream-target
+
+      - name: Checkout pinned rgbds 1.0.0
+        uses: actions/checkout@v6
+        with:
+          repository: gbdev/rgbds
+          ref: fb9fa6038cfc39a448f043806219a58c86daf930
+          path: rgbds
+
+      - name: Checkout pinned Flips
+        uses: actions/checkout@v6
+        with:
+          repository: bates64/flips
+          ref: 6caac470f7fc096b0c5fdc374b65954f8bac5b16
+          path: flips
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential bison libpng-dev pkg-config
+
+      - name: Build rgbds 1.0.0
+        run: |
+          make -C rgbds -j4 rgbasm rgblink rgbfix rgbgfx
+          echo "$GITHUB_WORKSPACE/rgbds" >> "$GITHUB_PATH"
+
+      - name: Install toolkit
+        working-directory: toolkit
+        run: python -m pip install -e . -c constraints.txt
+
+      - name: Verify the overlay against the pinned source (dry run)
+        working-directory: toolkit
+        run: classic-retro polished-crystal source-check ../upstream-target > ../source-check.json
+
+      - name: Build pristine Polished Crystal 3.2.3
+        working-directory: upstream-base
+        run: |
+          rgbasm --version
+          make -j4
+
+      - name: Verify pristine ROM identity
+        working-directory: upstream-base
+        run: |
+          echo "6930b48af5844d373e3c9130f26d6dd1084cf4ed  polishedcrystal-3.2.3.gbc" | sha1sum -c -
+          test "$(sha256sum polishedcrystal-3.2.3.gbc | awk '{print $1}')" = "f06dbebe3fd20db54e7804605f7a55ad05b8ca203c62209705290d8880864803"
+          classic-retro detect polishedcrystal-3.2.3.gbc | grep -q '"supported": true'
+
+      - name: Apply the Arabic overlay
+        working-directory: toolkit
+        run: |
+          mkdir -p ../artifact
+          NOTO_COMMIT=ffebf8c1ee449e544955a7e813c54f9b73848eac
+          ARABIC_FONT=../reference-font.ttf
+          curl --fail --location "https://raw.githubusercontent.com/notofonts/noto-fonts/$NOTO_COMMIT/hinted/ttf/NotoKufiArabic/NotoKufiArabic-SemiBold.ttf" -o "$ARABIC_FONT"
+          echo "aa30cd2663f1eb1c940c9cd6a898877f307c2572e72a8a352896fe23f512018e  $ARABIC_FONT" | sha256sum -c -
+          classic-retro targets prepare polished-crystal ../upstream-target --font "$ARABIC_FONT" | tee ../artifact/prepare-report.json
+          # A second run on the prepared tree changes nothing.
+          classic-retro targets prepare polished-crystal ../upstream-target --font "$ARABIC_FONT" | grep -q '"already_prepared": true'
+
+      - name: Build the Arabic ROM
+        working-directory: upstream-target
+        run: |
+          make -j4 2>&1 | tee ../artifact/make.log
+          test "$(stat -c %s polishedcrystal-3.2.3.gbc)" = 2097152
+          if grep -q "is not 8-bit" ../artifact/make.log; then echo "a short jump overflowed"; exit 1; fi
+          tools/bankends polishedcrystal-3.2.3.map > ../artifact/bankends.txt
+
+      - name: Build Flips CLI
+        working-directory: flips
+        run: TARGET=cli make CFLAGS="-O3"
+
+      - name: Create and verify the BPS patch
+        run: |
+          classic-retro polished-crystal make-bps upstream-base/polishedcrystal-3.2.3.gbc upstream-target/polishedcrystal-3.2.3.gbc --out artifact/polishedcrystal-3.2.3-arabic.bps | tee artifact/patch-report.json
+          ./flips/flips --apply artifact/polishedcrystal-3.2.3-arabic.bps upstream-base/polishedcrystal-3.2.3.gbc artifact/verified.gbc
+          cmp artifact/verified.gbc upstream-target/polishedcrystal-3.2.3.gbc
+          rm artifact/verified.gbc
+
+      - name: Upload BPS patch only
+        uses: actions/upload-artifact@v6
+        with:
+          name: polishedcrystal-3.2.3-arabic-bps
+          path: |
+            artifact/polishedcrystal-3.2.3-arabic.bps
+            artifact/patch-report.json
+            artifact/prepare-report.json
+            artifact/bankends.txt
+          if-no-files-found: error
+          retention-days: 14
+
   minish-cap-source-overlay:
     # zeldaret/tmc extracts its assets from the original ROM, which is never
     # uploaded. This job checks the overlay against the pinned source, measures
