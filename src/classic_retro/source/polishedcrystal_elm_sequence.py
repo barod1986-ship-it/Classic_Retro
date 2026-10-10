@@ -7,7 +7,6 @@ left untouched until an inline mixed-script renderer has been implemented.
 
 from __future__ import annotations
 
-import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -237,9 +236,7 @@ def prepare(source: Path, font: Path, preview: Path | None = None) -> dict[str, 
         review = Image.new("1", (opening.COLUMNS * 8, len(images) * 10))
         for index, image in enumerate(images):
             review.paste(image, (0, index * 10))
-        review.resize(
-            (review.width * 4, review.height * 4), Image.Resampling.NEAREST
-        ).save(preview)
+        review.resize((review.width * 4, review.height * 4), Image.Resampling.NEAREST).save(preview)
     return {
         "version": "3.2.3",
         "game": "polished-crystal",
