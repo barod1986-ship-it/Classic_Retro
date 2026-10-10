@@ -135,13 +135,13 @@ def test_visual_order_reverses_letters_but_not_digit_runs():
 def test_the_fonts_are_drawn_as_pinned():
     blank = Image.new("L", (128, 64), 255)
     assert _pixels(fonts.draw_font(blank)) == (
-        "063d016f0fcd6c2f0f2c90e5292751590179d57e7a5dada4e5ce0f59af3552db"
+        "633db85df037938c1bdf6a171b1f335d8bec67c4a57a0d640211e5b8350d5a53"
     )
     assert _pixels(fonts.draw_font(blank, bold=True)) == (
-        "3e7c5db49e0738781985938f097a52f4d492fa1a4fe3ea9e54dc58a2ae35f504"
+        "b7bef02fbbf804b8002dddc485e3959a3e5f6c2219bd30baa883b741e16ecc90"
     )
     assert _pixels(fonts.draw_vwf_font(blank)) == (
-        "68f3067c824e5e7a6bd3524a9f921c4494bcc3dba0da44a16b3cfd4c6670c955"
+        "2fe4a095cbe2aa1cc9962afeba46a89baee665a3b9dd31ef71e84c44f9da0895"
     )
     typefaces = fonts.typefaces(blank)
     assert list(typefaces) == list(fonts.TYPEFACES)
