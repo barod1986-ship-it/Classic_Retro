@@ -90,7 +90,11 @@ jobs:
 
           from pyboy import PyBoy
 
-          frames = [360, 780, 1200, 1700, 2200, 2600, 2900, 3200, 3500, 3800, 4100, 4400, 4700, 5000, 5500]
+          frames = [
+              360, 780, 1200, 1700, 2200, 2600, 2900, 3200, 3500, 3800,
+              4100, 4400, 4700, 5000, 5500, 5700, 5900, 6100, 6300, 6500,
+              6800, 7100, 7400,
+          ]
 
           def capture_rom(filename, prefix):
               emulator = PyBoy(filename, window="null", sound_emulated=False)
