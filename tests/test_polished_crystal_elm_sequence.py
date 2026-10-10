@@ -19,23 +19,19 @@ def _fixture(tmp_path):
     (source / "data/text").mkdir(parents=True)
     (source / "engine/menus").mkdir(parents=True)
     (source / "gfx/font").mkdir(parents=True)
-    extra = ''.join(
-        'SECTION "' + scene.source_label + '", ROMX\n'
-        + scene.source_label + '::\n'
-        + '\ttext "English"\n\tprompt\n\n'
+    extra = "".join(
+        f'SECTION "{scene.source_label}", ROMX\n'
+        f'{scene.source_label}::\n\ttext "English"\n\tprompt\n\n'
         for scene in seq.SCENES
     )
     (source / "data/text/common.asm").write_text(
-        'SECTION "_ElmText1", ROMX\n'
-        '_ElmText1::\n\ttext "Hello"\n\tprompt\n\n'
-        + extra,
+        'SECTION "_ElmText1", ROMX\n_ElmText1::\n\ttext "Hello"\n\tprompt\n\n' + extra,
         encoding="utf-8",
     )
     (source / "engine/menus/intro_menu.asm").write_text(
-        'ProfElmSpeech:\n\tld hl, ElmText1\n\tcall PrintText\n'
-        + ''.join(
-            '\tld hl, ' + scene.caller_label + '\n\tcall PrintText\n'
-            for scene in seq.SCENES
+        "ProfElmSpeech:\n\tld hl, ElmText1\n\tcall PrintText\n"
+        + "".join(
+            f"\tld hl, {scene.caller_label}\n\tcall PrintText\n" for scene in seq.SCENES
         ),
         encoding="utf-8",
     )
@@ -67,8 +63,7 @@ def test_fails_safely_on_ambiguous_text_sections():
 def test_multi_dialogue_overlay_preserves_dynamic_player_and_font(tmp_path, monkeypatch):
     source = _fixture(tmp_path)
     originals = {
-        name: opening._git_blob_sha((source / name).read_bytes())
-        for name in opening.SOURCE_FILES
+        name: opening._git_blob_sha((source / name).read_bytes()) for name in opening.SOURCE_FILES
     }
     monkeypatch.setattr(opening, "SOURCE_FILES", originals)
     monkeypatch.setattr(seq, "_verify_upstream", lambda p: None)
