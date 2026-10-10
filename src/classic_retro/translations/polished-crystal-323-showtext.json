@@ -1,0 +1,431 @@
+{
+  "schema": "classic-retro-polished-crystal-showtext-v1",
+  "version": "3.2.3",
+  "source_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+  "files": {
+    "maps/NewBarkTown.asm": "76a556311a4aadcd016fbd38418ee447c5147caf",
+    "maps/ElmsLab.asm": "9f82a1726df25459f53071867eaf6ee7dbe3a414"
+  },
+  "note": "Curated Arabic selected overworld showtext messages; not whole-game coverage. PLAYER kept as a separate live Latin-name line.",
+  "scenes": [
+    {
+      "id": "ST01",
+      "file": "maps/NewBarkTown.asm",
+      "label": "Text_LyraIntro",
+      "calls": 1,
+      "player_name": true,
+      "context": "Lyra greets the player outside their home and leads them to Professor Elm",
+      "lines": [
+        [
+          "line",
+          "مرحبًا! أنا ليرا."
+        ],
+        [
+          "para",
+          "زرت منزلك قبل"
+        ],
+        [
+          "line",
+          "قليل من الوقت."
+        ],
+        [
+          "para",
+          "لكن كنت ما زلت"
+        ],
+        [
+          "line",
+          "نائمًا حينها."
+        ],
+        [
+          "para",
+          "أساعد الأستاذ"
+        ],
+        [
+          "line",
+          "إلم أحيانًا."
+        ],
+        [
+          "para",
+          "بدأ بحثًا جديدًا"
+        ],
+        [
+          "line",
+          "عن البوكيمون."
+        ],
+        [
+          "para",
+          "ويريد منا نحن"
+        ],
+        [
+          "line",
+          "الاثنين مساعدته."
+        ],
+        [
+          "para",
+          "هيا نذهب إليه"
+        ],
+        [
+          "line",
+          "لنعرف المطلوب!"
+        ]
+      ]
+    },
+    {
+      "id": "ST02",
+      "file": "maps/ElmsLab.asm",
+      "label": "ElmText_GotAnEmail",
+      "calls": 1,
+      "context": "Elm notices an unexpected email",
+      "lines": [
+        [
+          "text",
+          "لحظة! وصلتني"
+        ],
+        [
+          "line",
+          "رسالة إلكترونية!"
+        ],
+        [
+          "para",
+          "دعني أقرأها..."
+        ],
+        [
+          "line",
+          "همم... فهمت."
+        ],
+        [
+          "para",
+          "حسنًا، جيد!"
+        ]
+      ]
+    },
+    {
+      "id": "ST03",
+      "file": "maps/ElmsLab.asm",
+      "label": "ElmText_ChooseAPokemon",
+      "calls": 1,
+      "player_name": true,
+      "context": "Elm invites the player to choose one starter Pokémon",
+      "lines": [
+        [
+          "line",
+          "أريدك أن تربي"
+        ],
+        [
+          "line",
+          "بوكيمونًا من هذه"
+        ],
+        [
+          "para",
+          "الكرات الثلاث."
+        ],
+        [
+          "para",
+          "ستكون أول مدرب"
+        ],
+        [
+          "line",
+          "لهذا البوكيمون."
+        ],
+        [
+          "para",
+          "تقدم واختر"
+        ],
+        [
+          "line",
+          "من يعجبك!"
+        ]
+      ]
+    },
+    {
+      "id": "ST04",
+      "file": "maps/ElmsLab.asm",
+      "label": "LabWhereGoingText",
+      "calls": 1,
+      "context": "Elm stops the player trying to leave the laboratory",
+      "lines": [
+        [
+          "text",
+          "إلم: انتظر!"
+        ],
+        [
+          "line",
+          "إلى أين تذهب؟"
+        ]
+      ]
+    },
+    {
+      "id": "ST05",
+      "file": "maps/ElmsLab.asm",
+      "label": "ElmDirectionsText1",
+      "calls": 1,
+      "context": "Professor Elm gives directions to Mr. Pokémon and his telephone number",
+      "lines": [
+        [
+          "text",
+          "يسكن السيد"
+        ],
+        [
+          "line",
+          "بوكيمون قرب"
+        ],
+        [
+          "para",
+          "شيريجروف، في"
+        ],
+        [
+          "line",
+          "المدينة المجاورة."
+        ],
+        [
+          "para",
+          "الطريق مباشر"
+        ],
+        [
+          "line",
+          "ويسهل العثور"
+        ],
+        [
+          "line",
+          "عليه."
+        ],
+        [
+          "para",
+          "وخذ رقم هاتفي."
+        ],
+        [
+          "line",
+          "اتصل إذا واجهت"
+        ],
+        [
+          "line",
+          "أي مشكلة!"
+        ]
+      ]
+    },
+    {
+      "id": "ST06",
+      "file": "maps/ElmsLab.asm",
+      "label": "ElmDirectionsText2",
+      "calls": 1,
+      "context": "Healing machine in Elm's lab",
+      "lines": [
+        [
+          "text",
+          "إذا أصيب أحد"
+        ],
+        [
+          "line",
+          "بوكيموناتك،"
+        ],
+        [
+          "para",
+          "استخدم هذه"
+        ],
+        [
+          "line",
+          "الآلة لعلاجه."
+        ],
+        [
+          "para",
+          "يمكنك استعمالها"
+        ],
+        [
+          "line",
+          "متى احتجت!"
+        ]
+      ]
+    },
+    {
+      "id": "ST07",
+      "file": "maps/ElmsLab.asm",
+      "label": "ElmDirectionsText3",
+      "calls": 1,
+      "player_name": true,
+      "context": "Elm is counting on the player",
+      "lines": [
+        [
+          "line",
+          "أنا أعتمد عليك!"
+        ]
+      ]
+    },
+    {
+      "id": "ST08",
+      "file": "maps/ElmsLab.asm",
+      "label": "ElmsLabOfficerText1",
+      "calls": 1,
+      "context": "Police officer investigating the stolen Pokémon",
+      "lines": [
+        [
+          "text",
+          "سمعت أن أحدهم"
+        ],
+        [
+          "line",
+          "سرق بوكيمونًا!"
+        ],
+        [
+          "para",
+          "القاعدة الأولى:"
+        ],
+        [
+          "line",
+          "المجرم يعود"
+        ],
+        [
+          "para",
+          "دائمًا إلى مكان"
+        ],
+        [
+          "line",
+          "جريمته..."
+        ],
+        [
+          "para",
+          "لحظة، هل أنت"
+        ],
+        [
+          "line",
+          "اللص إذًا؟"
+        ]
+      ]
+    },
+    {
+      "id": "ST09",
+      "file": "maps/ElmsLab.asm",
+      "label": "ElmsLabLyraTheftInnocentText",
+      "calls": 1,
+      "player_name": true,
+      "context": "Lyra defends the player against a theft accusation",
+      "lines": [
+        [
+          "line",
+          "ليرا: توقف!"
+        ],
+        [
+          "para",
+          "ليس لهذا المدرب"
+        ],
+        [
+          "line",
+          "علاقة بالسرقة!"
+        ],
+        [
+          "para",
+          "رأيت فتى ذا"
+        ],
+        [
+          "line",
+          "شعر أحمر يراقب"
+        ],
+        [
+          "line",
+          "هذا المبنى!"
+        ]
+      ]
+    },
+    {
+      "id": "ST10",
+      "file": "maps/ElmsLab.asm",
+      "label": "ElmsLabLyraTheftGoodbyeText",
+      "calls": 1,
+      "player_name": true,
+      "context": "Lyra says goodbye after the police clear the player",
+      "lines": [
+        [
+          "line",
+          "ليرا: أنا سعيدة"
+        ],
+        [
+          "para",
+          "لأنه فهم أنك"
+        ],
+        [
+          "line",
+          "لست المذنب."
+        ],
+        [
+          "para",
+          "آمل أن يجد"
+        ],
+        [
+          "line",
+          "اللص ويعيد"
+        ],
+        [
+          "line",
+          "البوكيمون."
+        ],
+        [
+          "para",
+          "حسنًا، إلى"
+        ],
+        [
+          "line",
+          "اللقاء قريبًا!"
+        ]
+      ]
+    },
+    {
+      "id": "ST11",
+      "file": "maps/ElmsLab.asm",
+      "label": "ElmsLabLyraChallengeText",
+      "calls": 1,
+      "player_name": true,
+      "context": "Lyra challenges the player to a friendly Pokémon battle",
+      "lines": [
+        [
+          "line",
+          "ليرا: تعال!"
+        ],
+        [
+          "para",
+          "لنتعرف إلى"
+        ],
+        [
+          "line",
+          "بوكيموناتنا عبر"
+        ],
+        [
+          "line",
+          "معركة ودية!"
+        ]
+      ]
+    },
+    {
+      "id": "ST12",
+      "file": "maps/ElmsLab.asm",
+      "label": "ElmsLabLyraText_YouLost",
+      "calls": 1,
+      "context": "Lyra comments after an exciting battle",
+      "lines": [
+        [
+          "text",
+          "كانت معركة"
+        ],
+        [
+          "line",
+          "رائعة ومثيرة!"
+        ]
+      ]
+    },
+    {
+      "id": "ST13",
+      "file": "maps/ElmsLab.asm",
+      "label": "ElmsLabLyraText_YouWon",
+      "calls": 1,
+      "context": "Lyra responds to the first tutorial battle, check original source structure before using",
+      "lines": [
+        [
+          "text",
+          "لقد أبدعت!"
+        ],
+        [
+          "line",
+          "كانت معركة رائعة!"
+        ]
+      ]
+    }
+  ]
+}
