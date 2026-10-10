@@ -22,6 +22,7 @@ RESOURCE = "polished-crystal-323-showtext.json"
 SCHEMA = "classic-retro-polished-crystal-showtext-v1"
 COMMIT = "3fa43192379df5c3e7b09a08e4d5d79af4f02f42"
 NORMAL_POOL = tuple(range(opening.FIRST_ARABIC_CODE, opening.LAST_ARABIC_CODE + 1))
+MAX_PAGE_LINES = 4
 _LABEL = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*:", re.MULTILINE)
 _COMMAND = re.compile(r'\s*(text|line|cont|para)\s+"([^"]*)"\s*(?:;.*)?')
 _TERMINATOR = re.compile(r"\s*done(?:\s*;.*)?")
@@ -36,6 +37,7 @@ class OverworldScene:
     calls: int
     player_name: bool
     lines: tuple[tuple[str, str], ...]
+    ending: str = "<DONE>"
 
 
 @dataclass
@@ -160,6 +162,39 @@ def _block(original: str, label: str) -> tuple[int, int, str]:
     return start, end, original[start:end]
 
 
+def pages_for(scene: OverworldScene) -> tuple[OverworldScene, ...]:
+    """Split oversized strings into bank-safe independent textbox pages.
+
+    The PLAYER placeholder is kept on a separate one-line name page whose
+    18 reserved non-Latin glyph slots preserve every English name character.
+    Normal pages may use the full static Arabic cell budget.
+    """
+    remaining = list(scene.lines)
+    groups: list[tuple[bool, tuple[tuple[str, str], ...]]] = []
+    if scene.player_name:
+        groups.append((True, (remaining.pop(0),)))
+    while remaining:
+        chunk = remaining[:MAX_PAGE_LINES]
+        del remaining[:MAX_PAGE_LINES]
+        if chunk[0][0] != "text":
+            chunk[0] = ("text", chunk[0][1])
+        groups.append((False, tuple(chunk)))
+    results = []
+    for index, (dynamic, lines) in enumerate(groups):
+        results.append(
+            OverworldScene(
+                scene.id + "P" + str(index + 1),
+                scene.file,
+                scene.label if index == 0 else f"ClassicRetro{scene.id}Page{index + 1}",
+                scene.calls,
+                dynamic,
+                lines,
+                "<DONE>" if index == len(groups) - 1 else "<PROMPT>",
+            )
+        )
+    return tuple(results)
+
+
 def verify_original(original: str, scene: OverworldScene) -> None:
     """Reject any unseen command instead of silently destroying game behavior."""
     _, _, text = _block(original, scene.label)
@@ -264,7 +299,7 @@ def _dialogue(entry: RenderedScene) -> str:
         if kind != "text":
             commands.append(f'\tdb "{_CONTROL[kind]}"')
         commands.append("\tdb " + ", ".join("$" + format(code, "02x") for code in line))
-    return "\n".join((*commands, '\tdb "<DONE>"', "", ""))
+    return "\n".join((*commands, '\tdb "' + scene.ending + '"', "", ""))
 
 
 def _atlas_loader(atlas: Atlas) -> str:
@@ -286,29 +321,29 @@ def _atlas_loader(atlas: Atlas) -> str:
     )
 
 
-def _replace_event_calls(script: str, entry: RenderedScene) -> str:
-    scene = entry.scene
+def _replace_event_calls(
+    script: str, scene: OverworldScene, pages: tuple[RenderedScene, ...]
+) -> str:
     original = f"\tshowtext {scene.label}\n"
-    if script.count(original) != scene.calls:
+    if script.count(original) != scene.calls or not pages:
         raise ClassicRetroError(
             ErrorCode.SOURCE_BASELINE_MISMATCH,
-            f"{scene.label}: expected {scene.calls} showtext calls, found {script.count(original)}",
+            f"{scene.label}: showtext count changed or no Arabic pages",
         )
-    # Identical to the showtext opcode: opentext, writetext, waitbutton,
-    # closetext. Load Arabic after opentext reloads the normal font; restore
-    # the normal atlas before closing to avoid spoiling subsequent screens.
-    replacement = "\n".join(
-        (
-            "\topentext",
-            f"\tcallasm {entry.atlas.loader_label}",
-            f"\twritetext {scene.label}",
-            "\twaitbutton",
-            "\tcallasm ClassicRetroSTRestoreFont",
-            "\tclosetext",
-            "",
-        )
-    )
-    return script.replace(original, replacement)
+    # Every non-final page uses PROMPT, which waits inside PrintText.
+    # The final page uses DONE and the original waitbutton. The textbox
+    # is opened just once and its normal font restored before closure.
+    commands = ["\topentext"]
+    for page in pages:
+        commands.append(f"\tcallasm {page.atlas.loader_label}")
+        commands.append(f"\twritetext {page.scene.label}")
+    commands += [
+        "\twaitbutton",
+        "\tcallasm ClassicRetroSTRestoreFont",
+        "\tclosetext",
+        "",
+    ]
+    return script.replace(original, "\n".join(commands))
 
 
 def augment(
@@ -330,21 +365,26 @@ def augment(
         raise ClassicRetroError(ErrorCode.INVALID_REFERENCE, "No pending font source")
     native = (source / "gfx/font/normal.1bpp").read_bytes()
     rendered: list[tuple[OverworldScene, opening.ElmArabicAssets]] = []
+    page_ids: dict[str, list[str]] = {}
     for scene in scenes:
         verify_original(originals[scene.file], scene)
-        assets = opening.make_assets(
-            source, font, scene.lines, code_pool=NAME_SAFE_POOL if scene.player_name else None
-        )
-        if scene.player_name:
-            for code in range(0x80, 0xBA):
-                start = (code - 0x80) * 8
-                if assets.tiles[start : start + 8] != native[start : start + 8]:
-                    raise ClassicRetroError(
-                        ErrorCode.BUILD_VALIDATION_FAILED,
-                        f"{scene.id}: changed a player's Latin name glyph",
-                    )
-        rendered.append((scene, assets))
+        page_ids[scene.id] = []
+        for page in pages_for(scene):
+            assets = opening.make_assets(
+                source, font, page.lines, code_pool=NAME_SAFE_POOL if page.player_name else None
+            )
+            if page.player_name:
+                for code in range(0x80, 0xBA):
+                    start = (code - 0x80) * 8
+                    if assets.tiles[start : start + 8] != native[start : start + 8]:
+                        raise ClassicRetroError(
+                            ErrorCode.BUILD_VALIDATION_FAILED,
+                            f"{scene.id}: changed a player's Latin name glyph",
+                        )
+            rendered.append((page, assets))
+            page_ids[scene.id].append(page.id)
     atlases, packed = pack_atlases(tuple(rendered))
+    by_id = {page.scene.id: page for page in packed}
     changes = dict(pending)
     common = pending[common_path].decode("utf-8")
     for atlas in atlases:
@@ -370,11 +410,13 @@ def augment(
         name: changes.get(source / name, (source / name).read_bytes()).decode("utf-8")
         for name in pinned
     }
-    for entry in packed:
-        content = scripts[entry.scene.file]
-        start, end, _ = _block(content, entry.scene.label)
-        content = content[:start] + _dialogue(entry) + content[end:]
-        scripts[entry.scene.file] = _replace_event_calls(content, entry)
+    for scene in scenes:
+        content = scripts[scene.file]
+        pages = tuple(by_id[identifier] for identifier in page_ids[scene.id])
+        start, end, _ = _block(content, scene.label)
+        translated = "\n".join(_dialogue(page) for page in pages)
+        content = content[:start] + translated + content[end:]
+        scripts[scene.file] = _replace_event_calls(content, scene, pages)
     for name, script in scripts.items():
         changes[source / name] = script.encode("utf-8")
     changes[common_path] = common.encode("utf-8")
@@ -382,10 +424,11 @@ def augment(
         "source_verified": True,
         "scenes": len(scenes),
         "arabic_lines": sum(len(scene.lines) for scene in scenes),
+        "text_pages": len(packed),
         "event_calls": sum(scene.calls for scene in scenes),
         "shared_atlases": len(atlases),
         "shared_atlas_tiles": [len(atlas.glyphs) for atlas in atlases],
-        "avoided_duplicate_font_bytes": (len(scenes) - len(atlases)) * 114 * 8,
+        "avoided_duplicate_font_bytes": (len(packed) - len(atlases)) * 114 * 8,
         "live_name_scenes": sum(scene.player_name for scene in scenes),
         "translated_scope": "curated overworld showtext messages",
         "gameplay_verified": False,
