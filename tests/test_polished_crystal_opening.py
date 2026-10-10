@@ -60,9 +60,9 @@ def test_injects_original_font_switch_without_touching_other_texts(tmp_path, mon
     assert result["scope"] == "ElmText1 only"
     assert result["playable_verified"] is False
     assert result["dynamic_arabic"] is False
-    assert "call ClassicRetroPrintArabicElm" in intro
-    assert "jmp LoadStandardFont" in intro
-    assert "call GetMaybeOpaque1bpp" in intro
+    assert "farcall ClassicRetroPrintArabicElm" in intro
+    assert "jmp LoadStandardFont" in common
+    assert "call GetMaybeOpaque1bpp" in common
     assert "ClassicRetroArabicElmFont::" in common
     assert '\ttext "Original"' in common
     assert (source / opening.OUTPUT_FONT).stat().st_size == 912
