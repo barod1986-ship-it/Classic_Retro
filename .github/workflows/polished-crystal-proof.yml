@@ -10,7 +10,7 @@ on:
       - "src/classic_retro/source/polishedcrystal_elm_dynamic.py"
       - "src/classic_retro/source/polishedcrystal_newbark.py"
       - "src/classic_retro/source/polishedcrystal_showtext.py"
-      - "src/classic_retro/translations/polished-crystal-323-showtext.json"
+      - "src/classic_retro/source_data/polished-crystal-323-showtext.json"
       - "src/classic_retro/source/polishedcrystal_catalog.py"
       - "src/classic_retro/research/commands.py"
       - "tests/test_polished_crystal_opening.py"
