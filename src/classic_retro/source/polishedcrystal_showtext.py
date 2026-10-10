@@ -107,7 +107,7 @@ def load_scenes() -> tuple[dict[str, str], tuple[OverworldScene, ...]]:
         path = record.get("file")
         label = record.get("label")
         calls = record.get("calls")
-        dynamic = record.get("player_name")
+        dynamic = record.get("player_name", False)
         rows = record.get("lines")
         if (
             not isinstance(identifier, str)
