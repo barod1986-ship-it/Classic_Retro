@@ -77,7 +77,7 @@ def _invalid(message: str) -> ClassicRetroError:
 def load_scenes() -> tuple[dict[str, str], tuple[OverworldScene, ...]]:
     """Arabic only, with stable labels and pinned source revisions."""
     try:
-        resource = files("classic_retro.translations").joinpath(RESOURCE)
+        resource = files("classic_retro.source_data").joinpath(RESOURCE)
         data = json.loads(resource.read_text(encoding="utf-8"))
     except (OSError, ValueError) as exc:
         raise _invalid(f"Could not load Polished Crystal overworld translations: {exc}") from exc
