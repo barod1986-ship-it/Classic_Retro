@@ -6,7 +6,7 @@
     "maps/NewBarkTown.asm": "76a556311a4aadcd016fbd38418ee447c5147caf",
     "maps/ElmsLab.asm": "9f82a1726df25459f53071867eaf6ee7dbe3a414"
   },
-  "note": "Curated Arabic selected overworld showtext messages; not whole-game coverage. PLAYER kept as a separate live Latin-name line.",
+  "note": "Curated Arabic only: original source labels are verified; aliases and unrecognized controls are deliberately excluded.",
   "scenes": [
     {
       "id": "ST01",
@@ -396,19 +396,48 @@
     {
       "id": "ST12",
       "file": "maps/ElmsLab.asm",
-      "label": "ElmsLabLyraText_YouLost",
+      "label": "ElmAfterTicketText",
       "calls": 1,
-      "context": "Lyra comments after an exciting battle",
+      "context": "Elm encourages the player and Lyra on separate journeys; one live PLAYER name",
       "lines": [
         [
-          "text",
-          "كانت معركة"
+          "line",
+          "إلم: لكل منكما"
+        ],
+        [
+          "para",
+          "رحلة خاصة"
         ],
         [
           "line",
-          "رائعة ومثيرة!"
+          "تنتظره الآن."
+        ],
+        [
+          "para",
+          "أتساءل هل"
+        ],
+        [
+          "line",
+          "تسبقك ليرا إلى"
+        ],
+        [
+          "line",
+          "دوري البوكيمون؟"
+        ],
+        [
+          "para",
+          "أبلغ الأستاذ"
+        ],
+        [
+          "line",
+          "أوك في كانتو"
+        ],
+        [
+          "line",
+          "تحياتي!"
         ]
-      ]
+      ],
+      "player_name": true
     }
   ]
 }
