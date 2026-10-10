@@ -183,8 +183,6 @@ def _print(payload: object) -> int:
     return 0
 
 
-
-
 def _polished_crystal_catalog(args: argparse.Namespace) -> int:
     from classic_retro.source.polishedcrystal_catalog import write_catalog
 
@@ -203,6 +201,7 @@ def _polished_crystal_check(args: argparse.Namespace) -> int:
     report = check_workspace(args.source, workspace)
     _print(report)
     return 2 if report["errors"] else 0
+
 
 def register_cli(subcommands: argparse._SubParsersAction) -> None:
     group = subcommands.add_parser(
