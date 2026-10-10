@@ -212,7 +212,7 @@ def _polished_crystal_opening(args: argparse.Namespace) -> int:
 def _polished_crystal_elm_sequence(args: argparse.Namespace) -> int:
     from classic_retro.source.polishedcrystal_elm_sequence import prepare
 
-    return _print(prepare(args.source, args.font, args.preview))
+    return _print(prepare(args.source, args.font, args.preview, dynamic_player=args.dynamic_player))
 
 
 def register_cli(subcommands: argparse._SubParsersAction) -> None:
@@ -254,6 +254,10 @@ def register_cli(subcommands: argparse._SubParsersAction) -> None:
     elm_sequence.add_argument("source", type=Path)
     elm_sequence.add_argument("--font", type=Path, required=True)
     elm_sequence.add_argument("--preview", type=Path)
+    elm_sequence.add_argument(
+        "--dynamic-player", action="store_true",
+        help="Also translate the last Elm speech while preserving the live player name",
+    )
     elm_sequence.set_defaults(handler=_polished_crystal_elm_sequence)
 
     run = commands.add_parser(
