@@ -80,6 +80,8 @@ def test_multi_dialogue_overlay_preserves_dynamic_player_and_font(tmp_path, monk
     common = (source / "data/text/common.asm").read_text(encoding="utf-8")
     intro = (source / "engine/menus/intro_menu.asm").read_text(encoding="utf-8")
     assert common.count("ClassicRetroArabicElm2Font::") == 1
+    assert "BANK(ElmText2)" in common
+    assert common.count("call FarCall_de") == 7
     assert len(list((source / "gfx/font").glob("classic_retro_*.1bpp"))) == 7
     assert intro.count("farcall ClassicRetroPrint") == 7
     assert intro.count("\tcall PrintText") == 0
