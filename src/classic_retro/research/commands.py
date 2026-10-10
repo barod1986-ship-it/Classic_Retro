@@ -203,6 +203,12 @@ def _polished_crystal_check(args: argparse.Namespace) -> int:
     return 2 if report["errors"] else 0
 
 
+def _polished_crystal_opening(args: argparse.Namespace) -> int:
+    from classic_retro.source.polishedcrystal_opening import prepare
+
+    return _print(prepare(args.source, args.font, args.preview))
+
+
 def register_cli(subcommands: argparse._SubParsersAction) -> None:
     group = subcommands.add_parser(
         "research",
@@ -225,6 +231,16 @@ def register_cli(subcommands: argparse._SubParsersAction) -> None:
     polished_check.add_argument("source", type=Path)
     polished_check.add_argument("workspace", type=Path)
     polished_check.set_defaults(handler=_polished_crystal_check)
+
+
+    polished_intro = commands.add_parser(
+        "polished-crystal-opening",
+        help="Patch a pristine, already built v3.2.3 RGBDS source with one Arabic opening",
+    )
+    polished_intro.add_argument("source", type=Path)
+    polished_intro.add_argument("--font", type=Path, required=True)
+    polished_intro.add_argument("--preview", type=Path)
+    polished_intro.set_defaults(handler=_polished_crystal_opening)
 
     run = commands.add_parser(
         "run",
