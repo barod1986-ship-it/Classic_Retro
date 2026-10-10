@@ -17,6 +17,7 @@ from classic_retro.engines.mmbn import MmbnEngineAdapter
 from classic_retro.engines.nsmb import NsmbEngineAdapter
 from classic_retro.engines.phantom_hourglass import PhantomHourglassEngineAdapter
 from classic_retro.engines.pmd import PmdEngineAdapter
+from classic_retro.engines.pokemon_gen2 import PolishedCrystalEngineAdapter
 from classic_retro.engines.pokemon_gen3 import PokemonGen3EngineAdapter
 from classic_retro.engines.pokemon_gen4 import PokemonGen4EngineAdapter
 from classic_retro.engines.ridge_racer import RidgeRacerEngineAdapter
@@ -38,6 +39,7 @@ from classic_retro.games.mario_luigi_superstar_saga import MarioLuigiSuperstarSa
 from classic_retro.games.megaman_battle_network import MegaManBattleNetworkUsaGameAdapter
 from classic_retro.games.metroid_fusion import MetroidFusionUsaGameAdapter
 from classic_retro.games.new_super_mario_bros import NewSuperMarioBrosUsaGameAdapter
+from classic_retro.games.polished_crystal import PolishedCrystal323GameAdapter
 from classic_retro.games.pokemon_firered import PokemonFireRedRev1GameAdapter
 from classic_retro.games.pokemon_mystery_dungeon_red import PokemonMysteryDungeonRedUsaGameAdapter
 from classic_retro.games.pokemon_platinum import PokemonPlatinumUsaGameAdapter
@@ -71,6 +73,7 @@ def register_builtin_adapters(registry: AdapterRegistry) -> None:
     ):
         registry.register_platform(adapter)
 
+    registry.register_engine(PolishedCrystalEngineAdapter())
     registry.register_engine(PokemonGen3EngineAdapter())
     registry.register_engine(TmcEngineAdapter())
     registry.register_engine(Ff6aEngineAdapter())
@@ -94,6 +97,7 @@ def register_builtin_adapters(registry: AdapterRegistry) -> None:
     registry.register_engine(Sf2EngineAdapter())
     registry.register_engine(Ff4EngineAdapter())
     registry.register_engine(Ff6EngineAdapter())
+    registry.register_game(PolishedCrystal323GameAdapter())
     registry.register_game(PokemonFireRedRev1GameAdapter())
     registry.register_game(ZeldaMinishCapUsaGameAdapter())
     registry.register_game(FinalFantasyVIAdvanceUsaGameAdapter())
