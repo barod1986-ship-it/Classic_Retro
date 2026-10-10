@@ -30,9 +30,7 @@ def _fixture(tmp_path):
     )
     (source / "engine/menus/intro_menu.asm").write_text(
         "ProfElmSpeech:\n\tld hl, ElmText1\n\tcall PrintText\n"
-        + "".join(
-            f"\tld hl, {scene.caller_label}\n\tcall PrintText\n" for scene in seq.SCENES
-        ),
+        + "".join(f"\tld hl, {scene.caller_label}\n\tcall PrintText\n" for scene in seq.SCENES),
         encoding="utf-8",
     )
     (source / "gfx/font/normal.1bpp").write_bytes(bytes(912))
