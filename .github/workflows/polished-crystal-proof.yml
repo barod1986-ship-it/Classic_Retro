@@ -1,0 +1,118 @@
+name: Polished Crystal Arabic proof
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - ".github/workflows/polished-crystal-proof.yml"
+      - "src/classic_retro/source/polishedcrystal_opening.py"
+      - "src/classic_retro/source/polishedcrystal_catalog.py"
+      - "src/classic_retro/research/commands.py"
+      - "tests/test_polished_crystal_opening.py"
+
+jobs:
+  arabic-opening:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout toolkit
+        uses: actions/checkout@v6
+        with:
+          path: toolkit
+
+      - name: Checkout exact Polished Crystal v3.2.3
+        uses: actions/checkout@v6
+        with:
+          repository: Rangi42/polishedcrystal
+          ref: 3fa43192379df5c3e7b09a08e4d5d79af4f02f42
+          path: upstream
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+
+      - name: Install RGBDS v1.0.0, source build dependencies and Classic Retro
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libpng-dev
+          mkdir rgbds
+          curl --fail --location --retry 3 \
+            "https://github.com/gbdev/rgbds/releases/download/v1.0.0/rgbds-linux-x86_64.tar.xz" \
+            -o rgbds-linux.tar.xz
+          tar -xf rgbds-linux.tar.xz -C rgbds
+          echo "$GITHUB_WORKSPACE/rgbds" >> "$GITHUB_PATH"
+          python -m pip install -e ./toolkit -c toolkit/constraints.txt
+
+      - name: Download pinned Arabic raster reference (font is never redistributed)
+        run: |
+          NOTO_COMMIT=ffebf8c1ee449e544955a7e813c54f9b73848eac
+          curl --fail --location --retry 3 \
+            "https://raw.githubusercontent.com/notofonts/noto-fonts/$NOTO_COMMIT/hinted/ttf/NotoKufiArabic/NotoKufiArabic-SemiBold.ttf" \
+            -o reference-font.ttf
+          echo "aa30cd2663f1eb1c940c9cd6a898877f307c2572e72a8a352896fe23f512018e  reference-font.ttf" | sha256sum -c -
+
+      - name: Compile pristine upstream Game Boy Color ROM
+        working-directory: upstream
+        run: |
+          rgbasm --version
+          make -j2 crystal
+          cp polishedcrystal-3.2.3.gbc ../base.gbc
+          echo "6930b48af5844d373e3c9130f26d6dd1084cf4ed  ../base.gbc" | sha1sum -c -
+          echo "f06dbebe3fd20db54e7804605f7a55ad05b8ca203c62209705290d8880864803  ../base.gbc" | sha256sum -c -
+
+      - name: Apply the RTL Arabic professor Elm source overlay
+        run: |
+          mkdir artifact
+          classic-retro research polished-crystal-opening upstream --font reference-font.ttf \
+            --preview artifact/elm-opening-preview.png | tee artifact/overlay-report.json
+
+      - name: Rebuild the patched GBC ROM
+        working-directory: upstream
+        run: |
+          make tidy
+          make -j2 crystal
+          cp polishedcrystal-3.2.3.gbc ../patched.gbc
+          test "$(stat -c %s ../patched.gbc)" -eq 2097152
+          test "$(sha256sum ../patched.gbc | cut -d' ' -f1)" != \
+            "f06dbebe3fd20db54e7804605f7a55ad05b8ca203c62209705290d8880864803"
+
+      - name: Create source-verified BPS only and verify roundtrip
+        run: |
+          classic-retro rebuild bps-create base.gbc patched.gbc artifact/polished-crystal-3.2.3-arabic-elm.bps
+          classic-retro rebuild bps-apply artifact/polished-crystal-3.2.3-arabic-elm.bps base.gbc verified.gbc
+          cmp verified.gbc patched.gbc
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          patch = Path("artifact/polished-crystal-3.2.3-arabic-elm.bps")
+          manifest = {
+              "source_rom_sha256": hashlib.sha256(Path("base.gbc").read_bytes()).hexdigest(),
+              "target_rom_sha256": hashlib.sha256(Path("patched.gbc").read_bytes()).hexdigest(),
+              "patch_sha256": hashlib.sha256(patch.read_bytes()).hexdigest(),
+              "patch_bytes": patch.stat().st_size,
+              "scope": "professor Elm first opening text only",
+              "format": "BPS",
+              "arabic_method": "pre-shaped RTL 8x8 line cells, native font restored",
+              "upstream_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
+              "smoke_tested_in_emulator": False,
+              "whole_game_translated": False,
+          }
+          Path("artifact/manifest.json").write_text(
+              json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          PY
+          rm -f verified.gbc patched.gbc base.gbc
+
+      - name: Upload BPS, preview and manifest (never ROM or reference font)
+        uses: actions/upload-artifact@v6
+        with:
+          name: polished-crystal-323-arabic-elm-bps
+          path: |
+            artifact/polished-crystal-3.2.3-arabic-elm.bps
+            artifact/elm-opening-preview.png
+            artifact/overlay-report.json
+            artifact/manifest.json
+          if-no-files-found: error
+          retention-days: 14
