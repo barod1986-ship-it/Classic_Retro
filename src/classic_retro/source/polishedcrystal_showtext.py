@@ -133,7 +133,7 @@ def load_scenes() -> tuple[dict[str, str], tuple[OverworldScene, ...]]:
                 or not isinstance(row[1], str)
                 or row[0] not in {"text", "line", "cont", "para"}
                 or not row[1].strip()
-                or not any("\u0600" <= c <= "\u06FF" for c in row[1])
+                or not any("\u0600" <= c <= "\u06ff" for c in row[1])
                 or any(c in row[1] for c in '<>"@\n\r\x00')
                 or bool(set(row[1]) & DIRECTION_CONTROLS)
             ):
@@ -198,9 +198,7 @@ def verify_original(original: str, scene: OverworldScene) -> None:
 
 def _tile(assets: opening.ElmArabicAssets, code: int) -> bytes:
     if not 0x80 <= code < 0x80 + opening.FONT_TILES:
-        raise ClassicRetroError(
-            ErrorCode.INVALID_BYTE_RANGE, f"Unknown tile code 0x{code:02x}"
-        )
+        raise ClassicRetroError(ErrorCode.INVALID_BYTE_RANGE, f"Unknown tile code 0x{code:02x}")
     start = (code - 0x80) * 8
     return assets.tiles[start : start + 8]
 
@@ -250,10 +248,7 @@ def pack_atlases(
             if tile not in suitable.glyphs:
                 suitable.glyphs[tile] = suitable.pool[len(suitable.glyphs)]
         remapped = tuple(
-            tuple(
-                0x7F if code == 0x7F else suitable.glyphs[_tile(assets, code)]
-                for code in line
-            )
+            tuple(0x7F if code == 0x7F else suitable.glyphs[_tile(assets, code)] for code in line)
             for line in assets.codes
         )
         packed.append(RenderedScene(scene, suitable, remapped))
