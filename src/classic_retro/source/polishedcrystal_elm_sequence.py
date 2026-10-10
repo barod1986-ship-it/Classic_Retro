@@ -196,7 +196,9 @@ def _replace_caller(intro: str, scene: Scene) -> str:
     return intro.replace(before, after)
 
 
-def prepare(source: Path, font: Path, preview: Path | None = None) -> dict[str, object]:
+def prepare(
+    source: Path, font: Path, preview: Path | None = None, *, dynamic_player: bool = False
+) -> dict[str, object]:
     """Build one source overlay for all static intro scenes from untouched v3.2.3."""
     source = Path(source).expanduser().resolve()
     font = Path(font).expanduser().resolve()
@@ -231,6 +233,11 @@ def prepare(source: Path, font: Path, preview: Path | None = None) -> dict[str, 
 
     patches[common_path] = common.encode("utf-8")
     patches[intro_path] = intro.encode("utf-8")
+    dynamic_report: dict[str, object] | None = None
+    if dynamic_player:
+        from classic_retro.source.polishedcrystal_elm_dynamic import augment
+
+        patches, dynamic_report = augment(source, font, patches)
     for path, data in patches.items():
         path.write_bytes(data)
 
@@ -244,11 +251,13 @@ def prepare(source: Path, font: Path, preview: Path | None = None) -> dict[str, 
         "version": "3.2.3",
         "game": "polished-crystal",
         "status": "incomplete (only static Elm opening messages)",
-        "source_scenes": len(scenes),
-        "arabic_lines": sum(len(assets.images) for _, assets in scenes),
+        "source_scenes": len(scenes) + (1 if dynamic_report else 0),
+        "arabic_lines": sum(len(assets.images) for _, assets in scenes)
+        + (dynamic_report["translated_lines"] if dynamic_report else 0),
         "tile_counts": {name: assets.used_glyphs for name, assets in scenes},
         "modified_files": sorted(path.relative_to(source).as_posix() for path in patches),
-        "untranslated_dynamic_message": "_ElmText7",
+        "untranslated_dynamic_message": None if dynamic_report else "_ElmText7",
+        "dynamic_player_intro": dynamic_report,
         "full_game_translated": False,
         "gameplay_verified": False,
     }
