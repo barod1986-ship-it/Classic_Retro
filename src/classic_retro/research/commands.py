@@ -209,6 +209,12 @@ def _polished_crystal_opening(args: argparse.Namespace) -> int:
     return _print(prepare(args.source, args.font, args.preview))
 
 
+def _polished_crystal_elm_sequence(args: argparse.Namespace) -> int:
+    from classic_retro.source.polishedcrystal_elm_sequence import prepare
+
+    return _print(prepare(args.source, args.font, args.preview))
+
+
 def register_cli(subcommands: argparse._SubParsersAction) -> None:
     group = subcommands.add_parser(
         "research",
@@ -240,6 +246,15 @@ def register_cli(subcommands: argparse._SubParsersAction) -> None:
     polished_intro.add_argument("--font", type=Path, required=True)
     polished_intro.add_argument("--preview", type=Path)
     polished_intro.set_defaults(handler=_polished_crystal_opening)
+
+    elm_sequence = commands.add_parser(
+        "polished-crystal-elm-sequence",
+        help="Patch seven static Elm intro scenes into pinned built v3.2.3 RGBDS source",
+    )
+    elm_sequence.add_argument("source", type=Path)
+    elm_sequence.add_argument("--font", type=Path, required=True)
+    elm_sequence.add_argument("--preview", type=Path)
+    elm_sequence.set_defaults(handler=_polished_crystal_elm_sequence)
 
     run = commands.add_parser(
         "run",
