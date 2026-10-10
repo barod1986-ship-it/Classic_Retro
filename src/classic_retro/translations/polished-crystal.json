@@ -833,17 +833,17 @@
     {
       "id": "engine/menus/intro_menu:Continue_LoadMenuHeader.MenuData2_Dex[1]",
       "context": "Continue/Save info box labels — at box (4,8)-(19,17) on Continue, (0,0)-(15,9) on Save; labels at box+(1,2) step 2 — values at box+(8,2) name, (13,4) …, (12,6) dex, (9,8) …",
-      "text": "شارات"
+      "text": "الشارات"
     },
     {
       "id": "engine/menus/intro_menu:Continue_LoadMenuHeader.MenuData2_Dex[2]",
       "context": "Continue/Save info box labels — at box (4,8)-(19,17) on Continue, (0,0)-(15,9) on Save; labels at box+(1,2) step 2 — values at box+(8,2) name, (13,4) …, (12,6) …, (9,8) …",
-      "text": "بوكيدكس"
+      "text": "بوكيديكس"
     },
     {
       "id": "engine/menus/intro_menu:Continue_LoadMenuHeader.MenuData2_Dex[3]",
       "context": "Continue/Save info box labels — at box (4,8)-(19,17) on Continue, (0,0)-(15,9) on Save; labels at box+(1,2) step 2 — values at box+(8,2) name, (13,4) …, (12,6) dex, (9,8) …",
-      "text": "وقت"
+      "text": "الوقت"
     },
     {
       "id": "engine/menus/intro_menu:Continue_LoadMenuHeader.MenuData2_NoDex[0]",
@@ -853,12 +853,12 @@
     {
       "id": "engine/menus/intro_menu:Continue_LoadMenuHeader.MenuData2_NoDex[1]",
       "context": "Continue/Save info box labels — at box (4,8)-(19,17) on Continue, (0,0)-(15,9) on Save; labels at box+(1,2) step 2 — values at box+(8,2) name, (13,4) …, (12,6) dex, (9,8) …",
-      "text": "شارات"
+      "text": "الشارات"
     },
     {
       "id": "engine/menus/intro_menu:Continue_LoadMenuHeader.MenuData2_NoDex[3]",
       "context": "Continue/Save info box labels — at box (4,8)-(19,17) on Continue, (0,0)-(15,9) on Save; labels at box+(1,2) step 2 — values at box+(8,2) name, (13,4) …, (12,6) dex, (9,8) …",
-      "text": "وقت"
+      "text": "الوقت"
     },
     {
       "id": "data/default_player_names:DefaultMalePlayerName",
@@ -1058,7 +1058,7 @@
     {
       "id": "engine/pokemon/move_mon:Special_HyperTrain.Strings[0]",
       "context": "Hyper Training stat choice (2D menu 3x2) — at box (0,4)-(19,11); col1 x=2, col2 x=10, rows 6/8/10 — 2D spacing 8; cursor x=1 and 9",
-      "text": "♥"
+      "text": "صحة"
     },
     {
       "id": "engine/pokemon/move_mon:Special_HyperTrain.Strings[1]",
@@ -1073,7 +1073,7 @@
     {
       "id": "engine/pokemon/move_mon:Special_HyperTrain.Strings[3]",
       "context": "Hyper Training stat choice (2D menu 3x2) — at box (0,4)-(19,11); col1 x=2, col2 x=10, rows 6/8/10 — 2D spacing 8; cursor x=1 and 9",
-      "text": "هجوم.خ"
+      "text": "هجوم خاص"
     },
     {
       "id": "engine/pokemon/move_mon:Special_HyperTrain.Strings[4]",
@@ -1083,7 +1083,7 @@
     {
       "id": "engine/pokemon/move_mon:Special_HyperTrain.Strings[5]",
       "context": "Hyper Training stat choice (2D menu 3x2) — at box (0,4)-(19,11); col1 x=2, col2 x=10, rows 6/8/10 — 2D spacing 8; cursor x=1 and 9",
-      "text": "دفاع.خ"
+      "text": "دفاع خاص"
     },
     {
       "id": "engine/pokemon/move_mon:Special_HyperTrain.TrainWhichStat",
@@ -1113,7 +1113,7 @@
     {
       "id": "engine/pokemon/move_mon:String_Egg",
       "context": "… nickname (…) — at buffer — rawchar name buffer",
-      "text": "بيض"
+      "text": "بيضة"
     },
     {
       "id": "engine/events/bug_contest/display_stats:DisplayCaughtContestMonStats.Health",
@@ -1133,7 +1133,7 @@
     {
       "id": "engine/items/item_effects:WingCase_MonSelected.RaisesStat",
       "context": "Wing case description line — at PlaceWholeStringInBoxAtOnce bc=(1,16) — text_ram stat name spliced mid-sentence",
-      "text": "ترفع {ram:wStringBuffer2} البوكيمون."
+      "text": "ترفع {ram:wStringBuffer2}."
     },
     {
       "id": "engine/items/item_effects:WingCase_MonSelected.CancelStr",
@@ -1163,27 +1163,27 @@
     {
       "id": "engine/items/item_effects:CandyJar_MonSelected.CandyNames[0]",
       "context": "…. Candy size letters (…) used in … — at list -> text_ram — li list; spliced into GivesExp",
-      "text": "ضئ"
+      "text": "ضئيلة"
     },
     {
       "id": "engine/items/item_effects:CandyJar_MonSelected.CandyNames[1]",
       "context": "…. Candy size letters (…) used in … — at list -> text_ram — li list; spliced into GivesExp",
-      "text": "ص"
+      "text": "صغيرة"
     },
     {
       "id": "engine/items/item_effects:CandyJar_MonSelected.CandyNames[2]",
       "context": "…. Candy size letters (…) used in … — at list -> text_ram — li list; spliced into GivesExp",
-      "text": "م"
+      "text": "متوسطة"
     },
     {
       "id": "engine/items/item_effects:CandyJar_MonSelected.CandyNames[3]",
       "context": "…. Candy size letters (…) used in … — at list -> text_ram — li list; spliced into GivesExp",
-      "text": "ك"
+      "text": "كبيرة"
     },
     {
       "id": "engine/items/item_effects:CandyJar_MonSelected.CandyNames[4]",
       "context": "…. Candy size letters (…) used in … — at list -> text_ram — li list; spliced into GivesExp",
-      "text": "ضخ"
+      "text": "ضخمة"
     },
     {
       "id": "engine/items/item_effects:CandyJar_MonSelected.GivesExp",
@@ -1208,22 +1208,22 @@
     {
       "id": "engine/items/item_effects:ApricornBox.Text[0]",
       "context": "Apricorn box table (7 colours, 2 columns) — at (6,3) in frame (5,1)-(19,11); counts printed at (10|16, 4|6|8|10) — color abbreviation at x=7 / x=13 (3 cells), … at x=9 / x=15, counts after; pure table layout (row 1)",
-      "text": "أحمر  زرق"
+      "text": "حمراء  زرقاء"
     },
     {
       "id": "engine/items/item_effects:ApricornBox.Text[2]",
       "context": "Apricorn box table (7 colours, 2 columns) — at (6,3) in frame (5,1)-(19,11); counts printed at (10|16, 4|6|8|10) — color abbreviation at x=7 / x=13 (3 cells), … at x=9 / x=15, counts after; pure table layout (row 3)",
-      "text": "أصفر  خضر"
+      "text": "صفراء  خضراء"
     },
     {
       "id": "engine/items/item_effects:ApricornBox.Text[4]",
       "context": "Apricorn box table (7 colours, 2 columns) — at (6,3) in frame (5,1)-(19,11); counts printed at (10|16, 4|6|8|10) — color abbreviation at x=7 / x=13 (3 cells), … at x=9 / x=15, counts after; pure table layout (row 5)",
-      "text": "أبيض  سود"
+      "text": "بيضاء  سوداء"
     },
     {
       "id": "engine/items/item_effects:ApricornBox.Text[6]",
       "context": "Apricorn box table (7 colours, 2 columns) — at (6,3) in frame (5,1)-(19,11); counts printed at (10|16, 4|6|8|10) — color abbreviation at x=7 / x=13 (3 cells), … at x=9 / x=15, counts after; pure table layout (row 7)",
-      "text": "ورد"
+      "text": "وردية"
     },
     {
       "id": "engine/items/item_effects:BallReplacedText",
@@ -1243,32 +1243,32 @@
     {
       "id": "data/battle/stat_strings:StatStrings.health",
       "context": "Stat word inside battle text",
-      "text": "صحة"
+      "text": "الصحة"
     },
     {
       "id": "data/battle/stat_strings:StatStrings.attack",
       "context": "Stat word inside battle text",
-      "text": "هجوم"
+      "text": "الهجوم"
     },
     {
       "id": "data/battle/stat_strings:StatStrings.defense",
       "context": "Stat word inside battle text",
-      "text": "دفاع"
+      "text": "الدفاع"
     },
     {
       "id": "data/battle/stat_strings:StatStrings.speed",
       "context": "Stat word inside battle text",
-      "text": "سرعة"
+      "text": "السرعة"
     },
     {
       "id": "data/battle/stat_strings:StatStrings.sp_atk",
       "context": "Stat word inside battle text",
-      "text": "هجوم.خ"
+      "text": "الهجوم الخاص"
     },
     {
       "id": "data/battle/stat_strings:StatStrings.sp_def",
       "context": "Stat word inside battle text",
-      "text": "دفاع.خ"
+      "text": "الدفاع الخاص"
     },
     {
       "id": "data/items/wing_names#0",
@@ -1303,7 +1303,7 @@
     {
       "id": "engine/pc/bills_pc:InitializeBoxes.Box",
       "context": "Default … names … (written to SRAM) — at buffer (…_NAME_LENGTH 9) — number appended with PrintNumFromReg after the string",
-      "text": "علبة"
+      "text": "صندوق"
     },
     {
       "id": "engine/pc/bills_pc_ui:ManageBoxes.ContinueBoxUse",
@@ -1373,7 +1373,7 @@
     {
       "id": "engine/pc/bills_pc_ui:BillsPC_MenuStrings[12]",
       "context": "Bill's PC context menus (shared string table) — at storage menu … (9,4)-(19,17) text x=11; party/… menus (10,y) text x=12; item/… menus (11,y)-(19,12) text x=13 — one table shared by menus of different widths",
-      "text": "عرض"
+      "text": "قراءة"
     },
     {
       "id": "engine/pc/bills_pc_ui:BillsPC_MenuStrings[13]",
@@ -1708,7 +1708,7 @@
     {
       "id": "engine/items/pack:MenuDataHeader_UseGiveToss.MenuData2[0]",
       "context": "Bag: item action submenu — at box (13,y)-(19,11), text (15,y+1) step 2 — very narrow (4 cells); cursor x=14",
-      "text": "فعل"
+      "text": "استخدم"
     },
     {
       "id": "engine/items/pack:MenuDataHeader_UseGiveToss.MenuData2[1]",
@@ -1728,7 +1728,7 @@
     {
       "id": "engine/items/pack:MenuDataHeader_Use.MenuData2[0]",
       "context": "Bag: item action submenu — at box (13,y)-(19,11), text (15,y+1) step 2 — very narrow (4 cells); cursor x=14",
-      "text": "فعل"
+      "text": "استخدم"
     },
     {
       "id": "engine/items/pack:MenuDataHeader_Use.MenuData2[1]",
@@ -1743,12 +1743,12 @@
     {
       "id": "engine/items/pack:MenuDataHeader_UseSel.MenuData2[0]",
       "context": "Bag: item action submenu — at box (13,y)-(19,11), text (15,y+1) step 2 — very narrow (4 cells); cursor x=14",
-      "text": "فعل"
+      "text": "استخدم"
     },
     {
       "id": "engine/items/pack:MenuDataHeader_UseSel.MenuData2[1]",
       "context": "Bag: item action submenu — at box (13,y)-(19,11), text (15,y+1) step 2 — very narrow (4 cells); cursor x=14",
-      "text": "سجل"
+      "text": "تسجيل"
     },
     {
       "id": "engine/items/pack:MenuDataHeader_UseSel.MenuData2[2]",
@@ -1803,7 +1803,7 @@
     {
       "id": "engine/menus/start_menu:StartMenu.PokedexString",
       "context": "Start menu — at box (10,0)-(19,17) (contest: (10,2)), text (12,2) step 2 — cursor x=11; <…> up to 7",
-      "text": "بوكيدكس"
+      "text": "بوكيديكس"
     },
     {
       "id": "engine/menus/start_menu:StartMenu.PartyString",
@@ -1868,7 +1868,7 @@
     {
       "id": "engine/pokemon/mon_menu:MonMailAction.MenuData2[0]",
       "context": "Party: … submenu — at box (12,10)-(19,17), text (14,12) step 2 — narrow",
-      "text": "عرض"
+      "text": "قراءة"
     },
     {
       "id": "engine/pokemon/mon_menu:MonMailAction.MenuData2[1]",
@@ -1878,7 +1878,7 @@
     {
       "id": "engine/pokemon/mon_menu:MonMailAction.MenuData2[2]",
       "context": "Party: … submenu — at box (12,10)-(19,17), text (14,12) step 2 — narrow",
-      "text": "تم"
+      "text": "خروج"
     },
     {
       "id": "engine/pokemon/mon_menu:MoveScreenLoop.MustSaveFirst",
@@ -2203,7 +2203,7 @@
     {
       "id": "engine/events/daycare:DayCare_GenerateEgg.String_EGG",
       "context": "… nickname (RAM) — at buffer wTempMonNickname — rawchar name buffer",
-      "text": "بيض"
+      "text": "بيضة"
     },
     {
       "id": "engine/items/update_item_description:BagString",
@@ -2301,19 +2301,29 @@
       "text": "قتال"
     },
     {
+      "id": "engine/battle/menu:BattleMenuDataHeader.Strings[1]",
+      "context": "Battle: main 2x2 menu (…/PKMN/…) — at box (8,12)-(19,17); items (10,14),(16,14),(10,16),(16,16) — 2D menu spacing 6; cursor x=9 and 15; PKMN and … in the 3-cell column",
+      "text": "بوكيمون"
+    },
+    {
       "id": "engine/battle/menu:BattleMenuDataHeader.Strings[2]",
       "context": "Battle: main 2x2 menu (…/PKMN/…) — at box (8,12)-(19,17); items (10,14),(16,14),(10,16),(16,16) — 2D menu spacing 6; cursor x=9 and 15; PKMN and … in the 3-cell column",
-      "text": "كيس"
+      "text": "حقيبة"
     },
     {
       "id": "engine/battle/menu:BattleMenuDataHeader.Strings[3]",
       "context": "Battle: main 2x2 menu (…/PKMN/…) — at box (8,12)-(19,17); items (10,14),(16,14),(10,16),(16,16) — 2D menu spacing 6; cursor x=9 and 15; PKMN and … in the 3-cell column",
-      "text": "هرب"
+      "text": "هروب"
     },
     {
       "id": "engine/battle/menu:ContestBattleMenuDataHeader.Strings[0]",
       "context": "Bug Contest battle 2x2 menu — at box (5,12)-(19,17); items (7,14),(15,14),(7,16),(15,16) — … label: … count printed at fixed (12,16) = label start+5",
       "text": "قتال"
+    },
+    {
+      "id": "engine/battle/menu:ContestBattleMenuDataHeader.Strings[1]",
+      "context": "Bug Contest battle 2x2 menu — at box (5,12)-(19,17); items (7,14),(15,14),(7,16),(15,16) — … label: … count printed at fixed (12,16) = label start+5",
+      "text": "بوكيمون"
     },
     {
       "id": "engine/battle/menu:ContestBattleMenuDataHeader.Strings[2]",
@@ -2323,7 +2333,7 @@
     {
       "id": "engine/battle/menu:ContestBattleMenuDataHeader.Strings[3]",
       "context": "Bug Contest battle 2x2 menu — at box (5,12)-(19,17); items (7,14),(15,14),(7,16),(15,16) — … label: … count printed at fixed (12,16) = label start+5",
-      "text": "هرب"
+      "text": "هروب"
     },
     {
       "id": "engine/battle/menu:SafariBattleMenuDataHeader.Strings[0]",
@@ -2343,7 +2353,7 @@
     {
       "id": "engine/battle/menu:SafariBattleMenuDataHeader.Strings[3]",
       "context": "Safari battle 2x2 menu — at box (4,12)-(19,17); items (6,14),(14,14),(6,16),(14,16) — … label: count printed at fixed (11,14) = label start+5",
-      "text": "هرب"
+      "text": "هروب"
     },
     {
       "id": "engine/items/buy_sell_toss:BTDisplayPurchaseCost.BPString",
@@ -2363,7 +2373,7 @@
     {
       "id": "engine/menus/trainer_card:TrainerCard_Page1_PrintDexCaught_GameTime.Dex_PlayTime_BP[0]",
       "context": "Trainer card p1 labels — at (2,10),(2,12),(2,14),(2,16); values at (15,10),(11,12),(13,14); stars at (2..,16); … at (18,16) — … has 10 leading spaces that leave room for star tiles (row 1)",
-      "text": "بوكيدكس"
+      "text": "بوكيديكس"
     },
     {
       "id": "engine/menus/trainer_card:TrainerCard_Page1_PrintDexCaught_GameTime.Dex_PlayTime_BP[1]",
@@ -2463,7 +2473,7 @@
     {
       "id": "data/decorations/names#5",
       "context": "Decoration name part (composed with colours / Pokémon names in the decoration menu)",
-      "text": "خريطة"
+      "text": "خريطة المدن"
     },
     {
       "id": "data/decorations/names#6",
@@ -2473,7 +2483,7 @@
     {
       "id": "data/decorations/names#7",
       "context": "Decoration name part (composed with colours / Pokémon names in the decoration menu)",
-      "text": "نينتندو"
+      "text": "سوبر نينتندو"
     },
     {
       "id": "data/decorations/names#8",
@@ -2508,12 +2518,12 @@
     {
       "id": "data/decorations/names#14",
       "context": "Decoration name part (composed with colours / Pokémon names in the decoration menu)",
-      "text": "تخت"
+      "text": "سرير"
     },
     {
       "id": "data/decorations/names#15",
       "context": "Decoration name part (composed with colours / Pokémon names in the decoration menu)",
-      "text": "بساط"
+      "text": "سجادة"
     },
     {
       "id": "data/decorations/names#16",
@@ -2528,7 +2538,7 @@
     {
       "id": "data/decorations/names#18",
       "context": "Decoration name part (composed with colours / Pokémon names in the decoration menu)",
-      "text": "ضخم"
+      "text": "كبير"
     },
     {
       "id": "data/decorations/names#19",
@@ -2553,22 +2563,22 @@
     {
       "id": "data/decorations/names#23",
       "context": "Decoration name part (composed with colours / Pokémon names in the decoration menu)",
-      "text": "قان"
+      "text": "حمراء"
     },
     {
       "id": "data/decorations/names#24",
       "context": "Decoration name part (composed with colours / Pokémon names in the decoration menu)",
-      "text": "أزرق"
+      "text": "زرقاء"
     },
     {
       "id": "data/decorations/names#25",
       "context": "Decoration name part (composed with colours / Pokémon names in the decoration menu)",
-      "text": "أصفر"
+      "text": "صفراء"
     },
     {
       "id": "data/decorations/names#26",
       "context": "Decoration name part (composed with colours / Pokémon names in the decoration menu)",
-      "text": "أخضر"
+      "text": "خضراء"
     },
     {
       "id": "engine/link/link:String_PleaseWait[0]",
@@ -9328,12 +9338,12 @@
     {
       "id": "engine/battle/endturn:GetTurnAndPlacePrefix.Your",
       "context": "Battle text prefix copied to wStringBuffer1 (…) — at buffer — English possessive prefix composed into data/text battle messages; Arabic needs suffix/post-noun order",
-      "text": "حليف"
+      "text": "بوكيمونك"
     },
     {
       "id": "engine/battle/endturn:GetTurnAndPlacePrefix.Foe",
       "context": "Battle text prefix copied to wStringBuffer1 (…) — at buffer — English possessive prefix composed into data/text battle messages; Arabic needs suffix/post-noun order",
-      "text": "خصم"
+      "text": "بوكيمون الخصم"
     },
     {
       "id": "engine/pokedex/area:Pokedex_AreaTypeLists[0]",
@@ -9578,12 +9588,12 @@
     {
       "id": "engine/pokemon/summary/pink_page:SummaryScreen_PinkPage.Rental_OT[0]",
       "context": "Summary info page … labels (…: 2-line … replaces … row) — at window (0,4),(2,5); … number at window (5,5); … name at window (4,4) — labels end at a fixed value column (row 1)",
-      "text": "إعارة"
+      "text": "بوكيمون"
     },
     {
       "id": "engine/pokemon/summary/pink_page:SummaryScreen_PinkPage.Rental_OT[1]",
       "context": "Summary info page … labels (…: 2-line … replaces … row) — at window (0,4),(2,5); … number at window (5,5); … name at window (4,4) — labels end at a fixed value column (row 2)",
-      "text": "مؤقتة"
+      "text": "معار"
     },
     {
       "id": "engine/pokemon/summary/pink_page:SummaryScreen_PinkPage.ExpPointStr",
@@ -9633,7 +9643,7 @@
     {
       "id": "engine/pokemon/summary/orange_page:SummaryScreen_OrangePage.str_level",
       "context": "Summary memo page: … — at appended at bc+1 after the time-of-day word printed at (1,14) — chained composition: time-of-day + suffix + level number, English order",
-      "text": "في {LV}"
+      "text": "بالمستوى"
     },
     {
       "id": "engine/pokemon/summary/orange_page:SummaryScreen_OrangePage.str_hatched",
@@ -11548,22 +11558,22 @@
     {
       "id": "data/text/battle:BattleText_MistFaded",
       "context": "Battle text box (BattleText_MistFaded)",
-      "text": "زال الضباب عن فريق {ram:wStringBuffer1}!"
+      "text": "زال الضباب عن {ram:wStringBuffer1}!"
     },
     {
       "id": "data/text/battle:BattleText_SafeguardFaded",
       "context": "Battle text box (BattleText_SafeguardFaded)",
-      "text": "زالت الوقاية عن فريق {ram:wStringBuffer1}!"
+      "text": "زالت الوقاية عن {ram:wStringBuffer1}!"
     },
     {
       "id": "data/text/battle:BattleText_LightScreenFell",
       "context": "Battle text box (BattleText_LightScreenFell)",
-      "text": "زال الستار الضوئي عن فريق {ram:wStringBuffer1}!"
+      "text": "زال الستار الضوئي عن {ram:wStringBuffer1}!"
     },
     {
       "id": "data/text/battle:BattleText_ReflectFaded",
       "context": "Battle text box (BattleText_ReflectFaded)",
-      "text": "زال الانعكاس عن فريق {ram:wStringBuffer1}!"
+      "text": "زال الانعكاس عن {ram:wStringBuffer1}!"
     },
     {
       "id": "data/text/battle:BattleText_TheRainStopped",
@@ -14688,7 +14698,7 @@
     {
       "id": "engine/rtc/timeset:String_oclock",
       "context": "Clock setting: … — at appended after hour at (1,9)+ — appended at returned pen; English order",
-      "text": "ساعة"
+      "text": "الساعة"
     },
     {
       "id": "engine/rtc/timeset:String_min",
@@ -14698,17 +14708,17 @@
     {
       "id": "engine/rtc/timeset:NITE_String",
       "context": "Time-of-… words (pokegear clock (6,7), caught-time on summary, timeset) — at various — also the head of the summary … chain",
-      "text": "ليل"
+      "text": "ليلا"
     },
     {
       "id": "engine/rtc/timeset:MORN_String",
       "context": "Time-of-… words (pokegear clock (6,7), caught-time on summary, timeset) — at various — also the head of the summary … chain",
-      "text": "صباح"
+      "text": "صباحا"
     },
     {
       "id": "engine/rtc/timeset:DAY_String",
       "context": "Time-of-… words (pokegear clock (6,7), caught-time on summary, timeset) — at various — also the head of the summary … chain",
-      "text": "نهار"
+      "text": "نهارا"
     },
     {
       "id": "engine/rtc/timeset:EVE_String",
@@ -15993,7 +16003,7 @@
     {
       "id": "engine/events/wonder_trade:DoWonderTrade.EggString",
       "context": "… nickname (RAM, MON_NAME_LENGTH copy) — at buffer — padded with @ to 11 bytes (CopyTradeName copies fixed length)",
-      "text": "بيض"
+      "text": "بيضة"
     },
     {
       "id": "data/events/wonder_trade/ot_names:WonderTradeOTNames1#0",
@@ -21958,12 +21968,12 @@
     {
       "id": "data/battle/stat_names#3",
       "context": "Stat name inside battle / item messages",
-      "text": "هجوم.خ"
+      "text": "هجوم خاص"
     },
     {
       "id": "data/battle/stat_names#4",
       "context": "Stat name inside battle / item messages",
-      "text": "دفاع.خ"
+      "text": "دفاع خاص"
     },
     {
       "id": "data/battle/stat_names#5",
@@ -28378,7 +28388,7 @@
     {
       "id": "engine/events/odd_egg:GiveSpecialEgg.EggName",
       "context": "… nickname (RAM) — at buffer — rawchar name buffer",
-      "text": "بيض"
+      "text": "بيضة"
     },
     {
       "id": "data/items/exp_candy_names#0",

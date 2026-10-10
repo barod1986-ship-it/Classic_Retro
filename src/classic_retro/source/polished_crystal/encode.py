@@ -23,6 +23,7 @@ from __future__ import annotations
 import re
 from collections import Counter
 from collections.abc import Sequence
+from functools import cache
 
 from classic_retro.engines.pokemon_gen2_arabic import forms as AR
 
@@ -1253,10 +1254,63 @@ def _encode_inner(entry: dict, text: str, ngrams, errs: list[str]) -> tuple[list
     if kind in ("string", "field"):
         _, shaped_lines, e2 = _string_lines(entry, text)
         errs += e2
+        px_limit = lim.get("vwf_px")
+        if px_limit is not None:
+            for k, line in enumerate(shaped_lines):
+                px = vwf_width(line)
+                if px > px_limit:
+                    where = f"line {k + 1}: " if len(shaped_lines) > 1 else ""
+                    errs.append(f"{where}{px} pixels in the variable-width font, limit {px_limit}")
         lines, e3 = _emit_string(entry, shaped_lines, ng)
         errs += e3
         return d_defs(entry, None) + lines, errs
     raise ValueError(f"unknown kind {kind}")
+
+
+# The variable-width font (a few fields, as the Pokédex's area label, measure pixels): the
+# Arabic glyphs as the overlay crops them (fonts.vwf_glyphs), the space (space.png) and the
+# English font's digits; anything else is counted as a full tile.
+VWF_SPACE = 4
+VWF_DIGIT = 5
+VWF_TILE = 8
+# the redrawn punctuation the VWF holds: ، ؟ and the neutral quote
+_VWF_PUNCT_CODES = {",": 0x9D, "?": 0x9E, "“": 0xBA}
+
+
+@cache
+def _vwf_glyph_widths() -> dict[int, int]:
+    from classic_retro.engines.pokemon_gen2_arabic.fonts import vwf_glyphs
+
+    return {code: len(columns) for code, columns in vwf_glyphs().items()}
+
+
+def _vwf_text_width(text: str) -> int:
+    widths = _vwf_glyph_widths()
+    total = 0
+    for ch in text:
+        code = code_of(ch)
+        if isinstance(code, int):
+            total += widths.get(code, VWF_TILE)
+        elif ch == " ":
+            total += VWF_SPACE
+        elif ch.isdigit():
+            total += VWF_DIGIT
+        else:
+            total += widths.get(_VWF_PUNCT_CODES.get(PUNCT.get(ch, ch), -1), VWF_TILE)
+    return total
+
+
+def vwf_width(line: list[Shaped]) -> int:
+    """Pixels of a shaped line in the variable-width font (placeholders at a tile a cell)."""
+    total = 0
+    for piece in line:
+        if piece.t == "t":
+            total += _vwf_text_width(piece.s)
+        elif piece.t == "alt":
+            total += max(_vwf_text_width(piece.m), _vwf_text_width(piece.f))
+        elif piece.t == "ph":
+            total += VWF_TILE * piece.w
+    return total
 
 
 def cells(text: str, entry: dict | None = None) -> int:

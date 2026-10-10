@@ -6,8 +6,9 @@ and gives every unit a stable id, a kind, the line range it owns, a pin of
 those lines, its placeholders, its limits and a context. Which unit becomes
 which kind of entry, with which limits and context, is decided per file by the
 handlers below; the limits come from the research done on the game (data tables,
-map scripts, engine strings). The engine strings' layout notes ship with the
-overlay (``data/engine_strings.json``), without any text of the game.
+map scripts, engine strings) and from the engine-patched screens (``screen.ROOM``:
+the real room of menu items, labels and name fields). The engine strings' layout
+notes ship with the overlay (``data/engine_strings.json``), without any text of the game.
 
 Kinds: ``dialog`` (a text block of the speech box), ``box`` (text wrapped in a
 box of its own: descriptions, the Pokédex), ``string`` (a menu item, a label, a
@@ -27,11 +28,14 @@ import sys
 from functools import cache
 from importlib.resources import files
 
-from classic_retro.source.polished_crystal import asmscan
+from classic_retro.source.polished_crystal import asmscan, screen
 from classic_retro.source.polished_crystal import encode as ENC
 from classic_retro.source.polished_crystal import units as X
 
 PH_DEFAULT_DIALOG_WIDTH = 18
+# The two tiles that spell PKMN: a menu item made of them alone (the battle menu's) is a
+# word of its own in Arabic.
+_PKMN = "<PK><MN>"
 
 
 @cache
@@ -794,7 +798,9 @@ class Extractor:
                         X.has_letters(d["core"])
                         or (
                             d["core"]
-                            and any(t in d["core"] for t in ("<PLAYER>", "<RIVAL>", "<TRENDY>"))
+                            and any(
+                                t in d["core"] for t in ("<PLAYER>", "<RIVAL>", "<TRENDY>", _PKMN)
+                            )
                         )
                     ):
                         line["parts"].append({"text": piece + sep_after})
@@ -1957,7 +1963,8 @@ class Extractor:
                     f"[{group.index(u)}]" if len(group) > 1 else ""
                 )
                 lits = [x for s in u.active_stmts for x in s.strings if x is not None]
-                if not X.has_letters("".join(lits)):
+                pkmn_only = not X.has_letters("".join(lits)) and _PKMN in "".join(lits)
+                if not X.has_letters("".join(lits)) and not pkmn_only:
                     continue
                 extra = None
                 width = None
@@ -2006,6 +2013,7 @@ class Extractor:
                     width=width,
                     exact=multi and cls == "b",
                     extra_limits=extra,
+                    allow_no_letters=pkmn_only,
                 )
 
     def per_line_strings(self, fs, u, lab, category, ctx, w):
@@ -2074,6 +2082,10 @@ class Extractor:
                 self.counters["jr_guarded"] += 1
 
     def _finish(self):
+        # the room the engine-patched screens give the short strings (screen.ROOM)
+        ruled = {e["id"] for e in self.entries if screen.apply(e)}
+        for missing in sorted(set(screen.ROOM) - ruled):
+            self.problems.append(f"{missing}: screen rule for an entry the extractor did not make")
         self._jr_guard()
         for e in self.entries:
             g = self.dr_member_of.get(e["id"])

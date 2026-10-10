@@ -192,7 +192,10 @@ glyph; the translators keep each batch at or below 0.95 of the English length.
 - **box** (descriptions, the Pokédex): the entry's width, lines and pages (`\f`);
 - **string** (menus, labels, names): the entry's width and lines (`\n`), columns separated by
   two or more spaces where the English had columns, bytes where a table limits them, the room
-  of a one-byte `dr` table shared by its strings (`limits.dr_groups`);
+  of a one-byte `dr` table shared by its strings (`limits.dr_groups`). A string's width is the
+  English's unless `source/polished_crystal/screen.py` gives the room read from the patched
+  screen (its coordinates, frame, neighbours and byte copies); a variable-width field is
+  measured in pixels with the Arabic VWF glyphs (`limits.vwf_px`);
 - **field** (fixed-size names): its cells and bytes, padded with `@`; no gender alternatives in
   a raw field.
 

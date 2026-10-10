@@ -26,7 +26,7 @@ from classic_retro.localization.translations import (
     builtin_translation_set,
 )
 from classic_retro.source import polished_crystal_arabic as overlay
-from classic_retro.source.polished_crystal import dex, encode, inject, jumps, textcodes
+from classic_retro.source.polished_crystal import dex, encode, inject, jumps, screen, textcodes
 from classic_retro.source.polished_crystal import manifest as manifest_module
 from classic_retro.source.polished_crystal import patch as patch_module
 from classic_retro.source.polished_crystal.units import Charmap
@@ -301,6 +301,35 @@ def test_the_shipped_manifest_follows_the_engine_patch_and_holds_no_text():
                     assert not re.search(
                         r"[A-Za-z]{2}", re.sub(r"<[^<>]*>|\{[^{}]*\}", "", literal)
                     )
+
+
+def test_the_manifest_gives_short_strings_the_room_of_the_patched_screens():
+    entries = manifest_module.builtin_manifest().entries
+    assert set(screen.ROOM) <= set(entries)
+
+    def widths(entry_id):
+        return [slot["width"] for slot in entries[entry_id]["fmt"]["slots"]]
+
+    menu = "engine/battle/menu:BattleMenuDataHeader.Strings"
+    # the widened battle menu: columns of 5 and 7 cells, the PKMN item now an entry
+    assert [widths(f"{menu}[{index}]") for index in range(4)] == [[5], [7], [5], [7]]
+    assert entries[f"{menu}[1]"]["skeleton"] == ["{PK}", "{MN}"]
+    assert widths("engine/menus/start_menu:StartMenu.PokedexString") == [8]
+    assert widths("engine/items/pack:MenuDataHeader_UseGiveToss.MenuData2[0]") == [6]
+    # a label a value is drawn over keeps only the cells before the value
+    assert widths("engine/battle/menu:SafariBattleMenuDataHeader.Strings[0]") == [5]
+    # the whole subject in the side prefix, and room for it in the texts that show it
+    assert widths("engine/battle/endturn:GetTurnAndPlacePrefix.Foe") == [13]
+    limits = entries["data/text/battle:BattleText_ReflectFaded"]["limits"]
+    assert limits["ph"]["{ram:wStringBuffer1}"] == 13
+    # a separator the code relies on is padded in; a composed noun loses its English space
+    box = entries["engine/pc/bills_pc:InitializeBoxes.Box"]["fmt"]["slots"][0]
+    assert (box["width"], box["pad"], box["bytes"]) == (5, 6, 6)
+    assert entries["data/decorations/names#14"]["fmt"]["slots"][0]["ctl_before"] == ""
+    area = entries["engine/pokedex/area:Pokedex_AreaTypeLists[4]"]
+    assert area["limits"]["vwf_px"] == 53
+    assert encode.check(area, "كسر الطوب") == []
+    assert encode.check(area, "صنارة قديمة") == ["63 pixels in the variable-width font, limit 53"]
 
 
 # --- encoder ---------------------------------------------------------------------------------
