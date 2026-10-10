@@ -79,23 +79,34 @@ NOTATION = (
     "the game shows the side that fits the player. An entry left out of this file stays English "
     "in the game."
 )
-# Name lists that become glossary terms (menu words and the decorations' parts do not).
-GLOSSARY_LISTS = (
-    "species",
-    "moves",
-    "items",
-    "key_items",
-    "special_items",
-    "apricorns",
-    "wings",
-    "exp_candy",
-    "abilities",
-    "types",
-    "natures",
-    "landmarks",
-    "badges",
-    "trainer_classes",
-    "trainer_names",
+# The glossary keeps the names a translator needs everywhere: places, types, badges, the main
+# characters and the core terms. Whole name tables (species, moves, items, abilities, trainers) are
+# entries of their own, so they are not repeated here.
+GLOSSARY_LISTS = ("types", "landmarks", "badges")
+GLOSSARY_CHARACTERS = frozenset(
+    {
+        "Falkner", "Bugsy", "Whitney", "Morty", "Chuck", "Jasmine", "Pryce", "Clair",
+        "Will", "Koga", "Bruno", "Karen", "Lance", "Brock", "Misty", "Surge", "Erika",
+        "Janine", "Sabrina", "Blaine", "Blue", "Red", "Lyra", "Kurt", "Bill", "Eusine",
+        "Kimono Girl", "Proton", "Petrel", "Ariana", "Archer", "Giovanni", "Mr. Pokémon",
+    }
+)  # fmt: skip
+CORE_TERMS = (
+    ("Pokémon", "بوكيمون"),
+    ("Poké Ball", "كرة بوكي"),
+    ("Pokédex", "بوكيديكس"),
+    ("Pokégear", "بوكيغير"),
+    ("Pokémon Center", "مركز البوكيمون"),
+    ("Poké Mart", "متجر بوكي"),
+    ("Trainer", "مدرب"),
+    ("Gym", "صالة"),
+    ("Gym Leader", "قائد الصالة"),
+    ("Badge", "شارة"),
+    ("Elite Four", "النخبة الأربعة"),
+    ("Champion", "البطل"),
+    ("Team Rocket", "فريق الصاروخ"),
+    ("Professor Elm", "البروفيسور إلم"),
+    ("Professor Oak", "البروفيسور أوك"),
 )
 
 
@@ -112,14 +123,17 @@ def _load_texts(paths: list[str]) -> dict[str, str]:
 
 
 def _glossary(directory: Path, texts: dict[str, str]) -> list[GlossaryTerm]:
-    seen: dict[str, str] = {}
+    seen: dict[str, str] = dict(CORE_TERMS)
     conflicting: set[str] = set()
-    for name in GLOSSARY_LISTS:
+    lists = [*GLOSSARY_LISTS, "trainer_names"]
+    for name in lists:
         path = directory / f"{name}.ar.json"
         if not path.exists():
             continue
         for item in json.loads(path.read_text(encoding="utf-8")):
-            term = str(item.get("en", "")).strip()
+            term = str(item.get("en", "")).replace("\\n", " ").strip()
+            if name == "trainer_names" and term not in GLOSSARY_CHARACTERS:
+                continue
             arabic = str(item.get("ar", "")).replace("\\n", " ").strip()
             if len(term) < 3 or not re.search("[A-Za-z]{2}", term) or term.startswith("<"):
                 continue
