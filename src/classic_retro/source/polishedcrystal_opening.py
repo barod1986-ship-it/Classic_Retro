@@ -180,10 +180,7 @@ def _source_overlays(source: Path, asset: ElmArabicAssets) -> dict[Path, bytes]:
         "\tcall PrintText\n"
         "\tjmp LoadStandardFont\n\n"
     )
-    new_common += (
-        '\nSECTION "Classic Retro Arabic Elm Loader", ROMX\n'
-        + routine
-    )
+    new_common += '\nSECTION "Classic Retro Arabic Elm Loader", ROMX\n' + routine
     return {
         common: new_common.encode("utf-8"),
         intro: new_intro.encode("utf-8"),
