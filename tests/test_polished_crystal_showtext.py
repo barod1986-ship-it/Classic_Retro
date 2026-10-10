@@ -76,12 +76,39 @@ def test_shared_bitmap_atlas_packing_is_deterministic_and_preserves_name_cells()
     assert groups[0].filename != groups[1].filename
 
 
+def test_long_dynamic_text_becomes_name_page_plus_short_regular_pages():
+    original = patch.OverworldScene(
+        "ST12",
+        "maps/ElmsLab.asm",
+        "ElmAfterTicketText",
+        1,
+        True,
+        (
+            ("line", "أهلًا"),
+            ("para", "رسالة أولى"),
+            ("line", "جملة أخرى"),
+            ("para", "الجزء الثاني"),
+            ("line", "ثم التالية"),
+            ("para", "والأخيرة"),
+        ),
+    )
+    pages = patch.pages_for(original)
+    assert len(pages) == 3
+    assert [len(page.lines) for page in pages] == [1, 4, 1]
+    assert [page.player_name for page in pages] == [True, False, False]
+    assert pages[0].label == "ElmAfterTicketText"
+    assert pages[1].label == "ClassicRetroST12Page2"
+    assert pages[0].ending == pages[1].ending == "<PROMPT>"
+    assert pages[2].ending == "<DONE>"
+    assert pages[1].lines[0][0] == "text"
+
+
 def test_showtext_rewrite_preserves_game_script_command_sequence():
     scene = _scene("MyText", calls=2)
     group = patch.Atlas(1, False, {})
     rendered = patch.RenderedScene(scene, group, ((0x80,),))
     text = "Talk1:\n\tshowtext MyText\n\tend\nTalk2:\n\tshowtext MyText\n\tend\n"
-    changed = patch._replace_event_calls(text, rendered)
+    changed = patch._replace_event_calls(text, scene, (rendered,))
     assert changed.count("\topentext\n") == 2
     assert changed.count("\tcallasm ClassicRetroSTA01Load\n") == 2
     assert changed.count("\twritetext MyText\n") == 2
@@ -89,7 +116,7 @@ def test_showtext_rewrite_preserves_game_script_command_sequence():
     assert changed.count("\tcallasm ClassicRetroSTRestoreFont\n") == 2
     assert changed.count("\tclosetext\n") == 2
     with pytest.raises(ClassicRetroError):
-        patch._replace_event_calls("\tshowtext MyText\n", rendered)
+        patch._replace_event_calls("\tshowtext MyText\n", scene, (rendered,))
 
 
 def _synthetic_source(tmp_path: Path):
