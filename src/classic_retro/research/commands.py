@@ -232,7 +232,6 @@ def register_cli(subcommands: argparse._SubParsersAction) -> None:
     polished_check.add_argument("workspace", type=Path)
     polished_check.set_defaults(handler=_polished_crystal_check)
 
-
     polished_intro = commands.add_parser(
         "polished-crystal-opening",
         help="Patch a pristine, already built v3.2.3 RGBDS source with one Arabic opening",
