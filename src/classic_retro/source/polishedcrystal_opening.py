@@ -75,7 +75,9 @@ def _tile_bytes(image: Image.Image, column: int) -> bytes:
     )
 
 
-def make_assets(source: Path, font_path: Path) -> ElmArabicAssets:
+def make_assets(
+    source: Path, font_path: Path, lines: tuple[tuple[str, str], ...] = OPENING_LINES
+) -> ElmArabicAssets:
     """Start with the game's own normal font so untranslated glyphs survive."""
     if not features.check("raqm"):
         raise ClassicRetroError(
@@ -93,7 +95,7 @@ def make_assets(source: Path, font_path: Path) -> ElmArabicAssets:
         font = ImageFont.truetype(str(font_path), 13, layout_engine=ImageFont.Layout.RAQM)
         if font.getmask("م", direction="rtl").getbbox() is None:
             raise ValueError("Arabic glyph missing")
-        images = tuple(_raster_line(line, font) for _, line in OPENING_LINES)
+        images = tuple(_raster_line(text, font) for _, text in lines)
     except (ValueError, OSError) as exc:
         raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, str(exc)) from exc
     atlas = bytearray(normal.read_bytes())
