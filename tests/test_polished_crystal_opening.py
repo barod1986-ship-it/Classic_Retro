@@ -20,7 +20,7 @@ def _fixture_source(tmp_path: Path) -> Path:
         encoding="utf-8",
     )
     (root / "engine/menus/intro_menu.asm").write_text(
-        'ProfElmSpeech:\n\tld hl, ElmText1\n\tcall PrintText\n\tret\n',
+        "ProfElmSpeech:\n\tld hl, ElmText1\n\tcall PrintText\n\tret\n",
         encoding="utf-8",
     )
     (root / "gfx/font").mkdir(parents=True)
@@ -30,9 +30,7 @@ def _fixture_source(tmp_path: Path) -> Path:
 
 def _fake_assets():
     codes = tuple((0x7F,) * opening.COLUMNS for _ in opening.OPENING_LINES)
-    images = tuple(
-        Image.new("1", (opening.COLUMNS * 8, 8)) for _ in opening.OPENING_LINES
-    )
+    images = tuple(Image.new("1", (opening.COLUMNS * 8, 8)) for _ in opening.OPENING_LINES)
     return opening.ElmArabicAssets(bytes(114 * 8), codes, images, 0)
 
 
@@ -50,8 +48,7 @@ def test_intro_raw_bytecode_preserves_line_and_paragraph_controls():
 def test_injects_original_font_switch_without_touching_other_texts(tmp_path, monkeypatch):
     source = _fixture_source(tmp_path)
     pinned = {
-        path: opening._git_blob_sha((source / path).read_bytes())
-        for path in opening.SOURCE_FILES
+        path: opening._git_blob_sha((source / path).read_bytes()) for path in opening.SOURCE_FILES
     }
     monkeypatch.setattr(opening, "SOURCE_FILES", pinned)
     monkeypatch.setattr(opening, "_verify_upstream", lambda path: None)
