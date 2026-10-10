@@ -14,7 +14,8 @@ of it into the Arabic game's source, which ``make`` then builds:
    by their pin; a translation that leaves an entry out is refused, since the
    Arabic glyphs take the Latin letters' codes;
 4. the generated files are written from the pinned originals: the Arabic glyphs
-   in the 8x8 typefaces and the VWF font, the Pokédex's tilemap labels, the
+   in the 8x8 typefaces and the VWF font, the Arabic lettering of the words drawn
+   in tile graphics (``gfx_labels``), the Pokédex's tilemap labels, the
    charmap with the presentation forms and the gender codes, the Huffman codes
    and n-grams trained on the translated tree, the keyboards, the shaping
    tables and the key phrase;
@@ -57,7 +58,15 @@ from classic_retro.engines.pokemon_gen2_arabic.glyphs import GLYPHS, PUNCTUATION
 from classic_retro.font.previews import glyph_atlas
 from classic_retro.localization.translations import TranslationSet, builtin_translation_set
 from classic_retro.rebuild.bps import apply_bps, create_bps
-from classic_retro.source.polished_crystal import asmscan, dex, encode, inject, jumps, textcodes
+from classic_retro.source.polished_crystal import (
+    asmscan,
+    dex,
+    encode,
+    gfx_labels,
+    inject,
+    jumps,
+    textcodes,
+)
 from classic_retro.source.polished_crystal import manifest as manifest_module
 from classic_retro.source.polished_crystal import patch as patch_module
 from classic_retro.source.polished_crystal.manifest import Manifest, builtin_manifest
@@ -116,6 +125,7 @@ def generated_files() -> list[str]:
     out += [f"{FONT_DIR}/{name}.png" for name in fonts.TYPEFACES]
     out.append(f"{FONT_DIR}/vwf.png")
     out += [f"{DEX_DIR}/{name}.tilemap" for name in dex.MAPS]
+    out += gfx_labels.paths()
     return out
 
 
@@ -469,6 +479,8 @@ def build_outputs(
     )
     for name, data in tilemaps.items():
         outputs[f"{DEX_DIR}/{name}.tilemap"] = data
+    # The English words drawn in tile graphics, lettered in Arabic over the originals.
+    outputs.update(gfx_labels.outputs(lambda path: pristine[path]))
     found = {
         "short_jumps_made_long": sum(far_jumps.values()),
         "translated_entries": len(encoded),
@@ -772,6 +784,7 @@ def make_manifest(source: Path) -> tuple[dict[str, Any], dict[str, str], dict[st
         | set(engine.modified())
         | set(generated_files())
         | {f"{DEX_DIR}/{name}.attrmap" for name in dex.MAPS}
+        | set(gfx_labels.pristine_sha256())
     )
     pinned -= {item.path for item in engine.files if item.is_new}
     pinned -= {SHAPING_TABLES, KEY_PHRASE_FILE}

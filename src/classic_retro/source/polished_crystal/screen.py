@@ -245,15 +245,6 @@ ROOM: dict[str, Mapping[str, Any]] = {
         }
         for index in range(5)
     },
-    # --- Apricorn box: colours at x 7 (5 cells) and 13 (6 cells), counts below ------
-    **{
-        f"engine/items/item_effects:ApricornBox.Text[{index}]": {
-            "width": 12,
-            "cols": [[0, 5], [6, 6]],
-        }
-        for index in (0, 2, 4)
-    },
-    "engine/items/item_effects:ApricornBox.Text[6]": {"width": 5},
     # --- summary: the rental label fills the 12-cell window; the OT label of the
     # trade screen keeps 3 cells (the gender symbol is drawn at x 7).
     "engine/pokemon/summary/pink_page:SummaryScreen_PinkPage.Rental_OT[0]": {"width": 12},

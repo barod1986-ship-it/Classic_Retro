@@ -50,8 +50,11 @@ makes the BPS patch from the user's ROM and the built one. Three files ship with
    letters (an entry whose limits allow it may be translated by an empty text);
 3. lengthens the short jumps over text that grows (below);
 4. writes the generated files from the pinned originals: the fonts, the VWF font, the
-   Pokédex's tilemaps, the charmap, the n-grams, the keyboards, the shaping tables and the key
-   phrase;
+   Pokédex's tilemaps, the charmap, the n-grams, the keyboards, the shaping tables, the key
+   phrase, and the Arabic lettering of the words drawn in tile graphics
+   (`source/polished_crystal/gfx_labels.py`: type and status badges, the Bag's tabs, the
+   summary's tabs, the Pokédex's buttons, the Type Chart, the Town Map, the music player and
+   more), drawn from the overlay's glyphs over each pinned original, which it checks first;
 5. records what it wrote and the pins of what it read in `.classic-retro-arabic.json`. The
    same command on the same tree with the same translation does nothing; any other prepared
    tree, or one where a written or a pinned file changed since, is refused.
@@ -225,6 +228,9 @@ a test checks), and the digests follow the translation.
   link battle's "against"); they are manifest entries of the patched tree and can be
   translated like any other.
 - The Unown dex words and the Ruins of Alph's puzzles stay in Latin letters (the Unown font).
+- A few English words in graphics are left: the diploma's big headings, the slot machine's
+  CREDIT/PAYOUT, the mode icon of Bill's PC, the Pokédex's page tile, the HP/EXP bar labels
+  (kept as abbreviations like PP and Lv) and the title screen's logo and copyright.
 - The five removed typefaces' PNGs are still written (with the Arabic glyphs), so no font
   file keeps Latin glyphs at the Arabic codes; they are not in the ROM.
 - Weekday names are written whole in the stems (`PrintDayOfWeek`), and the suffix entry is

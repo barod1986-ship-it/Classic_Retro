@@ -848,7 +848,7 @@
     {
       "id": "engine/menus/intro_menu:Continue_LoadMenuHeader.MenuData2_NoDex[0]",
       "context": "Continue/Save info box labels — at box (4,8)-(19,17) on Continue, (0,0)-(15,9) on Save; labels at box+(1,2) step 2 — values at box+(8,2) name, (13,4) …, (12,6) dex, (9,8) …",
-      "text": "اللاعب {PLAYER}"
+      "text": "اللاعب"
     },
     {
       "id": "engine/menus/intro_menu:Continue_LoadMenuHeader.MenuData2_NoDex[1]",
@@ -1206,23 +1206,38 @@
       "text": "كم العدد؟"
     },
     {
-      "id": "engine/items/item_effects:ApricornBox.Text[0]",
-      "context": "Apricorn box table (7 colours, 2 columns) — at (6,3) in frame (5,1)-(19,11); counts printed at (10|16, 4|6|8|10) — color abbreviation at x=7 / x=13 (3 cells), … at x=9 / x=15, counts after; pure table layout (row 1)",
-      "text": "حمراء  زرقاء"
+      "id": "engine/items/item_effects:PrintAprValues.Names[0]",
+      "context": "engine/items/item_effects.asm PrintAprValues.Names",
+      "text": "حمراء"
     },
     {
-      "id": "engine/items/item_effects:ApricornBox.Text[2]",
-      "context": "Apricorn box table (7 colours, 2 columns) — at (6,3) in frame (5,1)-(19,11); counts printed at (10|16, 4|6|8|10) — color abbreviation at x=7 / x=13 (3 cells), … at x=9 / x=15, counts after; pure table layout (row 3)",
-      "text": "صفراء  خضراء"
+      "id": "engine/items/item_effects:PrintAprValues.Names[1]",
+      "context": "engine/items/item_effects.asm PrintAprValues.Names",
+      "text": "زرقاء"
     },
     {
-      "id": "engine/items/item_effects:ApricornBox.Text[4]",
-      "context": "Apricorn box table (7 colours, 2 columns) — at (6,3) in frame (5,1)-(19,11); counts printed at (10|16, 4|6|8|10) — color abbreviation at x=7 / x=13 (3 cells), … at x=9 / x=15, counts after; pure table layout (row 5)",
-      "text": "بيضاء  سوداء"
+      "id": "engine/items/item_effects:PrintAprValues.Names[2]",
+      "context": "engine/items/item_effects.asm PrintAprValues.Names",
+      "text": "صفراء"
     },
     {
-      "id": "engine/items/item_effects:ApricornBox.Text[6]",
-      "context": "Apricorn box table (7 colours, 2 columns) — at (6,3) in frame (5,1)-(19,11); counts printed at (10|16, 4|6|8|10) — color abbreviation at x=7 / x=13 (3 cells), … at x=9 / x=15, counts after; pure table layout (row 7)",
+      "id": "engine/items/item_effects:PrintAprValues.Names[3]",
+      "context": "engine/items/item_effects.asm PrintAprValues.Names",
+      "text": "خضراء"
+    },
+    {
+      "id": "engine/items/item_effects:PrintAprValues.Names[4]",
+      "context": "engine/items/item_effects.asm PrintAprValues.Names",
+      "text": "بيضاء"
+    },
+    {
+      "id": "engine/items/item_effects:PrintAprValues.Names[5]",
+      "context": "engine/items/item_effects.asm PrintAprValues.Names",
+      "text": "سوداء"
+    },
+    {
+      "id": "engine/items/item_effects:PrintAprValues.Names[6]",
+      "context": "engine/items/item_effects.asm PrintAprValues.Names",
       "text": "وردية"
     },
     {
@@ -1803,7 +1818,7 @@
     {
       "id": "engine/menus/start_menu:StartMenu.PokedexString",
       "context": "Start menu — at box (10,0)-(19,17) (contest: (10,2)), text (12,2) step 2 — cursor x=11; <…> up to 7",
-      "text": "بوكيديكس"
+      "text": "بوكيدكس"
     },
     {
       "id": "engine/menus/start_menu:StartMenu.PartyString",
@@ -2009,6 +2024,11 @@
       "id": "engine/menus/naming_screen:NamingScreen_DrawBorders.PageString",
       "context": "engine/menus/naming_screen.asm NamingScreen_DrawBorders.PageString",
       "text": "رموز"
+    },
+    {
+      "id": "engine/menus/naming_screen:NamingScreen_DrawBorders.LettersString",
+      "context": "engine/menus/naming_screen.asm NamingScreen_DrawBorders.LettersString",
+      "text": "حروف"
     },
     {
       "id": "engine/menus/save:VerifyGameVersion.SaveUpgradeScreen[0]",
@@ -9598,7 +9618,7 @@
     {
       "id": "engine/pokemon/summary/pink_page:SummaryScreen_PinkPage.ExpPointStr",
       "context": "Summary info: … — at (1,13); number at (12,13)",
-      "text": "نقاط الخبرة"
+      "text": "نقاط خبرة"
     },
     {
       "id": "engine/pokemon/summary/pink_page:SummaryScreen_PinkPage.LevelUpStr",
@@ -9813,7 +9833,7 @@
     {
       "id": "engine/pokemon/summary/egg_page:SummaryScreen_Egg.OTString[0]",
       "context": "Summary … page header — at window (0,0),(0,1),(0,4),(2,5) — window is 12 cells wide (screen x 8..19) (row 1)",
-      "text": "المدرب:؟؟؟؟؟"
+      "text": "من: ؟؟؟؟؟"
     },
     {
       "id": "engine/pokemon/summary/egg_page:SummaryScreen_Egg.SoonString",
@@ -12163,7 +12183,7 @@
     {
       "id": "data/text/battle:StatRoseText",
       "context": "Battle text box (StatRoseText)",
-      "text": "ارتفاع {ram:wStringBuffer2} {USER}!"
+      "text": "زيادة {ram:wStringBuffer2} {USER}!"
     },
     {
       "id": "data/text/battle:StatRoseSharplyText",
@@ -12178,7 +12198,7 @@
     {
       "id": "data/text/battle:StatFellText",
       "context": "Battle text box (StatFellText)",
-      "text": "انخفاض {ram:wStringBuffer2} {USER}!"
+      "text": "نقص {ram:wStringBuffer2} {USER}!"
     },
     {
       "id": "data/text/battle:StatHarshlyFellText",
@@ -12303,7 +12323,7 @@
     {
       "id": "data/text/battle:LightScreenEffectText",
       "context": "Battle text box (LightScreenEffectText)",
-      "text": "ارتفع الدفاع الخاص لدى {USER}!"
+      "text": "{USER} ارتفع دفاعه الخاص!"
     },
     {
       "id": "data/text/battle:ReflectEffectText",
@@ -12333,7 +12353,7 @@
     {
       "id": "data/text/battle:DraggedOutText",
       "context": "Battle text box (DraggedOutText)",
-      "text": "سحب {USER} إلى الساحة!"
+      "text": "{USER} سحب إلى الساحة!"
     },
     {
       "id": "data/text/battle:ParalyzedText",
@@ -15894,11 +15914,6 @@
       "id": "engine/menus/options_menu:Options_Typeface.Bold",
       "context": "Options values — at (11,3/5/7/9/11/13) — each value padded with spaces to a fixed 6-8 chars so it overwrites the … value",
       "text": "عريض"
-    },
-    {
-      "id": "engine/menus/options_menu:Options_Typeface.Unown",
-      "context": "Options values — at (11,3/5/7/9/11/13) — each value padded with spaces to a fixed 6-8 chars so it overwrites the … value",
-      "text": "أنون"
     },
     {
       "id": "engine/menus/options_menu:Options_Keyboard.ABC",
@@ -64048,7 +64063,7 @@
     {
       "id": "data/text/common:_RecoveredSomeHPText",
       "context": "Common text (items, PC, marts, Day-Care, events) (_RecoveredSomeHPText)",
-      "text": "استعاد {ram:wStringBuffer1} {num:wCurHPAnimDeltaHP,2,3} من الصحة!"
+      "text": "{ram:wStringBuffer1} استعاد {num:wCurHPAnimDeltaHP,2,3} صحة!"
     },
     {
       "id": "data/text/common:_CuredOfPoisonText",
@@ -65233,17 +65248,17 @@
     {
       "id": "data/text/common:Text_Gained",
       "context": "Common text (items, PC, marts, Day-Care, events) (Text_Gained)",
-      "text": "حصل {ram:wStringBuffer1} على"
+      "text": "كسب {ram:wStringBuffer1}"
     },
     {
       "id": "data/text/common:Text_ABoostedStringBuffer2ExpPoints",
       "context": "Common text (items, PC, marts, Day-Care, events) (Text_ABoostedStringBuffer2ExpPoints)",
-      "text": "{num:wStringBuffer2,3,6} من نقاط الخبرة المعززة!"
+      "text": "{num:wStringBuffer2,3,6} نقطة خبرة معززة!"
     },
     {
       "id": "data/text/common:Text_StringBuffer2ExpPoints",
       "context": "Common text (items, PC, marts, Day-Care, events) (Text_StringBuffer2ExpPoints)",
-      "text": "{num:wStringBuffer2,3,6} من نقاط الخبرة!"
+      "text": "{num:wStringBuffer2,3,6} نقطة خبرة!"
     },
     {
       "id": "data/text/common:Text_GoPkmn",
@@ -65338,7 +65353,7 @@
     {
       "id": "data/text/common:_UsedSurfText",
       "context": "Common text (items, PC, marts, Day-Care, events) (_UsedSurfText)",
-      "text": "استخدم {ram:wStringBuffer2} ركوب الموج!"
+      "text": "{ram:wStringBuffer2} استخدم ركوب الموج!"
     },
     {
       "id": "data/text/common:_CantSurfText",
@@ -65393,12 +65408,12 @@
     {
       "id": "data/text/common:_UseStrengthText",
       "context": "Common text (items, PC, marts, Day-Care, events) (_UseStrengthText)",
-      "text": "استخدم {ram:wStringBuffer2} قوة بدنية!"
+      "text": "{ram:wStringBuffer2} استخدم قوة بدنية!"
     },
     {
       "id": "data/text/common:_MoveBoulderText",
       "context": "Common text (items, PC, marts, Day-Care, events) (_MoveBoulderText)",
-      "text": "يستطيع {ram:wStringBuffer1} تحريك الصخور."
+      "text": "{ram:wStringBuffer1} قادر على تحريك الصخور."
     },
     {
       "id": "data/text/common:_AskStrengthText",
@@ -65418,7 +65433,7 @@
     {
       "id": "data/text/common:_UseWhirlpoolText",
       "context": "Common text (items, PC, marts, Day-Care, events) (_UseWhirlpoolText)",
-      "text": "استخدم {ram:wStringBuffer2} دوامة مائية!"
+      "text": "{ram:wStringBuffer2} نفذ دوامة مائية!"
     },
     {
       "id": "data/text/common:_MayPassWhirlpoolText",
@@ -65448,7 +65463,7 @@
     {
       "id": "data/text/common:_UseRockSmashText",
       "context": "Common text (items, PC, marts, Day-Care, events) (_UseRockSmashText)",
-      "text": "استخدم {ram:wStringBuffer2} كسر الطوب!"
+      "text": "{ram:wStringBuffer2} استخدم كسر الطوب!"
     },
     {
       "id": "data/text/common:_MaySmashText",
@@ -65513,17 +65528,17 @@
     {
       "id": "data/text/common:WhiteoutText",
       "context": "Common text (items, PC, marts, Day-Care, events) (WhiteoutText)",
-      "text": "لم يبق لدى {PLAYER} بوكيمون قادر على القتال!\\p{فقد|فقدت} {PLAYER} الوعي!"
+      "text": "لم يبق لدى {PLAYER} بوكيمون سليم!\\p{فقد|فقدت} {PLAYER} الوعي!"
     },
     {
       "id": "data/text/common:WhiteoutToWildText",
       "context": "Common text (items, PC, marts, Day-Care, events) (WhiteoutToWildText)",
-      "text": "لم يبق لدى {PLAYER} بوكيمون قادر على القتال!\\p{ارتبك|ارتبكت} {PLAYER} {وأوقع|وأوقعت} ¥{num:hMoneyTemp,3,7}…\\p……………… ………………\\p{فقد|فقدت} {PLAYER} الوعي!"
+      "text": "لم يبق لدى {PLAYER} بوكيمون سليم!\\p{ارتبك|ارتبكت} {PLAYER} {وأوقع|وأوقعت} ¥{num:hMoneyTemp,3,7}…\\p……………… ………………\\p{فقد|فقدت} {PLAYER} الوعي!"
     },
     {
       "id": "data/text/common:WhiteoutToTrainerText",
       "context": "Common text (items, PC, marts, Day-Care, events) (WhiteoutToTrainerText)",
-      "text": "لم يبق لدى {PLAYER} بوكيمون قادر على القتال!\\p{دفع|دفعت} {PLAYER} ¥{num:hMoneyTemp,3,7} للفائز…\\p……………… ………………\\p{فقد|فقدت} {PLAYER} الوعي!"
+      "text": "لم يبق لدى {PLAYER} بوكيمون سليم!\\p{دفع|دفعت} {PLAYER} ¥{num:hMoneyTemp,3,7} للفائز…\\p……………… ………………\\p{فقد|فقدت} {PLAYER} الوعي!"
     },
     {
       "id": "data/text/common:ForfeitToTrainerText",
@@ -66053,7 +66068,7 @@
     {
       "id": "data/text/common:_PokemonTookItemText",
       "context": "Common text (items, PC, marts, Day-Care, events) (_PokemonTookItemText)",
-      "text": "تم أخذ {ram:wStringBuffer1} من {ram:wMonOrItemNameBuffer}."
+      "text": "أخذت {ram:wStringBuffer1} من {ram:wMonOrItemNameBuffer}."
     },
     {
       "id": "data/text/common:_PokemonAskSwapItemText",
@@ -66108,7 +66123,7 @@
     {
       "id": "data/text/common:_InitialOptionsText",
       "context": "Common text (items, PC, marts, Day-Care, events) (_InitialOptionsText)",
-      "text": "{اختر|اختاري} طريقة لعب الكريستال المصقول."
+      "text": "اختيار طريقة لعب الكريستال المصقول."
     },
     {
       "id": "data/text/common:_ElmText1",
@@ -66253,12 +66268,12 @@
     {
       "id": "data/text/common:_StoppedEvolvingText",
       "context": "Common text (items, PC, marts, Day-Care, events) (_StoppedEvolvingText)",
-      "text": "ماذا؟ توقف {ram:wStringBuffer2} عن التطور!"
+      "text": "ماذا؟ {ram:wStringBuffer2} توقف عن التطور!"
     },
     {
       "id": "data/text/common:_EvolvingText",
       "context": "Common text (items, PC, marts, Day-Care, events) (_EvolvingText)",
-      "text": "ما هذا؟ {ram:wStringBuffer2} يتطور!"
+      "text": "ماذا؟ {ram:wStringBuffer2} يتطور!"
     },
     {
       "id": "data/text/common:_MartHowManyText",
@@ -66688,7 +66703,7 @@
     {
       "id": "data/text/common:_MonSentToPCText",
       "context": "Common text (items, PC, marts, Day-Care, events) (_MonSentToPCText)",
-      "text": "تم إرسال {ram:wMonOrItemNameBuffer} إلى {ram:wStringBuffer1}."
+      "text": "{ram:wMonOrItemNameBuffer} أرسل إلى {ram:wStringBuffer1}."
     },
     {
       "id": "data/text/common:_NewDexDataText",

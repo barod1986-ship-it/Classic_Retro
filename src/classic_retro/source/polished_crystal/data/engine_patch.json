@@ -1,8 +1,221 @@
 {
   "format": "polished-crystal-engine-patch/1",
   "base": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
-  "engine": "35d78b350bf2ed5ac92c34d1f59031ec0fcb0a39",
+  "engine": "2753ade410df7aab591292f21bb0ac30cbd92c99",
   "files": [
+    {"path": "audio/music_player.asm",
+     "hunks": [
+       [679, 1, "e44a8ec36e01c83fe53d7671216592702e636c77ac0cac8a844a61b63f829960", [
+         "; Arabic: the song's text ends at the right edge, so the pitch and tempo fields",
+         "; are at the top left (x 1-5, their cursor at x 0): the signed number, then",
+         "; on its right the field's letter, read first (ﻁ for طبقة, pitch; ﺱ for سرعة,",
+         "; tempo; the English P and T would be Arabic letters at the Latin codes).",
+         "\thlcoord 1, 1"
+       ]],
+       [689, 2, "1229ddc09b388e98e8b0bfc44ebb0641a505540cc6739e2347a8991ea09d0a71", [
+       ]],
+       [693, 1, "9b125e427ab08ec3f3c36093755d987a4ea38109f09bf2394ef0f1a500e041f2", [
+         "\tcall _PrintSignedNum",
+         "\tld [hl], 'ﻁ'",
+         "\tret"
+       ]],
+       [696, 1, "1abf9000ac6d45f5b2c35c1fb33f736224a0ca30374a00777afb04462bb8dc15", [
+         "\thlcoord 1, 2"
+       ]],
+       [706, 2, "60a25ea33b9bd18f60d8fa032528bcbe2753389049001b95cc357c79c51be911", [
+       ]],
+       [710, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tcall _PrintSignedNum",
+         "\tld [hl], 'ﺱ'",
+         "\tret",
+         ""
+       ]],
+       [742, 1, "89582dd137f51b53fbe35fc24c55b9316ffa6b4c7f73252218c186eafc5a2458", [
+         "\thlcoord 0, 1"
+       ]],
+       [745, 1, "86e393c8d68188f54d62fd012358fb7922af0102b4aceee6f41ba80b3087e663", [
+         "\thlcoord 0, 2"
+       ]],
+       [768, 1, "89582dd137f51b53fbe35fc24c55b9316ffa6b4c7f73252218c186eafc5a2458", [
+         "\thlcoord 0, 1"
+       ]],
+       [771, 1, "86e393c8d68188f54d62fd012358fb7922af0102b4aceee6f41ba80b3087e663", [
+         "\thlcoord 0, 2"
+       ]],
+       [851, 1, "1379574549d56bd1bc2079cf507f828e6ed5641a28e1730312ac037051e3b933", [
+         "\t; Arabic: the noise set's number is left of its label (at x 18-19)",
+         "\thlcoord 16, MP_HUD_TOP + 1"
+       ]],
+       [1396, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: every line ends at the screen's right edge (x 19): the song's",
+         "\t; number first, its game's tag on the left of it, then the title, the",
+         "\t; composer and the arranger (see MPPlaceRight)"
+       ]],
+       [1398, 3, "57efd7440aa81e38e89e81dc089370662a6b1ea9cf853ac0c3bf7afed588bab8", [
+         "\tjr nz, DrawSongID"
+       ]],
+       [1405, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall MPPlaceRight"
+       ]],
+       [1410, 1, "90ad5425b0d8519f29e2be8b7af4bd58b696cb90440af0accdd0f779fccf8132", [
+       ]],
+       [1414, 2, "c8eb0adccb0bbe386c398add5e4b9e641e724b5f454c7b865364af7bbb6f95d1", [
+         "\tcall PlaceStringRight"
+       ]],
+       [1422, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall MPPlaceRight"
+       ]],
+       [1429, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall MPPlaceRight"
+       ]],
+       [1434, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: \"#<number>\" left to right, ending at the right edge of row 1.",
+         "; Returns hl = where text on its left ends, a cell apart.",
+         "\tld hl, wMPTextBuffer"
+       ]],
+       [1436, 8, "2a1011836ae1df47c955b65dcd150fcea300646c182f194ef9cd8cf4ad947a17", [
+       ]],
+       [1445, 1, "b8d0ffcfdd6ff4eb907bd3b99c6a2e9ecffdbe2d5318cfdfc5fccf6c1603e539", [
+         "\tlb bc, PRINTNUM_LEFTALIGN | 1, 3",
+         "\tcall PrintNum",
+         "\tld a, l",
+         "\tsub LOW(wMPTextBuffer)",
+         "\tld c, a",
+         "\tld b, 0",
+         "\t; de = row 2's x 0 (the cell after row 1's x 19) - the length",
+         "\tld a, LOW(wTilemap + 2 * SCREEN_WIDTH)",
+         "\tsub c",
+         "\tld e, a",
+         "\tld a, HIGH(wTilemap + 2 * SCREEN_WIDTH)",
+         "\tsbc b",
+         "\tld d, a",
+         "\tpush de",
+         "\tld hl, wMPTextBuffer",
+         "\trst CopyBytes",
+         "\tpop hl",
+         "\tdec hl",
+         "\tdec hl",
+         "\tret"
+       ]],
+       [1447, 2, "be2f9f3f30e7411a3016003afa3b04028da7287252afd55ca31a0882a95225d6", [
+         "MPPlaceRight:",
+         "; Arabic: place string de right to left in lines ending at the screen's right",
+         "; edge, the first on the row whose x 0 is hl. The English pushed the rest of",
+         "; a long text onto the next row with a run of spaces; that run starts a new",
+         "; line here. Returns de at the string's \"@\".",
+         "\tpush hl",
+         "\tld hl, wMPTextBuffer",
+         "\trst PlaceString",
+         "\tld h, b",
+         "\tld l, c",
+         "\tld [hl], '@'",
+         "\tpush de",
+         "\tld b, '<LNBRK>'",
+         "\tcall MPCompactSpaces",
+         "\tpop de",
+         "\tpop hl",
+         "\tpush de",
+         "\tld bc, SCREEN_WIDTH - 1",
+         "\tadd hl, bc",
+         "\tld de, wMPTextBuffer",
+         "\tcall PlaceStringRight",
+         "\tpop de",
+         "\tret",
+         "",
+         "MPCompactSpaces:",
+         "; In the string at wMPTextBuffer, make each run of two or more spaces one",
+         "; character b. Returns hl at its \"@\".",
+         "\tld hl, wMPTextBuffer",
+         "\tld d, h",
+         "\tld e, l",
+         ".loop",
+         "\tld a, [de]",
+         "\tinc de",
+         "\tcp ' '",
+         "\tjr nz, .put",
+         "\tld a, [de]",
+         "\tcp ' '",
+         "\tld a, ' '",
+         "\tjr nz, .put",
+         ".run",
+         "\tinc de",
+         "\tld a, [de]",
+         "\tcp ' '",
+         "\tjr z, .run",
+         "\tld a, b",
+         ".put"
+       ]],
+       [1450, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tcp '@'",
+         "\tjr nz, .loop",
+         "\tdec hl"
+       ]],
+       [1468, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall MPPlaceRight"
+       ]],
+       [1485, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall MPPlaceRight"
+       ]],
+       [1650, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: the song's number in a column on the right (x 16-18, read first) and",
+         "; its title right to left on its left, ending at x 14, its runs of spaces made",
+         "; one (the English used them to wrap the info screen's title); a title longer",
+         "; than the 14 cells keeps 13 and \"…\". The row (hl = x 1) is blanked first.",
+         "; Returns de at the title's \"@\".",
+         "\tpush de"
+       ]],
+       [1652, 2, "64e4808d50f0475d998e84a6cc93a868d39ff342b67f5cce1b1a9b1e3c101357", [
+         "\tld bc, SCREEN_WIDTH - 2"
+       ]],
+       [1655, 2, "5812392afe5251d019756edd251a7d21f9ad74aaf22b539ae46438f823f0fc84", [
+         "\tpop hl",
+         "\tpush hl",
+         "\tld bc, 16 - 1",
+         "\tadd hl, bc"
+       ]],
+       [1660, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tpop hl"
+       ]],
+       [1661, 2, "2908d13bbfbdb6b740855e7f195c1ab7469b1497db2e52008909292622741bcb", [
+       ]],
+       [1664, 1, "f3a355680bb30487c12af789f663df5ef9eca8744b91adf2f5df0d9114362167", [
+         "\tld hl, wMPTextBuffer"
+       ]],
+       [1669, 32, "9507a6b32062625bce1aa6420ded448ab824b24ac06907ef5100fb8c8e387783", [
+         "\tpush de",
+         "\tld b, ' '",
+         "\tcall MPCompactSpaces",
+         "\tld a, l",
+         "\tsub LOW(wMPTextBuffer + 15)",
+         "\tld a, h",
+         "\tsbc HIGH(wMPTextBuffer + 15)",
+         "\tjr c, .fits",
+         "\tld hl, wMPTextBuffer + 13"
+       ]],
+       [1704, 1, "bf7439e2d4836f4eb515724e81861f376392f708beab581c175218244f9823b3", [
+         ".fits",
+         "\tpop de"
+       ]],
+       [1707, 2, "27a348612b9acf541c67d2bd703897f5f60f708b6200de513d08324d1a8507b0", [
+         "\tld bc, 14 - 1",
+         "\tadd hl, bc",
+         "\tld de, wMPTextBuffer",
+         "\tcall PlaceStringRight"
+       ]],
+       [1720, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: the labels (gfx/music_player/bg.png, drawn by the overlay) read right",
+         "; to left, so the channel's number ($09, $0a; off $13, $14) is on the left of",
+         "; the word the two channels share"
+       ]],
+       [1721, 2, "209dc67c822ca9b8fe5188d0e503a5fcabbfc7467d085376a37b576012464b29", [
+         "\tch_name  0, MP_HUD_TOP, $09, $07, $08",
+         "\tch_name  5, MP_HUD_TOP, $0a, $07, $08"
+       ]],
+       [1727, 2, "0131e2972b1c428737d9cc746acee1346197c68d4ca4b2ac222c70c90f3eb3a9", [
+         "\tch_name  0, MP_HUD_TOP, $13, $11, $12",
+         "\tch_name  5, MP_HUD_TOP, $14, $11, $12"
+       ]]
+     ]},
     {"path": "constants/gfx_constants.asm",
      "hunks": [
        [44, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
@@ -10,6 +223,17 @@
        ]],
        [48, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
          "DEF VWF_RTL    EQU 1 << VWF_RTL_F"
+       ]]
+     ]},
+    {"path": "constants/menu_constants.asm",
+     "hunks": [
+       [24, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: a _2DMenu with this flag (STATICMENU_PLACE_TITLE, which _2DMenu does",
+         "; not use) mirrors its columns: the first column is on the right, and each",
+         "; item ends at the right edge of its column (engine/menus/menu.asm).",
+         "DEF STATICMENU_2D_MIRROR   EQU STATICMENU_PLACE_TITLE",
+         "DEF STATICMENU_2D_MIRROR_F EQU STATICMENU_PLACE_TITLE_F",
+         ""
        ]]
      ]},
     {"path": "constants/ram_constants.asm",
@@ -42,6 +266,367 @@
          ""
        ]]
      ]},
+    {"path": "data/items/name_order.asm",
+     "hunks": [
+       [1, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: \"by name\" sorts the bag in the order of the Arabic alphabet.",
+         "; The orders are computed when the ROM is assembled, from the Arabic names the",
+         "; translation puts in data/items/names.asm, data/items/key_names.asm and",
+         "; data/moves/names.asm: while main.asm includes them, li keeps a copy of each",
+         "; name (_LI_<list>_<index>, see li_capture), and arabic_ranks compares the",
+         "; copies with CHARCMP under the arabic_collation charmap below. It gives every",
+         "; form of a letter the letter's place in the alphabet: hamza and the alefs",
+         "; with hamza or madda sort as alef, teh marbuta as teh, waw with hamza as waw,",
+         "; alef maksura and yeh with hamza as yeh, and a lam-alef ligature as lam then",
+         "; alef. A space comes before every letter, digits and signs before letters.",
+         "; The tables are in their own section, read with GetFarByte.",
+         "",
+         "\tpushc",
+         "\tnewcharmap arabic_collation",
+         "\tcharmap \" \", $01",
+         "\tcharmap \".\", $02",
+         "\tcharmap \",\", $03",
+         "\tcharmap \"-\", $04",
+         "\tcharmap \"/\", $05",
+         "\tcharmap \"!\", $06",
+         "\tcharmap \"?\", $07",
+         "\tcharmap \":\", $08",
+         "\tcharmap \"×\", $09",
+         "\tcharmap \"+\", $0a",
+         "\tcharmap \"%\", $0b",
+         "\tcharmap \"&\", $0c",
+         "\tcharmap \"0\", $10",
+         "\tcharmap \"1\", $11",
+         "\tcharmap \"2\", $12",
+         "\tcharmap \"3\", $13",
+         "\tcharmap \"4\", $14",
+         "\tcharmap \"5\", $15",
+         "\tcharmap \"6\", $16",
+         "\tcharmap \"7\", $17",
+         "\tcharmap \"8\", $18",
+         "\tcharmap \"9\", $19",
+         "\t; alef",
+         "\tcharmap \"ﺀ\", $40",
+         "\tcharmap \"ﺁ\", $40",
+         "\tcharmap \"ﺂ\", $40",
+         "\tcharmap \"ﺃ\", $40",
+         "\tcharmap \"ﺄ\", $40",
+         "\tcharmap \"ﺇ\", $40",
+         "\tcharmap \"ﺈ\", $40",
+         "\tcharmap \"ﺍ\", $40",
+         "\tcharmap \"ﺎ\", $40",
+         "\t; beh",
+         "\tcharmap \"ﺏ\", $41",
+         "\tcharmap \"ﺐ\", $41",
+         "\tcharmap \"ﺑ\", $41",
+         "\tcharmap \"ﺒ\", $41",
+         "\t; teh",
+         "\tcharmap \"ﺓ\", $42",
+         "\tcharmap \"ﺔ\", $42",
+         "\tcharmap \"ﺕ\", $42",
+         "\tcharmap \"ﺖ\", $42",
+         "\tcharmap \"ﺗ\", $42",
+         "\tcharmap \"ﺘ\", $42",
+         "\t; theh",
+         "\tcharmap \"ﺙ\", $43",
+         "\tcharmap \"ﺚ\", $43",
+         "\tcharmap \"ﺛ\", $43",
+         "\tcharmap \"ﺜ\", $43",
+         "\t; jeem",
+         "\tcharmap \"ﺝ\", $44",
+         "\tcharmap \"ﺞ\", $44",
+         "\tcharmap \"ﺟ\", $44",
+         "\tcharmap \"ﺠ\", $44",
+         "\t; hah",
+         "\tcharmap \"ﺡ\", $45",
+         "\tcharmap \"ﺢ\", $45",
+         "\tcharmap \"ﺣ\", $45",
+         "\tcharmap \"ﺤ\", $45",
+         "\t; khah",
+         "\tcharmap \"ﺥ\", $46",
+         "\tcharmap \"ﺦ\", $46",
+         "\tcharmap \"ﺧ\", $46",
+         "\tcharmap \"ﺨ\", $46",
+         "\t; dal",
+         "\tcharmap \"ﺩ\", $47",
+         "\tcharmap \"ﺪ\", $47",
+         "\t; thal",
+         "\tcharmap \"ﺫ\", $48",
+         "\tcharmap \"ﺬ\", $48",
+         "\t; reh",
+         "\tcharmap \"ﺭ\", $49",
+         "\tcharmap \"ﺮ\", $49",
+         "\t; zain",
+         "\tcharmap \"ﺯ\", $4a",
+         "\tcharmap \"ﺰ\", $4a",
+         "\t; seen",
+         "\tcharmap \"ﺱ\", $4b",
+         "\tcharmap \"ﺲ\", $4b",
+         "\tcharmap \"ﺳ\", $4b",
+         "\tcharmap \"ﺴ\", $4b",
+         "\t; sheen",
+         "\tcharmap \"ﺵ\", $4c",
+         "\tcharmap \"ﺶ\", $4c",
+         "\tcharmap \"ﺷ\", $4c",
+         "\tcharmap \"ﺸ\", $4c",
+         "\t; sad",
+         "\tcharmap \"ﺹ\", $4d",
+         "\tcharmap \"ﺺ\", $4d",
+         "\tcharmap \"ﺻ\", $4d",
+         "\tcharmap \"ﺼ\", $4d",
+         "\t; dad",
+         "\tcharmap \"ﺽ\", $4e",
+         "\tcharmap \"ﺾ\", $4e",
+         "\tcharmap \"ﺿ\", $4e",
+         "\tcharmap \"ﻀ\", $4e",
+         "\t; tah",
+         "\tcharmap \"ﻁ\", $4f",
+         "\tcharmap \"ﻂ\", $4f",
+         "\tcharmap \"ﻃ\", $4f",
+         "\tcharmap \"ﻄ\", $4f",
+         "\t; zah",
+         "\tcharmap \"ﻅ\", $50",
+         "\tcharmap \"ﻆ\", $50",
+         "\tcharmap \"ﻇ\", $50",
+         "\tcharmap \"ﻈ\", $50",
+         "\t; ain",
+         "\tcharmap \"ﻉ\", $51",
+         "\tcharmap \"ﻊ\", $51",
+         "\tcharmap \"ﻋ\", $51",
+         "\tcharmap \"ﻌ\", $51",
+         "\t; ghain",
+         "\tcharmap \"ﻍ\", $52",
+         "\tcharmap \"ﻎ\", $52",
+         "\tcharmap \"ﻏ\", $52",
+         "\tcharmap \"ﻐ\", $52",
+         "\t; feh",
+         "\tcharmap \"ﻑ\", $53",
+         "\tcharmap \"ﻒ\", $53",
+         "\tcharmap \"ﻓ\", $53",
+         "\tcharmap \"ﻔ\", $53",
+         "\t; qaf",
+         "\tcharmap \"ﻕ\", $54",
+         "\tcharmap \"ﻖ\", $54",
+         "\tcharmap \"ﻗ\", $54",
+         "\tcharmap \"ﻘ\", $54",
+         "\t; kaf",
+         "\tcharmap \"ﻙ\", $55",
+         "\tcharmap \"ﻚ\", $55",
+         "\tcharmap \"ﻛ\", $55",
+         "\tcharmap \"ﻜ\", $55",
+         "\t; lam",
+         "\tcharmap \"ﻝ\", $56",
+         "\tcharmap \"ﻞ\", $56",
+         "\tcharmap \"ﻟ\", $56",
+         "\tcharmap \"ﻠ\", $56",
+         "\t; meem",
+         "\tcharmap \"ﻡ\", $57",
+         "\tcharmap \"ﻢ\", $57",
+         "\tcharmap \"ﻣ\", $57",
+         "\tcharmap \"ﻤ\", $57",
+         "\t; noon",
+         "\tcharmap \"ﻥ\", $58",
+         "\tcharmap \"ﻦ\", $58",
+         "\tcharmap \"ﻧ\", $58",
+         "\tcharmap \"ﻨ\", $58",
+         "\t; heh",
+         "\tcharmap \"ﻩ\", $59",
+         "\tcharmap \"ﻪ\", $59",
+         "\tcharmap \"ﻫ\", $59",
+         "\tcharmap \"ﻬ\", $59",
+         "\t; waw",
+         "\tcharmap \"ﺅ\", $5a",
+         "\tcharmap \"ﺆ\", $5a",
+         "\tcharmap \"ﻭ\", $5a",
+         "\tcharmap \"ﻮ\", $5a",
+         "\t; yeh",
+         "\tcharmap \"ﺉ\", $5b",
+         "\tcharmap \"ﺊ\", $5b",
+         "\tcharmap \"ﺋ\", $5b",
+         "\tcharmap \"ﺌ\", $5b",
+         "\tcharmap \"ﻯ\", $5b",
+         "\tcharmap \"ﻰ\", $5b",
+         "\tcharmap \"ﻱ\", $5b",
+         "\tcharmap \"ﻲ\", $5b",
+         "\tcharmap \"ﻳ\", $5b",
+         "\tcharmap \"ﻴ\", $5b",
+         "\t; lam-alef: lam, then alef",
+         "\tcharmap \"ﻵ\", $56, $40",
+         "\tcharmap \"ﻶ\", $56, $40",
+         "\tcharmap \"ﻷ\", $56, $40",
+         "\tcharmap \"ﻸ\", $56, $40",
+         "\tcharmap \"ﻹ\", $56, $40",
+         "\tcharmap \"ﻺ\", $56, $40",
+         "\tcharmap \"ﻻ\", $56, $40",
+         "\tcharmap \"ﻼ\", $56, $40",
+         "",
+         "\tpopc",
+         "",
+         "MACRO arabic_ranks",
+         "; \\1: a list of names (_LI_\\1_<index>); \\2, \\3: its first and last index.",
+         "; Defines _RANK_\\1_<index>: how many of the names \\2 to \\3 sort before this",
+         "; one (equal names keep the order of their indexes).",
+         "\tpushc",
+         "\tsetcharmap arabic_collation",
+         "\tfor _i, \\2, \\3 + 1",
+         "\t\tdef _rank = 0",
+         "\t\tfor _j, \\2, \\3 + 1",
+         "\t\t\tdef _cmp = CHARCMP(_LI_\\1_{d:_j}, _LI_\\1_{d:_i})",
+         "\t\t\tif _cmp < 0 || (_cmp == 0 && _j < _i)",
+         "\t\t\t\tdef _rank += 1",
+         "\t\t\tendc",
+         "\t\tendr",
+         "\t\tdef _RANK_\\1_{d:_i} = _rank",
+         "\tendr",
+         "\tpopc",
+         "ENDM",
+         "",
+         "MACRO arabic_rank_table",
+         "; \\1: a list of names; \\2, \\3: its first and last index.",
+         "; db, for each index from \\2 to \\3, its rank among them plus \\4.",
+         "\tarabic_ranks \\1, \\2, \\3",
+         "\tfor _i, \\2, \\3 + 1",
+         "\t\tdb _RANK_\\1_{d:_i} + \\4",
+         "\tendr",
+         "ENDM",
+         ""
+       ]],
+       [2, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; for each item, its place in the order (NO_ITEM first)"
+       ]],
+       [3, 307, "9cccf1ce78e98c013d49c155f9b1d671f1656de77b5af76bfbfc4684a4d63271", [
+         "\tdb 0 ; NO_ITEM",
+         "\tarabic_rank_table 1, 1, NUM_ITEMS, 1"
+       ]],
+       [314, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; for each key item from the first, its place in the order"
+       ]],
+       [315, 38, "e0273dd84cf4f9a1e080368da1430f84aa6aff4dbb342640651b411d5043b616", [
+         "\tarabic_rank_table 2, 1, NUM_KEY_ITEMS, 0"
+       ]]
+     ]},
+    {"path": "data/moves/tmhm_order.asm",
+     "hunks": [
+       [1, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "MACRO tmhm_alpha",
+         "; \\1: a TM or HM constant (TM_<move> or HM_<move>). Its move's Arabic name",
+         "; (from data/moves/names.asm, see data/items/name_order.asm) joins list 9.",
+         "\tREDEF _TMHM_MOVE EQUS STRSLICE(\"\\1\", 3)",
+         "\tif DEF({_TMHM_MOVE}_M)",
+         "\t\t; a move named like a type is <name>_M (TM_PSYCHIC teaches PSYCHIC_M)",
+         "\t\tDEF _tmhm_move = {_TMHM_MOVE}_M - 1",
+         "\telse",
+         "\t\tDEF _tmhm_move = {_TMHM_MOVE} - 1",
+         "\tendc",
+         "\tDEF _LI_9_{d:_tmhm_count} EQUS STRCAT(\"\\\"\", _LI_3_{d:_tmhm_move}, \"\\\"\")",
+         "\tDEF _TMHM_{d:_tmhm_count} = \\1",
+         "\tDEF _tmhm_count += 1",
+         "ENDM",
+         ""
+       ]],
+       [2, 5, "afde14873d2f350a829dc9c76b4a1e7a4c6a16f47bec5dd79d433ff542385a6c", [
+         "; Arabic: the TMs and HMs in the order of their moves' Arabic names",
+         "\tDEF _tmhm_count = 0",
+         "\ttmhm_alpha TM_ACROBATICS",
+         "\ttmhm_alpha TM_AERIAL_ACE",
+         "\ttmhm_alpha TM_ATTRACT",
+         "\ttmhm_alpha TM_AVALANCHE",
+         "\ttmhm_alpha TM_BLIZZARD"
+       ]],
+       [8, 1, "f689a4690dc8dee357df652b1d90fa53991ee5debead56d0d66c0c4f8a96f9cc", [
+         "\ttmhm_alpha TM_BRICK_BREAK"
+       ]],
+       [10, 45, "6bc9d5fcbe986a883bd510979f538993b915708348e3825d5721d3aa9f917ac5", [
+         "\ttmhm_alpha TM_BULK_UP",
+         "\ttmhm_alpha TM_BULLDOZE",
+         "\ttmhm_alpha TM_CALM_MIND",
+         "\ttmhm_alpha TM_CURSE",
+         "\ttmhm_alpha HM_CUT",
+         "\ttmhm_alpha TM_DARK_PULSE",
+         "\ttmhm_alpha TM_DAZZLINGLEAM",
+         "\ttmhm_alpha TM_DIG",
+         "\ttmhm_alpha TM_DOUBLE_TEAM",
+         "\ttmhm_alpha TM_DRAGON_CLAW",
+         "\ttmhm_alpha TM_DRAGON_PULSE",
+         "\ttmhm_alpha TM_DRAIN_PUNCH",
+         "\ttmhm_alpha TM_DYNAMICPUNCH",
+         "\ttmhm_alpha TM_EARTHQUAKE",
+         "\ttmhm_alpha TM_ENERGY_BALL",
+         "\ttmhm_alpha TM_EXPLOSION",
+         "\ttmhm_alpha TM_FACADE",
+         "\ttmhm_alpha TM_FALSE_SWIPE",
+         "\ttmhm_alpha TM_FIRE_BLAST",
+         "\ttmhm_alpha TM_FLAME_CHARGE",
+         "\ttmhm_alpha TM_FLAMETHROWER",
+         "\ttmhm_alpha TM_FLASH",
+         "\ttmhm_alpha TM_FLASH_CANNON",
+         "\ttmhm_alpha HM_FLY",
+         "\ttmhm_alpha TM_FOCUS_BLAST",
+         "\ttmhm_alpha TM_GIGA_DRAIN",
+         "\ttmhm_alpha TM_GIGA_IMPACT",
+         "\ttmhm_alpha TM_GYRO_BALL",
+         "\ttmhm_alpha TM_HAIL",
+         "\ttmhm_alpha TM_HIDDEN_POWER",
+         "\ttmhm_alpha TM_HONE_CLAWS",
+         "\ttmhm_alpha TM_HYPER_BEAM",
+         "\ttmhm_alpha TM_ICE_BEAM",
+         "\ttmhm_alpha TM_IRON_TAIL",
+         "\ttmhm_alpha TM_LEECH_LIFE",
+         "\ttmhm_alpha TM_LIGHT_SCREEN",
+         "\ttmhm_alpha TM_POISON_JAB",
+         "\ttmhm_alpha TM_PROTECT",
+         "\ttmhm_alpha TM_PSYCHIC",
+         "\ttmhm_alpha TM_RAIN_DANCE",
+         "\ttmhm_alpha TM_REFLECT",
+         "\ttmhm_alpha TM_REST",
+         "\ttmhm_alpha TM_RETURN",
+         "\ttmhm_alpha TM_ROAR",
+         "\ttmhm_alpha TM_ROCK_SLIDE"
+       ]],
+       [56, 1, "86c4943d8d5a971e3b850137a078de724169e26ed09f5cf91db7684c2ae0569f", [
+         "\ttmhm_alpha TM_ROCK_SMASH"
+       ]],
+       [58, 30, "c8f598d2fe2d71c50b56b20382019c4fd4df57523de6887cccedd5cffc0bda29", [
+         "\ttmhm_alpha TM_ROOST",
+         "\ttmhm_alpha TM_SAFEGUARD",
+         "\ttmhm_alpha TM_SANDSTORM",
+         "\ttmhm_alpha TM_SCALD",
+         "\ttmhm_alpha TM_SHADOW_BALL",
+         "\ttmhm_alpha TM_SHADOW_CLAW",
+         "\ttmhm_alpha TM_SLUDGE_BOMB",
+         "\ttmhm_alpha TM_SOLAR_BEAM",
+         "\ttmhm_alpha TM_STEEL_WING",
+         "\ttmhm_alpha TM_STONE_EDGE",
+         "\ttmhm_alpha HM_STRENGTH",
+         "\ttmhm_alpha TM_SUBSTITUTE",
+         "\ttmhm_alpha TM_SUNNY_DAY",
+         "\ttmhm_alpha HM_SURF",
+         "\ttmhm_alpha TM_SWIFT",
+         "\ttmhm_alpha TM_SWORDS_DANCE",
+         "\ttmhm_alpha TM_THIEF",
+         "\ttmhm_alpha TM_THUNDER",
+         "\ttmhm_alpha TM_THUNDERBOLT",
+         "\ttmhm_alpha TM_THUNDER_WAVE",
+         "\ttmhm_alpha TM_TOXIC",
+         "\ttmhm_alpha TM_U_TURN",
+         "\ttmhm_alpha TM_VENOSHOCK",
+         "\ttmhm_alpha TM_VOLT_SWITCH",
+         "\ttmhm_alpha HM_WATERFALL",
+         "\ttmhm_alpha TM_WATER_PULSE",
+         "\ttmhm_alpha HM_WHIRLPOOL",
+         "\ttmhm_alpha TM_WILD_CHARGE",
+         "\ttmhm_alpha TM_WILL_O_WISP",
+         "\ttmhm_alpha TM_X_SCISSOR",
+         "\tarabic_ranks 9, 0, _tmhm_count - 1",
+         "\tfor _pos, _tmhm_count",
+         "\t\tfor _i, _tmhm_count",
+         "\t\t\tif _RANK_9_{d:_i} == _pos",
+         "\t\t\t\tdb _TMHM_{d:_i}",
+         "\t\t\tendc",
+         "\t\tendr",
+         "\tendr"
+       ]]
+     ]},
     {"path": "data/options/default_options.asm",
      "hunks": [
        [15, 1, "81d60704aaa8997fa9909969e8c37507f12278a0f2912caece885560786726ae", [
@@ -68,6 +653,97 @@
          "\tld b, VWF_SINGLE | VWF_INVERT | VWF_OPAQUE | VWF_RTL"
        ]]
      ]},
+    {"path": "engine/battle/core.asm",
+     "hunks": [
+       [3962, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: the name ends at the HUD's right edge (x 19), so its row is",
+         "\t; blanked first (the HUD is also redrawn over itself on a level up)",
+         "\thlcoord 10, 7",
+         "\tld bc, MON_NAME_LENGTH - 1",
+         "\tld a, ' '",
+         "\trst ByteFill"
+       ]],
+       [3970, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\thlcoord 10, 7",
+         "\tld c, MON_NAME_LENGTH - 1",
+         "\tfarcall RTLJustifyRight"
+       ]],
+       [4064, 3, "e8c0c264536fc001dd8af1f9bb225e2051a4f7005ae872bd8cd938cc09c8ec57", [
+         "\t; Arabic: the name ends at the HUD's right edge (x 10)",
+         "\tld c, MON_NAME_LENGTH - 1",
+         "\tfarcall RTLJustifyRight"
+       ]],
+       [5008, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tpush hl"
+       ]],
+       [5009, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: the move names end at the box's right edge (x 18)",
+         "\tpop hl",
+         "\tld de, SCREEN_WIDTH",
+         "\tlb bc, NUM_MOVES, 18 - 6 + 1",
+         "\tfarcall JustifyRowsRight"
+       ]],
+       [5474, 3, "39788972df76633979720292f6a479a118c01c473b4e10e57508e80eaa33a664", [
+         "\t; Arabic: \"<power>P/<accuracy>%\" reads left to right like a number, so its",
+         "\t; signs are put in their tiles, not placed as a string (which would be",
+         "\t; turned around in place: \"40/P100%\")",
+         "\thlcoord 4, 10",
+         "\tld a, '<BOLDP>'",
+         "\tld [hli], a",
+         "\tld [hl], '/'",
+         "\thlcoord 9, 10",
+         "\tld [hl], '%'"
+       ]],
+       [5540, 2, "b247f81a73838d09082e4ef058e47446c0edf8f97560dfc8eb21e2464680ae84", [
+       ]],
+       [7578, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tcall BattleTextSpaceBeforeBattleMonNick"
+       ]],
+       [7581, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "BattleTextSpaceBeforeBattleMonNick:",
+         "; Arabic: the call (\"انطلق يا\") is a text of its own whose trailing space the",
+         "; translation trims, so the speech box pen bc moves a cell left before",
+         "; wBattleMonNickname, or to the second line when the name and its \"!\" do not",
+         "; fit left of the pen on the first line (a 10-letter name after \"افعلها يا\").",
+         "\tld hl, wBattleMonNickname",
+         "\tld d, 2 ; the space and the \"!\"",
+         ".count",
+         "\tld a, [hli]",
+         "\tcp '@'",
+         "\tjr z, .counted",
+         "\tinc d",
+         "\tjr .count",
+         "",
+         ".counted",
+         "\t; e = the pen's column if it is on the first line",
+         "\tld a, c",
+         "\tsub LOW(wTilemap + TEXTBOX_INNERY * SCREEN_WIDTH)",
+         "\tld e, a",
+         "\tld a, b",
+         "\tsbc HIGH(wTilemap + TEXTBOX_INNERY * SCREEN_WIDTH)",
+         "\tjr nz, .space",
+         "\tld a, e",
+         "\tcp SCREEN_WIDTH",
+         "\tjr nc, .space",
+         "\t; columns TEXTBOX_INNERX to e are free",
+         "\tsub TEXTBOX_INNERX - 1",
+         "\tcp d",
+         "\tjr nc, .space",
+         "\tbccoord TEXTBOX_INNERX + TEXTBOX_INNERW - 1, TEXTBOX_INNERY + 2",
+         "\tret",
+         "",
+         ".space",
+         "\tdec bc",
+         "\tret",
+         ""
+       ]],
+       [7624, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: the call back starts the second line, the name and its comma",
+         "\t; are the first (the translation trims the space between them, and a",
+         "\t; long name with \"يكفي هذا! عد!\" would run past the box)",
+         "\tbccoord TEXTBOX_INNERX + TEXTBOX_INNERW - 1, TEXTBOX_INNERY + 2"
+       ]]
+     ]},
     {"path": "engine/battle/endturn.asm",
      "hunks": [
        [974, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
@@ -82,20 +758,67 @@
     {"path": "engine/battle/menu.asm",
      "hunks": [
        [38, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
-         "; Arabic: the battle menus are wider than the English ones, so that both",
-         "; columns hold 7-glyph words (\"بوكيمون\"): main menu columns 5 and 7 cells",
-         "; (x 6-10, 12-18), Contest 7 and 7 (x 4-10, 12-18), Safari 7 and 5",
-         "; (x 6-12, 14-18). The ball count is drawn 5 cells right of its label's start",
-         "; (it is read first, then the label of up to 5 glyphs)."
+         "; Arabic: the battle menus are mirrored (STATICMENU_2D_MIRROR): the first item",
+         "; of each row is on the right and every item ends at the right edge of its",
+         "; column, one cell left of the next column's cursor. Main menu: Fight and Bag",
+         "; in x 14-18 (cursor at 13), Pokemon and Run in x 5-11 (cursor at 4). Contest:",
+         "; Fight and the Park Balls in x 12-18 (cursor at 11), Pokemon and Run in x 2-9",
+         "; (cursor at 1). Safari: the Safari Balls and Rock in x 12-18 (cursor at 11),",
+         "; Bait and Run in x 5-9 (cursor at 4). The ball count is drawn left of the",
+         "; \"×\" that follows the ball label."
        ]],
        [40, 1, "1f5186206f74c0c3f8dd3acc424c634778944cff1500a603a21577a155931777", [
-         "\tmenu_coords 4, 12, 19, 17"
+         "\tmenu_coords 3, 12, 19, 17"
+       ]],
+       [45, 1, "e647410ed0620d11bf7faf80c749bca37e526d48c32b2d235bb8192a94db5109", [
+         "\tdb $87 | STATICMENU_2D_MIRROR ; flags"
+       ]],
+       [47, 1, "4a5ed8b82dbf4e8bf71ac34826e5b22ef690a0abe93dbf99d6e22833979ec159", [
+         "\tdb 9 ; spacing"
        ]],
        [59, 1, "eefeac71caa1e70efdde8126fffcdeb9abd885a3fc63af161154ee0322be91ca", [
-         "\tmenu_coords 2, 12, 19, 17"
+         "\tmenu_coords 0, 12, 19, 17"
+       ]],
+       [64, 1, "e40cfc929b2f5baf008f7cce236e7f3897fcc2ac20828de20034120f88163546", [
+         "\tdb $81 | STATICMENU_2D_MIRROR ; flags"
+       ]],
+       [66, 1, "30e626892ebef4f002659eb291d09a5c771219bf95fdcf2614850fe8e1d00369", [
+         "\tdb 10 ; spacing"
        ]],
        [77, 1, "9548377561f7492a18e6dbf50b0c02c96cf3973643b6af8b6d2d9da3e5d041f9", [
-         "\thlcoord 4 + 5, 16"
+         "\thlcoord 0, 16"
+       ]],
+       [79, 2, "3881b212617b6870db49e21249a6ce02aa72c033d6dc65e51c7e439ca819961f", [
+         "\tjr ShowBallsRemaining"
+       ]],
+       [84, 1, "523b93e37643208b4072fba1dc1af25b296191b5cb357d3a3179155087bea150", [
+         "\tmenu_coords 3, 12, 19, 17"
+       ]],
+       [89, 1, "e40cfc929b2f5baf008f7cce236e7f3897fcc2ac20828de20034120f88163546", [
+         "\tdb $81 | STATICMENU_2D_MIRROR ; flags"
+       ]],
+       [91, 1, "30e626892ebef4f002659eb291d09a5c771219bf95fdcf2614850fe8e1d00369", [
+         "\tdb 7 ; spacing"
+       ]],
+       [102, 1, "054ce6c2177c653d1ddd51667f699ad2a28393773f7def187e892393bcfa4380", [
+         "\thlcoord 0, 14"
+       ]],
+       [104, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "ShowBallsRemaining:",
+         "; Print the ball count de in the two cells left of the first \"×\" of row hl",
+         "; (the ball label reads \"<Balls>×  \", drawn right to left).",
+         "\tld b, SCREEN_WIDTH",
+         ".find",
+         "\tld a, [hli]",
+         "\tcp '×'",
+         "\tjr z, .found",
+         "\tdec b",
+         "\tjr nz, .find",
+         "\tret",
+         "",
+         ".found",
+         "\tld bc, -3",
+         "\tadd hl, bc"
        ]]
      ]},
     {"path": "engine/battle/trainer_huds.asm",
@@ -136,9 +859,94 @@
      ]},
     {"path": "engine/events/diploma.asm",
      "hunks": [
+       [18, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: the label on the right (it ends at x 17, as the English one",
+         "\t; started at x 2), the name on its left (ending at x 10, as the English",
+         "\t; one started at x 9)"
+       ]],
+       [19, 2, "669d23c044d0dee6ef9cc415c05215a8f34d90e9f95e7a9f7a027d5087ba4c35", [
+         "\thlcoord 17, 5",
+         "\tcall PlaceStringRight"
+       ]],
+       [22, 2, "b845d2d5f9fdd0481c1625cebb45a5076c0625c1370ba94427f14cd380a43ea8", [
+         "\thlcoord 10, 5",
+         "\tcall PlaceStringRight"
+       ]],
        [25, 2, "079c2a74383d2b6ec9401f1bdb4db1a862a6124d0368c2d8bb0c2f4ea3a1dd5f", [
          "\t; Arabic: the lines are flush right, inside the same margins (x 2 to 17)",
          "\thlcoord 17, 8",
+         "\tcall PlaceStringRight"
+       ]],
+       [58, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: the label on the right, the time on its left (x 1 to 7, as",
+         "\t; the English one was at x 12 to 18), a cell between them"
+       ]],
+       [59, 3, "8f4509532318050c493f58ad898f4c74b0e72844ed58943b4d247850ed7a6da1", [
+         "\thlcoord 17, 15",
+         "\tcall PlaceStringRight",
+         "\thlcoord 1, 15"
+       ]]
+     ]},
+    {"path": "engine/events/elevator.asm",
+     "hunks": [
+       [148, 1, "b7646be43a04bb1df324cec0834839ca9a8de16375d6b47f395fb9255529500d", [
+         "\t; Arabic: the label and the floor end at the box's right edge",
+         "\thlcoord 8, 2"
+       ]],
+       [150, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [153, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\thlcoord 1, 4",
+         "\tld c, 8",
+         "\tfarcall RTLJustifyRight"
+       ]]
+     ]},
+    {"path": "engine/events/halloffame.asm",
+     "hunks": [
+       [106, 2, "a28f96c6dcf620d4744426cc821854882990a2208efe4b7296aba8ed8f278218", [
+         "\thlcoord 18, 2 ; Arabic: flush right",
+         "\tcall PlaceStringRight"
+       ]],
+       [355, 1, "3f48f50ef8af0db578d9659f207db1770d8852a9afc3053474857ea6b7c02065", [
+       ]],
+       [362, 1, "48b0d845faef20514c1116342ff9c858baa6d95220dc49f2203a6b8c67ac76f8", [
+         "\t; Arabic: the number goes a cell clear of the words (left of them)",
+         "\thlcoord 1, 2"
+       ]],
+       [366, 1, "0ea0febd9f318b4e792c5c2af0b2d25beeadfa70998664108312e7b760e97269", [
+       ]],
+       [369, 2, "244cbd98a41f45216a24e98191c9ed3c0c02aaef125f5c19d9d08cd3dcace44e", [
+         "\t; Arabic: the line (the number and the words) ends at the box's right edge",
+         "\thlcoord 1, 2",
+         "\tld c, SCREEN_WIDTH - 2",
+         "\tfarcall RTLJustifyRight"
+       ]],
+       [470, 2, "ee0f8f436fd4a5247312fb4847505a331bbcbd7590806896668344d149dc13e6", [
+         "\thlcoord 16, 13 ; Arabic: flush right, a cell clear of the gender",
+         "\tcall PlaceStringRight"
+       ]],
+       [483, 2, "f15984deebf8c0f216ed75d42b5caa70b7ffa766e810af82cb75d1b127387f69", [
+         "\tld [hl], a",
+         "\t; Arabic: \"/<nickname>\" read from the right, a cell in from the name above",
+         "\thlcoord 15, 14"
+       ]],
+       [486, 1, "1983bf0f1d8552eeb81a833d97cb55d6e2bd693b9adcf2ccb496bd3ea751ea0b", [
+         "\tld [hld], a"
+       ]],
+       [488, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [555, 1, "02b6b225629d7bd8525454de40ba90f2e5e64985640391314d3fbfc47d8bfea9", [
+         "\thlcoord 8, 4 ; Arabic: flush right in the box (the English started at x 2)"
+       ]],
+       [557, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [568, 1, "14d24d531c61fb4560a4d3074a28ce4a0fb6ed6122e989e626ca142c93cc3fad", [
+         "\thlcoord 9, 8 ; Arabic: flush right"
+       ]],
+       [570, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
          "\tcall PlaceStringRight"
        ]]
      ]},
@@ -172,6 +980,41 @@
          "\tfarcall _RTLReverseLine",
          "\tpop af",
          "\tld [wTextboxFlags], a"
+       ]]
+     ]},
+    {"path": "engine/events/mom.asm",
+     "hunks": [
+       [414, 1, "b7646be43a04bb1df324cec0834839ca9a8de16375d6b47f395fb9255529500d", [
+         "\t; Arabic: the labels end at the box's right edge, the amounts are on",
+         "\t; their left (x 1 to 8, as the English ones were at x 11 to 18)",
+         "\thlcoord 18, 2"
+       ]],
+       [416, 2, "354b834edd204274369690651f40448fae7df9ea090a43cc7848cc0d2d6f63f7", [
+         "\tcall PlaceStringRight",
+         "\thlcoord 1, 2"
+       ]],
+       [421, 1, "ac9508ab1b0a8f738aeb3e5b8374d01468af7b1ccd2850a6c8c56e22afa30301", [
+         "\thlcoord 18, 4"
+       ]],
+       [423, 2, "d35b333dd0ca6e7d8f88d0445c1209498e0b750506e80ad2431f1b5b90d277cf", [
+         "\tcall PlaceStringRight",
+         "\thlcoord 1, 4"
+       ]],
+       [428, 1, "99591ee161e838d5938ac2b427b3630f9d6a4c8e2c9e0a56a0262f7d82a76af9", [
+         "\thlcoord 18, 6"
+       ]],
+       [430, 2, "69d92540697d188b488411f36949a8b3049dc60a24f92492c4749215a1ac7197", [
+         "\tcall PlaceStringRight",
+         "\thlcoord 1, 6"
+       ]],
+       [455, 1, "1005882e063171dbd1ac9fd0987362301970cbb586392ddd1ffd27f3103f8184", [
+         "\thlcoord 1, 6 ; Arabic: the amount is left of its label"
+       ]],
+       [459, 1, "1005882e063171dbd1ac9fd0987362301970cbb586392ddd1ffd27f3103f8184", [
+         "\thlcoord 1, 6"
+       ]],
+       [466, 1, "fcdd11dd2ff32c16df357c24b4ccf23f77f0c928ff4934ecbe1b433d9fb4451e", [
+         "\thlcoord 2, 6"
        ]]
      ]},
     {"path": "engine/events/specials.asm",
@@ -218,8 +1061,73 @@
          "\tdec bc"
        ]]
      ]},
+    {"path": "engine/gfx/cgb_layouts.asm",
+     "hunks": [
+       [860, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: the tab bar is mirrored (see DrawPackGFX): Key Items on the left"
+       ]],
+       [861, 5, "ba01fc2bf4a5c3574e9f60992587970189646ca71433a764a90b91f9b5e5339b", [
+         "\tld a, $6"
+       ]],
+       [869, 1, "5060ef9e3d3931e89eb4d80dec25b694e8d4e2b5a0d9f80e5aa99b8197fa1733", [
+         "\tdec a"
+       ]],
+       [873, 2, "c50c14e463dcbf89a14d695b9dcdac8f2dce21b7b2f14da27d67c3fedd4a6269", [
+         "\tdec a",
+         "rept 3"
+       ]],
+       [877, 1, "5060ef9e3d3931e89eb4d80dec25b694e8d4e2b5a0d9f80e5aa99b8197fa1733", [
+         "\tdec a",
+         "rept 3"
+       ]],
+       [879, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "endr",
+         "\tdec a",
+         "rept 6",
+         "\tld [hli], a",
+         "endr"
+       ]]
+     ]},
+    {"path": "engine/gfx/item_icons.asm",
+     "hunks": [
+       [183, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: the speech box's lines start at its right edge, so the icon sits at",
+         "; its left edge (the English drew it at x 16-18, right of its lines). A first",
+         "; line long enough to reach it keeps its letters: the icon's tile is left out."
+       ]],
+       [185, 1, "7fbe7c6e2624ef08f29e6b57cb9f8be25b8ee6bd74a33d8af283f72d537edbd3", [
+         "\thlcoord 1, 13"
+       ]],
+       [192, 6, "895c422b028c4e194b3ac5f4954e98a2901f2bb5cdf24e2e390c93035576b023", [
+         "\thlcoord 1, 14",
+         "\tpush bc",
+         "\tld c, 3",
+         ".middle_row",
+         "\tld b, a",
+         "\tld a, [hl]",
+         "\tcp ' '",
+         "\tld a, b",
+         "\tjr nz, .keep_letter",
+         "\tld [hl], a",
+         ".keep_letter",
+         "\tinc hl"
+       ]],
+       [199, 1, "d94bd11edfb2dc200904170a008828cb286376a0646a5e6c0362936f76ad03af", [
+         "\tdec c",
+         "\tjr nz, .middle_row",
+         "\tpop bc",
+         "\thlcoord 1, 15"
+       ]]
+     ]},
     {"path": "engine/gfx/load_font.asm",
      "hunks": [
+       [34, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: the English typefaces 3-7 of an old save have no font here",
+         "\tcp NUM_FONTS",
+         "\tjr c, .got_font",
+         "\txor a ; NORMAL_FONT",
+         ".got_font"
+       ]],
        [46, 1, "658d492a809a33f570efcea7d40f0a3bae254a92dc0285e8bf0e31a52249959e", [
        ]],
        [48, 4, "950f6bc705f809c0a0b240c75b5b1e7d3b164d3518e3230a4ba2524fe00d7c45", [
@@ -231,9 +1139,9 @@
        "",
        "; Characters drawn leftward (speech box text, PlaceStringRight). A number",
        "; must still read left to right, so a run of numerals is drawn leftward like",
-       "; the rest and put back in order when it ends. A . , : / between two numerals",
-       "; belongs to the run (\"1/2\", \"20,000\", \"10:30\"); one that ends the run stays on",
-       "; its left, where a sentence goes on. A foot or inch mark belongs to the run",
+       "; the rest and put back in order when it ends. A . , : / - between two numerals",
+       "; belongs to the run (\"1/2\", \"20,000\", \"10:30\", the range \"2-5\"); one that ends",
+       "; the run stays on its left, where a sentence goes on. A foot or inch mark belongs to the run",
        "; only right after a digit (\"5′07″\"); elsewhere it is an ordinary character.",
        "; (The naming screen and the mail composer draw their entry lines with ′ ″, at",
        "; explicit coordinates: see _RTLReverseLine.)",
@@ -326,6 +1234,47 @@
        "\tpop bc",
        "\tret",
        "",
+       "_RTLBoxNumber::",
+       "; Print number de (PrintNum flags b, c digits) so that it ends at the speech",
+       "; box's leftward pen hl, left to right; returns hl = the pen left of it.",
+       "; Numerals drawn just right of the pen read left to right with the number:",
+       "; the \"¥\" of \"¥{num}\" (a run of its own, put in order when its text ended)",
+       "; moves left of the digits, so the amount reads \"¥300\", not \"300¥\".",
+       "\tres PRINTNUM_DELAY_F, b",
+       "\tpush hl",
+       "\tld hl, wRTLNumBuffer",
+       "\tcall PrintNum",
+       "\tld a, l",
+       "\tsub LOW(wRTLNumBuffer)",
+       "\tld c, a",
+       "\tpop hl",
+       "\t; de = the number's first tile, left of the pen",
+       "\tld a, l",
+       "\tsub c",
+       "\tld e, a",
+       "\tld a, h",
+       "\tsbc 0",
+       "\tld d, a",
+       "\tinc de",
+       "\tpush de",
+       "\t; the numerals right of the pen move left by the number's length",
+       ".run",
+       "\tinc hl",
+       "\tld a, [hl]",
+       "\tcall RTLIsNumeral",
+       "\tjr nc, .place",
+       "\tld [de], a",
+       "\tinc de",
+       "\tjr .run",
+       "",
+       ".place",
+       "\tld hl, wRTLNumBuffer",
+       "\tld b, 0",
+       "\trst CopyBytes",
+       "\tpop hl",
+       "\tdec hl",
+       "\tret",
+       "",
        "RTLIsNumeral::",
        "; carry if a reads left to right with digits: 0-9, ¥, ′ and ″. Preserves a.",
        "\tcall RTLIsDigit",
@@ -359,6 +1308,8 @@
        "\tcp ':'",
        "\tjr z, .yes",
        "\tcp '/'",
+       "\tjr z, .yes",
+       "\tcp '-'",
        "\tjr z, .yes",
        "\tand a",
        "\tret",
@@ -414,7 +1365,13 @@
        "_RTLEndText::",
        "; The text started with flags a ended at bc: end the line it owned, and give",
        "; back the speech box and owner flags it found. Preserves bc and hl.",
+       "; A <DONE> or <PROMPT> inside compressed text ends the text that holds it",
+       "; (hStopPrintingString), as it does uncompressed, not the one that called it",
+       "; with text_far: \"text_far X (done)\" then \"text_asm\" goes on to the text_asm.",
+       "; (The Arabic texts compress where the English did not.)",
        "\tld d, a",
+       "\txor a",
+       "\tldh [hStopPrintingString], a",
        "\tbit RTL_OWNER_F, d",
        "\tjr nz, .restore",
        "\tldh a, [hRTLFlags]",
@@ -435,12 +1392,146 @@
        "\tldh [hRTLFlags], a",
        "\tret",
        "",
+       "_RTLPromptLine::",
+       "; A prompt waits for a button at hl: what has been drawn must read right to",
+       "; left while it waits. Leftward text puts its numerals back in order; a line",
+       "; drawn left to right is reversed now and restarts at hl, so that its end",
+       "; reverses nothing more. Preserves bc, de and hl.",
+       "\tldh a, [hRTLFlags]",
+       "\tbit RTL_BOXDRAW_F, a",
+       "\tjp nz, RTLFlushDigits",
+       "\tbit RTL_OWNER_F, a",
+       "\tret z",
+       "\tcall _RTLReverseLine",
+       "\tld a, l",
+       "\tldh [hRTLLineStart], a",
+       "\tld a, h",
+       "\tldh [hRTLLineStart + 1], a",
+       "\tret",
+       "",
+       "RTLTrimString::",
+       "; Write string a:de (a = the bank it is in) into wRTLTextBuffer as it would be",
+       "; drawn (n-grams and placeholders expanded), without its leading and trailing",
+       "; spaces, \"@\"-terminated: the spaces that padded the English to blank a field",
+       "; are left out. For one-line strings without a prompt. Preserves hl.",
+       "\tpush hl",
+       "\tld b, a",
+       "\tldh a, [hRTLFlags]",
+       "\tpush af",
+       "\t; copied as it is: nested in a line (not reversed), left to right",
+       "\tand ~((1 << RTL_BOXDRAW_F) | (1 << RTL_DIGITS_F) | (1 << RTL_SKIP_F))",
+       "\tor 1 << RTL_OWNER_F",
+       "\tldh [hRTLFlags], a",
+       "\tld a, [wTextboxFlags]",
+       "\tpush af",
+       "\tres TEXT_DELAY_F, a",
+       "\tld [wTextboxFlags], a",
+       "\tld a, b",
+       "\tld hl, wRTLTextBuffer",
+       "\tcall FarString",
+       "\tpop af",
+       "\tld [wTextboxFlags], a",
+       "\tpop af",
+       "\tldh [hRTLFlags], a",
+       "\t; bc = the end: leave out the trailing spaces",
+       "\tld hl, wRTLTextBuffer",
+       ".trim_end",
+       "\tld a, c",
+       "\tcp l",
+       "\tjr nz, .not_empty",
+       "\tld a, b",
+       "\tcp h",
+       "\tjr z, .trimmed_end",
+       ".not_empty",
+       "\tdec bc",
+       "\tld a, [bc]",
+       "\tcp ' '",
+       "\tjr z, .trim_end",
+       "\tinc bc",
+       ".trimmed_end",
+       "\tld a, '@'",
+       "\tld [bc], a",
+       "\t; and the leading spaces",
+       "\tld d, h",
+       "\tld e, l",
+       ".skip_lead",
+       "\tld a, [de]",
+       "\tcp ' '",
+       "\tjr nz, .shift",
+       "\tinc de",
+       "\tjr .skip_lead",
+       "",
+       ".shift",
+       "\tld a, [de]",
+       "\tinc de",
+       "\tld [hli], a",
+       "\tcp '@'",
+       "\tjr nz, .shift",
+       "\tpop hl",
+       "\tret",
+       "",
+       "PlaceSpeechRowRight::",
+       "; Place string a:de (a = the bank it is in) on the speech box row whose left",
+       "; inner cell is hl, where the English placed it: the row is blanked and the",
+       "; text ends at its right inner edge, without the spaces that padded the",
+       "; English. For one-line strings without a prompt.",
+       "\tcall RTLTrimString",
+       "\tpush hl",
+       "\tld a, ' '",
+       "\tld bc, TEXTBOX_INNERW",
+       "\trst ByteFill",
+       "\tpop hl",
+       "\tld bc, TEXTBOX_INNERW - 1",
+       "\tadd hl, bc",
+       "\tld de, wRTLTextBuffer",
+       "\tjp PlaceStringRight",
+       "",
+       "RTLJustifyRight::",
+       "; Move the text in the c cells from hl (1 to SCREEN_WIDTH) flush right among",
+       "; them, its order kept, with spaces on its left: a line reversed in place in",
+       "; the English footprint then ends at its field's right edge. Preserves hl.",
+       "\tpush hl",
+       "\tld b, 0",
+       "\tadd hl, bc",
+       "\tdec hl",
+       "\tld d, h",
+       "\tld e, l",
+       "\t; hl = the last cell that is not a space",
+       ".skip",
+       "\tld a, [hl]",
+       "\tcp ' '",
+       "\tjr nz, .move",
+       "\tdec hl",
+       "\tdec c",
+       "\tjr nz, .skip",
+       "\tpop hl",
+       "\tret",
+       "",
+       ".move",
+       "\t; c cells from hl down go to de down",
+       "\tld a, [hld]",
+       "\tld [de], a",
+       "\tdec de",
+       "\tdec c",
+       "\tjr nz, .move",
+       "\tpop hl",
+       ".fill",
+       "\t; spaces from de down to hl",
+       "\tld a, e",
+       "\tsub l",
+       "\tld a, d",
+       "\tsbc h",
+       "\tret c",
+       "\tld a, ' '",
+       "\tld [de], a",
+       "\tdec de",
+       "\tjr .fill",
        "",
        "_RTLReverseLine::",
        "; Reverse in place the line from [hRTLLineStart] to hl (exclusive), so that it",
        "; reads right to left in the same tiles. Text between runs of two or more",
        "; spaces is reversed on its own, so columns keep their places, and runs of",
-       "; digits (with . : / , between two digits, and a foot or inch mark after a",
+       "; digits (with . : / , - between two digits, and a foot or inch mark after a",
        "; digit) still read left to right.",
        "; Only lines in a tilemap buffer are reversed. Preserves all registers.",
        "\tpush af",
@@ -548,7 +1639,7 @@
        "\tjr nc, .p2_write",
        "\tcall .IsNumeralAt",
        "\tjr c, .p2_next",
-       "\t; a . : / , between two numerals belongs to the run",
+       "\t; a . : / , - between two numerals belongs to the run",
        "\tld a, e",
        "\tinc a",
        "\tcall .Src",
@@ -708,6 +1799,8 @@
        "\tjr z, .yes",
        "\tcp ','",
        "\tjr z, .yes",
+       "\tcp '-'",
+       "\tjr z, .yes",
        "\tand a",
        "\tret",
        ".yes",
@@ -762,6 +1855,179 @@
          "\tld [hl], $9f ; \"!\""
        ]]
      ]},
+    {"path": "engine/items/item_effects.asm",
+     "hunks": [
+       [1860, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "ClearItemListDescription:",
+         "; Arabic: blank the description row under the wing and candy lists (x 1-18,",
+         "; y 16). The English blanked it with spaces at the end of its strings, which",
+         "; a line drawn right to left leaves on its left.",
+         "\thlcoord 1, 16",
+         "\tld bc, SCREEN_WIDTH - 2",
+         "\tld a, ' '",
+         "\trst ByteFill",
+         "\tret",
+         "",
+         "PlaceItemListDescription:",
+         "; Arabic: blank the description row and put string de on it, flush right",
+         "; (x 18). The spaces that end de are left out (they could reach the frame);",
+         "; a <PROMPT> that ends it waits for the button as usual.",
+         "\tpush de",
+         "\tcall ClearItemListDescription",
+         "\tpop hl",
+         "\tld de, wStringBuffer1",
+         "\tld b, d",
+         "\tld c, e",
+         ".copy",
+         "\t; bc = the end of the copy, after its last character that is not a space",
+         "\tld a, [hli]",
+         "\tld [de], a",
+         "\tinc de",
+         "\tcp '@'",
+         "\tjr z, .end",
+         "\tcp ' '",
+         "\tjr z, .copy",
+         "\tld b, d",
+         "\tld c, e",
+         "\tcp '<PROMPT>'",
+         "\tjr nz, .copy",
+         ".end",
+         "\tld a, '@'",
+         "\tld [bc], a",
+         "\tld de, wStringBuffer1",
+         "\thlcoord 18, 16",
+         "\tjmp PlaceStringRight",
+         ""
+       ]],
+       [1899, 1, "71fbef80fafd9a7ff38cf0bab313729e8d8ffdfc29a872946b7086ef489fb580", [
+       ]],
+       [1901, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceItemListDescription"
+       ]],
+       [1920, 2, "bbb014aac7a11378a909480ed15eb6a2dac6a995a166c34b82b0db6c6619b0fa", [
+       ]],
+       [1923, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceItemListDescription"
+       ]],
+       [1993, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: one column wider than the English (x 6, not 7), for wing names of",
+         "; 12 cells (x 7-18); the counts keep their place (x 15-18)"
+       ]],
+       [1994, 1, "e375cf1b0344d8281045d98402b03f446546b325498acaf7bdad29e6fe37d46d", [
+         "\tmenu_coords 6, 1, 18, 14"
+       ]],
+       [2000, 1, "dbcb1eace3303dd0463074ba2bd99b40cdec09161b946dd2386a63a90a6c5d89", [
+         "\tdb 7, 8"
+       ]],
+       [2023, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tld bc, 18 - 7 ; Arabic: the names end at x 18"
+       ]],
+       [2025, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: the name is flush with the menu's right edge, bc cells right of de"
+       ]],
+       [2027, 3, "3b35ceac9c7509d50f77255ade5d3f24d36e35b0e693aabd74f3ed15803bd779", [
+         "\tpush hl",
+         "\tld h, d",
+         "\tld l, e",
+         "\tadd hl, bc",
+         "\tpop de",
+         "\tjmp PlaceStringRight"
+       ]],
+       [2045, 5, "273c9509a948f4cb226585d4ea5992ee62bdb3a5d4494c10bc8db4f4900024ba", [
+       ]],
+       [2053, 2, "9783ad453b3f13fb9ac832bea3d07eede039c1a3b8c0f4bfaf1a393bc00a3d5f", [
+         "\tld de, .CancelStr",
+         "\tjmp z, PlaceItemListDescription",
+         "\tcall ClearItemListDescription",
+         "\tld a, [wMenuSelection]"
+       ]],
+       [2134, 1, "71fbef80fafd9a7ff38cf0bab313729e8d8ffdfc29a872946b7086ef489fb580", [
+       ]],
+       [2136, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceItemListDescription"
+       ]],
+       [2151, 2, "bbb014aac7a11378a909480ed15eb6a2dac6a995a166c34b82b0db6c6619b0fa", [
+       ]],
+       [2154, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceItemListDescription"
+       ]],
+       [2374, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tld bc, 18 - 13 ; Arabic: the names end at x 18"
+       ]],
+       [2399, 5, "273c9509a948f4cb226585d4ea5992ee62bdb3a5d4494c10bc8db4f4900024ba", [
+       ]],
+       [2406, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tinc a",
+         "\tld de, .CancelStr",
+         "\tjmp z, PlaceItemListDescription",
+         "\tcall ClearItemListDescription",
+         "\tld a, [wMenuSelection]"
+       ]],
+       [2408, 2, "ff8ad40320eef827765e9c8cc608612f828e02ffe5aa13e9f8624ec3e224bca0", [
+       ]],
+       [2564, 3, "95550b225f966169b299a748bad2d3319b6f196e86ed486cb0edc936348d7741", [
+       ]],
+       [2577, 11, "0e9b8fd13917f6625dfa830d918df59b03c148010453fa5dff3a380c418786bd", [
+       ]],
+       [2589, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: the colours read from the right, so the first column is the right",
+         "; one (the English had red, yellow, white and pink on the left). Each colour",
+         "; ends at its column's right edge, x 17 or x 11, and its count is under it:",
+         "; \"×\" at x 15 or x 9, then two digits, where the English had them.",
+         "\tld de, .Names",
+         "\tld bc, wApricorns",
+         "\thlcoord 17, 3 ; red",
+         "\tcall .Print",
+         "\thlcoord 11, 3 ; blue",
+         "\tcall .Print",
+         "\thlcoord 17, 5 ; yellow",
+         "\tcall .Print",
+         "\thlcoord 11, 5 ; green",
+         "\tcall .Print",
+         "\thlcoord 17, 7 ; white",
+         "\tcall .Print",
+         "\thlcoord 11, 7 ; black",
+         "\tcall .Print",
+         "\thlcoord 17, 9 ; pink",
+         "\t; fallthrough",
+         ".Print:",
+         "; the colour at de, ending at hl, and the count at bc under it;",
+         "; returns de and bc at the next colour and count",
+         "\tpush bc",
+         "\tpush hl",
+         "\tcall PlaceStringRight",
+         "\tinc de",
+         "\tpop hl",
+         "\tld bc, SCREEN_WIDTH - 2",
+         "\tadd hl, bc",
+         "\tld [hl], '×'",
+         "\tinc hl",
+         "\tpop bc",
+         "\tpush de",
+         "\tld d, b",
+         "\tld e, c"
+       ]],
+       [2590, 2, "f25d6648fe2525104176171af8c91c3bc093dfc91efa136ec8ae9012b4567e2b", [
+       ]],
+       [2593, 14, "6782e37587218acab27c99927e28e7e54461d27d3ffe66171910b70c3dfbee56", [
+         "\tld b, d",
+         "\tld c, e",
+         "\tinc bc",
+         "\tpop de",
+         "\tret",
+         "",
+         ".Names:",
+         "\tlist_start",
+         "\tli \"ﺣﻤﺮﺍﺀ\"",
+         "\tli \"ﺯﺭﻗﺎﺀ\"",
+         "\tli \"ﺻﻔﺮﺍﺀ\"",
+         "\tli \"ﺧﻀﺮﺍﺀ\"",
+         "\tli \"ﺑﻴﻀﺎﺀ\"",
+         "\tli \"ﺳﻮﺩﺍﺀ\"",
+         "\tli \"ﻭﺭﺩﻳﺔ\"",
+         "\tassert_list_length NUM_APRICORNS"
+       ]]
+     ]},
     {"path": "engine/items/pack.asm",
      "hunks": [
        [280, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
@@ -782,6 +2048,49 @@
        ]],
        [351, 1, "0e3a6d547b3c65af02f9ffb09ed353c2d2b777116a1f77acc56b43c91e9ff0d9", [
          "\tmenu_coords 11, 5, 19, 11"
+       ]],
+       [862, 1, "2fa68e0277b296a96948559c2029769e690a2775dabea0b2d0d14c6c2ff864a7", [
+         "; Arabic: the tab bar reads right to left, so right goes to the previous pocket",
+         "\tld b, -1"
+       ]],
+       [866, 1, "f0dbeb73949d1263a4f7892b2cba7f689792a23bc1a835d37844399cc7e822b8", [
+         "\tld b, 1"
+       ]],
+       [901, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: the pockets read right to left (see Pack_InterpretJoypad)"
+       ]],
+       [902, 1, "c2ef617890df16e80ea9c6a852d78704f6945d8b467afc2a1a37684f5abe5bff", [
+         "\tdb PAD_LEFT,  $00"
+       ]],
+       [904, 1, "c2ef617890df16e80ea9c6a852d78704f6945d8b467afc2a1a37684f5abe5bff", [
+         "\tdb PAD_LEFT,  $00"
+       ]],
+       [937, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: the tab bar is mirrored (gfx/pack/pack_top.png is drawn by the",
+         "; overlay): the pockets read right to left, Items on the right, and the",
+         "; cursor (the bar's last tile, $14) goes right of the current pocket's tab,",
+         "; at x 19 (Items), 15, 12, 9, 6 or 3 (Key Items). The tabs left of it keep",
+         "; their places; the ones right of it move a tile right."
+       ]],
+       [943, 5, "fd38d4fa218e32bc5855436c399bf58d628f6737a5911274df72797aa8b69fa9", [
+         "\tcpl",
+         "\tadd 19 ; 18 - 3 * pocket",
+         "\tcp 18",
+         "\tjr nz, .got_pocket",
+         "\tinc a ; Items: 19"
+       ]],
+       [951, 1, "ccd851fdde16362526a7a64e67775595f184651fdc90b1e592aa3a2492830f6c", [
+         "\tld a, $1"
+       ]],
+       [957, 1, "f905ee348b086ca747c4b624063b04ed28beb78617d08944451285f04e88100f", [
+         "\tld [hl], $14 ; no-optimize *hl++|*hl-- = N"
+       ]],
+       [1065, 1, "2fa68e0277b296a96948559c2029769e690a2775dabea0b2d0d14c6c2ff864a7", [
+         "; Arabic: the tab bar reads right to left, so right goes to the previous pocket",
+         "\tld b, -1"
+       ]],
+       [1069, 1, "f0dbeb73949d1263a4f7892b2cba7f689792a23bc1a835d37844399cc7e822b8", [
+         "\tld b, 1"
        ]]
      ]},
     {"path": "engine/items/print_item_description.asm",
@@ -793,6 +2102,18 @@
          "\tjmp PlaceStringRight"
        ]]
      ]},
+    {"path": "engine/items/switch_items.asm",
+     "hunks": [
+       [276, 1, "233ad8e6867425fa4f580a2bb67572d6086795721da35a3fcd7655c34c71308f", [
+         "\t; Arabic: the orders are computed from the Arabic names, in their own",
+         "\t; section (see main.asm)",
+         "\tassert BANK(ItemNameOrder) == BANK(KeyItemNameOrder)",
+         "\tld a, BANK(ItemNameOrder)",
+         "\tcall GetFarByte"
+       ]],
+       [281, 2, "7c589f4837d7e1e520187ba5c2ca20568e6b4d875e0f10b73a69ab2fe880f812", [
+       ]]
+     ]},
     {"path": "engine/items/tmhm2.asm",
      "hunks": [
        [208, 2, "5be842df9797d942bc1af158080b92e71d2d4ef1908dc6d9da1057d15c902b8e", [
@@ -802,6 +2123,32 @@
        ]],
        [213, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
          "\tld [hl], 'ﺥ'"
+       ]],
+       [225, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: the name (x 8-19, reversed in place) ends at x 18, like the",
+         "\t; other pockets' items; a name of 12 cells keeps x 19",
+         "\tld c, SCREEN_WIDTH - 2 - 8 + 1",
+         "\tfarcall RTLJustifyRight"
+       ]],
+       [235, 3, "f550ff9c908cab81f45fecc76407f2a883fbc3108c2fceea429598dde7074a57", [
+         "\t; Arabic: like the names, at x 18",
+         "\tld bc, 3 + SCREEN_WIDTH - 2 - 8",
+         "\tadd hl, bc"
+       ]],
+       [240, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [279, 1, "fd7c806ec1ac63a0a6609da80aa4795b0f4f30de10814ec999f9407025fbfec4", [
+         "\thlcoord SCREEN_WIDTH - 2, 3 ; Arabic: at x 18, like the names"
+       ]],
+       [282, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [316, 1, "233ad8e6867425fa4f580a2bb67572d6086795721da35a3fcd7655c34c71308f", [
+         "\t; Arabic: the order is computed from the Arabic move names, in its own",
+         "\t; section (see main.asm)",
+         "\tld a, BANK(TMHMListAlpha)",
+         "\tcall GetFarByte"
        ]],
        [352, 2, "8f234ced07c643d2f3abce032cbb4f633a63e6f60d0e7053ec18ee85232adfb9", [
          "\t; Arabic: the lines are flush with the right edge of the description box",
@@ -815,6 +2162,158 @@
          "\tld a, ' '",
          "\tld [de], a",
          "\tinc de"
+       ]],
+       [629, 2, "e46c90b3d7de04fa7d75678feb3ddf04b9066600f9dc93bfb0902383b9fd48d1", [
+       ]]
+     ]},
+    {"path": "engine/items/type_chart.asm",
+     "hunks": [
+       [31, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: the overlay redraws the chart's labels (gfx/type_chart/*), which",
+         "\t; can take up to 40 distinct tiles past the 255 of VRAM bank 1"
+       ]],
+       [33, 1, "288255a78b0e7f41dca573129786daf4e011f1de9f72ac69dbe80a2d6643989c", [
+         "\tlb bc, BANK(TypeChartBG1GFX), 40"
+       ]]
+     ]},
+    {"path": "engine/items/update_item_description.asm",
+     "hunks": [
+       [8, 3, "c671e23ac6fe901ac660645c991d3d44606ec20561d146c15b71bdc70f08c256", [
+       ]],
+       [13, 14, "807235c9803b1fdd21acc139cdd7e6cfaa69ff2d22402547c8f656ccdb550762", [
+         "\tcall PlaceBagQuantity"
+       ]],
+       [39, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "PlaceBagQuantity:",
+         "; Arabic: \"Bag ×  9\" mirrored: the label ends at the box's right edge (x 8),",
+         "; the count is right-aligned on its left with the sign after it:",
+         "; \"  9× Bag\", \" 99× Bag\", \"999× Bag\" or \"9999×Bag\" (digits left to right).",
+         "\thlcoord 8, 1",
+         "\tld de, BagString",
+         "\tcall PlaceStringRight",
+         "\thlcoord 1, 1",
+         "\tpush hl",
+         "\tld de, wBuffer1",
+         "\tlb bc, 2, 4",
+         "\tcall PrintNum",
+         "\tpop hl",
+         "\tld a, [hl]",
+         "\tassert ' ' < $80 && '0' >= $80",
+         "\tadd a ; overflows iff a != ' ' (four digits)",
+         "\tjr c, .four_digits",
+         "\t; the three digits move a cell left; the sign takes the fourth cell",
+         "\tld d, h",
+         "\tld e, l",
+         "\tinc de",
+         "\tld c, 3",
+         ".shift",
+         "\tld a, [de]",
+         "\tinc de",
+         "\tld [hli], a",
+         "\tdec c",
+         "\tjr nz, .shift",
+         "\tld [hl], '×'",
+         "\tret",
+         "",
+         ".four_digits",
+         "\thlcoord 5, 1",
+         "\tld [hl], '×'",
+         "\tret",
+         ""
+       ]],
+       [49, 3, "c671e23ac6fe901ac660645c991d3d44606ec20561d146c15b71bdc70f08c256", [
+       ]],
+       [54, 14, "807235c9803b1fdd21acc139cdd7e6cfaa69ff2d22402547c8f656ccdb550762", [
+         "\tcall PlaceBagQuantity"
+       ]],
+       [93, 2, "a1f2028528586c560c1e2a692be6f599ce5e3c0d0456c031d1d86527b70d7636", [
+         "\thlcoord 8, 1 ; Arabic: flush right in the box",
+         "\tcall PlaceStringRight"
+       ]]
+     ]},
+    {"path": "engine/link/link.asm",
+     "hunks": [
+       [1043, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: the row reads right to left, its first item (Summary) on the",
+         "\t; right: Trade's cursor is at x 1 (its text from x 2), Summary's at x 9",
+         "\t; (its text from x 10); the cursor starts on Summary",
+         "\tcall .SwapItems"
+       ]],
+       [1047, 2, "4c3eb7eb1f5ce022b80fa39b57314b748cc7e542140571ee802e5558a87f1189", [
+         "\tldcoord_a 1, 16",
+         "\tld a, PAD_A | PAD_B | PAD_LEFT"
+       ]],
+       [1056, 1, "e6406529f7ee3c35200f01a4174d1c5ae4095e4c9c676b9587d9123766cb4c66", [
+         "\tld a, 9"
+       ]],
+       [1067, 2, "952d635507987a3910938b5095559aa59038dba50f31b8ec05f2d3b6323fff8b", [
+         "\tbit B_PAD_LEFT, a",
+         "\tjr nz, .d_left"
+       ]],
+       [1077, 1, "58adbc6d5e33b9e3e7ab2e95072b323405efbc4e33ab58675de8daf2a0a1b31a", [
+         ".d_left"
+       ]],
+       [1079, 2, "dd1ff7ed23943235fa559dae22cdc1058c5b29c625a039e2bf38b45e397680d5", [
+         "\tldcoord_a 9, 16",
+         "\tld a, PAD_A | PAD_B | PAD_RIGHT"
+       ]],
+       [1088, 1, "2b118b54f9b0439f88b0b4d231a4dc7c1d557f982fa02dfce52a4ec3d27d6441", [
+         "\tld a, 1"
+       ]],
+       [1099, 1, "5a97605912bee577dedd0133fa364a47e6da0ae3150a93e03b53d750e8ff9f19", [
+         "\tbit B_PAD_RIGHT, a"
+       ]],
+       [1182, 1, "45c23bed5de809acbb1df36b9d56bf57be7425b855e95182129cfb58063b27c2", [
+         "\t; Arabic: the lines end at the box's right edge",
+         "\thlcoord TEXTBOX_INNERX + TEXTBOX_INNERW - 1, 14"
+       ]],
+       [1184, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [1197, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         ".SwapItems:",
+         "; .String_Summary_Trade put Summary (its first column, up to 8 cells) from",
+         "; x 2 and Trade (its second, up to 5 cells) from x 12, each read right to",
+         "; left: Trade moves to x 2-6 and Summary to x 10-17.",
+         "\thlcoord 2, 16",
+         "\tld de, wRTLLine",
+         "\tld bc, 15",
+         "\trst CopyBytes",
+         "\thlcoord 2, 16",
+         "\tld a, ' '",
+         "\tld bc, 16",
+         "\trst ByteFill",
+         "\tld hl, wRTLLine + 10",
+         "\tdecoord 2, 16",
+         "\tld bc, 5",
+         "\trst CopyBytes",
+         "\tld hl, wRTLLine",
+         "\tdecoord 10, 16",
+         "\tld bc, 8",
+         "\trst CopyBytes",
+         "\tret",
+         ""
+       ]],
+       [1410, 1, "45c23bed5de809acbb1df36b9d56bf57be7425b855e95182129cfb58063b27c2", [
+         "\t; Arabic: the lines end at the box's right edge",
+         "\thlcoord TEXTBOX_INNERX + TEXTBOX_INNERW - 1, 14"
+       ]],
+       [1412, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [1426, 1, "45c23bed5de809acbb1df36b9d56bf57be7425b855e95182129cfb58063b27c2", [
+         "\t; Arabic: the lines end at the box's right edge",
+         "\thlcoord TEXTBOX_INNERX + TEXTBOX_INNERW - 1, 14"
+       ]],
+       [1428, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [1675, 1, "45c23bed5de809acbb1df36b9d56bf57be7425b855e95182129cfb58063b27c2", [
+         "\t; Arabic: the line ends at the box's right edge",
+         "\thlcoord TEXTBOX_INNERX + TEXTBOX_INNERW - 1, 14"
+       ]],
+       [1677, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
        ]]
      ]},
     {"path": "engine/menus/arabic_shaping.asm",
@@ -909,6 +2408,140 @@
        "\tccf",
        "\tret"
      ]},
+    {"path": "engine/menus/init_options.asm",
+     "hunks": [
+       [26, 1, "c34d3c94fbc234f921dd67cbdf34e47132fb20c1fa27a1bef2c65178032479a1", [
+         "\t; Arabic: the footer's buttons (gfx/new_game/init_bg.png, drawn by the",
+         "\t; overlay) end at the right edge: x 7-18, the first button on the right",
+         "\thlcoord 7, 16, wAttrmap"
+       ]],
+       [83, 1, "d2b38775d485ddf97ac9677759d7c26c84238e4b51e20361ae9ba03b46b2912f", [
+         "\t; Arabic: the labels end at the right edge (see InitialOptions_PlaceValue)",
+         "\thlcoord 18, 1"
+       ]],
+       [85, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [87, 1, "71fbef80fafd9a7ff38cf0bab313729e8d8ffdfc29a872946b7086ef489fb580", [
+         "\thlcoord 7, 16 ; Arabic: the footer ends at the right edge"
+       ]],
+       [157, 2, "13812066daa6d203981ff40e122ccdd04ac9b9bf914ef4d31ef56b3cb45efc57", [
+         "\thlcoord 18, 1",
+         "\tcall PlaceStringRight"
+       ]],
+       [278, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall InitialOptions_PlaceValue"
+       ]],
+       [302, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall InitialOptions_PlaceValue"
+       ]],
+       [326, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall InitialOptions_PlaceValue"
+       ]],
+       [365, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall InitialOptions_PlaceValue"
+       ]],
+       [420, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall InitialOptions_PlaceValue"
+       ]],
+       [449, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall InitialOptions_PlaceValue"
+       ]],
+       [473, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall InitialOptions_PlaceValue"
+       ]],
+       [497, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall InitialOptions_PlaceValue"
+       ]],
+       [521, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall InitialOptions_PlaceValue"
+       ]],
+       [545, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall InitialOptions_PlaceValue"
+       ]],
+       [569, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall InitialOptions_PlaceValue"
+       ]],
+       [573, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "InitialOptions_PlaceValue:",
+         "; Arabic: the page is mirrored. Each label ends at the right edge, and the",
+         "; value line below it, \"            :\" drawn leftward from there, has its colon",
+         "; at x 6; the value (string de, which the English placed at hl = x 15) ends",
+         "; on the colon's left, in x 2-5. The field is blanked first, so a shorter",
+         "; value leaves nothing of a longer one (\"510\" after \"All\"), and the padding",
+         "; is left out.",
+         "\tld bc, 2 - 15",
+         "\tadd hl, bc",
+         "\tpush de",
+         "\tpush hl",
+         "\tld a, ' '",
+         "\tld bc, 4",
+         "\trst ByteFill",
+         "\tpop hl",
+         "\tpop de",
+         "\tld a, BANK(@)",
+         "\tfarcall RTLTrimString",
+         "\tld bc, 5 - 2",
+         "\tadd hl, bc",
+         "\tld de, wRTLTextBuffer",
+         "\tjmp PlaceStringRight",
+         ""
+       ]],
+       [588, 2, "13812066daa6d203981ff40e122ccdd04ac9b9bf914ef4d31ef56b3cb45efc57", [
+         "\thlcoord 18, 1",
+         "\tcall PlaceStringRight"
+       ]],
+       [605, 2, "13812066daa6d203981ff40e122ccdd04ac9b9bf914ef4d31ef56b3cb45efc57", [
+         "\thlcoord 18, 1",
+         "\tcall PlaceStringRight"
+       ]],
+       [702, 1, "71fbef80fafd9a7ff38cf0bab313729e8d8ffdfc29a872946b7086ef489fb580", [
+         "\thlcoord 7, 16 ; Arabic: the footer ends at the right edge"
+       ]]
+     ]},
+    {"path": "engine/menus/intro_menu.asm",
+     "hunks": [
+       [525, 1, "811ccf985a44b5331f282153120299d0b0163d2b1c558745a6bc62f21cc8b31a", [
+         "\t; Arabic: the label alone (اللاعب); the name is drawn once, by",
+         "\t; Continue_DisplayBadgesDexPlayerName",
+         "\tdb \"ﺍﻟﻼﻋﺐ@\""
+       ]],
+       [530, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: the box is mirrored. The labels end at its right inner edge",
+         "; (PlaceVerticalMenuItems); the values are on the left: the name ends at x 7,",
+         "; the numbers start at x 1."
+       ]],
+       [533, 1, "1ce7bf6878d580b4d73cf2688cd1af29d58e4f3e6525b4904c14cfa4eba7e9bf", [
+         "\tdecoord 1, 4, 0"
+       ]],
+       [538, 1, "2949f07eb80e0a5c3fc28263c0bfeb76fa7848f0b66dbf4e28effe64838e14d7", [
+         "\tdecoord 1, 6, 0"
+       ]],
+       [543, 1, "44961c99f2112125cf89161c546fbaf66f328b2b0998b1f87f86be66f38a3fec", [
+         "\tdecoord 7, 2, 0"
+       ]],
+       [546, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [554, 1, "7f06ee3d86f67e798afbbe57dc27bbc1a7123054fa4561504fc2b8470c41c0e1", [
+         "\tdecoord 1, 8, 0"
+       ]],
+       [559, 1, "7f06ee3d86f67e798afbbe57dc27bbc1a7123054fa4561504fc2b8470c41c0e1", [
+         "\tdecoord 1, 8, 0"
+       ]],
+       [566, 1, "f02add162ba112aba2b0bed0f1146b9044514a37235385b703eba5deb2def8f2", [
+         "\tdb \"???@\""
+       ]],
+       [575, 1, "44c31d720e48d7dbd3b3ca0590bb2808701472757397ae209f9618d3887a13ef", [
+         "\tlb bc, PRINTNUM_LEFTALIGN | 1, 2"
+       ]],
+       [584, 1, "82b4c1068305209be985b6a01a90ea1ef9dc5d5dd6eea860cde53cf0e25ce72a", [
+         "\tlb bc, PRINTNUM_LEFTALIGN | 2, 3"
+       ]],
+       [589, 1, "82b4c1068305209be985b6a01a90ea1ef9dc5d5dd6eea860cde53cf0e25ce72a", [
+         "\tlb bc, PRINTNUM_LEFTALIGN | 2, 3"
+       ]]
+     ]},
     {"path": "engine/menus/main_menu.asm",
      "hunks": [
        [177, 1, "20a227a71d65956633e06a4dc1a5bf6495981796c2cf6490a799a22a82a58dd8", [
@@ -933,6 +2566,133 @@
          "\tfarjp PlaceTimeAndTimeOfDayRight"
        ]]
      ]},
+    {"path": "engine/menus/menu.asm",
+     "hunks": [
+       [31, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; the item column, for the result and the callers",
+         "\tcall Mirror2DMenuCursorX"
+       ]],
+       [79, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tld a, [wMenuDataFlags]",
+         "\tbit STATICMENU_2D_MIRROR_F, a",
+         "\tjr z, .not_mirrored",
+         "\tcall Draw2DMenu_MirroredItems",
+         "\tjr .items_done",
+         "",
+         ".not_mirrored"
+       ]],
+       [104, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         ".items_done"
+       ]],
+       [113, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "Draw2DMenu_MirroredItems:",
+         "; Arabic (STATICMENU_2D_MIRROR): the columns are mirrored, so a row reads from",
+         "; the right. Visual column v keeps its cursor at text x - 1 + v * spacing;",
+         "; the first item of a row is in the last visual column and ends at the box's",
+         "; inner right edge, each other item ends one cell left of the cursor of the",
+         "; visual column right of it (a gap between an item and the next cursor).",
+         "; hl = the first row's text start, de = the strings.",
+         "\tcall GetMenuNumberOfRows",
+         "\tld b, a",
+         ".row",
+         "\tpush bc",
+         "\tpush hl",
+         "\tcall GetMenuNumberOfColumns",
+         "\tld c, a",
+         "\t; the first item: at the box's inner right edge",
+         "\tpush hl",
+         "\tpush bc",
+         "\tcall GetMenuTextStartCoord",
+         "\tld a, [wMenuBorderRightCoord]",
+         "\tdec a",
+         "\tsub c",
+         "\tpop bc",
+         "\tcall .PlaceAtOffset",
+         "\tpop hl",
+         "\tdec c",
+         "\tjr z, .row_done",
+         ".col",
+         "\t; the next items: visual column c - 1 ends at c * spacing - 3",
+         "\tpush hl",
+         "\tpush bc",
+         "\tld a, [wMenuDataSpacing]",
+         "\tld b, a",
+         "\txor a",
+         ".multiply",
+         "\tadd b",
+         "\tdec c",
+         "\tjr nz, .multiply",
+         "\tsub 3",
+         "\tpop bc",
+         "\tcall .PlaceAtOffset",
+         "\tpop hl",
+         "\tdec c",
+         "\tjr nz, .col",
+         ".row_done",
+         "\tpop hl",
+         "\tld bc, 2 * SCREEN_WIDTH",
+         "\tadd hl, bc",
+         "\tpop bc",
+         "\tdec b",
+         "\tjr nz, .row",
+         "\tret",
+         "",
+         ".PlaceAtOffset:",
+         "; Place string de right to left, ending at hl + a; de = the next string.",
+         "; Preserves bc.",
+         "\tadd l",
+         "\tld l, a",
+         "\tadc h",
+         "\tsub l",
+         "\tld h, a",
+         "\tpush bc",
+         "\tldh a, [hRTLFlags]",
+         "\tpush af",
+         "\tset RTL_BOXDRAW_F, a",
+         "\tldh [hRTLFlags], a",
+         "\tld a, [wMenuData_2DMenuItemStringsBank]",
+         "\tcall FarString",
+         "\tld h, b",
+         "\tld l, c",
+         "\tcall RTLFlushDigits",
+         "\tpop af",
+         "\tldh [hRTLFlags], a",
+         "\tpop bc",
+         "\tinc de",
+         "\tret",
+         "",
+         "Mirror2DMenuCursorX:",
+         "; Arabic (STATICMENU_2D_MIRROR): item column x (from 1) is drawn in visual",
+         "; column numCols + 1 - x; convert wMenuCursorX from one to the other.",
+         "; Preserves bc, de and hl.",
+         "\tld a, [wMenuDataFlags]",
+         "\tbit STATICMENU_2D_MIRROR_F, a",
+         "\tret z",
+         "\tpush hl",
+         "\tld hl, wMenuCursorX",
+         "\tld a, [w2DMenuNumCols]",
+         "\tinc a",
+         "\tsub [hl]",
+         "\tld [hl], a",
+         "\tpop hl",
+         "\tret",
+         ""
+       ]],
+       [151, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tcall Mirror2DMenuCursorX"
+       ]],
+       [411, 1, "de839bb378d6ae404dcfc33d2fbe78c95300ab91609fc6439ce4e1ded4ec8af7", [
+         "\tjr .quick_finish"
+       ]],
+       [421, 1, "de839bb378d6ae404dcfc33d2fbe78c95300ab91609fc6439ce4e1ded4ec8af7", [
+         "\tjr .quick_finish"
+       ]],
+       [434, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         ".quick_finish",
+         "\t; the item column of a mirrored menu is drawn in another visual column",
+         "\tcall Mirror2DMenuCursorX"
+       ]]
+     ]},
     {"path": "engine/menus/menu_2.asm",
      "hunks": [
        [250, 1, "a5e008a748141e66cb1470db171c35a41c6c6ec17eac13502a4cd5705e553194", [
@@ -953,6 +2713,37 @@
          "\tld de, wRTLTextBuffer",
          "\thlcoord 1, 3",
          "\trst PlaceString"
+       ]],
+       [273, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "",
+         "JustifyRowsRight::",
+         "; Arabic: b rows of a list, de bytes apart from hl, were drawn left to right",
+         "; from their English column and reversed in place: move each flush with the",
+         "; right edge of its c cells, as the English lists are flush with their left",
+         "; edge (RTLJustifyRight).",
+         ".loop",
+         "\tpush bc",
+         "\tpush de",
+         "\tfarcall RTLJustifyRight",
+         "\tpop de",
+         "\tadd hl, de",
+         "\tpop bc",
+         "\tdec b",
+         "\tjr nz, .loop",
+         "\tret",
+         "",
+         "JustifyMenuItemRight::",
+         "; Arabic: a menu's display function drew the item at hl (box x + 2) from its",
+         "; English column, reversed in place (the decorations, Buena's passwords): it",
+         "; ends at the box's inner right edge, as PlaceMenuItemRight places the",
+         "; others. Preserves hl.",
+         "\tld a, [wMenuBorderLeftCoord]",
+         "\tld c, a",
+         "\tld a, [wMenuBorderRightCoord]",
+         "\tsub c",
+         "\tsub 2",
+         "\tld c, a",
+         "\tfarjp RTLJustifyRight"
        ]]
      ]},
     {"path": "engine/menus/naming_screen.asm",
@@ -968,7 +2759,8 @@
        [79, 3, "ec26b1a4a1162df439aa29c6e49ecaacc9943a688a31ee422ea391432460269f", [
          "\thlcoord NAMINGSCREEN_RIGHT_EDGE, 2",
          "\tcall PlaceStringRight",
-         "\thlcoord NAMINGSCREEN_RIGHT_EDGE - (MON_NAME_LENGTH - 1) - 1, 4 ; left of the entry field"
+         "\t; the cell left of the entry field (x 9-18, .StoreMonIconParams)",
+         "\thlcoord NAMINGSCREEN_RIGHT_EDGE + 1 - (MON_NAME_LENGTH - 1) - 1, 4"
        ]],
        [112, 1, "b1b56157c58659f8115bb514e30962c8f285802b39156a46bc87b16bee4b1417", [
          "\thlcoord NAMINGSCREEN_RIGHT_EDGE, 2"
@@ -1052,6 +2844,7 @@
          "\t; letters (page 0) or digits and symbols (page 1)"
        ]],
        [385, 4, "a103a78cf2e456b0f97977be487f7601319b3b6340015122918507bba7f1d3ae", [
+         "\tcall NamingScreen_PlacePageLabel",
          "\tld de, NameInputLetters"
        ]],
        [390, 2, "8d298048b46321676f5969c3e05e1d5df3156c8fa33d31b39c7c137ed8c0cc01", [
@@ -1116,10 +2909,11 @@
        [1047, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
          "\t; letters (page 0) or digits and symbols (page 1)"
        ]],
-       [1051, 12, "15c38220c9c08d8ddf0bb7d2a9ca028bc4700b3e2501d23576f455607df0e00a", [
+       [1051, 4, "8dc7cb87003367a3469ee50f1c2c14ec61be24a9faae5d79a9f65d0d1863260f", [
+         "\tcall NamingScreen_PlacePageLabel",
          "\tld de, MailInputLetters"
        ]],
-       [1064, 1, "9ab5807575b961539efcaeec3ecdb75aecdfe4fce0a1be68eae12d701069dea6", [
+       [1056, 9, "9c48452bf679b1ce00eade76d86c5dde92903cd20f8a38a482182dba5e4b9230", [
          "\tld de, MailInputSymbols"
        ]],
        [1080, 1, "407d020a3e4deccd608ec7c7fd33b99f4eb724d445fa7ba61d4c1a2e2429e790", [
@@ -1144,14 +2938,130 @@
          ".DelString:",
          "\tdb \"ﺣﺬﻑ@\" ; حذف",
          ".PageString:",
-         "\tdb \"ﺭﻣﻮﺯ@\" ; رموز (the other page)"
+         "\tdb \"ﺭﻣﻮﺯ@\" ; رموز (the other page)",
+         ".LettersString:",
+         "\tdb \"ﺣﺮﻭﻑ@\" ; حروف (the other page, from the symbols page)",
+         "",
+         "NamingScreen_PlacePageLabel:",
+         "; The page switch names the other page: the symbols on the letters page, the",
+         "; letters on the symbols page. Returns z on the letters page.",
+         "\thlcoord 13, SCREEN_HEIGHT - 2",
+         "\tlb bc, 1, 6",
+         "\tcall ClearBox",
+         "\thlcoord 18, SCREEN_HEIGHT - 2",
+         "\tld de, NamingScreen_DrawBorders.PageString",
+         "\tld a, [wNamingScreenLetterCase]",
+         "\tand a",
+         "\tjr z, .got_label",
+         "\tld de, NamingScreen_DrawBorders.LettersString",
+         ".got_label",
+         "\tcall PlaceStringRight",
+         "\tld a, [wNamingScreenLetterCase]",
+         "\tand a",
+         "\tret"
        ]]
      ]},
     {"path": "engine/menus/options_menu.asm",
      "hunks": [
+       [12, 1, "48b0d845faef20514c1116342ff9c858baa6d95220dc49f2203a6b8c67ac76f8", [
+         "\t; Arabic: the labels end at the box's inner right edge (see",
+         "\t; OptionsMenu_PlaceValue for the values)",
+         "\thlcoord 18, 2"
+       ]],
+       [14, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [71, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "OptionsMenu_PlaceValue:",
+         "; Arabic: the page is mirrored. Each label ends at the box's right edge, and",
+         "; the value line below it, \"        :\" drawn leftward from there, has its colon",
+         "; at x 10; the value (string de, which the English placed at hl = x 11) ends",
+         "; on the colon's left, in x 2-9. The field is blanked first, so a shorter",
+         "; value leaves nothing of a longer one, and the padding is left out.",
+         "\tld bc, 2 - 11",
+         "\tadd hl, bc",
+         "\tpush de",
+         "\tpush hl",
+         "\tld a, ' '",
+         "\tld bc, 8",
+         "\trst ByteFill",
+         "\tpop hl",
+         "\tpop de",
+         "\tld a, BANK(@)",
+         "\tfarcall RTLTrimString",
+         "\tld bc, 9 - 2",
+         "\tadd hl, bc",
+         "\tld de, wRTLTextBuffer",
+         "\tjmp PlaceStringRight",
+         ""
+       ]],
+       [165, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall OptionsMenu_PlaceValue"
+       ]],
+       [204, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall OptionsMenu_PlaceValue"
+       ]],
+       [249, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall OptionsMenu_PlaceValue"
+       ]],
+       [280, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall OptionsMenu_PlaceValue"
+       ]],
+       [321, 4, "49a5a93bad118204c0bd228f3b9986f04f33049098ee6551f7c70088344bc470", [
+         "\t; Arabic: the value line \":<Type>\" is drawn leftward (colon at x 10, the",
+         "\t; word on its left), so the number goes left of the word, right-aligned in",
+         "\t; x 2-3: \":النوع 20\" reads right to left.",
+         "\thlcoord 2, 7",
+         "\tlb bc, 0, 2"
+       ]],
+       [350, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall OptionsMenu_PlaceValue"
+       ]],
+       [379, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall OptionsMenu_PlaceValue"
+       ]],
+       [408, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall OptionsMenu_PlaceValue"
+       ]],
+       [448, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall OptionsMenu_PlaceValue"
+       ]],
+       [488, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall OptionsMenu_PlaceValue"
+       ]],
+       [502, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: the Unown glyphs are Latin letters, and Arabic text drawn with them",
+         "; cannot be read, so the option only offers Normal and Bold; Unown stays for",
+         "; the Ruins of Alph texts (Script_unowntypeface). A typeface the option does",
+         "; not offer (Unown, or a number the Arabic ROM has no font for, from an old",
+         "; save) is shown and set as Normal when the menu opens."
+       ]],
+       [507, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tassert NORMAL_FONT == 0 && BOLD_FONT == 1",
+         "\tcp BOLD_FONT + 1",
+         "\tjr nc, .Reset"
+       ]],
+       [508, 3, "0e8ad84026f47c7723417d5a23b4988f018e05d784dc033dc0179f0a0d12b86e", [
+         "\tand PAD_LEFT | PAD_RIGHT"
+       ]],
+       [512, 10, "2317e2f8437d98e6335d03aff4ca1093cf3664e3f696e84713bec06581a6f6bd", [
+         "\t; left or right: Normal <-> Bold"
+       ]],
+       [523, 3, "f8c420b6f28190ff21c62c54b7d1279877b61a57d6886340bb19d18e151815cb", [
+         "\txor NORMAL_FONT ^ BOLD_FONT",
+         "\tld c, a",
+         "\tjr .Save"
+       ]],
+       [527, 2, "a35e23197b5664de8ac36bbd0706d6cc9a4190120569d11f87633e7102ab97b7", [
+         ".Reset:",
+         "\tld c, NORMAL_FONT"
+       ]],
+       [553, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall OptionsMenu_PlaceValue"
+       ]],
        [559, 1, "e11b2f716a5fbb7dd980961c224d3460184a3a10f99547c4d1a4d8cc27ec06d6", [
        ]],
-       [561, 4, "bc7b451434c72566b900e06dad9687865ef9d86b621a14e8f85ed81dfff9b8c7", [
+       [561, 5, "76100334719bd8222a6cad8892ce7a302d2c8a0b0441ef40ff8550cbafcd7f99", [
        ]],
        [567, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
          "; placeholder Arabic (the translation replaces these), 7 cells each"
@@ -1159,43 +3069,345 @@
        [568, 3, "da453e78e110af93b644fc5a722ab4d7d834620c8d1e678dc4532af5d4e9d23b", [
          "\tdb \"ﻋﺎﺩﻱ   @\""
        ]],
-       [572, 9, "43de1caa66df7e46932d86e92a3adcaa6141d1942dba85b16fb70cda92527582", [
+       [572, 11, "f93ac325b283a1b881eef80b9c5a42595b5373955abf06698c3f2c238c24b558", [
          "\tdb \"ﻋﺮﻳﺾ   @\""
        ]],
-       [582, 1, "ff74544da9870f5ee35fbb46fe90ae8d619fd267cd25f02692674f01b9a6058e", [
-         "\tdb \"ﺃﻧﻮﻥ   @\""
+       [604, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall OptionsMenu_PlaceValue"
+       ]],
+       [635, 2, "1c18ef8e7b0e0559c6625ac0de875293d5fd81cc733f2cdce871ae114fe00e8c", [
+         "\thlcoord 18, 2",
+         "\tcall PlaceStringRight"
+       ]]
+     ]},
+    {"path": "engine/menus/scrolling_menu.asm",
+     "hunks": [
+       [467, 1, "18c486bc99db345b3eef211b152727d75f563506c0b4026d02ee372db8d457d9", [
+         "\tjr ScrollingMenu_JustifyItem"
+       ]],
+       [470, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tpush hl"
+       ]],
+       [473, 1, "36f941a833a5c5f2d3e1037e1725496391487fc846dfb48b67bfe0c0f03e7beb", [
+         "\tcall FarPointerCall",
+         "\tpop hl",
+         "\t; fallthrough",
+         "",
+         "ScrollingMenu_JustifyItem:",
+         "; Arabic: the item at hl (the box's left edge + 1) was drawn left to right",
+         "; and reversed in place; move it flush with the box's right edge, as the",
+         "; English items are flush with its left edge. A box that reaches the screen's",
+         "; last column (the bag, the marts) keeps it as a margin: only a name that",
+         "; already fills it stays there. An item on the bottom row of a menu with",
+         "; arrows (the decorations) leaves the down arrow's cell (the box's bottom",
+         "; right) free. (The functions draw the quantities, prices and amounts on the",
+         "; row below the item.) Preserves hl.",
+         "\tld a, [wMenuBorderRightCoord]",
+         "\tcp SCREEN_WIDTH - 1",
+         "\tjr c, .got_right",
+         "\tld a, SCREEN_WIDTH - 2",
+         ".got_right",
+         "\tld c, a",
+         "\tld a, [wMenuDataFlags]",
+         "\tbit 4, a ; place arrows",
+         "\tjr z, .got_edge",
+         "\tpush bc",
+         "\tpush hl",
+         "\tld a, [wMenuBorderBottomCoord]",
+         "\tld b, a",
+         "\tld a, [wMenuBorderLeftCoord]",
+         "\tinc a",
+         "\tld c, a",
+         "\tcall Coord2Tile",
+         "\tld d, h",
+         "\tld e, l",
+         "\tpop hl",
+         "\tpop bc",
+         "\tld a, l",
+         "\tcp e",
+         "\tjr nz, .got_edge",
+         "\tld a, h",
+         "\tcp d",
+         "\tjr nz, .got_edge",
+         "\tdec c",
+         ".got_edge",
+         "\tld a, [wMenuBorderLeftCoord]",
+         "\tld b, a",
+         "\tld a, c",
+         "\tsub b",
+         "\tld c, a",
+         "\tfarjp RTLJustifyRight"
+       ]],
+       [504, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tcall ScrollingMenu_JustifyItem"
        ]]
      ]},
     {"path": "engine/menus/start_menu.asm",
      "hunks": [
        [143, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
-         "; Arabic: the menu is 8 cells wide (x 11-18; \"بوكيديكس\" is 8 glyphs), the",
-         "; English one 7 (ClearSpritesUnderStartMenu follows its left edge)."
+         "; Arabic: the labels end at the box's right inner edge (x 18); they have the",
+         "; English room, 7 cells (x 12-18), so that the menu leaves the player (x 8-9)",
+         "; uncovered."
        ]],
-       [145, 1, "d8988d0af178bb2efecd6967a41d1906f17c4fa48132cd3be28d1bae0eee1fad", [
-         "\tmenu_coords 9, 0, 19, 17"
+       [197, 3, "073d58f8f25e7e0de5e510958c213f3fad20e7918d220d1fe49076c2bba1161a", [
+         "\tjmp PlaceMenuItemRight ; Arabic: flush right"
+       ]]
+     ]},
+    {"path": "engine/menus/trainer_card.asm",
+     "hunks": [
+       [273, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: the divider is mirrored, its header (STATUS or BADGES, drawn in",
+         "; Arabic by the overlay) on the right: the dots ($25-$27) in x 1-12, their",
+         "; end ($24) in x 13, the header ($29-$2c) in x 14-17, the divider's end ($23)",
+         "; in x 18"
        ]],
-       [151, 1, "b9aeafa795b6d81bff3770c9b5f7669765f4d12118b64460a673546fc6b51e04", [
-         "\tmenu_coords 9, 2, 19, 17"
+       [274, 13, "a5efdd1ec04a227977ed63cb60460aa5f75e60a061d6eb8d0463e390758f673c", [
        ]],
-       [448, 1, "5dc2e255a5afd49034d34de41077655fa30962ec1c7961cf5e5a5488193dc3b2", [
-         "\t; Check if XCoord >= 9 * TILE_WIDTH,"
+       [289, 1, "d3a86d9f3ac34f27d5185b44a0ccca0481cbf462a72f142f36257da613518edb", [
+         "\tld a, $25"
        ]],
-       [451, 1, "470c004a9cf4e8338d55f7fe461439034adedde864bf89212bc1c175c2bbc3aa", [
-         "\tcp 9 * TILE_WIDTH"
+       [295, 1, "4c7d9e496fd4fad76865f1e502811936a45a97ba59a8a25fcc62cb3a5a850754", [
+       ]],
+       [298, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "",
+         "\tld a, $24",
+         "\tld [hli], a",
+         "\tld a, $29",
+         "\tld [hli], a",
+         "\tinc a ; $2a",
+         "\tld [hli], a",
+         "\tinc a ; $2b",
+         "\tld [hli], a",
+         "\tinc a ; $2c",
+         "\tld [hli], a",
+         "\tld [hl], $23"
+       ]],
+       [301, 3, "a4ad7ede0a4692f3f4f9aaae96c182edddb3786cf8b09141e2dcd1af4ac72bc5", [
+         "; Arabic: the frame keeps its tiles and places, and the rows read right to",
+         "; left: each label ends at the frame's right end (x 13), its value on its",
+         "; left. The labels are lines of .Top_Headings, which also holds the frame.",
+         "\tld a, '┌' - 4",
+         "\tldcoord_a 1, 2",
+         "\tldcoord_a 1, 3",
+         "\thlcoord 1, 4",
+         "\tld a, '┌' - 3",
+         "\tld [hli], a",
+         "\tinc a",
+         "\tld c, 11",
+         ".frame_loop",
+         "\tld [hli], a",
+         "\tdec c",
+         "\tjr nz, .frame_loop",
+         "\tinc a",
+         "\tld [hl], a"
+       ]],
+       [305, 1, "58854770afbd9e11c476085eed721033044b1a9dd3cd82bd5d87d96ba3d96fe9", [
+         "\t; name",
+         "\thlcoord 13, 2",
+         "\tld b, 0",
+         "\tcall .PlaceLabel",
+         "\tld h, b",
+         "\tld l, c",
+         "\tdec hl"
+       ]],
+       [307, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [309, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; \"IDNo.\" (no letters to translate) and the number",
+         "\thlcoord 11, 3",
+         "\tld a, '<ID>'",
+         "\tld [hli], a",
+         "\tld a, '№'",
+         "\tld [hli], a",
+         "\tld [hl], '.'"
+       ]],
+       [314, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; money: its label, then the amount on its left",
+         "\thlcoord 13, 6",
+         "\tld b, 4",
+         "\tcall .PlaceLabel",
+         "\tpush bc",
+         ""
+       ]],
+       [334, 1, "a2f6e0d659a735247ad05fd4c7da60cf5da657e954fb7c31c1073c7c2e7e5126", [
+         "\t; the amount is c + 1 cells (\"¥\" and c digits) and ends a cell left of",
+         "\t; the label, or next to it when the row has no room for the gap",
+         "\tpop hl",
+         "\tld a, l",
+         "\tsub c",
+         "\tld l, a",
+         "\tjr nc, .no_borrow",
+         "\tdec h",
+         ".no_borrow",
+         "\t; hl = the label's pen - c; with the gap it starts at hl - 1",
+         "\tld a, l",
+         "\tsub LOW(wTilemap + 6 * SCREEN_WIDTH + 2)",
+         "\tld a, h",
+         "\tsbc HIGH(wTilemap + 6 * SCREEN_WIDTH + 2)",
+         "\tjr c, .got_money_coord",
+         "\tdec hl",
+         ".got_money_coord"
+       ]],
+       [338, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         ".PlaceLabel:",
+         "; Place line b of .Top_Headings (lines end at <LNBRK>), without its frame",
+         "; tiles and spaces, ending at hl. Returns bc = the cell left of it.",
+         "\tpush hl",
+         "\tld hl, .Top_Headings",
+         "\tinc b",
+         "\tjr .next_line",
+         "",
+         ".skip_line",
+         "\tld a, [hli]",
+         "\tcp '<LNBRK>'",
+         "\tjr nz, .skip_line",
+         ".next_line",
+         "\tdec b",
+         "\tjr nz, .skip_line",
+         "\tld de, wRTLLine",
+         ".copy",
+         "\tld a, [hli]",
+         "\tcp '┌' - 4",
+         "\tjr nc, .copy ; a frame tile",
+         "\tcp '<LNBRK>'",
+         "\tjr z, .copied",
+         "\tcp '@'",
+         "\tjr z, .copied",
+         "\tld [de], a",
+         "\tinc de",
+         "\tjr .copy",
+         "",
+         ".copied",
+         "\tld a, '@'",
+         "\tld [de], a",
+         "\tld de, wRTLLine",
+         "\tldh a, [hROMBank]",
+         "\tfarcall RTLTrimString",
+         "\tpop hl",
+         "\tld de, wRTLTextBuffer",
+         "\tjmp PlaceStringRight",
+         ""
+       ]],
+       [353, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: the labels end at x 17 and the numbers end at x 7, on their left."
+       ]],
+       [356, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\thlcoord 2, 10",
+         "\tld b, 4",
+         ".justify_loop",
+         "\tpush bc",
+         "\tld c, 16",
+         "\tfarcall RTLJustifyRight",
+         "\tld bc, 2 * SCREEN_WIDTH",
+         "\tadd hl, bc",
+         "\tpop bc",
+         "\tdec b",
+         "\tjr nz, .justify_loop"
+       ]],
+       [366, 1, "ae0e47bfcd7dfb3ae2cd5123d89037b55b57ad05c4ec7333ff99655111a2447d", [
+         "\thlcoord 5, 10"
+       ]],
+       [373, 1, "fd897727c5f18fb2e1671138bdf1ddf35be548fdfbb225423638f0f868525fe2", [
+         "\thlcoord 3, 14"
+       ]],
+       [382, 2, "478730a18fce9e9a79fb3fd89c1630c1e406f83227a85d038d71ad1537a99d7d", [
+         "\thlcoord 1, 10",
+         "\tlb bc, 1, 17"
+       ]],
+       [391, 2, "0051e807014f79c18b908617824a3a7ecbb20d110fac79cf7fcdd63b3ae720bb", [
+         "\thlcoord 1, 14",
+         "\tlb bc, 1, 17"
+       ]],
+       [417, 1, "6cfa45c1979e17df103ca22fac088ba3d5357f3ab98a7043f3a3fd5b5760e986", [
+         "\t; Arabic: \"hhhh:mm\" in x 1-7 (see TrainerCard_Page1_PrintDexCaught_GameTime)",
+         "\thlcoord 1, 12"
+       ]],
+       [428, 1, "1ba8e12cf8fd751a225446fd94c051c693ee5d9e2a1ecaa8fc5f4788e15694ba", [
+         "\thlcoord 5, 12"
        ]]
      ]},
     {"path": "engine/movie/trade_animation.asm",
      "hunks": [
-       [942, 1, "ec3955a72c420924224a0b32e553182de67a3df75ec85b2a8e7ff5da18c3ea5c", [
-         "\t; Arabic: the gender symbol is read after the name, so it goes on its",
-         "\t; left; the name starts 2 cells right of where it did (same right end)",
-         "\thlcoord 7 + 2, 4"
+       [836, 1, "b09fcc502ad9890166a6174f9054fca630788c09dadad1e2f1156d13a7dd9da5", [
+         "\t; Arabic: the card's template code grew, out of a jr's reach",
+         "\tjp nz, TrademonStats_Egg"
        ]],
-       [944, 1, "ba97e682db187d2d2be0d35c029b661f33ebc8e9a03d5ef5375916560ed262a4", [
+       [850, 1, "098b3d7c62a6d4e69504d5677ba7e886e960c8e64c8f1739e69cfc253ac5187c", [
+         "\tjp TrademonStats_WaitBGMap"
+       ]],
+       [881, 1, "886d56efe41aa9175f8d782b29720c582950fc9a0a3275dc6d23a6d47a613445", [
+         "\t; Arabic: the card's lines are flush with the box's right edge (col 16).",
+         "\t; The frame's \"№.\" (row 0) and the ID label (row 6) are Latin tiles, which",
+         "\t; read left to right: they are written over what the leftward lines drew.",
+         "\thlcoord 16, 0"
+       ]],
+       [883, 2, "8f234ced07c643d2f3abce032cbb4f633a63e6f60d0e7053ec18ee85232adfb9", [
+         "\tcall PlaceStringRight",
+         "\thlcoord 4, 0",
+         "\tld bc, 13",
+         "\tld a, '─'",
+         "\trst ByteFill",
+         "\thlcoord 7, 0",
+         "\tld a, ' '",
+         "\tld [hli], a",
+         "\tld a, '№'",
+         "\tld [hli], a",
+         "\tld [hl], '.'",
+         "\tjr TrademonStats_IDLabel"
+       ]],
+       [894, 1, "d62c0b9f4088496412d52bb4b51a11c038a74bac61545e7d259759f3f861d720", [
+         "\thlcoord 16, 2"
+       ]],
+       [896, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight",
+         "\tcall TrademonStats_IDLabel",
+         "\t; the ID's \"?????\" (drawn leftward from the label) moves a cell left",
+         "\thlcoord 8, 6",
+         "\tld a, '?'",
+         "\tld bc, 5",
+         "\trst ByteFill",
+         "\tld [hl], ' '"
+       ]],
+       [906, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "TrademonStats_IDLabel:",
+         "; \"<ID>№.\" left to right at the box's right edge, the ID number a cell left",
+         "; of it (as on the trainer card)",
+         "\thlcoord 14, 6",
+         "\tld a, '<ID>'",
+         "\tld [hli], a",
+         "\tld a, '№'",
+         "\tld [hli], a",
+         "\tld [hl], '.'",
+         "\tret",
+         ""
+       ]],
+       [932, 3, "3a8ad3e6cb98f4c59f7487f5c2f7db7cc20f9354d55723b9526127fdb56ea607", [
+         "\thlcoord 16, 2",
+         "\tjmp PlaceStringRight"
+       ]],
+       [942, 3, "8c4134fa14480a6c9f883c7db2cc85c5aee5f6bdfe7f522b23ff57ca30630378", [
+         "\t; Arabic: the OT label is flush right on row 4 (from the card's template);",
+         "\t; the name ends a cell left of it, and the gender symbol, read after the",
+         "\t; name, is a cell left of the name",
+         "\thlcoord 4, 4",
+         ".find_label",
+         "\tld a, [hli]",
+         "\tcp ' '",
+         "\tjr z, .find_label",
+         "\tdec hl",
+         "\tdec hl",
+         "\tdec hl",
+         "\tcall PlaceStringRight"
        ]],
        [951, 1, "8321b3ead652de8ddcbef72689d116f0c55ad50f21eefdd1ccde08e6ff5877d5", [
-         "\tldcoord_a 7, 4"
+         "\tld h, b",
+         "\tld l, c",
+         "\tdec hl",
+         "\tld [hl], a"
+       ]],
+       [958, 1, "a2f6e0d659a735247ad05fd4c7da60cf5da657e954fb7c31c1073c7c2e7e5126", [
+         "\thlcoord 8, 6"
        ]]
      ]},
     {"path": "engine/overworld/decorations.asm",
@@ -1254,10 +3466,43 @@
          ""
        ]]
      ]},
+    {"path": "engine/overworld/select_menu.asm",
+     "hunks": [
+       [143, 1, "5ca77ed77f4e5f98598c426a103c3c19782a51d25e73f36047aa222a0111b229", [
+         "\t; Arabic: mirrored: each row's direction arrow is at x 19 and the item",
+         "\t; name ends at x 17 (drawn right to left over the \"-\" of an empty slot)",
+         "\thlcoord SCREEN_WIDTH - 1, 0"
+       ]],
+       [145, 2, "5b5dd97e1eb282effa15b8b196b9c2b3b57dbff2993e36949aa21edb7bf43da5", [
+         "\tcall PlaceStringRight",
+         "\thlcoord SCREEN_WIDTH - 3, 0"
+       ]],
+       [163, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]]
+     ]},
     {"path": "engine/pc/bills_pc_ui.asm",
      "hunks": [
        [1052, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
          "\tlb bc, VWF_RTL, 10 * TILE_WIDTH ; Arabic: right-aligned, right to left"
+       ]],
+       [1134, 2, "eaf382f531a8be28a56760fc32203ae074cfc3c796b2ca4819822265044dedb0", [
+         "\t; Nickname (Arabic: flush right, ending at x 18)",
+         "\thlcoord 18, 0"
+       ]],
+       [1137, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [1149, 1, "71c217268885ba49025e2f2de10c6862c9a4dcac6b9eebae9e9a9e4225a8e3d8", [
+         "\t; Arabic: \"/<species>\" read from the right: the slash at x 18, the",
+         "\t; name on its left",
+         "\thlcoord 18, 1"
+       ]],
+       [1151, 1, "1983bf0f1d8552eeb81a833d97cb55d6e2bd693b9adcf2ccb496bd3ea751ea0b", [
+         "\tld [hld], a"
+       ]],
+       [1154, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
        ]],
        [2283, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
          "\tlb bc, VWF_RTL, 10 * TILE_WIDTH ; Arabic: right-aligned, right to left"
@@ -1280,13 +3525,33 @@
      ]},
     {"path": "engine/phone/phone.asm",
      "hunks": [
-       [392, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
-         "\t; Arabic: the colon ends the name, so it goes on its left: drawing it",
-         "\t; first and the name after it gives what reversing \"<name>:\" would",
-         "\tld [hl], ':'",
-         "\tinc hl"
+       [371, 4, "3452f0b2f25c74f0064827668e3ff2c9a0197436f16ed0dbacc1e1f617f07e0f", [
+         "\tld [hl], a",
+         "\t; Arabic: the caller's lines end at the box's inner right edge",
+         "\tdecoord 18, 1"
        ]],
-       [393, 2, "5f6498f701999a26d694d875c059838e457f87da4e5453d2f6c1e2aa5b645e7e", [
+       [377, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: de = where the name ends (its line's right edge). The name and",
+         "; the class below it are drawn right to left; the class ends 3 cells left of",
+         "; the name's end, as the English started it 3 cells right of the name's start."
+       ]],
+       [392, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight",
+         "\t; the colon ends the name: on its left"
+       ]],
+       [397, 1, "15deadd864bd19c9350deacf432de850d5c8d7ff68aa11465115e662f43a931e", [
+         "\tld de, SCREEN_WIDTH - 3"
+       ]],
+       [400, 2, "8f234ced07c643d2f3abce032cbb4f633a63e6f60d0e7053ec18ee85232adfb9", [
+         "\tjmp PlaceStringRight"
+       ]],
+       [417, 2, "8f234ced07c643d2f3abce032cbb4f633a63e6f60d0e7053ec18ee85232adfb9", [
+         "\t; \"<name>:\" and \"   <class>\" (next1), each line drawn leftward from hl:",
+         "\t; the class's indent comes first, on its right",
+         "\tjmp PlaceStringRight"
+       ]],
+       [422, 2, "8f234ced07c643d2f3abce032cbb4f633a63e6f60d0e7053ec18ee85232adfb9", [
+         "\tjmp PlaceStringRight"
        ]]
      ]},
     {"path": "engine/pokedex/area.asm",
@@ -1294,10 +3559,32 @@
        [459, 6, "dbdcc44c988fab52b81c2e892736309c19001316d734067918779d64d969712d", [
          "\t; Right-justified: Arabic is drawn right to left from the right edge.",
          "\tlb bc, VWF_RTL, $35"
+       ]],
+       [493, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: the button's word is the last tiles of the search screen's",
+         "\t; SELECT button (gfx/pokedex/oam.png, drawn by the overlay): $0e, $0f",
+         "\t; and its cap $10, side by side"
+       ]],
+       [496, 3, "62600d8a96847335881e6dc2ca367c5c65861b6441b4d81a9564ee9cb20f20ee", [
+         "\tlb de, 3, 7",
+         "\tlb hl, 3, $0e",
+         "\tlb bc, 113, 143"
+       ]],
+       [500, 1, "113dab55da7055ab6ff5572da8312c80721823f747ac0cc9ee090de89aff5940", [
+         "\tld b, 105"
+       ]],
+       [502, 8, "63346f645fb89152067cbba03950e771b83f0c68795811258c668114455e6c9a", [
        ]]
      ]},
     {"path": "engine/pokedex/pokedex.asm",
      "hunks": [
+       [80, 1, "02864f7338ab1c66cac70e72363f0de92afabbd85fe44ec0f8e31a6cfe59fde3", [
+         "\t; Print species name (Arabic: it ends left of the dex number, x 13)"
+       ]],
+       [82, 2, "5b76646d40d75cda7df9da40f78758e2749ba8ca0db43db4c44257e4c9e9970c", [
+         "\thlcoord 13, 1",
+         "\tcall PlaceStringRight"
+       ]],
        [1087, 1, "199775488036e900d001ac7aa74c27c4efd7281d50d74879c2438534caa271fa", [
          "; (Arabic: copied as is, at x=10..15, so it is not reversed like a string)",
          "\tdb \"??′??″\"",
@@ -1321,6 +3608,10 @@
          "\tpop af",
          "\tldh [hRTLFlags], a",
          "\tret"
+       ]],
+       [1120, 2, "6fda3f22ba4fe550e4b5d7b98889252441cb67b2ee7e2cdc290abff77468df9d", [
+         "\thlcoord 19, 1 ; Arabic: flush right, like the category",
+         "\tcall PlaceStringRight"
        ]],
        [1128, 5, "8801a2780b147e798ba90753fe9ed787f7a29d43cbaf08eaf7e4750e673b8388", [
          "\t; Arabic: the tilemap holds the metric units (م, كغ) left of the numbers;",
@@ -1373,12 +3664,25 @@
          "\thlcoord 19, 12",
          "\tcall Pokedex_FarStringRight"
        ]],
+       [1576, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: the label ends at the box's right edge, above the count",
+         "\thlcoord 9, 6",
+         "\tld c, 10",
+         "\tfarcall RTLJustifyRight"
+       ]],
        [1596, 1, "47ed060163c115bdb48b3ad27b19a89b59be104f6c33727681e31e0512ab9502", [
          "\t; Arabic: Seen is the right-hand counter, Own the left-hand one",
          "\thlcoord 17, 7"
        ]],
        [1600, 1, "c60c2d224f79635b8d3275254b1c14a7f00cdc44699be64cdd1c23ff5d3328ab", [
          "\thlcoord 11, 7"
+       ]],
+       [1633, 1, "3b2ff5ddea91fef56dee573083e5f166a0067e176078e91ad7cc6b6f258811c0", [
+         "\t; Print category (Arabic: flush right under the name)"
+       ]],
+       [1635, 2, "39c2af39e23a84db3fc76d45341d3dd5c9a3b7e1746ef7874608a65b0e4bac3e", [
+         "\thlcoord 13, 3",
+         "\tcall Pokedex_FarStringRight"
        ]],
        [1726, 4, "d4839303266a31b4c7e585462e054552a4e8e063b2c7c743422344a43735495b", [
          "\thlcoord 8, 12 ; (Arabic: the label takes no plural 's')"
@@ -1398,6 +3702,10 @@
        [2133, 2, "daf887770f40ef094cf2b1328e42f0ed60aee85f7885b537533954e4df4f8ce0", [
          "\thlcoord 18, 14 ; Arabic: flush right",
          "\tcall PlaceStringRight"
+       ]],
+       [3278, 2, "e18f6dd480e8094cfc9f68dca1e034ec0564f70c80d083e8006477b1713b4a5c", [
+         "\thlcoord 18, 2 ; Arabic: flush right in the cleared field (x 9 to 18)",
+         "\tcall PlaceStringRight"
        ]]
      ]},
     {"path": "engine/pokedex/unown_dex.asm",
@@ -1415,6 +3723,19 @@
          "\tinc de",
          "\tjr .copy_word",
          ".copied_word"
+       ]]
+     ]},
+    {"path": "engine/pokegear/phone.asm",
+     "hunks": [
+       [220, 1, "02b6b225629d7bd8525454de40ba90f2e5e64985640391314d3fbfc47d8bfea9", [
+         "\thlcoord 18, 4 ; Arabic: where the name ends (it started at x 2)"
+       ]],
+       [336, 2, "c8eb0adccb0bbe386c398add5e4b9e641e724b5f454c7b865364af7bbb6f95d1", [
+         "\t; Arabic: the items end at the box's inner right edge (the cursor's",
+         "\t; column is the box's first)",
+         "\tld bc, 7",
+         "\tadd hl, bc",
+         "\tcall PlaceStringRight"
        ]]
      ]},
     {"path": "engine/pokegear/pokegear.asm",
@@ -1439,9 +3760,51 @@
          "\tldh [hRTLFlags], a",
          "\tret"
        ]],
+       [728, 1, "1983bf0f1d8552eeb81a833d97cb55d6e2bd693b9adcf2ccb496bd3ea751ea0b", [
+         "\tld [hl], a",
+         "\t; Arabic: the name's lines end at the right edge of the 11 cells right of",
+         "\t; the arrow (the English started them next to the arrow)",
+         "\tld bc, 11",
+         "\tadd hl, bc"
+       ]],
+       [745, 2, "8f234ced07c643d2f3abce032cbb4f633a63e6f60d0e7053ec18ee85232adfb9", [
+         "\tjmp PlaceStringRight"
+       ]],
+       [956, 2, "be1ffe0366e4ff6586c0ef140b205f945e20631c549340fd2e5f05183b4c4d68", [
+         "\thlcoord 17, 9 ; Arabic: flush right (the English started at x 2)",
+         "\tcall PlaceStringRight"
+       ]],
+       [1445, 1, "45c23bed5de809acbb1df36b9d56bf57be7425b855e95182129cfb58063b27c2", [
+         "\t; Arabic: the quoted name ends at the box's right edge, read from the",
+         "\t; right (the font has one neutral double quote)",
+         "\thlcoord 18, 14"
+       ]],
+       [1448, 2, "daf887770f40ef094cf2b1328e42f0ed60aee85f7885b537533954e4df4f8ce0", [
+         "\thlcoord 17, 14",
+         "\tcall PlaceStringRight"
+       ]],
        [1452, 1, "9a363628b9660e1bff15fa785c9be4e3c3d4f1b7ec431fc26c4665f5bf76fc23", [
-         "\t; the font has one neutral double quote (the line reads right to left)",
          "\tld [hl], '“'"
+       ]],
+       [1628, 1, "db77aab902ece7133beb60fb8c89fea29fb1762ee2f4cca9b5feb200351bb051", [
+         "\t; Arabic: the bubble's lines end at its inner right edge (x 17)",
+         "\thlcoord 17, 0"
+       ]],
+       [1630, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [1651, 1, "d2b38775d485ddf97ac9677759d7c26c84238e4b51e20361ae9ba03b46b2912f", [
+         "\thlcoord 17, 1"
+       ]],
+       [1653, 2, "8f234ced07c643d2f3abce032cbb4f633a63e6f60d0e7053ec18ee85232adfb9", [
+         "\tjmp PlaceStringRight"
+       ]]
+     ]},
+    {"path": "engine/pokegear/radio.asm",
+     "hunks": [
+       [1438, 2, "be1ffe0366e4ff6586c0ef140b205f945e20631c549340fd2e5f05183b4c4d68", [
+         "\thlcoord 17, 9 ; Arabic: flush right, like the other stations' names",
+         "\tcall PlaceStringRight"
        ]]
      ]},
     {"path": "engine/pokemon/abilities.asm",
@@ -1479,6 +3842,14 @@
          "\tjmp PlaceStringRight"
        ]]
      ]},
+    {"path": "engine/pokemon/learn.asm",
+     "hunks": [
+       [241, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: the space before \"Poof!\" (the translation trims the leading",
+         "\t; space of its text): the speech box pen moves a cell left",
+         "\tdec bc"
+       ]]
+     ]},
     {"path": "engine/pokemon/mail_2.asm",
      "hunks": [
        [626, 2, "0d82590eee33b3cfbae3d4382bb3757078e075a66e56befcf9c9c0a60c70e42c", [
@@ -1504,17 +3875,156 @@
      ]},
     {"path": "engine/pokemon/mon_menu.asm",
      "hunks": [
+       [183, 2, "b4148e3ae733fc4396782880a85a07000ae5de4fa277092548fc0347f406c125", [
+         "\t; Arabic: the item ends at the box's right edge, left of the menu (x 13)",
+         "\thlcoord 12, 16",
+         "\tcall PlaceStringRight"
+       ]],
        [600, 1, "db18eb0cdcd538f62491583024aeba8b8be1af4ffb31e6e706c4974ca2e20605", [
          "\tfarcall _ComposeMailMessage"
+       ]],
+       [1504, 2, "d94692de9eccfc082aaa54f898997e6b4ed031ad7371fdf6f24f3aedbbeaffb9", [
+         "\t; Arabic: the name ends next to the level (x 15), in its field (x 5-14)",
+         "\thlcoord 14, 1",
+         "\tcall PlaceStringRight"
+       ]],
+       [1533, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: the move names end at the box's right edge (x 18)",
+         "\thlcoord 2, 3",
+         "\tld de, SCREEN_WIDTH * 2",
+         "\tlb bc, NUM_MOVES, 18 - 2 + 1",
+         "\tfarcall JustifyRowsRight"
+       ]],
+       [1657, 3, "9ddcf85eba8fe6db34be3b9e06e5d05101fcb70eb8f694e8838d6d3ed46a18a3", [
+         "\t; Arabic: \"<power>P/<accuracy>%\" reads left to right like a number, so its",
+         "\t; signs are put in their tiles, not placed as a string (which would be",
+         "\t; turned around in place: \"40/P100%\")",
+         "\thlcoord 13, 12",
+         "\tld a, '<BOLDP>'",
+         "\tld [hli], a",
+         "\tld [hl], '/'",
+         "\thlcoord 18, 12",
+         "\tld [hl], '%'"
+       ]],
+       [1743, 3, "e7d04ea03765652996658a049239b40062ff676224fd3c6c80b4335c2e4445d3", [
+       ]]
+     ]},
+    {"path": "engine/pokemon/mon_stats.asm",
+     "hunks": [
+       [217, 2, "502a067fbda2a59d0f4d578492c8bf796ad7b60f4aa35f13524b982a2507ad39", [
+         "\t; Arabic: the numbers start at the box's left edge (the names end at",
+         "\t; its right edge)"
+       ]],
+       [247, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tadd 12",
+         "\tld c, a ; the box's inner width, to x 18",
+         "\tpush bc"
+       ]],
+       [249, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tpop bc",
+         "\tpop hl",
+         "\t; Arabic: each name ends at the box's right edge",
+         "\tpush hl",
+         "\tld b, NUM_STATS",
+         ".justify_loop",
+         "\tpush bc",
+         "\tfarcall RTLJustifyRight",
+         "\tld de, SCREEN_WIDTH",
+         "\tadd hl, de",
+         "\tpop bc",
+         "\tdec b",
+         "\tjr nz, .justify_loop"
+       ]],
+       [978, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: the 3 cells are copied right to left, so that the abbreviation",
+         "\t; reads right to left (it is not placed as a string)",
+         "\tinc hl",
+         "\tinc hl"
+       ]],
+       [980, 1, "1983bf0f1d8552eeb81a833d97cb55d6e2bd693b9adcf2ccb496bd3ea751ea0b", [
+         "\tld [hld], a"
+       ]],
+       [983, 1, "1983bf0f1d8552eeb81a833d97cb55d6e2bd693b9adcf2ccb496bd3ea751ea0b", [
+         "\tld [hld], a"
+       ]]
+     ]},
+    {"path": "engine/pokemon/mon_submenu.asm",
+     "hunks": [
+       [70, 1, "4f2e0a6da7054564472ee8a5ce579448f1caca726ba566e9e82bb34b1eab5ef0", [
+         "\t; Arabic: the items end at the box's inner right edge (x 18)",
+         "\tld bc, 2 * SCREEN_WIDTH + (19 - 1) - 6"
+       ]],
+       [82, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
        ]]
      ]},
     {"path": "engine/pokemon/party_menu.asm",
      "hunks": [
+       [35, 1, "71fbef80fafd9a7ff38cf0bab313729e8d8ffdfc29a872946b7086ef489fb580", [
+         "\t; Arabic: the prompt ends at the box's right edge",
+         "\thlcoord 18, 16"
+       ]],
+       [37, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [48, 1, "71fbef80fafd9a7ff38cf0bab313729e8d8ffdfc29a872946b7086ef489fb580", [
+         "\t; Arabic: the prompt ends at the box's right edge",
+         "\thlcoord 18, 16"
+       ]],
+       [50, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
        [334, 1, "71fbef80fafd9a7ff38cf0bab313729e8d8ffdfc29a872946b7086ef489fb580", [
          "\t; Arabic: the prompt ends left of the Yes/No box (x 14-19)",
          "\thlcoord 13, 16"
        ]],
        [336, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [558, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: the names (x 3-12, reversed in place) end at x 11, one cell",
+         "\t; before the HP; a name of 10 cells keeps x 12. Cancel ends at x 11 too."
+       ]],
+       [573, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tld c, MON_NAME_LENGTH - 2",
+         "\tfarcall RTLJustifyRight"
+       ]],
+       [582, 2, "6b3a4b9e27fb8876c3a197ca8253e5308284342b0b58b57fbe4a7838a7c37e43", [
+         "\tld de, MON_NAME_LENGTH - 3",
+         "\tadd hl, de"
+       ]],
+       [585, 2, "8f234ced07c643d2f3abce032cbb4f633a63e6f60d0e7053ec18ee85232adfb9", [
+         "\tjmp PlaceStringRight"
+       ]],
+       [777, 1, "64ed7d9e426c1e1f4f32120b5c974c091ebabff1300ecd158ee153cc93389473", [
+         "\t; Arabic: the status words end at the right edge (x 19)",
+         "\thlcoord SCREEN_WIDTH - 1, 2"
+       ]],
+       [814, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [833, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [864, 1, "64ed7d9e426c1e1f4f32120b5c974c091ebabff1300ecd158ee153cc93389473", [
+         "\t; Arabic: the status words end at the right edge (x 19)",
+         "\thlcoord SCREEN_WIDTH - 1, 2"
+       ]],
+       [921, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [991, 1, "64ed7d9e426c1e1f4f32120b5c974c091ebabff1300ecd158ee153cc93389473", [
+         "\t; Arabic: the status words end at the right edge (x 19)",
+         "\thlcoord SCREEN_WIDTH - 1, 2"
+       ]],
+       [1003, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [1034, 1, "64ed7d9e426c1e1f4f32120b5c974c091ebabff1300ecd158ee153cc93389473", [
+         "\t; Arabic: the status words end at the right edge (x 19)",
+         "\thlcoord SCREEN_WIDTH - 1, 2"
+       ]],
+       [1060, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
          "\tcall PlaceStringRight"
        ]],
        [1284, 2, "0a5f928017d417ec43d05d56a02bbb2418e95e0bbf058c49e5bb524a2246b2a2", [
@@ -1523,18 +4033,237 @@
          "\tcall PlaceStringRight"
        ]]
      ]},
+    {"path": "engine/pokemon/summary/blue_page.asm",
+     "hunks": [
+       [4, 1, "c80b75d3df2cee92acb54721abc0a3dee320ef23c5aa594be2bcff2ec670429c", [
+         "\t; Arabic: the window's columns are mirrored (x -> 10 - x, as on the pink",
+         "\t; page): the labels end at col 10, the numbers (still read left to right)",
+         "\t; and the HP bar are left of them",
+         "\thlbgcoord 0, 1, wSummaryScreenWindowBuffer"
+       ]],
+       [6, 1, "6bcf4a24b9a9193bec1455cce8ae5ee7aba968d45bb43a69d7f9050bbe12b608", [
+         "\thlbgcoord 16, 1, wSummaryScreenWindowBuffer"
+       ]],
+       [8, 1, "e5a1425826dbdc782be183776df125951601686ed09af7bf53da7d2b523d7878", [
+         "\tld bc, 9"
+       ]],
+       [14, 1, "e8f75d1b0db4690386dec434bd9a3443a117aaf253ba271a5d970ffd89acc308", [
+         "\thlbgcoord 10, 0, wSummaryScreenWindowBuffer"
+       ]],
+       [16, 4, "5a196f2466985b968c5dcef3b59ac9f2357321402fe3477ebb85b67a57f2ca24", [
+         "\tcall PlaceStringRight",
+         "\tcall .PrintStats"
+       ]],
+       [34, 1, "3a5d93ca8c65075670965d02170ee43dae587e87263745ff9a7e0a0130cb3d98", [
+         "\t; Arabic: the ability's name is flush right, its slot on the left",
+         "\thlcoord 1, 13"
+       ]],
+       [43, 2, "3dba261a55aad1c7557c9103d3abd4465a59af041eabd7caba9a9e41dcb73338", [
+         "\thlcoord 18, 13",
+         "\tfarcall PrintAbilityRight"
+       ]],
+       [98, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         ".PrintStats:",
+         "; PrintTempMonStats, mirrored: the stat names (MostStatNames) end at col 10,",
+         "; the numbers are in cols 0-2 with the nature's arrows in their first cell",
+         "\thlbgcoord 10, 2, wSummaryScreenWindowBuffer",
+         "\tld de, MostStatNames",
+         "\tldh a, [hRTLFlags]",
+         "\tpush af",
+         "\tset RTL_BOXDRAW_F, a",
+         "\tldh [hRTLFlags], a",
+         "\tld a, BANK(MostStatNames)",
+         "\tcall FarString",
+         "\tpop af",
+         "\tldh [hRTLFlags], a",
+         "\tld a, [wTempMonNature]",
+         "\tld b, a",
+         "\tcall GetNature",
+         "\thlbgcoord 0, 2, wSummaryScreenWindowBuffer",
+         "\tfarcall PrintNatureIndicators",
+         "\thlbgcoord 0, 2, wSummaryScreenWindowBuffer",
+         "\tld de, wTempMonAttack",
+         "\tlb bc, 2, 3",
+         "\tcall .PrintStat",
+         "\tld de, wTempMonDefense",
+         "\tcall .PrintStat",
+         "\tld de, wTempMonSpAtk",
+         "\tcall .PrintStat",
+         "\tld de, wTempMonSpDef",
+         "\tcall .PrintStat",
+         "\tld de, wTempMonSpeed",
+         "\tjmp PrintNum",
+         "",
+         ".PrintStat:",
+         "\tpush hl",
+         "\tcall PrintNum",
+         "\tpop hl",
+         "\tld de, TILEMAP_WIDTH",
+         "\tadd hl, de",
+         "\tret",
+         ""
+       ]],
+       [150, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: the numbers are in cols 0-2 (see SummaryScreen_BluePage.PrintStats)"
+       ]],
+       [151, 1, "614f8cbd08fd604597a4ab0c40063677479c0b44059f28ff0e22757b9d7ad6f8", [
+         "\thlbgcoord 16 + 0, 2, wSummaryScreenWindowBuffer"
+       ]],
+       [154, 1, "fb3ee04e526601b55dc44aaf990937179fece8e1394ba7b6e4c7809e536205e3", [
+         "\thlbgcoord 16 + 0, 3, wSummaryScreenWindowBuffer"
+       ]],
+       [157, 1, "73a1ca8d89a18db052652da8818b0a90809e613b01a1951094b5471f22b79778", [
+         "\thlbgcoord 16 + 0, 4, wSummaryScreenWindowBuffer"
+       ]],
+       [160, 1, "259cc37088e2d9ce5ac02f6d273d48388a4faa846b202acce1ff79216f937e15", [
+         "\thlbgcoord 16 + 0, 5, wSummaryScreenWindowBuffer"
+       ]],
+       [163, 1, "50768ce1507c06e2b521594c235f22473f49387232a6c18601eb16f22e8e6d98", [
+         "\thlbgcoord 16 + 0, 6, wSummaryScreenWindowBuffer"
+       ]],
+       [239, 1, "713cc1243b7941ef68ea51067b9c59f699f80cd5ca91823ac091666ebff0ab1d", [
+         "\t; Arabic: the numbers start above the bar's first cell (the English had",
+         "\t; them one cell right), a cell clear of the label right of them",
+         "\tld bc, -32"
+       ]]
+     ]},
     {"path": "engine/pokemon/summary/egg_page.asm",
      "hunks": [
+       [21, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: as on the pink page, the window's rows are mirrored. (The window",
+         "\t; buffer's line width is not set here, so a PlaceString would copy the",
+         "\t; Arabic left to right, unreversed.) \"№.???\" and \"<ID>№.\" read left to",
+         "\t; right; the ID's \"?????\" is a cell left of its label."
+       ]],
+       [22, 1, "e8f75d1b0db4690386dec434bd9a3443a117aaf253ba271a5d970ffd89acc308", [
+         "\thlbgcoord 6, 0, wSummaryScreenWindowBuffer"
+       ]],
+       [25, 2, "d10de05ffb8f7c6bf962c510803c5e62cbabf19e74a560b2001952cfa0512002", [
+         "\thlbgcoord 10, 1, wSummaryScreenWindowBuffer",
+         "\tcall PlaceStringRight"
+       ]],
+       [28, 5, "628a83dafe2ddd410d420c05981e4e42b8486c58c3cef87b63f94a0b6f83081e", [
+         "\thlbgcoord 10, 4, wSummaryScreenWindowBuffer",
+         "\tcall PlaceStringRight",
+         "\thlbgcoord 6, 5, wSummaryScreenWindowBuffer",
+         "\tld a, '<ID>'",
+         "\tld [hli], a",
+         "\tld a, '№'",
+         "\tld [hli], a",
+         "\tld [hl], '.'",
+         "\thlbgcoord 0, 5, wSummaryScreenWindowBuffer",
+         "\tld a, '?'",
+         "\tld bc, 5",
+         "\trst ByteFill"
+       ]],
        [46, 2, "1f5baa3a72f3cab74bc4fa65acbd1f4f1fe85de1572d9801dc64ccc216cddd8f", [
          "\t; Arabic: the hint's lines are flush with the right edge of its 18 cells",
          "\thlcoord 18, 13",
          "\tcall PlaceStringRight"
+       ]],
+       [104, 4, "748f989293c93fb476987c642c48ab8ee0e49d162d4a86c83e755211afeb6c61", [
+       ]]
+     ]},
+    {"path": "engine/pokemon/summary/green_page.asm",
+     "hunks": [
+       [69, 2, "1f5baa3a72f3cab74bc4fa65acbd1f4f1fe85de1572d9801dc64ccc216cddd8f", [
+         "\t; Arabic: flush with the right edge, like the description under it",
+         "\thlcoord 18, 13",
+         "\tcall PlaceStringRight"
+       ]],
+       [123, 5, "9a0713112aa84497fc6d182043b0c34cb2a656061fb5c38d8e5102301eb6a12e", [
+         "\t; Arabic: each move's name is flush with the window's right edge (col 11),",
+         "\t; above its type (cols 8-11); \"PP 20/35\" reads left to right, left of the",
+         "\t; type (cols 0-7). (ListMoves would place the names left to right.)",
+         "\thlbgcoord 11, 0, wSummaryScreenWindowBuffer",
+         "\tld de, wTempMonMoves",
+         "\tld b, 0",
+         ".move_name_loop",
+         "\tld a, [de]",
+         "\tand a",
+         "\tjr z, .no_move",
+         "\tpush de",
+         "\tpush bc",
+         "\tpush hl",
+         "\tld [wNamedObjectIndex], a",
+         "\tcall GetMoveName",
+         "\tcall PlaceStringRight",
+         "\tpop hl",
+         "\tpop bc",
+         "\tpop de",
+         "\tld a, b",
+         "\tld [wNumMoves], a",
+         "\tjr .next_move_name",
+         ".no_move",
+         "\tld [hl], '-'",
+         ".next_move_name",
+         "\tpush de",
+         "\tld de, TILEMAP_WIDTH * 2",
+         "\tadd hl, de",
+         "\tpop de",
+         "\tinc de",
+         "\tinc b",
+         "\tld a, b",
+         "\tcp NUM_MOVES",
+         "\tjr nz, .move_name_loop",
+         "\thlbgcoord 0, 1, wSummaryScreenWindowBuffer"
+       ]],
+       [138, 1, "c1ef9200be51953b4099dc3798da33084c21a141208b8ab992cf736f88f230b1", [
+         "\tlb bc, 72 + 8 * 8, 41 + n * 20"
+       ]],
+       [141, 1, "c99813753f0ec1e6aaf0e8ea3f56c538a72cfe8634116f65017b59683fc18107", [
+         "\tdebgcoord 8, 1 + n * 2, wSummaryScreenWindowBuffer"
+       ]],
+       [186, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: \"40P/100%\" reads left to right (Latin tiles and numbers): place",
+         "\t; the template without reversing it"
+       ]],
+       [188, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tldh a, [hRTLFlags]",
+         "\tpush af",
+         "\tset RTL_OWNER_F, a",
+         "\tldh [hRTLFlags], a"
+       ]],
+       [189, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tpop af",
+         "\tldh [hRTLFlags], a"
        ]]
      ]},
     {"path": "engine/pokemon/summary/orange_page.asm",
      "hunks": [
        [4, 2, "3e2c3849f2c21fa70880a7c874b8a5d881780ee859b408597e97b8250310815d", [
          "\tcall .TN_PrintToDAndLV"
+       ]],
+       [15, 4, "3496c8c792f7ac7bf310883b7ba188c6e0c7c985409c779ba7408a61208810d1", [
+         "\t; Arabic: the English fell through into .PlaceNatureInfo a second time,",
+         "\t; after the window buffer's line width was turned off, which redrew the",
+         "\t; labels unreversed (and would draw the right-anchored lines one row",
+         "\t; apart wrongly); it draws them once.",
+         "\tret"
+       ]],
+       [21, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: the labels end at col 10 (as on the pink page), and the values one",
+         "; cell in (col 9), the mirror of the English columns"
+       ]],
+       [22, 2, "f27894673eff3d7183738a9501e52162313d2419624542dc375b213b66d84d10", [
+         "\thlbgcoord 10, 0, wSummaryScreenWindowBuffer",
+         "\tcall PlaceStringRight"
+       ]],
+       [25, 2, "fa9b6b63966e952ecd44ef5fa948d2e5bb4f0a108893ec9456ef697d13061d21", [
+         "\thlbgcoord 10, 2, wSummaryScreenWindowBuffer",
+         "\tcall PlaceStringRight"
+       ]],
+       [30, 1, "f20397cb2a5fdc147de5cb717f593601e1bd400a01eea9626c3454d9b94fa4c1", [
+         "\thlbgcoord 9, 1, wSummaryScreenWindowBuffer",
+         "\t; PrintNature places the name with PlaceString: draw it leftward from hl",
+         "\tldh a, [hRTLFlags]",
+         "\tpush af",
+         "\tset RTL_BOXDRAW_F, a",
+         "\tldh [hRTLFlags], a"
+       ]],
+       [32, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tpop af",
+         "\tldh [hRTLFlags], a"
        ]],
        [60, 2, "677196e875ed0358423c27ec4d8ffa5f3e6646dcb5ffdcb276349aa2e77815ae", [
          ".TN_PrintToDAndLV:",
@@ -1575,38 +4304,268 @@
          ".place_caught",
          "\tld [hl], '@'",
          "\tld de, wRTLTextBuffer",
-         "\thlcoord 1, 14",
-         "\trst PlaceString",
-         "\tret"
+         "\thlcoord 18, 14",
+         "\tjmp PlaceStringRight"
+       ]],
+       [79, 3, "2195969c14fb374506ad695409e22d104986847027b086adfd1fae492a785d53", [
+         "\thlcoord 18, 17",
+         "\tjmp PlaceStringRight"
        ]],
        [89, 29, "13c4926f5075a640b6925674346e4fb8309d24d25abfb46dd3aa5c9cd4f6bc6d", [
+       ]],
+       [212, 3, "6fece80f08833330b993ee9410c89acdc8ac99e978d5a15a25c0b261050617c5", [
+         "\thlbgcoord 9, 3, wSummaryScreenWindowBuffer",
+         "\tjmp PlaceStringRight"
+       ]]
+     ]},
+    {"path": "engine/pokemon/summary/pink_page.asm",
+     "hunks": [
+       [14, 1, "9e03b0f235ecb485051161298459d746fc0ea92ca8a9f971000cba80a078ed8b", [
+         "\t; Arabic: the window's rows are mirrored (x -> 10 - x), so that labels",
+         "\t; end at col 10 (col 11 is the screen's last column, which would leave",
+         "\t; no margin) and each row starts on the right",
+         "\thlbgcoord 10, 5, wSummaryScreenWindowBuffer"
+       ]],
+       [16, 1, "222bedd2c95b7222160301bf260005568306092bc1bed642ffb5e44fca954419", [
+         "\thlbgcoord 16 + 10, 5, wSummaryScreenWindowBuffer"
+       ]],
+       [23, 1, "9afd3005a499ddf6d11c7d7674612567cc858b318187ccf2e402ab405a58a60e", [
+         "\thlbgcoord 0, 0, wSummaryScreenWindowBuffer"
+       ]],
+       [25, 1, "90d4e5a53c8fddcbe28b6356689821cf7aac17dbada312578efc8f5b6a7fe806", [
+         "\thlbgcoord 16 + 0, 0, wSummaryScreenWindowBuffer"
+       ]],
+       [42, 1, "e8f75d1b0db4690386dec434bd9a3443a117aaf253ba271a5d970ffd89acc308", [
+         "\t; \"№.123\" reads left to right, at the right",
+         "\thlbgcoord 6, 0, wSummaryScreenWindowBuffer"
+       ]],
+       [50, 1, "dfe39ca959eded501eccb2b96ac29988d028e7f3a3ba13544abd0369b62da842", [
+         "\t; Place name (flush right), and \"/species\" under it"
+       ]],
+       [53, 3, "79371836016b109c2361dcd230300c2af6bcd0b98479874526997cc4d21f1620", [
+         "\thlbgcoord 10, 1, wSummaryScreenWindowBuffer",
+         "\tcall PlaceStringRight",
+         "\thlbgcoord 10, 2, wSummaryScreenWindowBuffer"
+       ]],
+       [57, 1, "1983bf0f1d8552eeb81a833d97cb55d6e2bd693b9adcf2ccb496bd3ea751ea0b", [
+         "\tld [hld], a"
+       ]],
+       [61, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [63, 2, "cf106fe672865a9a81a1a390afe2978dd5262f484eee4a9b5d2130a7cd230bcb", [
+         "\t; Place ball (left of the types)",
+         "\thlbgcoord 0, 3, wSummaryScreenWindowBuffer"
+       ]],
+       [72, 1, "3b61ba6be54a893c71862c2124e3c6aea17cbb849b22e6faaa4fa0d834b2af40", [
+         "\thlbgcoord 16 + 1, 3, wSummaryScreenWindowBuffer"
+       ]],
+       [76, 1, "f5b13d9ee42a64e42f6792e09766219544d34ffb067886d448882c4d86800674", [
+         "\thlbgcoord 16 + 2, 3, wSummaryScreenWindowBuffer"
+       ]],
+       [92, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; the first type is on the right (window cols 7-10), the second left of it"
+       ]],
+       [94, 1, "26c557f77b6ca534f9d9ac414c34e545ad65b6b7a255a458d048f2c2845e5c78", [
+         "\tlb bc, 72 + 7 * 8, 76"
+       ]],
+       [97, 1, "52b845f07f1c3f8428206127141bc6e243d4c5e0068cdc417b8d076a77e39b2b", [
+         "\tdebgcoord 7, 3, wSummaryScreenWindowBuffer"
+       ]],
+       [107, 1, "28a0d0e7447c0ebcbddd8b911948d2c7e99dcfa460683190e551f3f945e8b611", [
+         "\tlb bc, 104 - 8, 76"
+       ]],
+       [110, 1, "209abe058233c4c2cf3eff3d3d7ef761c709a31223c01335083c57a935f25a9c", [
+         "\tdebgcoord 3, 3, wSummaryScreenWindowBuffer"
+       ]],
+       [122, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: each label is flush right (col 18) and its number starts at",
+         "\t; col 1; the next level is read after \"to\", left of it"
+       ]],
+       [123, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\thlcoord 18, 13",
+         "\tcall PlaceStringRight",
+         "\tpush bc"
+       ]],
+       [124, 3, "3e66fb06aa641472242b2453c5c5e3b3af8d97ca465565348fed65d0d9a81843", [
+         "\tlb bc, PRINTNUM_LEFTALIGN | 3, 7"
+       ]],
+       [129, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tpop bc",
+         "\thlcoord 0, 13",
+         "\tcall .SeparateNumber",
+         "\tld de, .LevelUpStr",
+         "\thlcoord 18, 15",
+         "\tcall PlaceStringRight",
+         "\tpush bc"
+       ]],
+       [130, 2, "46d0ce4e0654a5fd0890e72dd4248d3d94b062bf8ce0099eab694b5d75301fcc", [
+         "\thlcoord 1, 15",
+         "\tlb bc, PRINTNUM_LEFTALIGN | 3, 7"
+       ]],
+       [134, 3, "1a4c996030ec4576d1a6fece9adc9e36bf35f37550f1acc686e75a070d0ef777", [
+         "\tpop bc",
+         "\thlcoord 0, 15",
+         "\tcall .SeparateNumber"
+       ]],
+       [138, 3, "8b4271253d63a8329f674179f56ceaf41e1a191498e9f4352da2fff074fceba2", [
+         "\thlcoord 18, 17",
+         "\tcall PlaceStringRight",
+         "\t; the level (<LV> and 1 or 2 digits, or 3 digits) ends a cell left of the pen",
+         "\tld h, b",
+         "\tld l, c",
+         "\tdec hl",
+         "\tdec hl",
+         "\tld a, [wTempMonLevel]",
+         "\tcp 9",
+         "\tjr c, .next_level_1_digit",
+         "\tdec hl",
+         ".next_level_1_digit"
+       ]],
+       [173, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         ".SeparateNumber:",
+         "; hl = a row's first cell, bc = the pen left of its label (placed right to",
+         "; left). A number left-aligned at the next cell that reaches the pen moves one",
+         "; cell left, so that a space separates it from the label.",
+         "\tld a, [bc]",
+         "\tcp ' '",
+         "\tret z",
+         ".separate_loop",
+         "\tinc hl",
+         "\tld a, [hld]",
+         "\tld [hli], a",
+         "\tld a, l",
+         "\tcp c",
+         "\tjr nz, .separate_loop",
+         "\tld a, h",
+         "\tcp b",
+         "\tjr nz, .separate_loop",
+         "\tld [hl], ' '",
+         "\tret",
+         ""
+       ]],
+       [217, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: the OT label is flush right, and the OT's name ends a cell left",
+         "\t; of it; the ID's Latin tiles \"<ID>№.\" read left to right (cols 6-8, the",
+         "\t; mirror of the English columns, as the Pokerus tile takes col 10), its",
+         "\t; number a cell left of them (as on the trainer card)"
+       ]],
+       [218, 1, "54fd6aa212471213d81f234bc5302d44f666d1df149c14eab4bbe8687980a9b7", [
+         "\thlbgcoord 10, 4, wSummaryScreenWindowBuffer"
+       ]],
+       [221, 2, "8f234ced07c643d2f3abce032cbb4f633a63e6f60d0e7053ec18ee85232adfb9", [
+         "\tjmp PlaceStringRight"
+       ]],
+       [226, 5, "6b6af52c26bafa17cb287582e907469f93c0b8e31609138ef7988f35c02bcd9c", [
+         "\tcall PlaceStringRight",
+         "\tpush bc",
+         "\thlbgcoord 6, 5, wSummaryScreenWindowBuffer",
+         "\tld a, '<ID>'",
+         "\tld [hli], a",
+         "\tld a, '№'",
+         "\tld [hli], a",
+         "\tld [hl], '.'",
+         "\thlbgcoord 0, 5, wSummaryScreenWindowBuffer"
+       ]],
+       [236, 3, "b92d276913c958f2ca1a9444517faf1886a4dee30b53f501e5c56eac0623eaf1", [
+         "\tpop hl",
+         "\tdec hl",
+         "\tjmp PlaceStringRight"
+       ]],
+       [257, 2, "9ec2d834e8815b62061232e8f292c284945f14cf27f434ad525553b644ca5277", [
+         "\tdb 68, 144 - 8 * 8, SUMMARY_TILE_OAM_BALL_TOP_BORDER, OAM_YFLIP",
+         "\tdb 84, 144 - 8 * 8, SUMMARY_TILE_OAM_BALL_TOP_BORDER, 0"
+       ]],
+       [261, 2, "7d64c8d52908703a39329ead3da72829d5a3ef0e1292de2672e5d9f5fffc17f5", [
+         "\t; Arabic: left of \"№.123\" (window cols 3-4, the mirror of the English 6-7),",
+         "\t; which it covered",
+         "\tdb 31, 96, SUMMARY_TILE_OAM_STATUS + 0, 5",
+         "\tdb 31, 104, SUMMARY_TILE_OAM_STATUS + 1, 5"
+       ]],
+       [268, 4, "92ff91a17fc3df4df074eed344c26d2dc34186b378a38ecf9f2cedf4dede1954", [
        ]]
      ]},
     {"path": "engine/rtc/restart_clock.asm",
      "hunks": [
-       [214, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
-         "\tpush af"
+       [21, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: the arrows' columns of the mirrored screen (see RestartClock.PrintTime)"
        ]],
-       [215, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
-         "\tpop af",
-         "\t; Arabic: on a 12-hour clock the time ends at x 18 (AM/PM is on its left,",
-         "\t; see PrintHoursMins), so its digits are 3 cells right of the English ones",
-         "\tdec a",
-         "\tjr z, .got_column",
+       [22, 1, "ada014235fec75a34418f3afbcf023c00109d10b2820794c6483346e47931879", [
+         "\tdb 7, 15"
+       ]],
+       [25, 1, "86333bbba6bf9d7f34a1a2f26455345af3a91833d2aed88deb6b5a3de8577b56", [
+         "\tdb 24, 3"
+       ]],
+       [28, 1, "88a8e17d285260105f8fdcb13d6d796171896257ad185ee7b8fe3f4912dfe01e", [
+         "\tdb 60, 6"
+       ]],
+       [190, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: the screen is mirrored: the day, read first, ends at the box's",
+         "; right edge, and the time ends at x 7 on the left, its AM/PM on the time's",
+         "; left (the English had the day at x 1 and the time from x 11)."
+       ]],
+       [193, 1, "f3ca7dda4d33c13ee741a8de1ebe715a699f6dffc9889da78a46497111780945", [
+         "\tldh a, [hRTLFlags]",
+         "\tset RTL_BOXDRAW_F, a",
+         "\tldh [hRTLFlags], a",
+         "\tbccoord 18, 8"
+       ]],
+       [196, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tldh a, [hRTLFlags]",
+         "\tres RTL_BOXDRAW_F, a",
+         "\tldh [hRTLFlags], a"
+       ]],
+       [200, 1, "910887ce355dc1a7084ed8f1d037d37f48206e3666e00d51bbc48f06fa50ec09", [
+         "\t; PrintHoursMins ends the time where the English \" h:mm AM\" (8 cells) or",
+         "\t; \" h:mm\" (5 cells) placed at de ended",
          "\tld a, [wOptions2]",
          "\tbit CLOCK_FORMAT, a",
-         "\tjr nz, .got_column",
-         "\tinc c",
-         "\tinc c",
-         "\tinc c",
-         ".got_column"
+         "\tdecoord 7 - (8 - 1), 8",
+         "\tjr z, .got_time_start",
+         "\tdecoord 7 - (5 - 1), 8",
+         ".got_time_start"
        ]]
      ]},
     {"path": "engine/rtc/timeset.asm",
      "hunks": [
+       [148, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: \"<o'clock> <hour> <time of day>\" is placed as one string, right to",
+         "; left, ending at the box's inner right edge (x 18): \"الساعة 10 نهارا\". The",
+         "; English placed its pieces from x 1, so the Arabic ended where the time of",
+         "; day's length put it."
+       ]],
+       [149, 1, "af6be51e3bfa0551a08267a084edc77549f007dda2af35303e5f5bdf972ca8c0", [
+         "\tld a, ' '",
+         "\tld bc, 18",
+         "\trst ByteFill"
+       ]],
+       [153, 4, "9711c5a93985efe1430d63b5fd22c71e2edda3ece197a435b22c43384dab66cc", [
+         "\tcall GetTimeOfDayString",
+         "\tpush de",
+         "\tcall AdjustHourForAMorPM",
+         "\tld [wTextDecimalByte], a",
+         "\tld hl, wRTLTextBuffer"
+       ]],
+       [158, 3, "4f0546dde5aae8c7db6d172f9a4138ed452fb954b13f83975e9dbd7633e68a9b", [
+         "\tcall CopyName2",
+         "\tdec hl",
+         "\tld [hl], ' '",
+         "\tinc hl",
+         "\tld de, wTextDecimalByte",
+         "\tlb bc, PRINTNUM_LEFTALIGN | 1, 2",
+         "\tcall PrintNum",
+         "\tld [hl], ' '",
+         "\tinc hl",
+         "\tpop de",
+         "\tcall CopyName2",
+         "\thlcoord 18, 9",
+         "\tld de, wRTLTextBuffer",
+         "\tjmp PlaceStringRight"
+       ]],
        [212, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
-         "; Arabic: \"<minutes> <min.>\" is placed as one string, so that it reads right",
-         "; to left (the number first)."
+         "; Arabic: \"<minutes> <min.>\" is placed as one string, right to left (the number",
+         "; first), ending at the box's inner right edge (x 18; hl = x 12, where the",
+         "; English started)."
        ]],
        [215, 1, "2d0bb9fc4c636e3853ad3451c398cef28061fff23c8b5896bf645553b22bb8da", [
          "\tpush hl",
@@ -1615,10 +4574,14 @@
          "\tcall PrintNum",
          "\tld [hl], ' '"
        ]],
-       [218, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
-         "\tcall CopyName2",
-         "\tpop hl",
-         "\tld de, wRTLTextBuffer"
+       [218, 8, "80b3b10551ae4c7778fb26976f3cb23f4e0c1cf52a2646a1ad6b4e91fb7dec1f", [
+         "\tcall CopyName2"
+       ]],
+       [227, 2, "0e5d3818e1994436b3e9cf8c478ac945a8a34b5d0286fbb820251aed04fdc1dd", [
+         "\tld bc, 18 - 12",
+         "\tadd hl, bc",
+         "\tld de, wRTLTextBuffer",
+         "\tjmp PlaceStringRight"
        ]],
        [255, 2, "1eb4bd90e1ee6d30a457044493eb62a66f5627361c6b0660c09aa6b4d7e73558", [
          "\t; Arabic: the time is drawn right to left on the second line",
@@ -1682,6 +4645,11 @@
        ]],
        [473, 1, "3228db53c30efb503fbabc0440791d0fac7cef0436d8c7b0eea0528e96d93d9c", [
        ]],
+       [475, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; the English text starts with a space (\" DST,\"), which the Arabic text",
+         "\t; cannot keep (a speech box line starts with a word): leave the cell blank",
+         "\tdec bc"
+       ]],
        [489, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
          "\t; the text starts in the speech box (the English left bc unset, and its",
          "\t; text_asm drew at a fixed place)",
@@ -1696,15 +4664,13 @@
        ]],
        [498, 1, "3228db53c30efb503fbabc0440791d0fac7cef0436d8c7b0eea0528e96d93d9c", [
        ]],
-       [523, 1, "2872e911df0f223c66732a8836872db38079ffb9831e3e5ea6dac5d488387f6f", [
+       [508, 3, "f30bc3c5eb49362fbe2504141d97f05db4664ed3914fb35ebf08387020d851b7", [
          "PlaceInitTimeRight:",
-         "; Place the time being set right to left, ending at hl."
-       ]],
-       [525, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Place the time being set right to left, ending at hl.",
+         "\tld a, [wInitHourBuffer]",
          "\tld b, a",
-         "\tld a, [wInitMinuteBuffer]"
-       ]],
-       [526, 5, "d027d3c83e464ccd43a154c684dde62148ac56cf888084066a22fdff5ceb78c0", [
+         "\tld a, [wInitMinuteBuffer]",
+         "\tld c, a",
          "\t; fallthrough",
          "",
          "PlaceTimeAndTimeOfDayRight::",
@@ -1712,12 +4678,13 @@
          "; left, ending at hl: the time on the right, the time of day on its left.",
          "; Returns bc = the cell left of it.",
          "\tpush hl",
-         "\tld hl, wRTLTextBuffer",
-         "\tpush bc",
+         "\tld hl, wRTLTextBuffer"
+       ]],
+       [512, 4, "ee8cd997a9b85b9ce5498d56707855e11880148d4cba0a82ffdb386762ce98e4", [
          "\tcall BufferHourColonMinutes",
-         "\tld [hl], ' '",
-         "\tinc hl",
-         "\tpop bc",
+         "\tld [hl], ' '"
+       ]],
+       [518, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
          "\tpush hl",
          "\tld c, b",
          "\tcall GetTimeOfDayString",
@@ -1731,10 +4698,9 @@
          "; Write hours b (0-23, shown as the clock option says) \":\" minutes c at hl,",
          "; left to right. Returns hl after them.",
          "\tpush bc",
-         "\tld c, b",
-         "\tcall AdjustHourForAMorPM",
-         "\tld [wTextDecimalByte], a",
-         "\tld de, wTextDecimalByte",
+         "\tld c, b"
+       ]],
+       [521, 10, "d08cee1e2230bf91d649531bfa26ff9ce9466f49ba3944d6a55349e7c4ef3a1e", [
          "\tlb bc, PRINTNUM_LEFTALIGN | 1, 2"
        ]],
        [532, 3, "f642fd3b51194bf6b44eec34bcf34254c2aa9012ac79ad77705c23418583464c", [
@@ -1815,6 +4781,41 @@
        ]],
        [429, 1, "0fbd24564bb907b7a809836949fa38dfc896590f39690910d662f70954117451", [
          "\tld [wTilemap + 1 + 17 * SCREEN_WIDTH], a"
+       ]]
+     ]},
+    {"path": "home/menu.asm",
+     "hunks": [
+       [102, 1, "897449e0e05d87f0d4549654234e241529f4b83e24f15cdc6c7f6d23194d069c", [
+         "\t; Arabic: the items end at the box's inner right edge",
+         "\tld a, [wMenuBorderRightCoord]",
+         "\tdec a",
+         "\tld c, a",
+         "\tcall Coord2Tile ; hl now contains the tilemap address where the items end."
+       ]],
+       [109, 1, "a974220690518cf6c428f61c5416cc93d1390eb3fdba8fa59d3f769a834e5bb6", [
+         "\tcall PlaceStringRight"
+       ]],
+       [510, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\tfarcall JustifyMenuItemRight ; Arabic"
+       ]],
+       [599, 3, "073d58f8f25e7e0de5e510958c213f3fad20e7918d220d1fe49076c2bba1161a", [
+         "\tjr PlaceMenuItemRight"
+       ]],
+       [612, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "PlaceMenuItemRight::",
+         "; Arabic: place menu item de (text at box x + 2, on the stack) ending at the",
+         "; box's inner right edge."
+       ]],
+       [613, 2, "8f234ced07c643d2f3abce032cbb4f633a63e6f60d0e7053ec18ee85232adfb9", [
+         "\tld a, [wMenuBorderLeftCoord]",
+         "\tld c, a",
+         "\tld a, [wMenuBorderRightCoord]",
+         "\tsub c",
+         "\tsub 3",
+         "\tld c, a",
+         "\tld b, 0",
+         "\tadd hl, bc",
+         "\tjmp PlaceStringRight"
        ]]
      ]},
     {"path": "home/rtl.asm",
@@ -2023,8 +5024,8 @@
          "\tcall RTLStartLine"
        ]],
        [329, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
-         "\t; digits drawn leftward must read left to right while the arrow waits",
-         "\tcall RTLFlushDigits",
+         "\t; what was drawn must read right to left while the arrow waits",
+         "\tfarcall _RTLPromptLine",
          "\tpush hl"
        ]],
        [339, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
@@ -2088,36 +5089,14 @@
        [671, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
          "\tldh a, [hRTLFlags]",
          "\tbit RTL_BOXTEXT_F, a",
-         "\tjr nz, .rtl",
-         "\tcall PrintNum",
+         "\tjr nz, .rtl"
+       ]],
+       [672, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
          "\tjr FinishString",
          "",
          ".rtl",
-         "; print the number into a buffer, then copy it left to right so that it ends",
-         "; at the speech box's leftward pen",
-         "\tres PRINTNUM_DELAY_F, b",
-         "\tpush hl",
-         "\tld hl, wRTLNumBuffer"
-       ]],
-       [672, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
-         "\tld a, l",
-         "\tsub LOW(wRTLNumBuffer)",
-         "\tld c, a",
-         "\tld b, 0",
-         "\tpop hl",
-         "\tld a, l",
-         "\tsub c",
-         "\tld l, a",
-         "\tjr nc, .no_borrow",
-         "\tdec h",
-         ".no_borrow",
-         "\tpush hl",
-         "\tinc hl",
-         "\tld d, h",
-         "\tld e, l",
-         "\tld hl, wRTLNumBuffer",
-         "\tcall CopyBytes",
-         "\tpop hl"
+         "; the number ends at the speech box's leftward pen, left to right",
+         "\tfarcall _RTLBoxNumber"
        ]],
        [708, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
          "\tld d, a",
@@ -2142,6 +5121,16 @@
          "\tassert .Day - .Days < 256, \"PrintDayOfWeek names are too long for dr\""
        ]]
      ]},
+    {"path": "macros/asserts.asm",
+     "hunks": [
+       [65, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "\t; Arabic: keep a copy of the names the bag sorts by (see li_capture in",
+         "\t; main.asm and data/items/name_order.asm), quoted for use as a string",
+         "\tif DEF(li_capture)",
+         "\t\tDEF _LI_{d:li_capture}_{d:list_index} EQUS STRCAT(\"\\\"\", \\1, \"\\\"\")",
+         "\tendc"
+       ]]
+     ]},
     {"path": "main.asm",
      "hunks": [
        [75, 1, "d6742a4e0208187bb0344339cb668edd738b440e8102b00d556fe2e6eb865b48", [
@@ -2154,6 +5143,30 @@
          "INCLUDE \"engine/menus/naming_screen.asm\"",
          "",
          ""
+       ]],
+       [664, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: li keeps a copy of the item, key item and move names (lists 1, 2 and",
+         "; 3) for the bag's sorting by name (see data/items/name_order.asm)",
+         "DEF li_capture = 1"
+       ]],
+       [665, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "DEF li_capture = 2"
+       ]],
+       [666, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "PURGE li_capture"
+       ]],
+       [688, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "DEF li_capture = 3"
+       ]],
+       [689, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "PURGE li_capture",
+         "",
+         "",
+         "SECTION \"Arabic Sort Orders\", ROMX",
+         "",
+         "; Arabic: the orders of the names above, read with GetFarByte",
+         "INCLUDE \"data/items/name_order.asm\"",
+         "INCLUDE \"data/moves/tmhm_order.asm\""
        ]],
        [739, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
          "INCLUDE \"engine/gfx/rtl_reverse.asm\"",
@@ -2171,6 +5184,10 @@
      ]},
     {"path": "ram/wram0.asm",
      "hunks": [
+       [303, 0, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", [
+         "; Arabic: a song's text, expanded, before it is placed right to left",
+         "wMPTextBuffer:: ds 48"
+       ]],
        [885, 1, "d1fcf94701c1e5a38a2abdd281e1ed83fefd8cd91f6d6fe52a25131937ffa65f", [
          "wRTLNumBuffer:: ds 8 ; a number printed for a right-to-left text box",
          "wRTLLine:: ds TILEMAP_WIDTH ; a line being reversed in place",

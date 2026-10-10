@@ -660,6 +660,8 @@ def _fake_overlay(monkeypatch, files: dict[str, bytes]) -> TranslationSet:
     monkeypatch.setattr(overlay, "builtin_manifest", lambda: fake_manifest)
     monkeypatch.setattr(overlay, "builtin_engine_patch", lambda: engine)
     monkeypatch.setattr(overlay, "pinned_blobs", lambda: pins)
+    # The tiny tree holds none of the graphics the Arabic lettering is drawn over.
+    monkeypatch.setattr(overlay.gfx_labels, "outputs", lambda read: {})
     texts = [Translation(text_id, "م", context="label") for text_id in dex.label_entries()]
     texts.append(Translation(overlay.KEY_PHRASE_ID, "محظوظ", context="phrase"))
     texts.append(Translation("maps/TestTown:TestTownSignText", "لافتة مخترعة", context="a sign"))
