@@ -41,7 +41,7 @@ def test_arabic_dynamic_intro_keeps_runtime_name_and_divides_into_pages():
     assert assembler.count('db "<PLAYER>"') == 1
     assert assembler.count('db "<PROMPT>"') == 1
     assert "هل أنت مستعد" not in assembler
-    assert 'farcall ClassicRetroPrintElm7Ready' in dynamic._asm_caller()
+    assert "farcall ClassicRetroPrintElm7Ready" in dynamic._asm_caller()
 
 
 def test_all_dynamic_pages_compose_into_unique_memory_banks(tmp_path, monkeypatch):
@@ -72,7 +72,7 @@ def test_all_dynamic_pages_compose_into_unique_memory_banks(tmp_path, monkeypatc
     assert "farjp ClassicRetroElm7Sequence" in intro
     assert "\tjmp PrintText" not in intro
     assert common.count("call FarCall_de") == 4
-    assert '<PLAYER>' in common
+    assert "<PLAYER>" in common
     for page in dynamic.PAGES:
         name = "classic_retro_elm7_" + page.label.lower() + ".1bpp"
         assert (root / "gfx/font" / name) in generated
@@ -98,7 +98,9 @@ def test_sparse_arabic_atlas_keeps_native_ascii(tmp_path, reference_font):
     page = dynamic.PAGES[0]
     result = opening.make_assets(root, reference_font, page.lines, code_pool=dynamic.NAME_SAFE_POOL)
     assert 0 < result.used_glyphs <= len(dynamic.NAME_SAFE_POOL)
-    assert all(value in dynamic.NAME_SAFE_POOL or value == 0x7F for row in result.codes for value in row)
+    assert all(
+        value in dynamic.NAME_SAFE_POOL or value == 0x7F for row in result.codes for value in row
+    )
     for code in range(0x80, 0xBA):
         low = (code - 0x80) * 8
         assert result.tiles[low : low + 8] == native[low : low + 8]
