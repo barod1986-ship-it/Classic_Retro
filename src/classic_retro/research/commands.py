@@ -212,7 +212,15 @@ def _polished_crystal_opening(args: argparse.Namespace) -> int:
 def _polished_crystal_elm_sequence(args: argparse.Namespace) -> int:
     from classic_retro.source.polishedcrystal_elm_sequence import prepare
 
-    return _print(prepare(args.source, args.font, args.preview, dynamic_player=args.dynamic_player))
+    return _print(
+        prepare(
+            args.source,
+            args.font,
+            args.preview,
+            dynamic_player=args.dynamic_player,
+            new_bark_town=args.new_bark_town,
+        )
+    )
 
 
 def register_cli(subcommands: argparse._SubParsersAction) -> None:
@@ -258,6 +266,11 @@ def register_cli(subcommands: argparse._SubParsersAction) -> None:
         "--dynamic-player",
         action="store_true",
         help="Also translate the last Elm speech while preserving the live player name",
+    )
+    elm_sequence.add_argument(
+        "--new-bark-town",
+        action="store_true",
+        help="Also translate five early rival and teacher dialogues in New Bark Town",
     )
     elm_sequence.set_defaults(handler=_polished_crystal_elm_sequence)
 
