@@ -147,7 +147,9 @@ def augment(
     source = Path(source)
     map_path = source / MAP_PATH
     if not map_path.is_file() or opening._git_blob_sha(map_path.read_bytes()) != MAP_BLOB_SHA:
-        raise ClassicRetroError(ErrorCode.SOURCE_BASELINE_MISMATCH, "unexpected New Bark Town source")
+        raise ClassicRetroError(
+            ErrorCode.SOURCE_BASELINE_MISMATCH, "unexpected New Bark Town source"
+        )
     common_path = source / "data/text/common.asm"
     if common_path not in changes:
         raise ClassicRetroError(ErrorCode.INVALID_REFERENCE, "missing pending font-bank changes")
