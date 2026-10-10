@@ -409,23 +409,6 @@
           "رائعة ومثيرة!"
         ]
       ]
-    },
-    {
-      "id": "ST13",
-      "file": "maps/ElmsLab.asm",
-      "label": "ElmsLabLyraText_YouWon",
-      "calls": 1,
-      "context": "Lyra responds to the first tutorial battle, check original source structure before using",
-      "lines": [
-        [
-          "text",
-          "لقد أبدعت!"
-        ],
-        [
-          "line",
-          "كانت معركة رائعة!"
-        ]
-      ]
     }
   ]
 }
