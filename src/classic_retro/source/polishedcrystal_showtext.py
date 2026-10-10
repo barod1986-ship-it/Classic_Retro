@@ -194,3 +194,204 @@ def verify_original(original: str, scene: OverworldScene) -> None:
             ErrorCode.SOURCE_BASELINE_MISMATCH,
             f"{scene.label}: source terminator or PLAYER tokens have changed",
         )
+
+
+def _tile(assets: opening.ElmArabicAssets, code: int) -> bytes:
+    if not 0x80 <= code < 0x80 + opening.FONT_TILES:
+        raise ClassicRetroError(
+            ErrorCode.INVALID_BYTE_RANGE, f"Unknown tile code 0x{code:02x}"
+        )
+    start = (code - 0x80) * 8
+    return assets.tiles[start : start + 8]
+
+
+def pack_atlases(
+    scenes: tuple[tuple[OverworldScene, opening.ElmArabicAssets], ...],
+) -> tuple[tuple[Atlas, ...], tuple[RenderedScene, ...]]:
+    """Reuse atlases when their combined distinct 8x8 cells still fit.
+
+    Dynamic PLAYER-name pages are packed separately, using only non-Latin
+    codes. This prevents corrupting a player name during text expansion.
+    """
+    atlases: list[Atlas] = []
+    packed: list[RenderedScene] = []
+    for scene, assets in scenes:
+        glyphs: list[bytes] = []
+        seen: set[bytes] = set()
+        for row in assets.codes:
+            for code in row:
+                if code == 0x7F:
+                    continue
+                tile = _tile(assets, code)
+                if tile not in seen:
+                    seen.add(tile)
+                    glyphs.append(tile)
+        suitable = next(
+            (
+                atlas
+                for atlas in atlases
+                if atlas.dynamic == scene.player_name
+                and len(atlas.glyphs) + sum(tile not in atlas.glyphs for tile in glyphs)
+                <= len(atlas.pool)
+            ),
+            None,
+        )
+        if suitable is None:
+            suitable = Atlas(len(atlases) + 1, scene.player_name, {})
+            atlases.append(suitable)
+        if len(suitable.glyphs) + sum(tile not in suitable.glyphs for tile in glyphs) > len(
+            suitable.pool
+        ):
+            raise ClassicRetroError(
+                ErrorCode.ARABIC_GLYPH_CAPACITY_EXCEEDED,
+                f"{scene.id}: combined Arabic atlas lacks space",
+            )
+        for tile in glyphs:
+            if tile not in suitable.glyphs:
+                suitable.glyphs[tile] = suitable.pool[len(suitable.glyphs)]
+        remapped = tuple(
+            tuple(
+                0x7F if code == 0x7F else suitable.glyphs[_tile(assets, code)]
+                for code in line
+            )
+            for line in assets.codes
+        )
+        packed.append(RenderedScene(scene, suitable, remapped))
+    return tuple(atlases), tuple(packed)
+
+
+def _dialogue(entry: RenderedScene) -> str:
+    scene = entry.scene
+    commands = [f"{scene.label}:", "\ttext_start"]
+    if scene.player_name:
+        commands.append('\tdb "<PLAYER>"')
+    for (kind, _), line in zip(scene.lines, entry.codes, strict=True):
+        if kind != "text":
+            commands.append(f'\tdb "{_CONTROL[kind]}"')
+        commands.append("\tdb " + ", ".join("$" + format(code, "02x") for code in line))
+    return "\n".join((*commands, '\tdb "<DONE>"', "", ""))
+
+
+def _atlas_loader(atlas: Atlas) -> str:
+    return "\n".join(
+        (
+            f'SECTION "{atlas.font_label} Data", ROMX',
+            f"{atlas.font_label}::",
+            f'\tINCBIN "{atlas.filename}"',
+            f'SECTION "{atlas.font_label} Loader", ROMX',
+            f"{atlas.loader_label}::",
+            f"\tld de, {atlas.font_label}",
+            "\tld hl, vTiles0 tile 'A'",
+            f"\tlb bc, BANK({atlas.font_label}), 114",
+            "\txor a",
+            "\tldh [hRequestOpaque1bpp], a",
+            "\tjmp GetMaybeOpaque1bpp",
+            "",
+        )
+    )
+
+
+def _replace_event_calls(script: str, entry: RenderedScene) -> str:
+    scene = entry.scene
+    original = f"\tshowtext {scene.label}\n"
+    if script.count(original) != scene.calls:
+        raise ClassicRetroError(
+            ErrorCode.SOURCE_BASELINE_MISMATCH,
+            f"{scene.label}: expected {scene.calls} showtext calls, found {script.count(original)}",
+        )
+    # Identical to the showtext opcode: opentext, writetext, waitbutton,
+    # closetext. Load Arabic after opentext reloads the normal font; restore
+    # the normal atlas before closing to avoid spoiling subsequent screens.
+    replacement = "\n".join(
+        (
+            "\topentext",
+            f"\tcallasm {entry.atlas.loader_label}",
+            f"\twritetext {scene.label}",
+            "\twaitbutton",
+            "\tcallasm ClassicRetroSTRestoreFont",
+            "\tclosetext",
+            "",
+        )
+    )
+    return script.replace(original, replacement)
+
+
+def augment(
+    source: Path, font: Path, pending: dict[Path, bytes]
+) -> tuple[dict[Path, bytes], dict[str, object]]:
+    """Compile selected Arabic showtext strings into pending source files only."""
+    source = Path(source)
+    pinned, scenes = load_scenes()
+    originals: dict[str, str] = {}
+    for name, digest in pinned.items():
+        file = source / name
+        if not file.is_file() or opening._git_blob_sha(file.read_bytes()) != digest:
+            raise ClassicRetroError(
+                ErrorCode.SOURCE_BASELINE_MISMATCH, f"Unexpected overworld map {name}"
+            )
+        originals[name] = file.read_text(encoding="utf-8")
+    common_path = source / "data/text/common.asm"
+    if common_path not in pending:
+        raise ClassicRetroError(ErrorCode.INVALID_REFERENCE, "No pending font source")
+    native = (source / "gfx/font/normal.1bpp").read_bytes()
+    rendered: list[tuple[OverworldScene, opening.ElmArabicAssets]] = []
+    for scene in scenes:
+        verify_original(originals[scene.file], scene)
+        assets = opening.make_assets(
+            source, font, scene.lines, code_pool=NAME_SAFE_POOL if scene.player_name else None
+        )
+        if scene.player_name:
+            for code in range(0x80, 0xBA):
+                start = (code - 0x80) * 8
+                if assets.tiles[start : start + 8] != native[start : start + 8]:
+                    raise ClassicRetroError(
+                        ErrorCode.BUILD_VALIDATION_FAILED,
+                        f"{scene.id}: changed a player's Latin name glyph",
+                    )
+        rendered.append((scene, assets))
+    atlases, packed = pack_atlases(tuple(rendered))
+    changes = dict(pending)
+    common = pending[common_path].decode("utf-8")
+    for atlas in atlases:
+        binary = source / atlas.filename
+        if binary.exists() or binary in changes:
+            raise ClassicRetroError(ErrorCode.OUTPUT_EXISTS, f"Atlas already exists: {binary}")
+        tile_data = bytearray(native)
+        for pixels, code in atlas.glyphs.items():
+            start = (code - 0x80) * 8
+            tile_data[start : start + 8] = pixels
+        changes[binary] = bytes(tile_data)
+        common += "\n" + _atlas_loader(atlas)
+    common += "\n".join(
+        (
+            "",
+            'SECTION "Classic Retro Shared Showtext Font Restore", ROMX',
+            "ClassicRetroSTRestoreFont::",
+            "\tjmp LoadStandardFont",
+            "",
+        )
+    )
+    scripts = {
+        name: changes.get(source / name, (source / name).read_bytes()).decode("utf-8")
+        for name in pinned
+    }
+    for entry in packed:
+        content = scripts[entry.scene.file]
+        start, end, _ = _block(content, entry.scene.label)
+        content = content[:start] + _dialogue(entry) + content[end:]
+        scripts[entry.scene.file] = _replace_event_calls(content, entry)
+    for name, script in scripts.items():
+        changes[source / name] = script.encode("utf-8")
+    changes[common_path] = common.encode("utf-8")
+    return changes, {
+        "source_verified": True,
+        "scenes": len(scenes),
+        "arabic_lines": sum(len(scene.lines) for scene in scenes),
+        "event_calls": sum(scene.calls for scene in scenes),
+        "shared_atlases": len(atlases),
+        "shared_atlas_tiles": [len(atlas.glyphs) for atlas in atlases],
+        "avoided_duplicate_font_bytes": (len(scenes) - len(atlases)) * 114 * 8,
+        "live_name_scenes": sum(scene.player_name for scene in scenes),
+        "translated_scope": "curated overworld showtext messages",
+        "gameplay_verified": False,
+    }
