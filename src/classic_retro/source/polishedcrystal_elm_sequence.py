@@ -157,34 +157,35 @@ def _replace_section(source: str, scene: Scene, assets: opening.ElmArabicAssets)
 
 
 def _font_sections(scene: Scene) -> str:
-    """Banked font data and banked transient loader; no fixed-bank code growth."""
+    """Banked font and transient loader, avoiding the already full ROM bank 1."""
     loader = "ClassicRetroPrint" + scene.caller_label
     marker = scene.font_label
-    return (
-        '\nSECTION "' + marker + ' Data", ROMX\n'
-        + marker + '::\n'
-        + '\tINCBIN "' + scene.output_font + '"\n\n'
-        + 'SECTION "' + marker + ' Loader", ROMX\n'
-        + loader + '::\n'
-        + "\tpush hl\n"
-        + "\tld de, " + marker + "\n"
-        + "\tld hl, vTiles0 tile 'A'\n"
-        + "\tlb bc, BANK(" + marker + "), 114\n"
-        + "\txor a\n"
-        + "\tldh [hRequestOpaque1bpp], a\n"
-        + "\tcall GetMaybeOpaque1bpp\n"
-        + "\tpop hl\n"
-        + "\tcall PrintText\n"
-        + "\tjmp LoadStandardFont\n"
+    lines = (
+        "",
+        f'SECTION "{marker} Data", ROMX',
+        f"{marker}::",
+        f'\tINCBIN "{scene.output_font}"',
+        "",
+        f'SECTION "{marker} Loader", ROMX',
+        f"{loader}::",
+        "\tpush hl",
+        f"\tld de, {marker}",
+        "\tld hl, vTiles0 tile 'A'",
+        f"\tlb bc, BANK({marker}), 114",
+        "\txor a",
+        "\tldh [hRequestOpaque1bpp], a",
+        "\tcall GetMaybeOpaque1bpp",
+        "\tpop hl",
+        "\tcall PrintText",
+        "\tjmp LoadStandardFont",
+        "",
     )
+    return "\n".join(lines)
 
 
 def _replace_caller(intro: str, scene: Scene) -> str:
-    before = "\tld hl, " + scene.caller_label + "\n\tcall PrintText\n"
-    after = (
-        "\tld hl, " + scene.caller_label + "\n\tfarcall ClassicRetroPrint"
-        + scene.caller_label + "\n"
-    )
+    before = f"\tld hl, {scene.caller_label}\n\tcall PrintText\n"
+    after = f"\tld hl, {scene.caller_label}\n\tfarcall ClassicRetroPrint{scene.caller_label}\n"
     if intro.count(before) != 1:
         raise ClassicRetroError(
             ErrorCode.SOURCE_BASELINE_MISMATCH,
