@@ -102,8 +102,10 @@ def make_assets(
         images = tuple(_raster_line(text, font) for _, text in lines)
     except (ValueError, OSError) as exc:
         raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, str(exc)) from exc
-    pool = code_pool if code_pool is not None else tuple(
-        range(FIRST_ARABIC_CODE, LAST_ARABIC_CODE + 1)
+    pool = (
+        code_pool
+        if code_pool is not None
+        else tuple(range(FIRST_ARABIC_CODE, LAST_ARABIC_CODE + 1))
     )
     if (
         len(pool) != len(set(pool))
