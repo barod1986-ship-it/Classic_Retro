@@ -195,6 +195,11 @@ a whole game; the paragraphs below say what each covers. The Game Boy and Game B
 Color, the NES and the Nintendo 64 are detected but have no target yet. What a Nintendo 64
 target would build on is recorded in [the Super Mario 64 research notes](docs/SM64_RESEARCH_NOTES.md).
 
+Polished Crystal v3.2.3 (Game Boy Color) now has an exact-ROM game/engine adapter and a
+pinned-source text inventory/audit under `research polished-crystal-catalog` and
+`research polished-crystal-check`. This is **not** an Arabic renderer, localization target,
+or playable patch; see [the Arabic research notes](docs/POLISHED_CRYSTAL_323_ARABIC_RESEARCH_AR.md).
+
 Install with `python -m pip install -e ".[dev]" -c constraints.txt` (the pinned
 raster stack: the reference patch hashes are reproducible only with it), run `pytest`,
 and identify your own input with `classic-retro detect "path/to/game.gba"`.
