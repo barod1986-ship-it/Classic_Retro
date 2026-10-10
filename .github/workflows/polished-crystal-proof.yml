@@ -70,6 +70,7 @@ jobs:
 
       - name: Apply RTL Arabic source overlays to Elm's static introduction scenes
         run: |
+          set -o pipefail
           mkdir artifact
           classic-retro research polished-crystal-elm-sequence upstream --dynamic-player --new-bark-town --overworld-showtext --font reference-font.ttf \
             --preview artifact/elm-sequence-preview.png | tee artifact/overlay-report.json
