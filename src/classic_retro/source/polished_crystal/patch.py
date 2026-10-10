@@ -240,7 +240,12 @@ def from_dict(data: Mapping[str, Any], digest: str = "") -> EnginePatch:
 def builtin_engine_patch() -> EnginePatch:
     """The engine patch the overlay ships (``data/engine_patch.json``)."""
     resource = files("classic_retro.source.polished_crystal").joinpath("data", "engine_patch.json")
-    raw = resource.read_bytes()
+    return load_engine_patch(resource.read_bytes())
+
+
+def load_engine_patch(raw: bytes) -> EnginePatch:
+    """An engine patch file; its digest is the same in a checkout with CRLF line endings."""
+    raw = raw.replace(b"\r\n", b"\n")
     return from_dict(json.loads(raw.decode("utf-8")), hashlib.sha256(raw).hexdigest())
 
 

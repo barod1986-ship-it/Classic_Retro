@@ -197,6 +197,15 @@ def test_the_engine_patch_is_made_from_a_branch_without_its_text(tmp_path):
         patch_module.make_engine_patch(repository, "HEAD~1", "HEAD")
 
 
+def test_an_engine_patch_checked_out_with_crlf_line_endings_keeps_its_digest():
+    raw = patch_module.dumps(patch_module.builtin_engine_patch()).encode("utf-8")
+    lf, crlf = (
+        patch_module.load_engine_patch(raw),
+        patch_module.load_engine_patch(raw.replace(b"\n", b"\r\n")),
+    )
+    assert b"\n" in raw and crlf.digest == lf.digest and crlf.files == lf.files
+
+
 def test_the_shipped_engine_patch_holds_no_english_string():
     patch = patch_module.builtin_engine_patch()
     assert patch.base == overlay.PINNED_COMMIT and len(patch.digest) == 64
