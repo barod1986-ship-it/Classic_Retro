@@ -76,7 +76,11 @@ def _tile_bytes(image: Image.Image, column: int) -> bytes:
 
 
 def make_assets(
-    source: Path, font_path: Path, lines: tuple[tuple[str, str], ...] = OPENING_LINES
+    source: Path,
+    font_path: Path,
+    lines: tuple[tuple[str, str], ...] = OPENING_LINES,
+    *,
+    code_pool: tuple[int, ...] | None = None,
 ) -> ElmArabicAssets:
     """Start with the game's own normal font so untranslated glyphs survive."""
     if not features.check("raqm"):
@@ -98,6 +102,17 @@ def make_assets(
         images = tuple(_raster_line(text, font) for _, text in lines)
     except (ValueError, OSError) as exc:
         raise ClassicRetroError(ErrorCode.FONT_BUILD_FAILED, str(exc)) from exc
+    pool = code_pool if code_pool is not None else tuple(
+        range(FIRST_ARABIC_CODE, LAST_ARABIC_CODE + 1)
+    )
+    if (
+        len(pool) != len(set(pool))
+        or not pool
+        or any(code < 0x80 or code >= 0x80 + FONT_TILES for code in pool)
+    ):
+        raise ClassicRetroError(
+            ErrorCode.INVALID_BYTE_RANGE, "Arabic tile codes must be unique and in the font atlas"
+        )
     atlas = bytearray(normal.read_bytes())
     mapping: dict[bytes, int] = {}
     lines: list[tuple[int, ...]] = []
@@ -109,12 +124,12 @@ def make_assets(
                 row.append(0x7F)
                 continue
             if tile not in mapping:
-                code = FIRST_ARABIC_CODE + len(mapping)
-                if code > LAST_ARABIC_CODE:
+                if len(mapping) >= len(pool):
                     raise ClassicRetroError(
                         ErrorCode.ARABIC_GLYPH_CAPACITY_EXCEEDED,
-                        f"Elm opening needs {len(mapping) + 1} glyphs",
+                        f"Arabic scene needs {len(mapping) + 1} glyphs; available {len(pool)}",
                     )
+                code = pool[len(mapping)]
                 mapping[tile] = code
                 offset = (code - FIRST_ARABIC_CODE) * CELL_SIZE
                 atlas[offset : offset + CELL_SIZE] = tile
