@@ -203,6 +203,7 @@ def prepare(
     *,
     dynamic_player: bool = False,
     new_bark_town: bool = False,
+    overworld_showtext: bool = False,
 ) -> dict[str, object]:
     """Build one source overlay for all static intro scenes from untouched v3.2.3."""
     source = Path(source).expanduser().resolve()
@@ -248,6 +249,11 @@ def prepare(
         from classic_retro.source.polishedcrystal_newbark import augment as augment_town
 
         patches, town_report = augment_town(source, font, patches)
+    showtext_report: dict[str, object] | None = None
+    if overworld_showtext:
+        from classic_retro.source.polishedcrystal_showtext import augment as augment_showtext
+
+        patches, showtext_report = augment_showtext(source, font, patches)
     for path, data in patches.items():
         path.write_bytes(data)
 
@@ -261,17 +267,24 @@ def prepare(
         "version": "3.2.3",
         "game": "polished-crystal",
         "status": "incomplete (selected Elm and New Bark Town dialogs, not whole game)",
-        "source_scenes": len(scenes)
-        + (1 if dynamic_report else 0)
-        + (town_report["scenes"] if town_report else 0),
-        "arabic_lines": sum(len(assets.images) for _, assets in scenes)
-        + (dynamic_report["translated_lines"] if dynamic_report else 0)
-        + (town_report["arabic_lines"] if town_report else 0),
+        "source_scenes": (
+            len(scenes)
+            + (1 if dynamic_report else 0)
+            + (town_report["scenes"] if town_report else 0)
+            + (showtext_report["scenes"] if showtext_report else 0)
+        ),
+        "arabic_lines": (
+            sum(len(assets.images) for _, assets in scenes)
+            + (dynamic_report["translated_lines"] if dynamic_report else 0)
+            + (town_report["arabic_lines"] if town_report else 0)
+            + (showtext_report["arabic_lines"] if showtext_report else 0)
+        ),
         "tile_counts": {name: assets.used_glyphs for name, assets in scenes},
         "modified_files": sorted(path.relative_to(source).as_posix() for path in patches),
         "untranslated_dynamic_message": None if dynamic_report else "_ElmText7",
         "dynamic_player_intro": dynamic_report,
         "new_bark_town": town_report,
+        "overworld_showtext": showtext_report,
         "full_game_translated": False,
         "gameplay_verified": False,
     }
