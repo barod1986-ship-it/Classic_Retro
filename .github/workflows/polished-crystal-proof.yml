@@ -108,7 +108,7 @@ jobs:
                       screenshots[str(frame)] = {
                           "filename": screenshot,
                           "colors": len(image.getcolors(maxcolors=65536) or []),
-                          "blue_error_screen": image.getpixel((40, 35)) == (0, 0, 255),
+                          "blue_error_screen": image.getpixel((40, 35))[0] < 20 and image.getpixel((40, 35))[1] < 20 and image.getpixel((40, 35))[2] >= 224,
                       }
               emulator.stop(False)
               return {"title": title, "screenshots": screenshots}
@@ -131,6 +131,11 @@ jobs:
               json.dumps(report, indent=2) + "\n", encoding="utf-8"
           )
           assert any(v["colors"] > 1 for v in captures.values()), "no nonblank frames"
+          localized_crashes = [
+              frame for frame, data in patched["screenshots"].items()
+              if data["blue_error_screen"] and not baseline["screenshots"][frame]["blue_error_screen"]
+          ]
+          assert not localized_crashes, f"localized ROM crashed on frames {localized_crashes}"
           print(json.dumps(report, indent=2))
           PY
 
