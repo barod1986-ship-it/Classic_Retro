@@ -261,7 +261,8 @@ def prepare(
         "version": "3.2.3",
         "game": "polished-crystal",
         "status": "incomplete (selected Elm and New Bark Town dialogs, not whole game)",
-        "source_scenes": len(scenes) + (1 if dynamic_report else 0)
+        "source_scenes": len(scenes)
+        + (1 if dynamic_report else 0)
         + (town_report["scenes"] if town_report else 0),
         "arabic_lines": sum(len(assets.images) for _, assets in scenes)
         + (dynamic_report["translated_lines"] if dynamic_report else 0)
