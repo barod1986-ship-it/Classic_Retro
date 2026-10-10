@@ -219,6 +219,7 @@ def _polished_crystal_elm_sequence(args: argparse.Namespace) -> int:
             args.preview,
             dynamic_player=args.dynamic_player,
             new_bark_town=args.new_bark_town,
+            overworld_showtext=args.overworld_showtext,
         )
     )
 
@@ -271,6 +272,11 @@ def register_cli(subcommands: argparse._SubParsersAction) -> None:
         "--new-bark-town",
         action="store_true",
         help="Also translate five early rival and teacher dialogues in New Bark Town",
+    )
+    elm_sequence.add_argument(
+        "--overworld-showtext",
+        action="store_true",
+        help="Add curated data-driven lab and town Arabic messages using shared 8x8 atlases",
     )
     elm_sequence.set_defaults(handler=_polished_crystal_elm_sequence)
 
