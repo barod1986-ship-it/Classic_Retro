@@ -15,8 +15,8 @@ def _fake_source(tmp_path):
     native = bytes((i * 17) % 256 for i in range(opening.FONT_TILES * 8))
     (root / "gfx/font/normal.1bpp").write_bytes(native)
     (root / "data/text/common.asm").write_text('SECTION "Other", ROMX\n')
-    (root / "engine/menus/intro_menu.asm").write_text(
-        "ProfElmSpeech:\n\tld hl, ElmText7\n\tjmp PrintText\n"
+    (root / "engine/menus/intro_menu.asm").write_bytes(
+        b"ProfElmSpeech:\n\tld hl, ElmText7\n\tjmp PrintText\n"
     )
     return root
 
