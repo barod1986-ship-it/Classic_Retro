@@ -112,12 +112,15 @@ def test_workspace_refuses_deleted_ids_and_duplicate_ids(tmp_path):
     assert any(entry["problem"] == "duplicate ID" for entry in report["errors"])
 
 
-def test_never_overwrite_catalog(tmp_path):
+def test_never_overwrite_catalog(tmp_path, monkeypatch):
     source = _source(tmp_path)
     output = tmp_path / "catalog.json"
-    # Unit-test sources intentionally bypass source-tag verification.
+    # The synthetic test fixture has no upstream files, so bypass only that guard.
+    from classic_retro.source import polishedcrystal_catalog as catalog_module
+
+    monkeypatch.setattr(catalog_module, "_verify_upstream", lambda root: None)
     catalog = scan_source(source, strict=False)
     output.write_text(json.dumps(catalog), encoding="utf-8")
     with pytest.raises(ClassicRetroError) as caught:
         write_catalog(source, output)
-    assert caught.value.code is ErrorCode.SOURCE_BASELINE_MISMATCH
+    assert caught.value.code is ErrorCode.OUTPUT_EXISTS
