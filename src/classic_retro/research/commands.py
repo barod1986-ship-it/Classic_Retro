@@ -183,12 +183,49 @@ def _print(payload: object) -> int:
     return 0
 
 
+
+
+def _polished_crystal_catalog(args: argparse.Namespace) -> int:
+    from classic_retro.source.polishedcrystal_catalog import write_catalog
+
+    return _print(write_catalog(args.source, args.out))
+
+
+def _polished_crystal_check(args: argparse.Namespace) -> int:
+    from classic_retro.source.polishedcrystal_catalog import check_workspace
+
+    try:
+        workspace = json.loads(args.workspace.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise ClassicRetroError(
+            ErrorCode.INVALID_TRANSLATION_DOCUMENT, f"invalid catalog JSON: {exc}"
+        ) from exc
+    report = check_workspace(args.source, workspace)
+    _print(report)
+    return 2 if report["errors"] else 0
+
 def register_cli(subcommands: argparse._SubParsersAction) -> None:
     group = subcommands.add_parser(
         "research",
         help="Study a game: run it from a script of emulator commands, and scan its image",
     )
     commands = group.add_subparsers(dest="research_command", required=True)
+
+    polished = commands.add_parser(
+        "polished-crystal-catalog",
+        help="Catalog v3.2.3 RGBDS source text for translation; not a ROM patch",
+    )
+    polished.add_argument("source", type=Path)
+    polished.add_argument("--out", type=Path, required=True)
+    polished.set_defaults(handler=_polished_crystal_catalog)
+
+    polished_check = commands.add_parser(
+        "polished-crystal-check",
+        help="Check text IDs, placeholders and missing translations in a local catalog",
+    )
+    polished_check.add_argument("source", type=Path)
+    polished_check.add_argument("workspace", type=Path)
+    polished_check.set_defaults(handler=_polished_crystal_check)
 
     run = commands.add_parser(
         "run",
