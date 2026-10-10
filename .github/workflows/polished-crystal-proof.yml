@@ -86,35 +86,46 @@ jobs:
 
           from pyboy import PyBoy
 
-          emulator = PyBoy("patched.gbc", window="null", sound_emulated=False)
-          emulator.set_emulation_speed(0)
-          title = emulator.cartridge_title
           frames = [360, 780, 1200, 1700, 2200, 2600, 2900, 3200, 3500, 3800, 4100, 4400, 4700, 5000, 5500]
-          captures = {}
-          for frame in range(1, max(frames) + 1):
-              if frame in (420, 500, 580, 660, 900, 1020, 1140, 1360, 1460, 1600, 1820, 1950):
-                  emulator.button("a")
-              if frame in (360, 780, 1200):
-                  emulator.button("start")
-              if frame >= 2300 and frame % 96 == 0:
-                  emulator.button("a")
-              emulator.tick()
-              if frame in frames:
-                  image = emulator.screen.image.copy()
-                  filename = f"artifact/emulator-frame-{frame:04}.png"
-                  image.save(filename)
-                  captures[str(frame)] = {
-                      "filename": filename,
-                      "colors": len(image.getcolors(maxcolors=65536) or []),
-                  }
-          emulator.stop(False)
+
+          def capture_rom(filename, prefix):
+              emulator = PyBoy(filename, window="null", sound_emulated=False)
+              emulator.set_emulation_speed(0)
+              title = emulator.cartridge_title
+              screenshots = {}
+              for frame in range(1, max(frames) + 1):
+                  if frame in (420, 500, 580, 660, 900, 1020, 1140, 1360, 1460, 1600, 1820, 1950):
+                      emulator.button("a")
+                  if frame in (360, 780, 1200):
+                      emulator.button("start")
+                  if frame >= 2300 and frame % 96 == 0:
+                      emulator.button("a")
+                  emulator.tick()
+                  if frame in frames:
+                      image = emulator.screen.image.copy().convert("RGB")
+                      screenshot = f"artifact/{prefix}-frame-{frame:04}.png"
+                      image.save(screenshot)
+                      screenshots[str(frame)] = {
+                          "filename": screenshot,
+                          "colors": len(image.getcolors(maxcolors=65536) or []),
+                          "blue_error_screen": image.getpixel((40, 35)) == (0, 0, 255),
+                      }
+              emulator.stop(False)
+              return {"title": title, "screenshots": screenshots}
+
+          baseline = capture_rom("base.gbc", "baseline")
+          patched = capture_rom("patched.gbc", "emulator")
+          title = patched["title"]
+          captures = patched["screenshots"]
           report = {
               "rom": "patched.gbc",
               "cartridge_title": title,
               "frames_tested": max(frames),
               "screenshot_frames": captures,
+              "baseline": baseline,
+              "patched": patched,
               "opening_text_confirmed": False,
-              "note": "Automated boot evidence only. Dialogue rendering still needs scene-level review.",
+              "note": "Identical scripted input into both original and patched ROM; inspect blue_error_screen before attributing crashes.",
           }
           Path("artifact/emulator-report.json").write_text(
               json.dumps(report, indent=2) + "\n", encoding="utf-8"
@@ -162,6 +173,7 @@ jobs:
             artifact/polished-crystal-3.2.3-arabic-elm-sequence.bps
             artifact/elm-sequence-preview.png
             artifact/emulator-frame-*.png
+            artifact/baseline-frame-*.png
             artifact/emulator-report.json
             artifact/overlay-report.json
             artifact/manifest.json
