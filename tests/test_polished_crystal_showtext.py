@@ -33,7 +33,7 @@ def test_curated_translation_files_contain_stable_validated_entries():
     pins, scenes = patch.load_scenes()
     assert set(pins) == {"maps/ElmsLab.asm", "maps/NewBarkTown.asm"}
     assert len(scenes) == 12
-    assert sum(len(scene.lines) for scene in scenes) == 72
+    assert sum(len(scene.lines) for scene in scenes) == 79
     assert len({(scene.file, scene.label) for scene in scenes}) == len(scenes)
     assert sum(scene.player_name for scene in scenes) >= 3
     assert all(scene.calls == 1 for scene in scenes)
