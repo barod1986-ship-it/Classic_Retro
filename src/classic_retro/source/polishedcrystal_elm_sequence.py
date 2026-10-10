@@ -176,7 +176,9 @@ def _font_sections(scene: Scene) -> str:
         "\tldh [hRequestOpaque1bpp], a",
         "\tcall GetMaybeOpaque1bpp",
         "\tpop hl",
-        "\tcall PrintText",
+        f"\tld a, BANK({scene.caller_label})",
+        "\tld de, PrintText",
+        "\tcall FarCall_de",
         "\tjmp LoadStandardFont",
         "",
     )
