@@ -89,13 +89,15 @@ jobs:
           emulator = PyBoy("patched.gbc", window="null", sound_emulated=False)
           emulator.set_emulation_speed(0)
           title = emulator.cartridge_title
-          frames = [360, 780, 1200, 1700, 2200]
+          frames = [360, 780, 1200, 1700, 2200, 2600, 2900, 3200, 3500, 3800, 4100, 4400, 4700, 5000, 5500]
           captures = {}
           for frame in range(1, max(frames) + 1):
               if frame in (420, 500, 580, 660, 900, 1020, 1140, 1360, 1460, 1600, 1820, 1950):
                   emulator.button("a")
               if frame in (360, 780, 1200):
                   emulator.button("start")
+              if frame >= 2300 and frame % 96 == 0:
+                  emulator.button("a")
               emulator.tick()
               if frame in frames:
                   image = emulator.screen.image.copy()
@@ -141,7 +143,8 @@ jobs:
               "format": "BPS",
               "arabic_method": "seven pre-shaped RTL 8x8 atlas-per-dialog scenes, native font restored",
               "upstream_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
-              "smoke_tested_in_emulator": False,
+              "smoke_tested_in_emulator": True,
+              "elm_dialogue_screen_confirmed": False,
               "whole_game_translated": False,
           }
           Path("artifact/manifest.json").write_text(
