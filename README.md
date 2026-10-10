@@ -198,9 +198,13 @@ target would build on is recorded in [the Super Mario 64 research notes](docs/SM
 Polished Crystal v3.2.3 (Game Boy Color) now has an exact-ROM game/engine adapter and a
 pinned-source text inventory/audit under `research polished-crystal-catalog` and
 `research polished-crystal-check`, plus an **experimental, source-rebuilt BPS**
-proof translating eight Elm intro scenes (including the live player name) and
-five early New Bark Town interactions: 57 Arabic lines in 13 chosen scenes.
-The rest of the game remains English; this is **not** a complete localization. See [the research notes](docs/POLISHED_CRYSTAL_323_ARABIC_RESEARCH_AR.md).
+proof translating 25 selected scenes (136 Arabic lines) across Elm's introduction,
+New Bark Town and Elm's laboratory, including live player names. A source-verified
+Arabic JSON file and shared 8x8 tile atlases now support additional map dialogue
+without a bespoke font per page. Most game text is still English; this is **not**
+a complete localization or a fully play-tested translation. See
+[the Arabic status and build guide](docs/POLISHED_CRYSTAL_323_SHOWTEXT_AR.md)
+and [the earlier research notes](docs/POLISHED_CRYSTAL_323_ARABIC_RESEARCH_AR.md).
 
 Install with `python -m pip install -e ".[dev]" -c constraints.txt` (the pinned
 raster stack: the reference patch hashes are reproducible only with it), run `pytest`,
