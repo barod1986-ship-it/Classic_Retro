@@ -179,7 +179,9 @@ def _source_overlays(source: Path, asset: ElmArabicAssets) -> dict[Path, bytes]:
         "\tldh [hRequestOpaque1bpp], a\n"
         "\tcall GetMaybeOpaque1bpp\n"
         "\tpop hl\n"
-        "\tcall PrintText\n"
+        "\tld a, BANK(ElmText1)\n"
+        "\tld de, PrintText\n"
+        "\tcall FarCall_de\n"
         "\tjmp LoadStandardFont\n\n"
     )
     new_common += '\nSECTION "Classic Retro Arabic Elm Loader", ROMX\n' + routine
