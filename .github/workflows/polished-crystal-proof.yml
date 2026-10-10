@@ -9,12 +9,15 @@ on:
       - "src/classic_retro/source/polishedcrystal_elm_sequence.py"
       - "src/classic_retro/source/polishedcrystal_elm_dynamic.py"
       - "src/classic_retro/source/polishedcrystal_newbark.py"
+      - "src/classic_retro/source/polishedcrystal_showtext.py"
+      - "src/classic_retro/translations/polished-crystal-323-showtext.json"
       - "src/classic_retro/source/polishedcrystal_catalog.py"
       - "src/classic_retro/research/commands.py"
       - "tests/test_polished_crystal_opening.py"
       - "tests/test_polished_crystal_elm_sequence.py"
       - "tests/test_polished_crystal_elm_dynamic.py"
       - "tests/test_polished_crystal_newbark.py"
+      - "tests/test_polished_crystal_showtext.py"
 
 jobs:
   arabic-opening:
@@ -68,7 +71,7 @@ jobs:
       - name: Apply RTL Arabic source overlays to Elm's static introduction scenes
         run: |
           mkdir artifact
-          classic-retro research polished-crystal-elm-sequence upstream --dynamic-player --new-bark-town --font reference-font.ttf \
+          classic-retro research polished-crystal-elm-sequence upstream --dynamic-player --new-bark-town --overworld-showtext --font reference-font.ttf \
             --preview artifact/elm-sequence-preview.png | tee artifact/overlay-report.json
 
       - name: Rebuild the patched GBC ROM
@@ -149,21 +152,21 @@ jobs:
 
       - name: Create source-verified BPS only and verify roundtrip
         run: |
-          classic-retro rebuild bps-create base.gbc patched.gbc artifact/polished-crystal-3.2.3-arabic-opening-town.bps
-          classic-retro rebuild bps-apply artifact/polished-crystal-3.2.3-arabic-opening-town.bps base.gbc verified.gbc
+          classic-retro rebuild bps-create base.gbc patched.gbc artifact/polished-crystal-3.2.3-arabic-starter-world.bps
+          classic-retro rebuild bps-apply artifact/polished-crystal-3.2.3-arabic-starter-world.bps base.gbc verified.gbc
           cmp verified.gbc patched.gbc
           python - <<'PY'
           import hashlib
           import json
           from pathlib import Path
 
-          patch = Path("artifact/polished-crystal-3.2.3-arabic-opening-town.bps")
+          patch = Path("artifact/polished-crystal-3.2.3-arabic-starter-world.bps")
           manifest = {
               "source_rom_sha256": hashlib.sha256(Path("base.gbc").read_bytes()).hexdigest(),
               "target_rom_sha256": hashlib.sha256(Path("patched.gbc").read_bytes()).hexdigest(),
               "patch_sha256": hashlib.sha256(patch.read_bytes()).hexdigest(),
               "patch_bytes": patch.stat().st_size,
-              "scope": "13 scenes, 57 Arabic lines: professor Elm intro plus early New Bark Town rival and warning dialogues",
+              "scope": "25 selected early and story scenes, 136 Arabic lines (Elm intro, New Bark Town, Elm laboratory)",
               "format": "BPS",
               "arabic_method": "per-scene temporary 8x8 RTL font atlas; original Latin glyphs preserved for live PLAYER",
               "upstream_commit": "3fa43192379df5c3e7b09a08e4d5d79af4f02f42",
@@ -172,6 +175,8 @@ jobs:
               "whole_game_translated": False,
               "dynamic_player_name": True,
               "new_bark_town_scenes": 5,
+              "curated_shared_atlas_scenes": 12,
+              "curated_shared_atlas_lines": 79,
           }
           Path("artifact/manifest.json").write_text(
               json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
@@ -183,9 +188,9 @@ jobs:
       - name: Upload BPS, preview and manifest (never ROM or reference font)
         uses: actions/upload-artifact@v6
         with:
-          name: polished-crystal-323-arabic-opening-town-bps
+          name: polished-crystal-323-arabic-starter-world-bps
           path: |
-            artifact/polished-crystal-3.2.3-arabic-opening-town.bps
+            artifact/polished-crystal-3.2.3-arabic-starter-world.bps
             artifact/elm-sequence-preview.png
             artifact/emulator-frame-*.png
             artifact/baseline-frame-*.png
