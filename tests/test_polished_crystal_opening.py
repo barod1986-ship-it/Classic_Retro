@@ -63,6 +63,8 @@ def test_injects_original_font_switch_without_touching_other_texts(tmp_path, mon
     assert "farcall ClassicRetroPrintArabicElm" in intro
     assert "jmp LoadStandardFont" in common
     assert "call GetMaybeOpaque1bpp" in common
+    assert "call FarCall_de" in common
+    assert "BANK(ElmText1)" in common
     assert "ClassicRetroArabicElmFont::" in common
     assert '\ttext "Original"' in common
     assert (source / opening.OUTPUT_FONT).stat().st_size == 912
