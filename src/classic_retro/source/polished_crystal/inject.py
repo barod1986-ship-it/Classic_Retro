@@ -41,7 +41,7 @@ def encode_entries(
     problems = []
     for entry_id, entry in manifest.entries.items():
         text = texts.get(entry_id)
-        if text is None or not text.strip():
+        if text is None or not (text.strip() or entry["limits"].get("allow_empty")):
             continue
         lines, errors = encode._encode(entry, text, ngrams)
         if errors:

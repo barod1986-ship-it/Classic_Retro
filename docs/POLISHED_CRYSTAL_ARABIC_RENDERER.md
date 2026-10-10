@@ -45,13 +45,16 @@ makes the BPS patch from the user's ROM and the built one. Three files ship with
 
 1. applies the engine patch, checking every hunk's removed lines;
 2. encodes every translated entry (`source/polished_crystal/encode.py`) and puts it in place of
-   the lines it owns, checked by their pin. An entry the translation leaves out stays English;
+   the lines it owns, checked by their pin. A translation that leaves an entry out is refused:
+   the Arabic glyphs take the Latin letters' codes, so English left in would show as wrong
+   letters (an entry whose limits allow it may be translated by an empty text);
 3. lengthens the short jumps over text that grows (below);
 4. writes the generated files from the pinned originals: the fonts, the VWF font, the
    Pokédex's tilemaps, the charmap, the n-grams, the keyboards, the shaping tables and the key
    phrase;
-5. records what it wrote in `.classic-retro-arabic.json`. The same command on the same tree
-   with the same translation does nothing; any other prepared or changed tree is refused.
+5. records what it wrote and the pins of what it read in `.classic-retro-arabic.json`. The
+   same command on the same tree with the same translation does nothing; any other prepared
+   tree, or one where a written or a pinned file changed since, is refused.
 
 Everything is computed before the first file is written.
 
@@ -211,8 +214,9 @@ a test checks), and the digests follow the translation.
 
 ## Known issues
 
-- An untranslated text is drawn with the Arabic glyphs at the Latin letters' codes, so it is
-  unreadable rather than English. The coverage report says what is left.
+- An untranslated text would be drawn with the Arabic glyphs at the Latin letters' codes, so
+  `prepare` refuses a translation that leaves any entry out; `check-translations` reports the
+  coverage of a translation still in progress.
 - Some engine strings that had no translation entry before the engine patch hold placeholder
   Arabic in the engine's code (the naming screen's titles and keys, the typeface names, the
   link battle's "against"); they are manifest entries of the patched tree and can be
@@ -220,8 +224,8 @@ a test checks), and the digests follow the translation.
 - The Unown dex words and the Ruins of Alph's puzzles stay in Latin letters (the Unown font).
 - The five removed typefaces' PNGs are still written (with the Arabic glyphs), so no font
   file keeps Latin glyphs at the Arabic codes; they are not in the ROM.
-- Weekday names are written whole in the stems (`PrintDayOfWeek`), the English suffix entry
-  left empty.
+- Weekday names are written whole in the stems (`PrintDayOfWeek`), and the suffix entry is
+  translated by an empty text.
 - `targets extract` reads the originals from the engine-patched copy of the user's checkout
   with the extractor (about 20 seconds); the workspace holds only the entries of the
   translation file.

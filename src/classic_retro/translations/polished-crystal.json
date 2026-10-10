@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "target": "polished-crystal",
   "language": "ar",
-  "notation": "Logical Arabic in the overlay's notation (source/polished_crystal/encode.py), written as it reads: the build shapes the letters, picks each glyph and the game draws the text from the right. Arabic letters (no Persian letters), no vowel marks, no tatweel, no Latin letters and no brackets; the signs are space . ، ؛ ؟ ! : - … « » \" / × % + ¥ ♂ ♀ & ♪ ♥ and the digits 0-9 or ٠-٩ (all quotation marks become one neutral quote, ؛ becomes ،). \\p starts a new page of the speech box (the game waits for the button), only in a speech-box text (kind dialog); \\n forces a line break where the entry allows lines; \\f starts a new page of a box that has pages (the Pokédex's description). The build wraps every line itself: 18 cells in the speech box, the entry's width elsewhere, and refuses a text that does not fit its box, its field or its bytes. Placeholders keep their count (their order may change): {PLAYER} {RIVAL} {TRENDY} (a name of up to 7 letters), {USER} {TARGET} (a Pokémon in battle, the game adds the word for the foe's after it), {ENEMY} (a trainer's class and name, a line of its own), {ram:SYMBOL} (a name or item the game writes), {num:SYMBOL,BYTES,DIGITS} (a number), {d:CONST} (a number fixed at build time), {wait} {pause} {sound:SFX} {day} {far:LABEL} (the game's text commands, in speech-box texts only); {LV} {PK} {MN} {ID} {No} are tiles of the English font a translation may drop. The player's gender: {masculine|feminine} holds the words that differ (letters, spaces and signs only, no placeholder), and the game shows the side that fits the player. An entry left out of this file stays English in the game.",
+  "notation": "Logical Arabic in the overlay's notation (source/polished_crystal/encode.py), written as it reads: the build shapes the letters, picks each glyph and the game draws the text from the right. Arabic letters (no Persian letters), no vowel marks, no tatweel, no Latin letters and no brackets; the signs are space . ، ؛ ؟ ! : - … « » \" / × % + ¥ ♂ ♀ & ♪ ♥ and the digits 0-9 or ٠-٩ (all quotation marks become one neutral quote, ؛ becomes ،). \\p starts a new page of the speech box (the game waits for the button), only in a speech-box text (kind dialog); \\n forces a line break where the entry allows lines; \\f starts a new page of a box that has pages (the Pokédex's description). The build wraps every line itself: 18 cells in the speech box, the entry's width elsewhere, and refuses a text that does not fit its box, its field or its bytes. Placeholders keep their count (their order may change): {PLAYER} {RIVAL} {TRENDY} (a name of up to 7 letters), {USER} {TARGET} (a Pokémon in battle, the game adds the word for the foe's after it), {ENEMY} (a trainer's class and name, a line of its own), {ram:SYMBOL} (a name or item the game writes), {num:SYMBOL,BYTES,DIGITS} (a number), {d:CONST} (a number fixed at build time), {wait} {pause} {sound:SFX} {day} {far:LABEL} (the game's text commands, in speech-box texts only); {LV} {PK} {MN} {ID} {No} are tiles of the English font a translation may drop. The player's gender: {masculine|feminine} holds the words that differ (letters, spaces and signs only, no placeholder), and the game shows the side that fits the player. Every entry needs its Arabic: the Arabic glyphs take the Latin letters' codes, so a text left in English would show as wrong letters; an empty text only where an entry's limits allow it.",
   "glossary": [
     {
       "term": "Amorphous",
@@ -998,7 +998,7 @@
     {
       "id": "data/options/descriptions:InitialOptionDescriptions.InitialOptionDesc_EvolveInBattle",
       "context": "New-game options help (speech box) (InitialOptionDescriptions.InitialOptionDesc_EvolveInBattle)",
-      "text": "يمكن لبوكيمونك التطور أثناء قتال المدربين.\\pمستوحى من معارك الأنمي."
+      "text": "يمكن لبوكيمونك التطور أثناء قتال المدربين.\\pمستوحى من قتالات الأنمي."
     },
     {
       "id": "data/options/descriptions:InitialOptionDescriptions.InitialOptionDesc_ColorVariation",
@@ -1996,6 +1996,21 @@
       "text": "اسم صندوق"
     },
     {
+      "id": "engine/menus/naming_screen:NamingScreen_DrawBorders.EndString",
+      "context": "engine/menus/naming_screen.asm NamingScreen_DrawBorders.EndString",
+      "text": "تم"
+    },
+    {
+      "id": "engine/menus/naming_screen:NamingScreen_DrawBorders.DelString",
+      "context": "engine/menus/naming_screen.asm NamingScreen_DrawBorders.DelString",
+      "text": "حذف"
+    },
+    {
+      "id": "engine/menus/naming_screen:NamingScreen_DrawBorders.PageString",
+      "context": "engine/menus/naming_screen.asm NamingScreen_DrawBorders.PageString",
+      "text": "رموز"
+    },
+    {
       "id": "engine/menus/save:VerifyGameVersion.SaveUpgradeScreen[0]",
       "context": "… version mismatch screen (fatal) — at (0,0) full screen, one row per line — … lines are followed by 5-digit numbers at (14,11)/(14,13) (row 1)",
       "text": "ملف الحفظ الخاص بك"
@@ -2609,6 +2624,11 @@
       "id": "engine/movie/trade_animation:TrademonStats_EggData",
       "context": "Trade animation stats card (…) — at (4,2),(4,4),(4,6)",
       "text": "بيضة\\nم.أ ؟؟؟؟؟"
+    },
+    {
+      "id": "engine/battle/trainer_huds:_ShowLinkBattleParticipants.VersusString",
+      "context": "engine/battle/trainer_huds.asm _ShowLinkBattleParticipants.VersusString",
+      "text": "ضد"
     },
     {
       "id": "data/trainers/class_names#0",
@@ -11013,7 +11033,7 @@
     {
       "id": "data/phone/text/tiffany_caller:TiffanyDefeatedMonText",
       "context": "Phone call: Tiffany (calls you) (TiffanyDefeatedMonText)",
-      "text": "آه، واضطررنا قبل قليل لقتال {ram:wStringBuffer4} بري…\\pكاد كليفيري يفقد الوعي!\\pأليس هذا فظيعا؟\\pأكره {ram:wStringBuffer4} البغيض!"
+      "text": "آه، واضطررنا قبل قليل لقتال {ram:wStringBuffer4} بري…\\pكاد يغمى على كليفيري!\\pأليس هذا فظيعا؟\\pأكره {ram:wStringBuffer4} البغيض!"
     },
     {
       "id": "data/phone/text/tiffany_caller:TiffanyLostAMonText",
@@ -14753,7 +14773,7 @@
     {
       "id": "engine/pokegear/pokegear:PokemonMusicName",
       "context": "Pokegear radio: station name — at (2,9) (area (1,8)-(18,10) cleared)",
-      "text": "موسيقى البوكيمون"
+      "text": "ألحان البوكيمون"
     },
     {
       "id": "engine/pokegear/pokegear:LuckyChannelName",
@@ -15323,12 +15343,12 @@
     {
       "id": "data/phone/text/vance_overworld:VanceAskNumber1Text",
       "context": "Phone call: Vance (rematch / gift reminder) (VanceAskNumber1Text)",
-      "text": "أنت {قوي|قوية} حقا.\\pلكنني لا أريد أن أنسحب هكذا…\\pوجدتها! هل لي برقم هاتفك؟\\pلنلتق في معارك أخرى!"
+      "text": "أنت {قوي|قوية} حقا.\\pلكنني لا أريد أن أنسحب هكذا…\\pوجدتها! هل لي برقم هاتفك؟\\pلنلتق ونتقاتل مجددا!"
     },
     {
       "id": "data/phone/text/vance_overworld:VanceAskNumber2Text",
       "context": "Phone call: Vance (rematch / gift reminder) (VanceAskNumber2Text)",
-      "text": "أريد قتال المدربين الأقوياء قدر ما أستطيع!\\pهل لي برقم هاتفك؟\\pلنلتق في معارك أخرى!"
+      "text": "أريد قتال المدربين الأقوياء قدر ما أستطيع!\\pهل لي برقم هاتفك؟\\pلنلتق ونتقاتل مجددا!"
     },
     {
       "id": "data/phone/text/vance_overworld:VanceNumberAcceptedText",
@@ -15838,12 +15858,12 @@
     {
       "id": "engine/menus/options_menu:Options_TextAutoscroll.B",
       "context": "Options values — at (11,3/5/7/9/11/13) — each value padded with spaces to a fixed 6-8 chars so it overwrites the … value",
-      "text": "بي"
+      "text": "ب"
     },
     {
       "id": "engine/menus/options_menu:Options_TextAutoscroll.AorB",
       "context": "Options values — at (11,3/5/7/9/11/13) — each value padded with spaces to a fixed 6-8 chars so it overwrites the … value",
-      "text": "إيه/بي"
+      "text": "أ أو ب"
     },
     {
       "id": "engine/menus/options_menu:Options_TurningSpeed.Slow",
@@ -17473,7 +17493,7 @@
     {
       "id": "data/events/wonder_trade/ot_names:WonderTradeOTNames2#43",
       "context": "Wonder Trade OT name (fixed 8 bytes: ≤7 + @)",
-      "text": "كورت"
+      "text": "كيرت"
     },
     {
       "id": "data/events/wonder_trade/ot_names:WonderTradeOTNames2#44",
@@ -17533,7 +17553,7 @@
     {
       "id": "data/events/wonder_trade/ot_names:WonderTradeOTNames2#55",
       "context": "Wonder Trade OT name (fixed 8 bytes: ≤7 + @)",
-      "text": "ويسلي"
+      "text": "ويزلي"
     },
     {
       "id": "data/events/wonder_trade/ot_names:WonderTradeOTNames2#56",
@@ -18428,7 +18448,7 @@
     {
       "id": "data/events/wonder_trade/ot_names:WonderTradeOTNames2#234",
       "context": "Wonder Trade OT name (fixed 8 bytes: ≤7 + @)",
-      "text": "بوم"
+      "text": "بام"
     },
     {
       "id": "data/events/wonder_trade/ot_names:WonderTradeOTNames2#235",
@@ -19203,7 +19223,7 @@
     {
       "id": "data/phone/text/wade_caller:WadeLostAMonText",
       "context": "Phone call: Wade (calls you) (WadeLostAMonText)",
-      "text": "آه صحيح، أفلت مني {ram:wStringBuffer4} بري في آخر لحظة.\\pأعرف أنه بوكيمون شائع…\\pلكن يغيظني أنه أفلت وقد كدت أمسكه."
+      "text": "آه صحيح، أفلت مني {ram:wStringBuffer4} بري في آخر لحظة.\\pأعرف أنه بوكيمون شائع…\\pلكن يغيظني أنه أفلت وقد كدت أصطاده."
     },
     {
       "id": "data/phone/text/wade_caller:WadeBattleRematchText",
@@ -19478,7 +19498,7 @@
     {
       "id": "data/phone/text/gina_caller:GinaLostAMonText",
       "context": "Phone call: Gina (calls you) (GinaLostAMonText)",
-      "text": "لكن، {أتعلم|أتعلمين}؟\\pما زلت لم أمسك {ram:wStringBuffer4}.\\pالأمر تجاوز حد الإحباط…"
+      "text": "لكن، {أتعلم|أتعلمين}؟\\pما زلت لم أصطد {ram:wStringBuffer4}.\\pالأمر تجاوز حد الإحباط…"
     },
     {
       "id": "data/phone/text/gina_caller:GinaBattleRematchText",
@@ -28486,6 +28506,11 @@
       "text": "السبت"
     },
     {
+      "id": "home/text:PrintDayOfWeek.Day",
+      "context": "<…>/text_today: weekday stem + … — at inline (speech box) / main menu (1,15) / pokegear (6,5) — stem + … concatenation; … 1-byte offsets; ROM0",
+      "text": ""
+    },
+    {
       "id": "home/menu:YesNoMenuDataHeader.MenuData2[0]",
       "context": "Generic … (YesNoBox, 52 call sites) and … boxes — at box (x,y)-(x+5,y+4), default x=14 y=7; text (x+2,y+1),(x+2,y+3) — box width fixed (+5) in HandleYesNoMenu",
       "text": "نعم"
@@ -28823,7 +28848,7 @@
     {
       "id": "data/music_player/song_info#59",
       "context": "Music player: song title at (0,3); two rows of 20 (\\n = second row)",
-      "text": "مسيرة البوكيمون"
+      "text": "مارش البوكيمون"
     },
     {
       "id": "data/music_player/song_info#60",
@@ -30158,7 +30183,7 @@
     {
       "id": "data/pokemon/dex_entries:GloomPokedexEntry.body",
       "context": "Pokédex: Gloom description (2 pages × 3 lines; also read on the radio Pokédex Show)",
-      "text": "رائحة سائله اللزج وحبوب اللقاح على بتلاته كريهة جدا، وقد تفقد الخصوم وعيهم."
+      "text": "رائحة سائله اللزج وحبوب اللقاح على بتلاته كريهة جدا، وقد يغمى منها على الخصوم."
     },
     {
       "id": "data/pokemon/dex_entries:VileplumePokedexEntry.category",
@@ -30368,7 +30393,7 @@
     {
       "id": "data/pokemon/dex_entries:AlakazamPokedexEntry.body",
       "context": "Pokédex: Alakazam description (2 pages × 3 lines; also read on the radio Pokédex Show)",
-      "text": "يبلغ معدل ذكائه 5000. يحسب أمورا كثيرة ليتفوق في كل معركة."
+      "text": "يبلغ معدل ذكائه 5000. يحسب أمورا كثيرة ليتفوق في كل قتال."
     },
     {
       "id": "data/pokemon/dex_entries:MachopPokedexEntry.category",
@@ -30388,7 +30413,7 @@
     {
       "id": "data/pokemon/dex_entries:MachokePokedexEntry.body",
       "context": "Pokédex: Machoke description (2 pages × 3 lines; also read on the radio Pokédex Show)",
-      "text": "بوكيمون صلب يبقى دائما في قمة تركيزه. تزداد عضلاته ضخامة بعد كل معركة."
+      "text": "بوكيمون صلب يبقى دائما في قمة تركيزه. تزداد عضلاته ضخامة بعد كل قتال."
     },
     {
       "id": "data/pokemon/dex_entries:MachampPokedexEntry.category",
@@ -30708,7 +30733,7 @@
     {
       "id": "data/pokemon/dex_entries:KinglerPokedexEntry.body",
       "context": "Pokédex: Kingler description (2 pages × 3 lines; also read on the radio Pokédex Show)",
-      "text": "كماشته الضخمة قوية جدا، لكنها خارج المعارك لا تفعل سوى إعاقة حركته."
+      "text": "كماشته الضخمة قوية جدا، لكنها خارج القتال لا تفعل سوى إعاقة حركته."
     },
     {
       "id": "data/pokemon/dex_entries:VoltorbPokedexEntry.category",
@@ -30858,7 +30883,7 @@
     {
       "id": "data/pokemon/dex_entries:TangelaPokedexEntry.body",
       "context": "Pokédex: Tangela description (2 pages × 3 lines; also read on the radio Pokédex Show)",
-      "text": "في المعركة، يحرك الكروم التي تكسو جسمه دون توقف ليزعج خصمه."
+      "text": "في القتال، يحرك الكروم التي تكسو جسمه دون توقف ليزعج خصمه."
     },
     {
       "id": "data/pokemon/dex_entries:KangaskhanPokedexEntry.category",
@@ -31278,7 +31303,7 @@
     {
       "id": "data/pokemon/dex_entries:QuilavaPokedexEntry.body",
       "context": "Pokédex: Quilava description (2 pages × 3 lines; also read on the radio Pokédex Show)",
-      "text": "قبل المعركة، يدير ظهره لخصمه ليريه مدى ضراوة النار المشتعلة فيه."
+      "text": "قبل القتال، يدير ظهره لخصمه ليريه مدى ضراوة النار المشتعلة فيه."
     },
     {
       "id": "data/pokemon/dex_entries:TyphlosionPlainPokedexEntry.category",
@@ -32488,7 +32513,7 @@
     {
       "id": "data/pokemon/dex_entries:PerrserkerPokedexEntry.body",
       "context": "Pokédex: Perrserker description (2 pages × 3 lines; also read on the radio Pokédex Show)",
-      "text": "بعد معارك كثيرة، نمت له مخالب خطرة تتحد لتشكل خناجر حين يمدها."
+      "text": "بعد قتالات كثيرة، نمت له مخالب خطرة تتحد لتشكل خناجر حين يمدها."
     },
     {
       "id": "data/pokemon/dex_entries:CursolaPokedexEntry.category",
@@ -33563,7 +33588,7 @@
     {
       "id": "maps/CeruleanPokeCenter1F:CeruleanPokeCenter1FSuperNerdText",
       "context": "Cerulean Pokémon Center 1F: NPC talk (Pokemaniac)",
-      "text": "في المعارك، أفضل كثيرا استخدام بوكيمون ربيتها بنفسي،\\pحتى لو كانت أضعف من بوكيمون أمسكتها للتو."
+      "text": "في القتال، أفضل كثيرا استخدام بوكيمون ربيتها بنفسي،\\pحتى لو كانت أضعف من بوكيمون اصطدتها للتو."
     },
     {
       "id": "maps/VermilionPokeCenter1F:PokemonJournalLtSurgeScript+1",
@@ -33873,7 +33898,7 @@
     {
       "id": "maps/Route32PokeCenter1F:Route32PokeCenter1FPokefanMScript.Continue+1",
       "context": "Route 32 Pokémon Center 1F: dialogue [inline after jumpthisopenedtext]",
-      "text": "هذه الكرة تمسك بسهولة البوكيمون العالق بالصنارة!\\pصنعها كيرت في بلدة أزاليا من جوزة.\\pيحيا الجوز، هورا!"
+      "text": "هذه الكرة تصطاد بسهولة البوكيمون العالق بالصنارة!\\pصنعها كيرت في بلدة أزاليا من جوزة.\\pيحيا الجوز، هورا!"
     },
     {
       "id": "maps/Route32PokeCenter1F:Route32PokeCenter1FPokefanMScript.Text1",
@@ -33903,7 +33928,7 @@
     {
       "id": "maps/GoldenrodPokecomCenter1F:GoldenrodPokecenter1FGameboyKidText",
       "context": "Goldenrod Pokecom Center 1F: NPC talk (Gameboy Kid)",
-      "text": "الحلبة في الطابق العلوي لمعارك الربط.\\pسجلات المعارك معلقة على الحائط،\\pلذا لا يمكنني أن أخسر."
+      "text": "الحلبة في الطابق العلوي لقتال الربط.\\pسجلات القتال معلقة على الحائط،\\pلذا لا يمكنني أن أخسر."
     },
     {
       "id": "maps/GoldenrodPokecomCenter1F:GoldenrodPokecenter1FLassText",
@@ -34228,7 +34253,7 @@
     {
       "id": "maps/BattleTower1F:BattleTower1FRulesScript+2",
       "context": "Battle Tower 1F: dialogue [inline after jumpthisopenedtext]",
-      "text": "يشارك في المعارك ثلاثة بوكيمون.\\pيجب أن تكون الثلاثة مختلفة.\\pوأن تختلف الأدوات التي تحملها أيضا.\\pلا يحق للبيض ولبعض البوكيمون الأسطورية المشاركة."
+      "text": "يشارك في القتال ثلاثة بوكيمون.\\pيجب أن تكون الثلاثة مختلفة.\\pوأن تختلف الأدوات التي تحملها أيضا.\\pلا يحق للبيض ولبعض البوكيمون الأسطورية المشاركة."
     },
     {
       "id": "maps/BattleTower1F:BattleTower1FStreakText",
@@ -34248,7 +34273,7 @@
     {
       "id": "maps/BattleTower1F:BattleTower1FReceptionistScript.Explanation+1",
       "context": "Battle Tower 1F: dialogue [inline after writethistext]",
-      "text": "برج القتال منشأة مخصصة لمعارك البوكيمون.\\pيجتمع فيه مدربون لا يحصون من كل مكان\\pليتنازلوا في غرف قتال مصممة خصيصا.\\pفي البرج غرف قتال كثيرة،\\pوفي كل غرفة سبعة مدربين.\\pهزيمتهم جميعا تكسبك نقاط القتال.\\pلإيقاف الجولة يجب حفظ اللعبة،\\pوإلا فلن يمكنك استئناف تحدي الغرفة."
+      "text": "برج القتال منشأة مخصصة لقتال البوكيمون.\\pيجتمع فيه مدربون لا يحصون من كل مكان\\pليتنازلوا في غرف قتال مصممة خصيصا.\\pفي البرج غرف قتال كثيرة،\\pوفي كل غرفة سبعة مدربين.\\pهزيمتهم جميعا تكسبك نقاط القتال.\\pلإيقاف الجولة يجب حفظ اللعبة،\\pوإلا فلن يمكنك استئناف تحدي الغرفة."
     },
     {
       "id": "maps/BattleTower1F:BattleTower1FReceptionistScript.BattleTowerMenu+1",
@@ -34328,7 +34353,7 @@
     {
       "id": "maps/BattleTower1F:Text_BattleTowerGranny",
       "context": "Battle Tower 1F: NPC talk (Granny)",
-      "text": "منع الأدوات في المعارك\\pأمر مرهق حقا.\\pجعل بوكيمونك يحمل أدوات\\pهو مفتاح الفوز."
+      "text": "منع الأدوات في القتال\\pأمر مرهق حقا.\\pجعل بوكيمونك يحمل أدوات\\pهو مفتاح الفوز."
     },
     {
       "id": "maps/BattleTower1F:Text_BattleTowerBugCatcher",
@@ -34343,7 +34368,7 @@
     {
       "id": "maps/BattleTower2F:BattleTower2FTVScript+1",
       "context": "Battle Tower 2F: dialogue [inline after jumpthistext]",
-      "text": "معركة حامية على التلفاز."
+      "text": "قتال حماسي على التلفاز."
     },
     {
       "id": "maps/BattleTower2F:BattleTower2FCherylScript+1",
@@ -34498,7 +34523,7 @@
     {
       "id": "maps/BattleTower2F:BattleTower2FCooltrainermText",
       "context": "Battle Tower 2F: NPC talk (Ace Trainer M)",
-      "text": "علي أن أذهب، لكني لا أستطيع\\pالتوقف عن مشاهدة هذه المعركة!"
+      "text": "علي أن أذهب، لكني لا أستطيع\\pالتوقف عن مشاهدة هذا القتال!"
     },
     {
       "id": "maps/BattleTower2F:BattleTower2FLadyText",
@@ -34608,12 +34633,12 @@
     {
       "id": "maps/BattleTowerOutside:BattleTowerOutsideBeautyScript+1",
       "context": "Battle Tower Outside: dialogue (Beauty) [inline after jumpthistextfaceplayer]",
-      "text": "ماذا يفعلون هنا يا ترى؟\\pإن كان الاسم يدل على شيء،\\pفهو لمعارك البوكيمون."
+      "text": "ماذا يفعلون هنا يا ترى؟\\pإن كان الاسم يدل على شيء،\\pفهو لقتال البوكيمون."
     },
     {
       "id": "maps/BattleTowerOutside:BattleTowerOutsideBeautyScript.OpenText",
       "context": "Battle Tower Outside: dialogue (Beauty)",
-      "text": "يسمح بثلاثة بوكيمون فقط.\\pمن الصعب جدا أن أقرر\\pأي ثلاثة أرسل إلى المعركة…"
+      "text": "يسمح بثلاثة بوكيمون فقط.\\pمن الصعب جدا أن أقرر\\pأي ثلاثة أرسل إلى القتال…"
     },
     {
       "id": "maps/BattleTowerOutside:BattleTowerOutsideSailorText",
@@ -35756,6 +35781,536 @@
       "text": "بينها الحرشفة الحمراء اللامعة!"
     },
     {
+      "id": "maps/CherrygroveBay:CherrygroveBayGalarianBirdsScript.GreatTreeText",
+      "context": "Cherrygrove Bay: dialogue",
+      "text": "إنها شجرة تشيريغروف العظيمة!"
+    },
+    {
+      "id": "maps/CherrygroveBay:CherrygroveBayGalarianBirdsScript.LikeToUseItemText",
+      "context": "Cherrygrove Bay: dialogue",
+      "text": "هل {تريد|تريدين} رش طعم على الشجرة العظيمة؟"
+    },
+    {
+      "id": "maps/CherrygroveBay:CherrygroveBayGalarianBirdsScript.WhichLureText",
+      "context": "Cherrygrove Bay: dialogue",
+      "text": "أي طعم {تريد|تريدين} استخدامه؟"
+    },
+    {
+      "id": "maps/CherrygroveBay:CherrygroveBayGalarianBirdsScript.YouSprayedTheLureText",
+      "context": "Cherrygrove Bay: dialogue",
+      "text": "رششت الطعم على الشجرة."
+    },
+    {
+      "id": "maps/CherrygroveBay:CherrygroveBayGalarianBirdsScript.NothingHappensText",
+      "context": "Cherrygrove Bay: dialogue",
+      "text": "لم يحدث شيء…"
+    },
+    {
+      "id": "maps/CherrygroveBay:GenericTrainerSwimmermThomas+1",
+      "context": "Cherrygrove Bay: trainer, after battle (trainer Swimmerm Thomas) [inline after generictrainer]",
+      "text": "بوكيموني يعرف ركوب الموج، لكني أفضل السباحة."
+    },
+    {
+      "id": "maps/CherrygroveBay:GenericTrainerSwimmermThomas.SeenText",
+      "context": "Cherrygrove Bay: trainer, before battle (trainer Swimmerm Thomas)",
+      "text": "هل {تجيد|تجيدين} السباحة؟ سأعلمك إن شئت."
+    },
+    {
+      "id": "maps/CherrygroveBay:GenericTrainerSwimmermThomas.BeatenText",
+      "context": "Cherrygrove Bay: trainer defeated (battle text box) (trainer Swimmerm Thomas)",
+      "text": "غلوب، غلوب، غلوب…"
+    },
+    {
+      "id": "maps/CherrygroveBay:GenericTrainerSwimmerfSally+1",
+      "context": "Cherrygrove Bay: trainer, after battle (trainer Swimmerf Sally) [inline after generictrainer]",
+      "text": "أحب الطفو على الأمواج مع بوكيموني!"
+    },
+    {
+      "id": "maps/CherrygroveBay:GenericTrainerSwimmerfSally.SeenText",
+      "context": "Cherrygrove Bay: trainer, before battle (trainer Swimmerf Sally)",
+      "text": "أحب هذا الخليج.\\pمياهه أهدأ بكثير من المحيط المفتوح."
+    },
+    {
+      "id": "maps/CherrygroveBay:GenericTrainerSwimmerfSally.BeatenText",
+      "context": "Cherrygrove Bay: trainer defeated (battle text box) (trainer Swimmerf Sally)",
+      "text": "لكني لا أحب الخسارة…"
+    },
+    {
+      "id": "maps/CherrygroveBay:GenericTrainerSwimmerfTara+1",
+      "context": "Cherrygrove Bay: trainer, after battle (trainer Swimmerf Tara) [inline after generictrainer]",
+      "text": "إلى الشمال تقع شجرة تشيريغروف العظيمة.\\pيقال إن طيورا نادرة من البوكيمون تأتي من بعيد لتعشش فيها."
+    },
+    {
+      "id": "maps/CherrygroveBay:GenericTrainerSwimmerfTara.SeenText",
+      "context": "Cherrygrove Bay: trainer, before battle (trainer Swimmerf Tara)",
+      "text": "آه، السباحة بين أزهار الكرز مريحة جدا!"
+    },
+    {
+      "id": "maps/CherrygroveBay:GenericTrainerSwimmerfTara.BeatenText",
+      "context": "Cherrygrove Bay: trainer defeated (battle text box) (trainer Swimmerf Tara)",
+      "text": "حتى الخسارة لا تزعجني…"
+    },
+    {
+      "id": "maps/CherrygroveBay:GenericTrainerHikerTony+1",
+      "context": "Cherrygrove Bay: trainer, after battle (trainer Hiker Tony) [inline after generictrainer]",
+      "text": "بعد رحلة طويلة، رأيت ما يشبه طائرا كبيرا يحلق باتجاهنا!\\pإلى أين كان يتجه، ولماذا؟"
+    },
+    {
+      "id": "maps/CherrygroveBay:GenericTrainerHikerTony.SeenText",
+      "context": "Cherrygrove Bay: trainer, before battle (trainer Hiker Tony)",
+      "text": "قطعت أميالا من الغابات لأرى طيور البوكيمون الأسطورية!"
+    },
+    {
+      "id": "maps/CherrygroveBay:GenericTrainerHikerTony.BeatenText",
+      "context": "Cherrygrove Bay: trainer defeated (battle text box) (trainer Hiker Tony)",
+      "text": "أنا منهك…"
+    },
+    {
+      "id": "maps/CherrygroveBay:CherrygroveBayFisherText",
+      "context": "Cherrygrove Bay: NPC talk (Fisher)",
+      "text": "أرى مدينة تشيريغروف من بعيد وأنا أصطاد.\\pآه! ورأيت قبل أيام طيورا ضخمة جدا.\\pأظنها اتجهت إلى تلك الشجرة الكبيرة القريبة؟"
+    },
+    {
+      "id": "maps/CherrygroveBay:CherrygroveBayHikerText",
+      "context": "Cherrygrove Bay: dialogue (Hiker)",
+      "text": "لا أصدق أساطير البوكيمون الأسطوري عن خلق العالم.\\pتكونت جوتو عبر ملايين السنين بقوة الأرض!"
+    },
+    {
+      "id": "maps/CherrygroveBay:Text_CherrygroveBayTutorEarthPower",
+      "context": "Cherrygrove Bay: dialogue",
+      "text": "يمكنني تعليم بوكيمونك قوة الأرض مقابل ورقة فضية."
+    },
+    {
+      "id": "maps/CherrygroveBay:Text_CherrygroveBayTutorNoSilverLeaf",
+      "context": "Cherrygrove Bay: dialogue",
+      "text": "ليس لديك أي ورقة فضية…"
+    },
+    {
+      "id": "maps/CherrygroveBay:Text_CherrygroveBayTutorQuestion",
+      "context": "Cherrygrove Bay: dialogue",
+      "text": "هل أعلم بوكيمونك قوة الأرض؟"
+    },
+    {
+      "id": "maps/CherrygroveBay:Text_CherrygroveBayTutorRefused",
+      "context": "Cherrygrove Bay: dialogue",
+      "text": "لا بأس."
+    },
+    {
+      "id": "maps/CherrygroveBay:Text_CherrygroveBayTutorTaught",
+      "context": "Cherrygrove Bay: dialogue",
+      "text": "الآن يعرف بوكيمونك قوة الأرض."
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerSwimmermMichel+1",
+      "context": "Route 32 Coast: trainer, after battle (trainer Swimmerm Michel) [inline after generictrainer]",
+      "text": "تعلمت الدرس: الإحماء أولا!"
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerSwimmermMichel.SeenText",
+      "context": "Route 32 Coast: trainer, before battle (trainer Swimmerm Michel)",
+      "text": "كنت أنتظرك!\\pلنتقاتل! الآن!"
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerSwimmermMichel.BeatenText",
+      "context": "Route 32 Coast: trainer defeated (battle text box) (trainer Swimmerm Michel)",
+      "text": "آخ! أصابني شد عضلي!"
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerSwimmermLucas+1",
+      "context": "Route 32 Coast: trainer, after battle (trainer Swimmerm Lucas) [inline after generictrainer]",
+      "text": "قوس قزح الناتج عن ضوء الشمس يظهر في السماء مقابل الشمس.\\pمدهش، صحيح؟"
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerSwimmermLucas.SeenText",
+      "context": "Route 32 Coast: trainer, before battle (trainer Swimmerm Lucas)",
+      "text": "انعكاس الضوء وانكساره في قطرات الماء يصنع قوس قزح."
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerSwimmermLucas.BeatenText",
+      "context": "Route 32 Coast: trainer defeated (battle text box) (trainer Swimmerm Lucas)",
+      "text": "كان قتالا مليئا بالألوان!"
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerSwimmerfAlison+1",
+      "context": "Route 32 Coast: trainer, after battle (trainer Swimmerf Alison) [inline after generictrainer]",
+      "text": "شهيق… زفير…\\pأليس هذا منعشا؟"
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerSwimmerfAlison.SeenText",
+      "context": "Route 32 Coast: trainer, before battle (trainer Swimmerf Alison)",
+      "text": "قبل القتال يجب التنفس بعمق."
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerSwimmerfAlison.BeatenText",
+      "context": "Route 32 Coast: trainer defeated (battle text box) (trainer Swimmerf Alison)",
+      "text": "غلوب… استنشقت ماء البحر…"
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerSwimmerfStephanie+1",
+      "context": "Route 32 Coast: trainer, after battle (trainer Swimmerf Stephanie) [inline after generictrainer]",
+      "text": "الصوت في الماء أسرع منه في الهواء.\\pرائع، أليس كذلك؟"
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerSwimmerfStephanie.SeenText",
+      "context": "Route 32 Coast: trainer, before battle (trainer Swimmerf Stephanie)",
+      "text": "هل سمعت ذلك؟"
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerSwimmerfStephanie.BeatenText",
+      "context": "Route 32 Coast: trainer defeated (battle text box) (trainer Swimmerf Stephanie)",
+      "text": "بووو!"
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerBird_keeperPowell+1",
+      "context": "Route 32 Coast: trainer, after battle (trainer Bird Keeper Powell) [inline after generictrainer]",
+      "text": "يستطيع بوكيموني استخدام طيران حتى وهو مغمى عليه، فأعود إلى البيت.\\pمريح، صحيح؟"
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerBird_keeperPowell.SeenText",
+      "context": "Route 32 Coast: trainer, before battle (trainer Bird Keeper Powell)",
+      "text": "لا أجيد السباحة، فطرت إلى هنا على بوكيموني."
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerBird_keeperPowell.BeatenText",
+      "context": "Route 32 Coast: trainer defeated (battle text box) (trainer Bird Keeper Powell)",
+      "text": "لا! بوكيموني!"
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerCosplayerChloe+1",
+      "context": "Route 32 Coast: trainer, after battle (trainer Cosplayer Chloe) [inline after generictrainer]",
+      "text": "حين أرتدي هذا، يقول الناس إنني الألطف أينما ذهبت."
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerCosplayerChloe.SeenText",
+      "context": "Route 32 Coast: trainer, before battle (trainer Cosplayer Chloe)",
+      "text": "أيعجبك زيي؟ إنه فعال جدا!"
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerCosplayerChloe.BeatenText",
+      "context": "Route 32 Coast: trainer defeated (battle text box) (trainer Cosplayer Chloe)",
+      "text": "حسنا، لم يكن فعالا كثيرا…"
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerFisherKiley+1",
+      "context": "Route 32 Coast: trainer, after battle (trainer Fisher Kiley) [inline after generictrainer]",
+      "text": "لا بد من صنارة جيدة لصيد بوكيمون جيد."
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerFisherKiley.SeenText",
+      "context": "Route 32 Coast: trainer, before battle (trainer Fisher Kiley)",
+      "text": "هه، الحظ حليفي اليوم. ما رأيك بقتال يا {صغير|صغيرة}؟"
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerFisherKiley.BeatenText",
+      "context": "Route 32 Coast: trainer defeated (battle text box) (trainer Fisher Kiley)",
+      "text": "أوف. لم يحالفني الحظ هذه المرة."
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerCamperCraig+1",
+      "context": "Route 32 Coast: trainer, after battle (trainer Camper Craig) [inline after generictrainer]",
+      "text": "المغامرة تنتظرك خارج خيمتك، {فاخرج|فاخرجي} {واستمتع|واستمتعي}!"
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerCamperCraig.SeenText",
+      "context": "Route 32 Coast: trainer, before battle (trainer Camper Craig)",
+      "text": "لا شيء يضاهي الهواء الطلق!"
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerCamperCraig.BeatenText",
+      "context": "Route 32 Coast: trainer defeated (battle text box) (trainer Camper Craig)",
+      "text": "ما زلت كشافا سعيدا."
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerLassLayla+1",
+      "context": "Route 32 Coast: trainer, after battle (trainer Lass Layla) [inline after generictrainer]",
+      "text": "إن تمنيت شيئا وأخبرت به أحدا، فلن يتحقق!"
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerLassLayla.SeenText",
+      "context": "Route 32 Coast: trainer, before battle (trainer Lass Layla)",
+      "text": "لو كانت لك أمنية واحدة، فما هي؟"
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerLassLayla.BeatenText",
+      "context": "Route 32 Coast: trainer defeated (battle text box) (trainer Lass Layla)",
+      "text": "لكن لا {تخبرني|تخبريني} بأمنيتك!"
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerCoupleFoxandrae1+1",
+      "context": "Route 32 Coast: trainer, after battle (trainer Couple Foxandrae1) [inline after generictrainer]",
+      "text": "فوكس: تعاوننا كزوجين لم يكف هذه المرة."
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerCoupleFoxandrae1.SeenText",
+      "context": "Route 32 Coast: trainer, before battle (trainer Couple Foxandrae1)",
+      "text": "فوكس: هيا يا راي، لنقاتل!"
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerCoupleFoxandrae1.BeatenText",
+      "context": "Route 32 Coast: trainer defeated (battle text box) (trainer Couple Foxandrae1)",
+      "text": "فوكس: هزمتنا، أنا وراي…"
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerCoupleFoxandrae2+1",
+      "context": "Route 32 Coast: trainer, after battle (trainer Couple Foxandrae2) [inline after generictrainer]",
+      "text": "راي: خسرنا، لكننا ما زلنا زوجين سعيدين."
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerCoupleFoxandrae2.SeenText",
+      "context": "Route 32 Coast: trainer, before battle (trainer Couple Foxandrae2)",
+      "text": "راي: فوكس، ما رأيك أن نقاتل؟"
+    },
+    {
+      "id": "maps/Route32Coast:GenericTrainerCoupleFoxandrae2.BeatenText",
+      "context": "Route 32 Coast: trainer defeated (battle text box) (trainer Couple Foxandrae2)",
+      "text": "راي: كيف هزمتنا، أنا وفوكس؟"
+    },
+    {
+      "id": "maps/Route32Coast:Route32CoastLassText",
+      "context": "Route 32 Coast: NPC talk (Lass)",
+      "text": "هاه… هاه…\\pأخيرا عبرت ذلك الكهف.\\pكان أكبر بكثير مما توقعت.\\pتعبت كثيرا فلم أستكشفه كله، فخرجت."
+    },
+    {
+      "id": "maps/Route32Coast:Route32CoastTrainerTipsText",
+      "context": "Route 32 Coast: sign / object (sign)",
+      "text": "نصائح للمدربين\\pالبوكيمون ذو قدرة التقاط قد يحمل أداة بعد القتال!"
+    },
+    {
+      "id": "maps/Route32Coast:Route32CoastUnionCaveSignText",
+      "context": "Route 32 Coast: sign / object (sign)",
+      "text": "أمامك كهف الاتحاد"
+    },
+    {
+      "id": "maps/Route32CoastHouse:GourmetManiacScript+1",
+      "context": "Route 32 Coast House: dialogue (Baker) [inline after jumpthisopenedtext]",
+      "text": "ميرسي! شكرا!\\pبهذا سأصنع شيئا رائعا."
+    },
+    {
+      "id": "maps/Route32CoastHouse:GourmetManiacScript.GreetingText",
+      "context": "Route 32 Coast House: dialogue (Baker)",
+      "text": "مرحبا! أنا خبازة ذواقة!\\pأطهو أطباقا رائعة بأجود المكونات فقط!\\pهل لديك مكونات للبيع؟"
+    },
+    {
+      "id": "maps/Route32CoastHouse:GourmetManiacScript.OfferText",
+      "context": "Route 32 Coast House: dialogue (Baker)",
+      "text": "آه، رائحته زكية جدا!\\pهل {تقبل|تقبلين} ¥{num:hMoneyTemp,3,7} ثمنا له؟"
+    },
+    {
+      "id": "maps/Route32CoastHouse:GourmetManiacScript.WrongItemText",
+      "context": "Route 32 Coast House: dialogue (Baker)",
+      "text": "هممم… ليس هذا ما أبحث عنه تماما."
+    },
+    {
+      "id": "maps/Route32CoastHouse:GourmetManiacScript.NoItemText",
+      "context": "Route 32 Coast House: dialogue (Baker)",
+      "text": "أوه… حسنا، لا بأس."
+    },
+    {
+      "id": "maps/DarkCaveVioletEntrance:DarkCaveVioletEntranceFalknerAttackText",
+      "context": "Dark Cave Violet Entrance: dialogue",
+      "text": "فالكنر: بيدجيوتو، هجوم الجناح!"
+    },
+    {
+      "id": "maps/DarkCaveVioletEntrance:DarkCaveVioletEntranceFalknerReturnText",
+      "context": "Dark Cave Violet Entrance: dialogue",
+      "text": "أحسنت يا بيدجيوتو."
+    },
+    {
+      "id": "maps/DarkCaveVioletEntrance:DarkCaveVioletEntranceFalknerIntroText",
+      "context": "Dark Cave Violet Entrance: dialogue",
+      "text": "أوه! لا بد أنك {مدرب|مدربة}."
+    },
+    {
+      "id": "maps/DarkCaveVioletEntrance:DarkCaveVioletEntranceFalknerDarkIntroText",
+      "context": "Dark Cave Violet Entrance: dialogue",
+      "text": "لا بد أنك {شجاع|شجاعة} لتأتي إلى هنا في الظلام الدامس."
+    },
+    {
+      "id": "maps/DarkCaveVioletEntrance:DarkCaveVioletEntranceFalknerExplanationText",
+      "context": "Dark Cave Violet Entrance: dialogue",
+      "text": "أنا فالكنر، قائد صالة فايوليت.\\pلا أستكشف الكهوف للمتعة، لكن أورسارينغ ذاك كان يهاجم مدربين أضعف من أن يدافعوا عن أنفسهم.\\pوبصفتي قائد صالة، فمن واجبي التصدي لمثل هذه المواقف.\\pإذن جئت {لتنال|لتنالي} شارة؟\\pفلنلتق في صالة فايوليت."
+    },
+    {
+      "id": "maps/DarkCaveVioletEntrance:DarkCaveVioletEntranceFalknerDarknessText",
+      "context": "Dark Cave Violet Entrance: dialogue",
+      "text": "فالكنر: هل من أحد هناك؟\\pلا {تقترب|تقتربي} أكثر!\\pالظلام دامس، قد يصيبك أذى."
+    },
+    {
+      "id": "maps/DarkCaveVioletEntrance:DarkCaveVioletEntranceFalknerProgressAnywayText",
+      "context": "Dark Cave Violet Entrance: dialogue",
+      "text": "فالكنر: هل من أحد هناك؟\\pمن التهور استكشاف الكهف المظلم بلا أي ضوء!\\pأنا في قتال الآن، {فابتعد|فابتعدي}!"
+    },
+    {
+      "id": "maps/DarkCaveBlackthornEntrance:DarkCaveBlackthornEntrancePharmacistScript.PharmacistText2",
+      "context": "Dark Cave Blackthorn Entrance: dialogue (Pharmacist)",
+      "text": "النظارة السوداء تقوي حركات الظلام."
+    },
+    {
+      "id": "maps/DarkCaveBlackthornEntrance:DarkCaveBlackthornEntrancePharmacistScript.PharmacistText1",
+      "context": "Dark Cave Blackthorn Entrance: dialogue (Pharmacist)",
+      "text": "واو! لقد أفزعتني!\\pكنت أضع نظارتي السوداء، فلم ألحظك أبدا.\\pماذا أفعل هنا؟\\pلا {تشغل|تشغلي} بالك بهذا.\\pسأعطيك نظارة سوداء، {فانس|فانسي} أنك رأيتني، اتفقنا؟"
+    },
+    {
+      "id": "maps/VioletCity:Text_EarlAsksIfYouBeatFalkner",
+      "context": "Violet City: dialogue (Fat Guy)",
+      "text": "مرحبا! {مدرب|مدربة} أنت؟\\pقائد الصالة، هزمته أنت؟"
+    },
+    {
+      "id": "maps/VioletCity:Text_VeryNiceIndeed",
+      "context": "Violet City: dialogue (Fat Guy)",
+      "text": "أوه، لا لا! رائع حقا جدا!"
+    },
+    {
+      "id": "maps/VioletCity:Text_FollowEarl",
+      "context": "Violet City: dialogue (Fat Guy)",
+      "text": "أهكذا؟ الدراسة إذن، تلزمك! {اتبعني|اتبعيني}!"
+    },
+    {
+      "id": "maps/VioletCity:Text_HereTeacherIAm",
+      "context": "Violet City: dialogue (Fat Guy)",
+      "text": "هنا، المعلم أنا. دراستك هنا، جيدة هي!\\p{خذ|خذي} هذا، {فتتعلم|فتتعلمي} أنت!"
+    },
+    {
+      "id": "maps/VioletCity:Text_EarlsTypeChart",
+      "context": "Violet City: dialogue (Fat Guy)",
+      "text": "في القتال، مزايا الأنواع، معرفتها عليك!\\pفي أي وقت، هذا الجدول، مراجعته لك!"
+    },
+    {
+      "id": "maps/VioletCity:VioletCityLassText",
+      "context": "Violet City: NPC talk (Cute Girl)",
+      "text": "يقال إن الأشباح تظهر في برج البراعم.\\pوقالوا إن حركات النوع العادي لا تؤثر في الأشباح."
+    },
+    {
+      "id": "maps/VioletCity:VioletCityCooltrainerM1Text",
+      "context": "Violet City: NPC talk (Ace Trainer M)",
+      "text": "مهلا، أنت {مدرب|مدربة} بوكيمون؟\\pإن هزمت قائد الصالة هنا، فأنت {جاهز|جاهزة} للنجومية!"
+    },
+    {
+      "id": "maps/VioletCity:VioletCityCooltrainerFText",
+      "context": "Violet City: NPC talk (Ace Trainer F)",
+      "text": "بيلسبراوت بوكيمون محبوب في هذه المدينة.\\pلكنه لا يصمد أمام قائد صالتنا…"
+    },
+    {
+      "id": "maps/VioletCity:VioletCityGrampsText",
+      "context": "Violet City: NPC talk (Gramps)",
+      "text": "فالكنر، قائد صالة فايوليت، مدرب بارع!\\pورث الصالة عن أبيه وأدارها بنجاح كبير."
+    },
+    {
+      "id": "maps/VioletCity:VioletCityYoungsterText",
+      "context": "Violet City: NPC talk (Youngster)",
+      "text": "رأيت شجرة تتمايل هناك في الأمام!\\pإن لمستها تتلوى وترقص! رائع!"
+    },
+    {
+      "id": "maps/VioletCity:VioletCityFisherText",
+      "context": "Violet City: NPC talk (Fat Guy)",
+      "text": "كيف يصمد بناء مهتز كهذا أمام الزلازل؟ لا بد أن شيئا يفوتني."
+    },
+    {
+      "id": "maps/VioletCity:VioletCityCooltrainerM2Text",
+      "context": "Violet City: NPC talk (Cool Dude)",
+      "text": "نحن نعتني بالمباني التقليدية هنا.\\pحتى متجر بوكي ومركز البوكيمون مطليان بألوان هادئة لينسجما معها."
+    },
+    {
+      "id": "maps/VioletCity:VioletCitySignText",
+      "context": "Violet City: sign / object (sign)",
+      "text": "مدينة فايوليت\\pمدينة عبق الذكريات"
+    },
+    {
+      "id": "maps/VioletCity:VioletGymSignText",
+      "context": "Violet City: sign / object (sign)",
+      "text": "صالة مدينة فايوليت القائد: فالكنر\\pالسيد الأنيق لبوكيمون الطيور"
+    },
+    {
+      "id": "maps/VioletCity:SproutTowerSignText",
+      "context": "Violet City: sign / object (sign)",
+      "text": "برج البراعم\\pرحلة في طريق البوكيمون"
+    },
+    {
+      "id": "maps/VioletCity:EarlsPokemonAcademySignText",
+      "context": "Violet City: sign / object (sign)",
+      "text": "أكاديمية إيرل للبوكيمون"
+    },
+    {
+      "id": "maps/VioletMart:VioletMartGrannyText",
+      "context": "Violet Mart: NPC talk (Granny)",
+      "text": "عند صيده أول مرة، قد يكون البوكيمون ضعيفا.\\pلكنه سيكبر ويصبح قويا مع الوقت.\\pمن المهم معاملة البوكيمون بحب."
+    },
+    {
+      "id": "maps/VioletMart:VioletMartCooltrainerMText",
+      "context": "Violet Mart: NPC talk (Ace Trainer M)",
+      "text": "يستطيع البوكيمون حمل أدوات كالجرعة والترياق.\\pلكن يبدو أنه لا يجيد استخدام أدوات البشر."
+    },
+    {
+      "id": "maps/VioletGym:GenericTrainerBird_keeperRod+1",
+      "context": "Violet Gym: trainer, after battle (trainer Bird Keeper Rod) [inline after generictrainer]",
+      "text": "مهارات فالكنر حقيقية!\\pلا {تغتر|تغتري} لمجرد أنك هزمتني!"
+    },
+    {
+      "id": "maps/VioletGym:GenericTrainerBird_keeperAbe+1",
+      "context": "Violet Gym: trainer, after battle (trainer Bird Keeper Abe) [inline after generictrainer]",
+      "text": "يا للعار، أخسر أمام {مدرب مبتدئ|مدربة مبتدئة}…"
+    },
+    {
+      "id": "maps/VioletGym:FalknerIntroText",
+      "context": "Violet Gym: dialogue (Falkner)",
+      "text": "أنا فالكنر، قائد صالة فايوليت!\\pيقول الناس إن صدمة كهربائية تكفي لقص أجنحة بوكيمون النوع الطائر…\\pلن أسمح بإهانة كهذه لبوكيمون الطيور!\\pسأريك القوة الحقيقية لبوكيمون الطيور الرائعة!"
+    },
+    {
+      "id": "maps/VioletGym:FalknerWinLossText",
+      "context": "Violet Gym: trainer defeated (battle text box)",
+      "text": "…تبا! طيور أبي الغالية…\\pحسنا. {خذ|خذي} هذه.\\pإنها شارة النسيم الرسمية من دوري البوكيمون."
+    },
+    {
+      "id": "maps/VioletGym:FalknerZephyrBadgeText",
+      "context": "Violet Gym: dialogue (Falkner)",
+      "text": "بشارة النسيم ستطيعك البوكيمون حتى المستوى 20، ولو كانت متبادلة.\\p{تفضل|تفضلي}، {خذ|خذي} هذه أيضا."
+    },
+    {
+      "id": "maps/VioletGym:FalknerTMMudSlapText",
+      "context": "Violet Gym: dialogue (Falkner)",
+      "text": "بالآلة التقنية، يتعلم البوكيمون حركة جديدة فورا.\\pويمكن استخدامها مرات بلا حدود.\\pالآلة التقنية 51 فيها حركة عودة للعش.\\pيهبط بها على الأرض ليستعيد نصف صحته القصوى."
+    },
+    {
+      "id": "maps/VioletGym:FalknerFightDoneText",
+      "context": "Violet Gym: dialogue (Falkner)",
+      "text": "في المدن والبلدات القادمة صالات بوكيمون.\\pعليك اختبار مهاراتك فيها.\\pسأتدرب بجد أكبر لأصبح أعظم سيد للطيور!"
+    },
+    {
+      "id": "maps/VioletGym:Bird_keeperRodSeenText",
+      "context": "Violet Gym: trainer, before battle (trainer Bird Keeper Rod)",
+      "text": "كلمة السر هي العزيمة!\\pالجميع هنا يتدربون ليل نهار ليصبحوا أسياد بوكيمون الطيور.\\pهيا!"
+    },
+    {
+      "id": "maps/VioletGym:Bird_keeperRodBeatenText",
+      "context": "Violet Gym: trainer defeated (battle text box) (trainer Bird Keeper Rod)",
+      "text": "آآآه!"
+    },
+    {
+      "id": "maps/VioletGym:Bird_keeperAbeSeenText",
+      "context": "Violet Gym: trainer, before battle (trainer Bird Keeper Abe)",
+      "text": "لنر إن كنت {جديرا|جديرة} بمواجهة فالكنر!"
+    },
+    {
+      "id": "maps/VioletGym:Bird_keeperAbeBeatenText",
+      "context": "Violet Gym: trainer defeated (battle text box) (trainer Bird Keeper Abe)",
+      "text": "لا أصدق هذا!"
+    },
+    {
+      "id": "maps/VioletGym:VioletGymGuyText",
+      "context": "Violet Gym: dialogue (Gym Guy)",
+      "text": "مرحبا! لست مدربا لكني أقدم النصائح!\\p{صدقني|صدقيني}! إن آمنت بحلم البطولة، فسيتحقق.\\p{تؤمن|تؤمنين}؟ إذن {اسمع|اسمعي}.\\pنوع العشب ضعيف أمام النوع الطائر. {تذكر|تذكري} هذا جيدا."
+    },
+    {
+      "id": "maps/VioletGym:VioletGymGuyWinText",
+      "context": "Violet Gym: dialogue (Gym Guy)",
+      "text": "قتال رائع! {واصل|واصلي} هكذا، {وستصبح البطل|وستصبحين البطلة} في لمح البصر!"
+    },
+    {
+      "id": "maps/VioletGym:VioletGymGuyFalknerAwayText",
+      "context": "Violet Gym: dialogue",
+      "text": "مهلا! لا يمكنك تحدي فالكنر الآن.\\pإنه في الكهف المظلم يروض أورسارينغ هاجم مدربا صغيرا.\\p{عد|عودي} لاحقا."
+    },
+    {
       "id": "maps/VioletNicknameSpeechHouse:VioletNicknameSpeechHouseTeacherText",
       "context": "Violet Nickname Speech House: NPC talk (Pokefan F)",
       "text": "تستخدم أسماء أطعمتها المفضلة.\\pأعني كألقاب للبوكيمون خاصتها."
@@ -36128,7 +36683,7 @@
     {
       "id": "maps/VioletOutskirtsHouse:VioletOutskirtsHouseOldShrineText",
       "context": "Violet Outskirts House: dialogue",
-      "text": "إنه مزار قديم جدا."
+      "text": "إنه معبد قديم جدا."
     },
     {
       "id": "maps/VioletOutskirtsHouse:VioletOutskirtsHouseAhText",
@@ -36443,7 +36998,7 @@
     {
       "id": "maps/SinjohRuinsHouse:SinjohRuinsHouseCynthiaAfterText",
       "context": "Sinjoh Ruins House: dialogue (Cynthia)",
-      "text": "سينثيا: يا لها من معركة مذهلة!\\pأنت {مدرب رائع|مدربة رائعة}،\\pوسيسعدني أن أراك مجددا يوما ما."
+      "text": "سينثيا: يا له من قتال مذهل!\\pأنت {مدرب رائع|مدربة رائعة}،\\pوسيسعدني أن أراك مجددا يوما ما."
     },
     {
       "id": "maps/SinjohRuinsHouse:SinjohRuinsHousePokefanmText",
@@ -36538,12 +37093,12 @@
     {
       "id": "maps/MystriStage:MystriStageCynthiaItemText",
       "context": "Mystri Stage: dialogue",
-      "text": "سينثيا: فاق ذلك توقعاتي!\\pيا لها من معركة استثنائية!\\p{خذ|خذي} هذه الأداة. أثق\\pأنك {ستحسن|ستحسنين} استخدامها."
+      "text": "سينثيا: فاق ذلك توقعاتي!\\pيا له من قتال استثنائي!\\p{خذ|خذي} هذه الأداة. أثق\\pأنك {ستحسن|ستحسنين} استخدامها."
     },
     {
       "id": "maps/MystriStage:MystriStageCynthiaAfterText",
       "context": "Mystri Stage: dialogue",
-      "text": "سينثيا: لكن هل أثرت معركتنا في منصة ميستري؟"
+      "text": "سينثيا: لكن هل أثر قتالنا في منصة ميستري؟"
     },
     {
       "id": "maps/MystriStage:MystriStageCynthiaEggText",
@@ -37253,7 +37808,7 @@
     {
       "id": "maps/SlowpokeWellEntrance:SlowpokeWellEntranceKurtText",
       "context": "Slowpoke Well Entrance: NPC talk (Kurt)",
-      "text": "كورت: أهلا يا {PLAYER}!\\pهرب الحارس في الأعلى حين صرخت فيه.\\pلكنني سقطت في البئر بعدها.\\pارتطم ظهري بقوة، فلا أستطيع الحراك.\\pتبا! لو كنت بخير، لعاقبهم بوكيموني…\\pآه، لا حيلة لي.\\pيا {PLAYER}، {أرهم|أريهم} شجاعتك بدلا مني!"
+      "text": "كيرت: أهلا يا {PLAYER}!\\pهرب الحارس في الأعلى حين صرخت فيه.\\pلكنني سقطت في البئر بعدها.\\pارتطم ظهري بقوة، فلا أستطيع الحراك.\\pتبا! لو كنت بخير، لعاقبهم بوكيموني…\\pآه، لا حيلة لي.\\pيا {PLAYER}، {أرهم|أريهم} شجاعتك بدلا مني!"
     },
     {
       "id": "maps/SlowpokeWellB1F:GenericTrainerGruntM29+1",
@@ -37273,7 +37828,7 @@
     {
       "id": "maps/SlowpokeWellB1F:KurtLeaveSlowpokeWellText",
       "context": "Slowpoke Well B1F: dialogue",
-      "text": "كورت: أحسنت يا {PLAYER}!\\pلقد هرب فريق الصاروخ.\\pوتحسن ظهري أيضا. لنخرج من هنا."
+      "text": "كيرت: أحسنت يا {PLAYER}!\\pلقد هرب فريق الصاروخ.\\pوتحسن ظهري أيضا. لنخرج من هنا."
     },
     {
       "id": "maps/SlowpokeWellB1F:GruntM29SeenText",
@@ -37713,7 +38268,7 @@
     {
       "id": "maps/StormyBeach:GenericTrainerSwimmerfBarbara.BeatenText",
       "context": "Stormy Beach: trainer defeated (battle text box) (trainer Swimmerf Barbara)",
-      "text": "كانت معركة جيدة رغم خسارتي."
+      "text": "كان قتالا جيدا رغم خسارتي."
     },
     {
       "id": "maps/StormyBeach:GenericTrainerBird_keeperJulian+1",
@@ -38228,17 +38783,17 @@
     {
       "id": "maps/GoldenrodGameCorner:GoldenrodGameCornerTMVendorMenuData.MenuData2[0]",
       "context": "Goldenrod Game Corner: menu item (box (0, 2, 15, 11), 13 cells)",
-      "text": "آلة 35"
+      "text": "ت.35"
     },
     {
       "id": "maps/GoldenrodGameCorner:GoldenrodGameCornerTMVendorMenuData.MenuData2[1]",
       "context": "Goldenrod Game Corner: menu item (box (0, 2, 15, 11), 13 cells)",
-      "text": "آلة 24"
+      "text": "ت.24"
     },
     {
       "id": "maps/GoldenrodGameCorner:GoldenrodGameCornerTMVendorMenuData.MenuData2[2]",
       "context": "Goldenrod Game Corner: menu item (box (0, 2, 15, 11), 13 cells)",
-      "text": "آلة 13"
+      "text": "ت.13"
     },
     {
       "id": "maps/GoldenrodGameCorner:GoldenrodGameCornerTMVendorMenuData.MenuData2[3]",
@@ -40018,7 +40573,7 @@
     {
       "id": "maps/RadioTower3F:RadioTower3FCooltrainerFItsAGBCSoundsText",
       "context": "Radio Tower 3F: dialogue (Battle Girl)",
-      "text": "هذا مشغل موسيقى.\\pفيه أغان كثيرة يمكنك سماعها في أي مكان، حتى أثناء المعارك.\\pوله ميزات خاصة لضبط طبقة الصوت والسرعة،\\pلكن التحكم فيه صعب قليلا.\\p{جربه|جربيه} وحسب!"
+      "text": "هذا مشغل موسيقى.\\pفيه أغان كثيرة يمكنك سماعها في أي مكان، حتى أثناء القتال.\\pوله ميزات خاصة لضبط طبقة الصوت والسرعة،\\pلكن التحكم فيه صعب قليلا.\\p{جربه|جربيه} وحسب!"
     },
     {
       "id": "maps/RadioTower3F:RadioTower3FCooltrainerFYouWereMarvelousText",
@@ -40083,7 +40638,7 @@
     {
       "id": "maps/RadioTower3F:RadioTower3FPokemonMusicSignText",
       "context": "Radio Tower 3F: sign / object (sign)",
-      "text": "موسيقى البوكيمون مع المذيع بن"
+      "text": "ألحان البوكيمون مع المذيع بن"
     },
     {
       "id": "maps/RadioTower4F:RadioTower4FDJMaryScript+1",
@@ -40553,7 +41108,7 @@
     {
       "id": "maps/WarehouseEntrance:PiersAfterIntroText",
       "context": "Warehouse Entrance: dialogue (Piers)",
-      "text": "بعض أفضل ألحاني جاءت بعد الفوز بمعركة جيدة.\\pما رأيك أن نتقاتل هنا والآن؟"
+      "text": "بعض أفضل ألحاني جاءت بعد الفوز بقتال جيد.\\pما رأيك أن نتقاتل هنا والآن؟"
     },
     {
       "id": "maps/WarehouseEntrance:PiersNoBattleText",
@@ -40603,7 +41158,7 @@
     {
       "id": "maps/WarehouseEntrance:SupernerdTeruSeenText",
       "context": "Warehouse Entrance: trainer, before battle (trainer Super Nerd Teru)",
-      "text": "هل {تراعي|تراعين} الأنواع في المعركة؟\\pإن عرفت أفضلية الأنواع، {فستتفوق|فستتفوقين} في المعارك."
+      "text": "هل {تراعي|تراعين} الأنواع في القتال؟\\pإن عرفت أفضلية الأنواع، {فستتفوق|فستتفوقين} في القتال."
     },
     {
       "id": "maps/WarehouseEntrance:SupernerdTeruBeatenText",
@@ -41708,12 +42263,12 @@
     {
       "id": "maps/EcruteakDestinyKnotHouse:EcruteakDestinyKnotHouseCooltrainerFScript.Text2",
       "context": "Ecruteak Destiny Knot House: dialogue (Ace Trainer F)",
-      "text": "ماذا لو أمسك مدرب بها كلها؟\\pيا له من قدر بعيد المنال!"
+      "text": "ماذا لو اصطادها مدرب كلها؟\\pيا له من قدر بعيد المنال!"
     },
     {
       "id": "maps/EcruteakDestinyKnotHouse:EcruteakDestinyKnotHouseCooltrainerFScript.Text3",
       "context": "Ecruteak Destiny Knot House: dialogue (Ace Trainer F)",
-      "text": "ماذا؟ رأيتها؟ بل وأمسكت بها أيضا؟!\\pلنلق نظرة على البوكيديكس… رائع!\\pلا بد أن هذا قدرك.\\pإليك هذه، فهي تليق بك."
+      "text": "ماذا؟ رأيتها؟ بل واصطدتها أيضا؟!\\pلنلق نظرة على البوكيديكس… رائع!\\pلا بد أن هذا قدرك.\\pإليك هذه، فهي تليق بك."
     },
     {
       "id": "maps/ValeriesHouse:ValeriesHouseValerieText",
@@ -41903,7 +42458,7 @@
     {
       "id": "maps/BurnedTower1F:BurnedTowerRival_AfterText1",
       "context": "Burned Tower 1F: dialogue",
-      "text": "…أوه، لا يهم.\\pلن {تستطيع|تستطيعي} الإمساك\\pببوكيمون أسطوري على أي حال."
+      "text": "…أوه، لا يهم.\\pلن {تستطيع|تستطيعي} اصطياد\\pبوكيمون أسطوري على أي حال."
     },
     {
       "id": "maps/BurnedTower1F:BurnedTowerRival_LossText",
@@ -42763,7 +43318,7 @@
     {
       "id": "maps/CianwoodCity:CianwoodAdvancedTipsSignText",
       "context": "Cianwood City: sign / object (sign)",
-      "text": "نصائح متقدمة!\\pيمكنك استخدام كرة بوكي على بوكيمون أمسكته لتغيير كرته!\\pلكن كرته الأصلية لن تعود إليك!"
+      "text": "نصائح متقدمة!\\pيمكنك استخدام كرة بوكي على بوكيمون اصطدته لتغيير كرته!\\pلكن كرته الأصلية لن تعود إليك!"
     },
     {
       "id": "maps/CianwoodGym:GenericTrainerBlackbeltYoshi+1",
@@ -43888,7 +44443,7 @@
     {
       "id": "maps/MahoganyRedGyaradosSpeechHouse:MahoganyRedGyaradosSpeechHouseTeacherScript+1",
       "context": "Mahogany Red Gyarados Speech House: dialogue (Pokefan F) [inline after jumpthistextfaceplayer]",
-      "text": "برنامجي الإذاعي المفضل؟ موسيقى البوكيمون."
+      "text": "برنامجي الإذاعي المفضل؟ ألحان البوكيمون."
     },
     {
       "id": "maps/MahoganyRedGyaradosSpeechHouse:MahoganyRedGyaradosSpeechHouseBlackBeltText",
@@ -44173,7 +44728,7 @@
     {
       "id": "maps/TeamRocketBaseB1F:CameraGrunt2BeatenText",
       "context": "Team Rocket Base B1F: trainer defeated (battle text box)",
-      "text": "كاميرات المراقبة مخبأة في تماثيل البوكيمون.\\pوسنظل نظهر حتى {تضغط|تضغطي} مفتاحا سريا."
+      "text": "كاميرات المراقبة مخبأة في تماثيل البوكيمون.\\pوسنظل نظهر حتى {تضغط|تضغطي} زرا سريا."
     },
     {
       "id": "maps/TeamRocketBaseB1F:RocketScientistJedSeenText",
@@ -44203,12 +44758,12 @@
     {
       "id": "maps/TeamRocketBaseB1F:TeamRocketBaseB1FSecretSwitchText",
       "context": "Team Rocket Base B1F: dialogue",
-      "text": "مفتاح سري! من الأفضل ضغطه."
+      "text": "زر سري! من الأفضل ضغطه."
     },
     {
       "id": "maps/TeamRocketBaseB1F:TeamRocketBaseB1FSwitchOffText",
       "context": "Team Rocket Base B1F: dialogue",
-      "text": "المفتاح مطفأ."
+      "text": "الزر مطفأ."
     },
     {
       "id": "maps/TeamRocketBaseB2F:GenericTrainerGruntM17+1",
@@ -44278,7 +44833,7 @@
     {
       "id": "maps/TeamRocketBaseB2F:RockerBaseLanceElectrodeFaintText",
       "context": "Team Rocket Base B2F: dialogue",
-      "text": "هذه الآلة هي سبب كل المشاكل.\\pلا أرى فيها مفتاحا…\\pلا خيار لنا. علينا أن نجعل كل إلكترود يفقد وعيه.\\pهذا سيوقف الآلة عن بث تلك الإشارة الغريبة.\\pلا ذنب للبوكيمون في هذا، لذا يؤنبني ضميري.\\p{PLAYER}، لنتقاسم المهمة."
+      "text": "هذه الآلة هي سبب كل المشاكل.\\pلا أرى فيها زر إطفاء…\\pلا خيار لنا. علينا أن نقاتل كل إلكترود حتى يغمى عليه.\\pهذا سيوقف الآلة عن بث تلك الإشارة الغريبة.\\pلا ذنب للبوكيمون في هذا، لذا يؤنبني ضميري.\\p{PLAYER}، لنتقاسم المهمة."
     },
     {
       "id": "maps/TeamRocketBaseB2F:RocketBaseLancesSideText",
@@ -45193,7 +45748,7 @@
     {
       "id": "maps/BlackthornGym2F:GenericTrainerCooltrainermCody+1",
       "context": "Blackthorn Gym 2F: trainer, after battle (trainer Cooltrainerm Cody) [inline after generictrainer]",
-      "text": "في عشيرة التنانين، لا نستخدم بوكيمون التنين إلا بإذن معلمنا."
+      "text": "في عشيرة التنانين، لا نستخدم بوكيمون التنين إلا بإذن شيخنا."
     },
     {
       "id": "maps/BlackthornGym2F:GenericTrainerCooltrainermCody.SeenText",
@@ -45243,7 +45798,7 @@
     {
       "id": "maps/VictoryRoad2F:GenericTrainerVeteranfJonet+1",
       "context": "Victory Road 2F: trainer, after battle (trainer Veteranf Jonet) [inline after generictrainer]",
-      "text": "هل أمسك أحدهم مولتريس بالفعل؟"
+      "text": "هل اصطاد أحدهم مولتريس بالفعل؟"
     },
     {
       "id": "maps/VictoryRoad2F:VictoryRoadRivalBeforeText",
@@ -45278,7 +45833,7 @@
     {
       "id": "maps/VictoryRoad2F:VeteranfJonetSeenText",
       "context": "Victory Road 2F: trainer, before battle (trainer Veteranf Jonet)",
-      "text": "يقال إن مولتريس يعشش هنا.\\pسأمسك به!"
+      "text": "يقال إن مولتريس يعشش هنا.\\pسأصطاده!"
     },
     {
       "id": "maps/VictoryRoad2F:VeteranfJonetBeatenText",
@@ -45398,7 +45953,7 @@
     {
       "id": "maps/KogasRoom:KogaScript.SeenText",
       "context": "Kogas Room: dialogue (Koga)",
-      "text": "فواهاهاهاها!\\pأنا كوغا، عضو النخبة الأربعة.\\pأعيش في الظلال، أنا نينجا!\\pأسلوبي المعقد سيربكك ويدمرك!\\pالارتباك، النوم، السم…\\p{استعد لتكون|استعدي لتكوني} ضحية تقنيتي الخبيثة!\\pفواهاهاهاها!\\pمعارك البوكيمون ليست قوة غاشمة فحسب…\\p{سترى|سترين} ذلك قريبا!"
+      "text": "فواهاهاهاها!\\pأنا كوغا، عضو النخبة الأربعة.\\pأعيش في الظلال، أنا نينجا!\\pأسلوبي المعقد سيربكك ويدمرك!\\pالارتباك، النوم، السم…\\p{استعد لتكون|استعدي لتكوني} ضحية تقنيتي الخبيثة!\\pفواهاهاهاها!\\pقتال البوكيمون ليس قوة غاشمة فحسب…\\p{سترى|سترين} ذلك قريبا!"
     },
     {
       "id": "maps/KogasRoom:KogaScript.BeatenText",
@@ -46343,7 +46898,7 @@
     {
       "id": "maps/OaksLab:OaksLabPoster1Text",
       "context": "Oaks Lab: sign / object (sign)",
-      "text": "زر البدء يفتح القائمة."
+      "text": "زر ستارت يفتح القائمة."
     },
     {
       "id": "maps/OaksLab:OaksLabPoster2Text",
@@ -47103,12 +47658,12 @@
     {
       "id": "maps/PewterGym:CamperJerrySeenText",
       "context": "Pewter Gym: trainer, before battle (trainer Camper Jerry)",
-      "text": "مدربو هذه الصالة يستخدمون البوكيمون الصخرية.\\pودفاع النوع الصخري عال.\\pقد تطول المعارك كثيرا. هل أنت {مستعد|مستعدة}؟"
+      "text": "مدربو هذه الصالة يستخدمون البوكيمون الصخرية.\\pودفاع النوع الصخري عال.\\pقد يطول القتال كثيرا. هل أنت {مستعد|مستعدة}؟"
     },
     {
       "id": "maps/PewterGym:CamperJerryBeatenText",
       "context": "Pewter Gym: trainer defeated (battle text box) (trainer Camper Jerry)",
-      "text": "لا بد أن أفوز بهذه المعارك…"
+      "text": "لا بد أن أفوز بهذه القتالات…"
     },
     {
       "id": "maps/PewterGym:HikerEdwinSeenText",
@@ -48088,7 +48643,7 @@
     {
       "id": "maps/BillsHouse:PokemonJournalBillScript+1",
       "context": "Bills House: dialogue [inline after jumpthistext]",
-      "text": "مجلة البوكيمون\\pملف خاص: عاشق البوكيمون بيل!\\pاخترع بيل نظام تخزين البوكيمون ليحفظ مجموعته الضخمة.\\pويبدو أن أول ما أمسكه كان أبرا."
+      "text": "مجلة البوكيمون\\pملف خاص: عاشق البوكيمون بيل!\\pاخترع بيل نظام تخزين البوكيمون ليحفظ مجموعته الضخمة.\\pويبدو أن أول ما اصطاده كان أبرا."
     },
     {
       "id": "maps/BillsHouse:BillsHousePCText",
@@ -48098,7 +48653,7 @@
     {
       "id": "maps/BillsHouse:BillsHouseBillScript.AfterText",
       "context": "Bills House: dialogue (Bill)",
-      "text": "يا له من قتال رائع!\\pأي عاشق للبوكيمون سيطير فرحا برؤية ما أمسكته."
+      "text": "يا له من قتال رائع!\\pأي عاشق للبوكيمون سيطير فرحا برؤية ما اصطدته."
     },
     {
       "id": "maps/BillsHouse:BillsHouseBillScript.IntroText",
@@ -48108,7 +48663,7 @@
     {
       "id": "maps/BillsHouse:BillsHouseBillScript.SeenText",
       "context": "Bills House: dialogue (Bill)",
-      "text": "أمسكت الوحوش الأسطورية الثلاثة؟\\pهذا رائع يا {PLAYER}!\\pهل {تظن|تظنين} أنها كانت قريبة لإيفي؟\\pيا للروعة! علي أن أريك فريقي!\\pيمكنك مقارنة الأساطير الثلاثة التي قاتلتها ببوكيموني!"
+      "text": "اصطدت الوحوش الأسطورية الثلاثة؟\\pهذا رائع يا {PLAYER}!\\pهل {تظن|تظنين} أنها كانت قريبة لإيفي؟\\pيا للروعة! علي أن أريك فريقي!\\pيمكنك مقارنة الأساطير الثلاثة التي قاتلتها ببوكيموني!"
     },
     {
       "id": "maps/BillsHouse:BillsHouseBillScript.BeatenText",
@@ -48273,12 +48828,12 @@
     {
       "id": "maps/VermilionGym:GenericTrainerGuitaristfJanet+1",
       "context": "Vermilion Gym: trainer, after battle (trainer Guitaristf Janet) [inline after generictrainer]",
-      "text": "خبأ سيرج مفتاحي الأسوار الكهربائية في القمامة."
+      "text": "خبأ سيرج زرين للأسوار الكهربائية في القمامة."
     },
     {
       "id": "maps/VermilionGym:LtSurgeIntroText",
       "context": "Vermilion Gym: dialogue (Surge)",
-      "text": "سيرج: هيه يا {صغير|صغيرة}!\\pعلي أن أعترف لك. قد لا يكون تحديك لي تصرفا ذكيا، لكنه يتطلب شجاعة!\\pفي البوكيمون الكهربائية، أنا رقم واحد!\\pلم أخسر قط في ساحة المعركة.\\pسأصعقك كما صعقت أعدائي في الحرب!"
+      "text": "سيرج: هيه يا {صغير|صغيرة}!\\pعلي أن أعترف لك. قد لا يكون تحديك لي تصرفا ذكيا، لكنه يتطلب شجاعة!\\pفي البوكيمون الكهربائية، أنا رقم واحد!\\pلم أخسر قط في ساحة القتال.\\pسأصعقك كما صعقت أعدائي في الحرب!"
     },
     {
       "id": "maps/VermilionGym:LtSurgeWinLossText",
@@ -48353,7 +48908,7 @@
     {
       "id": "maps/VermilionGym:VermilionGymFoundSwitchText",
       "context": "Vermilion Gym: dialogue",
-      "text": "مفتاح سري تحت القمامة؟\\pمن الأفضل الضغط عليه."
+      "text": "زر سري تحت القمامة؟\\pمن الأفضل الضغط عليه."
     },
     {
       "id": "maps/VermilionGym:VermilionGymFoundFirstSwitchText",
@@ -48388,7 +48943,7 @@
     {
       "id": "maps/VermilionHouseFishingSpeechHouse:FishingDudeText",
       "context": "Vermilion House Fishing Speech House: NPC talk (Fishing Guru)",
-      "text": "أنا شيخ الصيد، أكبر إخوة الصيد.\\pهل قابلت خبير الصيد عند بحيرة الغضب؟\\pإنه يحلم برؤية أعظم ماجيكارب في العالم.\\pإن لم يزعجك، {أره|أريه} كل ماجيكارب {تمسكه|تمسكينه}.\\pمن يدري، ربما {تمسك|تمسكين} ماجيكارب أحلامه!"
+      "text": "أنا شيخ الصيد، أكبر إخوة الصيد.\\pهل قابلت خبير الصيد عند بحيرة الغضب؟\\pإنه يحلم برؤية أعظم ماجيكارب في العالم.\\pإن لم يزعجك، {أره|أريه} كل ماجيكارب {تصطاده|تصطادينه}.\\pمن يدري، ربما {تصطاد|تصطادين} ماجيكارب أحلامه!"
     },
     {
       "id": "maps/VermilionHouseFishingSpeechHouse:FishingDudesHousePhotoText",
@@ -48528,7 +49083,7 @@
     {
       "id": "maps/PokemonFanClub:PokemonFanClubClefairyGuyMakingDoWithADollIFoundText",
       "context": "Pokemon Fan Club: dialogue (Fat Guy)",
-      "text": "أحب كليفيري، لكنني لم أستطع إمساك واحد قط.\\pلذا أكتفي بدمية بوكي وجدتها."
+      "text": "أحب كليفيري، لكنني لم أستطع اصطياد واحد قط.\\pلذا أكتفي بدمية بوكي وجدتها."
     },
     {
       "id": "maps/PokemonFanClub:PokemonFanClubClefairyGuyTakeThisDollBackToGirlText",
@@ -49648,17 +50203,17 @@
     {
       "id": "maps/CeladonGameCornerPrizeRoom:CeladonPrizeRoom_TMMenuDataHeader.MenuData2[0]",
       "context": "Celadon Game Corner Prize Room: menu item (box (0, 2, 15, 11), 13 cells)",
-      "text": "آلة 32"
+      "text": "ت.32"
     },
     {
       "id": "maps/CeladonGameCornerPrizeRoom:CeladonPrizeRoom_TMMenuDataHeader.MenuData2[1]",
       "context": "Celadon Game Corner Prize Room: menu item (box (0, 2, 15, 11), 13 cells)",
-      "text": "آلة 06"
+      "text": "ت.06"
     },
     {
       "id": "maps/CeladonGameCornerPrizeRoom:CeladonPrizeRoom_TMMenuDataHeader.MenuData2[2]",
       "context": "Celadon Game Corner Prize Room: menu item (box (0, 2, 15, 11), 13 cells)",
-      "text": "آلة 68"
+      "text": "ت.68"
     },
     {
       "id": "maps/CeladonGameCornerPrizeRoom:CeladonPrizeRoom_TMMenuDataHeader.MenuData2[3]",
@@ -49723,7 +50278,7 @@
     {
       "id": "maps/CeladonGameCornerPrizeRoom:CeladonPrizeRoom_AlreadyHaveTMText",
       "context": "Celadon Game Corner Prize Room: dialogue",
-      "text": "لديك هذه الآلة مسبقا."
+      "text": "لديك هذه الآلة التقنية بالفعل."
     },
     {
       "id": "maps/CeladonGameCornerPrizeRoom:CeladonPrizeRoom_NotEnoughCoinsText",
@@ -49843,7 +50398,7 @@
     {
       "id": "maps/CeladonCafe:EatathonContestPosterText",
       "context": "Celadon Cafe: sign / object (sign)",
-      "text": "ماراثون الأكل! بلا حد زمني!\\pمعركة بلا نهاية!\\pمن يأكل أكثر يأكل مجانا!"
+      "text": "ماراثون الأكل! بلا حد زمني!\\pقتال بلا نهاية!\\pمن يأكل أكثر يأكل مجانا!"
     },
     {
       "id": "maps/CeladonCafe:EatathonContestTrashCanText",
@@ -49853,7 +50408,7 @@
     {
       "id": "maps/CeladonChiefHouse:CeladonChiefHouseCooltrainerMText",
       "context": "Celadon Chief House: NPC talk (Cool Dude)",
-      "text": "صالة الألعاب تجني لنا مالا كثيرا!\\pوكله قانوني. {صدقني|صدقيني}!"
+      "text": "ركن الألعاب يجني لنا مالا كثيرا!\\pوكله قانوني. {صدقني|صدقيني}!"
     },
     {
       "id": "maps/CeladonDevelopmentSpeechHouse:CeladonDevelopmentSpeechHouseCooltrainermText",
@@ -49898,7 +50453,7 @@
     {
       "id": "maps/EusinesHouse:EusineNoBeastsText",
       "context": "Eusines House: dialogue (Eusine)",
-      "text": "بالمناسبة يا {PLAYER}.\\pهل أمسكت أيا من الوحوش الأسطورية؟\\p………………\\pحسنا…\\pدعني أعطيك ملاحظات بحثي."
+      "text": "بالمناسبة يا {PLAYER}.\\pهل اصطدت أيا من الوحوش الأسطورية؟\\p………………\\pحسنا…\\pدعني أعطيك ملاحظات بحثي."
     },
     {
       "id": "maps/EusinesHouse:EusineShowsRaikouText",
@@ -49918,7 +50473,7 @@
     {
       "id": "maps/EusinesHouse:EusineQuestHintText",
       "context": "Eusines House: dialogue (Eusine)",
-      "text": "إن أمسكت واحدا منها، فأرجو أن {تخبرني|تخبريني}.\\pأعتمد عليك يا {PLAYER}!"
+      "text": "إن اصطدت واحدا منها، فأرجو أن {تخبرني|تخبريني}.\\pأعتمد عليك يا {PLAYER}!"
     },
     {
       "id": "maps/EusinesHouse:EusinesHouseGrampsGrandsonHomeText",
@@ -51253,7 +51808,7 @@
     {
       "id": "maps/CeladonUniversityCafeteria:CeladonUniversityCafeteriaCoreyScript.IntroText1",
       "context": "Celadon University Cafeteria: dialogue (Ace Trainer M)",
-      "text": "أنا كوري! من أقوى أربعة مدربين في جامعة سيلادون.\\pيسموننا رباعي سيلادون!\\pسأريك في معركة سريعة كيف استحققنا اللقب!"
+      "text": "أنا كوري! من أقوى أربعة مدربين في جامعة سيلادون.\\pيسموننا رباعي سيلادون!\\pسأريك في قتال سريع كيف استحققنا اللقب!"
     },
     {
       "id": "maps/CeladonUniversityCafeteria:CeladonUniversityCafeteriaCoreyScript.IntroText2",
@@ -51318,7 +51873,7 @@
     {
       "id": "maps/CeladonUniversityCafeteria:CeladonUniversityCafeteriaYoungster2Script.Text2",
       "context": "Celadon University Cafeteria: dialogue (Schoolboy)",
-      "text": "أحب عصير ليمون باردا بعد معركة صعبة."
+      "text": "أحب عصير ليمون باردا بعد قتال صعب."
     },
     {
       "id": "maps/CeladonUniversityCafeteria:CeladonUniversityCafeteriaBakerScript.Text2",
@@ -51473,7 +52028,7 @@
     {
       "id": "maps/CeladonUniversityPool:CeladonUniversityPoolFergusScript.IntroText1",
       "context": "Celadon University Pool: dialogue (Swimmer Guy)",
-      "text": "اسمي فيرغس! من أقوى أربعة\\pمدربين في جامعة سيلادون.\\pيسموننا رباعي سيلادون!\\pسأثبت لك بمعركة أنني أستحق سمعتي!"
+      "text": "اسمي فيرغس! من أقوى أربعة\\pمدربين في جامعة سيلادون.\\pيسموننا رباعي سيلادون!\\pسأثبت لك بقتال أنني أستحق سمعتي!"
     },
     {
       "id": "maps/CeladonUniversityPool:CeladonUniversityPoolFergusScript.IntroText2",
@@ -51598,7 +52153,7 @@
     {
       "id": "maps/CeladonUniversityNursesOffice:CeladonUniversityNursesOfficeSignText",
       "context": "Celadon University Nurses Office: sign / object (sign)",
-      "text": "البوكيمون السليم بوكيمون سعيد!\\pلا {تدع|تدعي} أصدقاءك يفقدون الوعي في المعارك!"
+      "text": "البوكيمون السليم بوكيمون سعيد!\\pلا {تدع|تدعي} أصدقاءك يغمى عليهم في القتال!"
     },
     {
       "id": "maps/CeladonUniversityClassroom1:CeladonUniversityClassroom1ImakuniScript.Text6",
@@ -52463,7 +53018,7 @@
     {
       "id": "maps/RocketHideoutB1F:RocketHideoutB1FLassMavis+1",
       "context": "Rocket Hideout B1F: trainer, after battle (trainer Lass Mavis) [inline after generictrainer]",
-      "text": "معارك سبارك لا يمكن توقعها.\\pلذا أنوع أسلوبي!"
+      "text": "قتالات سبارك لا يمكن توقعها.\\pلذا أنوع أسلوبي!"
     },
     {
       "id": "maps/RocketHideoutB1F:RocketHideoutB1FLassMavis.SeenText",
@@ -52523,7 +53078,7 @@
     {
       "id": "maps/RocketHideoutB4F:RocketHideoutB4FMeetLeadersScript.CandelaIntro1Text",
       "context": "Rocket Hideout B4F: dialogue",
-      "text": "كانديلا: أقول لكما، القوة الخام تفوز دائما!\\pيجب أن يكون التدريب قاسيا كالمعركة!"
+      "text": "كانديلا: أقول لكما، القوة الخام تفوز دائما!\\pيجب أن يكون التدريب قاسيا كالقتال!"
     },
     {
       "id": "maps/RocketHideoutB4F:RocketHideoutB4FMeetLeadersScript.BlancheIntro1Text",
@@ -52563,7 +53118,7 @@
     {
       "id": "maps/RocketHideoutB4F:RocketHideoutB4FSparkScript.GreetingText",
       "context": "Rocket Hideout B4F: dialogue (Spark)",
-      "text": "سبارك: مرحبا! {مستعد|مستعدة} للثقة بحدسك؟ في معركة؟"
+      "text": "سبارك: مرحبا! {مستعد|مستعدة} للثقة بحدسك؟ في قتال؟"
     },
     {
       "id": "maps/RocketHideoutB4F:RocketHideoutB4FSparkScript.SeenText",
@@ -54038,7 +54593,7 @@
     {
       "id": "maps/SafariZoneNorth:SafariZoneNorthCooltrainerFText",
       "context": "Safari Zone North: dialogue (Ace Trainer F)",
-      "text": "أمسكت تشانسي!\\pيا لحظي! سأعلمه اصطداما قويا جدا.\\pسأشاركك حظي!"
+      "text": "اصطدت تشانسي!\\pيا لحظي! سأعلمه اصطداما قويا جدا.\\pسأشاركك حظي!"
     },
     {
       "id": "maps/SafariZoneNorth:Text_SafariZoneNorthTutorDoubleEdge",
@@ -54098,7 +54653,7 @@
     {
       "id": "maps/SafariZoneEast:CowgirlAprilSeenText",
       "context": "Safari Zone East: trainer, before battle (trainer Cowgirl April)",
-      "text": "ييهاا! أمسكت للتو قطيعا كاملا من البوكيمون!"
+      "text": "ييهاا! اصطدت للتو قطيعا كاملا من البوكيمون!"
     },
     {
       "id": "maps/SafariZoneEast:CowgirlAprilBeatenText",
@@ -54148,7 +54703,7 @@
     {
       "id": "maps/SafariZoneWest:CamperAmosSeenText",
       "context": "Safari Zone West: trainer, before battle (trainer Camper Amos)",
-      "text": "يعيش بوكيمون كثير في منطقة السفاري.\\pجئت لأمسكها كلها!"
+      "text": "يعيش بوكيمون كثير في منطقة السفاري.\\pجئت لأصطادها كلها!"
     },
     {
       "id": "maps/SafariZoneWest:CamperAmosBeatenText",
@@ -54223,7 +54778,7 @@
     {
       "id": "maps/SafariZoneFuchsiaGate:SafariZoneFuchsiaGateOfficerText",
       "context": "Safari Zone Fuchsia Gate: NPC talk (Officer)",
-      "text": "مرحبا!\\pالحارس غائب، لذا أوقفنا لعبة السفاري حاليا.\\pعليك إحضار كراتك الخاصة إن أردت إمساك أي بوكيمون."
+      "text": "مرحبا!\\pالحارس غائب، لذا أوقفنا لعبة السفاري حاليا.\\pعليك إحضار كراتك الخاصة إن أردت اصطياد أي بوكيمون."
     },
     {
       "id": "maps/UragaChannelEast:GenericTrainerSwimmerfWoda+1",
@@ -54313,7 +54868,7 @@
     {
       "id": "maps/ScaryCave1F:ScaryCave1FMiraScript.ChallengeText",
       "context": "Scary Cave 1F: dialogue (Mira)",
-      "text": "أنا ميرا… كنت أمسك البوكيمون، لكن هذا الكهف مخيف جدا…\\pأريد أن أصبح أقوى كي لا أبقى جبانة هكذا.\\pأرجوك! أرجوك {نازلني|نازليني}!"
+      "text": "أنا ميرا… كنت أصطاد البوكيمون، لكن هذا الكهف مخيف جدا…\\pأريد أن أصبح أقوى كي لا أبقى جبانة هكذا.\\pأرجوك! أرجوك {نازلني|نازليني}!"
     },
     {
       "id": "maps/ScaryCave1F:ScaryCave1FMiraScript.YesText",
@@ -54693,7 +55248,7 @@
     {
       "id": "maps/CinnabarVolcanoB2F:CinnabarVolcanoB2FLawrenceSpeechText",
       "context": "Cinnabar Volcano B2F: dialogue",
-      "text": "لورانس: نلتقي ثانية يا {PLAYER}.\\pإذن {تبحث|تبحثين} عن مولتريس هنا أيضا. هل ألهمتك؟\\p…ماذا؟! أمسكت به بالفعل؟ مستحيل.\\pقضيت سنوات أبحث في طريق النصر\\pوالجزر جنوب كانتو…\\pلماذا نجحت حيث فشلت أنا؟\\pهل {تقدر|تقدرين} عظمة الأطياف المجنحة؟\\pهل سمعت يوما بحارس البحر؟\\pهذا غير مقبول.\\p{قابلني|قابليني} عند أطلال المعبد في جزيرة شاموتي.\\pسأثبت لك أنني أحق بامتلاك تلك البوكيمون."
+      "text": "لورانس: نلتقي ثانية يا {PLAYER}.\\pإذن {تبحث|تبحثين} عن مولتريس هنا أيضا. هل ألهمتك؟\\p…ماذا؟! اصطدته بالفعل؟ مستحيل.\\pقضيت سنوات أبحث في طريق النصر\\pوالجزر جنوب كانتو…\\pلماذا نجحت حيث فشلت أنا؟\\pهل {تقدر|تقدرين} عظمة الأطياف المجنحة؟\\pهل سمعت يوما بحارس البحر؟\\pهذا غير مقبول.\\p{قابلني|قابليني} عند أطلال المعبد في جزيرة شاموتي.\\pسأثبت لك أنني أحق بامتلاك تلك البوكيمون."
     },
     {
       "id": "maps/CinnabarVolcanoB2F:CinnabarVolcanoB2FLawrenceEscapeRopeText",
@@ -54878,7 +55433,7 @@
     {
       "id": "maps/SeafoamIslandsB4F:SeafoamIslandsB4FLawrenceSpeechText",
       "context": "Seafoam Islands B4F: dialogue",
-      "text": "لورانس: نلتقي ثانية يا {PLAYER}.\\pإذن {تجمع|تجمعين} الأساطير أيضا. هل ألهمتك؟\\p…ماذا؟! أمسكت الطيور الثلاثة؟ مستحيل.\\pحتى أنا، بكل معرفتي ومواردي،\\pلم أجد مولتريس…\\pلماذا نجحت حيث فشلت أنا؟\\pهل {تقدر|تقدرين} عظمة الأطياف المجنحة؟\\pهل سمعت يوما بحارس البحر؟\\pهذا غير مقبول.\\p{قابلني|قابليني} عند أطلال المعبد في جزيرة شاموتي.\\pسأثبت لك أنني أحق بامتلاك تلك البوكيمون."
+      "text": "لورانس: نلتقي ثانية يا {PLAYER}.\\pإذن {تجمع|تجمعين} الأساطير أيضا. هل ألهمتك؟\\p…ماذا؟! اصطدت الطيور الثلاثة؟ مستحيل.\\pحتى أنا، بكل معرفتي ومواردي،\\pلم أجد مولتريس…\\pلماذا نجحت حيث فشلت أنا؟\\pهل {تقدر|تقدرين} عظمة الأطياف المجنحة؟\\pهل سمعت يوما بحارس البحر؟\\pهذا غير مقبول.\\p{قابلني|قابليني} عند أطلال المعبد في جزيرة شاموتي.\\pسأثبت لك أنني أحق بامتلاك تلك البوكيمون."
     },
     {
       "id": "maps/SeafoamIslandsB4F:SeafoamIslandsB4FLawrenceEscapeRopeText",
@@ -55378,7 +55933,7 @@
     {
       "id": "maps/ShamoutiShrineRuins:ShamoutiShrineRuinsLawrenceScript.SeenText",
       "context": "Shamouti Shrine Ruins: dialogue (Lawrence)",
-      "text": "لورانس: بحثت في مناطق كثيرة\\pلأمسك أرتيكونو وزابدوس ومولتريس.\\pدون المجموعة كاملة،\\pلا أستطيع إيقاظ حارس البحر…\\p{ستساعدني|ستساعدينني} على إكمال مجموعتي!"
+      "text": "لورانس: بحثت في مناطق كثيرة\\pلأصطاد أرتيكونو وزابدوس ومولتريس.\\pدون المجموعة كاملة،\\pلا أستطيع إيقاظ حارس البحر…\\p{ستساعدني|ستساعدينني} على إكمال مجموعتي!"
     },
     {
       "id": "maps/ShamoutiShrineRuins:ShamoutiShrineRuinsLawrenceScript.BeatenText",
@@ -57168,7 +57723,7 @@
     {
       "id": "maps/Route10North:Route10NorthLawrenceSpeechText",
       "context": "Route 10 North: dialogue",
-      "text": "لورانس: نلتقي ثانية يا {PLAYER}.\\pإذن أردت زابدوس ذاك في النهاية.\\pبدأت أظن أنك لا {تهتم|تهتمين} بالأساطير.\\p…ماذا؟! أمسكت الطيور الثلاثة؟ مستحيل.\\pحتى أنا، بكل معرفتي ومواردي،\\pلم أجد مولتريس…\\pلماذا نجحت حيث فشلت أنا؟\\pهل {تقدر|تقدرين} عظمة الأطياف المجنحة؟\\pهل سمعت يوما بحارس البحر؟\\pهذا غير مقبول.\\p{قابلني|قابليني} عند أطلال المعبد في جزيرة شاموتي.\\pسأثبت لك أنني أحق بامتلاك تلك البوكيمون."
+      "text": "لورانس: نلتقي ثانية يا {PLAYER}.\\pإذن أردت زابدوس ذاك في النهاية.\\pبدأت أظن أنك لا {تهتم|تهتمين} بالأساطير.\\p…ماذا؟! اصطدت الطيور الثلاثة؟ مستحيل.\\pحتى أنا، بكل معرفتي ومواردي،\\pلم أجد مولتريس…\\pلماذا نجحت حيث فشلت أنا؟\\pهل {تقدر|تقدرين} عظمة الأطياف المجنحة؟\\pهل سمعت يوما بحارس البحر؟\\pهذا غير مقبول.\\p{قابلني|قابليني} عند أطلال المعبد في جزيرة شاموتي.\\pسأثبت لك أنني أحق بامتلاك تلك البوكيمون."
     },
     {
       "id": "maps/Route10North:RockTunnelSignText",
@@ -57378,7 +57933,7 @@
     {
       "id": "maps/Route11Gate:Route11GateOfficerText",
       "context": "Route 11 Gate: NPC talk (Officer)",
-      "text": "حين {تمسك|تمسكين} الكثير من البوكيمون، أليس ابتكار أسمائها صعبا؟\\pفي بلدة لافندر رجل يحكم على ألقاب البوكيمون.\\pوسيساعدك على تغييرها أيضا!"
+      "text": "حين {تصطاد|تصطادين} الكثير من البوكيمون، أليس ابتكار أسمائها صعبا؟\\pفي بلدة لافندر رجل يحكم على ألقاب البوكيمون.\\pوسيساعدك على تغييرها أيضا!"
     },
     {
       "id": "maps/Route11Gate2F:Route11Gate2FBinoculars1Text",
@@ -57788,7 +58343,7 @@
     {
       "id": "maps/Route14:PokefanmCarterSeenText",
       "context": "Route 14: trainer, before battle (trainer Pokefanm Carter)",
-      "text": "لقد عانيت كثيرا حقا\\pحتى أمسكت ببوكيموني الثمين."
+      "text": "لقد عانيت كثيرا حقا\\pحتى اصطدت بوكيموني الثمين."
     },
     {
       "id": "maps/Route14:PokefanmCarterBeatenText",
@@ -58938,7 +59493,7 @@
     {
       "id": "maps/Route21:GenericTrainerFisherLiam.BeatenText",
       "context": "Route 21: trainer defeated (battle text box) (trainer Fisher Liam)",
-      "text": "من طارد بوكيمونين لم يمسك أيا منهما!"
+      "text": "من طارد بوكيمونين لم يصطد أيا منهما!"
     },
     {
       "id": "maps/Route21:GenericTrainerFisherGideon+1",
@@ -59293,7 +59848,7 @@
     {
       "id": "maps/Route25:SupernerdPatSeenText",
       "context": "Route 25: trainer, before battle (trainer Super Nerd Pat)",
-      "text": "موفوفوفو…\\pلا علاقة لي بالمدربين الستة.\\pانتظرت هنا لأهزمك بعد أن تنهكك كل تلك المعارك."
+      "text": "موفوفوفو…\\pلا علاقة لي بالمدربين الستة.\\pانتظرت هنا لأهزمك بعد أن تنهكك كل تلك القتالات."
     },
     {
       "id": "maps/Route25:SupernerdPatBeatenText",
@@ -59383,7 +59938,7 @@
     {
       "id": "maps/Route26:CooltrainermGaven1SeenText",
       "context": "Route 26: trainer, before battle (trainer Cooltrainerm Gaven1)",
-      "text": "المعارك الصعبة تمنح القوة."
+      "text": "القتال الصعب يمنح القوة."
     },
     {
       "id": "maps/Route26:CooltrainermGaven1BeatenText",
@@ -59948,12 +60503,12 @@
     {
       "id": "maps/Route31:ReceivedSpearowMailText",
       "context": "Route 31: mail message (mail viewer)",
-      "text": "الكهف المظلم\\nيصل بطريق آخر"
+      "text": "الكهف المظلم\\nيؤدي لطريق آخر"
     },
     {
       "id": "maps/Route31:Bug_catcherWade1SeenText",
       "context": "Route 31: trainer, before battle (trainer Bug Catcher Wade1)",
-      "text": "أمسكت الكثير من البوكيمون. {دعني|دعيني} أقاتلك!"
+      "text": "اصطدت الكثير من البوكيمون. {دعني|دعيني} أقاتلك!"
     },
     {
       "id": "maps/Route31:Bug_catcherWade1BeatenText",
@@ -59963,12 +60518,12 @@
     {
       "id": "maps/Route31:Bug_catcherWade1AfterText",
       "context": "Route 31: dialogue (Bug Catcher)",
-      "text": "يمكنك الإمساك ببوكيمون حتى لو كان معك ستة.\\pإن أمسكت واحدا، يذهب تلقائيا إلى صندوقك."
+      "text": "يمكنك اصطياد بوكيمون حتى لو كان معك ستة.\\pإن اصطدت واحدا، يذهب تلقائيا إلى صندوقك."
     },
     {
       "id": "maps/Route31:Text_Route31SleepyMan",
       "context": "Route 31: dialogue (Fat Guy)",
-      "text": "…همممغ… هاه؟\\pمشيت كثيرا اليوم بحثا عن البوكيمون.\\pقدماي تؤلمانني وأشعر بالنعاس…\\pلو كنت بوكيمون بريا، لسهل الإمساك بي…\\p…خخخ…"
+      "text": "…همممغ… هاه؟\\pمشيت كثيرا اليوم بحثا عن البوكيمون.\\pقدماي تؤلمانني وأشعر بالنعاس…\\pلو كنت بوكيمون بريا، لسهل اصطيادي…\\p…خخخ…"
     },
     {
       "id": "maps/Route31:Text_Route31SleepyManGotMail",
@@ -60208,7 +60763,7 @@
     {
       "id": "maps/Route32:FisherRalphSwarmText",
       "context": "Route 32: dialogue (Fisher)",
-      "text": "واحد، اثنان، ثلاثة…\\pمواهاهاها، يا له من صيد وفير!\\pانتهيت! {أمسك|أمسكي} ما استطعت يا {صغير|صغيرة}!"
+      "text": "واحد، اثنان، ثلاثة…\\pمواهاهاها، يا له من صيد وفير!\\pانتهيت! {اصطد|اصطادي} ما استطعت يا {صغير|صغيرة}!"
     },
     {
       "id": "maps/Route32:FisherHenrySeenText",
@@ -60373,7 +60928,7 @@
     {
       "id": "maps/Route33:HikerAnthonyDunsparceText",
       "context": "Route 33: dialogue (Hiker)",
-      "text": "هيه، هل حصلت على دانسبارس؟\\pأنا أمسكت واحدا أيضا.\\p{انظر|انظري} إليه في الضوء. وجهه مضحك!"
+      "text": "هيه، هل حصلت على دانسبارس؟\\pأنا اصطدت واحدا أيضا.\\p{انظر|انظري} إليه في الضوء. وجهه مضحك!"
     },
     {
       "id": "maps/Route33:SchoolgirlImogenSeenText",
@@ -62693,7 +63248,7 @@
     {
       "id": "maps/Route44:Route44VeteranmScript.QuestionText",
       "context": "Route 44: dialogue (Veteran M)",
-      "text": "رأيت معاركك.\\pبوكيمونك قوية حقا.\\pهل أنت {مستعد|مستعدة}؟"
+      "text": "رأيت قتالاتك.\\pبوكيمونك قوية حقا.\\pهل أنت {مستعد|مستعدة}؟"
     },
     {
       "id": "maps/Route44:Route44VeteranmScript.RefusedText",
@@ -62728,7 +63283,7 @@
     {
       "id": "maps/Route44:GenericTrainerCooltrainerfCybil+1",
       "context": "Route 44: trainer, after battle (trainer Cooltrainerf Cybil) [inline after generictrainer]",
-      "text": "كلنا نتحسن بخوض معارك كثيرة.\\pقاتلت كثيرا لأصبح ما أنا عليه اليوم: من النخبة."
+      "text": "كلنا نتحسن بخوض قتالات كثيرة.\\pقاتلت كثيرا لأصبح ما أنا عليه اليوم: من النخبة."
     },
     {
       "id": "maps/Route44:GenericTrainerPokemaniacZach+1",
@@ -63293,7 +63848,7 @@
     {
       "id": "maps/Route48:Route48JessieJamesSeenText",
       "context": "Route 48: dialogue",
-      "text": "{قف|قفي} مكانك يا {شقي|شقية}!\\p{أتعرف|أتعرفين} أي بوكيمون يعيش في تلك الغابة؟ بيكاتشو!\\pسيسعد الزعيم إن أمسكنا واحدا قويا!\\p{استسلم|استسلمي} الآن، أو {استعد|استعدي} للقتال!"
+      "text": "{قف|قفي} مكانك يا {شقي|شقية}!\\p{أتعرف|أتعرفين} أي بوكيمون يعيش في تلك الغابة؟ بيكاتشو!\\pسيسعد الزعيم إن اصطدنا واحدا قويا!\\p{استسلم|استسلمي} الآن، أو {استعد|استعدي} للقتال!"
     },
     {
       "id": "maps/Route48:Route48JessieJamesBeatenText",
@@ -66103,7 +66658,7 @@
     {
       "id": "data/text/common:_BallAlmostHadItText",
       "context": "Common text (items, PC, marts, Day-Care, events) (_BallAlmostHadItText)",
-      "text": "آخ! كدنا نمسكه!"
+      "text": "آخ! كدنا نصطاده!"
     },
     {
       "id": "data/text/common:_BallSoCloseText",
@@ -66503,7 +67058,7 @@
     {
       "id": "data/credits_strings:CreditsStringsPointers.MorikazuAoki",
       "context": "Credits roll line(s), centred in 20 cells",
-      "text": "موريكازو آوكي"
+      "text": "موريكازو أوكي"
     },
     {
       "id": "data/credits_strings:CreditsStringsPointers.KohjiNishino",

@@ -11,7 +11,8 @@ of it into the Arabic game's source, which ``make`` then builds:
    screens turned around. Each hunk checks the lines it replaces by their hash;
 3. every translated entry of the manifest (``data/manifest.json``) is encoded
    (``polished_crystal.encode``) and put in place of the lines it owns, checked
-   by their pin; an entry the translation leaves out stays English;
+   by their pin; a translation that leaves an entry out is refused, since the
+   Arabic glyphs take the Latin letters' codes;
 4. the generated files are written from the pinned originals: the Arabic glyphs
    in the 8x8 typefaces and the VWF font, the Pokédex's tilemap labels, the
    charmap with the presentation forms and the gender codes, the Huffman codes
@@ -172,34 +173,53 @@ def extra_entries() -> dict[str, str]:
 
 
 def translation_texts(
-    translations: TranslationSet | None, manifest: Manifest | None = None
+    translations: TranslationSet | None = None,
+    manifest: Manifest | None = None,
+    *,
+    complete: bool = False,
 ) -> dict[str, str]:
-    """The translation's text by id; an empty text is an entry left in English.
+    """The translation's text by id; an empty text is an entry not translated yet,
+    except where the entry allows an empty text (it is then written empty).
 
     Unknown ids are refused, and so is a translation without the entries the
-    engine needs (``extra_entries``).
+    engine needs (``extra_entries``). ``complete`` (prepare) also refuses a
+    translation that leaves any entry out: the Arabic glyphs take the Latin
+    letters' codes, so a text left in English would show as wrong letters.
     """
     manifest = manifest or builtin_manifest()
     translations = translations or builtin_translation_set(TARGET)
     extras = extra_entries()
-    texts = {entry.id: entry.text for entry in translations.entries}
+    texts = {
+        entry.id: entry.text
+        for entry in translations.entries
+        if entry.text.strip()
+        or manifest.entries.get(entry.id, {}).get("limits", {}).get("allow_empty")
+    }
     unknown = [
-        entry_id
-        for entry_id in texts
-        if entry_id not in manifest.entries and entry_id not in extras
+        entry.id
+        for entry in translations.entries
+        if entry.id not in manifest.entries and entry.id not in extras
     ]
-    missing = [entry_id for entry_id in extras if not texts.get(entry_id, "").strip()]
-    if unknown or missing:
+    missing = [entry_id for entry_id in extras if entry_id not in texts]
+    untranslated = [entry_id for entry_id in manifest.entries if entry_id not in texts]
+    if unknown or missing or (complete and untranslated):
         problems = []
         if unknown:
             problems.append("unknown " + ", ".join(unknown[:20]))
         if missing:
             problems.append("missing " + ", ".join(missing))
+        if complete and untranslated:
+            more = f" (and {len(untranslated) - 10} more)" if len(untranslated) > 10 else ""
+            problems.append(
+                f"{len(untranslated)} entries untranslated, which would show as wrong letters: "
+                + ", ".join(untranslated[:10])
+                + more
+            )
         raise ClassicRetroError(
             ErrorCode.INVALID_TRANSLATION_DOCUMENT,
             f"{TARGET} translations: " + "; ".join(problems),
         )
-    return {entry_id: text for entry_id, text in texts.items() if text.strip()}
+    return texts
 
 
 def _check_key_phrase(text: str) -> list[int]:
@@ -487,14 +507,17 @@ def _validate_prepared(source: Path, state: Mapping[str, Any]) -> None:
         state.get("overlay_version") != OVERLAY_VERSION
         or state.get("upstream_commit") != PINNED_COMMIT
         or not isinstance(state.get("written"), dict)
+        or not isinstance(state.get("source_blobs"), dict)
     ):
         raise ClassicRetroError(
             ErrorCode.SOURCE_BASELINE_MISMATCH,
             f"Outdated Arabic overlay; prepare a fresh checkout of {PINNED_COMMIT}",
         )
+    # What prepare wrote, and every pinned file it read but left as it was.
+    expected = {**state["source_blobs"], **state["written"]}
     changed = [
         relative
-        for relative, blob in state["written"].items()
+        for relative, blob in expected.items()
         if not (source / relative).is_file()
         or git_blob_sha1((source / relative).read_bytes()) != blob
     ]
@@ -522,7 +545,7 @@ def prepare_polished_crystal_arabic_source(
     source = source.expanduser().resolve()
     manifest = builtin_manifest()
     engine = builtin_engine_patch()
-    texts = translation_texts(translations, manifest)
+    texts = translation_texts(translations, manifest, complete=True)
     digest = _translations_digest(texts)
     state = _read_state(source)
     if state is not None:
@@ -586,7 +609,7 @@ def check_polished_crystal_arabic_source(
     source = source.expanduser().resolve()
     manifest = builtin_manifest()
     engine = builtin_engine_patch()
-    texts = translation_texts(translations, manifest)
+    texts = translation_texts(translations, manifest, complete=True)
     pristine = read_pristine(source)
     outputs, found = build_outputs(pristine, texts, manifest, engine)
     return {

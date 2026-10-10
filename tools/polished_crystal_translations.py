@@ -76,8 +76,9 @@ NOTATION = (
     "{far:LABEL} (the game's text commands, in speech-box texts only); {LV} {PK} {MN} {ID} {No} "
     "are tiles of the English font a translation may drop. The player's gender: {masculine|"
     "feminine} holds the words that differ (letters, spaces and signs only, no placeholder), and "
-    "the game shows the side that fits the player. An entry left out of this file stays English "
-    "in the game."
+    "the game shows the side that fits the player. Every entry needs its Arabic: the Arabic "
+    "glyphs take the Latin letters' codes, so a text left in English would show as wrong letters; "
+    "an empty text only where an entry's limits allow it."
 )
 # The glossary keeps the names a translator needs everywhere: places, types, badges, the main
 # characters and the core terms. Whole name tables (species, moves, items, abilities, trainers) are
@@ -214,7 +215,8 @@ def main(argv: list[str] | None = None) -> int:
     rejects: dict[str, object] = {}
     accepted: dict[str, str] = {}
     for entry_id, text in texts.items():
-        if not text.strip():
+        allow_empty = manifest.entries.get(entry_id, {}).get("limits", {}).get("allow_empty")
+        if not text.strip() and not allow_empty:
             continue
         problems = check_one(entry_id, text)
         if problems:
@@ -268,6 +270,7 @@ def main(argv: list[str] | None = None) -> int:
                 "translations": str(args.out),
                 "entries": len(entries),
                 "manifest_entries": len(manifest),
+                "untranslated": sum(entry_id not in accepted for entry_id in manifest.entries),
                 "glossary": len(glossary),
                 "rejected": len(rejects),
                 "rejects": str(rejects_path) if rejects else None,

@@ -384,6 +384,22 @@ def test_injection_replaces_pinned_lines_from_the_bottom_up():
     )
     grouped = _manifest([group], {"t:T": {"slack": 2, "members": ["t:s"]}})
     assert inject.group_growth(grouped, {"t:s": ['\tdb "ابتثج@"']}) == {"t:T": (3, 2)}
+    # An empty text is written empty where the entry allows it, and skipped elsewhere.
+    suffix = _entry(
+        "t:d",
+        "t.asm",
+        1,
+        1,
+        ['\tdb "day@"'],
+        kind="string",
+        limits={"width": 8, "allow_empty": True},
+        fmt={
+            "lines": [{"pre": '\tdb "', "parts": [{"slot": 0}, {"text": '"'}]}],
+            "slots": [{"width": 8, "pre": "", "post": "", "ctl_before": "", "ctl_after": "@"}],
+        },
+    )
+    assert inject.encode_entries(_manifest([suffix]), {"t:d": ""}, None) == {"t:d": ['\tdb "@"']}
+    assert inject.encode_entries(manifest, {"maps/Town:A": ""}, None) == {}
 
 
 # --- text codes ------------------------------------------------------------------------------
@@ -501,7 +517,7 @@ def test_the_shipped_translation_passes_and_reports_its_coverage(tmp_path):
     extras = overlay.extra_entries()
     assert coverage["entries"] == len(manifest_module.builtin_manifest())
     assert coverage["translated"] == len(shipped.entries) - len(extras)
-    assert coverage["translated"] + coverage["untranslated"] == coverage["entries"]
+    assert coverage["translated"] == coverage["entries"] and coverage["untranslated"] == 0
     assert (
         sum(item["translated"] for item in coverage["by_category"].values())
         == (coverage["translated"])
@@ -528,10 +544,17 @@ def test_a_translation_must_know_its_ids_and_have_the_labels():
     )
     with pytest.raises(ClassicRetroError, match="missing"):
         overlay.translation_texts(without)
-    # An empty text is an entry left in English.
+    # An empty text is an entry not translated yet, which only prepare refuses: the Arabic
+    # glyphs take the Latin letters' codes.
     first = shipped.entries[0]
     emptied = replace(shipped, entries=(replace(first, text=""), *shipped.entries[1:]))
     assert first.id not in overlay.translation_texts(emptied)
+    with pytest.raises(ClassicRetroError, match=f"1 entries untranslated.*{re.escape(first.id)}"):
+        overlay.translation_texts(emptied, complete=True)
+    # Where the entry allows it, an empty text is the translation.
+    suffix = "home/text:PrintDayOfWeek.Day"
+    assert manifest_module.builtin_manifest().entries[suffix]["limits"]["allow_empty"]
+    assert overlay.translation_texts(shipped, complete=True)[suffix] == ""
 
 
 # --- prepare on a tiny tree ---------------------------------------------------------------
@@ -624,16 +647,29 @@ def test_prepare_patches_a_pinned_tree_once_and_refuses_any_other(monkeypatch, t
     again = overlay.prepare_polished_crystal_arabic_source(root, None, translations)
     assert again["already_prepared"] is True
     # Another translation, or a changed tree, is refused.
-    other = replace(translations, entries=translations.entries[:-1])
+    other = replace(
+        translations,
+        entries=(*translations.entries[:-1], replace(translations.entries[-1], text="باب")),
+    )
     with pytest.raises(ClassicRetroError, match="another translation"):
         overlay.prepare_polished_crystal_arabic_source(root, None, other)
+    attrmap = sorted(root.glob("gfx/pokedex/*.attrmap"))[0]
+    pristine = attrmap.read_bytes()
+    attrmap.write_bytes(pristine + b"\0")  # read, not written, by prepare
+    with pytest.raises(ClassicRetroError, match="Modified or partially patched"):
+        overlay.prepare_polished_crystal_arabic_source(root, None, translations)
+    attrmap.write_bytes(pristine)
     (root / "maps/TestTown.asm").write_text("changed\n", encoding="utf-8")
     with pytest.raises(ClassicRetroError) as error:
         overlay.prepare_polished_crystal_arabic_source(root, None, translations)
     assert error.value.code is ErrorCode.SOURCE_BASELINE_MISMATCH
-    # A tree that differs from the pins is refused before anything is written.
+    # A tree that differs from the pins is refused before anything is written, and so is a
+    # translation that leaves an entry out.
     fresh = tmp_path / "fresh"
     _tree(fresh)
+    partial = replace(translations, entries=translations.entries[:-1])
+    with pytest.raises(ClassicRetroError, match="untranslated"):
+        overlay.prepare_polished_crystal_arabic_source(fresh, None, partial)
     (fresh / "home/text.asm").write_text("PlaceString:\n\tret\n", encoding="utf-8")
     with pytest.raises(ClassicRetroError, match="does not match"):
         overlay.prepare_polished_crystal_arabic_source(fresh, None, translations)
