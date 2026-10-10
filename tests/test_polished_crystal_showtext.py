@@ -10,11 +10,14 @@ from classic_retro.source import polishedcrystal_showtext as patch
 
 
 def _scene(
-    name: str, *,
-    scene_id: str = "ST01", dynamic: bool = False, calls: int = 1
+    name: str, *, scene_id: str = "ST01", dynamic: bool = False, calls: int = 1
 ) -> patch.OverworldScene:
     return patch.OverworldScene(
-        scene_id, "maps/ElmsLab.asm", name, calls, dynamic,
+        scene_id,
+        "maps/ElmsLab.asm",
+        name,
+        calls,
+        dynamic,
         (("line" if dynamic else "text", "مرحبًا"),),
     )
 
@@ -95,8 +98,7 @@ def _synthetic_source(tmp_path: Path):
     (root / "data/text").mkdir(parents=True)
     (root / "gfx/font").mkdir(parents=True)
     (root / "maps/ElmsLab.asm").write_bytes(
-        b'Talk:\n\tshowtext HelloText\n\tend\n'
-        b'HelloText:\n\ttext "Welcome, <PLAYER>!"\n\tdone\n'
+        b'Talk:\n\tshowtext HelloText\n\tend\nHelloText:\n\ttext "Welcome, <PLAYER>!"\n\tdone\n'
     )
     (root / "maps/NewBarkTown.asm").write_bytes(b"Empty:\n\tend\n")
     (root / "data/text/common.asm").write_bytes(b'SECTION "Original", ROMX\n')
@@ -104,14 +106,14 @@ def _synthetic_source(tmp_path: Path):
     return root
 
 
-def test_generate_shared_atlases_into_pending_changes_without_mutating_source(tmp_path, monkeypatch):
+def test_generate_shared_atlases_into_pending_changes_without_mutating_source(
+    tmp_path, monkeypatch
+):
     root = _synthetic_source(tmp_path)
     labels = (_scene("HelloText", scene_id="ST01", dynamic=True),)
     pins = {
         "maps/ElmsLab.asm": opening._git_blob_sha((root / "maps/ElmsLab.asm").read_bytes()),
-        "maps/NewBarkTown.asm": opening._git_blob_sha(
-            (root / "maps/NewBarkTown.asm").read_bytes()
-        ),
+        "maps/NewBarkTown.asm": opening._git_blob_sha((root / "maps/NewBarkTown.asm").read_bytes()),
     }
     monkeypatch.setattr(patch, "load_scenes", lambda: (pins, labels))
     monkeypatch.setattr(
@@ -130,7 +132,7 @@ def test_generate_shared_atlases_into_pending_changes_without_mutating_source(tm
     assert report["shared_atlases"] == 1
     assert report["gameplay_verified"] is False
     changed = updated[root / "maps/ElmsLab.asm"].decode()
-    assert '<PLAYER>' in changed
+    assert "<PLAYER>" in changed
     assert "ClassicRetroSTA01Load" in changed
     assert "\tshowtext HelloText\n" not in changed
     assert (root / "maps/ElmsLab.asm").read_bytes().startswith(b"Talk:\n\tshowtext")
@@ -141,7 +143,8 @@ def test_generate_shared_atlases_into_pending_changes_without_mutating_source(tm
 def test_invalid_source_pin_leaves_all_files_unchanged(tmp_path, monkeypatch):
     root = _synthetic_source(tmp_path)
     monkeypatch.setattr(
-        patch, "load_scenes",
+        patch,
+        "load_scenes",
         lambda: ({"maps/ElmsLab.asm": "0" * 40}, (_scene("HelloText"),)),
     )
     before = (root / "maps/ElmsLab.asm").read_bytes()
