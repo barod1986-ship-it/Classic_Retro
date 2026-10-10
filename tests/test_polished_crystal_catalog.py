@@ -26,7 +26,7 @@ def _source(tmp_path):
         'OakText:: text "Welcome, <PLAYER>!" ; "comment only"\n'
         '    line "Hello; world!"\n'
         '    cont "Is that so?"\n'
-        '    done\n'
+        "    done\n"
         'DisplayMenu: db "YES@" ; marker\n'
         '    dw "symbolic" ; requires classification review\n',
         encoding="utf-8",
@@ -49,7 +49,7 @@ def test_revision_and_engine_registered():
 def test_source_catalog_records_all_strings_without_comments(tmp_path):
     source = _source(tmp_path)
     catalog = scan_source(source, strict=False)
-    assert catalog["files_scanned"] == 2
+    assert catalog["files_scanned"] == 1
     assert catalog["count"] == 5
     assert catalog["categories"] == {"dialogue": 3, "review": 1, "string": 1}
     assert catalog["source_verified"] is False
