@@ -872,6 +872,10 @@ def _emit_dialog(entry, paras, ngrams) -> list[str]:
         else:
             out.append(ind + "text_end")
     elif term in ("done", "prompt", "text_end", "text_asm"):
+        if fmt.get("at_end") and last_kind == "str" and out and out[-1].endswith('"'):
+            # the English's string ended with '@' before text_end: without it the text
+            # engine would read on past text_end into whatever follows
+            out[-1] = out[-1][:-1] + '@"'
         out.append(ind + term)
     out += [ind + k for k in fmt.get("keep_after", [])]
     return _with_label(fmt, out, len(fmt.get("keep", [])))
@@ -937,9 +941,9 @@ def _emit_box(entry, pages, ngrams) -> list[str]:
                 m = linem
             lit = literal(row, use_ng)
             out.append(f'{ind}{m}"{lit}"')
-    if term == "@":
+    if term == "@" or (term and fmt.get("at_end")):
         out[-1] = out[-1][:-1] + '@"'
-    elif term:
+    if term and term != "@":
         out.append(ind + term)
     return _with_label(fmt, out, len(fmt.get("keep", [])))
 

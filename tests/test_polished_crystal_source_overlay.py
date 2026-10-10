@@ -371,6 +371,21 @@ def test_the_encoder_wraps_shapes_and_keeps_placeholders():
     assert encode.cells("بيت {PLAYER}") == 3 + 1 + 7
 
 
+def test_a_string_the_english_ends_before_text_end_keeps_its_terminator():
+    # `text "Go! @"` + `text_end`: without the '@' the engine reads on past text_end.
+    entry = _dialog(skeleton=["{ram:wStringBuffer1}"])
+    entry["fmt"] = {"indent": "\t", "first": "text", "term": "text_end", "at_end": True}
+    lines = encode.encode(entry, "انطلق يا {ram:wStringBuffer1} الآن")
+    assert lines[-2].endswith('@"') and lines[-1] == "\ttext_end"
+    # after a command the engine is between commands already: nothing to end
+    lines = encode.encode(entry, "انطلق يا {ram:wStringBuffer1}")
+    assert lines[-2] == "\ttext_ram wStringBuffer1" and lines[-1] == "\ttext_end"
+    del entry["fmt"]["at_end"]
+    assert not encode.encode(entry, "انطلق يا {ram:wStringBuffer1} الآن")[-2].endswith('@"')
+    manifest = manifest_module.builtin_manifest()
+    assert manifest.entries["data/text/common:Text_GoPkmn"]["fmt"]["at_end"]
+
+
 # --- injection -------------------------------------------------------------------------------
 
 

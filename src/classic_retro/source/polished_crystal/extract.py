@@ -488,6 +488,8 @@ class Extractor:
         keep = []
         plural = False
         last_at = False
+        string_at = False  # the latest string ended with '@'
+        at_end = False  # ... and text_end follows it: the string's '@' must stay
         ind = None
         label_prefix = ""
         ops = u.active_stmts
@@ -535,9 +537,11 @@ class Extractor:
                 if last_at is None:
                     term = self._last_term
                     last_at = False
+                string_at = last_at
             elif d in X.TEXT_CMDS:
                 if d == "text_end":
                     term = "text_end"
+                    at_end = string_at
                 elif d == "text_asm":
                     term = "text_asm"
                 elif d == "text_plural":
@@ -549,6 +553,7 @@ class Extractor:
                     paras[-1][-1].append(ph)
                     skeleton.append(ph)
                     started = True
+                    string_at = False
         if not term and last_at:
             term = "@"
         rows_text = []
@@ -556,6 +561,8 @@ class Extractor:
             rows_text.append(X.join_rows(["".join(r) for r in rows]))
         notation = "\\p".join(rows_text)
         fmt = {"indent": ind or "\t", "first": first or "text", "term": term}
+        if at_end:
+            fmt["at_end"] = True
         if keep:
             fmt["keep"] = keep
         if label_prefix:
@@ -672,11 +679,13 @@ class Extractor:
         probs = []
         label_prefix = ""
         ind = None
+        at_end = False  # the last string ends with '@' and text_end follows it
         for st in ops:
             d = st.directive
             if d in X.TRANSPARENT_IN_TEXT:
                 continue
             if d in ("done", "prompt", "text_end") and not st.has_strings:
+                at_end = d == "text_end" and term == "@"
                 term = d
                 continue
             if not st.has_strings:
@@ -724,6 +733,8 @@ class Extractor:
         fmt["first_sp"] = first or "text "
         fmt["line_sp"] = prefixes.get("line", fmt["line"] + " ")
         fmt["page_sp"] = prefixes.get("page", fmt["page"] + " ")
+        if at_end:
+            fmt["at_end"] = True
         if label_prefix:
             fmt["label_prefix"] = label_prefix
         fmt["seen"] = sorted(k for k in ("line", "page") if k in prefixes)
