@@ -30,9 +30,7 @@ DIALOGUE = frozenset(("text", "next", "next1", "line", "cont", "para", "done", "
 STRING_DIRECTIVES = frozenset(("db", "rawchar"))
 TOKEN = re.compile(r"<[A-Za-z][A-Za-z0-9_]*>")
 QUOTED = re.compile(r'"(?:[^"\\]|\\.)*"')
-DIRECTIVE = re.compile(
-    r"^\s*(?:[A-Za-z_][A-Za-z0-9_.]*::?\s*)*([A-Za-z_][A-Za-z0-9_]*)\b"
-)
+DIRECTIVE = re.compile(r"^\s*(?:[A-Za-z_][A-Za-z0-9_.]*::?\s*)*([A-Za-z_][A-Za-z0-9_]*)\b")
 ARABIC = re.compile(r"[\u0600-\u06ff]")
 
 
@@ -77,7 +75,9 @@ def _verify_upstream(root: Path) -> None:
     if (root / ".git").exists():
         commit = subprocess.run(
             ["git", "-C", str(root), "rev-parse", "HEAD"],
-            text=True, capture_output=True, check=False,
+            text=True,
+            capture_output=True,
+            check=False,
         )
         if commit.returncode != 0 or commit.stdout.strip() != SOURCE_COMMIT:
             raise ClassicRetroError(
@@ -126,17 +126,19 @@ def scan_source(root: Path, *, strict: bool = True) -> dict[str, object]:
                 category = "review"
             for idx, match in enumerate(matches):
                 literal = match.group()[1:-1]
-                entries.append({
-                    "id": f"{rel}:{line_no}:{idx}",
-                    "file": rel,
-                    "line": line_no,
-                    "index": idx,
-                    "category": category,
-                    "directive": opcode,
-                    "source": literal,
-                    "source_file_sha256": digest,
-                    "arabic": None,
-                })
+                entries.append(
+                    {
+                        "id": f"{rel}:{line_no}:{idx}",
+                        "file": rel,
+                        "line": line_no,
+                        "index": idx,
+                        "category": category,
+                        "directive": opcode,
+                        "source": literal,
+                        "source_file_sha256": digest,
+                        "arabic": None,
+                    }
+                )
     counts = dict(sorted(Counter(e["category"] for e in entries).items()))
     return {
         "format": "classic-retro-polishedcrystal-catalog-v1",
@@ -179,16 +181,22 @@ def check_workspace(
     expected = {e["id"]: e for e in fresh["entries"]}
     entries = workspace.get("entries")
     if not isinstance(entries, list):
-        raise ClassicRetroError(ErrorCode.INVALID_TRANSLATION_DOCUMENT, "workspace.entries must be a list")
+        raise ClassicRetroError(
+            ErrorCode.INVALID_TRANSLATION_DOCUMENT, "workspace.entries must be a list"
+        )
     if workspace.get("source_commit") != SOURCE_COMMIT:
-        raise ClassicRetroError(ErrorCode.SOURCE_BASELINE_MISMATCH, "workspace targets another upstream commit")
+        raise ClassicRetroError(
+            ErrorCode.SOURCE_BASELINE_MISMATCH, "workspace targets another upstream commit"
+        )
     reported: list[dict[str, str]] = []
     translated = 0
     reviewed_non_text = 0
     seen: set[str] = set()
     for item in entries:
         if not isinstance(item, dict) or not isinstance(item.get("id"), str):
-            raise ClassicRetroError(ErrorCode.INVALID_TRANSLATION_DOCUMENT, "invalid workspace entry")
+            raise ClassicRetroError(
+                ErrorCode.INVALID_TRANSLATION_DOCUMENT, "invalid workspace entry"
+            )
         key = item["id"]
         if key in seen:
             reported.append({"id": key, "problem": "duplicate ID"})
@@ -198,7 +206,15 @@ def check_workspace(
         if reference is None:
             reported.append({"id": key, "problem": "unknown source ID"})
             continue
-        for field in ("file", "line", "index", "category", "directive", "source", "source_file_sha256"):
+        for field in (
+            "file",
+            "line",
+            "index",
+            "category",
+            "directive",
+            "source",
+            "source_file_sha256",
+        ):
             if item.get(field) != reference[field]:
                 reported.append({"id": key, "problem": f"source drift: {field}"})
                 break
@@ -238,6 +254,8 @@ def check_workspace(
 def write_catalog(source: Path, output: Path) -> dict[str, object]:
     catalog = scan_source(source)
     if output.exists():
-        raise ClassicRetroError(ErrorCode.OUTPUT_EXISTS, f"refusing to overwrite existing catalog: {output}")
+        raise ClassicRetroError(
+            ErrorCode.OUTPUT_EXISTS, f"refusing to overwrite existing catalog: {output}"
+        )
     output.write_text(json.dumps(catalog, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return {key: value for key, value in catalog.items() if key != "entries"}
