@@ -68,10 +68,36 @@ jobs:
           echo "6930b48af5844d373e3c9130f26d6dd1084cf4ed  ../base.gbc" | sha1sum -c -
           echo "f06dbebe3fd20db54e7804605f7a55ad05b8ca203c62209705290d8880864803  ../base.gbc" | sha256sum -c -
 
+      - name: Inventory source text coverage without publishing the English script
+        run: |
+          mkdir -p artifact
+          classic-retro research polished-crystal-catalog upstream --out local-original-dialogue-catalog.json > artifact/catalog-scan-report.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("local-original-dialogue-catalog.json")
+          catalog = json.loads(path.read_text(encoding="utf-8"))
+          report = {
+              "source_commit": catalog["source_commit"],
+              "source_asm_files": catalog["files_scanned"],
+              "quoted_literals": catalog["count"],
+              "category_counts": catalog["categories"],
+              "current_translated_lines": 136,
+              "translated_scenes": 25,
+              "note": "Quoted literals are NOT equivalent to unique dialogs or total story lines. Completion percentage is intentionally not reported.",
+          }
+          Path("artifact/text-inventory-summary.json").write_text(
+              json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+          )
+          print(json.dumps(report, ensure_ascii=False, indent=2))
+          path.unlink()
+          PY
+
       - name: Apply RTL Arabic source overlays to Elm's static introduction scenes
         run: |
           set -o pipefail
-          mkdir artifact
+          mkdir -p artifact
           classic-retro research polished-crystal-elm-sequence upstream --dynamic-player --new-bark-town --overworld-showtext --font reference-font.ttf \
             --preview artifact/elm-sequence-preview.png | tee artifact/overlay-report.json
 
@@ -197,6 +223,7 @@ jobs:
             artifact/baseline-frame-*.png
             artifact/emulator-report.json
             artifact/overlay-report.json
+            artifact/text-inventory-summary.json
             artifact/manifest.json
           if-no-files-found: error
           retention-days: 14
