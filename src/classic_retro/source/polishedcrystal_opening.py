@@ -165,7 +165,7 @@ def _source_overlays(source: Path, asset: ElmArabicAssets) -> dict[Path, bytes]:
     )
     original_intro = intro.read_text(encoding="utf-8")
     old_call = "\tld hl, ElmText1\n\tcall PrintText\n"
-    new_call = "\tld hl, ElmText1\n\tcall ClassicRetroPrintArabicElm\n"
+    new_call = "\tld hl, ElmText1\n\tfarcall ClassicRetroPrintArabicElm\n"
     new_intro = _replace_once(original_intro, old_call, new_call, "Elm call")
     routine = (
         "ClassicRetroPrintArabicElm::\n"
@@ -180,8 +180,9 @@ def _source_overlays(source: Path, asset: ElmArabicAssets) -> dict[Path, bytes]:
         "\tcall PrintText\n"
         "\tjmp LoadStandardFont\n\n"
     )
-    new_intro = _replace_once(
-        new_intro, "ProfElmSpeech:\n", routine + "ProfElmSpeech:\n", "Elm routine"
+    new_common += (
+        '\nSECTION "Classic Retro Arabic Elm Loader", ROMX\n'
+        + routine
     )
     return {
         common: new_common.encode("utf-8"),
