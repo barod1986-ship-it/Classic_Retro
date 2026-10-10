@@ -71,8 +71,7 @@ def _raster_line(text: str, font: ImageFont.FreeTypeFont) -> Image.Image:
 def _tile_bytes(image: Image.Image, column: int) -> bytes:
     pixels = image.load()
     return bytes(
-        sum((1 << (7 - x)) for x in range(8) if pixels[column * CELL_SIZE + x, y])
-        for y in range(8)
+        sum((1 << (7 - x)) for x in range(8) if pixels[column * CELL_SIZE + x, y]) for y in range(8)
     )
 
 
@@ -112,7 +111,7 @@ def make_assets(source: Path, font_path: Path) -> ElmArabicAssets:
                 if code > LAST_ARABIC_CODE:
                     raise ClassicRetroError(
                         ErrorCode.ARABIC_GLYPH_CAPACITY_EXCEEDED,
-                        f"Elm opening needs {len(mapping)+1} glyphs",
+                        f"Elm opening needs {len(mapping) + 1} glyphs",
                     )
                 mapping[tile] = code
                 offset = (code - FIRST_ARABIC_CODE) * CELL_SIZE
@@ -157,7 +156,10 @@ def _source_overlays(source: Path, asset: ElmArabicAssets) -> dict[Path, bytes]:
     if "_ElmText1::" not in old_scene or "prompt" not in old_scene:
         raise ClassicRetroError(ErrorCode.SOURCE_BASELINE_MISMATCH, "opening text changed")
     new_common = (
-        prefix + _opening_asm(asset.codes) + end + tail
+        prefix
+        + _opening_asm(asset.codes)
+        + end
+        + tail
         + '\nSECTION "Classic Retro Arabic Elm Font", ROMX\n'
         + f'{MARKER}::\n\tINCBIN "{OUTPUT_FONT}"\n'
     )
@@ -210,9 +212,7 @@ def prepare(source: Path, font_path: Path, preview: Path | None = None) -> dict[
         image = Image.new("1", (COLUMNS * CELL_SIZE, len(assets.images) * 10))
         for index, line in enumerate(assets.images):
             image.paste(line, (0, index * 10))
-        image.resize(
-            (image.width * 4, image.height * 4), Image.Resampling.NEAREST
-        ).save(preview)
+        image.resize((image.width * 4, image.height * 4), Image.Resampling.NEAREST).save(preview)
     return {
         "game": "polished-crystal",
         "scope": "ElmText1 only",
