@@ -31,6 +31,7 @@
 | `shining-force-2.json` | Shining Force II (Mega Drive) |
 | `final-fantasy-ii.json` | Final Fantasy II (Super NES) |
 | `final-fantasy-iii.json` | Final Fantasy III (Super NES) |
+| `polished-crystal.json` | Pokémon Polished Crystal 3.2.3 (Game Boy Color) |
 
 في كل ملف:
 
@@ -54,7 +55,7 @@ classic-retro targets extract fomt "path/to/game.gba"
 يكتب الأمر `fomt.workspace.json` في المجلد الحالي، ويمكن اختيار اسم آخر بـ `--out`.
 
 - **ألعاب الروم:** أعطِ الأمر صورة اللعبة التي يدعمها الهدف نفسها. الإصدار والبصمة في دليل كل لعبة (`docs/*_ARABIC_TEST_AR.md`). في Castlevania: Symphony of the Night أعطه ملف المسار الأول (`Track 1`) من القرص.
-- **FireRed وMinish Cap:** أعطِ الأمر نسختك من مشروع التفكيك (`pokefirered` أو `tmc`) على الـ commit المثبت، قبل ترقيعها.
+- **FireRed وMinish Cap وPolished Crystal:** أعطِ الأمر نسختك من مشروع التفكيك (`pokefirered` أو `tmc` أو `polishedcrystal`) على الـ commit المثبت، قبل ترقيعها.
 - يتحقق الأمر من بصمة كل نص أصلي قبل أن يكتبه، فالمساحة تطابق النسخة المدعومة دائمًا.
 - **مساحة العمل فيها نص اللعبة، فتبقى على جهازك.** لا ترفعها إلى المستودع ولا تشاركها. الملفات `*.workspace.json` مستثناة في git.
 - لتحديث مساحة قديمة بترجمات أحدث استعمل `--translations الملف` لأخذ العربية منه، و`--force` لاستبدال ملف موجود.
@@ -110,6 +111,13 @@ classic-retro targets extract fomt "path/to/game.gba"
   حيث يجب أن ينتهي سطر. الرمز `{NAME;0}` يكتب اسم البطل كما سمّاه اللاعب بالحروف اللاتينية (يُحسب له 70 بكسل)،
   و`{LEADER}` و`{ITEM}` و`{SPELL}` و`{CLASS}` و`{#}` ما تكتبه اللعبة. لا حروف لاتينية غير ذلك، والأرقام عربية أو
   هندية. العلامات المتاحة: `. , : ! - … ، ؛ ؟`.
+- في Pokémon Polished Crystal تُترجم اللعبة كلها على دفعات، والمدخل الغائب عن الملف (أو نصه فارغ) يبقى بالإنجليزية.
+  الأداة تلفّ الأسطر بنفسها: 18 خانة في صندوق الحوار، وعرض المدخل في غيره، و`\p` صفحة جديدة في صندوق الحوار وحده،
+  و`\n` سطر جديد حيث يسمح المدخل، و`\f` صفحة جديدة في صناديق الصفحات (وصف البوكيديكس). العناصر النائبة تبقى
+  بعددها ويجوز نقلها: `{PLAYER}` و`{RIVAL}` (اسم حتى 7 حروف)، و`{USER}` و`{TARGET}`، و`{ram:…}` و`{num:…}`
+  و`{d:…}`، وأوامر النص `{wait}` و`{pause}` و`{sound:…}` و`{day}` و`{far:…}` في صندوق الحوار وحده. وما يختلف
+  بجنس اللاعب يُكتب `{مذكر|مؤنث}` بالكلمات المختلفة وحدها، دون عنصر نائب بين القوسين: `هل أنت {مستعد|مستعدة}؟`.
+  لا حروف لاتينية ولا أقواس ولا حركات، والأرقام عربية أو هندية، والعلامات `. ، ؛ ؟ ! : - … « » " / × % + ¥`.
 - اكتب أسماء المسرد كما هي فيه.
 - الحقلان `context` و`notes` للبشر، وتعديلهما لا يغيّر شيئًا في اللعبة.
 
@@ -188,7 +196,7 @@ classic-retro targets build fomt "path/to/game.gba" --font reference-font.ttf \
 - القيمة `matches_reference` في التقرير تصبح `false` لأن الترجمة تغيّرت، وهذا متوقع. وتصبح `false` أيضًا إن اختلفت إصدارات المكتبات عن `constraints.txt`.
 - جرّب الباتش في المحاكي كما يشرح دليل اللعبة.
 
-FireRed وMinish Cap:
+FireRed وMinish Cap وPolished Crystal:
 
 ```text
 classic-retro targets prepare firered "path/to/pokefirered" --font reference-font.ttf \

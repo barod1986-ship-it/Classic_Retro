@@ -1,6 +1,6 @@
 # Classic Retro — Master Specification
 
-Version: 0.4 (Twenty-three reference targets on one pipeline)
+Version: 0.4 (Twenty-four reference targets on one pipeline)
 
 ## 1. Purpose
 
@@ -61,7 +61,7 @@ src/classic_retro/
   patching/       the binary overlay kit (image, hooks, overlay, outputs), DS images (nitro)
                   and CD data tracks (cdrom)
   rom/            one binary overlay per rom-overlay target
-  source/         source overlays (pokefirered, tmc)
+  source/         source overlays (pokefirered, tmc, polished_crystal)
   localization/   targets, rendering strategies, translation files, `targets` commands
   translations/   each target's Arabic
   schemas/        target-translations.schema.json
@@ -71,7 +71,7 @@ docs/
 ```
 
 Every system in the tree is detected; the Game Boy Advance, the Nintendo DS, the
-PlayStation, the Super NES and the Mega Drive also have Arabic targets. A platform is
+PlayStation, the Super NES, the Mega Drive and the Game Boy Color also have Arabic targets. A platform is
 supported when a target ships on it, not when its adapter exists.
 
 There is one pipeline: the localization targets (§3.5). The foundation phase also
@@ -176,7 +176,8 @@ Kinds:
   It has `prepare` instead of `build`, and `check_translations` like a rom overlay:
   the script checked without a checkout, and as its preview the font file `prepare`
   writes into the checkout (FireRed's atlas `arabic_normal.png`, Minish Cap's
-  `arabic_font_preview.png`).
+  `arabic_font_preview.png`; Polished Crystal's glyphs are drawn by hand, so its previews are
+  their atlas and speech-box rows drawn with them).
 
 `classic-retro targets list | strategies | check-hooks | check-translations |
 check-entries | build | prepare | extract | split | merge | strip` is the one way to run
@@ -214,7 +215,7 @@ duplicate ids, unknown kinds and strategies that are not registered.
 
 A rendering strategy (`classic_retro.localization.strategies`) is a way of drawing
 Arabic through a game's renderer. It records what it needs from the engine, which
-core modules it builds on, and what it costs. The twenty-three targets proved four:
+core modules it builds on, and what it costs. The twenty-four targets proved four:
 
 - `glyph-font`: a right-to-left glyph font in the game's own format;
 - `line-cells`: lines shaped with HarfBuzz and cut into the engine's fixed cells;

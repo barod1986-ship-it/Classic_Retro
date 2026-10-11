@@ -335,6 +335,24 @@
     },
     "report": "f8a224921264af0889e447f3d4c05be6ebaefeeabd5e3aeb3526ae996345eb95"
   },
+  "polished-crystal": {
+    "generated_with": {
+      "arabic_reshaper": "3.0.1",
+      "fonttools": "4.66.0",
+      "freetype": "2.14.3",
+      "harfbuzz": "0.56.2",
+      "jsonschema": "4.26.0",
+      "pillow": "12.3.0",
+      "pycdlib": "1.21.0",
+      "python": "3.13.16",
+      "python_bidi": "0.6.11"
+    },
+    "previews": {
+      "polished_crystal_glyphs.png": "fb3799d21380e309af3cc0a459dfc6c073b6290c11c527016417ff8a1837aa92",
+      "polished_crystal_specimen.png": "b558f2278e80924e215a0b449d67d8279e22df00c9946e6ae842c024d7a85c5b"
+    },
+    "report": "26f8e122fe56103ad191c23c748dc7b674312b723594c0f99de8482b41649c2f"
+  },
   "ridge-racer": {
     "generated_with": {
       "arabic_reshaper": "3.0.1",
